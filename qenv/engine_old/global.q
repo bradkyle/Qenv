@@ -1,10 +1,3 @@
-/
-Global is used to store enumeration types and state that can be
-unilaterraly accessed throughout the program. For instance the 
-current step, step time and default instrument (and associated config)
-that serves as a single source of configuration.
-\
-
 / Enumerations
 / -------------------------------------------------------------------->
 // TODO tick size, face value etc.
@@ -106,6 +99,62 @@ RETURNCODE  :   (`INVALID_MEMBER;
                 `INVALID_ORDER_STATUS;
                 `INVALID_ORDER;
                 `OK);
+
+/ Utility functions
+/ -------------------------------------------------------------------->
+
+// Todo move to schema/event
+MakeEvent   : {[time;cmd;kind;datum]
+        if[not (type time)=-15h; :`]; //TODO fix
+        if[not (cmd in EVENTCMD); ];
+        if[not (kind in EVENTKIND); ];
+        if[not] //validate datum 
+        :`time`cmd`kind`datum!(time;cmd;kind;datum);
+};
+
+MakeDepthEvent  :{[time;asks;bids]
+
+        :MakeEvent[time]
+};
+
+MakeTradeEvent  :{[]
+
+        :MakeEvent[];
+};
+
+MakeOrderEvent  :{[]
+
+        :MakeEvent[];
+};
+
+MakeCancelAllOrdersEvent  :{[]
+
+        :MakeEvent[];
+};
+
+MakeAccountUpdateEvent  :{[]
+
+        :MakeEvent[];
+};
+
+
+MakeAccountUpdateAllEvent  :{[]
+
+        :MakeEvent[];
+};
+
+MakeInventoryEvent  :{[]
+
+        :MakeEvent[];
+};
+
+MakeFailureEvent    :{[]
+
+}
+
+MakeDepositEvents   :{[]
+
+};
 
 / StateFul Singletons
 / -------------------------------------------------------------------->
