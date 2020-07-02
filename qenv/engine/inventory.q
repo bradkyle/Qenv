@@ -39,15 +39,20 @@ Inventory: (
 / default: 
 // TODO generate unique inventory id
 NewInventory : {[accountId;side]
-    `.inventory.Inventory insert (0,accountId,0,side,0,0f,0,0,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
+    `.inventory.Inventory insert (
+        0,
+        accountId,
+        0,
+        side,
+        0,0f,0,0,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
     }
 
 MakeInventoryUpdateEvent   :  {[];
     0b
     };
 
-MakeAccountInventoryUpdateEvent {[]
-
+MakeAccountInventoryUpdateEvent : {[]
+    0b
     };
 
 MakeAllInventoryUpdatedEvent : {[accountId];

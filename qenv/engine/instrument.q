@@ -1,9 +1,14 @@
 
-
 /*******************************************************
-/ liquidation engine enumerations  
-LIQUIDATESTRAT   :  `IMMEDIATE`GRADUAL;
-LIQUIDATEFEETYPE :  `TOTAL`COMMISSION;
+/ instrument enumerations
+MAINTTYPE           :   `TIERED`FLAT;
+FEETYPE             :   `TIERED`FLAT;
+INSTRUMENTSTATE     :   `ONLINE;
+INITMARGINTYPE      :   `TIERED`FLAT;
+INSTRUMENTTYPE      :   `PERPETUAL`ADAPTIVE;
+LIQUIDATIONSTRAT    :   `COMPLETE`PARTIAL; 
+SETTLETYPE          :   `QUANTO`INVERSE;
+LIQUIDATEFEETYPE    :  `TOTAL`COMMISSION;
 
 Instrument: (
     [id                     : `symbol$()];

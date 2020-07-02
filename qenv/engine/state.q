@@ -1,4 +1,9 @@
-
+/*******************************************************
+/ adapter enumerations
+ADAPTERTYPE :   (`MARKETMAKER;        
+                `DUALBOX;          
+                `SIMPLEBOX;    
+                `DISCRETE);   
 
 
 AccountEventHistory: ();
