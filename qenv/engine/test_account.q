@@ -1,4 +1,4 @@
-\d .inventoryTests
+\d .accountTests
 \l qunit.q
 \l account.q
 \l inventory.q

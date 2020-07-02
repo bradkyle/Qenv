@@ -118,8 +118,7 @@ ProcessWithdraw       :{[event]
             balance:balance-withdrawAmount 
             from `.account.Account 
             where accountId=accountId;
-        events,:.global.MakeWithdrawEvent[agentId;time;withdrawAmount];
-        events,:.global.MakeAccountUpdateEvent[agentId;time];
+        events,:MakeAccountUpdateEvent[];
     ];  
     :events;
     };
