@@ -24,13 +24,17 @@ testExecFill:{
     .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
     };
 
-
-/ testDeposit:{
-
-    / };
+testApplyFill:{
+    time:.z.z;
+    aid:107;
+    events:.account.NewAccount[aid;`CROSS;`HEDGED;time];
+    update balance:1f, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
+    .account.ApplyFill[10;1000;`SELL;time;0b;1b;aid];
+    };
 
 // TODO balance should not be less than zero
 // TODO should update available and maint margin etc. 
+// TODO check multiple cases
 testApplyFunding:{
     fundingRate:0.01;
     time:.z.z;
@@ -45,11 +49,11 @@ testApplyFunding:{
     .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
     };
 
-testDeposit:{
+testProcessDeposit:{
 
     };
 
-testWithdraw:{
+testProcessWithdraw:{
 
     };
 

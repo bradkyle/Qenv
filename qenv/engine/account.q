@@ -246,22 +246,19 @@ ApplyFunding       :{[fundingRate;time] // TODO convert to cnt (cntPosMrg)
 // Balance Management
 // -------------------------------------------------------------->
 
-ProcessDeposit  :{[event]
+Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     update 
-        balance:balance+depositAmount, 
-        depositAmount+:depositAmount,
+        balance:balance+deposited, 
+        depositAmount+:deposited,
         depositCount+:1
         from `.account.Account 
         where accountId=accountId;
     :MakeAccountUpdateEvent[];
     };
 
-ProcessWithdraw       :{[event]
+Withdraw       :{[withdrawn;time;accountId]
     events:();
-    withdrawn: event[`datum][`withdrawAmount];
-    accountId:event[`accountId];
-    time:event[`time];
     acc:exec from  .account.Account where accountId=accountId;
 
     $[withdrawn < acc[`available];
