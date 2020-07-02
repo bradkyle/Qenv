@@ -10,3 +10,7 @@ that serves as a single source of configuration.
 
 CurrentStep: `long$();
 StepTime: `datetime$();
+
+ActiveInstrument: .instrument.NewInstrument{[]
+
+    };

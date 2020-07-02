@@ -1,3 +1,4 @@
+\d .instrument
 
 /*******************************************************
 / instrument enumerations
@@ -12,20 +13,20 @@ LIQUIDATEFEETYPE    :  `TOTAL`COMMISSION;
 
 Instrument: (
     [id                     : `symbol$()];
-    state                   : `INSTRUMENTSTATE$();
+    state                   : `.instrument.INSTRUMENTSTATE$();
     quoteAsset              : `symbol$();
     baseAsset               : `symbol$();
     underlyingAsset         : `symbol$();
     faceValue               : `long$();
     maxLeverage             : `long$();
     minLeverage             : `long$();
-    maintType               : `MAINTTYPE$();
-    feeType                 : `FEETYPE$();
+    maintType               : `.instrument.MAINTTYPE$();
+    feeType                 : `.instrument.FEETYPE$();
     flatMakerFee            : `float$();
     flatTakerFee            : `float$();
     tickSize                : `float$();
     multiplier              : `float$();
-    riskTierType            : `RISKTIERTYPE$();
+    riskTierType            : `.instrument.RISKTIERTYPE$();
     flatRiskLimit           : `float$();
     flatRiskStep            : `float$();
     markPrice               : `float$();
@@ -47,8 +48,8 @@ Instrument: (
     lotSize                 : `float$();
     maxOrderSize            : `float$();
     junkOrderSize           : `float$();
-    liquidationStrat        : `LIQUIDATIONSTRAT$();
-    settleType              : `SETTLETYPE$();
+    liquidationStrat        : `.instrument.LIQUIDATIONSTRAT$();
+    settleType              : `.instrument.SETTLETYPE$();
     insuranceFee            :  `float$();
     maxOpenOrders           : `int$(); // The default maximum number of orders that an agent can have open.
     numLiquidations         : `long$();

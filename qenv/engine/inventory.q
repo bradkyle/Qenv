@@ -1,4 +1,3 @@
-
 \d .inventory
 
 inventoryCount:0;
@@ -39,13 +38,17 @@ Inventory: (
 / default: 
 // TODO generate unique inventory id
 NewInventory : {[accountId;side]
+    // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
+    // initMarginReq, maintMarginReq
+
     `.inventory.Inventory insert (
-        0,
+        inventoryCount+:1,
         accountId,
-        0,
+        0, // TODO derive face value from global
         side,
         0,0f,0,0,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
-    }
+    :.util.MakeEvent[];
+    };
 
 MakeInventoryUpdateEvent   :  {[];
     0b
