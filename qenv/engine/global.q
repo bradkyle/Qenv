@@ -27,72 +27,8 @@ ADAPTERTYPE :   (`MARKETMAKER;
                 `DISCRETE);   
 
 /*******************************************************
-/ event kind enumerations
-EVENTKIND    :  (`DEPTH;      / place a new order
-                `TRADE;    / modify an existing order
-                `DEPOSIT;    / increment a given accounts balance
-                `WITHDRAWAL; / decrement a given accounts balance
-                `FUNDING; / apply  a funding event
-                `MARK;
-                `PLACE_ORDER;
-                `PLACE_BATCH_ORDER;
-                `CANCEL_ORDER;
-                `CANCEL_BATCH_ORDER;
-                `CANCEL_ALL_ORDERS;
-                `AMEND_ORDER;
-                `AMEND_BATCH_ORDER;
-                `LEVERAGE_UPDATE;
-                `LIQUIDATION;
-                `ORDER_UPDATE;
-                `POSITION_UPDATE;
-                `ACCOUNT_UPDATE;
-                `INSTRUMENT_UPDATE;
-                `FEATURE;
-                `NEW_ORDER;
-                `ORDER_DELETED;
-                `AGENT_FORCED_CLOSE_ORDERS;
-                `AGENT_LIQUIDATED;
-                `FAILED_REQUEST);
-
-EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
-
-/*******************************************************
-/ order related enumerations  
-ORDERSIDE      :   `BUY`SELL;
-
-ORDERTYPE   :   (`MARKET;       / executed regardless of price
-                `LIMIT;         / executed only at required price
-                `STOP_MARKET;   / executed as market order once stop price reached
-                `STOP_LIMIT;
-                `REMAINDERLIMIT;
-                `PEGGED);   / executed as limit order once stop price reached
-//TODO trailing stop order
-
-ORDERSTATUS :   (`NEW;          / begining of life cycle
-                `PARTIALFILLED; / partially filled
-                `FILLED;        / fully filled
-                `FAILED;        / failed due to expiration etc
-                `UNTRIGGERED;
-                `TRIGGERED`;
-                `CANCELED);     / user or system cancel
-
-
-TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90days)
-                `IMMEDIATEORCANCEL; / fill immediately or cancel, allow partially fill
-                `FILLORKILL;        / fill immediately or cancel, full fill only 
-                `NIL);
-
-STOPTRIGGER :   `LIMIT`MARK`INDEX; 
-EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY   
-
-
-/*******************************************************
-/ position related enumerations  
-POSITIONSIDE   :   `LONG`SHORT`BOTH;
-
-/*******************************************************
 / account related enumerations  
-MARGINTYPE   :   `CROSS`ISOLATED;
+MARGINTYPE   :   `CROSS;`ISOLATED;
 POSITIONTYPE :   `HEDGED`COMBINED;
 
 /*******************************************************

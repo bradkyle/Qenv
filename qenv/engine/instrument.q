@@ -1,5 +1,10 @@
 
 
+/*******************************************************
+/ liquidation engine enumerations  
+LIQUIDATESTRAT   :  `IMMEDIATE`GRADUAL;
+LIQUIDATEFEETYPE :  `TOTAL`COMMISSION;
+
 Instrument: (
     [id                     : `symbol$()];
     state                   : `INSTRUMENTSTATE$();

@@ -1,4 +1,6 @@
 
+// Event/Action/Failure construction utils
+//----------------------------------------------------->
 
 // Todo move to schema/event
 MakeEvent   : {[time;cmd;kind;datum]
@@ -32,3 +34,7 @@ MakeFailure   : {[time;cmd;kind;datum]
         if[not] //validate datum 
         :`time`cmd`kind`datum!(time;cmd;kind;datum);
 };
+
+
+// Feature construction utils
+//----------------------------------------------------->

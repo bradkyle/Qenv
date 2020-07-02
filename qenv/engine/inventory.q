@@ -1,10 +1,18 @@
 
+\d .inventory
+
+inventoryCount:0;
+
+/*******************************************************
+/ position related enumerations  
+POSITIONSIDE   : `LONG`SHORT`BOTH;
+
 Inventory: (
     [inventoryId        :  `long$()]
     accountId           :  `long$();
-    amount              :  `long$();
     faceValue           :  `int$();
-    side                :  `POSITIONSIDE$();
+    side                :  `.inventory.POSITIONSIDE$();
+    currentQty          :  `long$();
     avgPrice            :  `float$();
     realizedPnl         :  `long$();
     unrealizedPnl       :  `long$();
@@ -14,9 +22,7 @@ Inventory: (
     grossProfit         :  `long$();
     totalCloseAmt       :  `long$();
     totalCrossAmt       :  `long$();
-    totalOpenAmt        :  `long$();
-    markPrice           :  `float$();
-    lastPrice           :  `float$();
+    totalOpenAmt        :  `long$(); 
     liquidationPrice    :  `float$();
     bankruptPrice       :  `float$();
     breakEvenPrice      :  `float$();
@@ -27,17 +33,23 @@ Inventory: (
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
     activeTakerFee      :  `float$();
-    activeMakerFee      :  `float$();
-);
+    activeMakerFee      :  `float$()
+    );
 
-NewInventory               :{[]
+/ default: 
+// TODO generate unique inventory id
+NewInventory : {[accountId;side]
+    `.inventory.Inventory insert (0,accountId,0,side,0,0f,0,0,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
+    }
 
-}
+MakeInventoryUpdateEvent   :  {[];
+    0b
+    };
 
-MakeInventoryUpdateEvent   :{[]
+MakeAccountInventoryUpdateEvent {[]
 
-}
+    };
 
-MakeAllInventoryUpdatedEvent :{[]
-
-}
+MakeAllInventoryUpdatedEvent : {[accountId];
+    0b
+    };
