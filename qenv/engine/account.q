@@ -30,8 +30,7 @@ Account: (
             netShortPosition    : `long$();
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
-            totalFundingCost    : `float$();
-            totalFundingCostMrg : `float$()
+            totalFundingCost    : `float$()
         );
 
 // Event creation utilities
@@ -50,7 +49,7 @@ MakeAllAccountsUpdatedEvent :{[time]
 
 // Generates a new account with default 
 // values and inserts it into the account 
-// table. // TODO gen events.
+// table. // TODO gen events. // TODO change to event?
 NewAccount :{[accountId;marginType;positionType;time]
     events:();
     `.account.Account insert (accountId;0;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f);
@@ -62,20 +61,50 @@ NewAccount :{[accountId;marginType;positionType;time]
     };
 
 
+// Fill and Position Related Logic
+// -------------------------------------------------------------->
+
+// Funding Event/Logic
+// -------------------------------------------------------------->
+// Positive funding rate means long pays short an amount equal to their current position
+// * the funding rate.
+// Negative funding rate means short pays long an amount equal to their current position
+// * the funding rate.
+// The funding rate6\ can either be applied to the current position or to the margin/balance.
+// This function is accessed by the engine upon a funding event and unilaterally applies
+// an update to all the open position quantites held in the schema/state representation.
+ApplyFunding       :{[event]
+
+    update 
+        balance-:((netLongPosition*fundingRate)-(netShortPosition*fundingRate)), 
+        longFundingCost+:netLongPosition*fundingRate,
+        shortFundingCost+:netShortPosition*fundingRate,
+        totalFundingCost+:((netLongPosition*fundingRate)-(netShortPosition*fundingRate)),
+        from `.account.Account;
+
+    / `schema.Account update balance:
+
+    :MakeAllAccountsUpdatedEvent[]
+    };
+
 // Balance Management
 // -------------------------------------------------------------->
 
 ProcessDeposit  :{[event]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     update 
-        balance:balance+depositAmount 
+        balance:balance+depositAmount, 
+        depositAmount+:depositAmount,
+        depositCount+:1,
         from `.account.Account 
         where accountId=accountId;
     :MakeAccountUpdateEvent[];
-};
+    };
 
 // TODO
-deriveAvailableBalance  :{[accountId]:exec from .schema.Account where accountId=accountId;};
+deriveAvailableBalance  :{[accountId]
+    :exec from .schema.Account where accountId=accountId;
+    };
 
 ProcessWithdraw       :{[event]
     events:();
@@ -85,9 +114,12 @@ ProcessWithdraw       :{[event]
     $[withdrawAmount < deriveAvailableBalance(accountId);
 
         // TODO more expressive and complete upddate statement accounting for margin etc.
-        update balance:balance-withdrawAmount from `.schema.Account where accountId=accountId;
+        update 
+            balance:balance-withdrawAmount 
+            from `.account.Account 
+            where accountId=accountId;
         events,:.global.MakeWithdrawEvent[agentId;time;withdrawAmount];
         events,:.global.MakeAccountUpdateEvent[agentId;time];
     ];  
     :events;
-};
+    };
