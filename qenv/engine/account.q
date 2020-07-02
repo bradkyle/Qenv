@@ -85,6 +85,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
     cost: fee * abs fillQty;
     nxtQty: inventory[`currentQty] + fillQty;
     leverage: account[`];
+    currentQty: inventory[`currentQty];
     faceValue:1;
 
     realizedPnlDelta:0; // TODO change to inst realized pnl
@@ -167,18 +168,16 @@ execFill    :{[account;inventory;fillQty;price;fee]
         inventory[`avgPrice]: 0;
         inventory[`currentQty]: 0;
     ];0N;];
+    
+    inventory[`fillCount]+:1;
+    inventory[`realizedGrossPnl]+:realizedPnlDelta - (cost%price)
+    account[`tradeCount]+:1;
+    account[`tradeVolume]+:abs[fillQty];
+    account[`totalCommission]+:(cost%price);
 
-    // TODO derive liquidation price
-    // TODO 
+    // TODO pos margin, order margin, available, 
+    // frozen, maintMargin, netLongPosition, netShortPosition
 
-    / $[];
-    /self.balance = round(next_balance, 8)
-    /position.current_qty = next_position
-    /position.total_costs += (cost/price)
-    /position.total_realised_pnl += realised_pnl
-    /position.total_summed_returns += realised_pnl - (cost/price)
-    /position.total_fills_completed += 1
-    // TODO update position values here.
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
 

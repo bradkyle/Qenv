@@ -17,6 +17,7 @@ Inventory: (
     avgPrice            :  `float$();
     realizedPnl         :  `long$();
     unrealizedPnl       :  `long$();
+    posMargin           :  `long$();
     totalCost           :  `long$();
     totalEntry          :  `long$();
     execCost            :  `long$();
@@ -33,8 +34,7 @@ Inventory: (
     markValue           :  `float$();
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
-    activeTakerFee      :  `float$();
-    activeMakerFee      :  `float$()
+    fillCount           :  `long$();
     );
 
 // Event creation utilities
