@@ -1,8 +1,7 @@
 \l inventory.q
+\l util.q
 
 \d .account
-
-accountCount:0;
 
 / account related enumerations  
 MARGINTYPE      :   `CROSS`ISOLATED;
@@ -38,15 +37,15 @@ Account: (
 // Event creation utilities
 // -------------------------------------------------------------->
 
-/ MakeAccountUpdateEvent  :{[accountId]
+MakeAccountUpdateEvent  :{[accountId;time]
 
-/ }
+    };
 
-/ MakeAllAccountsUpdatedEvent :{[]
+MakeAllAccountsUpdatedEvent :{[time]
 
-/ }
+    };
 
-// Account Logic
+// Account CRUD Logic
 // -------------------------------------------------------------->
 
 // Generates a new account with default 
@@ -61,6 +60,10 @@ NewAccount :{[accountId;marginType;positionType;time]
     events,:.inventory.NewInventory[accountId;`BOTH];
     :events;
     };
+
+
+// Balance Management
+// -------------------------------------------------------------->
 
 ProcessDeposit  :{[event]
     // TODO more expressive and complete upddate statement accounting for margin etc.

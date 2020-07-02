@@ -5,7 +5,7 @@
 
 testNewAccount:{
     aid:1;
-    .account.NewAccount[aid;`CROSS;`HEDGED];
+    events.account.NewAccount[aid;`CROSS;`HEDGED];
     x:select from .account.Account where accountId=aid;
     / y:select from .inventory.Inventory where accountId=aid;
 

@@ -1,3 +1,5 @@
+\l util.q
+
 \d .inventory
 
 inventoryCount:0;
@@ -35,19 +37,13 @@ Inventory: (
     activeMakerFee      :  `float$()
     );
 
-/ default: 
-// TODO generate unique inventory id
-NewInventory : {[accountId;side]
-    // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
-    // initMarginReq, maintMarginReq
 
-    `.inventory.Inventory insert (inventoryCount+:1;accountId;0;side;
-        0;0f;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);
-    / :.util.MakeEvent[];
-    };
+// Event creation utilities
+// -------------------------------------------------------------->
+
 
 MakeInventoryUpdateEvent   :  {[];
-    0b
+    :.util.MakeEvent[];
     };
 
 MakeAccountInventoryUpdateEvent : {[]
@@ -56,4 +52,18 @@ MakeAccountInventoryUpdateEvent : {[]
 
 MakeAllInventoryUpdatedEvent : {[accountId];
     0b
+    };
+
+
+// Inventory CRUD Logic
+// -------------------------------------------------------------->
+
+/ default: 
+// TODO generate unique inventory id
+NewInventory : {[accountId;side]
+    // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
+    // initMarginReq, maintMarginReq
+    `.inventory.Inventory insert (inventoryCount+:1;accountId;0;side;
+        0;0f;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);
+    :MakeInventoryUpdateEvent[];
     };
