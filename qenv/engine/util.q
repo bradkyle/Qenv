@@ -3,7 +3,7 @@
 
 // Converts a given amount of contracts into their
 // equivalent value in the given margin currency
-CntToMrg    : {[price;qty;faceValue;doAbs]
+CntToMrg    : {[qty;price;faceValue;doAbs]
         $[price>0 & doAbs;
         :(faceValue%price)* abs[qty];
         doAbs;

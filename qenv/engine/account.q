@@ -40,13 +40,9 @@ Account: (
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeAccountUpdateEvent  :{[accountId;time]
-    :1b;
-    };
+MakeAccountUpdateEvent  :{[accountId;time]:()};
 
-MakeAllAccountsUpdatedEvents :{[time]
-    :1b;
-    };
+MakeAllAccountsUpdatedEvents :{[time]:()};
 
 // Account CRUD Logic
 // -------------------------------------------------------------->
@@ -204,12 +200,11 @@ execFill    :{[account;inventory;fillQty;price;fee]
 // todo allow for onlyclose and calcualte fee
 ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     events:();
-    absQty:abs qty;
     acc: exec from Account where accountId=accountId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
 
     // TODO on hedged position check if close greater than open position.
-    $[absQty > 0:[
+    $[(abs qty)>0f;[
         $[acc[`positionType]=`HEDGED;
             $[qty>0;
             execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`LONG;$[isClose;neg qty;qty];price;fee];
@@ -250,15 +245,14 @@ Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     update 
         balance:balance+deposited, 
-        depositAmount+:deposited,
-        depositCount+:1
+        depositAmount:depositAmount+deposited,
+        depositCount:depositCount+1
         from `.account.Account 
         where accountId=accountId;
-    :MakeAccountUpdateEvent[];
+    :MakeAccountUpdateEvent[accountId;time];
     };
 
 Withdraw       :{[withdrawn;time;accountId]
-    events:();
     acc:exec from  .account.Account where accountId=accountId;
 
     $[withdrawn < acc[`available];
@@ -269,7 +263,7 @@ Withdraw       :{[withdrawn;time;accountId]
             withdrawCount:withdrawCount+1
             from `.account.Account 
             where accountId=accountId;
-        events,:MakeAccountUpdateEvent[];
+        :MakeAccountUpdateEvent[accountId;time];
     ];  
-    :events;
+    :();
     };

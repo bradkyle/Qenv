@@ -22,6 +22,7 @@ testExecFill:{
     accr:exec from .account.Account where accountId=aid;
     posr:exec from .inventory.Inventory where inventoryId=pos[`inventoryId];
     .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
+    .qunit.assertEquals[accr[`balance]; 0.999; "Account record should be present and inserted"];
     };
 
 testApplyFill:{
@@ -40,7 +41,7 @@ testApplyFunding:{
     time:.z.z;
     aid:101;
     events:.account.NewAccount[aid;`CROSS;`HEDGED;time];
-    update balance:1, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
+    update balance:1f, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
     events:.account.ApplyFunding[fundingRate;time];
     acc: exec from .account.Account where accountId=aid;
     .qunit.assertEquals[acc[`balance]; 0.999; "Account record should be present and inserted"];
@@ -49,12 +50,26 @@ testApplyFunding:{
     .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
     };
 
-testProcessDeposit:{
-
+// TODO more cases
+testDeposit:{
+    fundingRate:0.01;
+    time:.z.z;
+    aid:19;
+    depo: 5;
+    .account.NewAccount[aid;`CROSS;`HEDGED;time];
+    update balance:1f from `.account.Account where accountId=aid;
+    events:.account.Deposit[depo;time;aid];
     };
 
+// TODO more cases
 testProcessWithdraw:{
-
+    fundingRate:0.01;
+    time:.z.z;
+    aid:190;
+    widr: 5;
+    .account.NewAccount[aid;`CROSS;`HEDGED;time];
+    update balance:widr*2f from `.account.Account where accountId=aid;
+    events:.account.Withdraw[widr;time;aid];
     };
 
 
