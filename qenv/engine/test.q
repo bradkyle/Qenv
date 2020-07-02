@@ -6,4 +6,4 @@
 \l inventoryTest.q
 .qunit.runTests `.accountTest;
 / .qunit.runTests `.utilTest
-.qunit.runTests `.inventoryTest;
+/ .qunit.runTests `.inventoryTest;

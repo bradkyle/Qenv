@@ -1,7 +1,7 @@
 \l inventory.q
-\l util.q
 
 \d .account
+\l util.q
 
 / account related enumerations  
 MARGINTYPE      :   `CROSS`ISOLATED;
@@ -12,7 +12,7 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // pertaining to what the agent setting is.
 Account: (
             [accountId          : `long$()]
-            balance             : `long$();
+            balance             : `float$();
             frozen              : `long$();
             maintMargin         : `long$();
             available           : `long$();
@@ -28,9 +28,13 @@ Account: (
             tradeCount          : `long$();
             netLongPosition     : `long$();
             netShortPosition    : `long$();
+            longMargin          : `float$();
+            shortMargin         : `float$();
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
-            totalFundingCost    : `float$()
+            totalFundingCost    : `float$();
+            activeMakerFee      : `float$();
+            activeTakerFee      : `float$()
         );
 
 // Event creation utilities
@@ -52,7 +56,7 @@ MakeAllAccountsUpdatedEvents :{[time]
 // table. // TODO gen events. // TODO change to event?
 NewAccount :{[accountId;marginType;positionType;time]
     events:();
-    `.account.Account insert (accountId;0;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f);
+    `.account.Account insert (accountId;0f;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f);
     events,:MakeAccountUpdateEvent[accountId;time];
     events,:.inventory.NewInventory[accountId;`LONG;time];
     events,:.inventory.NewInventory[accountId;`SHORT;time];
@@ -60,6 +64,10 @@ NewAccount :{[accountId;marginType;positionType;time]
     :events;
     };
     
+
+// Deriving Cross and Isolated liquidation price
+// -------------------------------------------------------------->
+
 // Fill and Position Related Logic
 // -------------------------------------------------------------->
 
@@ -80,11 +88,18 @@ deriveUnrealisedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
     :(pricePerContract[faceValue;avgPrice] - pricePerContract[faceValue;markPrice])*currentQty;
     };
 
+// TODO type assertions
+// Converts an execution from a fill operation on an order to the corresponding 
+// position and balance respectively. 
 execFill    :{[account;inventory;fillQty;price;fee]
+    $[abs[fillQty]>0;0N;:0b];
+    $[price>0;0N;:0b];
+    $[(type account)=99h;0N;:0b];
+    $[(type inventory)=99h;0N;:0b];
     // TODO errors
     cost: fee * abs fillQty;
     nxtQty: inventory[`currentQty] + fillQty;
-    leverage: account[`];
+    leverage: 100;
     currentQty: inventory[`currentQty];
     faceValue:1;
 
@@ -118,7 +133,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         // amount of value added back to the balance is equivalent
         // to the position.
         amt:CntToMrg[((abs[currentQty]-abs[nxtQty])%leverage)-cost;price;faceValue;0b];
-        nextBalance:balance + amt + realizedPnlDelta; //Todo next balance
+        account[`balance]+:(amt + realizedPnlDelta)
       ];
       (abs currentQty)>(abs nxtQty);
       [
@@ -134,7 +149,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         // that the execution is smaller than the position
         // and as such is used as the value
         amt:CntToMrg[(abs[fillQty]%leverage)-cost;price;faceValue;1b];
-        nextBalance: balance + amt + realizedPnlDelta;
+        account[`balance]+: (amt + realizedPnlDelta);
       ];
       [
         / Because the current position is being increased
@@ -156,7 +171,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         / the cost is added to the execution i.e. an additional
         / amount is subtracted to simulate fee.
         amt: CntToMrg[(abs[fillQty]%leverage)+cost;price;faceValue;1b];
-        nextBalance: balance - amt;
+        account[`balance]-: amt;
       ]
     ];
 
@@ -169,20 +184,20 @@ execFill    :{[account;inventory;fillQty;price;fee]
         inventory[`currentQty]: 0;
     ];0N;];
     
-    inventory[`fillCount]+:1;
-    inventory[`realizedGrossPnl]+:realizedPnlDelta - (cost%price)
-    account[`tradeCount]+:1;
-    account[`tradeVolume]+:abs[fillQty];
-    account[`totalCommission]+:(cost%price);
-
+    / TODO implement
+    / inventory[`fillCount]+:1;
+    / inventory[`realizedGrossPnl]+:(realizedPnlDelta - (cost%price))
+    / account[`tradeCount]+:1;
+    / account[`tradeVolume]+:abs[fillQty];
+    / account[`totalCommission]+:(cost%price);
     // TODO pos margin, order margin, available, 
-    // frozen, maintMargin, netLongPosition, netShortPosition
+    // frozen, maintMargin, netLongPosition, netShortPosition, available, posMargin etc.
 
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
-
     };
 
+// TODO type assertions
 // Apply fill is an internal function i.e. it is not exposed
 // to the engine but is used by the orderbook to add a given
 // qty to the active position of an account.
@@ -190,22 +205,25 @@ execFill    :{[account;inventory;fillQty;price;fee]
 ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     events:();
     absQty:abs qty;
+    acc: exec from Account where accountId=accountId;
+    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
+
+    // TODO on hedged position check if close greater than open position.
     $[absQty > 0:[
-        acc: exec from Account where accountId=accountId;
         $[acc[`positionType]=`HEDGED;
             $[qty>0;
-            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`LONG;qty;price;fee];
-            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`SHORT;qty;price;fee]
+            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`LONG;$[isClose;neg qty;qty];price;fee];
+            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`SHORT;$[isClose;neg qty;qty];price;fee]
             ]; // LONG; SHORT
           acc[`positionType]=`COMBINED;
-            [execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`BOTH;qty;price;fee]];
+            [execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`BOTH;$[side=`SELL;neg qty;qty];price;fee]];
           [0N]
         ];
     ];];
     :events;
     };
 
-// Funding Event/Logic
+// Funding Event/Logic //TODO convert to cnt for reference
 // -------------------------------------------------------------->
 // Positive funding rate means long pays short an amount equal to their current position
 // * the funding rate.
@@ -214,13 +232,12 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
 // The funding rate6\ can either be applied to the current position or to the margin/balance.
 // This function is accessed by the engine upon a funding event and unilaterally applies
 // an update to all the open position quantites held in the schema/state representation.
-ApplyFunding       :{[fundingRate;time]
-
-    update 
-        balance-:((netLongPosition*fundingRate)-(netShortPosition*fundingRate)), 
-        longFundingCost+:netLongPosition*fundingRate,
-        shortFundingCost+:netShortPosition*fundingRate,
-        totalFundingCost+:((netLongPosition*fundingRate)-(netShortPosition*fundingRate))
+// TODO next funding rate and next funding time (funding time delta)
+ApplyFunding       :{[fundingRate;time] // TODO convert to cnt (cntPosMrg)
+    update balance:balance-((longMargin*fundingRate)-(shortMargin*fundingRate)), 
+        longFundingCost:longFundingCost+(longMargin*fundingRate),
+        shortFundingCost:shortFundingCost+(shortMargin*fundingRate),
+        totalFundingCost:totalFundingCost+((longMargin*fundingRate)-(shortMargin*fundingRate))
         by accountId from `.account.Account;
 
     :MakeAllAccountsUpdatedEvents[time];
@@ -240,21 +257,19 @@ ProcessDeposit  :{[event]
     :MakeAccountUpdateEvent[];
     };
 
-// TODO
-deriveAvailableBalance  :{[accountId]
-    :exec from .schema.Account where accountId=accountId;
-    };
-
 ProcessWithdraw       :{[event]
     events:();
-    withdrawAmount: event[`datum][`withdrawAmount];
+    withdrawn: event[`datum][`withdrawAmount];
     accountId:event[`accountId];
     time:event[`time];
-    $[withdrawAmount < deriveAvailableBalance(accountId);
+    acc:exec from  .account.Account where accountId=accountId;
 
+    $[withdrawn < acc[`available];
         // TODO more expressive and complete upddate statement accounting for margin etc.
         update 
             balance:balance-withdrawAmount 
+            withdrawAmount:withdrawAmount+withdrawn
+            withdrawCount:withdrawCount+1
             from `.account.Account 
             where accountId=accountId;
         events,:MakeAccountUpdateEvent[];

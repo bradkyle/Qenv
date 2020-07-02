@@ -34,7 +34,7 @@ Inventory: (
     markValue           :  `float$();
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
-    fillCount           :  `long$();
+    fillCount           :  `long$()
     );
 
 // Event creation utilities
@@ -56,7 +56,7 @@ MakeAccountInventoryUpdateEvent : {[time]
 NewInventory : {[accountId;side;time]
     // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
     // initMarginReq, maintMarginReq
-    `.inventory.Inventory insert (inventoryCount+:1;accountId;0;side;
-        0;0f;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);
+    `.inventory.Inventory insert (inventoryCount+:1;accountId;1;side;
+        0;0f;0;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0);
     :MakeInventoryUpdateEvent[time];
     };
