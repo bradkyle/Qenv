@@ -27,6 +27,8 @@ EVENTKIND    :  (`DEPTH;      / place a new order
                 `AGENT_LIQUIDATED;
                 `FAILED_REQUEST);
 
+// TODO functions for making evens
+
 EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 
 /*******************************************************

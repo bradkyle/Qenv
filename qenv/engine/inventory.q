@@ -41,13 +41,9 @@ NewInventory : {[accountId;side]
     // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
     // initMarginReq, maintMarginReq
 
-    `.inventory.Inventory insert (
-        inventoryCount+:1,
-        accountId,
-        0, // TODO derive face value from global
-        side,
-        0,0f,0,0,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
-    :.util.MakeEvent[];
+    `.inventory.Inventory insert (inventoryCount+:1;accountId;0;side;
+        0;0f;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);
+    / :.util.MakeEvent[];
     };
 
 MakeInventoryUpdateEvent   :  {[];

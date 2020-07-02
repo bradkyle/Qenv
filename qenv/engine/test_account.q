@@ -1,18 +1,28 @@
 \d .inventoryTests
 \l qunit.q
+\l account.q
 \l inventory.q
 
 testNewAccount:{
     aid:1;
-    .inventory.NewInventory[aid;`LONG];
-    x:select from .inventory.Inventory where accountId=aid;
+    .account.NewAccount[aid;`CROSS;`HEDGED];
+    x:select from .account.Account where accountId=aid;
+    / y:select from .inventory.Inventory where accountId=aid;
 
-    .qunit.assertEquals[count x; 1; "Record should be present and inserted"];
-    .qunit.assertEquals[(first x)[`side]; `.inventory.POSITIONSIDE$`LONG; "The side should be equal to specified side"];
-        
+    .qunit.assertEquals[count x; 1; "Account record should be present and inserted"];
+    / .qunit.assertEquals[count y; 3; "Inventory record should be present and inserted"];
+
     };
 
+testDeposit:{
 
+    };
 
-testNewAccount[]
+testWithdraw:{
+
+    };
+
+testNewAccount[];
+testDeposit[];
+testWithdraw[];
 \d .
