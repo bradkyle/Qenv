@@ -1,5 +1,16 @@
 \l global.q
 
+
+// Converts a given amount of contracts into their
+// equivalent value in the given margin currency
+CntToMrg    : {[price;qty;faceValue;doAbs]
+        $[price>0 & doAbs;
+        :(faceValue%price)* abs[qty];
+        doAbs;
+        :(faceValue%price)*qty;
+        :0];
+        };
+
 // Event/Action/Failure construction utils
 //----------------------------------------------------->
 
@@ -17,11 +28,8 @@ MakeEvent   : {[time;cmd;kind;datum]
 // a agent/account Id and its respective
 // vector target distribution and/or adapter
 // that conforms to a generaliseable dictionary
-MakeAction   : {[accountId;action;]
-        if[not (type time)=-15h; :`]; //TODO fix
-        if[not (cmd in EVENTCMD); ];
-        if[not (kind in EVENTKIND); ];
-        if[not] //validate datum 
+MakeAction   : {[accountId;action]
+        // TODO check 
         :`time`cmd`kind`datum!(time;cmd;kind;datum);
         };
 
@@ -30,10 +38,9 @@ MakeAction   : {[accountId;action;]
 // vector target distribution and/or adapter
 // that conforms to a generaliseable dictionary
 MakeFailure   : {[time;cmd;kind;datum]
-        if[not (type time)=-15h; :`]; //TODO fix
-        if[not (cmd in EVENTCMD); ];
-        if[not (kind in EVENTKIND); ];
-        if[not] //validate datum 
+        if[not (type time)=-15h; :0b]; //TODO fix
+        if[not (cmd in EVENTCMD); :0b];
+        if[not (kind in EVENTKIND); :0b];
         :`time`cmd`kind`datum!(time;cmd;kind;datum);
         };
 

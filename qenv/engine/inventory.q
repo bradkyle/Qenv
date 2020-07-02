@@ -37,33 +37,26 @@ Inventory: (
     activeMakerFee      :  `float$()
     );
 
-
 // Event creation utilities
 // -------------------------------------------------------------->
 
-
-MakeInventoryUpdateEvent   :  {[];
-    :.util.MakeEvent[];
+MakeInventoryUpdateEvent   :  {[time];
+    :1b;
     };
 
-MakeAccountInventoryUpdateEvent : {[]
-    0b
+MakeAccountInventoryUpdateEvent : {[time]
+    :1b;
     };
-
-MakeAllInventoryUpdatedEvent : {[accountId];
-    0b
-    };
-
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
 / default: 
 // TODO generate unique inventory id
-NewInventory : {[accountId;side]
+NewInventory : {[accountId;side;time]
     // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
     // initMarginReq, maintMarginReq
     `.inventory.Inventory insert (inventoryCount+:1;accountId;0;side;
         0;0f;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);
-    :MakeInventoryUpdateEvent[];
+    :MakeInventoryUpdateEvent[time];
     };
