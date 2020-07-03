@@ -10,7 +10,7 @@ testAddLimitOrder:{
         $[count[case[`offsets]]>0;.orderbook.updateOffsets[case[`side];case[`offsets]];0N];
         $[count[case[`sizes]]>0;.orderbook.updateSizes[case[`sizes];case[`sizes]];0N];
 
-        res:.orderbook.addLimitOrder[case[`orders];.z.z];
+        res:.orderbook.NewOrder[case[`orders];.z.z];
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
         .qunit.assertEquals[.orderbook.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
         .qunit.assertEquals[.orderbook.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];
@@ -30,7 +30,7 @@ testUpdateLimitOrder:{
         $[count[case[`offsets]]>0;.orderbook.updateOffsets[case[`side];case[`offsets]];0N];
         $[count[case[`sizes]]>0;.orderbook.updateSizes[case[`sizes];case[`sizes]];0N];
 
-        res:.orderbook.updateLimitOrder[case[`orders];.z.z];
+        res:.orderbook.UpdateOrder[case[`orders];.z.z];
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
         .qunit.assertEquals[.orderbook.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
         .qunit.assertEquals[.orderbook.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];

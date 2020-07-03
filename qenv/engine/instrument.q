@@ -75,3 +75,35 @@ MakeMarkPriceUpdateEvent    :{[]
 MakeFundingEvent             :{[]
 
 }
+
+
+reserveOrderMargin  : {[side;price;size;orderId;time]
+    // 
+    events:();
+    markPrice: 0;
+    faceValue: 0;
+    leverage:0;
+    $[side=`BUY & price>markPrice; 
+      premium:floor[(price-markPrice)*faceValue];
+      side=`SELL & price<markPrice;
+      premium:floor[(markPrice-price)*faceValue];
+      premium:0;
+    ];
+
+    $[side=`SELL & longOpenQty>sellOpenQty;
+     charged:max[size-(longOpenQty-sellOrderQty),0];
+     side=`BUY & shortOpenQty>buyOrderQty;
+     charged:max[size-(shortOpenQty-buyOrderQty),0];
+     charged:0;
+    ];
+    
+    reserved: floor[((charged+(initialMarginCoefficient*charged*faceValue)+changed*premium)%price)%leverage];
+    $[(reserved<availableBalance) | (reserved=0);
+        [
+            orderMargin:reserved;
+            :1b;
+        ];
+        [:0b]
+    ];
+    :events;
+    };

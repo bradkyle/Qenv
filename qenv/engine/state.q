@@ -12,6 +12,8 @@ OrderEventHistory: ();
 DepthEventHistory: ();
 TradeEventHistory: ();
 
+// TODO batching + 
+
 // Maintains a lookback buffer of 
 // aggregations of state including
 // state that has not been modified 

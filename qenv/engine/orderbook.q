@@ -1,5 +1,6 @@
 \l order.q
 \d .orderbook
+\l util.q
 // Instantiate a singleton class of Orderbook
 // qtys: represent the different level quantities at their given prices
 // agentOffsets: represent the given offsets of a set of agent(s') orders 
@@ -34,12 +35,13 @@ getAvailableQty : {[side]:sum value getQtys[side]};
 
 // Sets the order qtys on a given side to the target
 getOffsets  : {[side]:.orderbook.OrderBook[side][`agentOffsets]};
-addNewOffset  : {[side;price]:0N};
+addNewOffset  : {[side;price]:[`.orderbook.OrderBook;side,`agentOffsets,price;,;nxt]};
 updateOffsets  : {[side;nxt].[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]};
 / decrementOffsets    :{[side;price;qty] .schema.OrderBook[side][`agentOffsets][price][;1]-:qty}; // TODO test
 
 // Sets the order qtys on a given side to the target
 getSizes  : {[side]:.orderbook.OrderBook[side][`agentSizes]};
+addNewSize  : {[side;price]:[`.orderbook.OrderBook;side,`agentSizes,price;,;nxt]};
 updateSizes  : {[side;nxt].[`.orderbook.OrderBook;side,`agentSizes;,;nxt]};
 
 // Sets all values to 0 in list or matrix
@@ -137,51 +139,16 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
-reserveOrderMargin  : {[side;price;size;orderId;time]
-    // 
-    events:();
-    markPrice: 0;
-    faceValue: 0;
-    leverage:0;
-    $[side=`BUY & price>markPrice; 
-      premium:floor[(price-markPrice)*faceValue];
-      side=`SELL & price<markPrice;
-      premium:floor[(markPrice-price)*faceValue];
-      premium:0;
-    ];
-
-    $[side=`SELL & longOpenQty>sellOpenQty;
-     charged:max[size-(longOpenQty-sellOrderQty),0];
-     side=`BUY & shortOpenQty>buyOrderQty;
-     charged:max[size-(shortOpenQty-buyOrderQty),0];
-     charged:0;
-    ];
-    
-    reserved: floor[((charged + (initialMarginCoefficient*charged*faceValue) + changed*premium)/price)/leverage]
-    $[reserved<availableBalance | reserved=0;
-        [
-            orderMargin+:reserved;
-            :1b;
-        ];
-        [:0b;]
-    ];
-
-    };
-
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
 NewOrder       : {[order;time];
     events:();
-    $[.order.ValidateOrder[order];
-        [];
-        []
-    ];
-    orderid: 0
-    events,: reserveOrderMargin(); // TODO add extra id reference
-    addNewOffset[price];
-    addNewSize[size];
-    `.schema.Order insert ();
-    events,:.global.MakeOrderEvent[];
+    / $[not .order.ValidateOrder[order];events,:MakeFailure[]];
+    
+    // TODO kind agnostic
+    addNewOffset[order[`price]];
+    addNewSize[order[`size]];
+    `order.Order upsert order;
     :events;
     };
 
@@ -195,10 +162,7 @@ UpdateOrder    : {[order;time]
 
 RemoveOrder    : {[orderId;time]
     events:();
-    $[.order.ValidateOrder[order];
-        [];
-        []
-    ]; 
+    delete from `order.Order where orderId=orderId;
     :events;
     };
 
