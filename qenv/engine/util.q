@@ -16,10 +16,10 @@ CntToMrg    : {[qty;price;faceValue;doAbs]
 
 // Todo move to schema/event
 MakeEvent   : {[time;cmd;kind;datum]
-        if[not (type time)=-15h; :0b]; //
-        if[not (cmd in EVENTCMD); :0b];
-        if[not (kind in EVENTKIND); :0b];
-        if[not (type datum)=99h; :0b]; // should error if not dictionary
+        $[not (type time)=-15h; :0b]; //
+        $[not (cmd in EVENTCMD); :0b];
+        $[not (kind in EVENTKIND); :0b];
+        $[not (type datum)=99h; :0b]; // should error if not dictionary
         / if[not] //validate datum 
         :`time`cmd`kind`datum!(time;cmd;kind;datum);
         };

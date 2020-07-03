@@ -1,6 +1,7 @@
+\d .order
 /*******************************************************
 / order related enumerations  
-ORDERSIDE      :   `BUY;`SELL;
+ORDERSIDE      :   `BUY`SELL;
 
 ORDERTYPE   :   (`MARKET;       / executed regardless of price
                 `LIMIT;         / executed only at required price
@@ -15,7 +16,7 @@ ORDERSTATUS :   (`NEW;          / begining of life cycle
                 `FILLED;        / fully filled
                 `FAILED;        / failed due to expiration etc
                 `UNTRIGGERED;
-                `TRIGGERED`;
+                `TRIGGERED;
                 `CANCELED);     / user or system cancel
 
 
@@ -31,37 +32,60 @@ orderMandatoryFields    :`accountId`side`otype`osize;
 Order: (
     [orderId        : `long$()]
     accountId       : `long$();
-    side            : `ORDERSIDE$();
-    otype           : `ORDERTYPE$();
-    timeinforce     : `TIMEINFORCE$();
+    side            : `.order.ORDERSIDE$();
+    otype           : `.order.ORDERTYPE$();
+    timeinforce     : `.order.TIMEINFORCE$();
     osize           : `long$(); / multiply by 100
     leaves          : `long$();
     filled          : `long$();
     limitprice      : `long$(); / multiply by 100
     stopprice       : `long$(); / multiply by 100
     effdate         : `long$(); / as YYYYMMDD
-    status          : `ORDERSTATUS$();
+    status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
-    trigger         : `STOPTRIGGER$();
-    execInst        : `EXECINST$();
-);
+    trigger         : `.order.STOPTRIGGER$();
+    execInst        : `.order.EXECINST$()
+    );
 
-ValidateOrder   : {[order]
+// Event creation utilities
+// -------------------------------------------------------------->
 
-}
+/ ValidateOrder   : {[order]
 
-MakeNewOrderEvent   :{[]
+/     }
 
-}
+/ MakeNewOrderEvent   :{[]
 
-MakeOrderUpdateEvent :{[]
+/     }
 
-}
+/ MakeOrderUpdateEvent :{[]
 
-MakeBatchOrderEvent   :{[]
+/     }
 
-}
+/ MakeBatchOrderEvent   :{[]
 
-MakeCancelAllOrdersEvent :{[]
+/     }
 
-}
+/ MakeCancelAllOrdersEvent :{[]
+
+/     }
+
+// Account CRUD Logic
+// -------------------------------------------------------------->
+
+// Generates a new account with default 
+// values and inserts it into the account 
+// table. // TODO gen events. // TODO change to event?
+NewAccount :{[accountId;marginType;positionType;time]
+    events:();
+    `.account.Account insert (accountId;0f;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f);
+    events,:MakeAccountUpdateEvent[accountId;time];
+    events,:.inventory.NewInventory[accountId;`LONG;time];
+    events,:.inventory.NewInventory[accountId;`SHORT;time];
+    events,:.inventory.NewInventory[accountId;`BOTH;time];
+    :events;
+    };
+
+
+// Account CRUD Logic
+// -------------------------------------------------------------->

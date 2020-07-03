@@ -22,7 +22,7 @@ testExecFill:{
     accr:exec from .account.Account where accountId=aid;
     posr:exec from .inventory.Inventory where inventoryId=pos[`inventoryId];
     .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
-    .qunit.assertEquals[accr[`balance]; 0.999; "Account record should be present and inserted"];
+    .qunit.assertEquals[accr[`balance]; 0.9998925; "Account record should be present and inserted"];
     };
 
 testApplyFill:{

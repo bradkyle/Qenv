@@ -64,6 +64,15 @@ NewAccount :{[accountId;marginType;positionType;time]
 // Deriving Cross and Isolated liquidation price
 // -------------------------------------------------------------->
 
+// TODO
+/ crossLiquidationPrice{[]0N};
+
+// TODO
+/ crossBankruptcyPrice{[]0N};
+
+// TODO
+/ isolatedLiquidationPrice{[]0N};
+
 // Fill and Position Related Logic
 // -------------------------------------------------------------->
 
@@ -186,7 +195,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
     / account[`tradeCount]+:1;
     / account[`tradeVolume]+:abs[fillQty];
     / account[`totalCommission]+:(cost%price);
-    // TODO pos margin, order margin, available, 
+    // TODO pos margin, order margin, available, liquidation price,
     // frozen, maintMargin, netLongPosition, netShortPosition, available, posMargin etc.
 
     `.account.Account upsert account;
@@ -234,7 +243,6 @@ ApplyFunding       :{[fundingRate;time] // TODO convert to cnt (cntPosMrg)
         shortFundingCost:shortFundingCost+(shortMargin*fundingRate),
         totalFundingCost:totalFundingCost+((longMargin*fundingRate)-(shortMargin*fundingRate))
         by accountId from `.account.Account;
-
     :MakeAllAccountsUpdatedEvents[time];
     };
 
@@ -252,6 +260,10 @@ Deposit  :{[deposited;time;accountId]
     :MakeAccountUpdateEvent[accountId;time];
     };
 
+
+// Checks that a given account has enough available balance to
+// withdraw a given amount and then executes a withdrawal
+// updating balance,withdrawCount and withdrawAmount
 Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
 
