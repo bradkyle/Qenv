@@ -123,7 +123,6 @@ processSideUpdate   :{[side;nxt]
         ];
         [updateQtys[side;nxt]]
     ];
-    
     };
 
 ProcessDepthUpdate  : {[time;asks;bids]
@@ -152,8 +151,8 @@ addLimitOrder       : {[order;time];
     addNewSize[size];
     `.schema.Order insert ();
     events,:.global.MakeOrderEvent[];
-    :events
-};
+    :events;
+    };
 
 updateLimitOrder    : {[order;time]
     events:();
@@ -161,7 +160,7 @@ updateLimitOrder    : {[order;time]
         [];
         []
     ];
-};
+    };
 
 removeLimitOrder    : {[orderId;time]
     events:();
@@ -170,7 +169,7 @@ removeLimitOrder    : {[orderId;time]
         []
     ]; 
     :events;
-};
+    };
 
 
 // Market Order and Trade Logic
@@ -357,14 +356,14 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
 processCross     :{[events;side;leaves;isAgent;accountId] 
     while [leaves < getAvailableQty[side] & leaves>0;events,:fillTrade[side;leaves;event]];
     :events;
-};
+    };
 
 // Processes a trade that was not made by an agent
 // i.e. it was derived from an exchange data stream.
 ProcessTrade  : {[side;size;price;time]
     // TODO price invariant?
     :processCross[();side;size;0b;0N];
-};
+    };
 
 
 // Limit Order PlaceMent Logic
