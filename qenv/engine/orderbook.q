@@ -205,7 +205,15 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                     // be filled.
                     $[isAgent;
                         // If the market order was placed by an agent.
-                        events,: .account.ApplyFill[]
+                        events,:.account.ApplyFill[
+                            qty,
+                            price;
+                            side;
+                            time;
+                            isClose;
+                            0b; // not isMaker
+                            accountId
+                        ];
                         / .orderbook.OrderBook[negSide][`qtys][price] -:qty; TODO assign
                     ];
                     events,:.orderbook.MakeTradeEvent[time;side;qty;price];
@@ -233,7 +241,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                 negSide;
                                 time;
                                 nextAgentOrder[`isClose];
-                                1b;
+                                1b; // not isMaker
                                 nextAgentOrder[`accountId]
                             ];
 
@@ -248,7 +256,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                     side;
                                     time;
                                     isClose;
-                                    0b;
+                                    0b; // not isMaker
                                     accountId
                                 ];
                             ];
@@ -268,7 +276,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                 negSide;
                                 time;
                                 nextAgentOrder[`isClose];
-                                1b;
+                                1b; // isMaker
                                 nextAgentOrder[`accountId]
                             ];
 
@@ -283,7 +291,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                     side;
                                     time;
                                     isClose;
-                                    0b;
+                                    0b; // not isMaker
                                     accountId
                                 ];
                             ];
@@ -309,7 +317,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                     side;
                                     time;
                                     isClose;
-                                    0b;
+                                    0b; // not isMaker
                                     accountId
                             ];
                             qty:0;
@@ -317,12 +325,12 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                             removeQty[negSide;price];
                             events,:.orderbook.MakeTradeEvent[]; // TODO
                             events,:.account.ApplyFill[
-                                    qty,
+                                    bestQty,
                                     price;
                                     side;
                                     time;
                                     isClose;
-                                    0b;
+                                    0b; // not isMaker
                                     accountId
                             ]; // TODO
                             qty-:bestQty;
