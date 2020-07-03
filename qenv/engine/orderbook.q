@@ -11,13 +11,12 @@ OrderBook:`BUY`SELL!(Bids;Asks);
 
 MakeDepthUpdateEvent :{[]
     :();
-    }
+    };
 
 
 MakeTradeEvent  :{[]
-
-        :MakeEvent[];
-};
+    :();
+    };
 
 // Orderbook Utilities
 // -------------------------------------------------------------->
@@ -43,7 +42,7 @@ clip :{[x](x>0)*abs x}; // TODO move to util
 
 // Converts a list of lists into a equidimensional
 // i.e. equal dimensional matrix
-padm  :{[x]:x,'(max[c]-c:count each x)#'0}[x]
+padm  :{[x]:x,'(max[c]-c:count each x)#'0}
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -237,8 +236,8 @@ fillTrade   :{[side;qty;time;isAgent;agentId]
                 ]];
             ];
     ];
-    :qty events;       
-};
+    :events;       
+    };
 
 
 // Limit Order Logic
