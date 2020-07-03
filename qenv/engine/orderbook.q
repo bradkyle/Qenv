@@ -14,6 +14,11 @@ MakeDepthUpdateEvent :{[]
     }
 
 
+MakeTradeEvent  :{[]
+
+        :MakeEvent[];
+};
+
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
@@ -31,6 +36,14 @@ updateSizes  : {[side;nxt].[`.orderbook.OrderBook;side,`agentSizes;,;nxt]};
 
 // Sets the order qtys on a given side to the target
 getOrders  : {[side]:.orderbook.OrderBook[side][`agentOrders]};
+
+// Sets all values to 0 in list or matrix
+// where value is less than zero (negative)
+clip :{[x](x>0)*abs x}; // TODO move to util
+
+// Converts a list of lists into a equidimensional
+// i.e. equal dimensional matrix
+padm  :{[x]:x,'(max[c]-c:count each x)#'0}[x]
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -65,33 +78,36 @@ processSideUpdate   :{[side;nxt]
             // Remove all levels that aren't supposed to change
             dlt:where[dlt<>0]#dlt;
             
-            // C
+            // If the orderbook contains agent limit orders then
+            // update the current offsets.
             $[((count dlt)>0 & (count getOrders[side])); // TODO check
             [
                 numLvls:count qtys;
-                maxNumUpdates: 0;
-                offsets: getOffsets[side]; // TODO padding
-                sizes: getSizes[side]; // TODO padding
+                offsets: padm[getOffsetQtys[side]]; // TODO padding
+                sizes: padm[getSizes[side]]; // TODO padding
+                maxNumUpdates: max count flip offsets;
 
                 / Calculate the shifted offsets, which infers
                 / the amount of space between each offset
                 shft: sizes + offsets;
+                lshft: shft[;count shft];
+                lpad: maxNumUpdates+1;
 
                 / Initialize non agent quantities matrix
                 / The first column is set to the first lvl_offset
                 / The last column is set to the size of the level minus the size of the last offset + order size
                 / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
-                nonAgentQtys: (numLvls, maxNumUpdates+1)#0;
+                nonAgentQtys: (numLvls, lpad)#0;
                 nonAgentQtys[;0]: offsets[;0];
-                nonAgentQtys[;1:maxNumUpdates]: (offsets[;1] - shft[;-1]); //TODO clip etc
-                nonAgentQtys[;-1]:(qtys - shft[;-1]) // TODO clip etc.
+                nonAgentQtys[;1+til maxNumUpdates]: clip[(offsets[;1] - lshft)]; //TODO clip etc
+                nonAgentQtys[;lpad]:clip[qtys - lshft]; // TODO clip etc.
 
                 lvlNonAgentQtys: sum flip nonAgentQtys;
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
-                newOffsets: (offsets + derivedDeltas) // TODO clip etc
+                newOffsets: clip[offsets + derivedDeltas] // TODO clip etc
                 updateOffsets[side;newOffsets];
             ];
             [updateQtys[side;nxt]]
@@ -109,9 +125,121 @@ ProcessDepthUpdate  : {[time;asks;bids]
     :MakeDepthEvent[;nextAsks;nextBids];
     };
 
-// Limit Order Logic
-// -------------------------------------------------------------->
 
 // Market Order and Trade Logic
 // -------------------------------------------------------------->
 
+// TODO increment occurance of self execution
+// Executes a given trade an updates the orderbook and accounts/inventory
+// accordingly;
+// if the orderbook has agent orders
+//      - trade will not execute an agent order
+//          - if the trade was made by an agent
+//      - trade will execute an agent order
+//          - if the trade was made by an agent
+//          - if the trade execution is larger than the agent order
+//          - if the trade execution is smaller than the agent order
+// if the orderbook does not have agent orders
+//      - if the trade was made by an agent
+//          - if the trade is larger than best size
+//          - if the trade is smaller than the best size
+//      - if the trade was not made by an agent
+fillTrade   :{[side;qty;time;isAgent;agentId]
+        events:();
+        price:0;
+        negSide: $[side=`SELL;`BUY;`SELL];
+        smallestOffset, smallestOffsetId :0;
+        hasAgentOrders:(count .schema.Order)>0;
+        $[hasAgentOrders;
+            [
+                // If the orderbook possesses agent orders
+                $[qty <= smallestOffset;[
+                    // If the quantity left to trade is less than the 
+                    // smallest agent offset i.e. not agent orders will
+                    // be filled.
+                    $[isAgent;
+                        // If the market order was placed by an agent.
+                        events,: .account.ApplyFill[]
+                        .orderbook.OrderBook[negSide][`qtys][price] -:qty;
+                    ];
+                    events,:.orderbook.MakeTradeEvent[time;side;qty;price];
+                    decrementOffsets[negSide, price; qty];
+                    qty:0;
+                ];[
+                
+                    qty-:smallestOffset;
+
+                    $[isAgent;
+                        // If the order was made by an agent the first level of
+                        // the orderbook should represent the change otherwise not
+                        // captured.
+                        .orderbook.OrderBook[negSide][`qtys][price] -:smallestOffset;
+                    ];
+                    // Make a trade event that represents the trade taking up the
+                    // offset space;
+                    events,:.orderbook.MakeTradeEvent[time;side;qty;price];
+                    nextAgentOrder: exec from .order.Order where id=smallestOffsetId;
+                    $[qty>=nextAgentOrder[`osize];
+                        [
+                            // If the quantity to be traded is greater than or
+                            // equal to the next agent order, fill the agent order
+                            // updating its state and subsequently removing it from
+                            // the local buffer, adding fill to account and creating
+                            // respective trade event. 
+                            events,:fillLimitOrder[nextAgentOrder[`id];time]; // TODO update
+                            events,:.account.ApplyFill[];
+                            events,:.orderbook.MakeTradeEvent[];
+                            qty-:nextAgentOrder[`size];
+                        ];
+                        [
+                            // If the quantity to be traded is less than the next agent
+                            // order, update it to partially filled and apply fills, 
+                            // make trade events etc.
+                            events,:updateLimitOrder[nextAgentOrder[`id]; abs(nextAgentOrder[`osize]-qty);time]; // TODO update
+                            events,:.account.ApplyFill[
+                                qty;
+                                price;
+                                negSide;
+                                time;
+                                nextAgentOrder[`onlyClose];
+                                1b;
+                                nextAgentOrder[`accountId]
+                            ]; // TODO
+                            events,:.orderbook.MakeTradeEvent[];
+                            qty:0;
+                        ];
+                    ];
+                ]];
+            ];
+            [
+                // If the orderbook does not currently possess agent orders.
+                $[isAgent;[
+                    // If the order was placed by an agent.
+                    bestQty: .orderbook.OrderBook[negSide][`qtys][price];
+                    $[qty<=bestQty;[
+                        .orderbook.OrderBook[negSide][`qtys][price] -:qty; // TODO update lvl qty
+                        events,: .orderbook.MakeTradeEvent[];
+                        events,: .account.ApplyFill[];
+                        qty:0;
+                    ];[
+                        delete .orderbook.OrderBook[negSide][`qtys][price];
+                        events,:.orderbook.MakeTradeEvent[]; // TODO
+                        events,:.account.ApplyFill[]; // TODO
+                        qty-:bestQty;
+                    ]]
+                ];[
+                    // Considering the orderbook updates already 
+                    // represent the change due to trades, simply
+                    // make a trade event and revert the qty to be 
+                    // traded.
+                    events,:.orderbook.MakeTradeEvent[];
+                    qty:0;
+                ]];
+            ];
+    ];
+    :qty events;       
+};
+
+
+// Limit Order Logic
+// -------------------------------------------------------------->
