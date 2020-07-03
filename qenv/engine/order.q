@@ -43,6 +43,7 @@ Order: (
     effdate         : `long$(); / as YYYYMMDD
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
+    isClose         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$()
     );
@@ -50,9 +51,9 @@ Order: (
 // Event creation utilities
 // -------------------------------------------------------------->
 
-/ ValidateOrder   : {[order]
-
-/     }
+ValidateOrder   : {[order]
+    :0b;
+    }
 
 / MakeNewOrderEvent   :{[]
 
