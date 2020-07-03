@@ -137,9 +137,40 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
+reserveOrderMargin  : {[side;price;size;orderId;time]
+    // 
+    events:();
+    markPrice: 0;
+    faceValue: 0;
+    leverage:0;
+    $[side=`BUY & price>markPrice; 
+      premium:floor[(price-markPrice)*faceValue];
+      side=`SELL & price<markPrice;
+      premium:floor[(markPrice-price)*faceValue];
+      premium:0;
+    ];
+
+    $[side=`SELL & longOpenQty>sellOpenQty;
+     charged:max[size-(longOpenQty-sellOrderQty),0];
+     side=`BUY & shortOpenQty>buyOrderQty;
+     charged:max[size-(shortOpenQty-buyOrderQty),0];
+     charged:0;
+    ];
+    
+    reserved: floor[((charged + (initialMarginCoefficient*charged*faceValue) + changed*premium)/price)/leverage]
+    $[reserved<availableBalance | reserved=0;
+        [
+            orderMargin+:reserved;
+            :1b;
+        ];
+        [:0b;]
+    ];
+
+    };
+
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
-addLimitOrder       : {[order;time];
+NewOrder       : {[order;time];
     events:();
     $[.order.ValidateOrder[order];
         [];
@@ -154,7 +185,7 @@ addLimitOrder       : {[order;time];
     :events;
     };
 
-updateLimitOrder    : {[order;time]
+UpdateOrder    : {[order;time]
     events:();
     $[.order.ValidateOrder[order];
         [];
@@ -162,7 +193,7 @@ updateLimitOrder    : {[order;time]
     ];
     };
 
-removeLimitOrder    : {[orderId;time]
+RemoveOrder    : {[orderId;time]
     events:();
     $[.order.ValidateOrder[order];
         [];

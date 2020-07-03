@@ -321,9 +321,7 @@ class OrderBook():
         The reserved order margin for a given order.
         # TODO test and make sure this function is correct!!!
         """
-        return round(((charged + \
-            (self.account.initial_margin_coeficient * charged * self.face_value) + \
-            charged * premium)/price)/leverage, 8)
+        return round(((charged + (self.account.initial_margin_coeficient * charged * self.face_value) + charged * premium)/price)/leverage, 8)
 
     # TODO exec inst
     def reserve_order_margin(self, side, price, size, order_id, time):
