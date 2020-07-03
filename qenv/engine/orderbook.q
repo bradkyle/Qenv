@@ -214,7 +214,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                             0b; // not isMaker
                             accountId
                         ];
-                        / .orderbook.OrderBook[negSide][`qtys][price] -:qty; TODO assign
+                        decrementQty[negSide;price;qty]
                     ];
                     events,:.orderbook.MakeTradeEvent[time;side;qty;price];
                     decrementOffsets[negSide, price; qty];
