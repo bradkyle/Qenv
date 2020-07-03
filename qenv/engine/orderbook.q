@@ -27,8 +27,9 @@ updateQtys      : {[side;nxt].[`.orderbook.OrderBook;side,`qtys;,;nxt]};
 bestQty         : {[side]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
 getQtyByPrice   : {[side;price]x:getQtys[side];$[(count x)>0 & price in (key x);:x[price];0N]};
 decremetQty     : {[side;price;decqty]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-updateQty     : {[side;price;qty]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-removeQty     : {[side;price]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
+updateQty       : {[side;price;qty]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
+removeQty       : {[side;price]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
+getAvailableQty : {[side]:sum value getQtys[side]};
 / orderbook.OrderBook[negSide][`qtys][price] -:
 
 // Sets the order qtys on a given side to the target
@@ -214,13 +215,13 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                             0b; // not isMaker
                             accountId
                         ];
-                        decrementQty[negSide;price;qty]
+                        decrementQty[negSide;price;qty];
                     ];
                     events,:.orderbook.MakeTradeEvent[time;side;qty;price];
                     decrementOffsets[negSide, price; qty];
                     qty:0;
                 ];[
-                
+                    // 
                     qty-:smallestOffset;
 
                     // Make a trade event that represents the trade taking up the
@@ -353,8 +354,8 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-processCross     :{[events; side;leaves;isAgent;accountId] 
-    while [leaves < getAvailable[event.datum.side] & leaves>0;events,:fillTrade[side;leaves;event]];
+processCross     :{[events;side;leaves;isAgent;accountId] 
+    while [leaves < getAvailableQty[side] & leaves>0;events,:fillTrade[side;leaves;event]];
     :events;
 };
 
