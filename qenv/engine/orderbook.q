@@ -42,9 +42,6 @@ updateOffsets  : {[side;nxt].[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]};
 getSizes  : {[side]:.orderbook.OrderBook[side][`agentSizes]};
 updateSizes  : {[side;nxt].[`.orderbook.OrderBook;side,`agentSizes;,;nxt]};
 
-// Sets the order qtys on a given side to the target
-getOrders  : {[side]:.orderbook.OrderBook[side][`agentOrders]};
-
 // Sets all values to 0 in list or matrix
 // where value is less than zero (negative)
 clip :{[x](x>0)*abs x}; // TODO move to util
@@ -71,6 +68,7 @@ padm  :{[x]:x,'(max[c]-c:count each x)#'0}
 processSideUpdate   :{[side;nxt]
     / $[not (type nxt)=99h; :0b]; //
     / $[not (side in .order.ORDERSIDE); :0b];
+    // TODO prices cannot overlap
 
     // Retrieve the latest snapshot from the orderbook
     qtys:getQtys[side];
@@ -93,7 +91,7 @@ processSideUpdate   :{[side;nxt]
                 numLvls:count qtys;
                 offsets: padm[getOffsetQtys[side]]; // TODO padding
                 sizes: padm[getSizes[side]]; // TODO padding
-                maxNumUpdates: max count flip offsets;
+                maxNumUpdates: max count'[offsets];
 
                 / Calculate the shifted offsets, which infers
                 / the amount of space between each offset
@@ -110,7 +108,7 @@ processSideUpdate   :{[side;nxt]
                 nonAgentQtys[;1+til maxNumUpdates]: clip[(offsets[;1] - lshft)]; 
                 nonAgentQtys[;lpad]:clip[qtys - lshft]; 
 
-                lvlNonAgentQtys: sum flip nonAgentQtys;
+                lvlNonAgentQtys: sum'[nonAgentQtys];
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
                 // Update the new offsets to equal the last
@@ -131,7 +129,6 @@ ProcessDepthUpdate  : {[time;asks;bids]
     processSideUpdate[`BUY;event[`datum][`bids]];
     :MakeDepthEvent[nextAsks;nextBids];
     };
-
 
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->

@@ -1,36 +1,29 @@
 system "d .orderbookTest";
 \l orderbook.q
 
-/
-{
-    "Depth update with a single agent ask decreasing (delta less than offset)":{
-        "config": {
-            "tick_size": 0.5,
-            "current_sell_qtys":{},
-
-        },
-        "execute":[
-
-        ],
-        "expected": {
-
-        }
-    }
-}
-\
 
 // TODO more cases i.e. with agent orders etc.
-testProcessSideUpdate:{
-    side:`SELL;
-    qtys:100 100.5!100 100;
+testProcessSideUpdate:{ 
+        runCase: {[case]
+            $[count[case[`qtys]]>0;.orderbook.updateQtys[case[`side];case[`qtys]];0N];
+            / $[count[case[`orders]]>0;.orderbook.updateOrders[case[`side];case[`orders]];0N];
+            $[count[case[`offsets]]>0;.orderbook.updateOffsets[case[`side];case[`offsets]];0N];
+            $[count[case[`sizes]]>0;.orderbook.updateSizes[case[`sizes];case[`sizes]];0N];
 
-    res:.orderbook.processSideUpdate[side;qtys];
-    / .qunit.assertEquals[res; 1b; "Should return true"];
-    .qunit.assertEquals[.orderbook.getQtys[side]; qtys; "The orderbook should process"];
-    .qunit.assertEquals[.orderbook.getOffsets[side]; (); "There should be no offsets"];
+            res:.orderbook.processSideUpdate[case[`side];case[`updates]];
+            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
+            .qunit.assertEquals[.orderbook.getQtys[case[`side]]; case[`eqtys]; "qtys not expected"];
+            .qunit.assertEquals[.orderbook.getOffsets[case[`side]]; case[`eoffsets]; "offsets not expected"];
+            .qunit.assertEquals[.orderbook.getSizes[case[`side]]; case[`esizes]; "sizes not expected"];
+        };
+        caseCols:`caseId`side`updates`qtys`orders`offsets`sizes`eqtys`eorders`eoffsets`esizes`eresnum;
+        //simple ask update no agent orders or previous depth
+        runCase[caseCols!(1;`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
+        runCase[caseCols!(2;`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
     };
 
 testFillTrade:{
+    time: .z.z
     side:`SELL;
     qtys:100 100.5!100 100;
 
