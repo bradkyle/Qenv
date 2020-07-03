@@ -77,13 +77,10 @@ ValidateOrder   : {[order]
 // Generates a new account with default 
 // values and inserts it into the account 
 // table. // TODO gen events. // TODO change to event?
-NewAccount :{[accountId;marginType;positionType;time]
+NewOrder :{[accountId;time]
     events:();
-    `.account.Account insert (accountId;0f;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f);
-    events,:MakeAccountUpdateEvent[accountId;time];
-    events,:.inventory.NewInventory[accountId;`LONG;time];
-    events,:.inventory.NewInventory[accountId;`SHORT;time];
-    events,:.inventory.NewInventory[accountId;`BOTH;time];
+    `.order.Order insert (accountId;);
+    events,:MakeNewOrderEvent[];
     :events;
     };
 

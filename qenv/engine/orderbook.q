@@ -129,7 +129,7 @@ ProcessDepthUpdate  : {[time;asks;bids]
     // Derive the deltas for each level given the new update
     processSideUpdate[`SELL;event[`datum][`asks]];
     processSideUpdate[`BUY;event[`datum][`bids]];
-    :MakeDepthEvent[;nextAsks;nextBids];
+    :MakeDepthEvent[nextAsks;nextBids];
     };
 
 
@@ -144,7 +144,6 @@ addLimitOrder       : {[order;time];
         [];
         []
     ];
-    events:();
     orderid: 0
     events,: reserveOrderMargin(); // TODO add extra id reference
     addNewOffset[price];
@@ -365,6 +364,64 @@ ProcessTrade  : {[side;size;price;time]
     :processCross[();side;size;0b;0N];
     };
 
+//
+NewMarketOrder  :{[side;size;price;agentId;isClose]
+
+    };
 
 // Limit Order PlaceMent Logic
 // -------------------------------------------------------------->
+
+
+// TODO
+/ NewLimitOrder   :  {[event]
+/     events:(); // todo functional processing
+/     o: event[`datum];
+/     $[.schema.ValidateOrder[o];
+/         [
+/             $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
+/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+
+/             $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
+/                 [
+/                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
+/                         events,:.global.MakeFailureEvent[];
+/                         events,:processCross[
+/                         events;
+/                         event[`datum][`side];
+/                         event[`datum][`size];
+/                         1b;
+/                         event[`agentId]
+/                     ]]
+/                 ];
+/                 [events,:addLimitOrder[side;price;size;time;agentid;cmd]]
+/             ];
+/         ];
+/         [events,:.schema.MakeFailureEvent[]]
+/     ]
+/     :events;
+/     };
+
+/ AmendLimitOrder    :{[event]
+/     events:();
+/     events,:updateLimitOrder();
+/     :events;
+/     };
+
+/ CancelLimitOrder    :{[]
+/     events:();
+/     events,:removeLimitOrder();
+/     :events;
+/     };
+
+/ CancelLimitOrderBatch   :{[]
+/     events:();
+/     events,:CancelLimitOrder each orderIds
+/     };
+
+/ CancelAllLimitOrders    :{[]
+
+/     };
+
