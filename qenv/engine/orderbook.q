@@ -48,7 +48,11 @@ clip :{[x](x>0)*abs x}; // TODO move to util
 
 // Converts a list of lists into a equidimensional
 // i.e. equal dimensional matrix
-padm  :{[x]:x,'(max[c]-c:count each x)#'0}
+padm  :{[x]:x,'(max[c]-c:count each x)#'0};
+
+// Returns the opposite side to the side provided as an
+// argument
+negSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -189,7 +193,7 @@ removeLimitOrder    : {[orderId;time]
 fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
         events:();
         price:0;
-        negSide: $[side=`SELL;`BUY;`SELL];
+        nside: negSide[side];
         smallestOffset, smallestOffsetId :0;
         hasAgentOrders:(count .schema.Order)>0;
         $[hasAgentOrders;

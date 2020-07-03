@@ -35,7 +35,7 @@ Order: (
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
     timeinforce     : `.order.TIMEINFORCE$();
-    osize           : `long$(); / multiply by 100
+    size            : `long$(); / multiply by 100
     leaves          : `long$();
     filled          : `long$();
     limitprice      : `long$(); / multiply by 100
