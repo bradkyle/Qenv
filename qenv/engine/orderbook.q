@@ -99,15 +99,15 @@ processSideUpdate   :{[side;nxt]
                 / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
                 nonAgentQtys: (numLvls, lpad)#0;
                 nonAgentQtys[;0]: offsets[;0];
-                nonAgentQtys[;1+til maxNumUpdates]: clip[(offsets[;1] - lshft)]; //TODO clip etc
-                nonAgentQtys[;lpad]:clip[qtys - lshft]; // TODO clip etc.
+                nonAgentQtys[;1+til maxNumUpdates]: clip[(offsets[;1] - lshft)]; 
+                nonAgentQtys[;lpad]:clip[qtys - lshft]; 
 
                 lvlNonAgentQtys: sum flip nonAgentQtys;
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
-                newOffsets: clip[offsets + derivedDeltas] // TODO clip etc
+                newOffsets: clip[offsets + derivedDeltas];
                 updateOffsets[side;newOffsets];
             ];
             [updateQtys[side;nxt]]
