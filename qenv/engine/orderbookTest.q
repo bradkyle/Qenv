@@ -38,6 +38,25 @@ testGetAvailableQty :{
 /*******************************************************
 / Offsets
 
+testGetOffsets  :{
+
+    };
+
+testAddNewOffset    :{
+
+    };
+
+testGenNewOffset    :{
+
+    };
+
+testUpdateOffsets   :{
+
+    }
+
+testDecrementOffsetsAtPrice :{
+
+    }
 
 /*******************************************************
 / Sizes

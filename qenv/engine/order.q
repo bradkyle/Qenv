@@ -129,7 +129,7 @@ getQtyAtPrice   : {[price]
     };
 
 // Removes a given amount (amt) from the quantity of a given price
-decremetQty     : {[side;price;amt]
+decremetQtyAtPrice  : {[side;price;amt]
     update qty:qty-amt from `.order.OrderBook;
     };
 
@@ -206,6 +206,10 @@ getSideCombinedQtys :{[]
     }
 
 getAllCombinedQtys :{[]
+
+    }
+
+getSpread       :{[]
 
     }
 
