@@ -6,7 +6,14 @@
 // qtys: represent the different level quantities at their given prices
 // offsets: represent the given offsets of a set of agent(s') orders 
 // sizes: represent the given order sizes of a set of agent(s') orders
-OrderBook:([price:`float$()]side:`.order.ORDERSIDE$();qty:`float$();offsets:();sizes:());
+OrderBook:(
+    [price:`float$()]
+    side:`.order.ORDERSIDE$(); 
+    qty:`float$();
+    offsets:(); // dictionary mapping the offsets to the ids of given limit orders
+    sizes:(); // dictionary mapping the sizes to the ids of given limit orders
+    stops:() // dictionary mapping given prices to the ids of stop orders
+    );
 
 MakeDepthUpdateEvent :{[]
     :();
@@ -21,30 +28,88 @@ MakeTradeEvent  :{[]
 // -------------------------------------------------------------->
 
 // Sets the order qtys on a given side to the target
-getQtys         : {[side]:exec qty by price from .orderbook.OrderBook where side=side};
-updateQtys      : {[side;nxt]:0};
+// ?[`OrderBook;(enlist(=;`side;enlist `SELL)); 0b; ()]
+
+/*******************************************************
+/ QTYS
+
+// Returns all the quantities for a given side
+// as a dictionary of price:qty 
+getQtys :{[side]
+    :exec qty by price from .orderbook.OrderBook where side=side
+    };
+
+// Update the qtys 
+updateQtys      : {[side;nxt]
+    .[`.orderbook.OrderBook;side,`qtys;,;nxt]
+    };
+
+// Return the qty at the best price from the orderbook
+bestQty         : {[side]:
+    exec min price from .orderbook.OrderBook where side=side;
+    };
+
+// Get the quantity that exists at a given price 
+getQtyAtPrice   : {[price]
+    :.orderbook.OrderBook[price;`qty]
+    };
+
+// Removes a given amount (amt) from the quantity of a given price
+decremetQty     : {[side;price;amt]
+    update qty:qty-amt from `.orderbook.OrderBook;
+    };
+
+updateQty       : {[side;price;qty]
+    x:getQtys[side];$[(count x)>0;:x[min key x];0N]
+    };
+
+getAvailableQty : {[side]
+    :exec sum qty from .orderbook.OrderBook where side=`side;
+    };
+
+/*******************************************************
+/ Offsets
+
+// returns the set of offsets along with their corresponding orderids
+// for a given side
+getOffsets  : {[side]
+    :select offsets by price from .orderbook.OrderBook where side=side;
+    };
+
+// 
+addNewOffset  : {[side;price;offset;orderId]
+    .[`.orderbook.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]
+    };
 
 
-updateQtys      : {[side;nxt].[`.orderbook.OrderBook;side,`qtys;,;nxt]};
-bestQty         : {[side]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-getQtyByPrice   : {[side;price]x:getQtys[side];$[(count x)>0 & price in (key x);:x[price];0N]};
-decremetQty     : {[side;price;decqty]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-updateQty       : {[side;price;qty]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-removeQty       : {[side;price]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
-getAvailableQty : {[side]:sum value getQtys[side]};
-/ orderbook.OrderBook[negSide][`qtys][price] -:
+genNewOffset  : {[side;price]
+    :addNewOffset[side;price;getQtyByPrice[side;price]]
+    };
+
+
+updateOffsets  : {[side;nxt]
+    .[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]
+    };
+
+decrementOffsetsAtPrice : {[price]
+
+    };
+
+/*******************************************************
+/ Sizes
 
 // Sets the order qtys on a given side to the target
-getOffsets  : {[side]:.orderbook.OrderBook[side][`agentOffsets]};
-addNewOffset  : {[side;price;offset;orderId].[`.orderbook.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]};
-genNewOffset  : {[side;price]:addNewOffset[side;price;getQtyByPrice[side;price]]};
-updateOffsets  : {[side;nxt].[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]};
-/ decrementOffsets    :{[side;price;qty] .schema.OrderBook[side][`agentOffsets][price][;1]-:qty}; // TODO test
+getSizes  : {[side]
+    :.orderbook.OrderBook[side][`agentSizes]
+    };
+    
+addNewSize  : {[side;price;size]
+    :[`.orderbook.OrderBook;side,`agentSizes,price;,;size]
+    };
 
-// Sets the order qtys on a given side to the target
-getSizes  : {[side]:.orderbook.OrderBook[side][`agentSizes]};
-addNewSize  : {[side;price;size]:[`.orderbook.OrderBook;side,`agentSizes,price;,;size]};
-updateSizes  : {[side;nxt].[`.orderbook.OrderBook;side,`agentSizes;,;nxt]};
+updateSizes  : {[side;nxt]
+    .[`.orderbook.OrderBook;side,`agentSizes;,;nxt]
+    };
 
 newLvl{[price;side;qty;offsets;sizes]
     l:lvlCols!()
@@ -199,9 +264,9 @@ RemoveOrder    : {[orderId;time]
 //      - if the trade was not made by an agent
 fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
         events:();
-        price:0;
-        nside: negSide[side];
-        smallestOffset, smallestOffsetId :0;
+        nside: NegSide[side];
+        price:getBestPrice[nside];
+        smallestOffset, smallestOffsetId : getSmallestOffset[nside];
         hasAgentOrders:(count .schema.Order)>0;
         $[hasAgentOrders;
             [
@@ -433,3 +498,4 @@ NewMarketOrder  :{[side;size;price;agentId;isClose]
 
 /     };
 
+/ Update Market Orders
