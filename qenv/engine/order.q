@@ -119,7 +119,7 @@ updateQtys      : {[side;nxt]
     };
 
 // Return the qty at the best price from the orderbook
-bestQty         : {[side]:
+getBestQty         : {[side]:
     exec min price from .order.OrderBook where side=side;
     };
 
@@ -547,9 +547,9 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                 // If the orderbook does not currently possess agent orders.
                 $[isAgent;[
                     // If the order was placed by an agent.
-                    bestQty: getQtyByPrice[negSide;price];
-                    $[bestQty>0;
-                        $[qty<=bestQty;[
+                    getBestQty: getQtyByPrice[negSide;price];
+                    $[getBestQty>0;
+                        $[qty<=getBestQty;[
                             updateQty[qty]; // TODO update lvl qty
                             events,: .order.MakeTradeEvent[];
                             events,:.account.ApplyFill[
@@ -566,7 +566,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                             removeQty[negSide;price];
                             events,:.order.MakeTradeEvent[]; // TODO
                             events,:.account.ApplyFill[
-                                    bestQty,
+                                    getBestQty,
                                     price;
                                     side;
                                     time;
@@ -574,7 +574,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                     0b; // not isMaker
                                     accountId
                             ]; // TODO
-                            qty-:bestQty;
+                            qty-:getBestQty;
                         ]]
                         [:0N]
                     ];
