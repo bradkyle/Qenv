@@ -1,6 +1,78 @@
-\l order.q
-\d .orderbook
+\d .order
 \l util.q
+
+// Order
+// =====================================================================================>
+/*******************************************************
+/ order related enumerations  
+ORDERSIDE      :   `BUY`SELL;
+
+ORDERTYPE   :   (`MARKET;       / executed regardless of price
+                `LIMIT;         / executed only at required price
+                `STOP_MARKET;   / executed as market order once stop price reached
+                `STOP_LIMIT;
+                `REMAINDERLIMIT;
+                `PEGGED);   / executed as limit order once stop price reached
+//TODO trailing stop order
+
+ORDERSTATUS :   (`NEW;          / begining of life cycle
+                `PARTIALFILLED; / partially filled
+                `FILLED;        / fully filled
+                `FAILED;        / failed due to expiration etc
+                `UNTRIGGERED;
+                `TRIGGERED;
+                `CANCELED);     / user or system cancel
+
+
+TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90days)
+                `IMMEDIATEORCANCEL; / fill immediately or cancel, allow partially fill
+                `FILLORKILL;        / fill immediately or cancel, full fill only 
+                `NIL);
+
+STOPTRIGGER :   `LIMIT`MARK`INDEX; 
+EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;   
+
+ordFields  :(`orderId`accountId`side`otype`timeinforce,
+            `size`leaves`filled`limitprice`stopprice,
+            `effdate`status`time`isClose`trigger`execInst);    
+orderMandatoryFields    :`accountId`side`otype`size;
+Order: (
+    [orderId        : `long$()]
+    accountId       : `long$();
+    side            : `.order.ORDERSIDE$();
+    otype           : `.order.ORDERTYPE$();
+    timeinforce     : `.order.TIMEINFORCE$();
+    size            : `long$(); / multiply by 100
+    leaves          : `long$();
+    filled          : `long$();
+    limitprice      : `long$(); / multiply by 100
+    stopprice       : `long$(); / multiply by 100
+    status          : `.order.ORDERSTATUS$();
+    time            : `datetime$();
+    isClose         : `boolean$();
+    trigger         : `.order.STOPTRIGGER$();
+    execInst        : `.order.EXECINST$()
+    );
+
+MakeNewOrderEvent   :{[]
+
+    }
+
+MakeOrderUpdateEvent :{[]
+
+    }
+
+MakeBatchOrderEvent   :{[]
+
+    }
+
+MakeCancelAllOrdersEvent :{[]
+
+    }
+
+
+// OrderBook
+// =====================================================================================>
 
 // Instantiate a singleton class of Orderbook
 // qtys: represent the different level quantities at their given prices
@@ -36,27 +108,27 @@ MakeTradeEvent  :{[]
 // Returns all the quantities for a given side
 // as a dictionary of price:qty 
 getQtys :{[side]
-    :exec qty by price from .orderbook.OrderBook where side=side
+    :exec qty by price from .order.OrderBook where side=side
     };
 
 // Update the qtys 
 updateQtys      : {[side;nxt]
-    .[`.orderbook.OrderBook;side,`qtys;,;nxt]
+    .[`.order.OrderBook;side,`qtys;,;nxt]
     };
 
 // Return the qty at the best price from the orderbook
 bestQty         : {[side]:
-    exec min price from .orderbook.OrderBook where side=side;
+    exec min price from .order.OrderBook where side=side;
     };
 
 // Get the quantity that exists at a given price 
 getQtyAtPrice   : {[price]
-    :.orderbook.OrderBook[price;`qty]
+    :.order.OrderBook[price;`qty]
     };
 
 // Removes a given amount (amt) from the quantity of a given price
 decremetQty     : {[side;price;amt]
-    update qty:qty-amt from `.orderbook.OrderBook;
+    update qty:qty-amt from `.order.OrderBook;
     };
 
 updateQty       : {[side;price;qty]
@@ -64,7 +136,7 @@ updateQty       : {[side;price;qty]
     };
 
 getAvailableQty : {[side]
-    :exec sum qty from .orderbook.OrderBook where side=`side;
+    :exec sum qty from .order.OrderBook where side=`side;
     };
 
 /*******************************************************
@@ -73,24 +145,26 @@ getAvailableQty : {[side]
 // returns the set of offsets along with their corresponding orderids
 // for a given side
 getOffsets  : {[side]
-    :select offsets by price from .orderbook.OrderBook where side=side;
+    :select offsets by price from .order.OrderBook where side=side;
     };
 
-// 
+// creates a new offset of a given size for a given order id at a given price
 addNewOffset  : {[side;price;offset;orderId]
-    .[`.orderbook.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]
+    .[`.order.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]
     };
 
-
-genNewOffset  : {[side;price]
-    :addNewOffset[side;price;getQtyByPrice[side;price]]
+// Creates a new offset for a given order and price whilst deriving the offset
+// itself from the current qty at the given price.
+genNewOffset  : {[side;price;orderId]
+    :addNewOffset[side;price;getQtyByPrice[side;price];orderId]
     };
 
-
+// Updates all the offsets of a given side
 updateOffsets  : {[side;nxt]
-    .[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]
+    .[`.order.OrderBook;side,`agentOffsets;,;nxt]
     };
 
+// Removes a given amount from each offset at a given price
 decrementOffsetsAtPrice : {[price]
 
     };
@@ -98,24 +172,40 @@ decrementOffsetsAtPrice : {[price]
 /*******************************************************
 / Sizes
 
-// Sets the order qtys on a given side to the target
+// Returns all the sizes of agent orders at a given price
 getSizes  : {[side]
-    :.orderbook.OrderBook[side][`agentSizes]
+    :.order.OrderBook[side][`agentSizes]
     };
-    
+
+// Adds a new qty for a given agent size at a specified price
 addNewSize  : {[side;price;size]
-    :[`.orderbook.OrderBook;side,`agentSizes,price;,;size]
+    :[`.order.OrderBook;side,`agentSizes,price;,;size]
     };
 
+// 
 updateSizes  : {[side;nxt]
-    .[`.orderbook.OrderBook;side,`agentSizes;,;nxt]
+    .[`.order.OrderBook;side,`agentSizes;,;nxt]
     };
 
-newLvl{[price;side;qty;offsets;sizes]
-    l:lvlCols!()
-    lvl[`price]:price;
+newLvl  :{[price;side;qty;offsets;sizes]
+    :0N;
     }
 
+
+/*******************************************************
+/ Combined Representation
+
+getCombinedQtys :{[]
+
+    }
+
+getSideCombinedQtys :{[]
+
+    }
+
+getAllCombinedQtys :{[]
+
+    }
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -178,9 +268,14 @@ processSideUpdate   :{[side;nxt]
                 lvlNonAgentQtys: sum'[nonAgentQtys];
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
+                // TODO set new sizes as well 
+
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
                 newOffsets: clip[offsets + derivedDeltas];
+
+                // TODO combine offsets with offset ids
+
                 updateOffsets[side;newOffsets];
             ];
             [updateQtys[side;nxt]]
@@ -199,7 +294,6 @@ ProcessDepthUpdate  : {[time;asks;bids]
 
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
-
 
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
@@ -223,26 +317,99 @@ NewOrder       : {[o;accountId;time];
     o[`orderId]:0;
 
     // TODO add initial margin order margin logic etc.
+    $[o[`otype]=`LIMIT;
+        [
+            $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
+            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
 
-    // TODO kind agnostic
-    genNewOffset[o[`side];o[`price];o[`orderId]];
-    addNewSize[o[`side];o[`size];o[`price]];
-    `order.Order insert order;
+            $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
+                [
+                    $[`PARTICIPATEDONTINITIATE in o[`execInst];
+                        events,:.global.MakeFailureEvent[];
+                        events,:processCross[
+                        events;
+                        event[`datum][`side];
+                        event[`datum][`size];
+                        1b;
+                        event[`agentId]
+                    ]]
+                ];
+                [
+                    // add orderbook references
+                    genNewOffset[o[`side];o[`price];o[`orderId]];
+                    addNewSize[o[`side];o[`size];o[`price]];
+                    `order.Order insert order;
+                    events,:.order.MakeNewOrderEvent[];
+                ];
+            ];
+        ];
+      o[`otype]=`MARKET;
+        [
+            $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
+            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+
+            events,:processCross[
+                events;
+                event[`datum][`side];
+                event[`datum][`size];
+                1b;
+                event[`agentId]
+            ];
+        ];
+      o[`otype]=`STOP_MARKET;
+        [
+
+            `order.Order insert order;
+        ];
+      o[`otype]=`STOP_LIMIT;
+        [
+
+        ];
+    ];
     :events;
     };
 
-UpdateOrder    : {[order;time]
+updateOrder    : {[order;time]
     events:();
-    
+    if[null o[`side]; :`INVALID_SIDE];
+    if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
+    if[null o[`otype]; :`INVALID_ORDER_TYPE];
+    if[null o[`orderId]; :`INVALID_ORDER_TYPE];
+    if[null o[`accountId]; :`INVALID_ORDER_TYPE];
 
     };
 
-RemoveOrder    : {[orderId;time]
+removeOrder    : {[orderId;time]
     events:();
     delete from `order.Order where orderId=orderId;
     :events;
     };
 
+/ AmendLimitOrder    :{[event]
+/     events:();
+/     events,:updateLimitOrder();
+/     :events;
+/     };
+
+/ CancelLimitOrder    :{[]
+/     events:();
+/     events,:removeLimitOrder();
+/     :events;
+/     };
+
+/ CancelLimitOrderBatch   :{[]
+/     events:();
+/     events,:CancelLimitOrder each orderIds
+/     };
+
+/ CancelAllLimitOrders    :{[]
+
+/     };
+
+/ Update Market Orders
 
 // Market Order and Trade Logic
 // -------------------------------------------------------------->
@@ -288,7 +455,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                         ];
                         decrementQty[negSide;price;qty];
                     ];
-                    events,:.orderbook.MakeTradeEvent[time;side;qty;price];
+                    events,:.order.MakeTradeEvent[time;side;qty;price];
                     decrementOffsets[negSide, price; qty];
                     qty:0;
                 ];[
@@ -297,7 +464,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
 
                     // Make a trade event that represents the trade taking up the
                     // offset space;
-                    events,:.orderbook.MakeTradeEvent[time;side;qty;price];
+                    events,:.order.MakeTradeEvent[time;side;qty;price];
                     nextAgentOrder: exec from .order.Order where id=smallestOffsetId;
                     $[qty>=nextAgentOrder[`size];
                         [
@@ -333,7 +500,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                 ];
                             ];
 
-                            events,:.orderbook.MakeTradeEvent[];
+                            events,:.order.MakeTradeEvent[];
                             qty-:nextAgentOrder[`size];
                         ];
                         [
@@ -368,7 +535,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                                 ];
                             ];
 
-                            events,:.orderbook.MakeTradeEvent[];
+                            events,:.order.MakeTradeEvent[];
                             qty:0;
                         ];
                     ];
@@ -382,7 +549,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                     $[bestQty>0;
                         $[qty<=bestQty;[
                             updateQty[qty]; // TODO update lvl qty
-                            events,: .orderbook.MakeTradeEvent[];
+                            events,: .order.MakeTradeEvent[];
                             events,:.account.ApplyFill[
                                     qty,
                                     price;
@@ -395,7 +562,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                             qty:0;
                         ];[
                             removeQty[negSide;price];
-                            events,:.orderbook.MakeTradeEvent[]; // TODO
+                            events,:.order.MakeTradeEvent[]; // TODO
                             events,:.account.ApplyFill[
                                     bestQty,
                                     price;
@@ -414,7 +581,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
                     // represent the change due to trades, simply
                     // make a trade event and revert the qty to be 
                     // traded.
-                    events,:.orderbook.MakeTradeEvent[];
+                    events,:.order.MakeTradeEvent[];
                     qty:0;
                 ]];
             ];
@@ -425,7 +592,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-processCross     :{[events;side;leaves;isAgent;accountId] 
+processCross     :{[events;side;leaves;isAgent;accountId;isClose] 
     while [leaves < getAvailableQty[side] & leaves>0;events,:fillTrade[side;leaves;event]];
     :events;
     };
@@ -437,65 +604,9 @@ ProcessTrade  : {[side;size;price;time]
     :processCross[();side;size;0b;0N];
     };
 
-//
-NewMarketOrder  :{[side;size;price;agentId;isClose]
+// Updates the orderbook mark price and subsequently
+// checks if any stop orders or liquidations have
+// occurred as a result of the mark price change.
+UpdateMarkPrice : {[markPrice;time]
 
-    };
-
-// Limit Order PlaceMent Logic
-// -------------------------------------------------------------->
-
-
-// TODO
-/ NewLimitOrder   :  {[event]
-/     events:(); // todo functional processing
-/     o: event[`datum];
-/     $[.schema.ValidateOrder[o];
-/         [
-/             $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
-/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-/             $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-
-/             $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
-/                 [
-/                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
-/                         events,:.global.MakeFailureEvent[];
-/                         events,:processCross[
-/                         events;
-/                         event[`datum][`side];
-/                         event[`datum][`size];
-/                         1b;
-/                         event[`agentId]
-/                     ]]
-/                 ];
-/                 [events,:addLimitOrder[side;price;size;time;agentid;cmd]]
-/             ];
-/         ];
-/         [events,:.schema.MakeFailureEvent[]]
-/     ]
-/     :events;
-/     };
-
-/ AmendLimitOrder    :{[event]
-/     events:();
-/     events,:updateLimitOrder();
-/     :events;
-/     };
-
-/ CancelLimitOrder    :{[]
-/     events:();
-/     events,:removeLimitOrder();
-/     :events;
-/     };
-
-/ CancelLimitOrderBatch   :{[]
-/     events:();
-/     events,:CancelLimitOrder each orderIds
-/     };
-
-/ CancelAllLimitOrders    :{[]
-
-/     };
-
-/ Update Market Orders
+    }
