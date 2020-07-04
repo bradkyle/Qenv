@@ -21,7 +21,10 @@ MakeTradeEvent  :{[]
 // -------------------------------------------------------------->
 
 // Sets the order qtys on a given side to the target
-getQtys         : {[side]:.orderbook.OrderBook[side][`qtys]};
+getQtys         : {[side]:exec qty by price from .orderbook.OrderBook where side=side};
+updateQtys      : {[side;nxt]:0};
+
+
 updateQtys      : {[side;nxt].[`.orderbook.OrderBook;side,`qtys;,;nxt]};
 bestQty         : {[side]x:getQtys[side];$[(count x)>0;:x[min key x];0N]};
 getQtyByPrice   : {[side;price]x:getQtys[side];$[(count x)>0 & price in (key x);:x[price];0N]};
@@ -152,11 +155,12 @@ NewOrder       : {[o;accountId;time];
     o:default[o;`limitprice;0];
     o:default[o;`stopprice;0];
     o[`accountId]:accountId;
+    o[`orderId]:0;
 
     // TODO add initial margin order margin logic etc.
 
     // TODO kind agnostic
-    genNewOffset[o[`side];o[`price]];
+    genNewOffset[o[`side];o[`price];o[`orderId]];
     addNewSize[o[`side];o[`size];o[`price]];
     `order.Order insert order;
     :events;
@@ -164,10 +168,8 @@ NewOrder       : {[o;accountId;time];
 
 UpdateOrder    : {[order;time]
     events:();
-    $[.order.ValidateOrder[order];
-        [];
-        []
-    ];
+    
+
     };
 
 RemoveOrder    : {[orderId;time]
