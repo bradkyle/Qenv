@@ -615,5 +615,6 @@ ProcessTrade  : {[side;size;price;time]
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;time]
-    // TODO check for stop orders,
+    // TODO check for stop orders
+    // TODO check for liquidations
     }
