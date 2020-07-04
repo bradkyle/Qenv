@@ -28,9 +28,9 @@ TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90
 STOPTRIGGER :   `LIMIT`MARK`INDEX; 
 EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;   
 
-ordFields  :`orderId`accountId`side`otype`timeinforce
-            `size`leaves`filled`limitprice`stopprice
-            `effdate`status`time`isClose`trigger`execInst;    
+ordFields  :(`orderId`accountId`side`otype`timeinforce,
+            `size`leaves`filled`limitprice`stopprice,
+            `effdate`status`time`isClose`trigger`execInst);    
 orderMandatoryFields    :`accountId`side`otype`osize;
 Order: (
     [orderId        : `long$()]
@@ -43,7 +43,6 @@ Order: (
     filled          : `long$();
     limitprice      : `long$(); / multiply by 100
     stopprice       : `long$(); / multiply by 100
-    effdate         : `long$(); / as YYYYMMDD
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
     isClose         : `boolean$();

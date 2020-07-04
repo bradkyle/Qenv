@@ -1,6 +1,25 @@
 \l global.q
 
 
+// Sets all values to 0 in list or matrix
+// where value is less than zero (negative)
+Clip :{[x](x>0)*abs x}; // TODO move to util
+
+// Converts a list of lists into a equidimensional
+// i.e. equal dimensional matrix
+PadM  :{[x]:x,'(max[c]-c:count each x)#'0};
+
+// Returns the opposite side to the side provided as an
+// argument
+NegSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
+
+// If the value of key(f) of the datum/dict (d) is null then
+// set the value equal to the provided value (v) and return
+// the datum/dictionary (d)
+Default:{[d;f;v] if[null d[f];d[f]:v];:d;};
+
+
+
 // Converts a given amount of contracts into their
 // equivalent value in the given margin currency
 CntToMrg    : {[qty;price;faceValue;doAbs]

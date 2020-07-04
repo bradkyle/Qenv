@@ -1,14 +1,12 @@
 \l order.q
 \d .orderbook
 \l util.q
+
 // Instantiate a singleton class of Orderbook
 // qtys: represent the different level quantities at their given prices
-// agentOffsets: represent the given offsets of a set of agent(s') orders 
-// agentSizes: represent the given order sizes of a set of agent(s') orders
-// agentOrders: represent a batch of agent orders;
-Bids: `qtys`agentOffsets`agentSizes`agentOrders!()
-Asks: `qtys`agentOffsets`agentSizes`agentOrders!()
-OrderBook:`BUY`SELL!(Bids;Asks);
+// offsets: represent the given offsets of a set of agent(s') orders 
+// sizes: represent the given order sizes of a set of agent(s') orders
+OrderBook:([price:`float$()]side:`.order.ORDERSIDE$();qty:`float$();offsets:();sizes:());
 
 MakeDepthUpdateEvent :{[]
     :();
@@ -35,26 +33,21 @@ getAvailableQty : {[side]:sum value getQtys[side]};
 
 // Sets the order qtys on a given side to the target
 getOffsets  : {[side]:.orderbook.OrderBook[side][`agentOffsets]};
-addNewOffset  : {[side;price]:[`.orderbook.OrderBook;side,`agentOffsets,price;,;nxt]};
+addNewOffset  : {[side;price;offset;orderId].[`.orderbook.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]};
+genNewOffset  : {[side;price]:addNewOffset[side;price;getQtyByPrice[side;price]]};
 updateOffsets  : {[side;nxt].[`.orderbook.OrderBook;side,`agentOffsets;,;nxt]};
 / decrementOffsets    :{[side;price;qty] .schema.OrderBook[side][`agentOffsets][price][;1]-:qty}; // TODO test
 
 // Sets the order qtys on a given side to the target
 getSizes  : {[side]:.orderbook.OrderBook[side][`agentSizes]};
-addNewSize  : {[side;price]:[`.orderbook.OrderBook;side,`agentSizes,price;,;nxt]};
+addNewSize  : {[side;price;size]:[`.orderbook.OrderBook;side,`agentSizes,price;,;size]};
 updateSizes  : {[side;nxt].[`.orderbook.OrderBook;side,`agentSizes;,;nxt]};
 
-// Sets all values to 0 in list or matrix
-// where value is less than zero (negative)
-clip :{[x](x>0)*abs x}; // TODO move to util
+newLvl{[price;side;qty;offsets;sizes]
+    l:lvlCols!()
+    lvl[`price]:price;
+    }
 
-// Converts a list of lists into a equidimensional
-// i.e. equal dimensional matrix
-padm  :{[x]:x,'(max[c]-c:count each x)#'0};
-
-// Returns the opposite side to the side provided as an
-// argument
-negSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -139,16 +132,33 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
+
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
-NewOrder       : {[order;time];
+NewOrder       : {[o;accountId;time];
     events:();
-    / $[not .order.ValidateOrder[order];events,:MakeFailure[]];
     
+    if[null o[`side]; :`INVALID_SIDE];
+    if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
+    if[null o[`otype]; :`INVALID_ORDER_TYPE];
+
+    // TODO simplify
+    o:default[o;`leaves;0];
+    o:default[o;`isClose;0b];
+    o:default[o;`status;`NEW];
+    o:default[o;`time;time];
+    o:default[o;`trigger;0N];
+    o:default[o;`timeinforce;`GOODTILCANCEL];
+    o:default[o;`limitprice;0];
+    o:default[o;`stopprice;0];
+    o[`accountId]:accountId;
+
+    // TODO add initial margin order margin logic etc.
+
     // TODO kind agnostic
-    addNewOffset[order[`price]];
-    addNewSize[order[`size]];
-    `order.Order upsert order;
+    genNewOffset[o[`side];o[`price]];
+    addNewSize[o[`side];o[`size];o[`price]];
+    `order.Order insert order;
     :events;
     };
 
