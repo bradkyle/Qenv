@@ -59,7 +59,7 @@ getOpenPositions              :{[accountId]
 };
 
 getCurrentOrderLvlDist        :{[numAskLvls;numBidLvls]
-
+    
 };
 
 // Generates a set of events that represent
