@@ -100,6 +100,20 @@ FeatureBuffer: (
 
 InsertResultantEvents   :{[events]
 
+    k:event[`kind];
+    $[k=`DEPTH;
+    [];
+    k=`TRADE;
+    [];
+    k=`ACCOUNT_UPDATE;
+    [];
+    k=`ORDER_UPATE`NEW_ORDER;
+    [];
+    k=`ORDER_DELETED;
+    [];
+    k=`POSITION_UPDATE;
+    [];
+    ];
 };
 
 // Adapters
