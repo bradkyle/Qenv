@@ -1,6 +1,6 @@
-\d .utilTests
-\l qunit.q
-\l util.q
+/ system "d .inventoryTest";
+/ \l qunit.q
+/ \l instrument.q
 
 // TODO more cases i.e. with agent orders etc.
 / testProcessSideUpdate   :{ 
@@ -21,13 +21,3 @@
 /         runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
-
-
-testMakeEvent:{
-    aid:1;
-    time:.z.z;
-    event:MakeEvent[time;`NEW;`TRADE;((`side`size`price)!(`LONG;9;99f))];
-    show event
-    };
-
-\d .
