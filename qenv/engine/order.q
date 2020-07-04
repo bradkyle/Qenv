@@ -607,6 +607,7 @@ processCross     :{[events;side;leaves;isAgent;accountId;isClose]
 // i.e. it was derived from an exchange data stream.
 ProcessTrade  : {[side;size;price;time]
     // TODO price invariant?
+    // TODO check for limit stop orders.
     :processCross[();side;size;0b;0N];
     };
 
@@ -614,5 +615,5 @@ ProcessTrade  : {[side;size;price;time]
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;time]
-
+    // TODO check for stop orders,
     }
