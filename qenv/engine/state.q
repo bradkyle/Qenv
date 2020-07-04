@@ -19,6 +19,8 @@
 / outageMU            : `float$();
 / outageSigma         : `float$();
 
+// TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
+
 CurrentStep: 0;
 StepTime: .z.z;
 
