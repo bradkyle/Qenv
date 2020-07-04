@@ -1,8 +1,8 @@
 
+\l order.q
 \l engine.q
 \l schema.q
 \l util.q
-\l global.q
 
 / TODO config
 / rebalancefreq       : `long$();
@@ -14,15 +14,46 @@
 / totalSteps          : `long$();
 / rewardKind          : `.state.REWARDKIND$();
 / lookBackSize        : `long$();
+/ outageFreq          : `long$();
+/ outageMaxLength     : `long$();
+/ outageMinLength     : `long$();
+/ outageMU            : `float$();
+/ outageSigma         : `float$();
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 
-AccountEventHistory: ();
+// The following tables maintain a local state buffer 
+// representative of what the agent will see when
+// interacting with a live exchange. 
+AccountEventHistory: (
+    
+);
+
+// Maintains a historic and current record of the 
+// positions (Inventory) each agent has held and
+// subsequently provides agent specific details
+// therin
 InventoryEventHistory: ();
+
+// Maintains a historic and current record of orders
+// that the engine has produced.
 OrderEventHistory: ();
+
+// Maintains a historic record of depth snapshots
+// with the amount of levels stored dependent upon
+// the config for the specified exchange.
 DepthEventHistory: ();
-TradeEventHistory: ();
+
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+TradeEventHistory: (
+    size:   `float$();
+    price:  `float$();
+    side:   `.order.ORDERSIDE$();
+    time:   `datetime$();
+);
 
 // TODO batching + 
 
