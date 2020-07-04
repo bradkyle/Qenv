@@ -18,7 +18,7 @@ EVENTKIND    :  (`DEPTH;      / place a new order
                 `LEVERAGE_UPDATE;
                 `LIQUIDATION;
                 `ORDER_UPDATE;
-                `POSITION_UPDATE;
+                `INVENTORY_UPDATE;
                 `ACCOUNT_UPDATE;
                 `INSTRUMENT_UPDATE;
                 `FEATURE;

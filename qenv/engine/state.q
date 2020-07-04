@@ -101,18 +101,50 @@ FeatureBuffer: (
 InsertResultantEvents   :{[events]
 
     k:event[`kind];
-    $[k=`DEPTH;
-    [];
-    k=`TRADE;
-    [];
-    k=`ACCOUNT_UPDATE;
-    [];
-    k=`ORDER_UPATE`NEW_ORDER;
-    [];
-    k=`ORDER_DELETED;
-    [];
-    k=`POSITION_UPDATE;
-    [];
+    $[
+        k=`DEPTH;
+        [
+            `.state.DepthEventHistory insert ()
+        ];
+        k=`TRADE;
+        [
+            `state.TradeEventHistory insert ();
+        ];
+        k=`ACCOUNT_UPDATE;
+        [
+            // if account does not exsit
+            $[event[`datum][`accountId] in .state.AccountEventHistory;
+             [
+                update from `state.AccountEventHistory;
+             ];
+             [
+
+             ]
+            ];
+        ];
+        k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
+        [
+            $[event[`datum][`orderId] in .state.OrderEventHistory;
+                [
+                    update from `state.OrderEventHistory;
+                ];
+                [
+                    
+                ]
+            ];
+        ]; 
+        k=`INVENTORY_UPDATE;
+        [
+            $[event[`datum][`inventoryId] in .state.InventoryEventHistory;
+                [
+                   `.state.InventoryEventHistory insert ();
+                ];
+                [
+                    
+                ]
+            ];
+            
+        ];
     ];
 };
 
