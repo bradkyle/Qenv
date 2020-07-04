@@ -2,6 +2,7 @@
 
 \d .account
 \l util.q
+\l state.q
 
 / account related enumerations  
 MARGINTYPE      :   `CROSS`ISOLATED;
@@ -34,7 +35,7 @@ Account: (
             longFundingCost     : `float$();
             totalFundingCost    : `float$();
             activeMakerFee      : `float$();
-            activeTakerFee      : `float$()
+            activeTakerFee      : `float$();
         );
 
 // Event creation utilities

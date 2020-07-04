@@ -24,6 +24,7 @@ class MultiAgentEnv():
 
     def step(self):
         res = self._exec(".state.Step[("+";".join(["("+str(x)+";"+str(x*2)+")" for x in range(10)])+")]")
+        return ()
 
     def reset(self):
         res =  self._exec(".state.Reset[("+";".join(self.account_ids)+")]")

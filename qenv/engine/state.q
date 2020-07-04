@@ -4,6 +4,17 @@
 \l util.q
 \l global.q
 
+/ TODO config
+/ rebalancefreq       : `long$();
+/ maxBalanceRebalance : `long$();
+/ withrawFreq         : `long$();
+/ minBalanceWithdraw  : `long$();
+/ doneBalance         : `long$();
+/ maxNumSteps         : `long$();
+/ totalSteps          : `long$();
+/ rewardKind          : `.state.REWARDKIND$();
+/ lookBackSize        : `long$();
+
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 
@@ -35,6 +46,9 @@ ADAPTERTYPE :   (`MARKETMAKER;
                 `DUALBOX;          
                 `SIMPLEBOX;    
                 `DISCRETE);   
+
+REWARDKIND  :   (`SORTINO;
+                 `VANILLA);   
 
 
 // TODO move into state
@@ -494,6 +508,11 @@ advance :{[events;accountIds]
 
 // Main Callable functions
 // --------------------------------------------------->
+
+Config      :{[]
+
+
+}
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
