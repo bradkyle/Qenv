@@ -22,28 +22,58 @@
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
+// The lookback buffers attempt to build a realistic representation of what the
+// agent will percieve in a real exchange.
 
 // The following tables maintain a local state buffer 
 // representative of what the agent will see when
 // interacting with a live exchange. 
 AccountEventHistory: (
-    
+    [accountId          : `long$()]
+    balance             : `float$();
+    available           : `float$();
+    frozen              : `float$();
+    margin              : `float$()
 );
 
 // Maintains a historic and current record of the 
 // positions (Inventory) each agent has held and
 // subsequently provides agent specific details
 // therin
-InventoryEventHistory: ();
+InventoryEventHistory: (
+    accountId           :  `long$();
+    side                :  `.inventory.POSITIONSIDE$();
+    currentQty          :  `long$();
+    realizedPnl         :  `long$();
+    unrealizedPnl       :  `long$()
+);
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
-OrderEventHistory: ();
+OrderEventHistory: (
+    [orderId        : `long$()]
+    accountId       : `long$();
+    side            : `.order.ORDERSIDE$();
+    otype           : `.order.ORDERTYPE$();
+    leaves          : `long$();
+    filled          : `long$();
+    limitprice      : `long$(); / multiply by 100
+    stopprice       : `long$(); / multiply by 100
+    status          : `.order.ORDERSTATUS$();
+    time            : `datetime$();
+    isClose         : `boolean$();
+    trigger         : `.order.STOPTRIGGER$();
+    execInst        : `.order.EXECINST$()
+);
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
-// the config for the specified exchange.
-DepthEventHistory: ();
+// the config for the specified from the engine 
+// i.e. The depth has been directly affected by 
+// the agent.
+DepthEventHistory: (
+
+);
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
