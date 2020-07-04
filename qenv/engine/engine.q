@@ -1,3 +1,4 @@
+\l global.q
 
 /*******************************************************
 / Return code
@@ -25,7 +26,7 @@ Engine:(
     amendOrderOffsetMu          : `long$(); 
     amendBatchOffsetSigma       : `long$();
     commonOffset                : `long$(); 
-    eventCount                  : `long$();
+    eventCount                  : `long$()
     );
 
 / Utility Functions
@@ -33,25 +34,25 @@ Engine:(
 
 UpdateEngineProbs   :{[]
 
-}
+    };
 
 DeriveEngineProbs   :{[]
 
-}
+    };
 
 GetEngineInfo   : {
 
-    }
+    };
 
 ResetEngine     : {
 
-    }
+    };
 
 
 / Event Processing logic
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-eventEngine : (`EVENTKIND$()) ! ()
+eventEngine : (`.global.EVENTKIND$())!();
 
 eventEngine[`DEPTH] :   {[event]
     .logger.Debug["new depth"][event];
@@ -146,13 +147,11 @@ eventEngine[`AMEND_BATCH_ORDER] :   {[event]
 // with its respective processing logic above.
 ProcessSingleEvent : {[eventkind; event]
         :eventEngine [eventkind] [event];
-}
+    };
 
 // Processes a batch of events and matches
 // them with their respective processing 
 // logic above.
 ProcessEventBatch  : {[eventBatch]
-        
-
         :eventEngine [eventkind] [event] each eventBatch;
-}
+    };

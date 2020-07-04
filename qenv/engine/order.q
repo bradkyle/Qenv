@@ -36,6 +36,8 @@ ordFields  :(`orderId`accountId`side`otype`timeinforce,
             `size`leaves`filled`limitprice`stopprice,
             `effdate`status`time`isClose`trigger`execInst);    
 orderMandatoryFields    :`accountId`side`otype`size;
+
+
 Order: (
     [orderId        : `long$()]
     accountId       : `long$();

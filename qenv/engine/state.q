@@ -1,9 +1,8 @@
 
 \l order.q
 \l engine.q
-\l schema.q
 \l util.q
-
+\d .state
 / TODO config
 / rebalancefreq       : `long$();
 / maxBalanceRebalance : `long$();
@@ -20,6 +19,9 @@
 / outageMU            : `float$();
 / outageSigma         : `float$();
 
+CurrentStep: 0;
+StepTime: .z.z;
+
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
@@ -34,7 +36,7 @@ AccountEventHistory: (
     available           : `float$();
     frozen              : `float$();
     margin              : `float$()
-);
+    );
 
 // Maintains a historic and current record of the 
 // positions (Inventory) each agent has held and
@@ -46,25 +48,25 @@ InventoryEventHistory: (
     currentQty          :  `long$();
     realizedPnl         :  `long$();
     unrealizedPnl       :  `long$()
-);
+    );
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
 OrderEventHistory: (
-    [orderId        : `long$()]
-    accountId       : `long$();
-    side            : `.order.ORDERSIDE$();
-    otype           : `.order.ORDERTYPE$();
-    leaves          : `long$();
-    filled          : `long$();
-    limitprice      : `long$(); / multiply by 100
-    stopprice       : `long$(); / multiply by 100
-    status          : `.order.ORDERSTATUS$();
-    time            : `datetime$();
-    isClose         : `boolean$();
-    trigger         : `.order.STOPTRIGGER$();
-    execInst        : `.order.EXECINST$()
-);
+    [orderId        :   `long$()]
+    accountId       :   `long$();
+    side            :   `.order.ORDERSIDE$();
+    otype           :   `.order.ORDERTYPE$();
+    leaves          :   `long$();
+    filled          :   `long$();
+    limitprice      :   `long$(); / multiply by 100
+    stopprice       :   `long$(); / multiply by 100
+    status          :   `.order.ORDERSTATUS$();
+    time            :   `datetime$();
+    isClose         :   `boolean$();
+    trigger         :   `.order.STOPTRIGGER$();
+    execInst        :   `.order.EXECINST$()
+    );
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
@@ -72,18 +74,18 @@ OrderEventHistory: (
 // i.e. The depth has been directly affected by 
 // the agent.
 DepthEventHistory: (
-
-);
+    time            :   `datetime$()
+    );
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
 TradeEventHistory: (
-    size:   `float$();
-    price:  `float$();
-    side:   `.order.ORDERSIDE$();
-    time:   `datetime$();
-);
+    size            :   `float$();
+    price           :   `float$();
+    side            :   `.order.ORDERSIDE$();
+    time            :   `datetime$()
+    );
 
 // TODO batching + 
 
@@ -96,7 +98,7 @@ TradeEventHistory: (
 // than a single row can be done. 
 FeatureBuffer: (
 
-);
+    );
 
 InsertResultantEvents   :{[events]
 
@@ -120,7 +122,7 @@ InsertResultantEvents   :{[events]
              [
 
              ]
-            ];
+            ]
         ];
         k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
         [
@@ -131,7 +133,7 @@ InsertResultantEvents   :{[events]
                 [
                     
                 ]
-            ];
+            ]
         ]; 
         k=`INVENTORY_UPDATE;
         [
@@ -142,11 +144,11 @@ InsertResultantEvents   :{[events]
                 [
                     
                 ]
-            ];
+            ]
             
-        ];
+        ]
     ];
-};
+    };
 
 // Adapters
 // =====================================================================================>
@@ -175,17 +177,17 @@ environment agent state.
 // Event Creation Utilities
 // --------------------------------------------------->
 
-getPriceAtLevel               :{[level;side;]
+getPriceAtLevel               :{[level;side]
     // TODO
-};
+    };
 
 getOpenPositions              :{[accountId]
-    :select 
-};
+
+    };
 
 getCurrentOrderLvlDist        :{[numAskLvls;numBidLvls]
     
-};
+    };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
@@ -195,7 +197,7 @@ createOrderEventsAtLevel     :{[level;side;size;accountId]
     price: getPriceAtLevel[level;side];
     events,:.global.MakeOrderEvent[side;price;size];
     :events;
-};
+    };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
@@ -206,20 +208,20 @@ createOrderEventsByTargetDist :{[targetAskDist;targetBidDist]
     askDeltas: targetAskDist - currentDist[0];
     bidDeltas: targetBidDist - currentDist[1];
     
-};
+    };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
 createOrderEventsByLevelDeltas :{[lvlDeltas]
 
-};
+    };
 
 // Creates a simple market order event for the
 // respective agent
 createMarketOrderEvent      :{[]
 
-};
+    };
 
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
@@ -231,7 +233,7 @@ createFlattenEvents          :{[accountId]
     $[side=`SELL;`BUY;`SELL]
     abs currentQty
     events,:[]
-};  
+    };  
 
 // Creates an event that cancels all open orders for
 // a given agent.
@@ -239,32 +241,32 @@ createCancelAllOrdersEvent  :{[]
     events:();
     events,:.global.MakeCancelAllOrdersEvent[];
     :events;
-};
+    };
 
 createOrderEventsFromDist   :{[]
 
-};
+    };
 
 createMarketOrderEventsFromDist :{[]
 
-};
+    };
 
 createDepositEvent  :{[]
 
-};
+    };
 
 createWithdrawEvent  :{[]
 
-};
+    };
 
 createNaiveStopEvents  :{[]
 
-};
+    };
 
 
 // Action Adapters
 // --------------------------------------------------->
-adapters : (`ADAPTERTYPE$()) ! ()
+adapters : (`.state.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
 adapters[`DISCRETE]     :{[action;accountId]
@@ -272,7 +274,7 @@ adapters[`DISCRETE]     :{[action;accountId]
     penalty:0f;
     $[
         action=0;
-        [penalty+=.global.Encouragement]; // HOLD event agent does nothing
+        [penalty+:.global.Encouragement]; // HOLD event agent does nothing
         action=1;
         [
             res = createOrderEventsFromDist[0.05;`BUY];
@@ -305,22 +307,22 @@ adapters[`DISCRETE]     :{[action;accountId]
         ];
         [];
     ]
-};
+    };
 
 // SIMBLEBOX generates the set of actions that
 // will transition an agent with positions 
 // representing the current distribution
 // to the desired distribution.
-adapters[`SIMPLEBOX]  :{[action;accountId]
+/ adapters[`SIMPLEBOX]  :{[action;accountId]
     // TODO
-};
+    / };
 
 // DUALBOX adapter derives the set of actions
 // that would transition an agent from the 
 // current position to the desired one.
-adapters[`DUALBOX]      :{[action;accountId]
+/ adapters[`DUALBOX]      :{[action;accountId]
     // TODO
-};
+    / };
 
 // LVLDELTAS adapter derives the set of events
 // that will transition an agent from the 
@@ -329,9 +331,9 @@ adapters[`DUALBOX]      :{[action;accountId]
 // per lvl given the current state of the
 // agent and the level of aggregation, 
 // number of levels configured for agent.
-adapters[`LVLDELTAS]    :{[action;accountId]
+/ adapters[`LVLDELTAS]    :{[action;accountId]
     // TODO
-};
+    / };
 
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[action;accountId]
@@ -341,7 +343,7 @@ adapters[`MARKETMAKER]   :{[action;accountId]
     marketSize: 10;
     $[
         action=0;
-        [penalty+=.global.Encouragement]; // TODO derive config from account?
+        [penalty+:.global.Encouragement]; // TODO derive config from account?
         action=1;
         [
             res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
@@ -516,14 +518,14 @@ adapters[`MARKETMAKER]   :{[action;accountId]
             events,:res[0];
             penalty+: res[1];
         ]; // TODO add more
-        [] // TODO errors
+        [:0N] // TODO errors
     ];
-    :(events; penalty;)
-};
+    :(events; penalty)
+    };
 
 Adapt               :{[adapterType; action; accountId]
     :adapters[adapterType] [action;accountId];
-};
+    };
 
 // Exposed State Logic
 // =====================================================================================>
@@ -562,17 +564,17 @@ getFeatureVectors    :{[accountIds]
             value exec last amount, last average_entry_price, last leverage, last realised_pnl, last unrealised_pnl from positions where side=`short
         );
         // TODO count by account id
-        $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
+        / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
         // TODO fill forward + normalize
         :.ml.minmaxscaler[-100#.schema.FeatureBuffer];
-};
+    };
 
 // Returns the resultant rewards for a set of agent
 // ids based upon the configuration set i.e.
 // sortino ratio etc.
 getResultantRewards  :{[accountIds] // TODO apply given reward function by agent specified reward function.
     select deltas last amount by accountId, (`date$time) + 1 xbar `minute$time from account where time >= `minute$rewardLookbackMinutes // TODO make reward lookback minutes configurable
-};
+    };
 
 // Secondary state functions
 // --------------------------------------------------->
@@ -589,7 +591,7 @@ nextEvents   :{[step] // TODO changes in depth due to trades still persist only 
             select from .schema.SourceMarks where step=step; // returns the set of mark price updates that occur in the period
             select from .schema.SourceFundings where step=step; // returns the set of funding events that occur in the period
         );
-};
+    };
 
 // Derives a set of events that would constitute
 // the transition of state of the exchange BEFORE
@@ -597,11 +599,11 @@ nextEvents   :{[step] // TODO changes in depth due to trades still persist only 
 // Appending the actions to the events to be processed.
 derive  :{[actions;time]
     events: ();
-    events,: nextEvents[.global.CurrentStep]; // Utilizes a global variable to denote the current step.
+    events,: nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
     // sample a probability space of request time
     events,: .adapter.Adapt [] [accountId;action;time;meanWait;stdWait]; // TODO make work
     :events; //TODO implement penalty
-};
+    };
 
 
 // Inserts the step wise events recieved (back)
@@ -612,9 +614,9 @@ derive  :{[actions;time]
 advance :{[events;accountIds]
     InsertResultantEvents[events] // TODO try catch etc.
     featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
-    .global.CurrentStep+:1;
+    .state.CurrentStep+:1;
     :featureVectors;
-};
+    };
 
 
 // Main Callable functions
@@ -623,28 +625,28 @@ advance :{[events;accountIds]
 Config      :{[]
 
 
-}
+    };
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
 Info        :{[accountIds]
 
-};
+    };
 
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
 Reset       :{[accountIds] // TODO make into accountConfigs
     events:();
     // Reset public singletons
-    .global.CurrentStep:0; // TODO include buffer i.e. set current step to 10
-    .global.StepTime: exec from .schema.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
+    .state.CurrentStep:0; // TODO include buffer i.e. set current step to 10
+    .state.StepTime: exec from .schema.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
     
     // Derive the primary set of events derived from exchange
-    events,:nextEvents[.global.CurrentStep]; // TODO derive actual events from datums
+    events,:nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
     // TODO reset accounts inventory orders instrument
 
     :advance[events;accountIds];
-};
+    };
 
 // Carries out a step in the exchange environment
 // It generates a set of events for each action
@@ -677,4 +679,4 @@ Step    :{[actions]
     info: Info[accountIds];
 
     :(uj)over(obs;rewards;info);
-};
+    };
