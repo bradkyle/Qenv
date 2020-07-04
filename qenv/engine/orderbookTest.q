@@ -61,17 +61,47 @@ testDecrementOffsetsAtPrice :{
 /*******************************************************
 / Sizes
 
+testGetSizes    :{
 
+    };
+
+testAddNewSize  :{
+
+    };
+
+testUpdateSizes :{
+
+    };
+
+testNewLvl  :{
+
+    };
+    
 /*******************************************************
 / Combined Representation
 
+testGetCombinedQtys :{[]
+
+    };
+
+testGetSideCombinedQtys :{[]
+
+    };
+
+testGetAllCombinedQtys  :{
+
+    };
+
+testGetSpread   :{
+
+    };
 
 // Depth Update Logic
 // -------------------------------------------------------------->
 
 
 // TODO more cases i.e. with agent orders etc.
-testProcessSideUpdate:{ 
+testProcessSideUpdate   :{ 
         runCase: {[dscr; case]
             $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
             / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -94,7 +124,7 @@ testProcessSideUpdate:{
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
-testAddLimitOrder:{
+testAddLimitOrder   :{
     runCase:{[dscr;case]
         $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
         / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -114,7 +144,7 @@ testAddLimitOrder:{
 
     };
 
-testUpdateLimitOrder:{
+testUpdateLimitOrder    :{
     runCase:{[dscr;case]
         $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
         / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -134,7 +164,7 @@ testUpdateLimitOrder:{
 
     };
 
-testRemoveLimitOrder:{
+testRemoveLimitOrder    :{
 
     };
 
