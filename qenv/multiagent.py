@@ -2,9 +2,18 @@ from gym import Env, spaces
 from qpython import qconnection
 
 class MultiAgentEnv():
+    '''
+    A multi-agent environment consists of some number of Agents.
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
+    def _set_action_space(self):
+        pass
+
+    def _set_observation_space(self):
+        pass
 
     def _exec(self, qry):
         with qconnection.QConnection(
@@ -13,14 +22,8 @@ class MultiAgentEnv():
             pandas=False) as q:
             return q.sendSync(qry) 
 
-    def _set_action_space(self):
-        pass
-
-    def _set_observation_space(self):
-        pass
-
     def step(self):
-        pass
+        res = self._exec(".state.Step[]")
 
     def reset(self):
-        pass
+        res =  self._exec(".state.Reset[]")

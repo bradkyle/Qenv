@@ -525,6 +525,8 @@ Reset       :{[accountIds] // TODO make into accountConfigs
 // the next observations, rewards, done and info
 // for each agent
 Step    :{[actions]
+    // TODO format actions
+
     // TODO actions as a tuple of account id and action: derive account ids from actions.
     events:derive[actions];
 
