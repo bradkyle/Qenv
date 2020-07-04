@@ -19,6 +19,7 @@
 / outageMU            : `float$();
 / outageSigma         : `float$();
 
+// TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
 CurrentStep: 0;
@@ -98,7 +99,14 @@ TradeEventHistory: (
 // sorted by time for which normalization
 // and feature scaling that requires more
 // than a single row can be done. 
-FeatureBuffer: (
+FeatureBuffer   :(
+
+    );
+
+// The step buffer maintains a set of observation ids,
+// rewards, info etc for prioritized experience replay
+// diagnostics etc.
+StepBuffer  :(
 
     );
 
