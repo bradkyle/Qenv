@@ -23,7 +23,7 @@ class MultiAgentEnv():
             return q.sendSync(qry) 
 
     def step(self):
-        res = self._exec(".state.Step[]")
+        res = self._exec(".state.Step[("+";".join(["("+str(x)+";"+str(x*2)+")" for x in range(10)])+")]")
 
     def reset(self):
-        res =  self._exec(".state.Reset[]")
+        res =  self._exec(".state.Reset[("+";".join(self.account_ids)+")]")
