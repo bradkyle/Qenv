@@ -98,6 +98,10 @@ FeatureBuffer: (
 
 );
 
+InsertResultantEvents   :{[events]
+
+};
+
 // Adapters
 // =====================================================================================>
 
@@ -560,7 +564,7 @@ derive  :{[actions;time]
 // vector and resultant reward for each agent
 // participating in the environment.
 advance :{[events;accountIds]
-    .schema.InsertResultantEvents[events] // TODO try catch etc.
+    InsertResultantEvents[events] // TODO try catch etc.
     featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
     .global.CurrentStep+:1;
     :featureVectors;
