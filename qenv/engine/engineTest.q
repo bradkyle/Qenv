@@ -22,6 +22,34 @@ system "d .engineTest";
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
 
-testSetupEngine :{
+
+/ Main call/execution functions
+/ -------------------------------------------------------------------->
+
+testUpdateEngineProbs   :{
 
     };
+
+testResetEngine   :{
+
+    };
+
+testProcessSingleEvent  :{
+
+    };
+
+testPreProcessEventIngressBatch :{
+
+    };
+
+testPostProcessEventEgressBatch :{
+
+    };
+
+testProcessEventBatch :{
+
+    };
+
+testSetup :{
+
+    }

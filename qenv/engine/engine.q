@@ -26,28 +26,8 @@ Engine:(
     amendOrderOffsetMu          : `long$(); 
     amendBatchOffsetSigma       : `long$();
     commonOffset                : `long$(); 
-    eventCount                  : `long$()
+    eventCount                  : `long$();
     );
-
-/ Utility Functions
-/ -------------------------------------------------------------------->
-
-UpdateEngineProbs   :{[]
-
-    };
-
-DeriveEngineProbs   :{[]
-
-    };
-
-GetEngineInfo   : {
-
-    };
-
-ResetEngine     : {
-
-    };
-
 
 / Event Processing logic
 / -------------------------------------------------------------------->
@@ -143,10 +123,32 @@ eventEngine[`AMEND_BATCH_ORDER] :   {[event]
 / Main call/execution functions
 / -------------------------------------------------------------------->
 
+// Updates the configured engine probabilities
+// from which normal distributions on processing
+// time and return /outage probabilities are derived etc.
+UpdateEngineProbs   :{[]
+
+    };
+
+// Resets engine and its associated state to
+// the initial config set in Setup
+ResetEngine     : {
+
+    };
+
 // Processes a single event and matches it
 // with its respective processing logic above.
 ProcessSingleEvent : {[eventkind; event]
         :eventEngine [eventkind] [event];
+    };
+
+// 
+preprocessEventIngressBatch   :{[]
+
+    };
+
+preprocessEventEgressBatch     :{[]
+
     };
 
 // Processes a batch of events and matches
@@ -155,3 +157,9 @@ ProcessSingleEvent : {[eventkind; event]
 ProcessEventBatch  : {[eventBatch]
         :eventEngine [eventkind] [event] each eventBatch;
     };
+
+// Sets up the engine, active instrument and
+// sundary config which 
+Setup   :{[config]
+
+    }
