@@ -36,9 +36,16 @@ State  :(
         stepTime            : `datetime$();
         numFailures         : `long$();
         numAgentSteps       : `long$();
+        encouragement       : `float$();
     );
 
 
+// Source State Tables (State Origination and Derivation)
+// =====================================================================================>
+
+PrimaryStepInfo: (
+
+    );
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -488,7 +495,7 @@ derive  :{[actions;time]
 // vector and resultant reward for each agent
 // participating in the environment.
 advance :{[events;accountIds]
-    InsertResultantEvents[events] // TODO try catch etc.
+    InsertResultantEvents[events]; // TODO try catch etc.
     featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
     .state.CurrentStep+:1;
     :featureVectors;
@@ -515,7 +522,7 @@ Reset       :{[accountIds] // TODO make into accountConfigs
     events:();
     // Reset public singletons
     .state.CurrentStep:0; // TODO include buffer i.e. set current step to 10
-    .state.StepTime: exec from .schema.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
+    .state.StepTime: exec from .state.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
     
     // Derive the primary set of events derived from exchange
     events,:nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
