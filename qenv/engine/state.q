@@ -284,37 +284,17 @@ adapters[`DISCRETE]     :{[action;accountId]
     penalty:0f;
     $[
         action=0;
-        [penalty+:.global.Encouragement]; // HOLD event agent does nothing
+        [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()
         action=1;
-        [
-            res = createOrderEventsFromDist[0.05;`BUY];
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createOrderEventsFromDist[0.05;`BUY];
         action=2;
-        [
-            res = createOrderEventsFromDist[0.05;`SELL]; // indicative of 0.05 * max position i.e. 5%
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createOrderEventsFromDist[0.05;`SELL];
         action=3;
-        [
-            res = createMarketOrderEventsFromDist[0.05;`BUY];
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createMarketOrderEventsFromDist[0.05;`BUY];
         action=4;
-        [
-            res = createMarketOrderEventsFromDist[0.05;`SELL];
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createMarketOrderEventsFromDist[0.05;`SELL];
         action=5;
-        [
-            res = createFlattenEvents[];
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createFlattenEvents[];
         [];
     ]
     };
@@ -360,7 +340,7 @@ adapters[`MARKETMAKER]   :{[action;accountId]
     marketSize: 10;
     res: $[
         action=0;
-        [penalty+:.global.Encouragement]; // TODO derive config from account?
+        [:(();penalty+:.global.Encouragement)]; // TODO derive config from account?
         action=1;
         makerBuySell[];
         action=2;
@@ -404,7 +384,11 @@ adapters[`MARKETMAKER]   :{[action;accountId]
     :res;
     };
 
-Adapt               :{[adapterType; action; accountId]
+// Converts a scalar action representing a target state
+// to which the agent will effect a transition into
+// its representative amalgamation of events by way
+// of an adapter.
+Adapt :{[adapterType; action; accountId]
     :adapters[adapterType] [action;accountId];
     };
 
