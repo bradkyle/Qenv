@@ -41,14 +41,14 @@ testNewAccount:{
     accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
     expectedCols: `
 
-    runCase[
-        "long_to_longer";
-        accountCols!(500;);
-        inventoryCols!(`LONG;100;100;10000000;1000);
-        paramsCols!(100;1000;-0.00025); // flat maker fee
-        accountCols!(490.0025;);
-        inventoryCols!(`LONG;200;200;20000000;1000);
-    ];
+    / runCase[
+    /     "long_to_longer";
+    /     accountCols!(500;);
+    /     inventoryCols!(`LONG;100;100;10000000;1000);
+    /     paramsCols!(100;1000;-0.00025); // flat maker fee
+    /     accountCols!(490.0025;);
+    /     inventoryCols!(`LONG;200;200;20000000;1000);
+    / ];
     
 
     };

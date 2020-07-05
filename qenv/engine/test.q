@@ -1,16 +1,23 @@
 \c 500 550
 \l qunit.q
-\l accountTest.q 
-\l orderTest.q 
+
 \l utilTest.q
-\l inventoryTest.q
-\l stateTest.q 
-\l engineTest.q
-\l instrumentTest.q
 .qunit.runTests `.utilTest
+
+\l instrumentTest.q
 .qunit.runTests `.instrumentTest;
+
+\l accountTest.q 
 .qunit.runTests `.accountTest;
+
+\l inventoryTest.q
 .qunit.runTests `.inventoryTest;
+
+\l orderTest.q 
 .qunit.runTests `.orderTest;
+
+\l engineTest.q
 .qunit.runTests `.engineTest;
+
+\l stateTest.q 
 .qunit.runTests `.stateTest;

@@ -1,5 +1,7 @@
 \d .instrument
 
+instrumentCount:0;
+
 /*******************************************************
 / instrument enumerations
 MAINTTYPE           :   `TIERED`FLAT;
@@ -61,23 +63,46 @@ Instrument: (
     numForcedCancellations  : `long$()
     );
 
+mandCols:0;
+fltCols:0;
+lngCols:0; 
+
+// Event creation utilities
+// -------------------------------------------------------------->
+
+
+MakeMarkPriceUpdateEvent    :{[]
+
+    };
+
+MakeFundingEvent             :{[]
+
+    };
+
+
+// Inventory CRUD Logic
+// -------------------------------------------------------------->
+
 // TODO reference to dict
 // Generates a new instrument with default 
 // values and inserts it into the instrument 
 // table, it also returns the reference to
 // the singleton class representation therin.
-NewInstrument            :{[]
-
+NewInstrument            :{[instrument; time]
+    // TODO drop unnceccessary cols
+    instrument:Default[instrument;`instrumentId; instrumentCount+:1]; // TODO id generator
+    instrument:Default[instrument;fltCols;0f];    
+    instrument:Default[instrument;lngCols;0];      
+    .logger.Debug["instrument validated and decorated"];
     };
 
-MakeMarkPriceUpdateEvent    :{[]
 
-    }
 
-MakeFundingEvent             :{[]
-
-    }
-
+// Conditional Utilities
+// -------------------------------------------------------------->
+// conditional utilities define transition logic based upon the configuration defined for
+// a given instrument i.e. the maintenence type and associated logic, fee type and associated
+// logic, liquidation strategy and settlement type. 
 
 reserveOrderMargin  : {[side;price;size;orderId;time]
     // 

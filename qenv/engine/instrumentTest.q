@@ -22,22 +22,7 @@ system "d .instrumentTest";
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
 
-// Event creation utilities
-// -------------------------------------------------------------->
-
-testMakeInventoryUpdateEvent    :{
-
-    };
-
-testMakeAccountInventoryUpdateEvent :{
-
-    };
-
-testMakeAllInventoryUpdateEvent :{
-
-    };
-
-// Inventory CRUD Logic
+// Instrument CRUD Logic
 // -------------------------------------------------------------->
 testNewInstrument : {
 

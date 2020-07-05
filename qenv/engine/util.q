@@ -20,7 +20,14 @@ Default	:{[d;f;v]
 	if[null d[f];d[f]:v];:d;
 	};
 
-
+// TODO 
+MandCols :{[m]
+	if[all null inventory[mandCols];
+		[
+			.logger.Err[]
+		]
+	];
+	};
 
 // Converts a given amount of contracts into their
 // equivalent value in the given margin currency

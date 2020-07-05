@@ -70,7 +70,7 @@ NewAccount :{[account;time]
     .logger.Debug["account validated and decorated"];
 
     `.account.Account upsert account;
-
+    
     events,:MakeAccountUpdateEvent[accountId;time];
     events,:.inventory.NewInventory[accountId;`LONG;time];
     events,:.inventory.NewInventory[accountId;`SHORT;time];
@@ -78,6 +78,7 @@ NewAccount :{[account;time]
     :events;
     };
 
+// TODO
 ResetAccount :{[account;time]
 
     };
