@@ -22,10 +22,27 @@ system "d .instrumentTest";
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
 
-testNewInstrument: {
+// Event creation utilities
+// -------------------------------------------------------------->
+
+testMakeInventoryUpdateEvent    :{
+
+    };
+
+testMakeAccountInventoryUpdateEvent :{
+
+    };
+
+testMakeAllInventoryUpdateEvent :{
+
+    };
+
+// Inventory CRUD Logic
+// -------------------------------------------------------------->
+testNewInstrument : {
 
     };
 
 testSetDefaultInstrument :{
 
-    }
+    };

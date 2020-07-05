@@ -59,7 +59,7 @@ Instrument: (
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
     numForcedCancellations  : `long$()
-    )
+    );
 
 // TODO reference to dict
 // Generates a new instrument with default 

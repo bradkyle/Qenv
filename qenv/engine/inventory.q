@@ -48,6 +48,10 @@ MakeAccountInventoryUpdateEvent : {[time]
     :1b;
     };
 
+MakeAllInventoryUpdateEvent :{[]
+
+    };
+
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 

@@ -1,7 +1,7 @@
 
 // Sets all values to 0 in list or matrix
 // where value is less than zero (negative)
-Clip :{[x](x>0)*abs x}; // TODO move to util
+Clip :{[x](x>0)*abs x};  
 
 // Converts a list of lists into a equidimensional
 // i.e. equal dimensional matrix

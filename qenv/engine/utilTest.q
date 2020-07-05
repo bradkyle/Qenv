@@ -23,10 +23,18 @@ system "d .utilTest";
 /     };
 
 
-testMakeEvent:{
+testMakeEvent :{
     aid:1;
     / time:.z.z;
     / event:MakeEvent[time;`NEW;`TRADE;((`side`size`price)!(`LONG;9;99f))];
     };
+
+testMakeAction :{
+
+    };
+
+testMakeFailure : {
+
+    }
 
 \d .

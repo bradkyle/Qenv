@@ -26,7 +26,7 @@ Engine:(
     amendOrderOffsetMu          : `long$(); 
     amendBatchOffsetSigma       : `long$();
     commonOffset                : `long$(); 
-    eventCount                  : `long$();
+    eventCount                  : `long$()
     );
 
 / Event Processing logic
