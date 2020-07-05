@@ -37,30 +37,45 @@ Inventory: (
     fillCount           :  `long$()
     );
 
+mandCols:`accountId`side;
+fltCols:0;
+lngCols:0;
+
+
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeInventoryUpdateEvent   :  {[time];
-    :1b;
-    };
+MakeInventoryUpdateEvent   :  {[time;inventory];
+    // TODO check if value is null
+    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
+};
 
 MakeAccountInventoryUpdateEvent : {[time]
-    :1b;
-    };
+    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;]; // TODO get all for account
+};
 
-MakeAllInventoryUpdateEvent :{[]
-
-    };
+MakeAllInventoryUpdateEvent :{[time]
+    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;]; // TODO get all inventory
+};
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
 / default: 
 // TODO generate unique inventory id
-NewInventory : {[accountId;side;time]
+NewInventory : {[inventory;time]
     // TODO markPrice, lastPrice, activeTakerFee, activeMakerFee
     // initMarginReq, maintMarginReq
-    `.inventory.Inventory insert (inventoryCount+:1;accountId;1;side;
-        0;0f;0;0;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f;0f;0f;0);
-    :MakeInventoryUpdateEvent[time];
+
+    if[all null inventory[mandCols]; :0b];
+
+    // TODO drop unnceccessary cols
+    inventory:Default[inventory;`inventoryId; ]; // TODO id generator
+    inventory:Default[inventory;fltCols;0f];    
+    inventory:Default[inventory;lngCols;0f];  
+    .logger.Debug["inventory validated and decorated"];
+ 
+    `.inventory.Inventory upsert inventory; // TODO check if successful
+
+    :MakeInventoryUpdateEvent[time;inventory];
     };

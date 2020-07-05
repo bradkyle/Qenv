@@ -14,7 +14,11 @@ NegSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
 // If the value of key(f) of the datum/dict (d) is null then
 // set the value equal to the provided value (v) and return
 // the datum/dictionary (d)
-Default:{[d;f;v] if[null d[f];d[f]:v];:d;};
+// if the fields provided are iterable set all given names
+// in fields to value given
+Default	:{[d;f;v] 
+	if[null d[f];d[f]:v];:d;
+	};
 
 
 
@@ -34,7 +38,7 @@ CntToMrg    : {[qty;price;faceValue;doAbs]
 // Todo move to schema/event
 MakeEvent   : {[time;cmd;kind;datum]
         $[not (type time)=-15h; :0b]; //
-        $[not (cmd in EVENTCMD); :0b];
+        $[not (cmd in EVENTCMD); :0b]; // TODO default
         $[not (kind in EVENTKIND); :0b];
         $[not (type datum)=99h; :0b]; // should error if not dictionary
         / if[not] //validate datum 

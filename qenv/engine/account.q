@@ -40,6 +40,10 @@ Account: (
             activeTakerFee      : `float$()
         );
 
+mandCols:0;
+fltCols:0;
+lngCols:0;
+
 // Event creation utilities
 // -------------------------------------------------------------->
 
@@ -55,7 +59,18 @@ MakeAllAccountsUpdatedEvents :{[time]:()};
 // table. // TODO gen events. // TODO change to event?
 NewAccount :{[account;time]
     events:();
-    `.account.Account insert (accountId;0f;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f);
+    
+    if[all null account[mandCols]; :0b];
+
+    account:Default[account;`accountId; ]; // TODO id generator
+    account:Default[account;fltCols;0f];    
+    account:Default[account;lngCols;0f];  
+    account:Default[account;`marginType;`CROSS];
+    account:Default[account;`positionType;`COMBINED];
+    .logger.Debug["account validated and decorated"];
+
+    `.account.Account upsert account;
+
     events,:MakeAccountUpdateEvent[accountId;time];
     events,:.inventory.NewInventory[accountId;`LONG;time];
     events,:.inventory.NewInventory[accountId;`SHORT;time];

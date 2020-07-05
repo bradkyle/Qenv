@@ -17,7 +17,7 @@ testMakeAllAccountsUpdatedEvent :{
 // Account CRUD Logic
 // -------------------------------------------------------------->
 testNewAccount:{
-    runCase: {[dscr; case]
+    runCase: {[dscr; case; expects]
         // Setup
         $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
         / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -34,18 +34,21 @@ testNewAccount:{
         .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
     
         // Tear Down
+        delete from `.account.Account
+        delete from `.inventory.Inventory
     }; 
 
-    accountCols: `balance`realizedPnl`unrealizedPnl;
- 
-    / runCase[
-    /     "long_to_longer";
-    /     accountCols!(500;);
-    /     inventoryCols!(`LONG;100;100;10000000;1000);
-    /     paramsCols!(100;1000;-0.00025); // flat maker fee
-    /     accountCols!(490.0025;);
-    /     inventoryCols!(`LONG;200;200;20000000;1000);
-    / ];
+    accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
+    expectedCols: `
+
+    runCase[
+        "long_to_longer";
+        accountCols!(500;);
+        inventoryCols!(`LONG;100;100;10000000;1000);
+        paramsCols!(100;1000;-0.00025); // flat maker fee
+        accountCols!(490.0025;);
+        inventoryCols!(`LONG;200;200;20000000;1000);
+    ];
     
 
     };
@@ -126,13 +129,13 @@ testApplyFill:{
 
     / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 
-    runCase[
-        "check no funding occurs";
-        accountCols!();
-        (inventoryCols!(`LONG;0;0;0);inventoryCols!(`SHORT;1000;0;0);inventoryCols!(`BOTH;0;0;0));
-        fundingCols!(0;t+1;t);
-        expectedCols!(1;0;0;0)
-    ];
+    / runCase[
+    /     "check no funding occurs";
+    /     accountCols!();
+    /     (inventoryCols!(`LONG;0;0;0);inventoryCols!(`SHORT;1000;0;0);inventoryCols!(`BOTH;0;0;0));
+    /     fundingCols!(0;t+1;t);
+    /     expectedCols!(1;0;0;0)
+    / ];
     
     };
 
