@@ -345,6 +345,16 @@ adapters[`DISCRETE]     :{[action;accountId]
     // TODO
     / };
 
+makerBuySell : {[]
+    res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
+    events,:res[0];
+    penalty+: res[1];
+
+    res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
+    events,:res[0];
+    penalty+: res[1];
+    };
+
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[action;accountId]
     events:();
@@ -355,179 +365,43 @@ adapters[`MARKETMAKER]   :{[action;accountId]
         action=0;
         [penalty+:.global.Encouragement]; // TODO derive config from account?
         action=1;
-        [
-            res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=2;
-        [
-            res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[9;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=3;
-        [
-            res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[14;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=4;
-        [
-            res = createOrderEventsAtLevels[4;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[0;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=5;
-        [
-            res = createOrderEventsAtLevels[4;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=6;
-        [
-            res = createOrderEventsAtLevels[4;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[9;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=7;
-        [
-            res = createOrderEventsAtLevels[4;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[14;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=8;
-        [
-            res = createOrderEventsAtLevels[9;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[0;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=9;
-        [
-            res = createOrderEventsAtLevels[9;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=10;
-        [
-            res = createOrderEventsAtLevels[9;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[9;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=11;
-        [
-            res = createOrderEventsAtLevels[9;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[14;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=12;
-        [
-            res = createOrderEventsAtLevels[14;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[0;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=13;
-        [
-            res = createOrderEventsAtLevels[14;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=14;
-        [
-            res = createOrderEventsAtLevels[14;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[9;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=15;
-        [
-            res = createOrderEventsAtLevels[14;`SELL;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-
-            res = createOrderEventsAtLevels[14;`BUY;limitSize;accountId];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        makerBuySell[];
         action=16;
-        [
-            res = createFlattenEvents[];
-            events,:res[0];
-            penalty+: res[1]; 
-        ];
+        createFlattenEvents[];
         action=17;
-        [
-            res = createMarketOrderEvent[`BUY;marketSize];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        createMarketOrderEvent[`BUY;marketSize];
         action=18;
-        [
-            res = createMarketOrderEvent[`SELL;marketSize];
-            events,:res[0];
-            penalty+: res[1];
-        ];
+        createMarketOrderEvent[`SELL;marketSize];
         action=19;
-        [
-            res = createCancelAllOrdersEvent[];
-            events,:res[0];
-            penalty+: res[1];
-        ]; // TODO add more
+        createCancelAllOrdersEvent[]; // TODO add more
         [:0N] // TODO errors
     ];
     :(events; penalty)
