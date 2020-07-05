@@ -34,11 +34,19 @@ testNewAccount:{
         .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
     
         // Tear Down
-    };
-    caseCols:`account`expectedResp`expectedValues;
+    }; 
 
-    / runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
-    / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
+    accountCols: `balance`realizedPnl`unrealizedPnl;
+ 
+    / runCase[
+    /     "long_to_longer";
+    /     accountCols!(500;);
+    /     inventoryCols!(`LONG;100;100;10000000;1000);
+    /     paramsCols!(100;1000;-0.00025); // flat maker fee
+    /     accountCols!(490.0025;);
+    /     inventoryCols!(`LONG;200;200;20000000;1000);
+    / ];
+    
 
     };
 
@@ -72,21 +80,21 @@ testExecFill:{
     };
 
     // TODO margin etc.
-    accountCols: `balance;
-    inventoryCols: `side`currentQty`totalEntry`execCosts;
+    accountCols: `balance`realizedPnl`unrealizedPnl;
+    inventoryCols: `side`currentQty`totalEntry`execCosts`avgPrice`realizedPnl`unrealizedPnl`totalCloseAmt`totalCrossAmt`totalOpenAmt;
     paramsCols:`fillQty`price`fee;
 
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
 
-    runCase[
-        "long_to_longer";
-        accountCols!(500;);
-        inventoryCols!(`LONG;100;100;10000000);
-        paramsCols!(100;1000;-0.00025); // flat maker fee
-        accountCols!(490.0025;);
-        inventoryCols!(`LONG;200;200;20000000);
-    ];
+    / runCase[
+    /     "long_to_longer";
+    /     accountCols!(500;);
+    /     inventoryCols!(`LONG;100;100;10000000;1000);
+    /     paramsCols!(100;1000;-0.00025); // flat maker fee
+    /     accountCols!(490.0025;);
+    /     inventoryCols!(`LONG;200;200;20000000;1000);
+    / ];
     
     };
 
