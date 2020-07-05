@@ -141,7 +141,7 @@ InsertResultantEvents   :{[events]
                     update from `state.OrderEventHistory;
                 ];
                 [
-                    
+                    `state.OrderEventHistory upsert ();
                 ]
             ]
         ]; 
@@ -149,10 +149,10 @@ InsertResultantEvents   :{[events]
         [
             $[event[`datum][`inventoryId] in .state.InventoryEventHistory;
                 [
-                   `.state.InventoryEventHistory insert ();
+                   `.state.InventoryEventHistory upsert ();
                 ];
                 [
-                    
+                   `.state.InventoryEventHistory insert ();
                 ]
             ]
             
