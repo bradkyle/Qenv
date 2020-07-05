@@ -3,27 +3,42 @@
 \l engine.q
 \l util.q
 \d .state
-/ TODO config
-/ rebalancefreq       : `long$();
-/ maxBalanceRebalance : `long$();
-/ withrawFreq         : `long$();
-/ minBalanceWithdraw  : `long$();
-/ doneBalance         : `long$();
-/ maxNumSteps         : `long$();
-/ totalSteps          : `long$();
-/ rewardKind          : `.state.REWARDKIND$();
-/ lookBackSize        : `long$();
-/ outageFreq          : `long$();
-/ outageMaxLength     : `long$();
-/ outageMinLength     : `long$();
-/ outageMU            : `float$();
-/ outageSigma         : `float$();
+
 
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
+
+REWARDKIND  :   (`SORTINO;
+                 `VANILLA);   
+
 CurrentStep: 0;
 StepTime: .z.z;
+
+State  :(
+        rebalancefreq       : `long$();
+        maxBalanceRebalance : `long$();
+        withrawFreq         : `long$();
+        minBalanceWithdraw  : `long$();
+        doneBalance         : `long$();
+        maxNumSteps         : `long$();
+        totalSteps          : `long$();
+        rewardKind          : `.state.REWARDKIND$();
+        lookBackSize        : `long$();
+        outageFreq          : `long$();
+        outageMaxLength     : `long$();
+        outageMinLength     : `long$();
+        outageMU            : `float$();
+        outageSigma         : `float$();
+        doBatchedReplay     : `boolean$();
+        batchSize           : `long$();
+        currentStep         : `long$();
+        stepTime            : `datetime$();
+        numFailures         : `long$();
+        numAgentSteps       : `long$();
+    );
+
+
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -130,7 +145,7 @@ InsertResultantEvents   :{[events]
                 update from `state.AccountEventHistory;
              ];
              [
-
+                 `state.AccountEventHistory insert ();
              ]
             ]
         ];
@@ -169,10 +184,6 @@ ADAPTERTYPE :   (`MARKETMAKER;
                 `DUALBOX;          
                 `SIMPLEBOX;    
                 `DISCRETE);   
-
-REWARDKIND  :   (`SORTINO;
-                 `VANILLA);   
-
 
 // TODO move into state
 
@@ -438,7 +449,7 @@ getFeatureVectors    :{[accountIds]
 // ids based upon the configuration set i.e.
 // sortino ratio etc.
 getResultantRewards  :{[accountIds] // TODO apply given reward function by agent specified reward function.
-    select deltas last amount by accountId, (`date$time) + 1 xbar `minute$time from account where time >= `minute$rewardLookbackMinutes // TODO make reward lookback minutes configurable
+    stepReturns: select deltas last amount by accountId, (`date$time) + 1 xbar `minute$time from account where time >= `minute$rewardLookbackMinutes // TODO make reward lookback minutes configurable
     };
 
 // Secondary state functions
