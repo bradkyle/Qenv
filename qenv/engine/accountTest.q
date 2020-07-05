@@ -2,6 +2,18 @@ system "d .accountTest";
 \l account.q
 \l inventory.q
 
+
+// Event creation utilities
+// -------------------------------------------------------------->
+
+testMakeAccountUpdateEvent  :{
+
+    };
+
+testMakeAllAccountsUpdatedEvent :{
+
+    };
+
 // Account CRUD Logic
 // -------------------------------------------------------------->
 testNewAccount:{
