@@ -108,3 +108,79 @@ equation.
 /
 Vanilla sortino
 \
+
+
+/
+Generally researchers (Ghandar et al, Michalewicz, Lam) have used the profit or return on investment (ROI) as a reward (fitness) function.
+
+ROI=[∑Tt=1(Pricet−sc)×Is(t)]−[∑Tt=1(Pricet+bc)×Ib(t)][∑Tt=1(Pricet+bc)×Ib(t)]
+
+where Ib(t) and Is(t) are equal to one if a rule signals a buy and sell, respectively, and zero otherwise; 
+sc represents the selling cost and bc the buying cost. ROI is the difference between final bank balance 
+and starting bank balance after trading.
+
+You are correct, that the machine learning algorithm will then be influenced by spikes just before a sell.
+
+Nicholls et al showed that using the average profit or area under the trade resulted in better performing trading rules.
+This approach was used by Schoreels et al. This approach focuses on being in the market to capitalize on profit.
+It does not penalize the trading rule when it is in the market and the market is going down. The accumulated asset value (AAV) is defined as:
+
+AAV=∑Ni=1[(Prices−sc)−(Priceb+bc)]N
+
+where i is a buy and sell trading event, N is the number of buy and sell events, s the day the sale took place, and 
+b is the day the purchase took place.
+
+Nicholls MSc thesis [available April 2019] showed that the fitness function used by Allen and Karjalainen is the preferred fitness 
+function when evolving trading rules for the JSE using evolutionary programs.
+
+Allen and Karjalainen used a fitness function based on the compounded excess returns over the buy-and-hold strategy. The excess return is given by:
+
+Δr=r−rbh
+
+where the continuously compounded return of the trading rule is computed as
+
+r=∑Tt=1riIb(t)+∑Tt=1rfIs(t)+nlog(1−c1+c′)
+
+and the return for the buy-and-hold strategy is calculated as
+
+rbh=∑Tt=1rt+nlog(1−c1+c′)
+
+In the above,
+
+ri=logPt−logPt−1
+
+and P is the daily close price for a given day t, c denotes the one-way transaction cost; rf is the risk free cost when the trader is not 
+trading, Ib(t) and Is(t) are equal to one if a rule signals buy and sell, respectively, and zero otherwise; n denotes the number of 
+trades and rbh represents the returns of a buy-and-hold, while r represents the returns of the trader.
+
+A fixed trading cost of c=0.25% of the transaction was defined but this could be anything like a STATE fee + Brocker fee + Tax, 
+and might even be 2 different values, one for buying and one for selling. Which was the approach used by Nicholls. 
+The continuously compounded return function rewards an individual when the share value is dropping and the individual is 
+out of the market. The continuously compounded return function penalises the individual when the market is rising and the 
+individual is out of the market.
+
+I would recommend that you use the compounded excess return over the buy and hold strategy as your reward function.
+\
+
+
+
+/
+Return the reward based on PnL from the last step marked to the
+mid-price of the instruments traded
+:param e: Environment object. Environment where the agent operates
+:param a: Agent object. the agent that will perform the action
+:param s: dictionary. The inputs from environment to the agent
+:param pnl: float. The current pnl of the agent
+:param inputs: dictionary. The inputs from environment to the agent
+\
+
+/
+OFI
+Return the reward based on PnL from the last step marked to the
+mid-price of the instruments traded
+:param e: Environment object. Environment where the agent operates
+:param a: Agent object. the agent that will perform the action
+:param s: dictionary. The inputs from environment to the agent
+:param pnl: float. The current pnl of the agent
+:param inputs: dictionary. The inputs from environment to the agent
+\

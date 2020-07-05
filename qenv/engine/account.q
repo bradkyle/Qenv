@@ -14,16 +14,16 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 Account: (
             [accountId          : `long$()]
             balance             : `float$();
-            frozen              : `long$();
-            maintMargin         : `long$();
-            available           : `long$();
+            frozen              : `float$();
+            maintMargin         : `float$();
+            available           : `float$();
             openBuyOrderQty     : `long$();
             openSellOrderQty    : `long$();
             marginType          : `.account.MARGINTYPE$();
             positionType        : `.account.POSITIONTYPE$();
-            depositAmount       : `long$();
+            depositAmount       : `float$();
             depositCount        : `long$();
-            withdrawAmount      : `long$();
+            withdrawAmount      : `float$();
             withdrawCount       : `long$();
             tradeVolume         : `long$();
             tradeCount          : `long$();
@@ -51,7 +51,7 @@ MakeAllAccountsUpdatedEvents :{[time]:()};
 // Generates a new account with default 
 // values and inserts it into the account 
 // table. // TODO gen events. // TODO change to event?
-NewAccount :{[accountId;marginType;positionType;time]
+NewAccount :{[account;time]
     events:();
     `.account.Account insert (accountId;0f;0;0;0;0;0;marginType;positionType;0;0;0;0;0;0;0;0;0f;0f;0f;0f;0f;0f;0f);
     events,:MakeAccountUpdateEvent[accountId;time];
@@ -60,7 +60,10 @@ NewAccount :{[accountId;marginType;positionType;time]
     events,:.inventory.NewInventory[accountId;`BOTH;time];
     :events;
     };
-    
+
+ResetAccount :{[account;time]
+
+    };
 
 // Deriving Cross and Isolated liquidation price
 // -------------------------------------------------------------->
