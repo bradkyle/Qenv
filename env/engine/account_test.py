@@ -219,6 +219,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply negative (-0.0001) funding hedged short only (removes funding value) Negative funding rate means short pays long": {
         "args": {
             "balance": 1,
@@ -244,6 +245,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply positive (0.0001) funding hedged long only (removes funding value) Positive funding rate means long pays short": {
         "args": {
             "balance": 1,
@@ -269,6 +271,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply positive (0.0001) funding hedged long and short (position sizes nullify) Position sizes nullify cost": {
         "args": {
             "balance": 1,
@@ -294,6 +297,8 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
+
     "apply negative (-0.0001) funding hedged long and short (position sizes nullify) Position sizes nullify cost": {
         "args": {
             "balance": 1,
@@ -319,6 +324,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply negative (-0.0001) funding hedged long and short (position sizes 1 short/2 long)": {
         "args": {
             "balance": 1,
@@ -344,6 +350,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply negative (-0.0001) funding hedged long and short (position sizes 2 short/1 long)": {
         "args": {
             "balance": 1,
@@ -369,6 +376,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply positive (0.0001) funding hedged long and short (position sizes 1 short/2 long)": {
         "args": {
             "balance": 1,
@@ -394,6 +402,7 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
     "apply positive (0.0001) funding hedged long and short (position sizes 2 short/1 long)": {
         "args": {
             "balance": 1,
@@ -419,6 +428,8 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
+
     "apply positive (0.0001) funding combined short -1000 (longs pay shorts)": {
         "args": {
             "balance": 1,
@@ -444,6 +455,8 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
+
     "apply negative (-0.0001) funding combined short -1000 (shorts pay longs)": {
         "args": {
             "balance": 1,
@@ -469,6 +482,8 @@ cases = {
             "next_funding_time": _time1
         },
     },
+
+    
     "apply positive (0.0001) funding combined long 1000 (longs pay shorts)": {
         "args": {
             "balance": 1,

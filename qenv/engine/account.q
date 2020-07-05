@@ -34,6 +34,8 @@ Account: (
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
             totalFundingCost    : `float$();
+            realisedPnl         : `float$();
+            unrealizedPnl       : `float$();
             activeMakerFee      : `float$();
             activeTakerFee      : `float$()
         );
@@ -98,6 +100,7 @@ deriveUnrealisedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
     };
 
 // TODO type assertions
+// TODO what happens when in hedge mode and close is larger than position
 // Converts an execution from a fill operation on an order to the corresponding 
 // position and balance respectively. 
 execFill    :{[account;inventory;fillQty;price;fee]

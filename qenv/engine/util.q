@@ -70,7 +70,6 @@ MakeFailure   : {[time;cmd;kind;datum]
 
 // Trend Indicators
 //----------------------------------------------------->
-"loading in cryptoFuncs"
 vwap:{[ts;tp] wavg[ts;tp]}
 volatility:{100*dev[x]%avg[x]}
 totalReturn:{100*reciprocal[last[x]]*max[x]-min[x]}
