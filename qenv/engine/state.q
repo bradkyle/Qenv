@@ -345,14 +345,11 @@ adapters[`DISCRETE]     :{[action;accountId]
     // TODO
     / };
 
-makerBuySell : {[]
-    res = createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
-    events,:res[0];
-    penalty+: res[1];
-
-    res = createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-    events,:res[0];
-    penalty+: res[1];
+makerBuySell : {[buyLvl;sellLvl;limitSize;accountId]
+    res:();
+    res,:createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
+    res,:createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
+    :res:
     };
 
 // TODO remove redundancy
@@ -361,7 +358,7 @@ adapters[`MARKETMAKER]   :{[action;accountId]
     penalty:0f;
     limitSize: 8;
     marketSize: 10;
-    $[
+    res: $[
         action=0;
         [penalty+:.global.Encouragement]; // TODO derive config from account?
         action=1;
@@ -404,7 +401,7 @@ adapters[`MARKETMAKER]   :{[action;accountId]
         createCancelAllOrdersEvent[]; // TODO add more
         [:0N] // TODO errors
     ];
-    :(events; penalty)
+    :res;
     };
 
 Adapt               :{[adapterType; action; accountId]
