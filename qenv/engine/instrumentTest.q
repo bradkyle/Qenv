@@ -1,4 +1,4 @@
-system "d .inventoryTest";
+system "d .instrumentTest";
 \l qunit.q
 \l instrument.q
 
@@ -21,3 +21,11 @@ system "d .inventoryTest";
 /         runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
+
+testNewInstrument: {
+
+    };
+
+testSetDefaultInstrument :{
+
+    }

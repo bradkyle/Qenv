@@ -9,7 +9,9 @@ INITMARGINTYPE      :   `TIERED`FLAT;
 INSTRUMENTTYPE      :   `PERPETUAL`ADAPTIVE;
 LIQUIDATIONSTRAT    :   `COMPLETE`PARTIAL; 
 SETTLETYPE          :   `QUANTO`INVERSE;
-LIQUIDATEFEETYPE    :  `TOTAL`COMMISSION;
+LIQUIDATEFEETYPE    :   `TOTAL`COMMISSION;
+RISKTIERTYPE        :   `PROCEDURAL`FLAT;
+INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 
 Instrument: (
     [id                     : `symbol$()];
@@ -56,8 +58,8 @@ Instrument: (
     numAccountLiquidations  : `long$();
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
-    numForcedCancellations  : `long$();
-)
+    numForcedCancellations  : `long$()
+    )
 
 // TODO reference to dict
 // Generates a new instrument with default 
@@ -66,15 +68,15 @@ Instrument: (
 // the singleton class representation therin.
 NewInstrument            :{[]
 
-};
+    };
 
 MakeMarkPriceUpdateEvent    :{[]
 
-}
+    }
 
 MakeFundingEvent             :{[]
 
-}
+    }
 
 
 reserveOrderMargin  : {[side;price;size;orderId;time]

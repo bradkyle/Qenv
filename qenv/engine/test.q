@@ -2,9 +2,15 @@
 \l qunit.q
 \l accountTest.q 
 \l orderTest.q 
-/ \l utilTest.q
+\l utilTest.q
 \l inventoryTest.q
-/ .qunit.runTests `.accountTest;
-/ .qunit.runTests `.utilTest
-/ .qunit.runTests `.inventoryTest;
-.qunit.runTests `.orderbookTest;
+\l stateTest.q 
+\l engineTest.q
+\l instrumentTest.q
+.qunit.runTests `.utilTest
+.qunit.runTests `.instrumentTest;
+.qunit.runTests `.accountTest;
+.qunit.runTests `.inventoryTest;
+.qunit.runTests `.orderTest;
+.qunit.runTests `.engineTest;
+.qunit.runTests `.stateTest;

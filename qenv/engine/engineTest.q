@@ -1,6 +1,6 @@
-/ system "d .inventoryTest";
-/ \l qunit.q
-/ \l instrument.q
+system "d .engineTest";
+\l qunit.q
+\l engine.q
 
 // TODO more cases i.e. with agent orders etc.
 / testProcessSideUpdate   :{ 
@@ -21,3 +21,7 @@
 /         runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /         runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
 /     };
+
+testSetupEngine :{
+
+    };
