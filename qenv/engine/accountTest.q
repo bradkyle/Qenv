@@ -79,7 +79,7 @@ testExecFill:{
     };
 
 testApplyFill:{
-    runCase: {[dscr; case]
+    runCase: {[dscr; account; inventories; params; expected]
         // Setup
         $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
         / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -100,9 +100,10 @@ testApplyFill:{
         // Tear Down
     };
 
-    caseCols:`account`expectedResp`expectedValues;
+    setupCols:`account`inventories`fundingRate`nextFundingTime`time`expected
+    accountCols: `balance;
+    inventoryCols: `side`currentQty`totalEntry`execCosts;
 
-    / runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
     / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
     
     };
@@ -117,7 +118,7 @@ testApplyFill:{
 // TODO should update available and maint margin etc. 
 // TODO check multiple cases
 testApplyFunding:{
-    runCase: {[dscr; case]
+    runCase: {[dscr; account; inventories; params; expected]
         // Setup
         $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
         / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
@@ -144,8 +145,22 @@ testApplyFunding:{
         // Tear Down
     };
 
+    setupCols:`account`inventories`fundingRate`nextFundingTime`time`expected
+    accountCols: `balance;
+    inventoryCols: `side`currentQty`totalEntry`execCosts;
 
-    
+    runCase[
+        "check no funding occurs";
+        accountCols!();
+        (
+            ();
+            ();
+            ();
+        );
+        `fundingRate`nextFundingTime`time!();
+        `balance`longFundingCost`shortFundingCost`totalFundingCost!()
+    ];
+    / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];   
     
     };
 
@@ -155,24 +170,75 @@ testApplyFunding:{
 
 // TODO more cases
 testDeposit:{
-    fundingRate:0.01;
-    time:.z.z;
-    aid:19;
-    depo: 5;
-    .account.NewAccount[aid;`CROSS;`HEDGED;time];
-    update balance:1f from `.account.Account where accountId=aid;
-    events:.account.Deposit[depo;time;aid];
+    runCase: {[dscr; case]
+        // Setup
+        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
+        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
+        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
+        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
+
+        time:.z.z;
+        aid:19;
+        depo: 5;
+
+        .account.NewAccount[aid;`CROSS;`HEDGED;time];
+        update balance:1f from `.account.Account where accountId=aid;
+        
+        // Execute tested function
+        events:.account.Deposit[depo;time;aid];
+        
+        // Run tests on state
+        acc: exec from .account.Account where accountId=aid;
+        / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
+        .qunit.assertEquals[acc[`balance]; 0.999; "Account record should be present and inserted"];
+        .qunit.assertEquals[acc[`longFundingCost]; 0.001; "Long funding cost should be updated accordingly"];
+        .qunit.assertEquals[acc[`shortFundingCost]; 0f; "Short funding cost should be updated accordingly"];
+        .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
+    
+        // Tear Down
+    };
+
+    caseCols:`account`expectedResp`expectedValues;
+
+    / runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
+    / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];       
+    
     };
 
 // TODO more cases
-testProcessWithdraw:{
-    fundingRate:0.01;
-    time:.z.z;
-    aid:190;
-    widr: 5;
-    .account.NewAccount[aid;`CROSS;`HEDGED;time];
-    update balance:widr*2f from `.account.Account where accountId=aid;
-    events:.account.Withdraw[widr;time;aid];
+testProcessWithdraw:{ 
+    runCase: {[dscr; case]
+        // Setup
+        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
+        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
+        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
+        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
+
+        time:.z.z;
+        aid:190;
+        widr: 5;
+        .account.NewAccount[aid;`CROSS;`HEDGED;time];
+        update balance:widr*2f from `.account.Account where accountId=aid;
+        
+        // Execute tested function
+        events:.account.Withdraw[widr;time;aid];
+        
+        // Run tests on state
+        acc: exec from .account.Account where accountId=aid;
+        / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
+        .qunit.assertEquals[acc[`balance]; 0.999; "Account record should be present and inserted"];
+        .qunit.assertEquals[acc[`longFundingCost]; 0.001; "Long funding cost should be updated accordingly"];
+        .qunit.assertEquals[acc[`shortFundingCost]; 0f; "Short funding cost should be updated accordingly"];
+        .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
+    
+        // Tear Down
+    };
+
+    caseCols:`account`expectedResp`expectedValues;
+
+    / runCase["case1";caseCols!(`BUY;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];
+    / runCase["case2";caseCols!(`SELL;((100 100.5!100 100));();();();();(100 100.5!100 100);();();();0)];       
+    
     };
 
  
