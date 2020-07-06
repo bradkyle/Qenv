@@ -129,6 +129,12 @@ deriveMaintainenceMargin    :{[qty;takerFee;markPrice;faceValue]
     :((maintMarginCoeff[takerFee;markPrice]+takerFee)*qty)*markPrice;
     };
 
+
+betterExecFill  :{[]
+
+
+}
+
 // TODO type assertions
 // TODO what happens when in hedge mode and close is larger than position
 // Converts an execution from a fill operation on an order to the corresponding 
@@ -164,10 +170,12 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
         / Calculates the average price of entry for the current postion, used in calculating 
         / realized and unrealized pnl.
-        inventory[`avgPrice]: {$[signum[x[`currentQty]]>0;
+        inventory[`avgPrice]: {$[x[`currentQty]>0;
            1e8%floor[x[`execCost]%x[`totalEntry]];
            1e8%ceiling[x[`execCost]%x[`totalEntry]]
           ]}[inventory];
+
+        inventory[`entryValue]: abs[inventory[`currentQty]]%inventory[`avgPrice];
 
         // Closing of the position means that the value is
         // moving from the current position into the balance
@@ -267,7 +275,7 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     events:();
     acc: exec from Account where accountId=accountId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-
+    // TODO remove order margin
     // TODO on hedged position check if close greater than open position.
     $[(abs qty)>0f;[
         $[acc[`positionType]=`HEDGED;
