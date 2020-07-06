@@ -1,6 +1,7 @@
-\l util.q
 
 \d .inventory
+\l util.q
+\l logger.q
 
 inventoryCount:0;
 
@@ -11,7 +12,6 @@ POSITIONSIDE   : `LONG`SHORT`BOTH;
 Inventory: (
     [inventoryId        :  `long$()]
     accountId           :  `long$();
-    faceValue           :  `int$();
     side                :  `.inventory.POSITIONSIDE$();
     currentQty          :  `long$();
     avgPrice            :  `float$();
@@ -34,24 +34,23 @@ Inventory: (
     markValue           :  `float$();
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
+    faceValue           :  `long$();
     fillCount           :  `long$()
     );
 
-mandCols:`accountId`side;
-fltCols:(`avgPrice`realizedPnl`unrealizedPnl`posMargin,
-        `grossProfit`totalCloseAmt`totalCrossAmt`totalOpenAmt,
-        `liquidationPrice`bankruptPrice`breakEvenPrice`lastPrice,
-        `lastValue`markPrice`markValue`initMarginReq`maintMarginReq);
-lngCols:`totalCost`totalEntry`execCost`fillCount;
+mandCols:`accountId`side; // TODO fkeys?
+defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0,0)};
+allCols: cols Inventory;
 
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeInventoryUpdateEvent   :  {[time;inventory];
+MakeInventoryUpdateEvent   :  {[inventory;time];
     // TODO check if value is null
     :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
     };
 
+// TODO make work
 MakeAccountInventoryUpdateEvent : {[time]
     :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
     };
@@ -64,21 +63,15 @@ MakeAllInventoryUpdateEvent :{[time]
 // -------------------------------------------------------------->
 
 / default:  
-NewInventory : {[inventory;time]
+NewInventory : {[inventory;time] 
+    if[any null inventory[mandCols]; :0b];
 
-    if[all null inventory[mandCols]; :0b];
-
-    // TODO drop unnceccessary cols
-    inventory:Default[inventory;`inventoryId; inventoryCount+:1]; // TODO id generator
-    inventory:Default[inventory;fltCols;0f];    
-    inventory:Default[inventory;lngCols;0];      
-    inventory:Default[inventory;`lastPrice;0f]; // TODO derive from instrument
-    inventory:Default[inventory;`markPrice;0f]; // TODO derive from instrument
+    inventory:allCols!?["b"$not[null[inventory[allCols]]];inventory[allCols];defaults[]];
     .logger.Debug["inventory validated and decorated"];
- 
+
     `.inventory.Inventory upsert inventory; // TODO check if successful
 
-    :MakeInventoryUpdateEvent[time;inventory];
+    :MakeInventoryUpdateEvent[inventory;time]; 
     };
 
 // 

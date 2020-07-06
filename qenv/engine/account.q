@@ -4,6 +4,9 @@
 \l util.q
 \l state.q
 
+accountCount:0;
+
+/*******************************************************
 / account related enumerations  
 MARGINTYPE      :   `CROSS`ISOLATED;
 POSITIONTYPE    :   `HEDGED`COMBINED;
@@ -40,16 +43,21 @@ Account: (
             activeTakerFee      : `float$()
         );
 
-mandCols:0;
-fltCols:0;
-lngCols:0;
+mandCols:();
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+allCols:cols Account;
 
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeAccountUpdateEvent  :{[accountId;time]:()};
+MakeAccountUpdateEvent  :{[time;account]
+    // TODO check if value is null
+    :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
+    };
 
-MakeAllAccountsUpdatedEvents :{[time]:()};
+MakeAllAccountsUpdatedEvents :{[time]
+    :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
+    };
 
 // Account CRUD Logic
 // -------------------------------------------------------------->
@@ -59,22 +67,20 @@ MakeAllAccountsUpdatedEvents :{[time]:()};
 // table. // TODO gen events. // TODO change to event?
 NewAccount :{[account;time]
     events:();
-    
-    if[all null account[mandCols]; :0b];
+    if[any null account[mandCols]; :0b];
 
-    account:Default[account;`accountId; ]; // TODO id generator
-    account:Default[account;fltCols;0f];    
-    account:Default[account;lngCols;0f];  
-    account:Default[account;`marginType;`CROSS];
-    account:Default[account;`positionType;`COMBINED];
+    // Replace null values with their respective defailt values
+    // TODO dynamic account type checking
+    account:allCols!?["b"$not[null[account[allCols]]];account[allCols];defaults[]];
     .logger.Debug["account validated and decorated"];
-
     `.account.Account upsert account;
-    
-    events,:MakeAccountUpdateEvent[accountId;time];
-    events,:.inventory.NewInventory[accountId;`LONG;time];
-    events,:.inventory.NewInventory[accountId;`SHORT;time];
-    events,:.inventory.NewInventory[accountId;`BOTH;time];
+
+    accountId:account[`accountId];
+    MakeAccountUpdateEvent[accountId;time];
+    .inventory.NewInventory[.inventory.mandCols!(accountId;`LONG);time];
+    .inventory.NewInventory[.inventory.mandCols!(accountId;`SHORT);time];
+    .inventory.NewInventory[.inventory.mandCols!(accountId;`BOTH);time];
+
     :events;
     };
 

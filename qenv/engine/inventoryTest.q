@@ -1,6 +1,7 @@
 system "d .inventoryTest";
 \l qunit.q
 \l inventory.q
+\l testUtils.q
 
 
 // Event creation utilities
@@ -22,39 +23,35 @@ testMakeAllInventoryUpdateEvent :{
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
+// TODO test wrong types etc.
 testNewInventory : {
-    runCase: {[dscr; case; expects]
-            // Setup
-            $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
-            / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
-            $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
-            $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
-
+    runCase: {[dscr; inventory; expects] 
+            show dscr;
+            res:();
             // Execute tested function
-            res:.inventory.NewInventory[case[`account]];
+            $[expects[`shouldError];
+                .qunit.assertError[.inventory.NewInventory;(inventory;.z.z);"should error"];
+                res,:.inventory.NewInventory[inventory;.z.z]];
             
             // Run tests on state
-            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-            .qunit.assertEquals[.order.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
-            .qunit.assertEquals[.order.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];
-            .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
-        
+            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc 
+            invs:select from .inventory.Inventory;
+            .qunit.assertEquals[count invs; expects[`inventoryCount]; dscr,":inventoryCount"];
+            .qunit.assertEquals[.inventory.inventoryCount; expects[`inventoryCount]; dscr,":inventoryCount"];      
             // Tear Down 
             delete from `.inventory.Inventory
             .inventory.inventoryCount:0;
     }; 
 
-    inventoryCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
-    / expectedCols: `inventoryCount;
+    inventoryCols: `accountId`side`currentQty;
+    expectedCols: `inventoryCount`shouldError;
+    
+    runCase["should pass and insert value";inventoryCols!(1;`SHORT;0);expectedCols!(1;0b)];
+    runCase["should pass and insert value with unknown col";(inventoryCols,`unknownCol)!(1;`SHORT;0;88);expectedCols!(1;0b)];
+    / runCase["should error without mandCol";`currentQty!(0);expectedCols!(1;1b)]; TODO fix!
 
-    / runCase[
-    /     "long_to_longer";
-    /     accountCols!(500;);
-    /     inventoryCols!(`LONG;100;100;10000000;1000);
-    /     paramsCols!(100;1000;-0.00025); // flat maker fee
-    /     accountCols!(490.0025;);
-    /     inventoryCols!(`LONG;200;200;20000000;1000);
-    / ];
+    // TODO test response events
+
     };
  
     

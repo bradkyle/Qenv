@@ -17,39 +17,28 @@ testMakeAllAccountsUpdatedEvent :{
 // Account CRUD Logic
 // -------------------------------------------------------------->
 testNewAccount:{
-    runCase: {[dscr; case; expects]
-        // Setup
-        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
-        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
-        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
-        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
-
-        // Execute tested function
-        res:.order.NewAccount[case[`account]];
-        
-        // Run tests on state
-        / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        .qunit.assertEquals[.order.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
-        .qunit.assertEquals[.order.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];
-        .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
-    
-        // Tear Down
-        delete from `.account.Account
-        delete from `.inventory.Inventory
+    runCase: {[dscr; account; expects] 
+            res:();
+            // Execute tested function
+            $[expects[`shouldError];
+                .qunit.assertError[.account.NewAccount;(account;.z.z);"should error"];
+                res,:.account.NewAccount[account;.z.z]];
+            
+            // Run tests on state
+            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc 
+            ins:select from .account.Account;
+            .qunit.assertEquals[count ins; expects[`accountCount]; "accountCount"];
+            .qunit.assertEquals[.account.accountCount; expects[`accountCount]; "accountCount"];      
+            // Tear Down 
+            delete from `.account.Account
+            .account.accountCount:0;
     }; 
 
     accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
-    expectedCols: `
+    expectedCols: `accountCount`shouldError;
 
-    / runCase[
-    /     "long_to_longer";
-    /     accountCols!(500;);
-    /     inventoryCols!(`LONG;100;100;10000000;1000);
-    /     paramsCols!(100;1000;-0.00025); // flat maker fee
-    /     accountCols!(490.0025;);
-    /     inventoryCols!(`LONG;200;200;20000000;1000);
-    / ];
-    
+    runCase["should pass and insert value";accountCols!(1f;0f;0f;`CROSS;`COMBINED);expectedCols!(1;0b)];
+
 
     };
 
@@ -103,27 +92,21 @@ testExecFill:{
 
 testApplyFill:{
     runCase: {[dscr; account; inventories; params; expected]
-        // Setup
-        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
-        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
-        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
-        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
-
-        events:.account.NewAccount[aid;`CROSS;`HEDGED;time];
-        update balance:1f, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
+        time:.z.z;
+        // Setup 
+        events:.account.NewAccount[account;time];
 
         // Execute tested function
         res:.account.ApplyFill[10;1000;`SELL;time;0b;1b;aid];
         
         // Run tests on state
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
-        .qunit.assertEquals[accr[`balance]; 0.9998925; "Account record should be present and inserted"];
+        .qunit.assertEquals[10; 10; "Account record should be present and inserted"];
+        .qunit.assertEquals[10; 10; "Account record should be present and inserted"];
     
         // Tear Down
     };
-
-    setupCols:`account`inventories`fundingRate`nextFundingTime`time`expected
+    setupCols:`account`inventories`fundingRate`nextFundingTime`time`expected;
     accountCols: `balance;
     inventoryCols: `side`currentQty`totalEntry`execCosts;
 
@@ -151,20 +134,12 @@ testApplyFill:{
 // TODO remove positions and just use net outstanding
 testApplyFunding:{
     runCase: {[dscr; account; inventories; params; expected]
-        // Setup
-        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
-        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
-        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
-        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
-
-        fundingRate:0.01;
         time:.z.z;
-        aid:101;
-        events:.account.NewAccount[aid;`CROSS;`HEDGED;time];
-        update balance:1f, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
+        // Setup 
+        .account.NewAccount[account;time]; 
         
         // Execute tested function
-        events:.account.ApplyFunding[fundingRate;time];
+        events:.account.ApplyFunding[params[`fundingRate];time];
         
         // Run tests on state
         acc: exec from .account.Account where accountId=aid;
@@ -176,12 +151,10 @@ testApplyFunding:{
     
         // Tear Down
     };
-
     accountCols: `balance`longMargin`shortMargin`netLongPosition`netShortPosition`maintMargin`available;
     inventoryCols: `side`currentQty`totalEntry`execCosts;
     fundingCols: `fundingRate`nextFundingTime`time;
-    expectedCols:`balance`longFundingCost`shortFundingCost`totalFundingCost
-    t:.z.z
+    expectedCols:`balance`longFundingCost`shortFundingCost`totalFundingCost;
 
     / runCase[
     /     "check no funding occurs";

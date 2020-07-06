@@ -1,3 +1,5 @@
+\l logger.q
+\l global.q
 
 // Sets all values to 0 in list or matrix
 // where value is less than zero (negative)
@@ -16,8 +18,19 @@ NegSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
 // the datum/dictionary (d)
 // if the fields provided are iterable set all given names
 // in fields to value given
-Default	:{[d;f;v] 
-	if[null d[f];d[f]:v];:d;
+Default	:{[d;f;a;v] 
+	show d;
+	$[(count f)=1;f:enlist f;0N];
+	/ d[f[where[d[f]=0N]]]:v;
+	d[where[null d[a]] inter f]:v; 
+	:d;
+	};
+
+// TODO make better implementation, perhaps with type checking
+Sanitize  :{[i;a]
+	c: cols i;
+    shouldRemove:(c except (a inter c));
+    $[(count shouldRemove)>0;:(![i;();0b;shouldRemove]);:i];
 	};
 
 // TODO 
@@ -43,11 +56,11 @@ CntToMrg    : {[qty;price;faceValue;doAbs]
 //----------------------------------------------------->
 
 // Todo move to schema/event
-MakeEvent   : {[time;cmd;kind;datum]
-        $[not (type time)=-15h; :0b]; //
-        $[not (cmd in EVENTCMD); :0b]; // TODO default
-        $[not (kind in EVENTKIND); :0b];
-        $[not (type datum)=99h; :0b]; // should error if not dictionary
+MakeEvent   : {[time;cmd;kind;datum] // TODO make better validation
+        $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
+        $[not (cmd in .global.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
+        $[not (kind in .global.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
+        $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
         / if[not] //validate datum 
         :`time`cmd`kind`datum!(time;cmd;kind;datum);
         };
