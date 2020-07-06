@@ -243,29 +243,29 @@ class Account():
             raise ValueError("Invalid commission fee type")
 
     @property
-    def unrealised_pnl(self):
+    def unrealized_pnl(self):
         """
         Returns the sum of the unrealized pnl of the long and short inventory
         """
         return (
-            self.long_inventory.unrealised_pnl +  
-            self.short_inventory.unrealised_pnl + 
-            self.both_inventory.unrealised_pnl
+            self.long_inventory.unrealized_pnl +  
+            self.short_inventory.unrealized_pnl + 
+            self.both_inventory.unrealized_pnl
         )
 
     @property
     def equity(self):
         """
-        Your total equity held with the exchange. Margin Balance = Wallet Balance + Unrealised PNL.
+        Your total equity held with the exchange. Margin Balance = Wallet Balance + Unrealized PNL.
         """ 
-        return self.balance + self.unrealised_pnl
+        return self.balance + self.unrealized_pnl
 
     @property
-    def total_realised_pnl(self):
+    def total_realized_pnl(self):
         return (
-            self.long_inventory.total_realised_pnl +
-            self.short_inventory.total_realised_pnl +
-            self.both_inventory.total_realised_pnl
+            self.long_inventory.total_realized_pnl +
+            self.short_inventory.total_realized_pnl +
+            self.both_inventory.total_realized_pnl
         )
 
     # TODO make into config
@@ -426,8 +426,8 @@ class Account():
             "taker_fee": self.taker_fee,
             "balance": self.balance,
             "total_deposit": self.total_deposit,
-            "unrealised_pnl": self.unrealised_pnl,
-            "total_realised_pnl": self.total_realised_pnl,
+            "unrealized_pnl": self.unrealized_pnl,
+            "total_realized_pnl": self.total_realized_pnl,
             "average_entry_price": self.average_entry_price,
             "cross_bankruptcy_price": self.cross_bankruptcy_price,
             "cross_liquidation_price": self.cross_liquidation_price,
@@ -556,7 +556,7 @@ class Account():
         price = float(price)
         cost = float(fee) * abs(execution)
         next_position = position.current_qty+execution
-        realised_pnl = 0
+        realized_pnl = 0
         case="none"
 
         if abs(execution) == 0:
@@ -570,7 +570,7 @@ class Account():
             case="cross"
             # Calculate the realized pnl of the previous 
             # position, using the current execution price
-            realised_pnl = position._realised_pnl(
+            realized_pnl = position._realized_pnl(
                 size=position.current_qty,
                 price=price
             )
@@ -595,7 +595,7 @@ class Account():
                 price=price,
                 do_abs=False
             )
-            next_balance = self.balance + amt + realised_pnl
+            next_balance = self.balance + amt + realized_pnl
             position.total_cross_amount += amt
 
         # CLOSE POSITION
@@ -604,7 +604,7 @@ class Account():
             # Because the position is being closed
             # the realized pnl will be opposite the
             # position.
-            realised_pnl = position._realised_pnl(
+            realized_pnl = position._realized_pnl(
                 size=-execution,
                 price=price
             )
@@ -619,7 +619,7 @@ class Account():
                 qty=(abs(execution)/position.leverage)-cost, 
                 price=price,
             )
-            next_balance = self.balance + amt + realised_pnl
+            next_balance = self.balance + amt + realized_pnl
             position.total_close_amount += amt
 
         # OPEN POSITION
@@ -655,11 +655,11 @@ class Account():
         self.balance = round(next_balance, 8)
         position.current_qty = next_position
         position.total_costs += (cost/price)
-        position.total_realised_pnl += realised_pnl
-        position.total_summed_returns += realised_pnl - (cost/price)
+        position.total_realized_pnl += realized_pnl
+        position.total_summed_returns += realized_pnl - (cost/price)
         position.total_fills_completed += 1
         
-        return case, realised_pnl, cost, round(amt, 6)
+        return case, realized_pnl, cost, round(amt, 6)
 
     # TODO gen account update event if neccessary
     def add_fill(self, fill_qty, price, side, time, close=False, is_maker=False):

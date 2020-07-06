@@ -196,8 +196,8 @@ class PositionR():
         self.amount = kwargs.get('amount', 0)
         self.average_entry_price = kwargs.get('average_entry_price', 0)
         self.leverage = kwargs.get('leverage', 0)
-        self.realised_pnl = kwargs.get('realised_pnl', 0)
-        self.unrealised_pnl = kwargs.get('unrealised_pnl', 0)
+        self.realized_pnl = kwargs.get('realized_pnl', 0)
+        self.unrealized_pnl = kwargs.get('unrealized_pnl', 0)
 
     @property
     def abs_amount(self):

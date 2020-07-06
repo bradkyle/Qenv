@@ -28,7 +28,7 @@ class Position(object):
         """
         self.max_position_count = max_position
         self.positions = deque()
-        self.realised_pnl = 0.0
+        self.realized_pnl = 0.0
         self.full_inventory = False
         self.total_exposure = 0.0
         self.side = side
@@ -39,7 +39,7 @@ class Position(object):
         self.statistics = TradeStatistics()
 
     def __str__(self):
-        msg = 'PositionI-{}: [realised_pnl={:.4f}'.format(self.side, self.realised_pnl)
+        msg = 'PositionI-{}: [realized_pnl={:.4f}'.format(self.side, self.realized_pnl)
         msg += ' | total_exposure={:.4f} | total_trade_count={}]'.format(
             self.total_exposure, self.total_trade_count)
         return msg
@@ -51,7 +51,7 @@ class Position(object):
         :return: (void)
         """
         self.positions.clear()
-        self.realised_pnl = 0.0
+        self.realized_pnl = 0.0
         self.full_inventory = False
         self.total_exposure = 0.0
         self.average_price = 0.0
@@ -122,7 +122,7 @@ class Position(object):
 
             # deduct transaction fees when the LIMIT order gets filled
             if self.transaction_fee:
-                self.realised_pnl -= LIMIT_ORDER_FEE
+                self.realized_pnl -= LIMIT_ORDER_FEE
 
             return True
 
@@ -204,7 +204,7 @@ class Position(object):
 
         # deduct transaction fees whenever an order gets filled
         if self.transaction_fee:
-            self.realised_pnl -= MARKET_ORDER_FEE
+            self.realized_pnl -= MARKET_ORDER_FEE
 
         # update statistics
         self.statistics.market_orders += 1
@@ -290,7 +290,7 @@ class Position(object):
             pnl = (order.average_execution_price / netting_order.price) - 1.
 
         # Add Profit and Loss to realized gains/losses
-        self.realised_pnl += pnl
+        self.realized_pnl += pnl
 
         # Update positions attributes
         self.total_exposure -= order.average_execution_price
@@ -330,7 +330,7 @@ class Position(object):
         else:
             raise ValueError('Error. No {} pop_position to remove.'.format(self.side))
 
-    def get_unrealised_pnl(self, price: float) -> float:
+    def get_unrealized_pnl(self, price: float) -> float:
         """
         Unrealized PnL as a percentage gain.
 
@@ -340,14 +340,14 @@ class Position(object):
             return 0.0
 
         if self.side == 'long':
-            unrealised_pnl = (price / self.average_price) - 1.
+            unrealized_pnl = (price / self.average_price) - 1.
         elif self.side == 'short':
-            unrealised_pnl = (self.average_price / price) - 1.
+            unrealized_pnl = (self.average_price / price) - 1.
         else:
-            raise ValueError(('Error: PositionI.get_unrealised_pnl() for '
+            raise ValueError(('Error: PositionI.get_unrealized_pnl() for '
                               'side = {}').format(self.side))
 
-        return unrealised_pnl
+        return unrealized_pnl
 
     def flatten_inventory(self, price: float) -> float:
         """

@@ -443,8 +443,8 @@ getFeatureVectors    :{[accountIds]
             value exec sum leaves, avg price from orders where ordtyp=`limit, status=`new, side=`sell;
             value exec sum leaves, max price from orders where ordtyp=`stop_market, status=`new, side=`buy;
             value exec sum leaves, min price from orders where ordtyp=`stop_market, status=`new, side=`sell; 
-            value exec last amount, last average_entry_price, last leverage, last realised_pnl, last unrealised_pnl from positions where side=`long;
-            value exec last amount, last average_entry_price, last leverage, last realised_pnl, last unrealised_pnl from positions where side=`short
+            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`long;
+            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`short
         );
         // TODO count by account id
         / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable

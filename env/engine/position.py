@@ -53,7 +53,7 @@ class Position(object):
         self.tiered_risk = kwargs.get('tiered_risk', DEFAULT_TIERED_MAINT)
 
         # Metrics
-        self.total_realised_pnl = kwargs.get('total_realised_pnl', 0)
+        self.total_realized_pnl = kwargs.get('total_realized_pnl', 0)
         self.total_summed_returns = kwargs.get('total_summed_returns', 0)
         self.total_costs = kwargs.get('total_costs', 0)
         self.total_close_amount = kwargs.get('total_close_amount', 0)
@@ -85,8 +85,8 @@ class Position(object):
         return self.account.funding_rate
 
     @property
-    def realised_pnl(self):
-        return self.total_realised_pnl
+    def realized_pnl(self):
+        return self.total_realized_pnl
 
     @property
     def current_qty(self):
@@ -237,7 +237,7 @@ class Position(object):
             return 0
 
     @property
-    def unrealised_pnl(self):
+    def unrealized_pnl(self):
         """
         Returns the unrealized profit for the current position considering the current
         mark price and the average entry price (uses mark price to prevent liquidation).
@@ -286,7 +286,7 @@ class Position(object):
         Refers to the margin allocated to the given position
         """
         if self.average_entry_price > 0:
-            return (self.position/self.average_entry_price)/self.leverage + self.unrealised_pnl
+            return (self.position/self.average_entry_price)/self.leverage + self.unrealized_pnl
         else:
             return 0
 
@@ -311,8 +311,8 @@ class Position(object):
             amount=self.current_qty,
             average_entry_price=self.average_entry_price,
             leverage=self.leverage,
-            realised_pnl=self.realised_pnl,
-            unrealised_pnl=self.unrealised_pnl
+            realized_pnl=self.realized_pnl,
+            unrealized_pnl=self.unrealized_pnl
         )
 
     @property
@@ -329,7 +329,7 @@ class Position(object):
         self.total_entry = 0
         self.exec_costs = 0
         self.current_qty = 0
-        self.total_realised_pnl = 0
+        self.total_realized_pnl = 0
         self.total_close_amount = 0
         self.total_cross_amount = 0
         self.total_open_amount = 0
@@ -365,7 +365,7 @@ class Position(object):
         if do_abs: return ((self.face_value/price) * abs(qty))
         else: return (self.face_value/price) * qty
 
-    def _realised_pnl(self, size, price): # TODO make sure is correct
+    def _realized_pnl(self, size, price): # TODO make sure is correct
         """
         Calculates the realized profit and losses for a given position, size is a positive
         or negative number that represents the portion of the current position that has been

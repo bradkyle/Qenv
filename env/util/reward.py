@@ -36,7 +36,7 @@ def default_with_fills(inventory_count: int, midpoint_change: float, step_pnl: f
     return reward
 
 
-def realised_pnl(current_pnl: float, last_pnl: float) -> float:
+def realized_pnl(current_pnl: float, last_pnl: float) -> float:
     """
     Only provide reward signal when a trade is closed (round-trip).
 

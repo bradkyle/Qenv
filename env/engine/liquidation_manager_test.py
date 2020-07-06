@@ -227,7 +227,7 @@ def test_check_by_mark_price(monkeypatch, case):
     _orderbook.mark_price = case["new_mark_price"]
 
     logging.error(_account.short_inventory.average_entry_price)
-    logging.error(_account.short_inventory.unrealised_pnl)
+    logging.error(_account.short_inventory.unrealized_pnl)
     logging.error(_account.available_balance)
     logging.error("equity:"+str(_account.equity))
     logging.error("reserved balance:"+str(_account.reserved_balance))

@@ -27,10 +27,13 @@ Default	:{[d;f;a;v]
 	};
 
 // TODO make better implementation, perhaps with type checking
-Sanitize  :{[i;a]
-	c: cols i;
-    shouldRemove:(c except (a inter c));
-    $[(count shouldRemove)>0;:(![i;();0b;shouldRemove]);:i];
+// sanitize constructs valid input with the correct types and
+// is a useful utility for low 
+Sanitize  :{[i;d;a]
+	i:i[a];
+	idx:where[not[null i]];
+	if[(count idx)>0;d[idx]:i[idx]];
+	:a!d;
 	};
 
 // TODO 

@@ -116,15 +116,15 @@ class State():
         return self.account.balance
 
     @property
-    def unrealised_pnl(self):
-        return (self.long_position.unrealised_pnl + self.short_position.unrealised_pnl + self.both_position.unrealised_pnl)
+    def unrealized_pnl(self):
+        return (self.long_position.unrealized_pnl + self.short_position.unrealized_pnl + self.both_position.unrealized_pnl)
 
     @property
     def equity(self):
         """
-        Your total equity held with the exchange. Margin Balance = Wallet Balance + Unrealised PNL.
+        Your total equity held with the exchange. Margin Balance = Wallet Balance + Unrealized PNL.
         """ 
-        return self.balance + self.unrealised_pnl
+        return self.balance + self.unrealized_pnl
 
     @property
     def net_position(self):

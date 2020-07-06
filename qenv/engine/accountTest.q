@@ -29,9 +29,12 @@ testNewAccount:{
             ins:select from .account.Account;
             .qunit.assertEquals[count ins; expects[`accountCount]; "accountCount"];
             .qunit.assertEquals[.account.accountCount; expects[`accountCount]; "accountCount"];      
+
             // Tear Down 
-            delete from `.account.Account
+            delete from `.account.Account;
+            delete from `.inventory.Inventory;
             .account.accountCount:0;
+            .inventory.inventoryCount:0;
     }; 
 
     accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
@@ -50,25 +53,26 @@ testNewAccount:{
 testExecFill:{
     runCase: {[dscr; account; inventory; params; eaccount; einventory]
         // Setup
-        $[count[case[`qtys]]>0;.order.updateQtys[case[`side];case[`qtys]];0N];
-        / $[count[case[`orders]]>0;.order.updateOrders[case[`side];case[`orders]];0N];
-        $[count[case[`offsets]]>0;.order.updateOffsets[case[`side];case[`offsets]];0N];
-        $[count[case[`sizes]]>0;.order.updateSizes[case[`sizes];case[`sizes]];0N];
+        show "=================================================";
+        time:.z.z;
+        events:.account.NewAccount[account;time];
 
-        events:.account.NewAccount[aid;`CROSS;`HEDGED;time];
-        update balance:1f, longMargin:longMargin+0.1 from `.account.Account where accountId=aid;
-        acc:exec from .account.Account where accountId=aid;
-        pos:exec from .inventory.Inventory where accountId=aid, side=`LONG;
+        show events;
+        show "=================================================";
 
         // Execute tested function
-        res:.account.execFill[acc;pos;10;1000;0.00075];
-        
+        res:.account.execFill[acc;pos;10;1000f;0.00075];
+
         // Run tests on state
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
-        .qunit.assertEquals[accr[`balance]; 0.9998925; "Account record should be present and inserted"];
+        / .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
+        / .qunit.assertEquals[accr[`balance]; 0.9998925; "Account record should be present and inserted"];
     
         // Tear Down
+       delete from `.account.Account;
+       delete from `.inventory.Inventory;
+       .account.accountCount:0;
+       .inventory.inventoryCount:0;
     };
 
     // TODO margin etc.
@@ -79,14 +83,12 @@ testExecFill:{
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
 
-    / runCase[
-    /     "long_to_longer";
-    /     accountCols!(500;);
-    /     inventoryCols!(`LONG;100;100;10000000;1000);
-    /     paramsCols!(100;1000;-0.00025); // flat maker fee
-    /     accountCols!(490.0025;);
-    /     inventoryCols!(`LONG;200;200;20000000;1000);
-    / ];
+    runCase["long_to_longer";
+        accountCols!(500f;0f;0f);
+        inventoryCols!(`LONG;100;100;10000000;1000f;0;0;0;0;0);
+        paramsCols!(100;1000f;-0.00025); // flat maker fee
+        accountCols!(490.0025;0;0);
+        inventoryCols!(`LONG;200;200;20000000;1000f;0;0;0;0;0)];
     
     };
 

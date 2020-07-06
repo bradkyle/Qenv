@@ -61,7 +61,7 @@ accounts:(
     []time:`datetime$();
     balance:`float$();
     available_balance:`float$();
-    unrealised_pnl:`float$();
+    unrealized_pnl:`float$();
     equity:`float$();
     leverage:`float$();
     margin_balance:`float$();

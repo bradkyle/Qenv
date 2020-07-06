@@ -470,9 +470,9 @@ class DualBoxAdapter(BoxAdapter):
 class DiscreteAdapter(ActionAdapter):
     def __init__(self, state, *args, **kwargs):
         super(DiscreteAdapter, self).__init__(state, **kwargs)
-        self.max_position = kwargs.get('realised_pnl', 0)
-        self.market_order_dist = kwargs.get('unrealised_pnl', 0)
-        self.market_order_dist = kwargs.get('unrealised_pnl', 0)
+        self.max_position = kwargs.get('realized_pnl', 0)
+        self.market_order_dist = kwargs.get('unrealized_pnl', 0)
+        self.market_order_dist = kwargs.get('unrealized_pnl', 0)
         self.encouragement = kwargs.get('encouragement', 0.000000000001)
         self.num_actions = kwargs.get('num_actions', 7)
 

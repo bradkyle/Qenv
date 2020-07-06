@@ -121,8 +121,8 @@ class MarketMaker(BaseEnvironment):
         :return: (np.array) normalized position features
         """
         return np.array((self.broker.net_inventory_count / self.max_position,
-                         self.broker.realised_pnl * self.broker.pct_scale,
-                         self.broker.get_unrealised_pnl(self.best_bid, self.best_ask)
+                         self.broker.realized_pnl * self.broker.pct_scale,
+                         self.broker.get_unrealized_pnl(self.best_bid, self.best_ask)
                          * self.broker.pct_scale,
                          self.broker.get_long_order_distance_to_midpoint(
                              midpoint=self.midpoint) * self.broker.pct_scale,

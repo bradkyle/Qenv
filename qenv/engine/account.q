@@ -37,7 +37,7 @@ Account: (
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
             totalFundingCost    : `float$();
-            realisedPnl         : `float$();
+            realizedPnl         : `float$();
             unrealizedPnl       : `float$();
             activeMakerFee      : `float$();
             activeTakerFee      : `float$()
@@ -61,7 +61,7 @@ MakeAllAccountsUpdatedEvents :{[time]
 
 // Account CRUD Logic
 // -------------------------------------------------------------->
-
+/ q.account)allCols!(enlist ["b"$not[null[account[allCols]]];((count allCols)-7)#0N;defaults[]])[2]
 // Generates a new account with default 
 // values and inserts it into the account 
 // table. // TODO gen events. // TODO change to event?
@@ -71,7 +71,7 @@ NewAccount :{[account;time]
 
     // Replace null values with their respective defailt values
     // TODO dynamic account type checking
-    account:allCols!?["b"$not[null[account[allCols]]];account[allCols];defaults[]];
+    account:Sanitize[account;defaults[];allCols];
     .logger.Debug["account validated and decorated"];
     `.account.Account upsert account;
 
@@ -117,7 +117,7 @@ deriveRealisedPnl :{[avgPrice;fillPrice;faceValue;fillQty]; // TODO is fillQty s
 
 // Returns the unrealized profit for the current position considering the current
 // mark price and the average entry price (uses mark price to prevent liquidation).
-deriveUnrealisedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is currentQty sign agnostic?
+deriveUnrealizedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is currentQty sign agnostic?
     :(pricePerContract[faceValue;avgPrice] - pricePerContract[faceValue;markPrice])*currentQty;
     };
 
@@ -127,7 +127,7 @@ deriveUnrealisedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
 // position and balance respectively. 
 execFill    :{[account;inventory;fillQty;price;fee]
     $[abs[fillQty]>0;0N;:0b];
-    $[price>0;0N;:0b];
+    $[price>0 & (type price)=-9h;0N;:0b];
     $[(type account)=99h;0N;:0b];
     $[(type inventory)=99h;0N;:0b];
     // TODO errors
@@ -171,7 +171,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
       ];
       (abs currentQty)>(abs nxtQty);
       [
-        // Because the position is being closed the realised pnl 
+        // Because the position is being closed the realized pnl 
         // will be inversely proportional to the position.
         realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;fillQty];
         inventory[`currentQty]: nxtQty;
@@ -229,6 +229,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
+    / :(account;inventory);
     };
 
 // TODO type assertions

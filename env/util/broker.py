@@ -91,24 +91,24 @@ class Broker(object):
         short_pnl = self.short_inventory.flatten_inventory(price=ask_price)
         return long_pnl + short_pnl
 
-    def get_unrealised_pnl(self, bid_price: float, ask_price: float) -> float:
+    def get_unrealized_pnl(self, bid_price: float, ask_price: float) -> float:
         """
         Unrealized PnL as a percentage gain.
 
         :return: (float) PnL %
         """
-        long_pnl = self.long_inventory.get_unrealised_pnl(price=bid_price)
-        short_pnl = self.short_inventory.get_unrealised_pnl(price=ask_price)
+        long_pnl = self.long_inventory.get_unrealized_pnl(price=bid_price)
+        short_pnl = self.short_inventory.get_unrealized_pnl(price=ask_price)
         return long_pnl + short_pnl
 
     @property
-    def realised_pnl(self) -> float:
+    def realized_pnl(self) -> float:
         """
         Realized PnL as a percentage gain.
 
         :return: (float) PnL %
         """
-        return self.short_inventory.realised_pnl + self.long_inventory.realised_pnl
+        return self.short_inventory.realized_pnl + self.long_inventory.realized_pnl
 
     def get_total_pnl(self, bid_price: float, ask_price: float) -> float:
         """
@@ -118,7 +118,7 @@ class Broker(object):
         :param ask_price: (float) current ask price
         :return: (float) total PnL
         """
-        return self.get_unrealised_pnl(bid_price, ask_price) + self.realised_pnl
+        return self.get_unrealized_pnl(bid_price, ask_price) + self.realized_pnl
 
     @property
     def long_inventory_count(self) -> int:
@@ -279,11 +279,11 @@ class Broker(object):
 
         :return: (float) average pnl per trade
         """
-        if self.realised_pnl == 0.:
+        if self.realized_pnl == 0.:
             return 0.
         elif self.total_trade_count == 0.:
             return 0.
-        return self.realised_pnl / self.total_trade_count
+        return self.realized_pnl / self.total_trade_count
 
     def get_statistics(self) -> dict:
         """

@@ -65,8 +65,7 @@ MakeAllInventoryUpdateEvent :{[time]
 / default:  
 NewInventory : {[inventory;time] 
     if[any null inventory[mandCols]; :0b];
-
-    inventory:allCols!?["b"$not[null[inventory[allCols]]];inventory[allCols];defaults[]];
+    inventory:Sanitize[inventory;defaults[];allCols];
     .logger.Debug["inventory validated and decorated"];
 
     `.inventory.Inventory upsert inventory; // TODO check if successful

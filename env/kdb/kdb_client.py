@@ -166,8 +166,8 @@ class QueryConstructor():
             str(e.datum.amount),
             str(e.datum.average_entry_price),
             str(e.datum.leverage),
-            str(e.datum.realised_pnl),
-            str(e.datum.unrealised_pnl)
+            str(e.datum.realized_pnl),
+            str(e.datum.unrealized_pnl)
         ] for e in events])
         self._add("`positions insert("+"".join([
         _p(events)+'time:"Z"$('+"; ".join(ev[0]) + ");",
@@ -175,8 +175,8 @@ class QueryConstructor():
         "amount:"+" ".join(ev[2]) + "f;",
         "average_entry_price:"+" ".join(ev[3]) + "f;",
         "leverage:"+" ".join(ev[4]) + "f;",
-        "realised_pnl:"+" ".join(ev[5]) + "f;",
-        "unrealised_pnl:"+" ".join(ev[6]) + "f",
+        "realized_pnl:"+" ".join(ev[5]) + "f;",
+        "unrealized_pnl:"+" ".join(ev[6]) + "f",
         ]) + ");")
 
     def add_accounts(self, events):
@@ -303,8 +303,8 @@ class KDBClient():
                 amount:`float$();
                 average_entry_price:`float$();
                 leverage:`float$();
-                realised_pnl:`float$();
-                unrealised_pnl:`float$() 
+                realized_pnl:`float$();
+                unrealized_pnl:`float$() 
             );""",
             """account:(
                 []time:`datetime$();
@@ -391,8 +391,8 @@ class KDBClient():
             amount=data[2],
             average_entry_price=data[3],
             leverage=data[4],
-            realised_pnl=data[5],
-            unrealised_pnl=data[6]
+            realized_pnl=data[5],
+            unrealized_pnl=data[6]
         )
 
     # 
