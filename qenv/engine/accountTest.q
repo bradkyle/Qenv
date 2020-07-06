@@ -4,6 +4,13 @@ system "d .accountTest";
 \l util.q
 
 
+revert:   {
+            delete from `.account.Account;
+            delete from `.inventory.Inventory;
+            .account.accountCount:0;
+            .inventory.inventoryCount:0;
+    };
+
 // Event creation utilities
 // -------------------------------------------------------------->
 
@@ -32,10 +39,7 @@ testNewAccount:{
             .qunit.assertEquals[.account.accountCount; expects[`accountCount]; "accountCount"];      
 
             // Tear Down 
-            delete from `.account.Account;
-            delete from `.inventory.Inventory;
-            .account.accountCount:0;
-            .inventory.inventoryCount:0;
+            revert[];
     }; 
 
     accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
@@ -43,7 +47,7 @@ testNewAccount:{
 
     runCase["should pass and insert value";accountCols!(1f;0f;0f;`CROSS;`COMBINED);expectedCols!(1;0b)];
 
-
+    revert[];
     };
 
 
@@ -60,25 +64,28 @@ testExecFill:{
         inventory:Sanitize[inventory;.inventory.defaults[];.inventory.allCols];
 
         // Execute tested function
-        .account.execFill[account;inventory;10;1000f;0.00075];
+        .account.execFill[account;inventory;params[`fillQty];params[`price];params[`fee]];
 
         acc:exec from .account.Account where accountId=account[`accountId];
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Run tests on state
-        .qunit.assertEquals[eaccount[`balance]; acc[`balance]; "Should return true"];
-        .qunit.assertEquals[eaccount[`realizedPnl]; acc[`realizedPnl]; "Should return true"];
-        .qunit.assertEquals[eaccount[`unrealizedPnl]; acc[`unrealizedPnl]; "Should return true"];
+        .qunit.assertEquals[acc[`balance]; eaccount[`balance]; "account balance"];
+        .qunit.assertEquals[acc[`realizedPnl]; eaccount[`realizedPnl]; "account realized pnl"];
+        .qunit.assertEquals[acc[`unrealizedPnl]; eaccount[`unrealizedPnl]; "account unrealized pnl"];
 
-        .qunit.assertEquals[einventory[`currentQty]; invn[`currenQty]; "Should return true"];
-        .qunit.assertEquals[einventory[`totalEntry]; invn[`totalEntry]; "Should return true"];
-        .qunit.assertEquals[einventory[`execCosts]; invn[`execCosts]; "Should return true"];
-        .qunit.assertEquals[einventory[`avgPrice]; invn[`avgPrice]; "Should return true"];
-        .qunit.assertEquals[einventory[`realizedPnl]; invn[`realizedPnl]; "Should return true"]; 
-        .qunit.assertEquals[einventory[`unrealizedPnl]; invn[`unrealizedPnl]; "Should return true"]; 
-        .qunit.assertEquals[einventory[`totalCloseAmt]; invn[`totalCloseAmt]; "Should return true"]; 
-        .qunit.assertEquals[einventory[`totalCrossAmt]; invn[`totalCrossAmt]; "Should return true"]; 
-        .qunit.assertEquals[einventory[`totalOpenAmt]; invn[`totalOpenAmt]; "Should return true"]; 
+        .qunit.assertEquals[invn[`currentQty]; einventory[`currentQty]; "inventory current qty"];
+        .qunit.assertEquals[invn[`totalEntry]; einventory[`totalEntry]; "inventory total entry"];
+        .qunit.assertEquals[invn[`execCost]; einventory[`execCost]; "inventory exec costs"];
+        .qunit.assertEquals[invn[`avgPrice]; einventory[`avgPrice]; "inventory avgPrice"];
+        .qunit.assertEquals[invn[`realizedPnl]; einventory[`realizedPnl]; "inventory realized pnl"]; 
+        .qunit.assertEquals[invn[`unrealizedPnl]; einventory[`unrealizedPnl]; "inventory unrealizedPNL"]; 
+        .qunit.assertEquals[invn[`totalCloseAmt]; einventory[`totalCloseAmt]; "inventory total close amt"]; 
+        .qunit.assertEquals[invn[`totalCrossAmt]; einventory[`totalCrossAmt]; "inventory total cross amt"]; 
+        .qunit.assertEquals[invn[`totalOpenAmt]; einventory[`totalOpenAmt]; "inventory total open amt"]; 
+        .qunit.assertEquals[invn[`totalCloseVolume]; einventory[`totalCloseVolume]; "inventory total close amt"]; 
+        .qunit.assertEquals[invn[`totalCrossVolume]; einventory[`totalCrossVolume]; "inventory total cross amt"]; 
+        .qunit.assertEquals[invn[`totalOpenVolume]; einventory[`totalOpenVolume]; "inventory total open amt"]; 
 
         // Tear Down
        delete from `.account.Account;
@@ -88,22 +95,26 @@ testExecFill:{
     };
 
     // TODO margin etc.
-    accountCols: `accountId`balance`realizedPnl`unrealizedPnl;
+    accountCols: `accountId`balance;
     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
-                   `execCosts`avgPrice`realizedPnl`unrealizedPnl,
-                   `totalCloseAmt`totalCrossAmt`totalOpenAmt);
+                   `execCost`avgPrice);
     paramsCols:`fillQty`price`fee;
+    eaccountCols:accountCols,`realizedPnl`unrealizedPnl;
+    einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume;
 
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
 
     runCase["long_to_longer";
-        accountCols!(1;500f;0f;0f);
-        inventoryCols!(1;1;`LONG;100;100;10000000;1000f;0f;0f;0f;0f;0f);
-        paramsCols!(100;1000f;-0.00025); // flat maker fee
-        accountCols!(1;490.0025;0f;0f);
-        inventoryCols!(1;1;`LONG;200;200;20000000;1000f;0f;0f;0f;0f;0f)];
+        accountCols!(1;500f);
+        inventoryCols!(1;1;`LONG;100;100;`long$1e9;10f);
+        paramsCols!(100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;499.9025;0f;0f);
+        einventoryCols!(1;1;`LONG;200;200;`long$2e9;10f;0f;0f;0f;0f;0.0975f;0;0;100)];
     
+    revert[];
     };
 
 testApplyFill:{
@@ -121,6 +132,7 @@ testApplyFill:{
         .qunit.assertEquals[10; 10; "Account record should be present and inserted"];
     
         // Tear Down
+        revert[];
     };
     setupCols:`account`inventories`fundingRate`nextFundingTime`time`expected;
     accountCols: `balance;
@@ -135,6 +147,7 @@ testApplyFill:{
     /     fundingCols!(0;t+1;t);
     /     expectedCols!(1;0;0;0)
     / ];
+    revert[];
     
     };
 
@@ -166,6 +179,7 @@ testApplyFunding:{
         .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
     
         // Tear Down
+        revert[];
     };
     accountCols: `balance`longMargin`shortMargin`netLongPosition`netShortPosition`maintMargin`available;
     inventoryCols: `side`currentQty`totalEntry`execCosts;

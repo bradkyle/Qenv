@@ -21,10 +21,13 @@ Inventory: (
     totalCost           :  `long$();
     totalEntry          :  `long$();
     execCost            :  `long$();
-    grossProfit         :  `float$();
+    totalCloseVolume    :  `long$();
+    totalCrossVolume    :  `long$();
+    totalOpenVolume     :  `long$(); 
     totalCloseAmt       :  `float$();
     totalCrossAmt       :  `float$();
     totalOpenAmt        :  `float$(); 
+    grossProfit         :  `float$();
     liquidationPrice    :  `float$();
     bankruptPrice       :  `float$();
     breakEvenPrice      :  `float$();
@@ -34,12 +37,13 @@ Inventory: (
     markValue           :  `float$();
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
+    leverage            :  `float$();
     faceValue           :  `long$();
     fillCount           :  `long$()
     );
 
-mandCols:`accountId`side; // TODO fkeys?
-defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0,0)};
+mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
+defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
 allCols: cols Inventory;
 
 // Event creation utilities

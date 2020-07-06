@@ -106,6 +106,7 @@ ResetAccount :{[account;time]
 
 // Derives the price per contract 
 pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
+maintMarginCoeff  :{[takerFee;fundingRate] 0.005 + takerFee + fundingRate}
 
 // Calculates the realized profit and losses for a given position, size is a positive
 // or negative number that represents the portion of the current position that has been
@@ -121,6 +122,13 @@ deriveUnrealizedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
     :(pricePerContract[faceValue;avgPrice] - pricePerContract[faceValue;markPrice])*currentQty;
     };
 
+/ This is the minimum amount of margin you must maintain to avoid liquidation on your position.
+/ The amount of commission applicable to close out all your positions will also be added onto 
+/ your maintenance margin requirement.
+deriveMaintainenceMargin    :{[qty;takerFee;markPrice;faceValue]
+    :((maintMarginCoeff[takerFee;markPrice]+takerFee)*qty)*markPrice;
+    };
+
 // TODO type assertions
 // TODO what happens when in hedge mode and close is larger than position
 // Converts an execution from a fill operation on an order to the corresponding 
@@ -133,9 +141,9 @@ execFill    :{[account;inventory;fillQty;price;fee]
     // TODO errors
     cost: fee * abs fillQty;
     nxtQty: inventory[`currentQty] + fillQty;
-    leverage: 100;
+    leverage: inventory[`leverage];
     currentQty: inventory[`currentQty];
-    faceValue:1; // TODO change
+    faceValue:inventory[`faceValue]; // TODO change
 
     realizedPnlDelta:0f; // TODO change to inst realized pnl
 
@@ -152,6 +160,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         inventory[`totalEntry]: abs[nxtQty];
         inventory[`execCost]: floor[1e8%price] * abs[nxtQty];
         inventory[`currentQty]: nxtQty;
+        inventory[`totalCrossVolume]+:fillQty;
 
         / Calculates the average price of entry for the current postion, used in calculating 
         / realized and unrealized pnl.
@@ -168,6 +177,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         // to the position.
         amt:CntToMrg[((abs[currentQty]-abs[nxtQty])%leverage)-cost;price;faceValue;0b];
         account[`balance]+:(amt + realizedPnlDelta)
+        inventory[`totalCrossAmt]+:amt;
       ];
       (abs currentQty)>(abs nxtQty);
       [
@@ -176,6 +186,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;fillQty];
         inventory[`currentQty]: nxtQty;
         inventory[`realizedPnl]+:realizedPnlDelta;
+        inventory[`totalCloseVolume]+:fillQty;
 
         // Closing of position means that the value is moving
         // from the current position into the balance, cost is
@@ -184,14 +195,16 @@ execFill    :{[account;inventory;fillQty;price;fee]
         // and as such is used as the value
         amt:CntToMrg[(abs[fillQty]%leverage)-cost;price;faceValue;1b];
         account[`balance]+: (amt + realizedPnlDelta);
+        inventory[`totalCloseAmt]+:amt;
       ];
       [
         / Because the current position is being increased
         / an entry is added for calculation of average entry
         / price. 
-        inventory[`totalEntry]+: abs[nxtQty];
-        inventory[`execCost]+: floor[1e8%price] * abs[nxtQty];
+        inventory[`totalEntry]+: abs[fillQty];
+        inventory[`execCost]+: floor[1e8%price] * abs[fillQty];
         inventory[`currentQty]: nxtQty;
+        inventory[`totalOpenVolume]+:fillQty;
 
         / Calculates the average price of entry for the current postion, used in calculating 
         / realized and unrealized pnl.
@@ -206,6 +219,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
         / amount is subtracted to simulate fee.
         amt: CntToMrg[(abs[fillQty]%leverage)+cost;price;faceValue;1b];
         account[`balance]-: amt;
+        inventory[`totalOpenAmt]+:amt;
       ]
     ];
 
@@ -217,12 +231,24 @@ execFill    :{[account;inventory;fillQty;price;fee]
         inventory[`avgPrice]: 0f;
         inventory[`currentQty]: 0;
     ];0N;];
+
+    inventory[`fillCount]+:1;
+    account[`tradeCount]+:1;
+    account[`tradeVolume]+:abs[fillQty];
+    // TODO change available 
+
+    $[nextQty>0;
+        [
+            account[`longMargin]+:0;
+            account[`maintMargin]+:0;
+        ];
+        [
+
+        ]
+    ];
     
     / TODO implement
-    / inventory[`fillCount]+:1;
     / inventory[`realizedGrossPnl]+:(realizedPnlDelta - (cost%price))
-    / account[`tradeCount]+:1;
-    / account[`tradeVolume]+:abs[fillQty];
     / account[`totalCommission]+:(cost%price);
     // TODO pos margin, order margin, available, liquidation price,
     // frozen, maintMargin, netLongPosition, netShortPosition, available, posMargin etc.

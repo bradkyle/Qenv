@@ -15,6 +15,8 @@ LIQUIDATEFEETYPE    :   `TOTAL`COMMISSION;
 RISKTIERTYPE        :   `PROCEDURAL`FLAT;
 INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 
+// TODO INVERSE vs QUANTO i.e. bitmex + okex vs binance etc.
+
 Instrument: (
     [id                     : `symbol$()];
     state                   : `.instrument.INSTRUMENTSTATE$();
@@ -133,4 +135,11 @@ reserveOrderMargin  : {[side;price;size;orderId;time]
         [:0b]
     ];
     :events;
+    };
+
+/ This is the minimum amount of margin you must maintain to avoid liquidation on your position.
+/ The amount of commission applicable to close out all your positions will also be added onto 
+/ your maintenance margin requirement.
+deriveMainteneceMargin  : {[]
+
     };
