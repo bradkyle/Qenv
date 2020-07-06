@@ -1,6 +1,7 @@
 system "d .accountTest";
 \l account.q
 \l inventory.q
+\l util.q
 
 
 // Event creation utilities
@@ -53,21 +54,32 @@ testNewAccount:{
 testExecFill:{
     runCase: {[dscr; account; inventory; params; eaccount; einventory]
         // Setup
-        show "=================================================";
         time:.z.z;
-        events:.account.NewAccount[account;time];
 
-        show events;
-        show "=================================================";
+        account:Sanitize[account;.account.defaults[];.account.allCols];        
+        inventory:Sanitize[inventory;.inventory.defaults[];.inventory.allCols];
 
         // Execute tested function
-        res:.account.execFill[acc;pos;10;1000f;0.00075];
+        .account.execFill[account;inventory;10;1000f;0.00075];
+
+        acc:exec from .account.Account where accountId=account[`accountId];
+        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Run tests on state
-        / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        / .qunit.assertEquals[posr[`currentQty]; 10; "Account record should be present and inserted"];
-        / .qunit.assertEquals[accr[`balance]; 0.9998925; "Account record should be present and inserted"];
-    
+        .qunit.assertEquals[eaccount[`balance]; acc[`balance]; "Should return true"];
+        .qunit.assertEquals[eaccount[`realizedPnl]; acc[`realizedPnl]; "Should return true"];
+        .qunit.assertEquals[eaccount[`unrealizedPnl]; acc[`unrealizedPnl]; "Should return true"];
+
+        .qunit.assertEquals[einventory[`currentQty]; invn[`currenQty]; "Should return true"];
+        .qunit.assertEquals[einventory[`totalEntry]; invn[`totalEntry]; "Should return true"];
+        .qunit.assertEquals[einventory[`execCosts]; invn[`execCosts]; "Should return true"];
+        .qunit.assertEquals[einventory[`avgPrice]; invn[`avgPrice]; "Should return true"];
+        .qunit.assertEquals[einventory[`realizedPnl]; invn[`realizedPnl]; "Should return true"]; 
+        .qunit.assertEquals[einventory[`unrealizedPnl]; invn[`unrealizedPnl]; "Should return true"]; 
+        .qunit.assertEquals[einventory[`totalCloseAmt]; invn[`totalCloseAmt]; "Should return true"]; 
+        .qunit.assertEquals[einventory[`totalCrossAmt]; invn[`totalCrossAmt]; "Should return true"]; 
+        .qunit.assertEquals[einventory[`totalOpenAmt]; invn[`totalOpenAmt]; "Should return true"]; 
+
         // Tear Down
        delete from `.account.Account;
        delete from `.inventory.Inventory;
@@ -76,19 +88,21 @@ testExecFill:{
     };
 
     // TODO margin etc.
-    accountCols: `balance`realizedPnl`unrealizedPnl;
-    inventoryCols: `side`currentQty`totalEntry`execCosts`avgPrice`realizedPnl`unrealizedPnl`totalCloseAmt`totalCrossAmt`totalOpenAmt;
+    accountCols: `accountId`balance`realizedPnl`unrealizedPnl;
+    inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
+                   `execCosts`avgPrice`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt);
     paramsCols:`fillQty`price`fee;
 
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
 
     runCase["long_to_longer";
-        accountCols!(500f;0f;0f);
-        inventoryCols!(`LONG;100;100;10000000;1000f;0;0;0;0;0);
+        accountCols!(1;500f;0f;0f);
+        inventoryCols!(1;1;`LONG;100;100;10000000;1000f;0f;0f;0f;0f;0f);
         paramsCols!(100;1000f;-0.00025); // flat maker fee
-        accountCols!(490.0025;0;0);
-        inventoryCols!(`LONG;200;200;20000000;1000f;0;0;0;0;0)];
+        accountCols!(1;490.0025;0f;0f);
+        inventoryCols!(1;1;`LONG;200;200;20000000;1000f;0f;0f;0f;0f;0f)];
     
     };
 

@@ -135,9 +135,9 @@ execFill    :{[account;inventory;fillQty;price;fee]
     nxtQty: inventory[`currentQty] + fillQty;
     leverage: 100;
     currentQty: inventory[`currentQty];
-    faceValue:1;
+    faceValue:1; // TODO change
 
-    realizedPnlDelta:0; // TODO change to inst realized pnl
+    realizedPnlDelta:0f; // TODO change to inst realized pnl
 
     $[(currentQty*nxtQty)<0;
       [
@@ -214,7 +214,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
     $[nxtQty=0;[
         inventory[`totalEntry]:0;
         inventory[`execCost]:0;
-        inventory[`avgPrice]: 0;
+        inventory[`avgPrice]: 0f;
         inventory[`currentQty]: 0;
     ];0N;];
     
