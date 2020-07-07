@@ -258,7 +258,6 @@ execFill    :{[account;inventory;fillQty;price;fee]
     / divided by the selected leverage, plus unrealised profit and loss.
     inventory[`initMargin]:inventory[`entryValue]%leverage;
     inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
-    
     inventory[`liquidationPrice]: deriveLiquidationPrice[]; 
     inventory[`bankruptPrice]: deriveBankruptPrice[];
     inventory[`realizedPnl]+:realizedPnlDelta;
