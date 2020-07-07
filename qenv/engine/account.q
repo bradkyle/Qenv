@@ -259,12 +259,10 @@ execFill    :{[account;inventory;fillQty;price;fee]
     inventory[`initMargin]:inventory[`entryValue]%leverage;
     inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
     
-    
     inventory[`liquidationPrice]: deriveLiquidationPrice[]; 
     inventory[`bankruptPrice]: deriveBankruptPrice[];
     inventory[`realizedPnl]+:realizedPnlDelta;
     inventory[`unrealizedPnl]:unrealizedPnl;
-
 
     account[`netLongPosition]:0;
     account[`netShortPosition]:0; // TODO fix for account
