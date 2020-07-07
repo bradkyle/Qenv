@@ -21,7 +21,10 @@ Account: (
             maintMargin         : `float$();
             available           : `float$();
             openBuyOrderQty     : `long$();
+            openBuyPremium      : `float$();
             openSellOrderQty    : `long$();
+            openSellPremium     : `float$();
+            orderMargin         : `float$();
             marginType          : `.account.MARGINTYPE$();
             positionType        : `.account.POSITIONTYPE$();
             depositAmount       : `float$();
@@ -32,6 +35,7 @@ Account: (
             tradeCount          : `long$();
             netLongPosition     : `long$();
             netShortPosition    : `long$();
+            posMargin           : `long$();
             longMargin          : `float$();
             shortMargin         : `float$();
             shortFundingCost    : `float$();
@@ -44,7 +48,7 @@ Account: (
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -125,12 +129,38 @@ deriveUnrealizedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
 / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
 / The amount of commission applicable to close out all your positions will also be added onto 
 / your maintenance margin requirement.
-deriveMaintainenceMargin    :{[qty;takerFee;markPrice;faceValue]
-    :((maintMarginCoeff[takerFee;markPrice]+takerFee)*qty)*markPrice;
+deriveMaintainenceMargin    :{[currentQty;takerFee;markPrice;faceValue]
+    :((maintMarginCoeff[takerFee;markPrice]+takerFee)*currentQty)*pricePerContract[faceValue;markPrice];
     };
 
+/ Calculate the position liquidation price
+/ To do this, we use the PNL equation from the series guide to determine 
+/ the price at which only the maintenance margin remains on the position 
+/ (ie, the rest of the initial margin has been deducted due 
+/ to unrealised losses.)
+/ (Size * (1/Entry Price - 1/Liquidation Price)) = (Initial Margin - MM) * -1
+/ (200000 * (1/10000 - 1/Liquidation Price)) = (1 - 0.1178517) * -1
+/ Liquidation Price = $9577.56
+deriveLiquidationPrice      :{[currentQty;avgPrice;initMargin;maintMargin]
+        :currentQty%((currentQty%avgPrice)-((initMargin-maintMargin)*-1))
+    };
 
-betterExecFill  :{[]
+/ Calculate the position bankruptcy price
+/ To do this, we use the PNL equation from the series guide to 
+/ determine the price at which the initial margin of the position 
+/ has been lost.
+/ Size * (1/Entry Price - 1/Bankruptcy Price) = Initial Margin * -1
+/ 200000 * (1/10000 - 1/Bankruptcy Price) = 1 * -1
+/ Bankruptcy Price = 9523
+deriveBankruptPrice          :{[currentQty;avgPrice;initMargin]
+    :currentQty%((currentQty%avgPrice)-(initMargin*-1))
+    };
+
+deriveBreakevenPrice        :{[]
+
+    };
+
+betterExecFill  :{[account;inventory;fillQty;price;fee]
 
 
 }
@@ -150,6 +180,9 @@ execFill    :{[account;inventory;fillQty;price;fee]
     leverage: inventory[`leverage];
     currentQty: inventory[`currentQty];
     faceValue:inventory[`faceValue]; // TODO change
+    markPrice:inventory[`markPrice];
+    takerFee:account[`activeTakerFee];
+    makerFee:account[`activeMakerFee];
 
     realizedPnlDelta:0f; // TODO change to inst realized pnl
 
@@ -175,7 +208,41 @@ execFill    :{[account;inventory;fillQty;price;fee]
            1e8%ceiling[x[`execCost]%x[`totalEntry]]
           ]}[inventory];
 
+        unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
+
         inventory[`entryValue]: abs[inventory[`currentQty]]%inventory[`avgPrice];
+        inventory[`totalCrossVolume]: 0;
+        inventory[`totalCrossAmt]: 0;
+
+        / The portion of your margin that is assigned to the initial margin requirements 
+        / on your open positions. This is the entry value of all contracts you hold 
+        / divided by the selected leverage, plus unrealised profit and loss.
+        inventory[`initMargin]:0;
+        inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
+        
+        
+        inventory[`liquidationPrice]: 0; 
+
+        
+        inventory[`bankruptPrice]: 0;
+        
+        // TODO
+        inventory[`breakEvenPrice]: 0;
+        inventory[`realizedPnl]+:realizedPnlDelta;
+        inventory[`unrealizedPnl]:unrealizedPnl;
+
+        account[`frozen]:0;
+        account[`netLongPosition]:0;
+        account[`netShortPosition]:0; // TODO fix for account
+        account[`maintMargin]:deriveMaintainenceMargin[inventory[`currentQty];takerFee;markPrice;faceValue];
+        account[`posMargin]:0;
+        account[`longMargin]:0;
+        account[`shortMargin]:0;
+        account[`realizedPnl]+:realizedPnlDelta;
+        account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
+        account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
+        account[`unrealizedPnl]:unrealizedPnl;
+        account[`available]:account[`available]-account[`orderMargin]-account[`posMargin];
 
         // Closing of the position means that the value is
         // moving from the current position into the balance

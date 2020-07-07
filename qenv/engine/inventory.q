@@ -18,6 +18,7 @@ Inventory: (
     realizedPnl         :  `float$();
     unrealizedPnl       :  `float$();
     posMargin           :  `float$();
+    entryValue          :  `float$();
     totalCost           :  `long$();
     totalEntry          :  `long$();
     execCost            :  `long$();
@@ -27,7 +28,6 @@ Inventory: (
     totalCloseAmt       :  `float$();
     totalCrossAmt       :  `float$();
     totalOpenAmt        :  `float$(); 
-    grossProfit         :  `float$();
     liquidationPrice    :  `float$();
     bankruptPrice       :  `float$();
     breakEvenPrice      :  `float$();
@@ -38,12 +38,13 @@ Inventory: (
     initMarginReq       :  `float$();
     maintMarginReq      :  `float$();
     leverage            :  `float$();
+    effectiveLeverage   :  `float$();
     faceValue           :  `long$();
     fillCount           :  `long$()
     );
 
 mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
-defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
+defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0:0;,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
 allCols: cols Inventory;
 
 // Event creation utilities
