@@ -273,9 +273,6 @@ execFill    :{[account;inventory;fillQty;price;fee]
     account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
     account[`unrealizedPnl]:unrealizedPnl;
     account[`balance]+:realizedPnlDelta;
-    show 90#"+";
-    show account[`posMargin];
-    show account[`initMargin];
     account[`available]:account[`balance]-(account[`orderMargin]+account[`posMargin]);
     
     / TODO implement
