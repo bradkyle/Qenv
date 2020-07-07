@@ -98,8 +98,6 @@ NewInstrument            :{[instrument; time]
     .logger.Debug["instrument validated and decorated"];
     };
 
-
-
 // Conditional Utilities
 // -------------------------------------------------------------->
 // conditional utilities define transition logic based upon the configuration defined for

@@ -160,10 +160,6 @@ deriveBreakevenPrice        :{[]
 
     };
 
-betterExecFill  :{[account;inventory;fillQty;price;fee]
-
-
-}
 
 // TODO type assertions
 // TODO what happens when in hedge mode and close is larger than position
@@ -207,52 +203,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
            1e8%floor[x[`execCost]%x[`totalEntry]];
            1e8%ceiling[x[`execCost]%x[`totalEntry]]
           ]}[inventory];
-
-        unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
-
-        inventory[`entryValue]: abs[inventory[`currentQty]]%inventory[`avgPrice];
-        inventory[`totalCrossVolume]: 0;
-        inventory[`totalCrossAmt]: 0;
-
-        / The portion of your margin that is assigned to the initial margin requirements 
-        / on your open positions. This is the entry value of all contracts you hold 
-        / divided by the selected leverage, plus unrealised profit and loss.
-        inventory[`initMargin]:0;
-        inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
-        
-        
-        inventory[`liquidationPrice]: 0; 
-
-        
-        inventory[`bankruptPrice]: 0;
-        
-        // TODO
-        inventory[`breakEvenPrice]: 0;
-        inventory[`realizedPnl]+:realizedPnlDelta;
-        inventory[`unrealizedPnl]:unrealizedPnl;
-
-        account[`frozen]:0;
-        account[`netLongPosition]:0;
-        account[`netShortPosition]:0; // TODO fix for account
-        account[`maintMargin]:deriveMaintainenceMargin[inventory[`currentQty];takerFee;markPrice;faceValue];
-        account[`posMargin]:0;
-        account[`longMargin]:0;
-        account[`shortMargin]:0;
-        account[`realizedPnl]+:realizedPnlDelta;
-        account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
-        account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
-        account[`unrealizedPnl]:unrealizedPnl;
-        account[`available]:account[`available]-account[`orderMargin]-account[`posMargin];
-
-        // Closing of the position means that the value is
-        // moving from the current position into the balance
-        // cost is subtracted from this execution amount.
-        // Because the execution is larger than the position the 
-        // amount of value added back to the balance is equivalent
-        // to the position.
-        amt:CntToMrg[((abs[currentQty]-abs[nxtQty])%leverage)-cost;price;faceValue;0b];
-        account[`balance]+:(amt + realizedPnlDelta)
-        inventory[`totalCrossAmt]+:amt;
+ 
       ];
       (abs currentQty)>(abs nxtQty);
       [
@@ -263,14 +214,6 @@ execFill    :{[account;inventory;fillQty;price;fee]
         inventory[`realizedPnl]+:realizedPnlDelta;
         inventory[`totalCloseVolume]+:fillQty;
 
-        // Closing of position means that the value is moving
-        // from the current position into the balance, cost is
-        // subtracted from this execution amount, it also means
-        // that the execution is smaller than the position
-        // and as such is used as the value
-        amt:CntToMrg[(abs[fillQty]%leverage)-cost;price;faceValue;1b];
-        account[`balance]+: (amt + realizedPnlDelta);
-        inventory[`totalCloseAmt]+:amt;
       ];
       [
         / Because the current position is being increased
@@ -288,13 +231,6 @@ execFill    :{[account;inventory;fillQty;price;fee]
            1e8%ceiling[x[`execCost]%x[`totalEntry]]
           ]}[inventory];
 
-        / Opening of position means that value is moving from
-        / the current balance to the position and as thus
-        / the cost is added to the execution i.e. an additional
-        / amount is subtracted to simulate fee.
-        amt: CntToMrg[(abs[fillQty]%leverage)+cost;price;faceValue;1b];
-        account[`balance]-: amt;
-        inventory[`totalOpenAmt]+:amt;
       ]
     ];
 
@@ -310,17 +246,38 @@ execFill    :{[account;inventory;fillQty;price;fee]
     inventory[`fillCount]+:1;
     account[`tradeCount]+:1;
     account[`tradeVolume]+:abs[fillQty];
-    // TODO change available 
+    
+    unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
 
-    $[nextQty>0;
-        [
-            account[`longMargin]+:0;
-            account[`maintMargin]+:0;
-        ];
-        [
+    inventory[`entryValue]: abs[inventory[`currentQty]]%inventory[`avgPrice];
+    inventory[`totalCrossVolume]: 0;
+    inventory[`totalCrossAmt]: 0;
 
-        ]
-    ];
+    / The portion of your margin that is assigned to the initial margin requirements 
+    / on your open positions. This is the entry value of all contracts you hold 
+    / divided by the selected leverage, plus unrealised profit and loss.
+    inventory[`initMargin]:inventory[`entryValue]%leverage;
+    inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
+    
+    
+    inventory[`liquidationPrice]: deriveLiquidationPrice[]; 
+    inventory[`bankruptPrice]: deriveBankruptPrice[];
+    inventory[`realizedPnl]+:realizedPnlDelta;
+    inventory[`unrealizedPnl]:unrealizedPnl;
+
+
+    account[`netLongPosition]:0;
+    account[`netShortPosition]:0; // TODO fix for account
+    account[`maintMargin]:deriveMaintainenceMargin[inventory[`currentQty];takerFee;markPrice;faceValue];
+    account[`posMargin]:0;
+    account[`longMargin]:0;
+    account[`shortMargin]:0;
+    account[`realizedPnl]+:realizedPnlDelta;
+    account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
+    account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
+    account[`unrealizedPnl]:unrealizedPnl;
+    account[`balance]+:realizedPnl;
+    account[`available]:account[`balance]-account[`orderMargin]-account[`posMargin];
     
     / TODO implement
     / inventory[`realizedGrossPnl]+:(realizedPnlDelta - (cost%price))

@@ -44,7 +44,7 @@ Inventory: (
     );
 
 mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
-defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0:0;,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
+defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
 allCols: cols Inventory;
 
 // Event creation utilities
