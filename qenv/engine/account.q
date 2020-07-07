@@ -35,12 +35,14 @@ Account: (
             tradeCount          : `long$();
             netLongPosition     : `long$();
             netShortPosition    : `long$();
-            posMargin           : `long$();
+            posMargin           : `float$();
             longMargin          : `float$();
             shortMargin         : `float$();
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
             totalFundingCost    : `float$();
+            totalLossPnl        : `float$();
+            totalGainPnl        : `float$();
             realizedPnl         : `float$();
             unrealizedPnl       : `float$();
             activeMakerFee      : `float$();
@@ -48,7 +50,7 @@ Account: (
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -142,7 +144,7 @@ deriveMaintainenceMargin    :{[currentQty;takerFee;markPrice;faceValue]
 / (200000 * (1/10000 - 1/Liquidation Price)) = (1 - 0.1178517) * -1
 / Liquidation Price = $9577.56
 deriveLiquidationPrice      :{[currentQty;avgPrice;initMargin;maintMargin]
-        :currentQty%((currentQty%avgPrice)-((initMargin-maintMargin)*-1))
+        :(currentQty%((currentQty%avgPrice)-((initMargin-maintMargin)*-1)))
     };
 
 / Calculate the position bankruptcy price
@@ -153,12 +155,11 @@ deriveLiquidationPrice      :{[currentQty;avgPrice;initMargin;maintMargin]
 / 200000 * (1/10000 - 1/Bankruptcy Price) = 1 * -1
 / Bankruptcy Price = 9523
 deriveBankruptPrice          :{[currentQty;avgPrice;initMargin]
-    :currentQty%((currentQty%avgPrice)-(initMargin*-1))
+    :(currentQty%((currentQty%avgPrice)-(initMargin*-1)))
     };
 
-deriveBreakevenPrice        :{[]
-
-    };
+// TODO
+deriveBreakevenPrice        :{[]};
 
 
 // TODO type assertions
@@ -234,6 +235,8 @@ execFill    :{[account;inventory;fillQty;price;fee]
       ]
     ];
 
+    realizedPnlDelta-:cost;
+
     // If the next position will be 0
     // reset the entry values for the position.
     $[nxtQty=0;[
@@ -250,38 +253,36 @@ execFill    :{[account;inventory;fillQty;price;fee]
     unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
 
     inventory[`entryValue]: abs[inventory[`currentQty]]%inventory[`avgPrice];
-    inventory[`totalCrossVolume]: 0;
-    inventory[`totalCrossAmt]: 0;
 
     / The portion of your margin that is assigned to the initial margin requirements 
     / on your open positions. This is the entry value of all contracts you hold 
     / divided by the selected leverage, plus unrealised profit and loss.
     inventory[`initMargin]:inventory[`entryValue]%leverage;
     inventory[`posMargin]:inventory[`entryValue]%leverage + unrealizedPnl;
-    inventory[`liquidationPrice]: deriveLiquidationPrice[]; 
-    inventory[`bankruptPrice]: deriveBankruptPrice[];
+    inventory[`liquidationPrice]: deriveLiquidationPrice[inventory[`currentQty];inventory[`avgPrice];inventory[`initMargin];inventory[`maintMargin]]; 
+    inventory[`bankruptPrice]: deriveBankruptPrice[inventory[`currentQty];inventory[`avgPrice];inventory[`initMargin]];
     inventory[`realizedPnl]+:realizedPnlDelta;
     inventory[`unrealizedPnl]:unrealizedPnl;
 
-    account[`netLongPosition]:0;
-    account[`netShortPosition]:0; // TODO fix for account
     account[`maintMargin]:deriveMaintainenceMargin[inventory[`currentQty];takerFee;markPrice;faceValue];
-    account[`posMargin]:0;
-    account[`longMargin]:0;
-    account[`shortMargin]:0;
+    account[`longMargin]:$[(inventory[`side]=`LONG) or ((inventory[`side]=`BOTH) & (inventory[`currentQty]>0));inventory[`posMargin];account[`longMargin]];
+    account[`shortMargin]:$[(inventory[`side]=`SHORT) or ((inventory[`side]=`BOTH) & (inventory[`currentQty]<0));inventory[`posMargin];account[`shortMargin]];
+    account[`posMargin]:account[`longMargin] + account[`shortMargin];
     account[`realizedPnl]+:realizedPnlDelta;
     account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
     account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
     account[`unrealizedPnl]:unrealizedPnl;
-    account[`balance]+:realizedPnl;
-    account[`available]:account[`balance]-account[`orderMargin]-account[`posMargin];
+    account[`balance]+:realizedPnlDelta;
+    show 90#"+";
+    show account[`posMargin];
+    show account[`initMargin];
+    account[`available]:account[`balance]-(account[`orderMargin]+account[`posMargin]);
     
     / TODO implement
     / inventory[`realizedGrossPnl]+:(realizedPnlDelta - (cost%price))
     / account[`totalCommission]+:(cost%price);
     // TODO pos margin, order margin, available, liquidation price,
     // frozen, maintMargin, netLongPosition, netShortPosition, available, posMargin etc.
-
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
     / :(account;inventory);

@@ -71,6 +71,7 @@ testExecFill:{
 
         // Run tests on state
         .qunit.assertEquals[acc[`balance]; eaccount[`balance]; "account balance"];
+        .qunit.assertEquals[acc[`available]; eaccount[`available]; "account available"];
         .qunit.assertEquals[acc[`realizedPnl]; eaccount[`realizedPnl]; "account realized pnl"];
         .qunit.assertEquals[acc[`unrealizedPnl]; eaccount[`unrealizedPnl]; "account unrealized pnl"];
 
@@ -99,7 +100,7 @@ testExecFill:{
     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
                    `execCost`avgPrice);
     paramsCols:`fillQty`price`fee;
-    eaccountCols:accountCols,`realizedPnl`unrealizedPnl;
+    eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
     einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
                    `totalCloseVolume`totalCrossVolume`totalOpenVolume;
@@ -111,7 +112,7 @@ testExecFill:{
         accountCols!(1;500f);
         inventoryCols!(1;1;`LONG;100;100;`long$1e9;10f);
         paramsCols!(100;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;499.9025;0f;0f);
+        eaccountCols!(1;500.025f;499.025;0.025f;0f);
         einventoryCols!(1;1;`LONG;200;200;`long$2e9;10f;0f;0f;0f;0f;0.0975f;0;0;100)];
     
     revert[];
