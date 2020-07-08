@@ -10,42 +10,46 @@ inventoryCount:0;
 POSITIONSIDE   : `LONG`SHORT`BOTH;
 
 Inventory: (
-    [inventoryId        :  `long$()]
-    accountId           :  `long$();
-    side                :  `.inventory.POSITIONSIDE$();
-    currentQty          :  `long$();
-    avgPrice            :  `float$();
-    realizedPnl         :  `float$();
-    unrealizedPnl       :  `float$();
-    posMargin           :  `float$();
-    initMargin          :  `float$();
-    entryValue          :  `float$();
-    totalCost           :  `long$();
-    totalEntry          :  `long$();
-    execCost            :  `long$();
-    totalCloseVolume    :  `long$();
-    totalCrossVolume    :  `long$();
-    totalOpenVolume     :  `long$(); 
-    totalCloseAmt       :  `float$();
-    totalCrossAmt       :  `float$();
-    totalOpenAmt        :  `float$(); 
-    liquidationPrice    :  `float$();
-    bankruptPrice       :  `float$();
-    breakEvenPrice      :  `float$();
-    lastPrice           :  `float$();
-    lastValue           :  `float$();
-    markPrice           :  `float$();
-    markValue           :  `float$();
-    initMarginReq       :  `float$();
-    maintMarginReq      :  `float$();
-    leverage            :  `float$();
-    effectiveLeverage   :  `float$();
-    faceValue           :  `long$();
-    fillCount           :  `long$()
+    [inventoryId             :  `long$()]
+    accountId                :  `long$();
+    side                     :  `.inventory.POSITIONSIDE$();
+    currentQty               :  `long$();
+    avgPrice                 :  `float$();
+    realizedPnl              :  `float$();
+    unrealizedPnl            :  `float$();
+    posMargin                :  `float$();
+    initMargin               :  `float$();
+    entryValue               :  `float$();
+    totalCost                :  `long$();
+    totalEntry               :  `long$();
+    execCost                 :  `long$();
+    totalCloseVolume         :  `long$();
+    totalCrossVolume         :  `long$();
+    totalOpenVolume          :  `long$(); 
+    totalCloseMarketValue    :  `float$();
+    totalCrossMarketValue    :  `float$();
+    totalOpenMarketValue     :  `float$(); 
+    totalCloseAmt            :  `float$();
+    totalCrossAmt            :  `float$();
+    totalOpenAmt             :  `float$(); 
+    liquidationPrice         :  `float$();
+    bankruptPrice            :  `float$();
+    breakEvenPrice           :  `float$();
+    lastPrice                :  `float$();
+    lastValue                :  `float$();
+    markPrice                :  `float$();
+    markValue                :  `float$();
+    initMarginReq            :  `float$();
+    maintMarginReq           :  `float$();
+    leverage                 :  `float$();
+    effectiveLeverage        :  `float$();
+    totalCommission          :  `float$();
+    faceValue                :  `long$();
+    fillCount                :  `long$()
     );
 
 mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
-defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,1,0)};
+defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,100f,0f,1,0)};
 allCols: cols Inventory;
 
 // Event creation utilities

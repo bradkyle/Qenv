@@ -84,9 +84,12 @@ testExecFill:{
         .qunit.assertEquals[invn[`totalCloseAmt]; einventory[`totalCloseAmt]; "inventory total close amt"]; 
         .qunit.assertEquals[invn[`totalCrossAmt]; einventory[`totalCrossAmt]; "inventory total cross amt"]; 
         .qunit.assertEquals[invn[`totalOpenAmt]; einventory[`totalOpenAmt]; "inventory total open amt"]; 
-        .qunit.assertEquals[invn[`totalCloseVolume]; einventory[`totalCloseVolume]; "inventory total close amt"]; 
-        .qunit.assertEquals[invn[`totalCrossVolume]; einventory[`totalCrossVolume]; "inventory total cross amt"]; 
-        .qunit.assertEquals[invn[`totalOpenVolume]; einventory[`totalOpenVolume]; "inventory total open amt"]; 
+        .qunit.assertEquals[invn[`totalCloseVolume]; einventory[`totalCloseVolume]; "inventory total close vol"]; 
+        .qunit.assertEquals[invn[`totalCrossVolume]; einventory[`totalCrossVolume]; "inventory total cross vol"]; 
+        .qunit.assertEquals[invn[`totalOpenVolume]; einventory[`totalOpenVolume]; "inventory total open vol"]; 
+        .qunit.assertEquals[invn[`totalCloseMarketValue]; einventory[`totalCloseMarketValue]; "inventory total close market value"]; 
+        .qunit.assertEquals[invn[`totalCrossMarketValue]; einventory[`totalCrossMarketValue]; "inventory total cross market value"]; 
+        .qunit.assertEquals[invn[`totalOpenMarketValue]; einventory[`totalOpenMarketValue]; "inventory total open market value"]; 
 
         // Tear Down
        delete from `.account.Account;
@@ -97,24 +100,79 @@ testExecFill:{
 
     // TODO margin etc.
     accountCols: `accountId`balance;
+    priceCols: `markPrice`lastPrice;
     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
                    `execCost`avgPrice);
     paramsCols:`fillQty`price`fee;
     eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
     einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
-                   `totalCloseVolume`totalCrossVolume`totalOpenVolume;
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                   `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
 
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
 
-    runCase["long_to_longer";
+    // Hedged tests
+    // =======================================================================================>
+
+    // open
+    runCase["hedged:long_to_longer";
         accountCols!(1;500f);
-        inventoryCols!(1;1;`LONG;100;100;`long$1e9;10f);
+        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
         paramsCols!(100;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;500.025f;499.025;0.025f;0f);
-        einventoryCols!(1;1;`LONG;200;200;`long$2e9;10f;0f;0f;0f;0f;0.0975f;0;0;100)];
+        eaccountCols!(1;500.025f;499.825;0.025f;0f);
+        einventoryCols!(1;1;`LONG;200;200;`long$2e9;10f;0.025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f)];
     
+    // close
+    runCase["hedged:longer_to_long";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(-50;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.0125f;499.9625;0.0125f;0f);
+        einventoryCols!(1;1;`LONG;50;100;`long$1e9;10f;0.0125f;0f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
+
+    // flatten
+    runCase["hedged:long_to_flat";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(-100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.025f;500.025f;0.025f;0f);
+        einventoryCols!(1;1;`LONG;0;0;0;0f;0.025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+
+    // TODO
+    / runCase["long_to_short"; 
+    /     accountCols!(1;500f);
+    /     (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
+    /     paramsCols!(-150;10f;-0.00025); // flat maker fee
+    /     eaccountCols!(1;500.0375f;500.025f;0.025f;0f);
+    /     einventoryCols!(1;1;`LONG;0;0;0;0f;0.025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+
+
+    // open
+    runCase["combined:long_to_longer";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.025f;499.825;0.025f;0f);
+        einventoryCols!(1;1;`BOTH;200;200;`long$2e9;10f;0.025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f)];
+    
+    // close
+    runCase["combined:longer_to_long";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(-50;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.0125f;499.9625;0.0125f;0f);
+        einventoryCols!(1;1;`BOTH;50;100;`long$1e9;10f;0.0125f;0f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
+
+    // flatten
+    runCase["combined:long_to_flat";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(-100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.025f;500.025f;0.025f;0f);
+        einventoryCols!(1;1;`BOTH;0;0;0;0f;0.025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+
     revert[];
     };
 
