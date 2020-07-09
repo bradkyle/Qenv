@@ -109,6 +109,7 @@ testExecFill:{
                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
                    `totalCloseVolume`totalCrossVolume`totalOpenVolume,
                    `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
+                /    `initMargin`posMargin`liquidationPrice`;
 
     // TEST BOTH, LONG, SHORT etc.
     // TEST margin usage
@@ -142,38 +143,32 @@ testExecFill:{
         eaccountCols!(1;500.0025f;500.0025f;0.0025f;0f);
         einventoryCols!(1;1;`LONG;0;0;0;0f;0.0025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
 
-    // TODO should not allow
-    / runCase["long_to_short"; 
-    /     accountCols!(1;500f);
-    /     (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
-    /     paramsCols!(-150;10f;-0.00025); // flat maker fee
-    /     eaccountCols!(1;500.0375f;500.025f;0.025f;0f);
-    /     einventoryCols!(1;1;`LONG;0;0;0;0f;0.025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
-
     // open
-    runCase["combined:short_to_shorter";
+    runCase["hedged:short_to_shorter";
         accountCols!(1;500f);
-        (inventoryCols,priceCols)!(1;1;`SHORT;100;100;`long$1e9;10f;10f;10f);
-        paramsCols!(100;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;500.0025f;499.8025;0.0025f;0f);
-        einventoryCols!(1;1;`BOTH;200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f)];
-
-    // close
-    runCase["combined:shorter_to_short";
-        accountCols!(1;500f);
-        (inventoryCols,priceCols)!(1;1;`SHORT;100;100;`long$1e9;10f;10f;10f);
-        paramsCols!(-50;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;500.00125f;499.95125;0.00125f;0f);
-        einventoryCols!(1;1;`BOTH;50;100;`long$1e9;10f;0.00125f;0f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
-
-    // close
-    runCase["combined:shorter_to_flat";
-        accountCols!(1;500f);
-        (inventoryCols,priceCols)!(1;1;`SHORT;100;100;`long$1e9;10f;10f;10f);
+        (inventoryCols,priceCols)!(1;1;`SHORT;-100;100;`long$1e9;10f;10f;10f);
         paramsCols!(-100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.0025f;499.8025;0.0025f;0f);
+        einventoryCols!(1;1;`SHORT;-200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f)];
+
+    // close
+    runCase["hedged:shorter_to_short";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`SHORT;-100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(50;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;500.00125f;499.95125;0.00125f;0f);
+        einventoryCols!(1;1;`SHORT;-50;100;`long$1e9;10f;0.00125f;0f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
+
+    // close
+    runCase["hedged:shorter_to_flat";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`SHORT;-100;100;`long$1e9;10f;10f;10f);
+        paramsCols!(100;10f;-0.00025); // flat maker fee
         eaccountCols!(1;500.0025f;500.0025;0.0025f;0f);
         einventoryCols!(1;1;`BOTH;0;0;`long$0;0f;0.0025f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
 
+
+    // Combined tests
     // ------------------------------------------------------------------------------------------>
 
     // open
@@ -264,9 +259,43 @@ testExecFill:{
         eaccountCols!(1;500.00625f;499.85625;0.00625f;0f);
         einventoryCols!(1;1;`BOTH;150;150;`long$1.5e9;10f;0.00625f;0f;0f;25f;0f;0;250;0;0f;0.25f;0f)];
 
-    // RPNL tests
+    
+    // HEDGED RPNL tests
     // ------------------------------------------------------------------------------------------>
-    // TODO long short
+
+    runCase["hedged:short_to_flat_rpl_-50";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`SHORT;-100;100;`long$1e9;10f;20f;20f);
+        paramsCols!(100;20f;-0.00025); // flat maker fee
+        eaccountCols!(1;495.00125f;495.00125f;-4.99875f;0f);
+        einventoryCols!(1;1;`SHORT;0;0;`long$0;0f;-4.99875f;0f;5f;0f;0f;100;0;0;0.05f;0f;0f)];
+
+
+    runCase["hedged:long_to_flat_rpl_50";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;20f;20f);
+        paramsCols!(-100;20f;-0.00025); // flat maker fee
+        eaccountCols!(1;505.00125f;505.00125f;5.00125f;0f);
+        einventoryCols!(1;1;`LONG;0;0;`long$0;0f;5.00125f;0f;5f;0f;0f;100;0;0;0.05f;0f;0f)];
+
+
+    runCase["hedged:short_to_flat_rpl_50";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`SHORT;-100;100;`long$1e9;20f;10f;10f);
+        paramsCols!(100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;505.0025f;505.0025f;5.0025;0f);
+        einventoryCols!(1;1;`SHORT;0;0;`long$0;0f;5.0025;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+ 
+    runCase["hedged:long_to_flat_rpl_-50";
+        accountCols!(1;500f);
+        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;20f;10f;10f);
+        paramsCols!(-100;10f;-0.00025); // flat maker fee
+        eaccountCols!(1;495.0025f;495.0025f;-4.9975f;0f);
+        einventoryCols!(1;1;`LONG;0;0;`long$0;0f;-4.9975f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+
+    // COMBINED RPNL tests
+    // ------------------------------------------------------------------------------------------>
+    // TODO half flat!!
      
     runCase["combined:short_to_flat_rpl_-50";
         accountCols!(1;500f);
@@ -331,6 +360,12 @@ testExecFill:{
     // UPNL tests
     // ------------------------------------------------------------------------------------------>
     // TODO long short
+
+    auxInventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                   `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
+    
 
     revert[];
     };

@@ -20,6 +20,7 @@ Account: (
             frozen              : `float$();
             maintMargin         : `float$();
             available           : `float$();
+            withdrawable        : `float$();
             openBuyOrderQty     : `long$();
             openBuyPremium      : `float$();
             openSellOrderQty    : `long$();
@@ -44,6 +45,8 @@ Account: (
             totalLossPnl        : `float$();
             totalGainPnl        : `float$();
             realizedPnl         : `float$();
+            liquidationPrice    : `float$();
+            bankruptPrice       : `float$();
             unrealizedPnl       : `float$();
             activeMakerFee      : `float$();
             activeTakerFee      : `float$();
@@ -51,7 +54,7 @@ Account: (
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -131,7 +134,7 @@ deriveUnrealizedPnl :{[avgPrice;markPrice;faceValue;currentQty]; // TODO is curr
 
 / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
 / The amount of commission applicable to close out all your positions will also be added onto 
-/ your maintenance margin requirement.
+/ your maintenance margin requirement. // TODO make strategy dependent
 deriveMaintainenceMargin    :{[currentQty;takerFee;markPrice;faceValue]
     :((maintMarginCoeff[takerFee;markPrice]+takerFee)*currentQty)*pricePerContract[faceValue;markPrice];
     };
@@ -195,9 +198,9 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
     // If the order is close and is in a hedged
     // position return with err
-    $[(((inventory[`side]=`LONG) or 
-        (inventory[`side]=`SHORT)) and 
-        (nxtQty<0));:0b;0N]; // TODO better error
+    $[(((inventory[`side]=`LONG) and ((currentQty < 0) or (nxtQty < 0))) or 
+       ((inventory[`side]=`SHORT) and ((currentQty > 0) or (nxtQty > 0))));:0b;0N]; // TODO better error
+
 
     realizedPnlDelta:0f; // TODO change to inst realized pnl
 
@@ -285,15 +288,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
     / divided by the selected leverage, plus unrealised profit and loss.
     inventory[`initMargin]:inventory[`entryValue]%leverage;
     inventory[`posMargin]:inventory[`initMargin] + unrealizedPnl;
-    inventory[`liquidationPrice]: deriveLiquidationPrice[
-        inventory[`currentQty];
-        inventory[`avgPrice];
-        inventory[`initMargin];
-        inventory[`maintMargin]]; 
-    inventory[`bankruptPrice]: deriveBankruptPrice[
-        inventory[`currentQty];
-        inventory[`avgPrice];
-        inventory[`initMargin]];
+
     inventory[`realizedPnl]+:realizedPnlDelta;
     inventory[`unrealizedPnl]:unrealizedPnl;
 
@@ -321,7 +316,32 @@ execFill    :{[account;inventory;fillQty;price;fee]
     account[`unrealizedPnl]:unrealizedPnl;
     account[`balance]+:realizedPnlDelta; 
     account[`available]:(account[`balance]-(account[`orderMargin]+account[`posMargin])); 
+
+    // In hedge mode, both long and short positions of the 
+    // same contract are sharing the same liquidation price 
+    // in cross margin mode.
+    liquidationPrice:deriveLiquidationPrice[
+        inventory[`currentQty];
+        inventory[`avgPrice];
+        account[`initMargin];
+        account[`maintMargin]]; 
+    bankruptPrice:deriveBankruptPrice[
+        inventory[`currentQty];
+        inventory[`avgPrice];
+        inventory[`initMargin]];
+
+    // TODO update all liquidation prices for all positions
+    // in hedge mode
+    inventory[`liquidationPrice]: liquidationPrice;
+    account[`liquidationPrice]: liquidationPrice;
+    inventory[`bankruptPrice]: bankruptPrice;
+    account[`bankruptPrice]: bankruptPrice;
+
+    / netLongPosition
+    account[`withdrawable]: bankruptPrice;
     
+    // TODO withdrawable, net open position, unrealized pnl, shortMargin, longMargin, liquidation price
+
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
     / :(account;inventory);
