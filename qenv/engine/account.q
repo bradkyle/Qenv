@@ -177,14 +177,14 @@ deriveBreakevenPrice        :{[]};
 // Binance hedged Cross
 // If the amount of the reduce-only order is larger than the 
 // position you have, the order will be rejected and expired.
+// TODO if position does exist and close only only exec = position side
 execFill    :{[account;inventory;fillQty;price;fee]
     $[abs[fillQty]>0;0N;:0b];
     $[price>0 & (type price)=-9h;0N;:0b];
     $[(type account)=99h;0N;:0b];
     $[(type inventory)=99h;0N;:0b];
-
     // TODO errors
-    cost: fee * abs fillQty;
+    cost: fee * (abs[fillQty]%price);
     nxtQty: inventory[`currentQty] + fillQty;
     leverage: inventory[`leverage];
     currentQty: inventory[`currentQty];
@@ -201,22 +201,23 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
     realizedPnlDelta:0f; // TODO change to inst realized pnl
 
-    $[(currentQty*nxtQty)<0;
+    $[(currentQty*nxtQty)<0; // CROSS
       [
         // The position is being crossed i.e.
         // being changed from long to short or
         // short to long and visa versa.  
-        realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;fillQty];
+        realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;currentQty];
 
         // Reset entries because of the change in position
         // side and add an entry of a size equal to the
         // size of the next position.
         inventory[`totalEntry]: abs[nxtQty];
         inventory[`execCost]: floor[1e8%price] * abs[nxtQty];
-        inventory[`currentQty]: nxtQty;
         inventory[`totalCrossVolume]+:abs[fillQty]; 
         inventory[`totalCrossAmt]+:abs[fillQty%price];
         inventory[`totalCrossMarketValue]+:abs[fillQty%price]%leverage;
+
+        // TODO reset position realized pnl (dont reset account realized pnl)
 
         / Calculates the average price of entry for the current postion, used in calculating 
         / realized and unrealized pnl.
@@ -225,24 +226,21 @@ execFill    :{[account;inventory;fillQty;price;fee]
            1e8%ceiling[x[`execCost]%x[`totalEntry]]
           ]}[inventory];
       ];
-      (abs currentQty)>(abs nxtQty);
+      (abs currentQty)>(abs nxtQty); // CLOSE
       [
         // Because the position is being closed the realized pnl 
         // will be inversely proportional to the position.
-        realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;fillQty];
-        inventory[`currentQty]: nxtQty;
-        inventory[`realizedPnl]+:realizedPnlDelta;
+        realizedPnlDelta:deriveRealisedPnl[inventory[`avgPrice];price;faceValue;neg fillQty];
         inventory[`totalCloseVolume]+:abs[fillQty]; 
         inventory[`totalCloseAmt]+:abs[fillQty%price];
         inventory[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
       ];
-      [
+      [ // OPEN
         / Because the current position is being increased
         / an entry is added for calculation of average entry
         / price. 
         inventory[`totalEntry]+: abs[fillQty];
         inventory[`execCost]+: floor[1e8%price] * abs[fillQty];
-        inventory[`currentQty]: nxtQty;
         inventory[`totalOpenVolume]+:abs[fillQty];
         inventory[`totalOpenAmt]+:abs[fillQty%price];
         inventory[`totalOpenMarketValue]+:abs[fillQty%price]%leverage;
@@ -256,12 +254,12 @@ execFill    :{[account;inventory;fillQty;price;fee]
           ]}[inventory];
       ]
     ];
-
     / TODO implement
     // frozen, maintMargin, netLongPosition, netShortPosition, available, posMargin etc.
     realizedPnlDelta-:cost;
     account[`totalCommission]+:cost;
     inventory[`totalCommission]+:cost;
+    inventory[`currentQty]: nxtQty;
 
     // If the next position will be 0
     // reset the entry values for the position.
@@ -274,12 +272,11 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
     inventory[`fillCount]+:1;
     account[`tradeCount]+:1;
-    account[`tradeVolume]+:abs[fillQty];
-    
+    account[`tradeVolume]+:abs[fillQty]; 
     unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
 
     // Inventory values
-    inventory[`entryValue]: $[(inventory[`currentQty]>0) and (inventory[`avgPrice]>0);
+    inventory[`entryValue]: $[(abs[inventory[`currentQty]]>0) and (inventory[`avgPrice]>0);
         abs[inventory[`currentQty]]%inventory[`avgPrice];
         0f];
 
@@ -316,12 +313,13 @@ execFill    :{[account;inventory;fillQty;price;fee]
         ((inventory[`side]=`BOTH) & (inventory[`currentQty]<0));
         inventory[`posMargin];
         account[`shortMargin]];
-    account[`posMargin]:account[`longMargin] + account[`shortMargin];
+    
+    account[`posMargin]:account[`longMargin] + account[`shortMargin]; // TODO both margin
     account[`realizedPnl]+:realizedPnlDelta;
     account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
     account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
     account[`unrealizedPnl]:unrealizedPnl;
-    account[`balance]+:realizedPnlDelta;
+    account[`balance]+:realizedPnlDelta; 
     account[`available]:(account[`balance]-(account[`orderMargin]+account[`posMargin])); 
     
     `.account.Account upsert account;
