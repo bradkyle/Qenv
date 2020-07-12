@@ -338,7 +338,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
     account[`bankruptPrice]: bankruptPrice;
 
     / netLongPosition
-    account[`withdrawable]: bankruptPrice;
+    / account[`withdrawable]: bankruptPrice;
     
     // TODO withdrawable, net open position, unrealized pnl, shortMargin, longMargin, liquidation price
 
