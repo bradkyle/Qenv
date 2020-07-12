@@ -360,7 +360,7 @@ testExecFill:{
         accountCols!(1;500f);
         (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;10f;20f;20f);
         paramsCols!(-50;20f;-0.00025); // flat maker fee
-        eaccountCols!(1;502.50125f;502.50125f;5.00125f;0f);
+        eaccountCols!(1;502.500625f;502.50125f;5.00125f;0f);
         einventoryCols!(1;1;`BOTH;0;0;`long$0;0f;5.00125f;0f;5f;0f;0f;100;0;0;0.05f;0f;0f)];
 
     runCase["combined:long_to_flat_rpl_-50";

@@ -279,7 +279,8 @@ execFill    :{[account;inventory;fillQty;price;fee]
     unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
 
     // Inventory values
-    inventory[`entryValue]: $[(abs[inventory[`currentQty]]>0) and (inventory[`avgPrice]>0);
+    inventory[`entryValue]: $[
+        (abs[inventory[`currentQty]]>0) and (inventory[`avgPrice]>0);
         abs[inventory[`currentQty]]%inventory[`avgPrice];
         0f];
 
