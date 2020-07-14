@@ -39,6 +39,8 @@ Account: (
             posMargin           : `float$();
             longMargin          : `float$();
             shortMargin         : `float$();
+            longValue           : `float$();
+            shortValue          : `float$();
             shortFundingCost    : `float$();
             longFundingCost     : `float$();
             totalFundingCost    : `float$();
@@ -54,7 +56,7 @@ Account: (
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
 allCols:cols Account;
 
 // Event creation utilities
