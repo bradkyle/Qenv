@@ -384,10 +384,13 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
 // an update to all the open position quantites held in the schema/state representation.
 // TODO next funding rate and next funding time (funding time delta)
 ApplyFunding       :{[fundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
-    update balance:balance-((longMargin*fundingRate)-(shortMargin*fundingRate)), 
-        longFundingCost:longFundingCost+(longMargin*fundingRate),
-        shortFundingCost:shortFundingCost+(shortMargin*fundingRate),
-        totalFundingCost:totalFundingCost+((longMargin*fundingRate)-(shortMargin*fundingRate))
+
+    // todo available, 
+    // todo funding should be subtracted from balance and calculated from 
+    update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
+        longFundingCost:longFundingCost+(longValue*fundingRate),
+        shortFundingCost:shortFundingCost+(longValue*fundingRate),
+        totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
         by accountId from `.account.Account;
     :MakeAllAccountsUpdatedEvents[time];
     };
