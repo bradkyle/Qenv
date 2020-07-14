@@ -295,23 +295,24 @@ execFill    :{[account;inventory;fillQty;price;fee]
     inventory[`realizedPnl]+:realizedPnlDelta;
     inventory[`unrealizedPnl]:unrealizedPnl;
 
-    // Update account values
+
     account[`maintMargin]:deriveMaintainenceMargin[
         inventory[`currentQty];
         takerFee;
         markPrice;
         faceValue];
-    account[`longMargin]:$[
-        (inventory[`side]=`LONG) or 
-        ((inventory[`side]=`BOTH) & (inventory[`currentQty]>0));
-        inventory[`posMargin];
-        account[`longMargin]];
-    account[`shortMargin]:$[
-        (inventory[`side]=`SHORT) or 
-        ((inventory[`side]=`BOTH) & (inventory[`currentQty]<0));
-        inventory[`posMargin];
-        account[`shortMargin]];
-    
+
+    $[inventory[`side]=`SHORT;
+    [
+        account[`shortMargin]:inventory[`posMargin];
+        account[`shortValue]:inventory[`entryValue];
+    ];
+    [
+        account[`longMargin]:inventory[`posMargin];
+        account[`longValue]:inventory[`entryValue];
+    ]
+    ];
+ 
     account[`posMargin]:account[`longMargin] + account[`shortMargin]; // TODO both margin
     account[`realizedPnl]+:realizedPnlDelta;
     account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
