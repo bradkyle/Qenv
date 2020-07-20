@@ -51,6 +51,8 @@ Account: (
             realizedPnl         : `float$();
             liquidationPrice    : `float$();
             bankruptPrice       : `float$();
+            longUnrealizedPnl   : `float$();
+            shortUnrealizedPnl  : `float$();
             unrealizedPnl       : `float$();
             activeMakerFee      : `float$();
             activeTakerFee      : `float$();
@@ -58,7 +60,7 @@ Account: (
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -87,6 +89,8 @@ NewAccount :{[account;time]
     // TODO dynamic account type checking
     account:Sanitize[account;defaults[];allCols];
     .logger.Debug["account validated and decorated"];
+    / show value type each 1_account;
+    / show value type each .account.Account@0;
     `.account.Account upsert account;
 
     accountId:account[`accountId];
@@ -275,7 +279,13 @@ execFill    :{[account;inventory;fillQty;price;fee]
     inventory[`fillCount]+:1;
     account[`tradeCount]+:1;
     account[`tradeVolume]+:abs[fillQty]; 
-    unrealizedPnl:deriveUnrealizedPnl[inventory[`avgPrice];markPrice;faceValue;inventory[`currentQty]];
+    
+    // TODO unrealized pnl for inventory and account
+    unrealizedPnl:deriveUnrealizedPnl[
+        inventory[`avgPrice];
+        markPrice;
+        faceValue;
+        inventory[`currentQty]];
 
     // Inventory values
     inventory[`entryValue]: $[
@@ -304,26 +314,29 @@ execFill    :{[account;inventory;fillQty;price;fee]
         [
             account[`shortMargin]:inventory[`posMargin];
             account[`shortValue]:inventory[`entryValue];
+            account[`shortUnrealizedPnl]:inventory[`unrealizedPnl];
         ];
         [
             account[`longMargin]:inventory[`posMargin];
             account[`longValue]:inventory[`entryValue];
+            account[`longUnrealizedPnl]:inventory[`unrealizedPnl];
         ]
     ];
- 
+
     account[`posMargin]:account[`longMargin] + account[`shortMargin]; // TODO both margin
     account[`realizedPnl]+:realizedPnlDelta;
     account[`totalLossPnl]+:min[realizedPnlDelta,0]; // TODO cur off 0
     account[`totalGainPnl]+:max[realizedPnlDelta,0]; // TODO cut off 0
-    account[`unrealizedPnl]:unrealizedPnl;
+    account[`unrealizedPnl]:account[`longUnrealizedPnl]+account[`shortUnrealizedPnl];
     account[`balance]+:realizedPnlDelta; 
-    account[`available]:((account[`balance]+unrealizedPnl)-(account[`orderMargin]+account[`posMargin])); 
+    account[`available]:((account[`balance]+account[`unrealizedPnl])-(account[`orderMargin]+account[`posMargin])); 
 
     // TODO account average entry price
 
     // In hedge mode, both long and short positions of the 
     // same contract are sharing the same liquidation price 
     // in cross margin mode.
+    // TODO cross margin vs isolated margin (implement for multiple hedged positions)
     liquidationPrice:deriveLiquidationPrice[
         inventory[`currentQty]; // TODO change to account liquidation
         inventory[`avgPrice];
@@ -348,6 +361,7 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
+    // todo instrument update
     / :(account;inventory);
     };
 

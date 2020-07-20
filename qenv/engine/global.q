@@ -31,3 +31,8 @@ EVENTKIND    :  (`DEPTH;      / place a new order
 // TODO functions for making evens
 
 EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
+
+
+/*******************************************************
+/ error kind enumerations
+ERRORKIND   :   ();

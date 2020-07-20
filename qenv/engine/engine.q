@@ -73,13 +73,14 @@ eventEngine[`FUNDING] :   {[event]
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
     events:();
-    events,:.liquidationengine.CheckByMarkPrice[event];
+    events,:.order.CheckByMarkPrice[event];
     events,:.stopmanager.CheckStopsByMarkPrice[event];
     :events;
     };
 
 // TODO add randomization based upon current probability 
 // of order being placed due to overload etc.
+// TODO check within max and min orders, run validation etc.
 eventEngine[`PLACE_ORDER] :   {[event]
     .logger.Debug["new place order"][event];
     events:();  

@@ -13,8 +13,8 @@
 \l inventoryTest.q
 .qunit.runTests `.inventoryTest;
 
-/ \l orderTest.q 
-/ .qunit.runTests `.orderTest;
+\l orderTest.q 
+.qunit.runTests `.orderTest;
 
 / \l engineTest.q
 / .qunit.runTests `.engineTest;

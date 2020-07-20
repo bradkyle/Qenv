@@ -306,6 +306,8 @@ ProcessDepthUpdate  : {[time;asks;bids]
 NewOrder       : {[o;accountId;time];
     events:();
     
+    // TODO if account is hedged and order is close the order cannot be larger than the position
+
     if[null o[`side]; :`INVALID_SIDE];
     if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
     if[null o[`otype]; :`INVALID_ORDER_TYPE];

@@ -57,6 +57,27 @@ Account: (
 
 mandCols, defaults, allCols : DeriveDefaults();
 
-execFill    :{[account;inventory;fillQty;price;fee]
 
+// Apply fill is an internal function i.e. it is not exposed
+// to the engine but is used by the orderbook to add a given
+// qty to the active position of an account.
+// todo allow for onlyclose and calcualte fee
+ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
+    events:();
+    acc: exec from Account where accountId=accountId;
+    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
+    // TODO remove order margin
+    // TODO on hedged position check if close greater than open position.
+    $[(abs qty)>0f;[
+        $[acc[`positionType]=`HEDGED;
+            $[qty>0;
+            execFill[acc;getInventory[accountId;`LONG];$[isClose;neg qty;qty];price;fee];
+            execFill[acc;getInventory[accountId;`SHORT];$[isClose;neg qty;qty];price;fee]
+            ]; // LONG; SHORT
+          acc[`positionType]=`COMBINED;
+            [execFill[acc;getInventory[accountId;`BOTH];$[side=`SELL;neg qty;qty];price;fee]];
+          [0N]
+        ];
+    ];];
+    :events;
     };

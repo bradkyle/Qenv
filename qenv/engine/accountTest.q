@@ -45,7 +45,7 @@ testNewAccount:{
     accountCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
     expectedCols: `accountCount`shouldError;
 
-    runCase["should pass and insert value";accountCols!(1f;0f;0f;`CROSS;`COMBINED);expectedCols!(1;0b)];
+    / runCase["should pass and insert value";accountCols!(1f;0f;0f;`CROSS;`COMBINED);expectedCols!(1;0b)];
 
     revert[];
     };
@@ -360,34 +360,35 @@ testExecFill:{
         accountCols!(1;500f);
         (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;10f;20f;20f);
         paramsCols!(-50;20f;-0.00025); // flat maker fee
-        eaccountCols!(1;502.500625f;499.950625;2.500625f;2.5f); // TODO check upl aded to available
+        eaccountCols!(1;502.500625f;502.450625f;2.500625f;2.5f); // TODO check upl aded to available
         einventoryCols!(1;1;`BOTH;50;100;`long$1e9;10f;2.500625f;2.5f;2.5f;0f;0f;50;0;0;0.025f;0f;0f)];
 
     runCase["combined:long_to_flat_rpl_-50";
         accountCols!(1;500f);
         (inventoryCols,priceCols)!(1;1;`BOTH;100;100;`long$1e9;20f;10f;10f);
         paramsCols!(-50;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;497.50125f;497.50125f;-4.9975f;0f);
-        einventoryCols!(1;1;`BOTH;50;0;`long$0;0f;-4.9975f;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+        eaccountCols!(1;497.50125f;497.47625f;-2.49875f;-2.5f);
+        einventoryCols!(1;1;`BOTH;50;100;`long$1e9;20f;-2.49875f;-2.5f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
 
     runCase["combined:short_to_flat_rpl_50";
         accountCols!(1;500f);
         (inventoryCols,priceCols)!(1;1;`BOTH;-100;100;`long$1e9;20f;10f;10f);
         paramsCols!(50;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;505.0025f;505.0025f;5.0025;0f);
-        einventoryCols!(1;1;`BOTH;0;0;`long$0;0f;5.0025;0f;10f;0f;0f;100;0;0;0.1f;0f;0f)];
+        eaccountCols!(1;502.50125f;502.47625f;2.50125f;2.5f);
+        einventoryCols!(1;1;`BOTH;-50;100;`long$1e9;20f;2.50125f;2.5f;5f;0f;0f;50;0;0;0.05f;0f;0f)];
  
     runCase["combined:short_to_flat_rpl_-50";
         accountCols!(1;500f);
         (inventoryCols,priceCols)!(1;1;`BOTH;-100;100;`long$1e9;10f;20f;20f);
         paramsCols!(50;20f;-0.00025); // flat maker fee
-        eaccountCols!(1;495.00125f;495.00125f;-4.99875f;0f);
-        einventoryCols!(1;1;`BOTH;0;0;`long$0;0f;-4.99875f;0f;5f;0f;0f;100;0;0;0.05f;0f;0f)];
+        eaccountCols!(1;497.500625f;497.450625f;-2.499375f;-2.5f);
+        einventoryCols!(1;1;`BOTH;-50;100;`long$1e9;10f;-2.499375f;-2.5f;2.5f;0f;0f;50;0;0;0.025f;0f;0f)];
  
     // Multiple open hedged tests (UPNL, liquidation price, bankruptcy price etc.)
     // ------------------------------------------------------------------------------------------>
     // TODO long short
-
+    // dscr; account; inventory; params; eaccount; einventory
+    
 
 
     revert[];
@@ -438,7 +439,7 @@ testApplyFill:{
 // Does funding apply to margin or position
 // TODO remove positions and just use net outstanding
 testApplyFunding:{
-    runCase: {[dscr; account; inventories; params; expected]
+    runCase: {[dscr; account; inventories; params; eaccount; einventory]
         time:.z.z;
         // Setup 
         .account.NewAccount[account;time]; 
@@ -447,29 +448,36 @@ testApplyFunding:{
         events:.account.ApplyFunding[params[`fundingRate];time];
         
         // Run tests on state
-        acc: exec from .account.Account where accountId=aid;
+        acc: exec from .account.Account where accountId=account[`accountId];
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        .qunit.assertEquals[acc[`balance]; 0.999; "Account record should be present and inserted"];
-        .qunit.assertEquals[acc[`longFundingCost]; 0.001; "Long funding cost should be updated accordingly"];
-        .qunit.assertEquals[acc[`shortFundingCost]; 0f; "Short funding cost should be updated accordingly"];
-        .qunit.assertEquals[acc[`totalFundingCost]; 0.001; "Total funding cost should be updated accordingly"];
+        show acc;
+        
+
+        // Run tests on state
+        .qunit.assertEquals[acc[`balance]; eaccount[`balance]; dscr,": account balance"];
+        .qunit.assertEquals[acc[`available]; eaccount[`available]; dscr,": account available"];
+        .qunit.assertEquals[acc[`realizedPnl]; eaccount[`realizedPnl]; dscr,": account realized pnl"];
     
         // Tear Down
         revert[];
     };
-    accountCols: `balance`longMargin`shortMargin`netLongPosition`netShortPosition`maintMargin`available;
+    accountCols: `accountId`balance`longValue`shortValue;
     inventoryCols: `side`currentQty`totalEntry`execCosts;
     fundingCols: `fundingRate`nextFundingTime`time;
     expectedCols:`balance`longFundingCost`shortFundingCost`totalFundingCost;
     t:.z.z;
 
-    / runCase[
-    /     "check no funding occurs";
-    /     accountCols!();
-    /     (inventoryCols!(`LONG;0;0;0);inventoryCols!(`SHORT;1000;0;0);inventoryCols!(`BOTH;0;0;0));
-    /     fundingCols!(0;t+1;t);
-    /     expectedCols!(1;0;0;0)
-    / ];
+    eaccountCols:accountCols,`available`realizedPnl;
+    einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                   `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
+    
+    runCase["check no funding occurs";
+            accountCols!(1;10f;0f;100f);
+            (inventoryCols!(`LONG;0;0;0);inventoryCols!(`SHORT;1000;0;0);inventoryCols!(`BOTH;0;0;0));
+            fundingCols!(0;t+1;t);
+            eaccountCols!(1;10f;10f;0f;0f;0f);0N];
 
     / runCase[
     /     "apply positive (0.0001) funding hedged short only (recieves funding value) Positive funding rate means long pays short";
