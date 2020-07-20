@@ -181,11 +181,14 @@ processSideUpdate   :{[side;nxt]
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
                 newOffsets: Clip[offsets + derivedDeltas];
-                newShft:0;
                 // Combine the new offsets with the respective offset ids in an 
                 // update statement that will update the respective offsets.
                 update offset:newOffsets from .order.Order where orderId in ordrs[`orderId];
                 
+                // considering no changes have been made to the sizes of the given orders
+                // the new shft would be the new offsets + the previous sizes
+                newShft:sizes + newOffsets;
+
                 // Update the orderbook lvl qtys to represent the change                
                 // Replace all instances of the update with the maximum shft (offset + size)
                 // for each price whereby the update is smaller than the given shft (offset+size)
