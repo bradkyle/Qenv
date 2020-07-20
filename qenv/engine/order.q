@@ -124,6 +124,7 @@ processSideUpdate   :{[side;nxt]
     // Retrieve the latest snapshot from the orderbook
     qtys:exec qty by price from .order.OrderBook where side=side;
     show qtys;
+    // sanitize/preprocess
 
     // Generate the set of differences between the current
     // orderbook snapshot and the target (nxt) snapshot
@@ -211,20 +212,14 @@ NewOrder       : {[o;accountId;time];
     events:();
     
     // TODO if account is hedged and order is close the order cannot be larger than the position
+    Validate[o];
 
     if[null o[`side]; :`INVALID_SIDE];
     if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
     if[null o[`otype]; :`INVALID_ORDER_TYPE];
 
     // TODO simplify
-    o:default[o;`leaves;0];
-    o:default[o;`isClose;0b];
-    o:default[o;`status;`NEW];
-    o:default[o;`time;time];
-    o:default[o;`trigger;0N];
-    o:default[o;`timeinforce;`GOODTILCANCEL];
-    o:default[o;`limitprice;0];
-    o:default[o;`stopprice;0];
+    o:Sanitize[o];
     o[`accountId]:accountId;
     o[`orderId]:0;
     // TODO set offset
@@ -277,7 +272,7 @@ NewOrder       : {[o;accountId;time];
         ];
       o[`otype]=`STOP_LIMIT;
         [
-
+            `order.Order insert order;
         ];
     ];
     :events;
