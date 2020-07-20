@@ -56,6 +56,14 @@ Order: (
     execInst        : `.order.EXECINST$()
     );
 
+isActiveLimit:(
+            (>;`size;0);
+            (in;`status;enlist[`FILLED`FAILED`CANCELED]);
+            (in;`price;key dlt);
+            (=;`otype;`LIMIT);
+            (=;`side;side)
+        );
+
 MakeNewOrderEvent   :{[]
 
     }
@@ -83,7 +91,8 @@ MakeCancelAllOrdersEvent :{[]
 OrderBook:(
     [price      :`float$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`float$()
+    qty         :`float$();
+    visqty      :`float$()
     );
 
 MakeDepthUpdateEvent :{[]
@@ -139,13 +148,7 @@ processSideUpdate   :{[side;nxt]
             numLvls:count dlt;
 
             // TODO grouping by price, orderId
-            odrs:?[.order.Order;(
-                    (>;`size;0);
-                    (in;`status;enlist[`FILLED`FAILED`CANCELED]);
-                    (in;`price;key dlt);
-                    (=;`otype;`LIMIT);
-                    (=;`side;side)
-                ); 0b; ()];
+            odrs:?[.order.Order;isActiveLimit;0b;()];
             
             // If the orderbook contains agent limit orders then
             // update the current offsets.
@@ -180,18 +183,19 @@ processSideUpdate   :{[side;nxt]
                 newOffsets: Clip[offsets + derivedDeltas];
 
                 // TODO combine offsets with offset ids
+                update offset:newOffsets from .order.Order where orderId in ordrs[`orderId];
                 
-                
+
             ];
             [
                 / update  qtys:
-                0N; 
+                update qtys:
             ]
             ];
         ];
         [
-            / update qtys:0;
-            0N;
+            nxt[`side]:side;
+            `.order.OrderBook upsert nxt; 
         ]
     ];
     };
