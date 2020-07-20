@@ -450,8 +450,6 @@ testApplyFunding:{
         // Run tests on state
         acc: exec from .account.Account where accountId=account[`accountId];
         / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-        show acc;
-        
 
         // Run tests on state
         .qunit.assertEquals[acc[`balance]; eaccount[`balance]; dscr,": account balance"];

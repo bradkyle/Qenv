@@ -37,12 +37,12 @@ ordFields  :(`orderId`accountId`side`otype`timeinforce,
             `effdate`status`time`isClose`trigger`execInst);    
 orderMandatoryFields    :`accountId`side`otype`size;
 
-
 Order: (
-    [orderId        : `long$()]
+    [price:`float$(); orderId:`long$()]
     accountId       : `long$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
+    offset          : `long$();
     timeinforce     : `.order.TIMEINFORCE$();
     size            : `long$(); / multiply by 100
     leaves          : `long$();
@@ -81,12 +81,9 @@ MakeCancelAllOrdersEvent :{[]
 // offsets: represent the given offsets of a set of agent(s') orders 
 // sizes: represent the given order sizes of a set of agent(s') orders
 OrderBook:(
-    [price:`float$()]
-    side:`.order.ORDERSIDE$(); 
-    qty:`float$();
-    offsets:(); // dictionary mapping the offsets to the ids of given limit orders
-    sizes:(); // dictionary mapping the sizes to the ids of given limit orders
-    stops:() // dictionary mapping given prices to the ids of stop orders
+    [price      :`float$()]
+    side        :`.order.ORDERSIDE$(); 
+    qty         :`float$()
     );
 
 MakeDepthUpdateEvent :{[]
@@ -103,115 +100,6 @@ MakeTradeEvent  :{[]
 
 // Sets the order qtys on a given side to the target
 // ?[`OrderBook;(enlist(=;`side;enlist `SELL)); 0b; ()]
-
-/*******************************************************
-/ QTYS
-
-// Returns all the quantities for a given side
-// as a dictionary of price:qty 
-getQtys :{[side]
-    :exec qty by price from .order.OrderBook where side=side
-    };
-
-// Update the qtys 
-updateQtys      : {[side;nxt]
-    .[`.order.OrderBook;side,`qtys;,;nxt]
-    };
-
-// Return the qty at the best price from the orderbook
-getBestQty         : {[side]:
-    exec min price from .order.OrderBook where side=side;
-    };
-
-// Get the quantity that exists at a given price 
-getQtyAtPrice   : {[price]
-    :.order.OrderBook[price;`qty]
-    };
-
-// Removes a given amount (amt) from the quantity of a given price
-decremetQtyAtPrice  : {[side;price;amt]
-    update qty:qty-amt from `.order.OrderBook;
-    };
-
-updateQty       : {[side;price;qty]
-    x:getQtys[side];$[(count x)>0;:x[min key x];0N]
-    };
-
-getAvailableQty : {[side]
-    :exec sum qty from .order.OrderBook where side=`side;
-    };
-
-/*******************************************************
-/ Offsets
-
-// returns the set of offsets along with their corresponding orderids
-// for a given side
-getOffsets  : {[side]
-    :select offsets by price from .order.OrderBook where side=side;
-    };
-
-// creates a new offset of a given size for a given order id at a given price
-addNewOffset  : {[side;price;offset;orderId]
-    .[`.order.OrderBook;side,`agentOffsets,price;,;(offset,orderId)]
-    };
-
-// Creates a new offset for a given order and price whilst deriving the offset
-// itself from the current qty at the given price.
-genNewOffset  : {[side;price;orderId]
-    :addNewOffset[side;price;getQtyByPrice[side;price];orderId]
-    };
-
-// Updates all the offsets of a given side
-updateOffsets  : {[side;nxt]
-    .[`.order.OrderBook;side,`agentOffsets;,;nxt]
-    };
-
-// Removes a given amount from each offset at a given price
-decrementOffsetsAtPrice : {[price]
-
-    };
-
-/*******************************************************
-/ Sizes
-
-// Returns all the sizes of agent orders at a given price
-getSizes  : {[side]
-    :.order.OrderBook[side][`agentSizes]
-    };
-
-// Adds a new qty for a given agent size at a specified price
-addNewSize  : {[side;price;size]
-    :[`.order.OrderBook;side,`agentSizes,price;,;size]
-    };
-
-// 
-updateSizes  : {[side;nxt]
-    .[`.order.OrderBook;side,`agentSizes;,;nxt]
-    };
-
-newLvl  :{[price;side;qty;offsets;sizes]
-    :0N;
-    }
-
-
-/*******************************************************
-/ Combined Representation
-
-getCombinedQtys :{[]
-
-    }
-
-getSideCombinedQtys :{[]
-
-    }
-
-getAllCombinedQtys :{[]
-
-    }
-
-getSpread       :{[]
-
-    }
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -234,7 +122,8 @@ processSideUpdate   :{[side;nxt]
     // TODO prices cannot overlap
 
     // Retrieve the latest snapshot from the orderbook
-    qtys:getQtys[side];
+    qtys:exec qty by price from .order.OrderBook where side=side;
+    show qtys;
 
     // Generate the set of differences between the current
     // orderbook snapshot and the target (nxt) snapshot
@@ -246,14 +135,23 @@ processSideUpdate   :{[side;nxt]
 
             // Remove all levels that aren't supposed to change
             dlt:where[dlt<>0]#dlt;
+            numLvls:count dlt;
+
+            // TODO grouping by price, orderId
+            odrs:?[.order.Order;(
+                    (>;`size;0);
+                    (in;`status;enlist[`FILLED`FAILED`CANCELED]);
+                    (in;`price;key dlt);
+                    (=;`otype;`LIMIT);
+                    (=;`side;side)
+                ); 0b; ()];
             
             // If the orderbook contains agent limit orders then
             // update the current offsets.
-            $[((count dlt)>0 & (count getOrders[side])); // TODO check
+            $[(numLvls>0 & count[odrs]>0); // TODO check
             [
-                numLvls:count qtys;
-                offsets: padm[getOffsetQtys[side]]; // TODO padding
-                sizes: padm[getSizes[side]]; // TODO padding
+                offsets: PadM[odrs[`offset]]; // TODO padding
+                sizes: PadM[odrs[`size]]; // TODO padding
                 maxNumUpdates: max count'[offsets];
 
                 / Calculate the shifted offsets, which infers
@@ -268,8 +166,8 @@ processSideUpdate   :{[side;nxt]
                 / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
                 nonAgentQtys: (numLvls, lpad)#0;
                 nonAgentQtys[;0]: offsets[;0];
-                nonAgentQtys[;1+til maxNumUpdates]: clip[(offsets[;1] - lshft)]; 
-                nonAgentQtys[;lpad]:clip[qtys - lshft]; 
+                nonAgentQtys[;1+til maxNumUpdates]: Clip[(offsets[;1] - lshft)]; 
+                nonAgentQtys[;lpad]:Clip[qtys - lshft]; 
 
                 lvlNonAgentQtys: sum'[nonAgentQtys];
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
@@ -278,16 +176,22 @@ processSideUpdate   :{[side;nxt]
 
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
-                newOffsets: clip[offsets + derivedDeltas];
+                newOffsets: Clip[offsets + derivedDeltas];
 
                 // TODO combine offsets with offset ids
-
-                updateOffsets[side;newOffsets];
+                
+                
             ];
-            [updateQtys[side;nxt]]
+            [
+                / update  qtys:
+                0N; 
+            ]
             ];
         ];
-        [updateQtys[side;nxt]]
+        [
+            / update qtys:0;
+            0N;
+        ]
     ];
     };
 
@@ -323,6 +227,7 @@ NewOrder       : {[o;accountId;time];
     o:default[o;`stopprice;0];
     o[`accountId]:accountId;
     o[`orderId]:0;
+    // TODO set offset
 
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
@@ -346,8 +251,6 @@ NewOrder       : {[o;accountId;time];
                 ];
                 [
                     // add orderbook references
-                    genNewOffset[o[`side];o[`price];o[`orderId]];
-                    addNewSize[o[`side];o[`size];o[`price]];
                     `order.Order insert order;
                     events,:.order.MakeNewOrderEvent[];
                 ];
