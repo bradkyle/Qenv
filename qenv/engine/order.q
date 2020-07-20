@@ -56,13 +56,11 @@ Order: (
     execInst        : `.order.EXECINST$()
     );
 
-isActiveLimit:(
-            (>;`size;0);
-            (in;`status;enlist[`FILLED`FAILED`CANCELED]);
-            (in;`price;key dlt);
-            (=;`otype;`LIMIT);
-            (=;`side;side)
-        );
+isActiveLimit:((>;`size;0);
+               (in;`status;enlist[`FILLED`FAILED`CANCELED]);
+               (in;`price;key dlt);
+               (=;`otype;`LIMIT);
+               (=;`side;side));
 
 MakeNewOrderEvent   :{[]
 
@@ -137,7 +135,7 @@ processSideUpdate   :{[side;nxt]
     // Generate the set of differences between the current
     // orderbook snapshot and the target (nxt) snapshot
     // to which the orderbook is to transition.
-    $[(count qtys)>0;
+    $[(count qtys)>0; // TODO collapse int single function.
         [
             // TODO only calculate if has agent orders
             // TODO sort qtys etc.
@@ -176,8 +174,6 @@ processSideUpdate   :{[side;nxt]
                 lvlNonAgentQtys: sum'[nonAgentQtys];
                 derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
-                // TODO set new sizes as well 
-
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
                 newOffsets: Clip[offsets + derivedDeltas];
@@ -198,13 +194,9 @@ processSideUpdate   :{[side;nxt]
                 update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]];
             ];
             [
-                // Update the orderbook lvl qtys to represent the change                
-                // Replace all instances of the update with the maximum shft (offset + size)
-                // for each price whereby the update is smaller than the given shft (offset+size)
-                // ensures that an accurate representation is kept. 
-                nxtQty:value[nxt];
-                maxShft:max'[newShft];
-                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]];
+                // No orders exist therefore a simple upsert 
+                nxt[`side]:side;
+                `.order.OrderBook upsert nxt; 
             ]
             ];
         ];
