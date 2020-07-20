@@ -91,8 +91,7 @@ MakeCancelAllOrdersEvent :{[]
 OrderBook:(
     [price      :`float$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`float$();
-    visqty      :`float$()
+    qty         :`float$(); 
     );
 
 MakeDepthUpdateEvent :{[]
@@ -141,6 +140,7 @@ processSideUpdate   :{[side;nxt]
     $[(count qtys)>0;
         [
             // TODO only calculate if has agent orders
+            // TODO sort qtys etc.
             dlt:nxt-qtys;
 
             // Remove all levels that aren't supposed to change
@@ -181,15 +181,27 @@ processSideUpdate   :{[side;nxt]
                 // Update the new offsets to equal the last
                 // offsets + the derived deltas
                 newOffsets: Clip[offsets + derivedDeltas];
-
-                // TODO combine offsets with offset ids
+                newShft:0;
+                // Combine the new offsets with the respective offset ids in an 
+                // update statement that will update the respective offsets.
                 update offset:newOffsets from .order.Order where orderId in ordrs[`orderId];
                 
-
+                // Update the orderbook lvl qtys to represent the change                
+                // Replace all instances of the update with the maximum shft (offset + size)
+                // for each price whereby the update is smaller than the given shft (offset+size)
+                // ensures that an accurate representation is kept. 
+                nxtQty:value[nxt];
+                maxShft:max'[newShft];
+                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]];
             ];
             [
-                / update  qtys:
-                update qtys:
+                // Update the orderbook lvl qtys to represent the change                
+                // Replace all instances of the update with the maximum shft (offset + size)
+                // for each price whereby the update is smaller than the given shft (offset+size)
+                // ensures that an accurate representation is kept. 
+                nxtQty:value[nxt];
+                maxShft:max'[newShft];
+                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]];
             ]
             ];
         ];
