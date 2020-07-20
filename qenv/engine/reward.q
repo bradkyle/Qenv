@@ -10,12 +10,12 @@ The inputs are as follows:
     (1) Change in exposure value between time steps, in dollar terms; and,
     (2) Realized PnL from a open order being filled between time steps,
         in dollar terms.
-:param inventory_count: TRUE if long order is filled within same time step
-:param midpoint_change: percentage change in midpoint price
+:param inventoryCount: TRUE if long order is filled within same time step
+:param midPointChange: percentage change in midpoint price
 :return: reward
 \
-Default  :{[]
-
+Default  :{[inventoryCount;midPointChange]
+    :(inventoryCount*midPointChange)
     };
 
 /
@@ -29,8 +29,8 @@ The inputs are as follows:
 :param step_pnl: limit order pnl
 :return: reward
 \
-DefaultWithFills        :{[]
-
+DefaultWithFills        :{[inventoryCount;midPointChange;stepPnl]
+    :(inventoryCount*midPointChange)+stepPnl
     };
 
 /
@@ -39,8 +39,8 @@ Only provide reward signal when a trade is closed (round-trip).
 :param last_pnl: Realized PnL at former time step
 :return: reward
 \
-RealizedPNL             :{[]
-
+RealizedPNL             :{[currentPnl;lastPnl]
+    :(currentPnl-lastPnl)
     };
 
 /
@@ -53,8 +53,8 @@ Source 2: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.87.8437&rep=r
 :param eta: discount rate (same as EMA's alpha)
 :return: (tuple) reward, A_t, and B_t
 \
-DifferentialSharpeRatio :{[]
-
+DifferentialSharpeRatio :{[Rt;Atml;Btml;eta]
+    
     };
 
 /

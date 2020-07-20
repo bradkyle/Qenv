@@ -14,6 +14,8 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // Account state in this instance serves as a proxy
 // for a single agent and contains config therin
 // pertaining to what the agent setting is.
+// TODO realized Gross PNL, unrealized Gross PNL, total Unrealized Pnl etc
+// 
 Account: (
             [accountId          : `long$()]
             balance             : `float$();
@@ -101,14 +103,9 @@ ResetAccount :{[account;time]
 
     };
 
-// Deriving Cross and Isolated liquidation price
+// Deriving Isolated Values
 // -------------------------------------------------------------->
 
-// TODO
-/ crossLiquidationPrice{[]0N};
-
-// TODO
-/ crossBankruptcyPrice{[]0N};
 
 // TODO
 / isolatedLiquidationPrice{[]0N};
@@ -295,51 +292,54 @@ execFill    :{[account;inventory;fillQty;price;fee]
     inventory[`realizedPnl]+:realizedPnlDelta;
     inventory[`unrealizedPnl]:unrealizedPnl;
 
-
+    // TODO update maint margin to take account of short and long
+    // positions // TODO update account maint margin
     account[`maintMargin]:deriveMaintainenceMargin[
         inventory[`currentQty];
         takerFee;
         markPrice;
         faceValue];
 
-    $[inventory[`side]=`SHORT;
-    [
-        account[`shortMargin]:inventory[`posMargin];
-        account[`shortValue]:inventory[`entryValue];
-    ];
-    [
-        account[`longMargin]:inventory[`posMargin];
-        account[`longValue]:inventory[`entryValue];
-    ]
+    $[(inventory[`side]=`SHORT) or (inventory[`currentQty]<0);
+        [
+            account[`shortMargin]:inventory[`posMargin];
+            account[`shortValue]:inventory[`entryValue];
+        ];
+        [
+            account[`longMargin]:inventory[`posMargin];
+            account[`longValue]:inventory[`entryValue];
+        ]
     ];
  
     account[`posMargin]:account[`longMargin] + account[`shortMargin]; // TODO both margin
     account[`realizedPnl]+:realizedPnlDelta;
-    account[`totalLossPnl]+:realizedPnlDelta; // TODO cur off 0
-    account[`totalGainPnl]+:realizedPnlDelta; // TODO cut off 0
+    account[`totalLossPnl]+:min[realizedPnlDelta,0]; // TODO cur off 0
+    account[`totalGainPnl]+:max[realizedPnlDelta,0]; // TODO cut off 0
     account[`unrealizedPnl]:unrealizedPnl;
     account[`balance]+:realizedPnlDelta; 
-    account[`available]:(account[`balance]-(account[`orderMargin]+account[`posMargin])); 
+    account[`available]:((account[`balance]+unrealizedPnl)-(account[`orderMargin]+account[`posMargin])); 
+
+    // TODO account average entry price
 
     // In hedge mode, both long and short positions of the 
     // same contract are sharing the same liquidation price 
     // in cross margin mode.
     liquidationPrice:deriveLiquidationPrice[
-        inventory[`currentQty];
+        inventory[`currentQty]; // TODO change to account liquidation
         inventory[`avgPrice];
         account[`initMargin];
         account[`maintMargin]]; 
     bankruptPrice:deriveBankruptPrice[
-        inventory[`currentQty];
+        inventory[`currentQty]; // TODO change to account bankruptcy
         inventory[`avgPrice];
         inventory[`initMargin]];
 
     // TODO update all liquidation prices for all positions
     // in hedge mode
     inventory[`liquidationPrice]: liquidationPrice;
-    account[`liquidationPrice]: liquidationPrice;
     inventory[`bankruptPrice]: bankruptPrice;
     account[`bankruptPrice]: bankruptPrice;
+    account[`liquidationPrice]: liquidationPrice;
 
     / netLongPosition
     / account[`withdrawable]: bankruptPrice;
@@ -349,6 +349,10 @@ execFill    :{[account;inventory;fillQty;price;fee]
     `.account.Account upsert account;
     `.inventory.Inventory upsert inventory;
     / :(account;inventory);
+    };
+
+getInventory    :{[accountId;side]
+    exec from .inventory.Inventory where accountId=accountId & side=side;
     };
 
 // TODO type assertions
@@ -365,11 +369,11 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     $[(abs qty)>0f;[
         $[acc[`positionType]=`HEDGED;
             $[qty>0;
-            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`LONG;$[isClose;neg qty;qty];price;fee];
-            execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`SHORT;$[isClose;neg qty;qty];price;fee]
+            execFill[acc;getInventory[accountId;`LONG];$[isClose;neg qty;qty];price;fee];
+            execFill[acc;getInventory[accountId;`SHORT];$[isClose;neg qty;qty];price;fee]
             ]; // LONG; SHORT
           acc[`positionType]=`COMBINED;
-            [execFill[acc;exec from .inventory.Inventory where accountId=accountId & side=`BOTH;$[side=`SELL;neg qty;qty];price;fee]];
+            [execFill[acc;getInventory[accountId;`BOTH];$[side=`SELL;neg qty;qty];price;fee]];
           [0N]
         ];
     ];];
@@ -389,7 +393,6 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
 ApplyFunding       :{[fundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
 
     // todo available, 
-    // todo funding should be subtracted from balance and calculated from 
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
