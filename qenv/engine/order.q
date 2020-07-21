@@ -228,6 +228,7 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // reserves order margin (checks that account has enough margin) 
 NewOrder       : {[o;time];
     events:();
+    ins:.instrument.GetActiveInstrument[];
     
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];

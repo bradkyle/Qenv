@@ -1,6 +1,7 @@
 \d .instrument
 
 instrumentCount:0;
+activeInstrumentId:0;
 
 /*******************************************************
 / instrument enumerations
@@ -18,7 +19,7 @@ INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 // TODO INVERSE vs QUANTO i.e. bitmex + okex vs binance etc.
 
 Instrument: (
-    [id                     : `symbol$()];
+    [instrumentId           : `long$()];
     state                   : `.instrument.INSTRUMENTSTATE$();
     quoteAsset              : `symbol$();
     baseAsset               : `symbol$();
@@ -100,8 +101,8 @@ NewInstrument            :{[instrument; time]
 
 / UpdateInstrument        :{}
 
-GetInstrument             :{[]
-
+GetInstrument             :{[instrumentId]
+    if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]
     };
 
 GetActiveInstrument        :{[]
