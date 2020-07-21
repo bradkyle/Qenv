@@ -227,30 +227,81 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // reserves order margin (checks that account has enough margin) 
 NewOrder       : {[o;time];
     events:();
-    ins:.instrument.GetActiveInstrument[];
     
     // TODO append failures to events and return.
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
+    if[null o[`size] | o[`size]>0; :MakeFailure[time;`INVALID_SIZE;"Invalid order size"]];
+    if[null o[`otype]; :MakeFailure[time;`INVALID_ORDER_TYPE;"oType is null"]];
+    if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_SIDE;"Invalid side"]]; // TODO make failure event.
-    if[null o[`size] | o[`size]>0; :MakeFailure[time;`INVALID_SIZE;"Invalid size"]];
-    if[null o[`otype]; :MakeFailure[time;`INVALID_ORDER_TYPE;"Invalid size"]];
-    if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"Invalid size"]];
+    if[not (o[`otype] in .order.ORDERTYPE); :MakeFailure[time;`INVALID_ORDERTYPE;"Invalid order type"]]; // TODO make failure event.
+    if[not (o[`timeinforce] in .order.TIMEINFORCE); :MakeFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
+    if[not (o[`exdcInst] in .order.EXECINST); :MakeFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
 
-    // Price and size validation
-    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[]];
-    if[o[`price]>ins[`maxPrice];:MakeFailure[]];
-    if[o[`price]<ins[`minPrice];:MakeFailure[]];
-    if[o[`size]<ins[`maxOrderSize];:MakeFailure[]];
-    if[o[`size]>ins[`minOrderSize];:MakeFailure[]];
+    // Instrument related validation
+    ins:.instrument.GetActiveInstrument[];
+    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[time;`INVALID;""]];
+    if[o[`price]>ins[`maxPrice];:MakeFailure[time;`INVALID;""]];
+    if[o[`price]<ins[`minPrice];:MakeFailure[time;`INVALID;""]];
+    if[o[`size]<ins[`maxOrderSize];:MakeFailure[time;`INVALID;""]];
+    if[o[`size]>ins[`minOrderSize];:MakeFailure[time;`INVALID;""]];
+    // Account related validation
+
+    // TODO 
+    / Duplicate clOrdID
+    / Invalid orderID
+    / Duplicate orderID
+    / Invalid symbol
+    / Instruments do not match
+    / Instrument not listed for trading yet
+    / Instrument expired
+    / Instrument has no mark price
+    / Accounts do not match
+    / Invalid account
+    / Account is suspended
+    / Account has no [XBt]
+    / Invalid ordStatus (trying to amend a canceled or filled order)
+    / Invalid triggered
+    / Invalid workingIndicator
+    / Invalid side
+    / Invalid orderQty or simpleOrderQty
+    / Invalid simpleOrderQty
+    / Invalid orderQty
+    / Invalid simpleLeavesQty
+    / Invalid simpleCumQty
+    / Invalid leavesQty
+    / Invalid cumQty
+    / Invalid avgPx
+    / Invalid price
+    / Invalid price tickSize
+    / Invalid displayQty
+    / Unsupported ordType
+    / Unsupported pegPriceType
+    / Invalid pegPriceType for ordType
+    / Invalid pegOffsetValue for pegPriceType
+    / Invalid pegOffsetValue tickSize
+    / Invalid stopPx for ordType
+    / Invalid stopPx tickSize
+    / Unsupported timeInForce
+    / Unsupported execInst
+    / Invalid execInst
+    / Invalid ordType or timeInForce for execInst
+    / Invalid displayQty for execInst
+    / Invalid ordType for execInst
+    / Unsupported contingencyType
+    / Invalid clOrdLinkID for contingencyType
+    / Invalid multiLegReportingType
+    / Invalid currency
+    / Invalid settlCurrency
 
     o[`orderId]:orderCount+1;
     // TODO set offset
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
         [
-
-            $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
+            $[(o[`side]=`SELL and o[`price] < ins[`bestBidPrice]) |
+              (o[`side]=`BUY and o[`price] > ins[`bestAskPrice]);
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Invalid size"];
@@ -265,8 +316,20 @@ NewOrder       : {[o;time];
                 [
                     // add orderbook references
                     // TODO update order init margin etc.
-                    `order.Order insert order;
+                    // todo if there is a row at price and qty is greater than zero
+                    o[`offset]: .order.OrderBook[o[`price]][`qty];
+                    update (
+                        openBuyPremium:0;
+                        openSellPremium:0;
+                        openBuyOrderQty:0;
+                        openSellOrderQty:0;
+                        orderMargin:0;
+                        frozen:0;
+                        available:0
+                    ) from `.account.Account where accountId=o[`accountId]; 
+                    `.order.Order insert order;
                     events,:.order.MakeNewOrderEvent[];
+                    events,:.account.MakeAccountUpdateEvent[]
                 ];
             ];
         ];
@@ -281,11 +344,12 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`STOP_MARKET;
         [
-
+            // todo if close 
             `order.Order insert order;
         ];
       o[`otype]=`STOP_LIMIT;
         [
+            // todo if close
             `order.Order insert order;
         ];
     ];
