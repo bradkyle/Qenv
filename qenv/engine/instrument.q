@@ -1,4 +1,5 @@
 \d .instrument
+\l util.q
 
 instrumentCount:0;
 activeInstrumentId:0;
@@ -38,9 +39,8 @@ Instrument: (
     flatRiskStep            : `float$();
     markPrice               : `float$();
     lastPrice               : `float$();
-    fundingInterval         : `datetime$();
+    fundingInterval         : `timespan$();
     totalVolume             : `long$();
-    volume                  : `long$();
     volume24h               : `long$();
     bestBidPrice            : `float$();
     bestAskPrice            : `float$();
@@ -65,15 +65,17 @@ Instrument: (
     numBankruptcies         : `long$();
     numForcedCancellations  : `long$());
 
-mandCols:0;
+mandCols:();
 // Defaults approximate the values seen with bitmex XBTUSD
 defaults:{:(
-    (instrumentCount+:1),`ONLINE,`QUOTE`BASE`UNDERLYING,1,100,0,
-    `FLAT,`FLAT,-0.00025,0.00025,0.5,1,`PROCEDURAL,200,100,
-    )};
+    (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,
+    `FLAT,`FLAT,-0.00025,0.00025,0.5,1f,`PROCEDURAL,200f,100f,0f,0f,
+    (`timespan$(`minute$480)),0,0,0f,0f,0f,0,0f,0b,1b,0b,1e6f,0f,1f,1e5f,
+    25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0)};
+allCols:cols Instrument;
+
 // Event creation utilities
 // -------------------------------------------------------------->
-
 
 MakeMarkPriceUpdateEvent    :{[]
 
@@ -83,7 +85,6 @@ MakeFundingEvent             :{[]
 
     };
 
-
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
@@ -92,12 +93,12 @@ MakeFundingEvent             :{[]
 // values and inserts it into the instrument 
 // table, it also returns the reference to
 // the singleton class representation therin.
+// TODO deal with columns without values specified etc.
 NewInstrument            :{[instrument; isActive; time]
     events:();
     if[any null instrument[mandCols]; :0b];      
-
     instrument:Sanitize[instrument;defaults[];allCols];
-
+    `.instrument.Instrument upsert instrument;
     };
 
 GetInstrument             :{[instrumentId]

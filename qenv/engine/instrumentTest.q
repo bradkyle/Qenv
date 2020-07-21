@@ -34,24 +34,22 @@ testNewInstrument : {
     runCase: {[dscr; instrument; einstrument; expects] 
             res:();
             // Execute tested function
-            res,:.instrument.NewInstrument[instrument;.z.z]
-            
+            res,:.instrument.NewInstrument[instrument; 1b; .z.z];
             // Run tests on state
-            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc 
-            ins:.instrument.Instrument;
-            .qunit.assertEquals[.instrument.instrumentCount; expects[`instrumentCount]; "instrumentCount"];      
+            ins:select from .instrument.Instrument;
+            .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"];      
 
             // Tear Down 
-            revert[];
+            / revert[];
     }; 
 
-    instrumentCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
+    instrumentCols: `some`other;
     expectedCols: `instrumentCount`shouldError;
 
     runCase["simple instrument creation";
+        instrumentCols!(0N;0N);
         instrumentCols!();
-        instrumentCols!();
-        expectedCols!()];
+        expectedCols!(1;0b)];
 
     };
  
