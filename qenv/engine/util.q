@@ -85,11 +85,10 @@ MakeAction   : {[accountId;action]
 // a agent/account Id and its respective
 // vector target distribution and/or adapter
 // that conforms to a generaliseable dictionary
-MakeFailure   : {[time;cmd;kind;datum]
+MakeFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
-        if[not (cmd in EVENTCMD); :0b];
-        if[not (kind in EVENTKIND); :0b];
-        :`time`cmd`kind`datum!(time;cmd;kind;datum);
+        if[not (kind in ERRORKIND); :0b];
+        :`time`kind`msg!(time;cmd;kind;datum);
         };
 
 

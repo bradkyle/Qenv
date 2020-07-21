@@ -126,6 +126,7 @@ MakeTradeEvent  :{[]
 // offset been changed)
 // nxt is a dictionary of price:qty
 // side is an enum (ORDERSIDE) of `BUY, `SELL 
+// TODO do validation based on instrument
 processSideUpdate   :{[side;nxt]
     nxtCount:count[nxt];
 
@@ -230,21 +231,20 @@ NewOrder       : {[o;time];
     
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
-    if[not (o[`side] in `.order.ORDERSIDE); :`INVALID_SIDE];
+    if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_SIDE;"Invalid side"]]; // TODO make failure event.
     if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
     if[null o[`otype]; :`INVALID_ORDER_TYPE];
     if[null o[`accountId]; :`INVALID_ACCOUNTID];
 
-    // TODO simplify
     o[`orderId]:orderCount+1;
     // TODO set offset
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
         [
-            $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
-            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
+            $[(price mod .global.TICKSIZE)<>0;:MakeFailure[]];
+            $[size<.global.MAXSIZE;:MakeFailure[]];
+            $[size<.global.MAXSIZE;:MakeFailure[]];
+            $[size<.global.MAXSIZE;:MakeFailure[]];
 
             $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
                 [

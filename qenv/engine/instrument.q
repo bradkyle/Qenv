@@ -100,9 +100,13 @@ NewInstrument            :{[instrument; time]
 
 / UpdateInstrument        :{}
 
-/ DefaultInstrument: NewInstrument[];
+GetInstrument             :{[]
 
+    };
 
+GetActiveInstrument        :{[]
+
+    };
 
 // Conditional Utilities
 // -------------------------------------------------------------->
