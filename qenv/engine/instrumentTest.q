@@ -74,6 +74,7 @@ testGetInstrument  :{
         expectedCols!(1;0b)];
     };
 
+// TODO test active instrument doesnt exist, exists etc.
 testGetActiveInstrument :{
     runCase: {[dscr; instrumentId; einstrument; expects] 
             res:();

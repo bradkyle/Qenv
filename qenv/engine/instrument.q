@@ -118,8 +118,9 @@ UpdateInstrument      :{[instrument;time]
     :events;
     };
 
-UpdateActiveInstrument  :{[]
-
+UpdateActiveInstrument  :{[instrument;time]
+    instrument[`instrumentId]:.instrument.activeInstrumentId;
+    :UpdateInstrument[instrument];
     };
 
 // Conditional Utilities
