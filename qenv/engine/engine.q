@@ -7,7 +7,7 @@ RETURNCODE  :   (`INVALID_MEMBER;
                 `INVALID_ORDER;
                 `OK);
 
-
+// TODO dropped response etc.
 /*******************************************************
 // represents the offset in milliseconds
 // check if flip is right

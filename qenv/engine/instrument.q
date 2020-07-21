@@ -118,8 +118,11 @@ GetActiveInstrument        :{[]
 
 UpdateInstrument      :{[instrument;time]
     events:();
+    isMark:`markPrice in cols[instrument];
     instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
     `.instrument.Instrument upsert instrument;
+    if[isMark;events,:MakeMarkPriceUpdateEvent[]];
+    // TODO funding?, instrumentUpdate? 
     :events;
     };
 
