@@ -55,8 +55,7 @@ Account: (
             totalCommission     : `float$()
         );
 
-mandCols, defaults, allCols : DeriveDefaults();
-
+mandCols, defaults, allCols : DeriveDefaults[.account.Account];
 
 // Apply fill is an internal function i.e. it is not exposed
 // to the engine but is used by the orderbook to add a given
