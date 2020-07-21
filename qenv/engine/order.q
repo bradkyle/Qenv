@@ -179,7 +179,7 @@ processSideUpdate   :{[side;nxt]
                 newOffsets: Clip[offsets + derivedDeltas];
                 // Combine the new offsets with the respective offset ids in an 
                 // update statement that will update the respective offsets.
-                update offset:newOffsets from .order.Order where orderId in ordrs[`orderId];
+                update offset:newOffsets from .order.Order where orderId in ordrs[`orderId]; // TODO update
                 
                 // considering no changes have been made to the sizes of the given orders
                 // the new shft would be the new offsets + the previous sizes
@@ -191,7 +191,7 @@ processSideUpdate   :{[side;nxt]
                 // ensures that an accurate representation is kept. 
                 nxtQty:value[nxt];
                 maxShft:max'[newShft];
-                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]];
+                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]]; // TODO update
             ];
             [
                 // No orders exist therefore a simple upsert 

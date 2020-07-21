@@ -25,14 +25,54 @@ testProcessSideUpdate   :{
         obCols:cols .order.OrderBook;
         oCols:cols .order.Order;
 
-        
-        runCase["hedged:long_to_longer";`BUY;
+        runCase["simple ask update no agent orders or previous depth";`BUY;
             obCols!();
             oCols!(); // flat maker fee
             ();
             obCols!();
             oCols!()];
+
+        / runCase["simple ask update no agent orders or previous depth";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
         
+        / runCase["1 order at 1 level";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
+        
+        / runCase["3 orders at one level";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
+
+        / runCase["1 order at 3 different levels and differing offsets";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
+
+        / runCase["mixed orders of different quantities at 3 different levels and differing offsets";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
+
+        / runCase["mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left";`BUY;
+        /     obCols!();
+        /     oCols!(); // flat maker fee
+        /     ();
+        /     obCols!();
+        /     oCols!()];
     };
 
 
