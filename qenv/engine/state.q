@@ -505,7 +505,10 @@ advance :{[events;accountIds]
 // Main Callable functions
 // --------------------------------------------------->
 
-Config      :{[]
+// config recieves a json representation of the given config
+// that pertains to the initial environment state, agent state 
+// aswell as the strategy for which steps will take place.
+Config      :{[config]
 
 
     };
