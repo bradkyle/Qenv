@@ -24,12 +24,12 @@ testProcessSideUpdate   :{
         };
         b:`.order.ORDERSIDE$`BUY;
 
-        / runCase["simple update no agent orders or previous depth";`BUY;
-        /     ();
-        /     (); // flat maker fee
-        /     (E[100.5]!E[100]);
-        /     1!([]price:E[100.5];side:E[b];qty:E[100f]);
-        /     ()];
+        runCase["simple update no agent orders or previous depth";`BUY;
+            ();
+            (); // flat maker fee
+            (E[100.5]!E[100]);
+            1!([]price:E[100.5];side:E[b];qty:E[100f]);
+            ()];
 
         runCase["simple update no agent orders with previous depth";`BUY;
             1!([]price:E[100.5];side:E[b];qty:E[1000f]);
@@ -38,47 +38,20 @@ testProcessSideUpdate   :{
             1!([]price:E[100.5];side:E[b];qty:E[100f]);
             ()];
 
-        / runCase["simple ask update no agent orders or previous depth";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
-        
-        / runCase["1 order at 1 level";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
-        
-        / runCase["3 orders at one level";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
+        runCase["simple update no agent orders with previous multi level depth one side";`BUY;
+            1!([]price:100.5 101;side:2#b;qty:1000 1000f);
+            (); // flat maker fee
+            (E[100.5]!E[100]);
+            1!([]price:100.5 101;side:2#b;qty:100 1000f);
+            ()];
 
-        / runCase["1 order at 3 different levels and differing offsets";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
-
-        / runCase["mixed orders of different quantities at 3 different levels and differing offsets";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
-
-        / runCase["mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left";`BUY;
-        /     obCols!();
-        /     oCols!(); // flat maker fee
-        /     ();
-        /     obCols!();
-        /     oCols!()];
+        runCase["multiple level updates simultaneously";`BUY;
+            1!([]price:100.5 101;side:2#b;qty:1000 1000f);
+            (); // flat maker fee
+            (E[100.5]!E[100]);
+            1!([]price:100.5 101;side:2#b;qty:100 1000f);
+            ()];
+ 
     };
 
 

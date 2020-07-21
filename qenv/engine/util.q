@@ -9,7 +9,8 @@ E:{[x] :enlist[x]};
 Clip :{[x](x>0)*abs x};  
 
 // Converts a list of lists into a equidimensional
-// i.e. equal dimensional matrix
+// i.e. equal dimensional matrix that can be used
+// in matrix calculations 
 PadM  :{[x]:x,'(max[c]-c:count each x)#'0};
 
 // Returns the opposite side to the side provided as an

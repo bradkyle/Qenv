@@ -144,20 +144,19 @@ processSideUpdate   :{[side;nxt]
         [
             // TODO only calculate if has agent orders
             // TODO sort qtys etc.
+            // TODO remove levels where qty=0
             dlt:first'[nxt-qtys];
-
+            
             // Remove all levels that aren't supposed to change 
             dlt:where[dlt<>0]#dlt;           
             numLvls:count dlt;
+
             // TODO grouping by price, orderId
             odrs:?[.order.Order;isActiveLimit[side;key dlt];0b;()];
-            show 90#"+";
-            show count[odrs];
             // If the orderbook contains agent limit orders then
             // update the current offsets.
             $[((numLvls>0) & (count[odrs]>0)); // TODO check
                 [
-                    show 90#"=";
                     offsets: PadM[odrs[`offset]]; // TODO padding
                     sizes: PadM[odrs[`size]]; // TODO padding
                     maxNumUpdates: max count'[offsets];
