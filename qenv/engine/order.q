@@ -1,6 +1,8 @@
 \d .order
 \l util.q
 
+orderCount:0;
+
 // Order
 // =====================================================================================>
 /*******************************************************
@@ -32,29 +34,29 @@ TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90
 STOPTRIGGER :   `LIMIT`MARK`INDEX; 
 EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;   
 
-ordFields  :(`orderId`accountId`side`otype`timeinforce,
-            `size`leaves`filled`limitprice`stopprice,
-            `effdate`status`time`isClose`trigger`execInst);    
 orderMandatoryFields    :`accountId`side`otype`size;
 
 Order: (
     [price:`float$(); orderId:`long$()]
+    clOrdId         : `long$();
     accountId       : `long$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
     offset          : `long$();
     timeinforce     : `.order.TIMEINFORCE$();
-    size            : `long$(); / multiply by 100
-    leaves          : `long$();
-    filled          : `long$();
-    limitprice      : `long$(); / multiply by 100
-    stopprice       : `long$(); / multiply by 100
+    size            : `float$(); / multiply by 100
+    leaves          : `float$();
+    filled          : `float$();
+    limitprice      : `float$(); / multiply by 100
+    stopprice       : `float$(); / multiply by 100
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
     isClose         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$()
     );
+
+ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
 isActiveLimit:{[side; validPrices]
               :((>;`size;0);
@@ -223,22 +225,19 @@ ProcessDepthUpdate  : {[time;asks;bids]
 
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
-NewOrder       : {[o;accountId;time];
+NewOrder       : {[o;time];
     events:();
     
     // TODO if account is hedged and order is close the order cannot be larger than the position
-    Validate[o];
-
-    if[null o[`side]; :`INVALID_SIDE];
+    o:ordSubmitFields!o[ordSubmitFields];
+    if[not (o[`side] in `.order.ORDERSIDE); :`INVALID_SIDE];
     if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
     if[null o[`otype]; :`INVALID_ORDER_TYPE];
+    if[null o[`accountId]; :`INVALID_ACCOUNTID];
 
     // TODO simplify
-    o:Sanitize[o];
-    o[`accountId]:accountId;
-    o[`orderId]:0;
+    o[`orderId]:orderCount+1;
     // TODO set offset
-
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
         [
