@@ -77,3 +77,11 @@ testGetInstrument  :{
 testGetActiveInstrument :{
 
     };
+
+testUpdateInstrument     :{
+
+    };
+
+testUpdateActiveInstrument  :{
+
+    };

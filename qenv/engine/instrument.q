@@ -109,13 +109,17 @@ GetInstrument             :{[instrumentId]
 
 // TODO check if active instrument present etc.
 GetActiveInstrument        :{[]
-    if[count[.instrument.Instrument]>0;:GetInstrument[.instrument.activeInstrumentId]]
+    if[count[.instrument.Instrument]>0;:GetInstrument[.instrument.activeInstrumentId]];
     };
 
-UpdateActiveInstrument      :{[instrument;time]
+UpdateInstrument      :{[instrument;time]
     events:();
 
     :events;
+    };
+
+UpdateActiveInstrument  :{[]
+
     };
 
 // Conditional Utilities

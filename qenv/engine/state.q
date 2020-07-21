@@ -508,8 +508,9 @@ advance :{[events;accountIds]
 // config recieves a json representation of the given config
 // that pertains to the initial environment state, agent state 
 // aswell as the strategy for which steps will take place.
+// utilizes the .j (json) namespace to process a json representation
+// sent to it.
 Config      :{[config]
-
 
     };
 
