@@ -103,18 +103,23 @@ NewInstrument            :{[instrument; isActive; time]
     :events;
     };
 
+// Returns the current state of the instrument denoted by the provided
+// instrument Id,
 GetInstrument             :{[instrumentId]
     if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]
     };
 
 // TODO check if active instrument present etc.
+// Returns the current state of the active instrument denoted by
+// the activeInstrumentId
 GetActiveInstrument        :{[]
     if[count[.instrument.Instrument]>0;:GetInstrument[.instrument.activeInstrumentId]];
     };
 
 UpdateInstrument      :{[instrument;time]
     events:();
-
+    instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
+    `.instrument.Instrument upsert instrument;
     :events;
     };
 
