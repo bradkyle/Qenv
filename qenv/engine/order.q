@@ -229,37 +229,42 @@ NewOrder       : {[o;time];
     events:();
     ins:.instrument.GetActiveInstrument[];
     
+    // TODO append failures to events and return.
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
     if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_SIDE;"Invalid side"]]; // TODO make failure event.
-    if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
-    if[null o[`otype]; :`INVALID_ORDER_TYPE];
-    if[null o[`accountId]; :`INVALID_ACCOUNTID];
+    if[null o[`size] | o[`size]>0; :MakeFailure[time;`INVALID_SIZE;"Invalid size"]];
+    if[null o[`otype]; :MakeFailure[time;`INVALID_ORDER_TYPE;"Invalid size"]];
+    if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"Invalid size"]];
+
+    // Price and size validation
+    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[]];
+    if[o[`price]>ins[`maxPrice];:MakeFailure[]];
+    if[o[`price]<ins[`minPrice];:MakeFailure[]];
+    if[o[`size]<ins[`maxOrderSize];:MakeFailure[]];
+    if[o[`size]>ins[`minOrderSize];:MakeFailure[]];
 
     o[`orderId]:orderCount+1;
     // TODO set offset
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
         [
-            $[(price mod .global.TICKSIZE)<>0;:MakeFailure[]];
-            $[size<.global.MAXSIZE;:MakeFailure[]];
-            $[size<.global.MAXSIZE;:MakeFailure[]];
-            $[size<.global.MAXSIZE;:MakeFailure[]];
 
             $[(side=`SELL and price < orderbook[`bestBidPrice]) | (side=`BUY and price > orderbook[`bestAskPrice]);
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
-                        events,:.global.MakeFailureEvent[];
-                        events,:processCross[
-                        events;
-                        event[`datum][`side];
-                        event[`datum][`size];
-                        1b;
-                        event[`agentId]
-                    ]]
+                        events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Invalid size"];
+                        events,:processCross[ // The order crosses the bid ask spread.
+                            events;
+                            event[`datum][`side];
+                            event[`datum][`size];
+                            1b;
+                            event[`agentId]];
+                    ]
                 ];
                 [
                     // add orderbook references
+                    // TODO update order init margin etc.
                     `order.Order insert order;
                     events,:.order.MakeNewOrderEvent[];
                 ];
@@ -267,17 +272,12 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`MARKET;
         [
-            $[(price mod .global.TICKSIZE)<>0;:.global.MakeFailureEvent[]];
-            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-            $[size<.global.MAXSIZE;:.global.MakeFailureEvent[]];
-
             events,:processCross[
                 events;
                 event[`datum][`side];
                 event[`datum][`size];
                 1b;
-                event[`agentId]
-            ];
+                event[`agentId]];
         ];
       o[`otype]=`STOP_MARKET;
         [
@@ -294,12 +294,8 @@ NewOrder       : {[o;time];
 
 updateOrder    : {[order;time]
     events:();
-    if[null o[`side]; :`INVALID_SIDE];
-    if[null o[`size] | o[`size]>0; :`INVALID_SIZE];
-    if[null o[`otype]; :`INVALID_ORDER_TYPE];
-    if[null o[`orderId]; :`INVALID_ORDER_TYPE];
-    if[null o[`accountId]; :`INVALID_ORDER_TYPE];
-
+   
+    :events;
     };
 
 removeOrder    : {[orderId;time]

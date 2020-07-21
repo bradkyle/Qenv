@@ -374,8 +374,10 @@ getInventory    :{[accountId;side]
 // to the engine but is used by the orderbook to add a given
 // qty to the active position of an account.
 // todo allow for onlyclose and calcualte fee
+// TODO update active fees
 ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     events:();
+    ins:.instrument.GetActiveInstrument[];
     acc: exec from Account where accountId=accountId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     // TODO remove order margin

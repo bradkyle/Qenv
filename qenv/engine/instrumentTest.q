@@ -94,7 +94,7 @@ testGetActiveInstrument :{
         instrumentId;
         instrumentCols!();
         expectedCols!(1;0b)];
-    };
+
     };
 
 testUpdateInstrument     :{
@@ -116,7 +116,7 @@ testUpdateInstrument     :{
         instrumentId;
         instrumentCols!();
         expectedCols!(1;0b)];
-    };
+    
     };
 
 testUpdateActiveInstrument  :{
@@ -138,5 +138,5 @@ testUpdateActiveInstrument  :{
         instrumentId;
         instrumentCols!();
         expectedCols!(1;0b)];
-    };
+    
     };
