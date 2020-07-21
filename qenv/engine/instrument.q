@@ -91,7 +91,7 @@ MakeFundingEvent             :{[]
 // values and inserts it into the instrument 
 // table, it also returns the reference to
 // the singleton class representation therin.
-NewInstrument            :{[instrument; time]
+NewInstrument            :{[instrument; isActive; time]
     // TODO drop unnceccessary cols
     instrument:Default[instrument;`instrumentId; instrumentCount+:1]; // TODO id generator
     instrument:Default[instrument;fltCols;0f];    

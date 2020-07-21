@@ -27,7 +27,4 @@ system "d .instrumentTest";
 testNewInstrument : {
 
     };
-
-testSetDefaultInstrument :{
-
-    };
+ 
