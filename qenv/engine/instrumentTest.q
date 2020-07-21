@@ -54,7 +54,24 @@ testNewInstrument : {
     };
  
 testGetInstrument  :{
+    runCase: {[dscr; instrumentId; einstrument; expects] 
+            res:();
+            // Execute tested function
+            res,:.instrument.NewInstrument[instrument; 1b; .z.z];
+            // Run tests on state
+            ins:select from .instrument.Instrument;
+            .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"];      
 
+            // Tear Down 
+            / revert[];
+    }; 
+ 
+    expectedCols: `instrumentCount`shouldError;
+
+    runCase["simple instrument creation";
+        instrumentId;
+        instrumentCols!();
+        expectedCols!(1;0b)];
     };
 
 testGetActiveInstrument :{

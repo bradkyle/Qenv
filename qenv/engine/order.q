@@ -25,7 +25,6 @@ ORDERSTATUS :   (`NEW;          / begining of life cycle
                 `TRIGGERED;
                 `CANCELED);     / user or system cancel
 
-
 TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90days)
                 `IMMEDIATEORCANCEL; / fill immediately or cancel, allow partially fill
                 `FILLORKILL;        / fill immediately or cancel, full fill only 

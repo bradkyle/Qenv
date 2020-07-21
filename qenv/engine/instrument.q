@@ -18,7 +18,7 @@ RISKTIERTYPE        :   `PROCEDURAL`FLAT;
 INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 
 // TODO INVERSE vs QUANTO i.e. bitmex + okex vs binance etc.
-
+// TODO do funding, fair price marking, 
 Instrument: (
     [instrumentId           : `long$()];
     state                   : `.instrument.INSTRUMENTSTATE$();
@@ -99,14 +99,23 @@ NewInstrument            :{[instrument; isActive; time]
     if[any null instrument[mandCols]; :0b];      
     instrument:Sanitize[instrument;defaults[];allCols];
     `.instrument.Instrument upsert instrument;
+    if[isActive; .instrument.activeInstrumentId:instrument[`instrumentId]];
+    :events;
     };
 
 GetInstrument             :{[instrumentId]
     if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]
     };
 
+// TODO check if active instrument present etc.
 GetActiveInstrument        :{[]
+    if[count[.instrument.Instrument]>0;:GetInstrument[.instrument.activeInstrumentId]]
+    };
 
+UpdateActiveInstrument      :{[instrument;time]
+    events:();
+
+    :events;
     };
 
 // Conditional Utilities
