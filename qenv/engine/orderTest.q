@@ -6,6 +6,12 @@ system "d .orderTest";
 // Order CRUD logic
 // -------------------------------------------------------------->
 
+testNewOrder        :{
+    runCase :{[dscr;accountId;order;eorder]
+        time:.z.z;
+        res:.order.NewOrder[order;accountId;time];
+        };
+    };
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -66,12 +72,13 @@ testProcessSideUpdate   :{
         /     1!([]price:100.5 101;side:2#b;qty:100 1000f);
         /     ()];
 
-        runCase["depth update with single agent order increasing";`BUY;
-            1!([]price:100.5 101;side:2#b;qty:1000 1000f);
-            (); // flat maker fee
-            (E[100.5]!E[100]);
-            1!([]price:100.5 101;side:2#b;qty:100 1000f);
-            ()];
+        // TODO
+        / runCase["depth update with single agent order increasing";`BUY;
+        /     1!([]price:100.5 101;side:2#b;qty:1000 1000f);
+        /     (); // flat maker fee
+        /     (E[100.5]!E[100]);
+        /     1!([]price:100.5 101;side:2#b;qty:100 1000f);
+        /     ()];
 
  
     };
