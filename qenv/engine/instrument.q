@@ -63,13 +63,14 @@ Instrument: (
     numAccountLiquidations  : `long$();
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
-    numForcedCancellations  : `long$()
-    );
+    numForcedCancellations  : `long$());
 
 mandCols:0;
-fltCols:0;
-lngCols:0; 
-
+// Defaults approximate the values seen with bitmex XBTUSD
+defaults:{:(
+    (instrumentCount+:1),`ONLINE,`QUOTE`BASE`UNDERLYING,1,100,0,
+    `FLAT,`FLAT,-0.00025,0.00025,0.5,1,`PROCEDURAL,200,100,
+    )};
 // Event creation utilities
 // -------------------------------------------------------------->
 
@@ -92,14 +93,12 @@ MakeFundingEvent             :{[]
 // table, it also returns the reference to
 // the singleton class representation therin.
 NewInstrument            :{[instrument; isActive; time]
-    // TODO drop unnceccessary cols
-    instrument:Default[instrument;`instrumentId; instrumentCount+:1]; // TODO id generator
-    instrument:Default[instrument;fltCols;0f];    
-    instrument:Default[instrument;lngCols;0];      
-    .logger.Debug["instrument validated and decorated"];
-    };
+    events:();
+    if[any null instrument[mandCols]; :0b];      
 
-/ UpdateInstrument        :{}
+    instrument:Sanitize[instrument;defaults[];allCols];
+
+    };
 
 GetInstrument             :{[instrumentId]
     if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]

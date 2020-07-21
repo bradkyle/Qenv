@@ -2,6 +2,12 @@ system "d .instrumentTest";
 \l qunit.q
 \l instrument.q
 
+revert:   {
+            delete from `.instrument.Instrument;
+            .instrument.instrumentCount:0;
+            .inventory.activeInstrumentId:0;
+    };
+
 // TODO more cases i.e. with agent orders etc.
 / testProcessSideUpdate   :{ 
 /         runCase: {[dscr; case]
@@ -25,6 +31,34 @@ system "d .instrumentTest";
 // Instrument CRUD Logic
 // -------------------------------------------------------------->
 testNewInstrument : {
+    runCase: {[dscr; instrument; einstrument; expects] 
+            res:();
+            // Execute tested function
+            res,:.instrument.NewInstrument[instrument;.z.z]
+            
+            // Run tests on state
+            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc 
+            ins:.instrument.Instrument;
+            .qunit.assertEquals[.instrument.instrumentCount; expects[`instrumentCount]; "instrumentCount"];      
+
+            // Tear Down 
+            revert[];
+    }; 
+
+    instrumentCols: `balance`realizedPnl`unrealizedPnl`marginType`positionType;
+    expectedCols: `instrumentCount`shouldError;
+
+    runCase["simple instrument creation";
+        instrumentCols!();
+        instrumentCols!();
+        expectedCols!()];
 
     };
  
+testGetInstrument  :{
+
+    };
+
+testGetActiveInstrument :{
+
+    };

@@ -350,6 +350,7 @@ removeOrder    : {[orderId;time]
 //          - if the trade is larger than best size
 //          - if the trade is smaller than the best size
 //      - if the trade was not made by an agent
+// TODO compactify!
 fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
         events:();
         nside: NegSide[side];
