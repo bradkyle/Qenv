@@ -2,6 +2,11 @@ system "d .orderTest";
 \l order.q
 \l util.q
 
+
+// Order CRUD logic
+// -------------------------------------------------------------->
+
+
 // Depth Update Logic
 // -------------------------------------------------------------->
 
@@ -45,12 +50,29 @@ testProcessSideUpdate   :{
             1!([]price:100.5 101;side:2#b;qty:100 1000f);
             ()];
 
-        runCase["multiple level updates simultaneously";`BUY;
+        // TODO
+        / runCase["multiple level updates simultaneously";`BUY;
+        /     1!([]price:100.5 101;side:2#b;qty:1000 1000f);
+        /     (); // flat maker fee
+        /     (E[100.5]!E[100]);
+        /     1!([]price:100.5 101;side:2#b;qty:100 1000f);
+        /     ()];
+
+        // TODO
+        / runCase["multiple level updates simultaneously with null one";`BUY;
+        /     1!([]price:100.5 101;side:2#b;qty:1000 1000f);
+        /     (); // flat maker fee
+        /     (E[100.5]!E[100]);
+        /     1!([]price:100.5 101;side:2#b;qty:100 1000f);
+        /     ()];
+
+        runCase["depth update with single agent order increasing";`BUY;
             1!([]price:100.5 101;side:2#b;qty:1000 1000f);
             (); // flat maker fee
             (E[100.5]!E[100]);
             1!([]price:100.5 101;side:2#b;qty:100 1000f);
             ()];
+
  
     };
 
