@@ -56,11 +56,13 @@ Order: (
     execInst        : `.order.EXECINST$()
     );
 
-isActiveLimit:((>;`size;0);
+isActiveLimit:{[side; validPrices]
+              :((>;`size;0);
                (in;`status;enlist[`FILLED`FAILED`CANCELED]);
-               (in;`price;key dlt);
-               (=;`otype;`LIMIT);
-               (=;`side;side));
+               (in;`price;validPrices);
+               (=;`otype;`.order.ORDERTYPE$`LIMIT);
+               (=;`side;`.order.ORDERSIDE$side));
+               };
 
 MakeNewOrderEvent   :{[]
 
@@ -89,7 +91,7 @@ MakeCancelAllOrdersEvent :{[]
 OrderBook:(
     [price      :`float$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`float$(); 
+    qty         :`float$()
     );
 
 MakeDepthUpdateEvent :{[]
@@ -123,86 +125,89 @@ MakeTradeEvent  :{[]
 // nxt is a dictionary of price:qty
 // side is an enum (ORDERSIDE) of `BUY, `SELL 
 processSideUpdate   :{[side;nxt]
-    / $[not (type nxt)=99h; :0b]; //
-    / $[not (side in .order.ORDERSIDE); :0b];
+    nxtCount:count[nxt];
+
+    if[not (type nxt)=99h; :0b];
+    if[not (side in .order.ORDERSIDE); :0b];
+    if[not (nxtCount>0); :0b];
     // TODO prices cannot overlap
+    // asc desc for ask vs bid
 
     // Retrieve the latest snapshot from the orderbook
     qtys:exec qty by price from .order.OrderBook where side=side;
-    show qtys;
     // sanitize/preprocess
 
     // Generate the set of differences between the current
     // orderbook snapshot and the target (nxt) snapshot
     // to which the orderbook is to transition.
-    $[(count qtys)>0; // TODO collapse int single function.
+    $[count[qtys]>0;
         [
             // TODO only calculate if has agent orders
             // TODO sort qtys etc.
-            dlt:nxt-qtys;
+            dlt:first'[nxt-qtys];
 
-            // Remove all levels that aren't supposed to change
-            dlt:where[dlt<>0]#dlt;
+            // Remove all levels that aren't supposed to change 
+            dlt:where[dlt<>0]#dlt;           
             numLvls:count dlt;
-
             // TODO grouping by price, orderId
-            odrs:?[.order.Order;isActiveLimit;0b;()];
-            
+            odrs:?[.order.Order;isActiveLimit[side;key dlt];0b;()];
+            show 90#"+";
+            show count[odrs];
             // If the orderbook contains agent limit orders then
             // update the current offsets.
-            $[(numLvls>0 & count[odrs]>0); // TODO check
-            [
-                offsets: PadM[odrs[`offset]]; // TODO padding
-                sizes: PadM[odrs[`size]]; // TODO padding
-                maxNumUpdates: max count'[offsets];
+            $[((numLvls>0) & (count[odrs]>0)); // TODO check
+                [
+                    show 90#"=";
+                    offsets: PadM[odrs[`offset]]; // TODO padding
+                    sizes: PadM[odrs[`size]]; // TODO padding
+                    maxNumUpdates: max count'[offsets];
 
-                / Calculate the shifted offsets, which infers
-                / the amount of space between each offset
-                shft: sizes + offsets;
-                lshft: shft[;count shft];
-                lpad: maxNumUpdates+1;
+                    / Calculate the shifted offsets, which infers
+                    / the amount of space between each offset
+                    shft: sizes + offsets;
+                    lshft: shft[;count shft];
+                    lpad: maxNumUpdates+1;
 
-                / Initialize non agent quantities matrix
-                / The first column is set to the first lvl_offset
-                / The last column is set to the size of the level minus the size of the last offset + order size
-                / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
-                nonAgentQtys: (numLvls, lpad)#0;
-                nonAgentQtys[;0]: offsets[;0];
-                nonAgentQtys[;1+til maxNumUpdates]: Clip[(offsets[;1] - lshft)]; 
-                nonAgentQtys[;lpad]:Clip[qtys - lshft]; 
+                    / Initialize non agent quantities matrix
+                    / The first column is set to the first lvl_offset
+                    / The last column is set to the size of the level minus the size of the last offset + order size
+                    / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
+                    nonAgentQtys: (numLvls, lpad)#0;
+                    nonAgentQtys[;0]: offsets[;0];
+                    nonAgentQtys[;1+til maxNumUpdates]: Clip[(offsets[;1] - lshft)]; 
+                    nonAgentQtys[;lpad]:Clip[qtys - lshft]; 
 
-                lvlNonAgentQtys: sum'[nonAgentQtys];
-                derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
+                    lvlNonAgentQtys: sum'[nonAgentQtys];
+                    derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
-                // Update the new offsets to equal the last
-                // offsets + the derived deltas
-                newOffsets: Clip[offsets + derivedDeltas];
-                // Combine the new offsets with the respective offset ids in an 
-                // update statement that will update the respective offsets.
-                update offset:newOffsets from .order.Order where orderId in ordrs[`orderId]; // TODO update
-                
-                // considering no changes have been made to the sizes of the given orders
-                // the new shft would be the new offsets + the previous sizes
-                newShft:sizes + newOffsets;
+                    // Update the new offsets to equal the last
+                    // offsets + the derived deltas
+                    newOffsets: Clip[offsets + derivedDeltas];
+                    // Combine the new offsets with the respective offset ids in an 
+                    // update statement that will update the respective offsets.
+                    update offset:newOffsets from .order.Order where orderId in ordrs[`orderId]; // TODO update
+                    
+                    // considering no changes have been made to the sizes of the given orders
+                    // the new shft would be the new offsets + the previous sizes
+                    newShft:sizes + newOffsets;
 
-                // Update the orderbook lvl qtys to represent the change                
-                // Replace all instances of the update with the maximum shft (offset + size)
-                // for each price whereby the update is smaller than the given shft (offset+size)
-                // ensures that an accurate representation is kept. 
-                nxtQty:value[nxt];
-                maxShft:max'[newShft];
-                update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]]; // TODO update
+                    // Update the orderbook lvl qtys to represent the change                
+                    // Replace all instances of the update with the maximum shft (offset + size)
+                    // for each price whereby the update is smaller than the given shft (offset+size)
+                    // ensures that an accurate representation is kept. 
+                    nxtQty:value[nxt];
+                    maxShft:max'[newShft];
+                    update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]; // TODO update
+                ];
+                [
+                    // No orders exist therefore a simple upsert 
+                    `.order.OrderBook upsert ([] price:`float$key[nxt]; side:nxtCount#side; qty:`float$value[nxt]); 
+                ]
             ];
-            [
-                // No orders exist therefore a simple upsert 
-                nxt[`side]:side;
-                `.order.OrderBook upsert nxt; 
-            ]
-            ];
-        ];
+        ]; 
         [
-            nxt[`side]:side;
-            `.order.OrderBook upsert nxt; 
+            / `.order.OrderBook upsert nxt; 
+            `.order.OrderBook insert (`float$key[nxt];nxtCount#side;`float$value[nxt]); 
         ]
     ];
     };

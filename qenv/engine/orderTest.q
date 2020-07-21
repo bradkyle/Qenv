@@ -1,8 +1,6 @@
 system "d .orderTest";
 \l order.q
-
-e:{[x] :enlist[x]};
-
+\l util.q
 
 // Depth Update Logic
 // -------------------------------------------------------------->
@@ -11,26 +9,34 @@ e:{[x] :enlist[x]};
 // TODO more cases i.e. with agent orders etc.
 testProcessSideUpdate   :{ 
         runCase: {[dscr; side; orderbook; orders; upd; eorderbook; eorders] 
+            if[count[orderbook]>0;.order.OrderBook:orderbook];
+            if[count[orders]>0;.order.Order:orders];
 
-            `.order.OrderBook upsert orderbook;
-            `.order.Order upsert orders;
+            .order.processSideUpdate[side;upd];
 
-            res:.order.processSideUpdate[side;upd];
+            ob: .order.OrderBook;
+            ors: .order.Order;
 
-            / .qunit.assertEquals[res; 1b; "Should return true"]; // TODO use caseid etc
-            .qunit.assertEquals[.order.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
-            .qunit.assertEquals[.order.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];
-            .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
+            .qunit.assertEquals[ob~eorderbook; 1b; dscr,": orderbook"]; // TODO use caseid etc
+            / .qunit.assertEquals[.order.getQtys[case[`side]]; case[`eqtys]; "qtys expected"];
+            / .qunit.assertEquals[.order.getOffsets[case[`side]]; case[`eoffsets]; "offsets expected"];
+            / .qunit.assertEquals[.order.getSizes[case[`side]]; case[`esizes]; "sizes expected"];
         };
-        obCols:cols .order.OrderBook;
-        oCols:cols .order.Order;
+        b:`.order.ORDERSIDE$`BUY;
 
-        runCase["simple ask update no agent orders or previous depth";`BUY;
-            obCols!();
-            oCols!(); // flat maker fee
-            ();
-            obCols!();
-            oCols!()];
+        / runCase["simple update no agent orders or previous depth";`BUY;
+        /     ();
+        /     (); // flat maker fee
+        /     (E[100.5]!E[100]);
+        /     1!([]price:E[100.5];side:E[b];qty:E[100f]);
+        /     ()];
+
+        runCase["simple update no agent orders with previous depth";`BUY;
+            1!([]price:E[100.5];side:E[b];qty:E[1000f]);
+            (); // flat maker fee
+            (E[100.5]!E[100]);
+            1!([]price:E[100.5];side:E[b];qty:E[100f]);
+            ()];
 
         / runCase["simple ask update no agent orders or previous depth";`BUY;
         /     obCols!();
