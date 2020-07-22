@@ -38,46 +38,34 @@ eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported 
 
 eventEngine[`DEPTH] :   {[event]
     .logger.Debug["new depth"][event];
-    events:();
-    events:events,.orderbook.ProcessDepthUpdate[event]
-    :events;
+    .orderbook.ProcessDepthUpdate[event];
     };
 
 eventEngine[`TRADE] :   {[event]
     .logger.Debug["new trade"][event];
-    events:();
-    events:events,.orderbook.ProcessTradeEvent[event];
-    events:events,.stopmanager.CheckStopsByTradeEvent[event];
-    :events;
+    .orderbook.ProcessTradeEvent[event];
+    .stopmanager.CheckStopsByTradeEvent[event];
     };
 
 eventEngine[`DEPOSIT] :   {[event]
     .logger.Debug["new deposit"][event];
-    events:();
-    events:events,.account.ProcessDeposit[event];
-    :events;
+    .account.ProcessDeposit[event];
     };
 
 eventEngine[`WITHDRAWAL] :   {[event]
     .logger.Debug["new withdrawal"][event];
-    events:();
-    events:events,.account.ProcessWithdraw[event];
-    :events;
+    .account.ProcessWithdraw[event];
     };
 
 eventEngine[`FUNDING] :   {[event]
     .logger.Debug["new funding"][event];
-    events:();
-    events:events,.account.ApplyFunding[event];
-    :events;
+    .account.ApplyFunding[event];
     };
 
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
-    events:();
-    events:events,.order.CheckByMarkPrice[event];
-    events:events,.stopmanager.CheckStopsByMarkPrice[event];
-    :events;
+    .order.CheckByMarkPrice[event];
+    .stopmanager.CheckStopsByMarkPrice[event];
     };
 
 // TODO add randomization based upon current probability 
@@ -85,14 +73,11 @@ eventEngine[`MARK] :   {[event]
 // TODO check within max and min orders, run validation etc.
 eventEngine[`PLACE_ORDER] :   {[event]
     .logger.Debug["new place order"][event];
-    events:();  
-    // todo
-    :events;
     };
 
 eventEngine[`PLACE_BATCH_ORDER] :   {[event]
     .logger.Debug["new place batch order"][event];
-
+    // TODO 
     };
 //
 eventEngine[`CANCEL_ORDER] :   {[event]
@@ -142,7 +127,7 @@ ResetEngine     : {
 // Processes a single event and matches it
 // with its respective processing logic above.
 ProcessSingleEvent : {[eventkind; event]
-        :eventEngine [eventkind] [event];
+        eventEngine [eventkind] [event];
     };
 
 // 
@@ -158,7 +143,7 @@ preprocessEventEgressBatch     :{[]
 // them with their respective processing 
 // logic above.
 ProcessEventBatch  : {[eventBatch]
-        :eventEngine [eventkind] [event] each eventBatch;
+        eventEngine [eventkind] [event] each eventBatch;
     };
 
 // Sets up the engine, active instrument and

@@ -68,7 +68,7 @@ Events  :( // TODO add failure to table
     kind        :`.global.EVENTKIND$();
     datum       :();
     isErr       :`boolean$();
-    reason      :`.global.ERRORKIND;
+    reason      :`.global.ERRORKIND$()
     );
 
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation

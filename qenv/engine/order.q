@@ -65,23 +65,21 @@ isActiveLimit:{[side; validPrices]
                (=;`side;`.order.ORDERSIDE$side));
                };
 
-MakeNewOrderEvent   :{[]
+AddNewOrderEvent   :{[]
 
     }
 
-MakeOrderUpdateEvent :{[]
+AddOrderUpdateEvent :{[]
 
     }
 
-MakeBatchOrderEvent   :{[]
+AddBatchOrderEvent   :{[]
 
     }
 
-MakeCancelAllOrdersEvent :{[]
+AddCancelAllOrdersEvent :{[]
 
     }
-
-
 
 
 // OrderBook
@@ -97,27 +95,27 @@ OrderBook:(
     qty         :`float$()
     );
 
-MakeDepthUpdateEvent :{[depth;time]
+AddDepthUpdateEvent :{[depth;time]
     :MakeEvent[time;`UPDATE;`DEPTH;depth];
     };
 
 
-MakeTradeEvent  :{[trade;time]
+AddTradeEvent  :{[trade;time]
     :MakeEvent[time;`NEW;`TRADE;trade];
     };
 
+// TRADES ARE UN NECCESSARY FOR THE ENGINE.
+/ // Trade
+/ // =====================================================================================>
+/ Trade   :`(
+/     [tradeId    :`long$()]
+/     price       :`float$();
+/     side        :`.order.ORDERSIDE$();
+/     qty         :`float$()
+/     );
 
-// Trade
-// =====================================================================================>
-Trade   :(
-    [tradeId    :`long$()]
-    price       :`float$();
-    side        :`.order.ORDERSIDE$();
-    qty         :`float$()
-    );
-
-// TODO fix
-tradeCols:cols[Trade] except `tradeId;
+/ // TODO fix
+tradeCols:`price`side`qty;
 
 // Orderbook Utilities
 // -------------------------------------------------------------->
@@ -232,7 +230,7 @@ ProcessDepthUpdate  : {[time;asks;bids]
     // Derive the deltas for each level given the new update
     processSideUpdate[`SELL;event[`datum][`asks]];
     processSideUpdate[`BUY;event[`datum][`bids]];
-    :MakeDepthEvent[nextAsks;nextBids];
+    AddDepthEvent[nextAsks;nextBids];
     };
 
 // Limit Order Manipulation CRUD Logic
