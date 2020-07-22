@@ -187,12 +187,14 @@ testFillTrade:{
             eors:state[5];
             eorderbook:state[6];
             if[count[orderbook]>0;.order.OrderBook:orderbook];
-
-            // TODO make testable i.e. if account not found etc.
             if[count[account]>0;.account.NewAccount[account;.z.z]];
+            if[count[orders]>0;.order.NewOrder[orders;.z.z]];
+            / show .order.NewOrder[orders;.z.z];
+            // TODO make testable i.e. if account not found etc.
 
             aid:$[params[`isAgent];account[`accountId];0N];
             res:.order.fillTrade[params[`side];params[`qty];params[`isClose];params[`isAgent];aid;time];
+            show res;
             .qunit.assertThat[res; ~; eres; dscr,": expected response"];
             .qunit.assertThat[.order.OrderBook; ~; eorderbook; dscr,": expected orderbook"];
 
@@ -205,42 +207,46 @@ testFillTrade:{
         l:`LIMIT;
         aCols:`accountId`balance`available; 
         pCols:`side`qty`isClose`isAgent;
+        oCols:`clOrdId,.order.orderMandatoryFields,`price;
         time:.z.z;
 
         // TODO make sure that returns list of trades.
-        runCase["orderbook does not have agent orders, trade was not made by an agent";(
-            aCols!(1;1f;1f);
-            ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
-            pCols!(s;50;0b;0b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;50f;100.5));
-            ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
+        // TODO return list of trades or aggregated trade depending on configuration.
+        // TODO test errors
+        / runCase["orderbook does not have agent orders, trade was not made by an agent";(
+        /     aCols!(1;1f;1f);
+        /     ();
+        /     1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
+        /     pCols!(s;50;0b;0b);
+        /     `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;50f;100.5));
+        /     ();
+        /     1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
         
-        runCase["orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
+        / runCase["orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
+        /     aCols!(1;1f;1f);
+        /     ();
+        /     1!([]price:100 100.5f;side:`BUY`SELL;qty:100 100f); // flat maker fee
+        /     pCols!(s;150;0b;1b);
+        /     `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100f));
+        /     ();
+        /     1!([]price:E[100.5];side:E[`SELL];qty:E[100f]));time];
+
+        / runCase["orderbook does not have agent orders, trade was made by an agent, trade is smaller than the best size";(
+        /     aCols!(1;1f;1f);
+        /     ();
+        /     1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
+        /     pCols!(s;50;0b;1b);
+        /     `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100.5));
+        /     ();
+        /     1!([]price:E[100.5];side:E[`BUY];qty:E[50f]));time];
+
+        // Test a different agent order will be executed 
+        runCase["orderbook has agent orders, trade fills agent order, trade execution < agent order, fill is agent";(
             aCols!(1;1f;1f);
-            ();
+            oCols!(101;1;`BUY;`LIMIT;100f;100f);            
             1!([]price:100 100.5f;side:`BUY`SELL;qty:100 100f); // flat maker fee
             pCols!(s;150;0b;1b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100f));
-            ();
-            1!([]price:E[100.5];side:E[`SELL];qty:E[100f]));time];
-
-        runCase["orderbook does not have agent orders, trade was made by an agent, trade is smaller than the best size";(
-            aCols!(1;1f;1f);
-            ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
-            pCols!(s;50;0b;1b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100.5));
-            ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[50f]));time];
-
-        runCase["orderbook has agent orders, trade will execute an agent order, trade execution is smaller than the agent order";(
-            aCols!(1;1f;1f);
-            ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
-            pCols!(s;50;0b;1b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100.5));
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;150f;100f));
             ();
             1!([]price:E[100.5];side:E[`BUY];qty:E[50f]));time];
     };

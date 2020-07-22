@@ -223,7 +223,7 @@ getCurrentOrderLvlDist        :{[numAskLvls;numBidLvls]
 createOrderEventsAtLevel     :{[level;side;size;accountId]
     events:();
     price: getPriceAtLevel[level;side];
-    events,:.global.MakeOrderEvent[side;price;size];
+    events:events,.global.MakeOrderEvent[side;price;size];
     :events;
     };
 
@@ -260,14 +260,14 @@ createFlattenEvents          :{[accountId]
     
     $[side=`SELL;`BUY;`SELL]
     abs currentQty
-    events,:[]
+    events:events,[]
     };  
 
 // Creates an event that cancels all open orders for
 // a given agent.
 createCancelAllOrdersEvent  :{[]
     events:();
-    events,:.global.MakeCancelAllOrdersEvent[];
+    events:events,.global.MakeCancelAllOrdersEvent[];
     :events;
     };
 
@@ -482,9 +482,9 @@ nextEvents   :{[step] // TODO changes in depth due to trades still persist only 
 // Appending the actions to the events to be processed.
 derive  :{[actions;time]
     events: ();
-    events,: nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
+    events:events, nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
     // sample a probability space of request time
-    events,: .adapter.Adapt [] [accountId;action;time;meanWait;stdWait]; // TODO make work
+    events:events, .adapter.Adapt [] [accountId;action;time;meanWait;stdWait]; // TODO make work
     :events; //TODO implement penalty
     };
 
@@ -529,7 +529,7 @@ Reset       :{[accountIds] // TODO make into accountConfigs
     .state.StepTime: exec from .state.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
     
     // Derive the primary set of events derived from exchange
-    events,:nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
+    events:events,nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
     // TODO reset accounts inventory orders instrument
 
     :advance[events;accountIds];

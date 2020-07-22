@@ -91,6 +91,12 @@ MakeFailure   : {[time;kind;msg]
         :`time`kind`msg!(time;kind;msg);
         };
 
+// Adds a given event to the list of events provided
+// then returns the events provided
+Append	:{[events;event]
+
+	};
+
 
 // Feature construction utils
 //----------------------------------------------------->

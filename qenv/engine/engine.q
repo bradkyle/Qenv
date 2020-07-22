@@ -38,44 +38,44 @@ eventEngine : (`.global.EVENTKIND$())!();
 eventEngine[`DEPTH] :   {[event]
     .logger.Debug["new depth"][event];
     events:();
-    events,:.orderbook.ProcessDepthUpdate[event]
+    events:events,.orderbook.ProcessDepthUpdate[event]
     :events;
     };
 
 eventEngine[`TRADE] :   {[event]
     .logger.Debug["new trade"][event];
     events:();
-    events,:.orderbook.ProcessTradeEvent[event];
-    events,:.stopmanager.CheckStopsByTradeEvent[event];
+    events:events,.orderbook.ProcessTradeEvent[event];
+    events:events,.stopmanager.CheckStopsByTradeEvent[event];
     :events;
     };
 
 eventEngine[`DEPOSIT] :   {[event]
     .logger.Debug["new deposit"][event];
     events:();
-    events,:.account.ProcessDeposit[event];
+    events:events,.account.ProcessDeposit[event];
     :events;
     };
 
 eventEngine[`WITHDRAWAL] :   {[event]
     .logger.Debug["new withdrawal"][event];
     events:();
-    events,:.account.ProcessWithdraw[event];
+    events:events,.account.ProcessWithdraw[event];
     :events;
     };
 
 eventEngine[`FUNDING] :   {[event]
     .logger.Debug["new funding"][event];
     events:();
-    events,:.account.ApplyFunding[event];
+    events:events,.account.ApplyFunding[event];
     :events;
     };
 
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
     events:();
-    events,:.order.CheckByMarkPrice[event];
-    events,:.stopmanager.CheckStopsByMarkPrice[event];
+    events:events,.order.CheckByMarkPrice[event];
+    events:events,.stopmanager.CheckStopsByMarkPrice[event];
     :events;
     };
 

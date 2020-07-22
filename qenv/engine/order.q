@@ -298,6 +298,8 @@ NewOrder       : {[o;time];
     if[o[`size]>ins[`maxOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
     if[o[`size]<ins[`minOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;""]];
 
+    // TODO if market order etc.
+
     // Account related validation
     if[not(o[`accountId] in key .account.Account);:MakeFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
@@ -358,10 +360,10 @@ NewOrder       : {[o;time];
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
-                            events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
+                            events:events,MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
-                            events,:processCross[ // The order crosses the bid ask spread.
+                            events:events,processCross[ // The order crosses the bid ask spread.
                                 events;
                                 o[`side];
                                 o[`size];
@@ -398,14 +400,14 @@ NewOrder       : {[o;time];
                     o[`status]: `NEW;
                     o[`time]: time;
                     `.order.Order insert o;
-                    / events,:.order.MakeNewOrderEvent[];
-                    / events,:.account.MakeAccountUpdateEvent[]
+                    / events:events,.order.MakeNewOrderEvent[];
+                    / events:events,.account.MakeAccountUpdateEvent[]
                 ]
             ];
         ];
       o[`otype]=`MARKET;
         [
-            events,:processCross[
+            events:events,processCross[
                 events;
                 o[`side];
                 o[`size];
@@ -442,19 +444,19 @@ removeOrder    : {[orderId;time]
 
 / AmendLimitOrder    :{[event]
 /     events:();
-/     events,:updateLimitOrder();
+/     events:events,updateLimitOrder();
 /     :events;
 /     };
 
 / CancelLimitOrder    :{[]
 /     events:();
-/     events,:removeLimitOrder();
+/     events:events,removeLimitOrder();
 /     :events;
 /     };
 
 / CancelLimitOrderBatch   :{[]
 /     events:();
-/     events,:CancelLimitOrder each orderIds
+/     events:events,CancelLimitOrder each orderIds
 /     };
 
 / CancelAllLimitOrders    :{[]
@@ -483,10 +485,12 @@ removeOrder    : {[orderId;time]
 //      - if the trade was not made by an agent
 // TODO compactify!
 // TODO immediate or cancel, 
+// TODO add randomization. agg trade?
 fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         events:();
         nside: NegSide[side];
         // TODO checking price is not more/less than best price
+        / minOffset:exec 
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:MakeFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
@@ -494,111 +498,114 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                 hasAgentOrders:(count select from .order.Order where side=nside)>0;
                 $[hasAgentOrders;
                     [
-                        offset:exec min offset, price, orderId from .order.Order where side=nside & price=price; //TODO derive price 
-                        
+                        // TODO check that the min offset in this instance only pertains to the price+side
+                        nxt:exec from .order.Order where side=nside, price=price, offset=min offset; //TODO derive price 
                         // If the orderbook possesses agent orders
-                        $[qty <= smallestOffset;[
-                            // If the quantity left to trade is less than the 
-                            // smallest agent offset i.e. not agent orders will
-                            // be filled.
-                            $[isAgent;
-                                // If the market order was placed by an agent.
-                                events,:.account.ApplyFill[
-                                    qty,
-                                    price;
-                                    side;
-                                    time;
-                                    isClose;
-                                    0b; // not isMaker
-                                    accountId
-                                ];
-                                decrementQty[nside;price;qty];
-                            ];
-                            events,:.order.MakeTradeEvent[time;side;qty;price];
-                            decrementOffsets[nside, price; qty];
-                            qty:0;
-                        ];[
-                            // 
-                            qty-:smallestOffset;
-
-                            // Make a trade event that represents the trade taking up the
-                            // offset space;
-                            events,:.order.MakeTradeEvent[time;side;qty;price];
-                            nextAgentOrder: exec from .order.Order where id=smallestOffsetId;
-                            $[qty>=nextAgentOrder[`size];
-                                [
-                                    // If the quantity to be traded is greater than or
-                                    // equal to the next agent order, fill the agent order
-                                    // updating its state and subsequently removing it from
-                                    // the local buffer, adding fill to account and creating
-                                    // respective trade event. // TODO if order made by agent!
-                                    events,:fillLimitOrder[nextAgentOrder[`id];time]; // TODO update
-                                    events,:.account.ApplyFill[
-                                        nextAgentOrder[`size],
-                                        price;
-                                        nside;
-                                        time;
-                                        nextAgentOrder[`isClose];
-                                        1b; // not isMaker
-                                        nextAgentOrder[`accountId]
-                                    ];
-
-                                    $[isAgent;
-                                        // If the order was made by an agent the first level of
-                                        // the orderbook should represent the change otherwise not
-                                        // captured.
-                                        decrementQty[side;price;smallestOffset]; 
-                                        events,:.account.ApplyFill[
-                                            qty,
-                                            price;
-                                            side;
-                                            time;
-                                            isClose;
-                                            0b; // not isMaker
-                                            accountId
-                                        ];
-                                    ];
-
-                                    events,:.order.MakeTradeEvent[];
-                                    qty-:nextAgentOrder[`size];
-                                ];
-                                [
-                                    // If the quantity to be traded is less than the next agent
-                                    // order, update it to partially filled and apply fills, 
-                                    // make trade events etc.
-                                    nextAgentOrder[`size]-: qty;
-                                    events,:updateLimitOrder[nextAgentOrder;time];
-                                    events,:.account.ApplyFill[
+                        $[qty <= nxt[`offset];
+                            [
+                                // If the quantity left to trade is less than the 
+                                // smallest agent offset i.e. not agent orders will
+                                // be filled.
+                                $[isAgent;
+                                    // If the market order was placed by an agent.
+                                    events:events,.account.ApplyFill[
                                         qty;
                                         price;
-                                        nside;
+                                        side;
                                         time;
-                                        nextAgentOrder[`isClose];
-                                        1b; // isMaker
-                                        nextAgentOrder[`accountId]
-                                    ];
-
-                                    $[isAgent;
-                                        // If the order was made by an agent the first level of
-                                        // the orderbook should represent the change otherwise not
-                                        // captured.
-                                        decrementQty[side;price;smallestOffset]; 
-                                        events,:.account.ApplyFill[
-                                            qty,
-                                            price;
-                                            side;
-                                            time;
-                                            isClose;
-                                            0b; // not isMaker
-                                            accountId
-                                        ];
-                                    ];
-
-                                    events,:.order.MakeTradeEvent[];
-                                    qty:0;
+                                        isClose;
+                                        0b; // not isMaker
+                                        accountId];
+                                    fill:qty; // TODO remove 
+                                    update qty:qty-fill from `.order.OrderBook where side=nside, price=price;
                                 ];
+                                events:events,.order.MakeTradeEvent[(tradeCols!(side;qty;price));time];
+                                update offset:offset-qty from `.order.Order where side=nside, price=price;
+                                qty:0;
                             ];
-                        ]];
+                            [
+                                // 
+                                qty-:nxt[`offset];
+
+                                // Make a trade event that represents the trade taking up the
+                                // offset space;
+                                events:events,.order.MakeTradeEvent[(tradeCols!(side;nxt[`offset];price));time]; 
+                                show 99#"X"; 
+                                $[qty>=nxt[`size];
+                                    [
+                                        show 99#"H";
+                                        // If the quantity to be traded is greater than or
+                                        // equal to the next agent order, fill the agent order
+                                        // updating its state and subsequently removing it from
+                                        // the local buffer, adding fill to account and creating
+                                        // respective trade event. // TODO if order made by agent!
+                                        events:events,fillLimitOrder[nxt[`id];time]; // TODO update
+                                        events:events,.account.ApplyFill[
+                                            nxt[`size],
+                                            price;
+                                            nside;
+                                            time;
+                                            nxt[`isClose];
+                                            1b; // not isMaker
+                                            nxt[`accountId]
+                                        ];
+
+                                        $[isAgent;
+                                            // If the order was made by an agent the first level of
+                                            // the orderbook should represent the change otherwise not
+                                            // captured.
+                                            decrementQty[side;price;smallestOffset]; 
+                                            events:events,.account.ApplyFill[
+                                                qty,
+                                                price;
+                                                side;
+                                                time;
+                                                isClose;
+                                                0b; // not isMaker
+                                                accountId
+                                            ];
+                                        ];
+
+                                        events:events,.order.MakeTradeEvent[];
+                                        qty-:nxt[`size];
+                                    ];
+                                    [
+                                        // If the quantity to be traded is less than the next agent
+                                        // order, update it to partially filled and apply fills, 
+                                        // make trade events etc.
+                                        nxt[`size]-: qty;
+                                        events:events,updateOrder[nxt;time];
+                                        events:events,.account.ApplyFill[
+                                            qty;
+                                            price;
+                                            nside;
+                                            time;
+                                            nxt[`isClose];
+                                            1b; // isMaker
+                                            nxt[`accountId]
+                                        ];
+
+                                        $[isAgent;
+                                            // If the order was made by an agent the first level of
+                                            // the orderbook should represent the change otherwise not
+                                            // captured.
+                                            update qty:qty-nxt[`offset] from `.order.OrderBook where side=nside, price=price;
+                                            events:events,.account.ApplyFill[
+                                                qty,
+                                                price;
+                                                side;
+                                                time;
+                                                isClose;
+                                                0b; // not isMaker
+                                                accountId
+                                            ];
+                                        ];
+                                        events:(events,.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time]);
+                                        qty:0;
+                                    ]
+                                ]
+                            ]
+                        ]
                     ];
                     [
                         // If the orderbook does not currently possess agent orders.
@@ -610,8 +617,8 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                     $[qty<=bestQty;[
                                         nqty:bestQty-qty;
                                         update qty:nqty from `.order.OrderBook where side=nside, price=price;
-                                        events,: .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
-                                        events,:.account.ApplyFill[
+                                        events:events, .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
+                                        events:events,.account.ApplyFill[
                                                 qty;
                                                 price;
                                                 side;
@@ -625,8 +632,8 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         // the level of the orderbook is to be removed and the resultant size of the
                                         // trade should be equal to the size of the bestQty
                                         delete from `.order.OrderBook where side=nside, price=price;
-                                        events,:.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
-                                        events,:.account.ApplyFill[
+                                        events:events,.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
+                                        events:events,.account.ApplyFill[
                                                 bestQty;
                                                 price;
                                                 side;
@@ -648,7 +655,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // represent the change due to trades, simply
                                 // make a trade event and revert the qty to be 
                                 // traded.
-                                events,:.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time];
+                                events:events,.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time];
                                 qty:0;
                             ]
                         ]
@@ -665,7 +672,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // set of events.
 processCross     :{[events;side;leaves;isAgent;accountId;isClose;time] 
         $[0;
-            [while [leaves>0;events,:fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
+            [while [leaves>0;events:events,fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
             [:MakeFailure[time;`]]
         ];
         :events;
