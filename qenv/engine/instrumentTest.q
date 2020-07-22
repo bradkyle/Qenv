@@ -40,7 +40,7 @@ testNewInstrument : {
             .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"];      
 
             // Tear Down 
-            / revert[];
+            revert[];
     }; 
 
     instrumentCols: `some`other;
@@ -57,45 +57,52 @@ testGetInstrument  :{
     runCase: {[dscr; instrumentId; einstrument; expects] 
             res:();
             // Execute tested function
-            res,:.instrument.NewInstrument[instrument; 1b; .z.z];
+            instrument: `instrumentId`flatMakerFee`flatTakerFee!(instrumentId;-0.00025;0.00075);
+            .instrument.NewInstrument[instrument; 1b; .z.z];
+            
+            res:.instrument.GetInstrument[instrumentId];
             // Run tests on state
             ins:select from .instrument.Instrument;
             .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"];      
 
             // Tear Down 
-            / revert[];
+            revert[];
     }; 
- 
+    instrumentCols: `some`other;
     expectedCols: `instrumentCount`shouldError;
 
-    runCase["simple instrument creation";
-        instrumentId;
-        instrumentCols!();
+    runCase["simple instrument exists fetch";
+        1;
+        instrumentCols!(1;1);
         expectedCols!(1;0b)];
     };
 
 // TODO test active instrument doesnt exist, exists etc.
-testGetActiveInstrument :{
+testGetAvtiveInstrument  :{
     runCase: {[dscr; instrumentId; einstrument; expects] 
             res:();
             // Execute tested function
-            res,:.instrument.NewInstrument[instrument; 1b; .z.z];
+            instrument: `instrumentId`flatMakerFee`flatTakerFee!(instrumentId;-0.00025;0.00075);
+            .instrument.NewInstrument[instrument; 1b; .z.z];
+            
+            res:.instrument.GetActiveInstrument[];
             // Run tests on state
-            ins:select from .instrument.Instrument;
-            .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"];      
+            ins:select from .instrument.Instrument where instrumentId=instrumentId;
+            .qunit.assertEquals[count ins; expects[`instrumentCount]; "instrumentCount"]; 
+            .qunit.assertEquals[first[ins]~res; 1b; "instrumentCount"];     
 
             // Tear Down 
-            / revert[];
+            revert[];
     }; 
- 
+    instrumentCols: `some`other;
     expectedCols: `instrumentCount`shouldError;
 
-    runCase["simple instrument creation";
-        instrumentId;
-        instrumentCols!();
+    runCase["simple instrument exists fetch";
+        1;
+        instrumentCols!(1;1);
         expectedCols!(1;0b)];
-
     };
+
 
 testUpdateInstrument     :{
     runCase: {[dscr; instrumentId; einstrument; expects] 

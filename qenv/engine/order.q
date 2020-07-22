@@ -223,6 +223,50 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
+// Conditional Utilities
+// -------------------------------------------------------------->
+// conditional utilities define transition logic based upon the configuration defined for
+// a given instrument i.e. the maintenence type and associated logic, fee type and associated
+// logic, liquidation strategy and settlement type. 
+
+/ reserveOrderMargin  : {[side;price;size;orderId;time]
+/     // 
+/     events:();
+/     markPrice: 0;
+/     faceValue: 0;
+/     leverage:0;
+/     $[side=`BUY & price>markPrice; 
+/       premium:floor[(price-markPrice)*faceValue];
+/       side=`SELL & price<markPrice;
+/       premium:floor[(markPrice-price)*faceValue];
+/       premium:0;
+/     ];
+
+/     $[side=`SELL & longOpenQty>sellOpenQty;
+/      charged:max[size-(longOpenQty-sellOrderQty),0];
+/      side=`BUY & shortOpenQty>buyOrderQty;
+/      charged:max[size-(shortOpenQty-buyOrderQty),0];
+/      charged:0;
+/     ];
+    
+/     reserved: floor[((charged+(initialMarginCoefficient*charged*faceValue)+changed*premium)%price)%leverage];
+/     $[(reserved<availableBalance) | (reserved=0);
+/         [
+/             orderMargin:reserved;
+/             :1b;
+/         ];
+/         [:0b]
+/     ];
+/     :events;
+/     };
+
+/ / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
+/ / The amount of commission applicable to close out all your positions will also be added onto 
+/ / your maintenance margin requirement.
+/ deriveMainteneceMargin  : {[]
+
+/     };
+
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
 NewOrder       : {[o;time];
@@ -316,6 +360,7 @@ NewOrder       : {[o;time];
                 [
                     // add orderbook references
                     // TODO update order init margin etc.
+                    // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
                     o[`offset]: .order.OrderBook[o[`price]][`qty];
                     update (
@@ -414,7 +459,7 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
         events:();
         nside: NegSide[side];
         price:getBestPrice[nside];
-        smallestOffset, smallestOffsetId : getSmallestOffset[nside];
+        offset:exec offset:min offset, price, orderId from .order.Order where side=side & price=0; //TODO derive price 
         hasAgentOrders:(count .schema.Order)>0;
         $[hasAgentOrders;
             [
@@ -570,11 +615,12 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
     :events;       
     };
 
+
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
 processCross     :{[events;side;leaves;isAgent;accountId;isClose] 
-    while [leaves < getAvailableQty[side] & leaves>0;events,:fillTrade[side;leaves;event]];
+    while [leaves>0;events,:fillTrade[side;leaves;event]];
     :events;
     };
 
