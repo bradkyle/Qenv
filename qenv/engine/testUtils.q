@@ -14,22 +14,71 @@ RevertALL   :{[]
 
     };
 
-TESTKIND    :`UNIT`INTEGRATION`BENCHMARK;
+TESTKIND    :`UNIT`INTEGRATION`BENCHMARK`PROFILE;
 TESTSTATE   :`PASS`FAIL`SKIP;
 
 Test    :(
     [testId      : `long$()]
     name         : `symbol$();
+    namespace    : `symbol$();
     kind         : `.testUtils.TESTKIND;
     state        : `.testUtils.TESTSTATE;
     dscr         : `char$();
     func         : ();
     params       : ();
     setup        : ();
-    revert       : ()
+    revert       : ();
+    repeat       : `long$();
+    retry        : `long$();
+    start        : `datetime$();
+    end          : `datetime$();
+    profileRes   : ()
     );
 
-Register    :{[kind;name;dscr;func;params;setup;revert]
+
+/ mock kind enumerations
+MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
+
+Mock        :{
+    [mockId      : `long$()]
+    testId       : `long$();
+    kind         : `.testUtils.MOCKKIND;
+    returns      : ();
+    throws       : ();
+    rejects      : ();
+    calledWith   : ();
+    mocks        : ();
+    replaceWith  : ();
+    numCalls     : `long$()
+    };
+
+// TODO restore;
+
+/ assertion kind enumerations
+ASSERTIONKIND:  (`TRUE;      / place a new order
+                `THROWS;    / modify an existing order
+                `KNOWN;    / increment a given accounts balance
+                `EQUALS; / decrement a given accounts balance
+                `THAT /
+                );
+
+Assertion   :{
+    [mockId      : `long$()]
+    testId       : `long$();
+    kind         : `.testUtils.ASSERTIONKIND;
+    state        : `.testUtils.TESTSTATE;
+    dscr         : `char$();
+    subject      : ();
+    object       : ();
+    predicate    : ();
+    start        : `datetime$();
+    end          : `datetime$()
+    };
+
+
+
+// Register adds a test to the given test table.
+Register    :{[kind;name;dscr;func;params;before;after]
 
     };
 
