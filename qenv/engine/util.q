@@ -59,44 +59,6 @@ CntToMrg    : {[qty;price;faceValue;doAbs]
         :0];
         };
 
-// Event/Action/Failure construction utils
-//----------------------------------------------------->
-
-// Todo move to schema/event
-MakeEvent   : {[time;cmd;kind;datum] // TODO make better validation
-        $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
-        $[not (cmd in .global.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
-        $[not (kind in .global.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
-        $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
-        / if[not] //validate datum 
-        :`time`cmd`kind`datum!(time;cmd;kind;datum);
-        };
-
-// Creates an action i.e. a mapping between
-// a agent/account Id and its respective
-// vector target distribution and/or adapter
-// that conforms to a generaliseable dictionary
-MakeAction   : {[accountId;action]
-        // TODO check 
-        :`time`cmd`kind`datum!(time;cmd;kind;datum);
-        };
-
-// Creates an action i.e. a mapping between
-// a agent/account Id and its respective
-// vector target distribution and/or adapter
-// that conforms to a generaliseable dictionary
-MakeFailure   : {[time;kind;msg]
-        if[not (type time)=-15h; :0b]; //TODO fix
-        if[not (kind in .global.ERRORKIND); :0b];
-        :`time`kind`msg!(time;kind;msg);
-        };
-
-// Adds a given event to the list of events provided
-// then returns the events provided
-Append	:{[events;event]
-
-	};
-
 
 // Feature construction utils
 //----------------------------------------------------->

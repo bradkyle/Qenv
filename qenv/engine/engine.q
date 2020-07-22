@@ -31,19 +31,6 @@ Engine:(
     eventCount                  : `long$()
     );
 
-
-/*******************************************************
-/ Events
-
-// The events table acts as a buffer for all events that occur within
-// the given environment step, this allows for unilateral event post/pre
-// processing after the environment state has progressed i.e. adding lag
-// adding "dropout" and randomization etc. it has the added benifit of 
-// simplifying (removing) nesting/recursion within the engine. 
-Events  :(
-
-    );
-
 / Event Processing logic
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
