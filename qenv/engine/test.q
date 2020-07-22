@@ -7,14 +7,14 @@
 \l instrumentTest.q
 .qunit.runTests `.instrumentTest;
 
-/ \l accountTest.q 
-/ .qunit.runTests `.accountTest;
+\l accountTest.q 
+.qunit.runTests `.accountTest;
 
-/ \l inventoryTest.q
-/ .qunit.runTests `.inventoryTest;
+\l inventoryTest.q
+.qunit.runTests `.inventoryTest;
 
-/ \l orderTest.q 
-/ .qunit.runTests `.orderTest;
+\l orderTest.q 
+.qunit.runTests `.orderTest;
 
 / \l engineTest.q
 / .qunit.runTests `.engineTest;

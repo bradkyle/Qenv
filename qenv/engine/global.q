@@ -35,4 +35,4 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 
 /*******************************************************
 / error kind enumerations
-ERRORKIND   :   ();
+ERRORKIND   :   (`INVALID);

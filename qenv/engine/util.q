@@ -87,8 +87,8 @@ MakeAction   : {[accountId;action]
 // that conforms to a generaliseable dictionary
 MakeFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
-        if[not (kind in ERRORKIND); :0b];
-        :`time`kind`msg!(time;cmd;kind;datum);
+        if[not (kind in .global.ERRORKIND); :0b];
+        :`time`kind`msg!(time;kind;msg);
         };
 
 

@@ -2,7 +2,14 @@ system "d .orderTest";
 \l order.q
 \l util.q
 
-revert:   {
+setup   :{
+    instrument: `instrumentId`flatMakerFee`flatTakerFee!(1;-0.00025;0.00075);
+    .instrument.NewInstrument[instrument; 1b; .z.z];
+    };
+
+setup[];
+
+revert  :{
             delete from `.order.Order;
             delete from `.order.OrderBook;
             .order.orderCount:0;

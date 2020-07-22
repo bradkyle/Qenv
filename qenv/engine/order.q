@@ -275,13 +275,15 @@ NewOrder       : {[o;time];
     // TODO append failures to events and return.
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
+    if[null o[`timeinforce];o[`timeinforce]:`NIL];
+    if[null o[`execInst];o[`execInst]:()];
     if[null o[`size] | o[`size]>0; :MakeFailure[time;`INVALID_SIZE;"Invalid order size"]];
     if[null o[`otype]; :MakeFailure[time;`INVALID_ORDER_TYPE;"oType is null"]];
     if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_SIDE;"Invalid side"]]; // TODO make failure event.
     if[not (o[`otype] in .order.ORDERTYPE); :MakeFailure[time;`INVALID_ORDERTYPE;"Invalid order type"]]; // TODO make failure event.
     if[not (o[`timeinforce] in .order.TIMEINFORCE); :MakeFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
-    if[not (o[`exdcInst] in .order.EXECINST); :MakeFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
+    if[not (all o[`execInst] in .order.EXECINST); :MakeFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
 
     // Instrument related validation
     ins:.instrument.GetActiveInstrument[];
@@ -290,7 +292,9 @@ NewOrder       : {[o;time];
     if[o[`price]<ins[`minPrice];:MakeFailure[time;`INVALID;""]];
     if[o[`size]<ins[`maxOrderSize];:MakeFailure[time;`INVALID;""]];
     if[o[`size]>ins[`minOrderSize];:MakeFailure[time;`INVALID;""]];
+
     // Account related validation
+    if[not(o[`accountId] in key .account.Account);:MakeFailure[time;`INVALID;""]]
 
     // TODO 
     / Duplicate clOrdID
@@ -351,10 +355,10 @@ NewOrder       : {[o;time];
                         events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Invalid size"];
                         events,:processCross[ // The order crosses the bid ask spread.
                             events;
-                            event[`datum][`side];
-                            event[`datum][`size];
+                            o[`side];
+                            o[`size];
                             1b;
-                            event[`agentId]];
+                            event[`accountId]];
                     ]
                 ];
                 [
@@ -382,20 +386,22 @@ NewOrder       : {[o;time];
         [
             events,:processCross[
                 events;
-                event[`datum][`side];
-                event[`datum][`size];
+                o[`side];
+                o[`size];
                 1b;
-                event[`agentId]];
+                event[`accountId]];
         ];
       o[`otype]=`STOP_MARKET;
         [
             // todo if close 
-            `order.Order insert order;
+            / `order.Order insert order;
+            show "STOP_MARKET";
         ];
       o[`otype]=`STOP_LIMIT;
         [
             // todo if close
-            `order.Order insert order;
+            / `order.Order insert order;
+            show "STOP_LIMIT";
         ];
     ];
     :events;
