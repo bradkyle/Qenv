@@ -95,14 +95,16 @@ OrderBook:(
     qty         :`float$()
     );
 
-MakeDepthUpdateEvent :{[]
-    :();
+MakeDepthUpdateEvent :{[depth;time]
+    :MakeEvent[time;`UPDATE;`DEPTH;depth];
     };
 
 
-MakeTradeEvent  :{[]
-    :();
+MakeTradeEvent  :{[trade;time]
+    :MakeEvent[time;`NEW;`TRADE;trade];
     };
+
+tradeCols:`side`qty`price;
 
 // Orderbook Utilities
 // -------------------------------------------------------------->
@@ -484,16 +486,15 @@ removeOrder    : {[orderId;time]
 fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         events:();
         nside: NegSide[side];
-        $[0;
-            [:MakeFailure[time;]];
+        $[(exec sum qty from .order.OrderBook where side=nside)=0;
+            [:MakeFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
                 price:exec min price from .order.OrderBook where side=nside;
-                offset:exec offset:min offset, price, orderId from .order.Order where side=nside & price=price; //TODO derive price 
-                show price;
-                show offset;
-                hasAgentOrders:(count .schema.Order)>0;
+                hasAgentOrders:(count select from .order.Order where side=nside)>0;
                 $[hasAgentOrders;
                     [
+                        offset:exec min offset, price, orderId from .order.Order where side=nside & price=price; //TODO derive price 
+                        
                         // If the orderbook possesses agent orders
                         $[qty <= smallestOffset;[
                             // If the quantity left to trade is less than the 
@@ -599,51 +600,55 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                         ]];
                     ];
                     [
+
                         // If the orderbook does not currently possess agent orders.
-                        $[isAgent;[
-                            // If the order was placed by an agent.
-                            getBestQty: getQtyByPrice[negSide;price];
-                            $[getBestQty>0;
-                                $[qty<=getBestQty;[
-                                    updateQty[qty]; // TODO update lvl qty
-                                    events,: .order.MakeTradeEvent[];
-                                    events,:.account.ApplyFill[
-                                            qty,
-                                            price;
-                                            side;
-                                            time;
-                                            isClose;
-                                            0b; // not isMaker
-                                            accountId
-                                    ];
-                                    qty:0;
-                                ];[
-                                    removeQty[negSide;price];
-                                    events,:.order.MakeTradeEvent[]; // TODO
-                                    events,:.account.ApplyFill[
-                                            getBestQty,
-                                            price;
-                                            side;
-                                            time;
-                                            isClose;
-                                            0b; // not isMaker
-                                            accountId
-                                    ]; // TODO
-                                    qty-:getBestQty;
-                                ]]
-                                [:0N]
+                        $[isAgent;
+                            [
+                                // If the order was placed by an agent.
+                                getBestQty: getQtyByPrice[negSide;price];
+                                $[getBestQty>0;
+                                    $[qty<=getBestQty;[
+                                        updateQty[qty]; // TODO update lvl qty
+                                        events,: .order.MakeTradeEvent[];
+                                        events,:.account.ApplyFill[
+                                                qty,
+                                                price;
+                                                side;
+                                                time;
+                                                isClose;
+                                                0b; // not isMaker
+                                                accountId
+                                        ];
+                                        qty:0;
+                                    ];[
+                                        removeQty[negSide;price];
+                                        events,:.order.MakeTradeEvent[]; // TODO
+                                        events,:.account.ApplyFill[
+                                                getBestQty,
+                                                price;
+                                                side;
+                                                time;
+                                                isClose;
+                                                0b; // not isMaker
+                                                accountId
+                                        ]; // TODO
+                                        qty-:getBestQty;
+                                    ]]
+                                    [:0N]
+                                ];
                             ];
-                        ];[
-                            // Considering the orderbook updates already 
-                            // represent the change due to trades, simply
-                            // make a trade event and revert the qty to be 
-                            // traded.
-                            events,:.order.MakeTradeEvent[];
-                            qty:0;
-                        ]];
-                    ];
+                            [
+                                // Considering the orderbook updates already 
+                                // represent the change due to trades, simply
+                                // make a trade event and revert the qty to be 
+                                // traded.
+                                events,:.order.MakeTradeEvent[(tradeCols!(side;qty;price));time];
+                                qty:0;
+                            ]
+                        ]
+                    ]
             ]
-        ];
+        ]
     ];
     :events;       
     };

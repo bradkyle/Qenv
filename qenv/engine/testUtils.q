@@ -8,3 +8,7 @@ FailedMsg :{[dscr;expected;result]:(dscr," | expected:",string[expected]," got:"
 AssertEquals: {[]
 
     };
+    
+RevertALL   :{[]
+
+    };

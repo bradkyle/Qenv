@@ -51,4 +51,5 @@ ERRORKIND   :   (
             `INVALID_ACCOUNTID;
             `INVALID_ORDER_SIZE;
             `PARTICIPATE_DONT_INITIATE;
+            `NO_LIQUIDITY
         );
