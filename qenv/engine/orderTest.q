@@ -179,7 +179,8 @@ testFillTrade:{
             // TODO make testable i.e. if account not found etc.
             if[count[account]>0;.account.NewAccount[account;.z.z]];
 
-            res:.order.fillTrade[order;time];
+            aid:$[params[`isAgent];account[`accountId];0N];
+            res:.order.fillTrade[params[`side];params[`qty];params[`isClose];params[`isAgent];aid;time];
             .qunit.assertEquals[res; eres; dscr,": expected response"];
 
             / ob: .order.OrderBook;
@@ -187,13 +188,15 @@ testFillTrade:{
             .qunit.assertEquals[count ors; count eorders; dscr,"order count"];
             revert[];
         }; 
+        s:`SELL;
+        l:`LIMIT;
         aCols:`accountId`balance`available; 
-        pCols:`side`qty`isClose`isAgent
+        pCols:`side`qty`isClose`isAgent;
 
         runCase["simple trade fill no agent orders or previous depth";
             aCols!(1;1f;1f);
             (); // flat maker fee
-            pCols!(1;1;b;l;100f;100f);
+            pCols!(s;100;0b;0b);
             ();
-            1!([]price:E[100.5];side:E[b];qty:E[100f])];
+            1!([]price:E[100.5];side:E[s];qty:E[100f])];
     };
