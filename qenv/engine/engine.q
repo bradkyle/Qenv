@@ -12,6 +12,7 @@ RETURNCODE  :   (`INVALID_MEMBER;
 // represents the offset in milliseconds
 // check if flip is right
 // TODO rate limit, return order and time, make sure ingress events in order
+// TODO supported event types
 Engine:(
     loadSheddingProbability     : `float$();
     placeOrderOffsetMu          : `float$(); 
@@ -30,10 +31,23 @@ Engine:(
     eventCount                  : `long$()
     );
 
+
+/*******************************************************
+/ Events
+
+// The events table acts as a buffer for all events that occur within
+// the given environment step, this allows for unilateral event post/pre
+// processing after the environment state has progressed i.e. adding lag
+// adding "dropout" and randomization etc. it has the added benifit of 
+// simplifying (removing) nesting/recursion within the engine. 
+Events  :(
+
+    );
+
 / Event Processing logic
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-eventEngine : (`.global.EVENTKIND$())!();
+eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported types.
 
 eventEngine[`DEPTH] :   {[event]
     .logger.Debug["new depth"][event];

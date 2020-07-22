@@ -82,6 +82,8 @@ MakeCancelAllOrdersEvent :{[]
     }
 
 
+
+
 // OrderBook
 // =====================================================================================>
 
@@ -104,7 +106,18 @@ MakeTradeEvent  :{[trade;time]
     :MakeEvent[time;`NEW;`TRADE;trade];
     };
 
-tradeCols:`side`qty`price;
+
+// Trade
+// =====================================================================================>
+Trade   :(
+    [tradeId    :`long$()]
+    price       :`float$();
+    side        :`.order.ORDERSIDE$();
+    qty         :`float$()
+    );
+
+// TODO fix
+tradeCols:cols[Trade] except `tradeId;
 
 // Orderbook Utilities
 // -------------------------------------------------------------->
@@ -547,8 +560,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             time;
                                             nxt[`isClose];
                                             1b; // not isMaker
-                                            nxt[`accountId]
-                                        ];
+                                            nxt[`accountId]];
 
                                         $[isAgent;
                                             // If the order was made by an agent the first level of
@@ -614,35 +626,38 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // If the order was placed by an agent.
                                 bestQty: exec first qty from .order.OrderBook where side=nside, price=price;
                                 $[bestQty>0;
-                                    $[qty<=bestQty;[
-                                        nqty:bestQty-qty;
-                                        update qty:nqty from `.order.OrderBook where side=nside, price=price;
-                                        events:events, .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
-                                        events:events,.account.ApplyFill[
-                                                qty;
-                                                price;
-                                                side;
-                                                time;
-                                                isClose;
-                                                0b; // not isMaker
-                                                accountId];
-                                        qty:0;
-                                    ];[
-                                        // Because the market order/trade is larger than the best qty at this level
-                                        // the level of the orderbook is to be removed and the resultant size of the
-                                        // trade should be equal to the size of the bestQty
-                                        delete from `.order.OrderBook where side=nside, price=price;
-                                        events:events,.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
-                                        events:events,.account.ApplyFill[
-                                                bestQty;
-                                                price;
-                                                side;
-                                                time;
-                                                isClose;
-                                                0b; // not isMaker
-                                                accountId]; // TODO
-                                        qty-:bestQty;
-                                    ]];
+                                    $[qty<=bestQty;
+                                        [
+                                            nqty:bestQty-qty;
+                                            update qty:nqty from `.order.OrderBook where side=nside, price=price;
+                                            events:events, .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
+                                            events:events,.account.ApplyFill[
+                                                    qty;
+                                                    price;
+                                                    side;
+                                                    time;
+                                                    isClose;
+                                                    0b; // not isMaker
+                                                    accountId];
+                                            qty:0;
+                                        ];
+                                        [
+                                            // Because the market order/trade is larger than the best qty at this level
+                                            // the level of the orderbook is to be removed and the resultant size of the
+                                            // trade should be equal to the size of the bestQty
+                                            delete from `.order.OrderBook where side=nside, price=price;
+                                            events:events,.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
+                                            events:events,.account.ApplyFill[
+                                                    bestQty;
+                                                    price;
+                                                    side;
+                                                    time;
+                                                    isClose;
+                                                    0b; // not isMaker
+                                                    accountId]; // TODO
+                                            qty-:bestQty;
+                                        ]
+                                    ];
                                     [
                                         // There is no best qty i.e. the market order cannot be
                                         // filled because there is no liquidity.
