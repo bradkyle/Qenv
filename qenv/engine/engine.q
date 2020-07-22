@@ -124,12 +124,6 @@ ResetEngine     : {
 
     };
 
-// Processes a single event and matches it
-// with its respective processing logic above.
-ProcessSingleEvent : {[eventkind; event]
-        eventEngine [eventkind] [event];
-    };
-
 // 
 preprocessEventIngressBatch   :{[]
 
@@ -142,7 +136,7 @@ preprocessEventEgressBatch     :{[]
 // Processes a batch of events and matches
 // them with their respective processing 
 // logic above.
-ProcessEventBatch  : {[eventBatch]
+ProcessEvents  : {[eventBatch]
         eventEngine [eventkind] [event] each eventBatch;
     };
 

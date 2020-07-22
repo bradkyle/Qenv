@@ -96,12 +96,12 @@ OrderBook:(
     );
 
 AddDepthUpdateEvent :{[depth;time]
-    :MakeEvent[time;`UPDATE;`DEPTH;depth];
+    :.global.AddEvent[time;`UPDATE;`DEPTH;depth];
     };
 
 
 AddTradeEvent  :{[side;qty;price;time]
-    :MakeEvent[time;`NEW;`TRADE;trade];
+    :.global.AddEvent[time;`NEW;`TRADE;trade];
     };
 
 // TRADES ARE UN NECCESSARY FOR THE ENGINE.
@@ -373,7 +373,6 @@ NewOrder       : {[o;time];
                         ];
                         [
                             processCross[ // The order crosses the bid ask spread.
-                                events;
                                 o[`side];
                                 o[`size];
                                 1b;
@@ -417,7 +416,6 @@ NewOrder       : {[o;time];
       o[`otype]=`MARKET;
         [
             processCross[
-                events;
                 o[`side];
                 o[`size];
                 1b;
@@ -578,7 +576,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         // make trade events etc.
                                         nxt[`size]-: qty;
                                         // TODO Update order
-                                        events:events,updateOrder[nxt;time];
+                                        updateOrder[nxt;time];
                                         .account.ApplyFill[
                                             qty;
                                             price;
@@ -670,7 +668,6 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
             ]
         ]
     ];
-    :events;       
     };
 
 
@@ -682,7 +679,6 @@ processCross     :{[side;leaves;isAgent;accountId;isClose;time]
             [while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
             [:MakeFailure[time;`]]
         ];
-        :events;
     };
 
 // Processes a trade that was not made by an agent

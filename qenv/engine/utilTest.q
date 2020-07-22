@@ -23,10 +23,10 @@ system "d .utilTest";
 /     };
 
 
-testMakeEvent :{
+test.global.AddEvent :{
     aid:1;
     / time:.z.z;
-    / event:MakeEvent[time;`NEW;`TRADE;((`side`size`price)!(`LONG;9;99f))];
+    / event:.global.AddEvent[time;`NEW;`TRADE;((`side`size`price)!(`LONG;9;99f))];
     };
 
 testMakeAction :{

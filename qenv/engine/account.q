@@ -69,11 +69,11 @@ allCols:cols Account;
 
 AddAccountUpdateEvent  :{[time;account]
     // TODO check if value is null
-    :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
+    :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
     };
 
 AddAllAccountsUpdatedEvents :{[time]
-    :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
+    :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
     };
 
 // Account CRUD Logic
@@ -83,7 +83,6 @@ AddAllAccountsUpdatedEvents :{[time]
 // values and inserts it into the account 
 // table. // TODO gen events. // TODO change to event?
 NewAccount :{[account;time]
-    events:();
     if[any null account[mandCols]; :0b];
     // Replace null values with their respective defailt values
     // TODO dynamic account type checking
@@ -98,8 +97,6 @@ NewAccount :{[account;time]
     .inventory.NewInventory[.inventory.mandCols!(accountId;`LONG);time];
     .inventory.NewInventory[.inventory.mandCols!(accountId;`SHORT);time];
     .inventory.NewInventory[.inventory.mandCols!(accountId;`BOTH);time];
-
-    :events;
     };
 
 // TODO

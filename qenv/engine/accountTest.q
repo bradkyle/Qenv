@@ -398,7 +398,7 @@ testApplyFill:{
     runCase: {[dscr; account; inventories; params; expected]
         time:.z.z;
         // Setup 
-        events:.account.NewAccount[account;time];
+        .account.NewAccount[account;time];
 
         // Execute tested function
         res:.account.ApplyFill[10;1000;`SELL;time;0b;1b;aid];
@@ -445,7 +445,7 @@ testApplyFunding:{
         .account.NewAccount[account;time]; 
         
         // Execute tested function
-        events:.account.ApplyFunding[params[`fundingRate];time];
+        .account.ApplyFunding[params[`fundingRate];time];
         
         // Run tests on state
         acc: exec from .account.Account where accountId=account[`accountId];
@@ -612,7 +612,7 @@ testDeposit:{
         update balance:1f from `.account.Account where accountId=aid;
         
         // Execute tested function
-        events:.account.Deposit[depo;time;aid];
+        .account.Deposit[depo;time;aid];
         
         // Run tests on state
         acc: exec from .account.Account where accountId=aid;
@@ -648,7 +648,7 @@ testProcessWithdraw:{
         update balance:widr*2f from `.account.Account where accountId=aid;
         
         // Execute tested function
-        events:.account.Withdraw[widr;time;aid];
+        .account.Withdraw[widr;time;aid];
         
         // Run tests on state
         acc: exec from .account.Account where accountId=aid;

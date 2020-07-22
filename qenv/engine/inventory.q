@@ -57,16 +57,16 @@ allCols: cols Inventory;
 
 AddInventoryUpdateEvent   :  {[inventory;time];
     // TODO check if value is null
-    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
+    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
     };
 
 // TODO make work
 AddAccountInventoryUpdateEvent : {[time]
-    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
+    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
     };
 
 AddAllInventoryUpdateEvent :{[time]
-    :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all inventory
+    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all inventory
     };
 
 // Inventory CRUD Logic

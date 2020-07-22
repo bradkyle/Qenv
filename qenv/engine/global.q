@@ -1,5 +1,22 @@
 \d .global
 
+
+/*******************************************************
+/ error kind enumerations
+ERRORKIND   :   (
+            `NIL;
+            `INVALID_ORDER_TYPE;
+            `INVALID_ORDER_SIDE;
+            `INVALID_ORDER_TICK_SIZE;
+            `INVALID_TIMEINFORCE;
+            `INVALID_EXECINST;
+            `INVALID_ORDER_PRICE;
+            `INVALID_ACCOUNTID;
+            `INVALID_ORDER_SIZE;
+            `PARTICIPATE_DONT_INITIATE;
+            `NO_LIQUIDITY
+        );
+
 /*******************************************************
 / event kind enumerations
 EVENTKIND    :  (`DEPTH;      / place a new order
@@ -32,22 +49,7 @@ EVENTKIND    :  (`DEPTH;      / place a new order
 
 EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 
-
-/*******************************************************
-/ error kind enumerations
-ERRORKIND   :   (
-            `INVALID_ORDER_TYPE;
-            `INVALID_ORDER_SIDE;
-            `INVALID_ORDER_TICK_SIZE;
-            `INVALID_TIMEINFORCE;
-            `INVALID_EXECINST;
-            `INVALID_ORDER_PRICE;
-            `INVALID_ACCOUNTID;
-            `INVALID_ORDER_SIZE;
-            `PARTICIPATE_DONT_INITIATE;
-            `NO_LIQUIDITY
-        );
-
+// TODO create combined table.
 
 /*******************************************************
 / Events LOGIC
@@ -68,9 +70,10 @@ Events  :( // TODO add failure to table
     cmd         :`.global.EVENTCMD$();
     kind        :`.global.EVENTKIND$();
     datum       :();
-    isErr       :`boolean$();
-    reason      :`.global.ERRORKIND$()
+    errKind     :`.global.ERRORKIND$()
     );
+
+eid     :{:count[.global.Events]}
 
 // Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
@@ -79,22 +82,25 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (kind in .global.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
         / if[not] //validate datum 
-        eid:0;
-        `.global.Events upsert (eventId:eid;time:time;cmd:cmd;kind:kind;datum:datum);
+        `.global.Events upsert (eventId:eid[];time:time;cmd:cmd;kind:kind;datum:datum;errKind:`NIL);
         };
 
 // Creates an action i.e. a mapping between
 // a agent/account Id and its respective
 // vector target distribution and/or adapter
-// that conforms to a generaliseable dictionary
+// that conforms to a generaliseable dictionary 
 AddFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
         if[not (kind in .global.ERRORKIND); :0b];
-        :`time`kind`msg!(time;kind;msg);
+        if[not (kind in .global.ERRORKIND); :0b]; // TODO update msg 
+        `.global.Events upsert (eventId:eid[];time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg;errKind:kind);
         };
 
 // Retrieves all events from the Events table and then
-// deletes/drops all of them.
+// deletes/drops them all before reverting the eventCount and
+// returning the events (As a table?)
 PopEvents     :{[]
-
+        e: .global.Event;
+        delete from `.global.Events;
+        :e
         };
