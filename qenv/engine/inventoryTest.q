@@ -1,8 +1,6 @@
 system "d .inventoryTest";
 \l qunit.q
 \l inventory.q
-\l testUtils.q
-
 
 // Event creation utilities
 // -------------------------------------------------------------->

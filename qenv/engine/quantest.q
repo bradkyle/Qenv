@@ -1,28 +1,24 @@
 \l qunit.q
-\d .testUtils
+system "d .quantest";
+
 
 // Forms a message pertaining to form
 // of a test case. 
-FailedMsg :{[dscr;expected;result]:(dscr," | expected:",string[expected]," got:",string[result])};
+FailedMsg :{[dscr;expected;result]:(dscr," | expected:",string[expected]," - got:",string[result])};
 
-// TODO
-AssertEquals: {[]
-
-    };
-    
-RevertALL   :{[]
-
-    };
+// Test
+// ======================================================================>
 
 TESTKIND    :`UNIT`INTEGRATION`BENCHMARK`PROFILE;
 TESTSTATE   :`PASS`FAIL`SKIP;
+SETUPSTATE  :`SETUP`MOCK`TESTING;
 
 Test    :(
     [testId      : `long$()]
     name         : `symbol$();
     namespace    : `symbol$();
-    kind         : `.testUtils.TESTKIND;
-    state        : `.testUtils.TESTSTATE;
+    kind         : `.quantest.TESTKIND$();
+    state        : `.quantest.TESTSTATE$();
     dscr         : `char$();
     func         : ();
     params       : ();
@@ -35,14 +31,22 @@ Test    :(
     profileRes   : ()
     );
 
+test : (`.quantest.TESTKIND$())!(); // TODO change to subset of supported types.
+
+test[`UNIT] :   {[params]
+    :0N;
+    };
+
+// Mock
+// ======================================================================>
 
 / mock kind enumerations
 MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
 
-Mock        :{
+Mock        :(
     [mockId      : `long$()]
     testId       : `long$();
-    kind         : `.testUtils.MOCKKIND;
+    kind         : `.quantest.MOCKKIND$();
     returns      : ();
     throws       : ();
     rejects      : ();
@@ -50,9 +54,17 @@ Mock        :{
     mocks        : ();
     replaceWith  : ();
     numCalls     : `long$()
-    };
+    );
 
 // TODO restore;
+mock : (`.quantest.MOCKKIND$())!(); // TODO change to subset of supported types.
+
+mock[`FAKE] :   {[params]
+    :0N;
+    };
+
+/ // Assert
+/ // ======================================================================>
 
 / assertion kind enumerations
 ASSERTIONKIND:  (`TRUE;      / place a new order
@@ -62,20 +74,27 @@ ASSERTIONKIND:  (`TRUE;      / place a new order
                 `THAT /
                 );
 
-Assertion   :{
-    [mockId      : `long$()]
+Assertion   :(
+    [assertId      : `long$()]
     testId       : `long$();
-    kind         : `.testUtils.ASSERTIONKIND;
-    state        : `.testUtils.TESTSTATE;
+    kind         : `.quantest.ASSERTIONKIND;
+    state        : `.quantest.TESTSTATE;
     dscr         : `char$();
     subject      : ();
     object       : ();
     predicate    : ();
     start        : `datetime$();
     end          : `datetime$()
+    );
+
+assert : (`.quantest.ASSERTIONKIND$())!(); // TODO change to subset of supported types.
+
+assert[`TRUE] :   {[params]
+    :0N;
     };
 
-
+// Main (Callable) Functions.
+// ======================================================================>
 
 // Register adds a test to the given test table.
 Register    :{[kind;name;dscr;func;params;before;after]
@@ -87,6 +106,10 @@ generateReport  :{
 
     };
 
-RunTests    :{[testKinds]
+formatTable     :{
 
+    };
+
+RunTests    :{[testKinds]
+    
     };
