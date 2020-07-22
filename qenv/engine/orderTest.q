@@ -175,8 +175,7 @@ testProcessSideUpdate   :{
 testFillTrade:{
      show "FILL TRADE";
      show 99#"=";
-     runCase :{[dscr;account;orderbook;params;eres;eorderbook]
-            time:.z.z;
+     runCase :{[dscr;account;orderbook;params;eres;eorderbook;time]
             if[count[orderbook]>0;.order.OrderBook:orderbook];
 
             // TODO make testable i.e. if account not found etc.
@@ -184,7 +183,8 @@ testFillTrade:{
 
             aid:$[params[`isAgent];account[`accountId];0N];
             res:.order.fillTrade[params[`side];params[`qty];params[`isClose];params[`isAgent];aid;time];
-            .qunit.assertEquals[res; eres; dscr,": expected response"];
+            show res;
+            .qunit.assertEquals[res~eres; 1b; dscr,": expected response"];
 
             / ob: .order.OrderBook;
             / ors: .order.Order;
@@ -195,12 +195,13 @@ testFillTrade:{
         l:`LIMIT;
         aCols:`accountId`balance`available; 
         pCols:`side`qty`isClose`isAgent;
+        time:.z.z;
 
         // TODO make sure that returns list of trades.
         runCase["simple trade fill no agent orders or previous depth";
             aCols!(1;1f;1f);
             1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
             pCols!(s;100;0b;0b);
-            `time`cmd`kind`datum!(2020.07.22T13:48:56.043;`NEW;`TRADE;`side`qty`price!(`SELL;100;100.5));
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f])];
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100;100.5));
+            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]);time];
     };
