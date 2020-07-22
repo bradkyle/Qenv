@@ -172,6 +172,7 @@ testProcessSideUpdate   :{
 // Market Order and Trade Logic
 // -------------------------------------------------------------->
 
+// TODO mock .acocunt.ApplyFill
 testFillTrade:{
      show 99#"=";
      show "FILL TRADE";
@@ -192,7 +193,8 @@ testFillTrade:{
 
             aid:$[params[`isAgent];account[`accountId];0N];
             res:.order.fillTrade[params[`side];params[`qty];params[`isClose];params[`isAgent];aid;time];
-            .qunit.assertEquals[res~eres; 1b; dscr,": expected response"];
+            .qunit.assertThat[res; ~; eres; dscr,": expected response"];
+            .qunit.assertThat[.order.OrderBook; ~; eorderbook; dscr,": expected orderbook"];
 
             / ob: .order.OrderBook;
             / ors: .order.Order;
@@ -211,16 +213,25 @@ testFillTrade:{
             ();
             1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
             pCols!(s;50;0b;0b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;50;100.5));
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;50f;100.5));
             ();
             1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
         
         runCase["orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
             aCols!(1;1f;1f);
             ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
+            1!([]price:100 100.5f;side:`BUY`SELL;qty:100 100f); // flat maker fee
             pCols!(s;150;0b;1b);
-            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100;100.5));
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100.5));
             ();
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
+            1!([]price:E[100.5];side:E[`SELL];qty:E[100f]));time];
+
+        runCase["orderbook does not have agent orders, trade was made by an agent, trade is smaller than the best size";(
+            aCols!(1;1f;1f);
+            ();
+            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
+            pCols!(s;50;0b;1b);
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100f;100.5));
+            ();
+            1!([]price:E[100.5];side:E[`BUY];qty:E[50f]));time];
     };

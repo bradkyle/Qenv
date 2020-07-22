@@ -486,6 +486,7 @@ removeOrder    : {[orderId;time]
 fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         events:();
         nside: NegSide[side];
+        // TODO checking price
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:MakeFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
@@ -600,7 +601,6 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                         ]];
                     ];
                     [
-
                         // If the orderbook does not currently possess agent orders.
                         $[isAgent;
                             [
@@ -608,8 +608,9 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 bestQty: exec first qty from .order.OrderBook where side=nside, price=price;
                                 $[bestQty>0;
                                     $[qty<=bestQty;[
-                                        updateQty[qty]; // TODO update lvl qty
-                                        events,: .order.MakeTradeEvent[];
+                                        nqty:bestQty-qty;
+                                        update qty:nqty from `.order.OrderBook where side=nside, price=price;
+                                        events,: .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
                                         events,:.account.ApplyFill[
                                                 qty;
                                                 price;
@@ -623,7 +624,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         // Because the market order/trade is larger than the best qty at this level
                                         // the level of the orderbook is to be removed and the resultant size of the
                                         // trade should be equal to the size of the bestQty
-                                        delete from .order.OrderBook where side=nside, price=price;
+                                        delete from `.order.OrderBook where side=nside, price=price;
                                         events,:.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
                                         events,:.account.ApplyFill[
                                                 bestQty;
@@ -647,7 +648,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // represent the change due to trades, simply
                                 // make a trade event and revert the qty to be 
                                 // traded.
-                                events,:.order.MakeTradeEvent[(tradeCols!(side;qty;price));time];
+                                events,:.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time];
                                 qty:0;
                             ]
                         ]
