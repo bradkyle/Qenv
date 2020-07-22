@@ -172,12 +172,28 @@ testProcessSideUpdate   :{
 // Market Order and Trade Logic
 // -------------------------------------------------------------->
 
-/ testFillTrade:{
-/     time: .z.z
-/     side:`SELL;
-/     qtys:100 100.5!100 100;
+testFillTrade:{
+     runCase :{[dscr;account;orderbook;params;eres;eorderbook]
+            time:.z.z;
 
-/     res:.order.fillTrade[side;qty;time;0b;0N];
-/     / .qunit.assertEquals[res; 1b; "Should return true"];
-/     / .qunit.assertEquals[.order.getQtys[side]; qtys; "The orderbook should process"];
-/     };
+            // TODO make testable i.e. if account not found etc.
+            if[count[account]>0;.account.NewAccount[account;.z.z]];
+
+            res:.order.fillTrade[order;time];
+            .qunit.assertEquals[res; eres; dscr,": expected response"];
+
+            / ob: .order.OrderBook;
+            ors: .order.Order;
+            .qunit.assertEquals[count ors; count eorders; dscr,"order count"];
+            revert[];
+        }; 
+        aCols:`accountId`balance`available; 
+        pCols:`side`qty`isClose`isAgent
+
+        runCase["simple trade fill no agent orders or previous depth";
+            aCols!(1;1f;1f);
+            (); // flat maker fee
+            pCols!(1;1;b;l;100f;100f);
+            ();
+            1!([]price:E[100.5];side:E[b];qty:E[100f])];
+    };
