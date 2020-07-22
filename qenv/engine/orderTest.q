@@ -20,26 +20,32 @@ revert  :{
 
 // TODO test failure events etc.
 testNewOrder        :{
-    runCase :{[dscr;orderbook;orders;order;eorders;eorderbook]
+    runCase :{[dscr;account;orderbook;orders;order;eres;eorders;eorderbook]
             time:.z.z;
 
+            // TODO make testable i.e. if account not found etc.
+            if[count[account]>0;.account.NewAccount[account;.z.z]];
+
             res:.order.NewOrder[order;time];
-            show res;
+            .qunit.assertEquals[res; eres; dscr,": expected response"];
+
             / ob: .order.OrderBook;
             ors: .order.Order;
-
             .qunit.assertEquals[count ors; count eorders; dscr,"order count"];
             revert[];
         };
         b:`BUY;
         l:`LIMIT;
-        oCols:cols .order.Order;
+        oCols:`clOrdId,.order.orderMandatoryFields,`price;
+        aCols:`accountId`balance`available; 
 
         runCase["simple place order no agent orders or previous depth";
+            aCols!(1;1f;1f);
             ();
             (); // flat maker fee
-            oCols!(100.5;0N;1;1;b;l;0N;0N;100f;0N;0N;0N;0N;0N;0N;0N;0N;0N);
-            (oCols!(100.5;0N;1;1;b;l;0N;0N;100f;0N;0N;0N;0N;0N;0N;0N;0N;0N),);
+            oCols!(1;1;b;l;100f;100f);
+            ();
+            (oCols!(1;1;b;l;100f;100f),);
             1!([]price:E[100.5];side:E[b];qty:E[100f])];
 
     };

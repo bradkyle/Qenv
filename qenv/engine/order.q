@@ -30,7 +30,7 @@ TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90
                 `FILLORKILL;        / fill immediately or cancel, full fill only 
                 `NIL);
 
-STOPTRIGGER :   `LIMIT`MARK`INDEX; 
+STOPTRIGGER :   `LIMIT`MARK`INDEX`NIL; 
 EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;   
 
 orderMandatoryFields    :`accountId`side`otype`size;
@@ -41,7 +41,7 @@ Order: (
     accountId       : `long$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
-    offset          : `long$();
+    offset          : `float$();
     timeinforce     : `.order.TIMEINFORCE$();
     size            : `float$(); / multiply by 100
     leaves          : `float$();
@@ -276,25 +276,28 @@ NewOrder       : {[o;time];
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
+    if[null o[`isClose];o[`isClose]:0b];
     if[null o[`execInst];o[`execInst]:()];
-    if[null o[`size] | o[`size]>0; :MakeFailure[time;`INVALID_SIZE;"Invalid order size"]];
-    if[null o[`otype]; :MakeFailure[time;`INVALID_ORDER_TYPE;"oType is null"]];
     if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_SIDE;"Invalid side"]]; // TODO make failure event.
-    if[not (o[`otype] in .order.ORDERTYPE); :MakeFailure[time;`INVALID_ORDERTYPE;"Invalid order type"]]; // TODO make failure event.
+    if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
+    if[not (o[`otype] in .order.ORDERTYPE); :MakeFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
     if[not (o[`timeinforce] in .order.TIMEINFORCE); :MakeFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
     if[not (all o[`execInst] in .order.EXECINST); :MakeFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
 
+    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
+    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:MakeFailure[time;`INVALID;""];o[`stopprice]:0f];
+    $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:MakeFailure[time;`INVALID;""];o[`limitprice]:0f];
+
     // Instrument related validation
     ins:.instrument.GetActiveInstrument[];
-    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[time;`INVALID;""]];
-    if[o[`price]>ins[`maxPrice];:MakeFailure[time;`INVALID;""]];
-    if[o[`price]<ins[`minPrice];:MakeFailure[time;`INVALID;""]];
-    if[o[`size]<ins[`maxOrderSize];:MakeFailure[time;`INVALID;""]];
-    if[o[`size]>ins[`minOrderSize];:MakeFailure[time;`INVALID;""]];
+    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
+    if[o[`price]>ins[`maxPrice];:MakeFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`price]<ins[`minPrice];:MakeFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`size]>ins[`maxOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
+    if[o[`size]<ins[`minOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;""]];
 
     // Account related validation
-    if[not(o[`accountId] in key .account.Account);:MakeFailure[time;`INVALID;""]]
+    if[not(o[`accountId] in key .account.Account);:MakeFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
     // TODO 
     / Duplicate clOrdID
@@ -342,23 +345,29 @@ NewOrder       : {[o;time];
     / Invalid multiLegReportingType
     / Invalid currency
     / Invalid settlCurrency
-
     o[`orderId]:orderCount+1;
     // TODO set offset
+    // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
     $[o[`otype]=`LIMIT;
         [
-            $[(o[`side]=`SELL and o[`price] < ins[`bestBidPrice]) |
-              (o[`side]=`BUY and o[`price] > ins[`bestAskPrice]);
+            $[((o[`side]=`SELL) and (o[`price] < ins[`bestBidPrice])) or 
+              ((o[`side]=`BUY) and (o[`price] > ins[`bestAskPrice]));
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
-                        events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Invalid size"];
-                        events,:processCross[ // The order crosses the bid ask spread.
-                            events;
-                            o[`side];
-                            o[`size];
-                            1b;
-                            event[`accountId]];
+                        [
+                            events,:MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
+                        ];
+                        [
+                            events,:processCross[ // The order crosses the bid ask spread.
+                                events;
+                                o[`side];
+                                o[`size];
+                                1b;
+                                o[`accountId];
+                                o[`isClose];
+                                time];
+                        ]
                     ]
                 ];
                 [
@@ -366,20 +375,30 @@ NewOrder       : {[o;time];
                     // TODO update order init margin etc.
                     // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
-                    o[`offset]: .order.OrderBook[o[`price]][`qty];
-                    update (
-                        openBuyPremium:0;
-                        openSellPremium:0;
-                        openBuyOrderQty:0;
-                        openSellOrderQty:0;
-                        orderMargin:0;
-                        frozen:0;
-                        available:0
-                    ) from `.account.Account where accountId=o[`accountId]; 
-                    `.order.Order insert order;
-                    events,:.order.MakeNewOrderEvent[];
-                    events,:.account.MakeAccountUpdateEvent[]
-                ];
+                    qty:.order.OrderBook[o[`price]][`qty];
+                    o[`offset]: $[not null[qty];qty;0f];
+
+                    // Update the account with the respective
+                    // order premium etc.
+                    update 
+                        openBuyPremium:0f,
+                        openSellPremium:0f,
+                        openBuyOrderQty:0,
+                        openSellOrderQty:0,
+                        orderMargin:0f,
+                        frozen:0f,
+                        available:0f from `.account.Account where accountId=o[`accountId]; 
+
+                    // TODO make better
+                    o[`execInst]:`ALLORNONE;
+                    o[`leaves]: o[`size];
+                    o[`filled]: 0f;
+                    o[`status]: `NEW;
+                    o[`time]: time;
+                    `.order.Order insert o;
+                    / events,:.order.MakeNewOrderEvent[];
+                    / events,:.account.MakeAccountUpdateEvent[]
+                ]
             ];
         ];
       o[`otype]=`MARKET;
@@ -461,7 +480,7 @@ removeOrder    : {[orderId;time]
 //          - if the trade is smaller than the best size
 //      - if the trade was not made by an agent
 // TODO compactify!
-fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
+fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         events:();
         nside: NegSide[side];
         price:getBestPrice[nside];
@@ -625,9 +644,12 @@ fillTrade   :{[side;qty;time;isClose;isAgent;accountId]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-processCross     :{[events;side;leaves;isAgent;accountId;isClose] 
-    while [leaves>0;events,:fillTrade[side;leaves;event]];
-    :events;
+processCross     :{[events;side;leaves;isAgent;accountId;isClose;time] 
+        $[0;
+            [while [leaves>0;events,:fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
+            [:MakeFailure[time;`]]
+        ];
+        :events;
     };
 
 // Processes a trade that was not made by an agent

@@ -50,10 +50,13 @@ Instrument: (
     taxed                   : `boolean$();
     deleverage              : `boolean$();
     capped                  : `boolean$();
+    hasLiquidityBuy         : `boolean$();
+    hasLiquiditySell        : `boolean$();
     maxPrice                : `float$();
     minPrice                : `float$();
     lotSize                 : `float$();
     maxOrderSize            : `float$();
+    minOrderSize            : `float$();
     junkOrderSize           : `float$();
     liquidationStrat        : `.instrument.LIQUIDATIONSTRAT$();
     settleType              : `.instrument.SETTLETYPE$();
@@ -70,7 +73,7 @@ mandCols:();
 defaults:{:(
     (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,
     `FLAT,`FLAT,-0.00025,0.00025,0.5,1f,`PROCEDURAL,200f,100f,0f,0f,
-    (`timespan$(`minute$480)),0,0,0f,0f,0f,0,0f,0b,1b,0b,1e6f,0f,1f,1e5f,
+    (`timespan$(`minute$480)),0,0,0f,1e6f,0f,0,0f,0b,1b,0b,0b,0b,1e6f,0f,1f,1e5f,0f,
     25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0)};
 allCols:cols Instrument;
 

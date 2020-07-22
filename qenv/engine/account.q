@@ -15,7 +15,7 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // for a single agent and contains config therin
 // pertaining to what the agent setting is.
 // TODO realized Gross PNL, unrealized Gross PNL, total Unrealized Pnl etc
-// 
+// TODO is suspended, state etc.
 Account: (
             [accountId          : `long$()]
             balance             : `float$();
@@ -84,7 +84,6 @@ MakeAllAccountsUpdatedEvents :{[time]
 NewAccount :{[account;time]
     events:();
     if[any null account[mandCols]; :0b];
-
     // Replace null values with their respective defailt values
     // TODO dynamic account type checking
     account:Sanitize[account;defaults[];allCols];

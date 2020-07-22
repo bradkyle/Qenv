@@ -1,5 +1,11 @@
 \d .global
 
+
+/*******************************************************
+/ Response types
+
+RESPONSEKIND : `OK`FAILURE;
+
 /*******************************************************
 / event kind enumerations
 EVENTKIND    :  (`DEPTH;      / place a new order
@@ -35,4 +41,14 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 
 /*******************************************************
 / error kind enumerations
-ERRORKIND   :   (`INVALID);
+ERRORKIND   :   (
+            `INVALID_ORDER_TYPE;
+            `INVALID_ORDER_SIDE;
+            `INVALID_ORDER_TICK_SIZE;
+            `INVALID_TIMEINFORCE;
+            `INVALID_EXECINST;
+            `INVALID_ORDER_PRICE;
+            `INVALID_ACCOUNTID;
+            `INVALID_ORDER_SIZE;
+            `PARTICIPATE_DONT_INITIATE;
+        );
