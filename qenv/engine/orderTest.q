@@ -173,9 +173,18 @@ testProcessSideUpdate   :{
 // -------------------------------------------------------------->
 
 testFillTrade:{
+     show 99#"=";
      show "FILL TRADE";
      show 99#"=";
-     runCase :{[dscr;account;orderbook;params;eres;eorderbook;time]
+     runCase :{[dscr;state;time]
+
+            account:state[0];
+            orders:state[1];
+            orderbook:state[2];
+            params:state[3];
+            eres:state[4];
+            eors:state[5];
+            eorderbook:state[6];
             if[count[orderbook]>0;.order.OrderBook:orderbook];
 
             // TODO make testable i.e. if account not found etc.
@@ -183,7 +192,6 @@ testFillTrade:{
 
             aid:$[params[`isAgent];account[`accountId];0N];
             res:.order.fillTrade[params[`side];params[`qty];params[`isClose];params[`isAgent];aid;time];
-            show res;
             .qunit.assertEquals[res~eres; 1b; dscr,": expected response"];
 
             / ob: .order.OrderBook;
@@ -198,10 +206,21 @@ testFillTrade:{
         time:.z.z;
 
         // TODO make sure that returns list of trades.
-        runCase["simple trade fill no agent orders or previous depth";
+        runCase["orderbook does not have agent orders, trade was not made by an agent";(
             aCols!(1;1f;1f);
+            ();
             1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
-            pCols!(s;100;0b;0b);
+            pCols!(s;50;0b;0b);
+            `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;50;100.5));
+            ();
+            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
+        
+        runCase["orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
+            aCols!(1;1f;1f);
+            ();
+            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]); // flat maker fee
+            pCols!(s;150;0b;1b);
             `time`cmd`kind`datum!(time;`NEW;`TRADE;`side`qty`price!(`SELL;100;100.5));
-            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]);time];
+            ();
+            1!([]price:E[100.5];side:E[`BUY];qty:E[100f]));time];
     };

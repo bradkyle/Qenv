@@ -478,7 +478,7 @@ removeOrder    : {[orderId;time]
 //          - if the trade execution is smaller than the agent order
 // if the orderbook does not have agent orders
 //      - if the trade was made by an agent
-//          - if the trade is larger than best size
+//          - if the trade is larger than best qty
 //          - if the trade is smaller than the best size
 //      - if the trade was not made by an agent
 // TODO compactify!
@@ -511,10 +511,10 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                     0b; // not isMaker
                                     accountId
                                 ];
-                                decrementQty[negSide;price;qty];
+                                decrementQty[nside;price;qty];
                             ];
                             events,:.order.MakeTradeEvent[time;side;qty;price];
-                            decrementOffsets[negSide, price; qty];
+                            decrementOffsets[nside, price; qty];
                             qty:0;
                         ];[
                             // 
@@ -535,7 +535,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                     events,:.account.ApplyFill[
                                         nextAgentOrder[`size],
                                         price;
-                                        negSide;
+                                        nside;
                                         time;
                                         nextAgentOrder[`isClose];
                                         1b; // not isMaker
@@ -570,7 +570,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                     events,:.account.ApplyFill[
                                         qty;
                                         price;
-                                        negSide;
+                                        nside;
                                         time;
                                         nextAgentOrder[`isClose];
                                         1b; // isMaker
@@ -605,36 +605,41 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                         $[isAgent;
                             [
                                 // If the order was placed by an agent.
-                                getBestQty: getQtyByPrice[negSide;price];
-                                $[getBestQty>0;
-                                    $[qty<=getBestQty;[
+                                bestQty: exec first qty from .order.OrderBook where side=nside, price=price;
+                                $[bestQty>0;
+                                    $[qty<=bestQty;[
                                         updateQty[qty]; // TODO update lvl qty
                                         events,: .order.MakeTradeEvent[];
                                         events,:.account.ApplyFill[
-                                                qty,
+                                                qty;
                                                 price;
                                                 side;
                                                 time;
                                                 isClose;
                                                 0b; // not isMaker
-                                                accountId
-                                        ];
+                                                accountId];
                                         qty:0;
                                     ];[
-                                        removeQty[negSide;price];
-                                        events,:.order.MakeTradeEvent[]; // TODO
+                                        // Because the market order/trade is larger than the best qty at this level
+                                        // the level of the orderbook is to be removed and the resultant size of the
+                                        // trade should be equal to the size of the bestQty
+                                        delete from .order.OrderBook where side=nside, price=price;
+                                        events,:.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
                                         events,:.account.ApplyFill[
-                                                getBestQty,
+                                                bestQty;
                                                 price;
                                                 side;
                                                 time;
                                                 isClose;
                                                 0b; // not isMaker
-                                                accountId
-                                        ]; // TODO
-                                        qty-:getBestQty;
-                                    ]]
-                                    [:0N]
+                                                accountId]; // TODO
+                                        qty-:bestQty;
+                                    ]];
+                                    [
+                                        // There is no best qty i.e. the market order cannot be
+                                        // filled because there is no liquidity.
+                                        :0N
+                                    ]
                                 ];
                             ];
                             [

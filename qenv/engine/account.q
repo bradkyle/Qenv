@@ -376,6 +376,7 @@ getInventory    :{[accountId;side]
 // TODO update active fees
 ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
     events:();
+    show 99#"H";                                
     ins:.instrument.GetActiveInstrument[];
     acc: exec from Account where accountId=accountId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];

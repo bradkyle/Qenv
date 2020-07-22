@@ -12,3 +12,9 @@ AssertEquals: {[]
 RevertALL   :{[]
 
     };
+
+TESTKIND    :`UNIT`INTEGRATION`BENCHMARK;
+
+Register    :{[kind;name;dscr;func;params;setup;revert]
+
+    };

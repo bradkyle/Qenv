@@ -19,6 +19,7 @@ INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 
 // TODO INVERSE vs QUANTO i.e. bitmex + okex vs binance etc.
 // TODO do funding, fair price marking, 
+// TODO are trades aggregated
 Instrument: (
     [instrumentId           : `long$()];
     state                   : `.instrument.INSTRUMENTSTATE$();
