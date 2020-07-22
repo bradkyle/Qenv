@@ -486,7 +486,7 @@ removeOrder    : {[orderId;time]
 fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         events:();
         nside: NegSide[side];
-        // TODO checking price
+        // TODO checking price is not more/less than best price
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:MakeFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
