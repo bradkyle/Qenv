@@ -67,12 +67,12 @@ allCols:cols Account;
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeAccountUpdateEvent  :{[time;account]
+AddAccountUpdateEvent  :{[time;account]
     // TODO check if value is null
     :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
     };
 
-MakeAllAccountsUpdatedEvents :{[time]
+AddAllAccountsUpdatedEvents :{[time]
     :MakeEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
     };
 
@@ -94,7 +94,7 @@ NewAccount :{[account;time]
     `.account.Account upsert account;
 
     accountId:account[`accountId];
-    MakeAccountUpdateEvent[accountId;time];
+    AddAccountUpdateEvent[accountId;time];
     .inventory.NewInventory[.inventory.mandCols!(accountId;`LONG);time];
     .inventory.NewInventory[.inventory.mandCols!(accountId;`SHORT);time];
     .inventory.NewInventory[.inventory.mandCols!(accountId;`BOTH);time];
@@ -376,7 +376,6 @@ getInventory    :{[accountId;side]
 // todo allow for onlyclose and calcualte fee
 // TODO update active fees
 ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
-    events:();
     ins:.instrument.GetActiveInstrument[];
     acc: exec from Account where accountId=accountId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
@@ -393,7 +392,6 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
           [0N]
         ];
     ];];
-    :events;
     };
 
 // Funding Event/Logic //TODO convert to cnt for reference
@@ -414,7 +412,7 @@ ApplyFunding       :{[fundingRate;nextFundingTime;time] // TODO convert to cnt (
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
         totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
         by accountId from `.account.Account;
-    :MakeAllAccountsUpdatedEvents[time];
+    :AddAllAccountsUpdatedEvents[time];
     };
 
 // Balance Management
@@ -428,7 +426,7 @@ Deposit  :{[deposited;time;accountId]
         depositCount:depositCount+1
         from `.account.Account 
         where accountId=accountId;
-    :MakeAccountUpdateEvent[accountId;time];
+    :AddAccountUpdateEvent[accountId;time];
     };
 
 
@@ -446,7 +444,7 @@ Withdraw       :{[withdrawn;time;accountId]
             withdrawCount:withdrawCount+1
             from `.account.Account 
             where accountId=accountId;
-        :MakeAccountUpdateEvent[accountId;time];
+        :AddAccountUpdateEvent[accountId;time];
     ];  
     :();
     };

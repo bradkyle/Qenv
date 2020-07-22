@@ -132,6 +132,8 @@ StepBuffer  :(
 
     );
 
+// Recieves a table of events from the engine 
+// and proceeds to insert them into the local historic buffer
 InsertResultantEvents   :{[events]
 
     k:event[`kind];

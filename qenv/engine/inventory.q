@@ -55,17 +55,17 @@ allCols: cols Inventory;
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeInventoryUpdateEvent   :  {[inventory;time];
+AddInventoryUpdateEvent   :  {[inventory;time];
     // TODO check if value is null
     :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
     };
 
 // TODO make work
-MakeAccountInventoryUpdateEvent : {[time]
+AddAccountInventoryUpdateEvent : {[time]
     :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
     };
 
-MakeAllInventoryUpdateEvent :{[time]
+AddAllInventoryUpdateEvent :{[time]
     :MakeEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all inventory
     };
 
@@ -80,7 +80,7 @@ NewInventory : {[inventory;time]
 
     `.inventory.Inventory upsert inventory; // TODO check if successful
 
-    :MakeInventoryUpdateEvent[inventory;time]; 
+    :AddInventoryUpdateEvent[inventory;time]; 
     };
 
 // 

@@ -61,6 +61,7 @@ ERRORKIND   :   (
 // Drawbacks may include testability?
 // The events table is used exclusively within the engine and is not used
 // by for example the state.
+// Acts like a kafka queue/pubsub.
 Events  :( // TODO add failure to table
     [eventId    :`long$()]
     time        :`datetime$();
@@ -71,6 +72,7 @@ Events  :( // TODO add failure to table
     reason      :`.global.ERRORKIND$()
     );
 
+// Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
         $[not (cmd in .global.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
@@ -89,4 +91,10 @@ AddFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
         if[not (kind in .global.ERRORKIND); :0b];
         :`time`kind`msg!(time;kind;msg);
+        };
+
+// Retrieves all events from the Events table and then
+// deletes/drops all of them.
+PopEvents     :{[]
+
         };

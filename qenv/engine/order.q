@@ -100,7 +100,7 @@ AddDepthUpdateEvent :{[depth;time]
     };
 
 
-AddTradeEvent  :{[trade;time]
+AddTradeEvent  :{[side;qty;price;time]
     :MakeEvent[time;`NEW;`TRADE;trade];
     };
 
@@ -283,8 +283,6 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
 NewOrder       : {[o;time];
-    events:();
-    
     // TODO append failures to events and return.
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
@@ -371,10 +369,10 @@ NewOrder       : {[o;time];
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
-                            events:events,MakeFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
+                            .global.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
-                            events:events,processCross[ // The order crosses the bid ask spread.
+                            processCross[ // The order crosses the bid ask spread.
                                 events;
                                 o[`side];
                                 o[`size];
@@ -418,7 +416,7 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`MARKET;
         [
-            events:events,processCross[
+            processCross[
                 events;
                 o[`side];
                 o[`size];
@@ -438,19 +436,16 @@ NewOrder       : {[o;time];
             show "STOP_LIMIT";
         ];
     ];
-    :events;
     };
 
 updateOrder    : {[order;time]
-    events:();
-   
-    :events;
+    // TODO add margin etc.
+    // add account updates etc.
     };
 
 removeOrder    : {[orderId;time]
-    events:();
+    // TODO add margin etc.
     delete from `order.Order where orderId=orderId;
-    :events;
     };
 
 / AmendLimitOrder    :{[event]
@@ -498,12 +493,11 @@ removeOrder    : {[orderId;time]
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
 fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
-        events:();
         nside: NegSide[side];
         // TODO checking price is not more/less than best price
         / minOffset:exec 
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
-            [:MakeFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
+            [:.global.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
                 price:exec min price from .order.OrderBook where side=nside;
                 hasAgentOrders:(count select from .order.Order where side=nside)>0;
@@ -519,7 +513,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // be filled.
                                 $[isAgent;
                                     // If the market order was placed by an agent.
-                                    events:events,.account.ApplyFill[
+                                    .account.ApplyFill[
                                         qty;
                                         price;
                                         side;
@@ -530,7 +524,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                     fill:qty; // TODO remove 
                                     update qty:qty-fill from `.order.OrderBook where side=nside, price=price;
                                 ];
-                                events:events,.order.MakeTradeEvent[(tradeCols!(side;qty;price));time];
+                                .order.AddTradeEvent[side;qty;price;time];
                                 update offset:offset-qty from `.order.Order where side=nside, price=price;
                                 qty:0;
                             ];
@@ -540,8 +534,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 
                                 // Make a trade event that represents the trade taking up the
                                 // offset space;
-                                events:events,.order.MakeTradeEvent[(tradeCols!(side;nxt[`offset];price));time]; 
-                                show 99#"X"; 
+                                .order.AddTradeEvent[side;nxt[`offset];price;time]; 
                                 $[qty>=nxt[`size];
                                     [
                                         show 99#"H";
@@ -550,8 +543,8 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         // updating its state and subsequently removing it from
                                         // the local buffer, adding fill to account and creating
                                         // respective trade event. // TODO if order made by agent!
-                                        events:events,fillLimitOrder[nxt[`id];time]; // TODO update
-                                        events:events,.account.ApplyFill[
+                                        // TODO completely fill limit order
+                                        .account.ApplyFill[
                                             nxt[`size],
                                             price;
                                             nside;
@@ -565,7 +558,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             // the orderbook should represent the change otherwise not
                                             // captured.
                                             decrementQty[side;price;smallestOffset]; 
-                                            events:events,.account.ApplyFill[
+                                            .account.ApplyFill[
                                                 qty,
                                                 price;
                                                 side;
@@ -576,7 +569,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             ];
                                         ];
 
-                                        events:events,.order.MakeTradeEvent[];
+                                        .order.AddTradeEvent[];
                                         qty-:nxt[`size];
                                     ];
                                     [
@@ -584,8 +577,9 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         // order, update it to partially filled and apply fills, 
                                         // make trade events etc.
                                         nxt[`size]-: qty;
+                                        // TODO Update order
                                         events:events,updateOrder[nxt;time];
-                                        events:events,.account.ApplyFill[
+                                        .account.ApplyFill[
                                             qty;
                                             price;
                                             nside;
@@ -600,7 +594,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             // the orderbook should represent the change otherwise not
                                             // captured.
                                             update qty:qty-nxt[`offset] from `.order.OrderBook where side=nside, price=price;
-                                            events:events,.account.ApplyFill[
+                                            .account.ApplyFill[
                                                 qty,
                                                 price;
                                                 side;
@@ -610,7 +604,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                                 accountId
                                             ];
                                         ];
-                                        events:(events,.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time]);
+                                        .order.AddTradeEvent[side;`float$qty;price;time];
                                         qty:0;
                                     ]
                                 ]
@@ -628,8 +622,8 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         [
                                             nqty:bestQty-qty;
                                             update qty:nqty from `.order.OrderBook where side=nside, price=price;
-                                            events:events, .order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time];
-                                            events:events,.account.ApplyFill[
+                                            .order.AddTradeEvent[side;bestQty;price;time];
+                                            .account.ApplyFill[
                                                     qty;
                                                     price;
                                                     side;
@@ -643,9 +637,9 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             // Because the market order/trade is larger than the best qty at this level
                                             // the level of the orderbook is to be removed and the resultant size of the
                                             // trade should be equal to the size of the bestQty
-                                            delete from `.order.OrderBook where side=nside, price=price;
-                                            events:events,.order.MakeTradeEvent[(tradeCols!(side;bestQty;price));time]; // TODO
-                                            events:events,.account.ApplyFill[
+                                            delete from `.order.OrderBook where side=nside, price=price; // TODO orderbook update etc.
+                                            .order.AddTradeEvent[side;bestQty;price;time]; // TODO
+                                            .account.ApplyFill[
                                                     bestQty;
                                                     price;
                                                     side;
@@ -668,7 +662,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // represent the change due to trades, simply
                                 // make a trade event and revert the qty to be 
                                 // traded.
-                                events:events,.order.MakeTradeEvent[(tradeCols!(side;`float$qty;price));time];
+                                .order.AddTradeEvent[side;`float$qty;price;time];
                                 qty:0;
                             ]
                         ]
@@ -683,9 +677,9 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-processCross     :{[events;side;leaves;isAgent;accountId;isClose;time] 
+processCross     :{[side;leaves;isAgent;accountId;isClose;time] 
         $[0;
-            [while [leaves>0;events:events,fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
+            [while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
             [:MakeFailure[time;`]]
         ];
         :events;
@@ -696,7 +690,7 @@ processCross     :{[events;side;leaves;isAgent;accountId;isClose;time]
 ProcessTrade  : {[side;size;price;time]
     // TODO price invariant?
     // TODO check for limit stop orders.
-    :processCross[();side;size;0b;0N];
+    :processCross[side;size;0b;0N];
     };
 
 // Updates the orderbook mark price and subsequently

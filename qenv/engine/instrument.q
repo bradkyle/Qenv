@@ -81,11 +81,11 @@ allCols:cols Instrument;
 // Event creation utilities
 // -------------------------------------------------------------->
 
-MakeMarkPriceUpdateEvent    :{[]
+AddMarkPriceUpdateEvent    :{[]
 
     };
 
-MakeFundingEvent             :{[]
+AddFundingEvent             :{[]
 
     };
 
@@ -99,12 +99,10 @@ MakeFundingEvent             :{[]
 // the singleton class representation therin.
 // TODO deal with columns without values specified etc.
 NewInstrument            :{[instrument; isActive; time]
-    events:();
     if[any null instrument[mandCols]; :0b];      
     instrument:Sanitize[instrument;defaults[];allCols];
     `.instrument.Instrument upsert instrument;
     if[isActive; .instrument.activeInstrumentId:instrument[`instrumentId]];
-    :events;
     };
 
 // Returns the current state of the instrument denoted by the provided
@@ -121,13 +119,11 @@ GetActiveInstrument        :{[]
     };
 
 UpdateInstrument      :{[instrument;time]
-    events:();
     isMark:`markPrice in cols[instrument];
     instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
     `.instrument.Instrument upsert instrument;
-    if[isMark;events:events,MakeMarkPriceUpdateEvent[]];
+    if[isMark;AddMarkPriceUpdateEvent[]]; // TODO change.
     // TODO funding?, instrumentUpdate? 
-    :events;
     };
 
 UpdateActiveInstrument  :{[instrument;time]

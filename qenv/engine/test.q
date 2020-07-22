@@ -1,6 +1,9 @@
 \c 500 550
 \l qunit.q
 
+/ \l globalTest.q
+/ .qunit.runTests `.globalTest
+
 / \l utilTest.q
 / .qunit.runTests `.utilTest
 
