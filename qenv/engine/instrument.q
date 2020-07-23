@@ -78,17 +78,6 @@ defaults:{:(
     25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0)};
 allCols:cols Instrument;
 
-// Event creation utilities
-// -------------------------------------------------------------->
-
-AddMarkPriceUpdateEvent    :{[]
-
-    };
-
-AddFundingEvent             :{[]
-
-    };
-
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
@@ -122,7 +111,6 @@ UpdateInstrument      :{[instrument;time]
     isMark:`markPrice in cols[instrument];
     instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
     `.instrument.Instrument upsert instrument;
-    if[isMark;AddMarkPriceUpdateEvent[]]; // TODO change.
     // TODO funding?, instrumentUpdate? 
     };
 
