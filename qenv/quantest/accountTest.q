@@ -1,9 +1,4 @@
 
-\d .external
-externalFn  :{[a;b;c]
-    show a b c;
-    }
-\d .
 
 defaultAfterEach: {
      delete from `.account.Account;
@@ -175,8 +170,6 @@ test:.qt.UNIT[
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
         inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
 
-        .qt.M[];
-
         // Execute tested function
         .account.execFill[account;inventory;p[`fillQty];p[`price];p[`fee]];
 
@@ -185,8 +178,8 @@ test:.qt.UNIT[
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
-        .qt.A[acc[ecols];~;eacc[ecols];];
-        .qt.A[invn[ecols];~;einv[ecols];];
+        .qt.A[acc[ecols];~;eacc[ecols];c];
+        .qt.A[invn[ecols];~;einv[ecols];c];
 
     };;(;;;defaultAfterEach)];
 
@@ -227,7 +220,7 @@ test:.qt.UNIT[
         acc:exec from .account.Account where accountId=account[`accountId];
 
         // Assertions
-        .qt.A[acc[ecols];~;eacc[ecols];];
+        .qt.A[acc[ecols];~;eacc[ecols];c];
 
     };;(;;;defaultAfterEach)];
 
@@ -260,7 +253,7 @@ test:.qt.UNIT[
         acc:exec from .account.Account where accountId=account[`accountId];
 
         // Assertions
-        .qt.A[acc[ecols];~;eacc[ecols];];
+        .qt.A[acc[ecols];~;eacc[ecols];c];
 
     };;(;;;defaultAfterEach)];
 

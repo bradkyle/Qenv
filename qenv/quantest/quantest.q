@@ -173,21 +173,13 @@ ResetTest   :{
 
     };
 
-testFnWrapper   :{[testFn]
-
-    };
-
 // TODO protected execution
-runTestCase     :{[test; case]
-    test[`beforeEach][];
-    test[`func][case[`params];case]
-    test[`afterEach][];
-    };
+runCase :{[test; case] test[`beforeEach][]; test[`func][case[`params];case]; test[`afterEach][];};
 
 runTest         :{[test]
     cases:select from `.qt.Case where state=`READY;
     test[`start]:.z.z;
-    runTestCase each (test;cases);
+    runCase (test;cases);
     test[`end]:.z.z;
     test[`afterAll][];
     `qt.Test upsert test;
@@ -236,9 +228,7 @@ AddCase     :{[test;dscr;params]
     };
 
 
-SkipCase    :{[]
-    update state:`SKIP from `.test.Test where testId=tid;
-    };
+/ SkipCase    :{[tid] update state:`SKIP from `.test.Test where testId=tid;};
 
 // Mock
 // ======================================================================>
@@ -265,23 +255,17 @@ Mock        :(
     numCalls     : `long$()
     );
 
+invokeId:-1;
 Invocations :(
     [invokeId      : `long$()]
     mockId       : `.qt.Mock$();
     invokedWith  : ()
     );
 
-// TODO restore;
-mock : (`.qt.MOCKKIND$())!(); // TODO change to subset of supported types.
-
-mock[`FAKE] :   {[mocker]
-    :0N;
-    };
-
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
 repFn :{[replacement;mockId;params] // creates lambda function to be used later
-    `.qt.Invocations insert (1;mockId;params);
+    `.qt.Invocations insert ((invokeId+:1);mockId;params);
     update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mockId;
     :replacement[params];
     };
@@ -298,8 +282,8 @@ M   :{[target;replacement;name;case]
     // Initialize representation in mock table.
     // TODO check that target and replacement have the same number of params if function 
     / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
-
-    `.qt.Mock insert ((mockId+:1);case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
+    mockId:(mockId+:1);
+    `.qt.Mock insert (mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
     target set repFn[replacement;mockId];
     };
@@ -307,9 +291,7 @@ M   :{[target;replacement;name;case]
 // Get Mocks by tags
 // Get Mocks by name
 // TODO skip
-SkipMock    :{[]
-    
-    };
+/ SkipMock    :{[]};
 
 // Profile
 // ======================================================================>
@@ -343,7 +325,7 @@ Assertion   :(
     caseId         : `.qt.Case$();
     kind           : `.qt.ASSERTIONKIND;
     state          : `.qt.TESTSTATE;
-    dscr           : `char$();
+    msg            : `char$();
     actual         : ();
     relation       : ();
     expected       : ()
@@ -353,16 +335,11 @@ Assertion   :(
 // @param actual An object representing the actual result value
 // @param expected An object representing the expected value
 // @param msg Description of this test or related message
+// @param case the case to which this assertion belongs.
 // @return actual object
 A   :{[actual;relation;expected;msg;case]
     failFlag::not .[relation; (actual; expected); 0b];
-    if[failFlag;
-        lg "expected = ",-3!expected;
-        lg "actual = ",-3!actual;];
-    ar::`actual`expected`msg!(actual;expected;msg);
-    if[failFlag; 'assertThatFAIL];
+    state:$[failFlag;`FAIL;`PASS];
+    `.qt.Assertion insert ((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;relation;expected);
     }
 
-SkipAssertion   :{[]
-    // TODO
-    };

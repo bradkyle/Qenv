@@ -1,5 +1,11 @@
 
 
+\d .external
+externalFn  :{[a;b;c]
+    show a b c;
+    }
+\d .
+
 testUnit   :{
 
     };
