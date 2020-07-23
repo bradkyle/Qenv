@@ -567,5 +567,7 @@ Step    :{[actions]
     // Returns a table of Info indexed by accountId
     info: Info[accountIds];
 
+    // TODO log info to analytics
+
     :(uj)over(obs;rewards;info);
     };

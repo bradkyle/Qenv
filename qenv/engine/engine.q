@@ -14,6 +14,7 @@ RETURNCODE  :   (`INVALID_MEMBER;
 // TODO rate limit, return order and time, make sure ingress events in order
 // TODO supported event types
 Engine:(
+    isConfigured                : `boolean$();
     loadSheddingProbability     : `float$();
     placeOrderOffsetMu          : `float$(); 
     placeOrderOffsetSigma       : `float$();
