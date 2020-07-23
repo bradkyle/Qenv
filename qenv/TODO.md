@@ -41,3 +41,6 @@ https://tickertape.tdameritrade.com/trading/trading-basics-advanced-stock-order-
 
 
 shuffeling accounts for larger simulations i.e. create 1000 accounts and shuffle 10 randomly (resetting state of agent in process);
+
+
+run engine in seperate process, communicate via rpc?
