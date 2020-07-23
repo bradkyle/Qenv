@@ -245,7 +245,7 @@ deriveCaseParams :{[params]
 // -------------------------------------------------------------->
 
 test:.qt.UNIT[
-    ".account.Deposit";
+    ".account.Withdraw";
     {[params]
         time:.z.z;
 
@@ -255,7 +255,7 @@ test:.qt.UNIT[
         .qt.M[];
 
         // Execute tested function
-        .account.Deposit[accountId;deposit;time];
+        .account.Withdraw[accountId;deposit;time];
 
         acc:exec from .account.Account where accountId=account[`accountId];
 
