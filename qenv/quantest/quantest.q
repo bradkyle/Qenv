@@ -1,5 +1,5 @@
 \l qunit.q
-system "d .quantest";
+system "d .qt";
 
 
 line: {show 99#"-"};
@@ -90,8 +90,8 @@ Test    :(
     [testId      : `long$()]
     name         : `symbol$();
     namespace    : `symbol$();
-    kind         : `.quantest.TESTKIND$();
-    state        : `.quantest.TESTSTATE$();
+    kind         : `.qt.TESTKIND$();
+    state        : `.qt.TESTSTATE$();
     dscr         : `char$();
     func         : ();
     params       : ();
@@ -108,103 +108,14 @@ Test    :(
     profileRes   : ()
     );
 
-test : (`.quantest.TESTKIND$())!(); // TODO change to subset of supported types.
+test : (`.qt.TESTKIND$())!(); // TODO change to subset of supported types.
 
 test[`UNIT] :   {[tester]
     :0N;
     };
 
 SkipTest    :{
-
-    };
-
-// Mock
-// ======================================================================>
-
-/ mock kind enumerations
-MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
-
-Mock        :(
-    [mockId      : `long$()]
-    testId       : `long$();
-    kind         : `.quantest.MOCKKIND$();
-    tags         : ();
-    returns      : ();
-    throws       : ();
-    rejects      : ();
-    mocks        : ();
-    replaceWith  : ();
-    doWait       : `boolean$();
-    waitBefore   : `second$();
-    waitAfter    : `second$();
-    called       : `boolean$();
-    numCalls     : `long$()
-    );
-
-Invocations :(
-    [invokeId      : `long$()]
-    mockId       : `long$();
-    invokedWith  : ();
-    );
-
-// TODO restore;
-mock : (`.quantest.MOCKKIND$())!(); // TODO change to subset of supported types.
-
-mock[`FAKE] :   {[mocker]
-    :0N;
-    };
-
-// Replace a given variable/table/reference etc. with another
-// @param mocks is the function that is to be replaced.
-// @param expected An object representing the expected value
-// @param msg Description of this test or related message
-// @return reference to mock object which can be used to 
-// make assertions on behavior of function.
-M   :{[mocks;repFn;tags;name]
-
-    };
-
-// Get Mocks by tags
-// Get Mocks by name
-// TODO skip
-
-SkipMock    :{[]
-    
-    };
-
-/ // Assert
-/ // ======================================================================>
-
-/ assertion kind enumerations
-ASSERTIONKIND:  (`TRUE;      / place a new order
-                `THROWS;    / modify an existing order
-                `KNOWN;    / increment a given accounts balance
-                `EQUALS; / decrement a given accounts balance
-                `THAT /
-                );
-
-Assertion   :(
-    [assertId      : `long$()]
-    testId       : `long$();
-    kind         : `.quantest.ASSERTIONKIND;
-    state        : `.quantest.TESTSTATE;
-    dscr         : `char$();
-    actual       : ();
-    relation     : ();
-    expected     : ()
-    );
-
-// Assert that the relation between expected and actual value holds
-// @param actual An object representing the actual result value
-// @param expected An object representing the expected value
-// @param msg Description of this test or related message
-// @return actual object
-A   :{[actual;relation;expected;msg]
-
-    }
-
-SkipAssertion   :{[]
-
+    update state:`SKIP from `.test.Test where testId=tid;
     };
 
 // Case
@@ -212,8 +123,8 @@ SkipAssertion   :{[]
 
 Case    :(
     [caseId      : `long$()]
-    testId       : `long$();
-    state        : `.quantest.TESTSTATE$();
+    testId       : `.qt.Test$();
+    state        : `.qt.TESTSTATE$();
     dscr         : `char$();
     func         : ();
     params       : ();
@@ -239,8 +150,133 @@ AddCase     :{[ref;dscr;params]
 
 
 SkipCase    :{[]
-
+    update state:`SKIP from `.test.Test where testId=tid;
     };
+
+// Mock
+// ======================================================================>
+// Mocks serve to replace a given function or variable (entity) with
+// a given replacement such that tests can be performed in an idempotent
+// manner.
+
+/ mock kind enumerations
+MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
+
+Mock        :(
+    [mockId      : `long$()]
+    testId       : `.qt.Test$();
+    kind         : `.qt.MOCKKIND$();
+    namespace    : `symbol$();
+    tags         : ();
+    returns      : ();
+    throws       : ();
+    rejects      : ();
+    target       : ();
+    replacement  : ();
+    doWait       : `boolean$();
+    waitBefore   : `second$();
+    waitAfter    : `second$();
+    called       : `boolean$();
+    numCalls     : `long$()
+    );
+
+Invocations :(
+    [invokeId      : `long$()]
+    mockId       : `.qt.Mock$();
+    invokedWith  : ()
+    );
+
+// TODO restore;
+mock : (`.qt.MOCKKIND$())!(); // TODO change to subset of supported types.
+
+mock[`FAKE] :   {[mocker]
+    :0N;
+    };
+
+// Wraps a given rep function with common logic
+// @param repFn function that replaces the given target
+repFn :{[replacement;params] // creates lambda function to be used later
+    `.qt.Invocations insert ();
+    :replacement[params];
+    };
+
+// Replace a given variable/table/reference etc. with another
+// @param target is the function that is to be replaced.
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @return reference to mock object which can be used to 
+// make assertions on behavior of function.
+M   :{[target;replacement;tags;name]
+    // TODO check target, replacement, tags, name
+    // TODO create mockid etc.
+    // Initialize representation in mock table.
+    `.qt.Mock insert (); 
+    // Replace target with mock replacement
+    target:repFn[replacement];
+    };
+
+// Get Mocks by tags
+// Get Mocks by name
+// TODO skip
+SkipMock    :{[]
+    
+    };
+
+// Profile
+// ======================================================================>
+
+/ Profile   :(
+/     [profileId      : `long$()]
+/     testId         : `.qt.Test$();
+/     caseId         : `.qt.Case$();
+/     kind           : `.qt.ASSERTIONKIND;
+/     state          : `.qt.TESTSTATE;
+/     dscr           : `char$();
+/     actual         : ();
+/     relation       : ();
+/     expected       : ()
+/     );
+/ // Assert
+/ // ======================================================================>
+
+/ assertion kind enumerations
+ASSERTIONKIND:  (`TRUE;      / place a new order
+                `THROWS;    / modify an existing order
+                `KNOWN;    / increment a given accounts balance
+                `EQUALS; / decrement a given accounts balance
+                `THAT /
+                );
+
+Assertion   :(
+    [assertId      : `long$()]
+    testId         : `.qt.Test$();
+    caseId         : `.qt.Case$();
+    kind           : `.qt.ASSERTIONKIND;
+    state          : `.qt.TESTSTATE;
+    dscr           : `char$();
+    actual         : ();
+    relation       : ();
+    expected       : ()
+    );
+
+// Assert that the relation between expected and actual value holds
+// @param actual An object representing the actual result value
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @return actual object
+A   :{[actual;relation;expected;msg]
+    failFlag::not .[relation; (actual; expected); 0b];
+    if[failFlag;
+        lg "expected = ",-3!expected;
+        lg "actual = ",-3!actual;];
+    ar::`actual`expected`msg!(actual;expected;msg);
+    if[failFlag; 'assertThatFAIL];
+    }
+
+SkipAssertion   :{[]
+    // TODO
+    };
+
 
 // Before/After Utils
 // ======================================================================>
