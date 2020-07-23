@@ -5,31 +5,20 @@ externalFn  :{[a;b;c]
     }
 \d .
 
-testExecFill: {
-    beforeAll  :{[]
 
-        };
-
-    afterAll   :{[]
-
-        };
-
-    beforeEach  :{[]
-
-        };
-
-    afterEach   :{[]
-        delete from `.account.Account;
-        delete from `.inventory.Inventory;
-        .account.accountCount:0;
-        .inventory.inventoryCount:0;
-        };
-
-    testFn  :{[params;test]
+test:.qt.UNIT[
+    ".account.execFill";
+    {[params]
         time:.z.z;
 
-        account:Sanitize[account;.account.defaults[];.account.allCols];        
-        inventory:Sanitize[inventory;.inventory.defaults[];.inventory.allCols];
+        eacc:params[`eaccount];
+        einv:params[`einventory]
+        ecols:params[`ecols];
+
+        account:Sanitize[params[`account];.account.defaults[];.account.allCols];        
+        inventory:Sanitize[params[`inventory];.inventory.defaults[];.inventory.allCols];
+
+        .qt.M[];
 
         // Execute tested function
         .account.execFill[account;inventory;params[`fillQty];params[`price];params[`fee]];
@@ -39,24 +28,34 @@ testExecFill: {
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
-        A[acc[ecols];~;eacc[ecols]];
-        A[invn[ecols];~;einv[ecols]];
+        .qt.A[acc[ecols];~;eacc[ecols];];
+        .qt.A[invn[ecols];~;einv[ecols];];
 
-        };
+    };;(;;;{
+     delete from `.account.Account;
+     delete from `.inventory.Inventory;
+     .account.accountCount:0;
+     .inventory.inventoryCount:0;
+     .qt.RestoreMocks[];
+    })];
 
-    // TODO set defaults
 
-    test :.quantest.UNIT[testFn;before;after;beforeEach;afterEach];
+deriveCase :{[params]
+    accountCols: `accountId`balance;
+    priceCols: `markPrice`lastPrice;
+    inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
+                   `execCost`avgPrice);
+    paramsCols:`fillQty`price`fee;
+    eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
+    einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                   `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
 
-    //TODO make into array and addCases
-    .quantest.AddCase[test;"hedged:long_to_longer";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-    .quantest.AddCase[test;"hedged:";()];
-
-    .quantest.RunTest[test];
     };
+
+//TODO make into array and addCases
+.qt.AddCase[test;"hedged:long_to_longer";deriveCase[(
+    (1;500f);(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);(100;10f;-0.00025);(1;500.0025f;499.8025;0.0025f;0f);
+    (1;1;`LONG;200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f))]];
+

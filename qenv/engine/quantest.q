@@ -2,6 +2,12 @@
 system "d .quantest";
 
 
+line: {show 99#"-"};
+dline: {show 99#"="};
+hline: {show 99#"#"}
+
+lg:{a:string[.z.t],$[type[x]=98h; "\r\n"; "  "],$[type[x] in 10 -10h; x; .Q.s x],"\r\n"; l::l,enlist a; 1 a; x};
+
 // Forms a message pertaining to form
 // of a test case. 
 FailedMsg :{[dscr;expected;result]:(dscr," | expected:",string[expected]," - got:",string[result])};
@@ -130,6 +136,16 @@ mock[`FAKE] :   {[mocker]
     :0N;
     };
 
+// Replace a given variable/table/reference etc. with another
+// @param actual An object representing the actual result value
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @return reference to mock object which can be used to 
+// make assertions on behavior of function.
+M   :{[mocks;repFn;]
+
+    };
+
 / // Assert
 / // ======================================================================>
 
@@ -147,18 +163,19 @@ Assertion   :(
     kind         : `.quantest.ASSERTIONKIND;
     state        : `.quantest.TESTSTATE;
     dscr         : `char$();
-    subject      : ();
-    object       : ();
-    predicate    : ();
-    start        : `datetime$();
-    end          : `datetime$()
+    actual       : ();
+    relation     : ();
+    expected     : ()
     );
 
-assert : (`.quantest.ASSERTIONKIND$())!(); // TODO change to subset of supported types.
+// Assert that the relation between expected and actual value holds
+// @param actual An object representing the actual result value
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @return actual object
+A   :{[actual;relation;expected;msg]
 
-assert[`TRUE] :   {[assertion]
-    :0N;
-    };
+    }
 
 // Case
 // ======================================================================>
@@ -179,19 +196,47 @@ Case    :(
     profileRes   : ()
     );
 
-// Main (Callable) Functions.
+
+// Adds a specific case to a test with assertions and mocks included.
+// @param ref is either a table or a id
+// @param dscr Description of this test or related message
+// @param params are the specific case params that are to be passed 
+// to the testFn on execution of the test.
+// @return case
+AddCase     :{[ref;dscr;params]
+
+    };
+
+
+// Before/After Utils
 // ======================================================================>
 
-// Register adds a test to the given test table.
-Register    :{[kind;dscr;func;params;before;after]
+// Main (Callable) Test Functions
+// ======================================================================>
 
-    };
+fnhooknames: `beforeTest`afterTest`beforeEach`afterEach
+allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,fnhooknames;
 
 // todo Unit, Integration, Benchmark, Profile, T
-
-AddCase     :{[]
+Unit        :{[name;testFn;cases;hooks]
 
     };
+
+Integration  :{
+
+    };
+
+Benchmark     :{
+
+    };
+
+Profile        :{
+
+    };
+
+
+// Main (Callable) Functions.
+// ======================================================================>
 
 // Generates the tabular representation of 
 generateReport  :{
@@ -202,8 +247,28 @@ formatTable     :{
 
     };
 
-RunTests    :{[test;filter;only]
-    
+/ find functions with a certain name pattern within the selected namespace
+/ @logEmpty If set to true write to log that no funcs found otherwise stay silent
+findFuncs   :{ [ns; pattern; logEmpty]
+        fl:{x where x like y}[system "f ",string ns; pattern];
+        if[logEmpty or 0<count fl; lg pattern," found: `","`" sv string fl];
+        $[ns~`.; fl; `${"." sv x} each string ns,/:fl]};
+
+prepareNsTest   :{[ns]
+    if[not (ns~`.) or (`$1_string ns) in key `; 'nsNoExist]; // can't find namespace
+    currentNamespaceBeingTested::{$["."=first a:string x; `$1 _ a; x]} ns;
+    ff:findFuncs[ns;;1b];
+
+    };
+
+RunTests    :{[nsList;filter;only]
+    dline["RUNNING TESTS"];
+    nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
+    a:raze prepareTests each (),nsl;
+    lg $[count a; a; 'noTestsFound];
+
+
+
     };
 
 ResetTest   :{

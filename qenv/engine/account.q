@@ -2,7 +2,6 @@
 
 \d .account
 \l util.q
-\l state.q
 
 accountCount:0;
 
