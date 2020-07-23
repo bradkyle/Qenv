@@ -60,13 +60,11 @@ allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,f
 
 // todo Unit, Integration, Benchmark, Profile, T
 Unit        :{[name;testFn;cases;hooks;dscr]
-    beforeTest:hooks[0];
-    afterTest:hook[1];
-    beforeEach:hook[2];
-    afterEach:hook[3]
 
+    validHook:{:$[100h~type vFn:value x; $[1~count (value vFn) 1; 1b; 0b]; 0b];}
+    if[not all[validHook each hooks]; :(0b;0b;"invalid hooks specified")];
     validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
-    if[not validFn; :(0b;0b;"replacement should be dual arg function [p;c]")];
+    if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
 
     `.qt.Test insert ((testId+:1);name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
     };
@@ -202,6 +200,22 @@ repFn :{[replacement;mockId;params] // creates lambda function to be used later
 // @return reference to mock object which can be used to 
 // make assertions on behavior of function.
 M   :{[target;replacement;name;case]
+    r:@[{(1b;value x)}; name;00b];
+    / if variable has an existing value
+    $[(not name in unsetMocks) and first r;
+        [if[not name in key mocks; mocks[name]:r 1]]; / store original value 
+        unsetMocks,:name];
+    
+    / make sure func declared in same ns as any existing function        
+    if[100h~type fn:mocks name;
+        lg "isFunc";
+        ns:string first (value fn) 3;
+        lg "ns = ",ns;
+        v:string $[ns~"";name;last ` vs name];
+        lg "v = ",v;
+        runInNs[ns; v,":",string replacement];
+        :name];
+
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
     // Initialize representation in mock table.
