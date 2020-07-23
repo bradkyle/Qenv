@@ -33,7 +33,6 @@ testId:-1;
 Test    :(
     [testId      : `long$()]
     name         : `symbol$();
-    namespace    : `symbol$();
     kind         : `.qt.TESTKIND$();
     state        : `.qt.TESTSTATE$();
     dscr         : `symbol$();
@@ -60,13 +59,15 @@ allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,f
 
 // todo Unit, Integration, Benchmark, Profile, T
 Unit        :{[name;testFn;cases;hooks;dscr]
-
-    validHook:{:$[100h~type vFn:value x; $[1~count (value vFn) 1; 1b; 0b]; 0b];}
-    if[not all[validHook each hooks]; :(0b;0b;"invalid hooks specified")];
-    validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
-    if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
-
-    `.qt.Test insert ((testId+:1);name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
+    $[not null[`$name];name:`$name;name:`$""];
+    $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
+    / validHook:{:$[100h~type vFn:value x; $[1~count (value vFn) 1; 1b; 0b]; 0b];};
+    / if[not all[validHook each hooks]; :(0b;0b;"invalid hooks specified")];
+    / validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
+    / if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
+    test:cols[.qt.Test]!((testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z);
+    `.qt.Test upsert test;
+    :test
     };
 
 Integration    :{[]
@@ -77,26 +78,11 @@ Integration    :{[]
 // Main (Callable) Functions.
 // ======================================================================>
 
-
-/ find functions with a certain name pattern within the selected namespace
-/ @logEmpty If set to true write to log that no funcs found otherwise stay silent
-findFuncs   :{ [ns; pattern; logEmpty]
-        fl:{x where x like y}[system "f ",string ns; pattern];
-        if[logEmpty or 0<count fl; lg pattern," found: `","`" sv string fl];
-        $[ns~`.; fl; `${"." sv x} each string ns,/:fl]};
-
-prepareNsTest   :{[ns]
-    if[not (ns~`.) or (`$1_string ns) in key `; 'nsNoExist]; // can't find namespace
-    currentNamespaceBeingTested::{$["."=first a:string x; `$1 _ a; x]} ns;
-    ff:findFuncs[ns;;1b];
-
-    };
-
 // TODO protected execution
 runCase :{[test; case] test[`beforeEach][]; test[`func][case[`params];case]; test[`afterEach][];};
 
 runTest         :{[test]
-    cases:select from `.qt.Case where state=`READY and testId=test[`testId];
+    cases:select from `.qt.Case where state=`READY, testId=test[`testId];
     test[`start]:.z.z;
     runCase (test;cases);
     test[`end]:.z.z;
@@ -104,11 +90,9 @@ runTest         :{[test]
     `qt.Test upsert test;
     };
 
-ResetTest   :{[test]
-    runTest[test];
-    };
+RunAllTests :{runTest each select from 0!.qt.Test where state=`READY;};
 
-RunTests    :{[nsList;filter;only]
+RunNsTests    :{[nsList;filter;only]
     dline["RUNNING TESTS"];
     nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
     / a:raze prepareTests each (),nsl;
@@ -129,7 +113,7 @@ Case    :(
     testId       : `.qt.Test$();
     state        : `.qt.TESTSTATE$();
     dscr         : `symbol$();
-    params       : ();
+    params       : {};
     repeat       : `long$();
     retry        : `long$();
     start        : `datetime$();
@@ -144,10 +128,11 @@ Case    :(
 // to the testFn on execution of the test.
 // @return case
 AddCase     :{[test;dscr;params]
-    
-
-    `.qt.Test upsert cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;params;0;0;.z.z;.z.z);
-
+    $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
+    if[not((type[test] in 98 99h) and (test[`testId] in key[.qt.Test]));show "error"]; // TODO better error
+    if[not(type[params] in 98 99h);show 99#"+"]; // TODO better error
+    case:cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;params;0;0;.z.z;.z.z);
+    `.qt.Case upsert case;
     };
 
 
@@ -187,9 +172,9 @@ Invocations :(
 
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
-repFn :{[replacement;mockId;params] // creates lambda function to be used later
-    `.qt.Invocations insert ((invokeId+:1);mockId;params);
-    update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mockId;
+repFn :{[replacement;mId;params] // creates lambda function to be used later
+    `.qt.Invocations insert ((invokeId+:1);mId;params);
+    update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
     :replacement[params];
     };
 
@@ -221,10 +206,14 @@ M   :{[target;replacement;name;case]
     // Initialize representation in mock table.
     // TODO check that target and replacement have the same number of params if function 
     / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
-    mockId:(mockId+:1);
-    `.qt.Mock insert (mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
+    .qt.mockId+:1;
+    `.qt.Mock insert (.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
-    target set repFn[replacement;mockId];
+    target set repFn[replacement;.qt.mockId];
+    };
+
+RestoreMocks    :{[]
+
     };
 
 // Get Mocks by tags
