@@ -39,10 +39,12 @@ testExecFill: {
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
-        A[acc[ecols];~;eacc[ecols]]
+        A[acc[ecols];~;eacc[ecols]];
         A[invn[ecols];~;einv[ecols]];
 
         };
+
+    // TODO set defaults
 
     test :.quantest.UNIT[testFn;before;after;beforeEach;afterEach];
 
