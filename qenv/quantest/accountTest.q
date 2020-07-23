@@ -22,38 +22,38 @@ defaultAfterEach: {
 
 test:.qt.UNIT[
     ".account.execFill";
-    {[params]
+    {[p;c]
         time:.z.z;
 
-        eacc:params[`eaccount];
-        einv:params[`einventory]
-        ecols:params[`ecols];
+        eacc:p[`eaccount];
+        einv:p[`einventory]
+        ecols:p[`ecols];
 
-        account:Sanitize[params[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[params[`inventory];.inventory.defaults[];.inventory.allCols];
+        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
 
-        .qt.M[];
+        / .qt.M[];
 
         // Execute tested function
-        .account.execFill[account;inventory;params[`fillQty];params[`price];params[`fee]];
+        .account.execFill[account;inventory;p[`fillQty];p[`price];p[`fee]];
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
-        .qt.A[acc[ecols];~;eacc[ecols];];
-        .qt.A[invn[ecols];~;einv[ecols];];
+        .qt.A[acc[ecols];~;eacc[ecols];"account";c];
+        .qt.A[invn[ecols];~;einv[ecols];"inventory";c];
 
     };;(;;;defaultAfterEach)];
 
 
-deriveCaseParams :{[params]
+deriveCaseParams :{[p]
     accountCols: `accountId`balance;
     priceCols: `markPrice`lastPrice;
     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
                    `execCost`avgPrice);
-    paramsCols:`fillQty`price`fee;
+    pCols:`fillQty`price`fee;
     eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
     einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
@@ -165,20 +165,20 @@ deriveCaseParams :{[params]
 
 test:.qt.UNIT[
     ".account.ApplyFill";
-    {[params]
+    {[p;c]
         time:.z.z;
 
-        eacc:params[`eaccount];
-        einv:params[`einventory]
-        ecols:params[`ecols];
+        eacc:p[`eaccount];
+        einv:p[`einventory]
+        ecols:p[`ecols];
 
-        account:Sanitize[params[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[params[`inventory];.inventory.defaults[];.inventory.allCols];
+        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
 
         .qt.M[];
 
         // Execute tested function
-        .account.execFill[account;inventory;params[`fillQty];params[`price];params[`fee]];
+        .account.execFill[account;inventory;p[`fillQty];p[`price];p[`fee]];
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
@@ -190,12 +190,12 @@ test:.qt.UNIT[
 
     };;(;;;defaultAfterEach)];
 
-deriveCaseParams :{[params]
+deriveCaseParams :{[p]
     accountCols: `accountId`balance;
     priceCols: `markPrice`lastPrice;
     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
                    `execCost`avgPrice);
-    paramsCols:`fillQty`price`fee;
+    pCols:`fillQty`price`fee;
     eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
     einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
@@ -213,16 +213,16 @@ deriveCaseParams :{[params]
 
 test:.qt.UNIT[
     ".account.Deposit";
-    {[params]
+    {[p;c]
         time:.z.z;
 
-        eacc:params[`eaccount];
-        ecols:params[`ecols];
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
 
         .qt.M[];
 
         // Execute tested function
-        .account.Deposit[accountId;deposit;time];
+        .account.Deposit[accountId;deposit;cime];
 
         acc:exec from .account.Account where accountId=account[`accountId];
 
@@ -231,7 +231,7 @@ test:.qt.UNIT[
 
     };;(;;;defaultAfterEach)];
 
-deriveCaseParams :{[params]
+deriveCaseParams :{[p]
      caseCols:`account`expectedResp`expectedValues;
     :();
     };
@@ -246,16 +246,16 @@ deriveCaseParams :{[params]
 
 test:.qt.UNIT[
     ".account.Withdraw";
-    {[params]
+    {[p;c]
         time:.z.z;
 
-        eacc:params[`eaccount];
-        ecols:params[`ecols];
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
 
         .qt.M[];
 
         // Execute tested function
-        .account.Withdraw[accountId;deposit;time];
+        .account.Withdraw[accountId;deposit;cime];
 
         acc:exec from .account.Account where accountId=account[`accountId];
 
@@ -264,7 +264,7 @@ test:.qt.UNIT[
 
     };;(;;;defaultAfterEach)];
 
-deriveCaseParams :{[params]
+deriveCaseParams :{[p]
      caseCols:`account`expectedResp`expectedValues;
     :();
     };

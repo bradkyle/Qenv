@@ -167,11 +167,16 @@ prepareNsTest   :{[ns]
 
 ResetTest   :{
 
-    }
+    };
 
+testFnWrapper   :{[testFn]
+
+    };
+
+// TODO protected execution
 runTestCase     :{[test; case]
     test[`beforeEach][];
-    test[`func][case[`params]]
+    test[`func][case[`params];case]
     test[`afterEach][];
     };
 
@@ -281,7 +286,7 @@ repFn :{[replacement;params] // creates lambda function to be used later
 // @param msg Description of this test or related message
 // @return reference to mock object which can be used to 
 // make assertions on behavior of function.
-M   :{[target;replacement;tags;name]
+M   :{[target;replacement;name;case]
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
     // Initialize representation in mock table.
@@ -339,7 +344,7 @@ Assertion   :(
 // @param expected An object representing the expected value
 // @param msg Description of this test or related message
 // @return actual object
-A   :{[actual;relation;expected;msg]
+A   :{[actual;relation;expected;msg;case]
     failFlag::not .[relation; (actual; expected); 0b];
     if[failFlag;
         lg "expected = ",-3!expected;
