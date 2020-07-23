@@ -75,7 +75,6 @@ derive  :{[actions;time]
     :events; //TODO implement penalty
     };
 
-
 // Inserts the step wise events recieved (back)
 // from the engine and adds them to their 
 // respective table before deriving a feature
@@ -87,7 +86,6 @@ advance :{[events;accountIds]
     .state.CurrentStep+:1;
     :featureVectors;
     };
-
 
 // Main Callable functions
 // --------------------------------------------------->
