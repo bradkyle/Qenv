@@ -107,14 +107,13 @@ Info        :{[accountIds]
 
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-Reset       :{[accountIds] // TODO make into accountConfigs
-    events:();
+Reset       :{[accountIds] // TODO make into accountConfigs 
     // Reset public singletons
     .state.CurrentStep:0; // TODO include buffer i.e. set current step to 10
     .state.StepTime: exec from .state.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
     
     // Derive the primary set of events derived from exchange
-    events:events,nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
+    events: nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
     // TODO reset accounts inventory orders instrument
 
     :advance[events;accountIds];

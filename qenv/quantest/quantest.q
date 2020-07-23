@@ -5,6 +5,7 @@ system "d .qt";
 line: {show 99#"-"};
 dline: {show 99#"="};
 hline: {show 99#"#"}
+uline: {line[];}
 
 lg:{a:string[.z.t],$[type[x]=98h; "\r\n"; "  "],$[type[x] in 10 -10h; x; .Q.s x],"\r\n"; l::l,enlist a; 1 a; x};
 
@@ -92,14 +93,14 @@ Test    :(
     namespace    : `symbol$();
     kind         : `.qt.TESTKIND$();
     state        : `.qt.TESTSTATE$();
-    dscr         : `char$();
-    func         : ();
+    dscr         : `symbol$();
+    func         : {};
     repeat       : `long$();
     retry        : `long$();
-    beforeEach   : ();
-    afterEach    : ();
-    beforeAll    : ();
-    afterAll     : ();
+    beforeEach   : {};
+    afterEach    : {};
+    beforeAll    : {};
+    afterAll     : {};
     start        : `datetime$();
     end          : `datetime$()
     );
@@ -116,10 +117,17 @@ allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,f
 
 // todo Unit, Integration, Benchmark, Profile, T
 Unit        :{[name;testFn;cases;hooks;dscr]
+    beforeTest:hooks[0];
+    afterTest:hook[1];
+    beforeEach:hook[2];
+    afterEach:hook[3]
 
-
-    `.qt.Test insert (1;name;ns;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;`datetime$();0N);
+    `.qt.Test upsert cols[.qt.Test]!(1;name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
     };
+
+Integration    :{[]
+
+    }
 
 Benchmark     :{[name;target;iterations]
 
@@ -161,12 +169,31 @@ ResetTest   :{
 
     }
 
+runTestCase     :{[test; case]
+    test[`beforeEach][];
+
+    test[`afterEach][];
+    };
+
+runTest         :{[test]
+    cases:select from `.qt.Case where state=`READY;
+    test[`start]:.z.z;
+    runTestCase each (test;cases);
+    test[`end]:.z.z;
+    test[`afterAll][];
+    `qt.Test upsert test;
+    };
+
 RunTests    :{[nsList;filter;only]
     dline["RUNNING TESTS"];
     nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
     / a:raze prepareTests each (),nsl;
     / lg $[count a; a; 'noTestsFound];
-    tests: select from `.qt.Tests where state=`READY;
+    if[count[cases]>0;runTestCase each cases]
+    
+    / test[`beforeAll][];
+    / dline[test[`name]];
+    / uline[test[`dscr]];
     };
 
 // Case
@@ -176,16 +203,12 @@ Case    :(
     [caseId      : `long$()]
     testId       : `.qt.Test$();
     state        : `.qt.TESTSTATE$();
-    dscr         : `char$();
-    func         : ();
+    dscr         : `symbol$();
     params       : ();
-    before        : ();
-    after       : ();
     repeat       : `long$();
     retry        : `long$();
     start        : `datetime$();
     end          : `datetime$();
-    profileRes   : ()
     );
 
 
@@ -196,6 +219,7 @@ Case    :(
 // to the testFn on execution of the test.
 // @return case
 AddCase     :{[ref;dscr;params]
+    `.qt.Test upsert cols[.qt.Case]!(1;1;`READY;dscr;params;0;0;.z.z;.z.z);
 
     };
 
