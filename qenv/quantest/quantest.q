@@ -83,7 +83,7 @@ disp:{[f;t]
 // ======================================================================>
 
 TESTKIND    :`UNIT`INTEGRATION`BENCHMARK`PROFILE;
-TESTSTATE   :`PASS`FAIL`SKIP;
+TESTSTATE   :`READY`PASS`FAIL`SKIP;
 SETUPSTATE  :`SETUP`MOCK`TESTING;
 
 Test    :(
@@ -94,9 +94,6 @@ Test    :(
     state        : `.qt.TESTSTATE$();
     dscr         : `char$();
     func         : ();
-    params       : ();
-    setup        : ();
-    revert       : ();
     repeat       : `long$();
     retry        : `long$();
     beforeEach   : ();
@@ -104,18 +101,72 @@ Test    :(
     beforeAll    : ();
     afterAll     : ();
     start        : `datetime$();
-    end          : `datetime$();
-    profileRes   : ()
+    end          : `datetime$()
     );
-
-test : (`.qt.TESTKIND$())!(); // TODO change to subset of supported types.
-
-test[`UNIT] :   {[tester]
-    :0N;
-    };
 
 SkipTest    :{
     update state:`SKIP from `.test.Test where testId=tid;
+    };
+
+// Main (Callable) Test Functions
+// ======================================================================>
+
+fnhooknames: `beforeTest`afterTest`beforeEach`afterEach
+allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,fnhooknames;
+
+// todo Unit, Integration, Benchmark, Profile, T
+Unit        :{[name;testFn;cases;hooks;dscr]
+
+
+    `.qt.Test insert (1;name;ns;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;`datetime$();0N);
+    };
+
+Benchmark     :{[name;target;iterations]
+
+    };
+
+Profile        :{
+
+    };
+
+
+// Main (Callable) Functions.
+// ======================================================================>
+
+// Generates the tabular representation of 
+generateReport  :{
+
+    };
+
+formatTable     :{
+
+    };
+
+/ find functions with a certain name pattern within the selected namespace
+/ @logEmpty If set to true write to log that no funcs found otherwise stay silent
+findFuncs   :{ [ns; pattern; logEmpty]
+        fl:{x where x like y}[system "f ",string ns; pattern];
+        if[logEmpty or 0<count fl; lg pattern," found: `","`" sv string fl];
+        $[ns~`.; fl; `${"." sv x} each string ns,/:fl]};
+
+prepareNsTest   :{[ns]
+    if[not (ns~`.) or (`$1_string ns) in key `; 'nsNoExist]; // can't find namespace
+    currentNamespaceBeingTested::{$["."=first a:string x; `$1 _ a; x]} ns;
+    ff:findFuncs[ns;;1b];
+
+    };
+
+
+ResetTest   :{
+
+    }
+
+RunTests    :{[nsList;filter;only]
+    dline["RUNNING TESTS"];
+    nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
+    / a:raze prepareTests each (),nsl;
+    / lg $[count a; a; 'noTestsFound];
+    tests: select from `.qt.Tests where state=`READY;
     };
 
 // Case
@@ -276,71 +327,3 @@ A   :{[actual;relation;expected;msg]
 SkipAssertion   :{[]
     // TODO
     };
-
-
-// Before/After Utils
-// ======================================================================>
-
-// Main (Callable) Test Functions
-// ======================================================================>
-
-fnhooknames: `beforeTest`afterTest`beforeEach`afterEach
-allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,fnhooknames;
-
-// todo Unit, Integration, Benchmark, Profile, T
-Unit        :{[name;testFn;cases;hooks]
-
-    };
-
-Integration  :{
-
-    };
-
-Benchmark     :{
-
-    };
-
-Profile        :{
-
-    };
-
-
-// Main (Callable) Functions.
-// ======================================================================>
-
-// Generates the tabular representation of 
-generateReport  :{
-
-    };
-
-formatTable     :{
-
-    };
-
-/ find functions with a certain name pattern within the selected namespace
-/ @logEmpty If set to true write to log that no funcs found otherwise stay silent
-findFuncs   :{ [ns; pattern; logEmpty]
-        fl:{x where x like y}[system "f ",string ns; pattern];
-        if[logEmpty or 0<count fl; lg pattern," found: `","`" sv string fl];
-        $[ns~`.; fl; `${"." sv x} each string ns,/:fl]};
-
-prepareNsTest   :{[ns]
-    if[not (ns~`.) or (`$1_string ns) in key `; 'nsNoExist]; // can't find namespace
-    currentNamespaceBeingTested::{$["."=first a:string x; `$1 _ a; x]} ns;
-    ff:findFuncs[ns;;1b];
-
-    };
-
-RunTests    :{[nsList;filter;only]
-    dline["RUNNING TESTS"];
-    nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
-    a:raze prepareTests each (),nsl;
-    lg $[count a; a; 'noTestsFound];
-
-
-
-    };
-
-ResetTest   :{
-
-    }
