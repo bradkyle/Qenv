@@ -87,6 +87,7 @@ TESTKIND    :`UNIT`INTEGRATION`BENCHMARK`PROFILE;
 TESTSTATE   :`READY`PASS`FAIL`SKIP;
 SETUPSTATE  :`SETUP`MOCK`TESTING;
 
+testId:-1;
 Test    :(
     [testId      : `long$()]
     name         : `symbol$();
@@ -125,7 +126,7 @@ Unit        :{[name;testFn;cases;hooks;dscr]
     validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
     if[not validFn; :(0b;0b;"replacement should be dual arg function [p;c]")];
 
-    `.qt.Test upsert cols[.qt.Test]!(1;name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
+    `.qt.Test insert ((testId+:1);name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
     };
 
 Integration    :{[]
@@ -207,6 +208,7 @@ RunTests    :{[nsList;filter;only]
 // Case
 // ======================================================================>
 
+caseId:-1;
 Case    :(
     [caseId      : `long$()]
     testId       : `.qt.Test$();
@@ -226,10 +228,10 @@ Case    :(
 // @param params are the specific case params that are to be passed 
 // to the testFn on execution of the test.
 // @return case
-AddCase     :{[ref;dscr;params]
+AddCase     :{[test;dscr;params]
     
 
-    `.qt.Test upsert cols[.qt.Case]!(1;1;`READY;dscr;params;0;0;.z.z;.z.z);
+    `.qt.Test upsert cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;params;0;0;.z.z;.z.z);
 
     };
 
@@ -247,6 +249,7 @@ SkipCase    :{[]
 / mock kind enumerations
 MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
 
+mockId:-1;
 Mock        :(
     [mockId      : `long$()]
     testId       : `.qt.Test$();
@@ -279,6 +282,7 @@ mock[`FAKE] :   {[mocker]
 // @param repFn function that replaces the given target
 repFn :{[replacement;mockId;params] // creates lambda function to be used later
     `.qt.Invocations insert (1;mockId;params);
+    update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mockId;
     :replacement[params];
     };
 
@@ -292,12 +296,12 @@ M   :{[target;replacement;name;case]
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
     // Initialize representation in mock table.
-
+    // TODO check that target and replacement have the same number of params if function 
     / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
 
-    `.qt.Mock insert (1;1;1;`MOCK;ns;target;replacement;0b;0;0;0b;0); 
+    `.qt.Mock insert ((mockId+:1);case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
-    target:repFn[replacement;mockId];
+    target set repFn[replacement;mockId];
     };
 
 // Get Mocks by tags
@@ -332,6 +336,7 @@ ASSERTIONKIND:  (`TRUE;      / place a new order
                 `THAT /
                 );
 
+assertId:-1;
 Assertion   :(
     [assertId      : `long$()]
     testId         : `.qt.Test$();
