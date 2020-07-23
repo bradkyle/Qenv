@@ -111,7 +111,6 @@ UpdateInstrument      :{[instrument;time]
     isMark:`markPrice in cols[instrument];
     instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
     `.instrument.Instrument upsert instrument;
-    // TODO funding?, instrumentUpdate? 
     };
 
 UpdateActiveInstrument  :{[instrument;time]

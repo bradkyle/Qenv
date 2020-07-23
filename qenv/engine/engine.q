@@ -34,6 +34,16 @@ Engine:(
     eventCount                  : `long$()
     );
 
+
+/ REST request handling functionality
+/ -------------------------------------------------------------------->
+
+// get orders
+// get account
+// 
+
+
+
 / Event Processing logic
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
