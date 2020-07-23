@@ -122,6 +122,9 @@ Unit        :{[name;testFn;cases;hooks;dscr]
     beforeEach:hook[2];
     afterEach:hook[3]
 
+    validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
+    if[not validFn; :(0b;0b;"replacement should be dual arg function [p;c]")];
+
     `.qt.Test upsert cols[.qt.Test]!(1;name;ns;`UNIT;`READY;dscr;testFn;0;0;beforeTest;afterTest;beforeEach;afterEach;.z.z;.z.z);
     };
 
@@ -224,6 +227,8 @@ Case    :(
 // to the testFn on execution of the test.
 // @return case
 AddCase     :{[ref;dscr;params]
+    
+
     `.qt.Test upsert cols[.qt.Case]!(1;1;`READY;dscr;params;0;0;.z.z;.z.z);
 
     };
@@ -245,17 +250,14 @@ MOCKKIND    :`FAKE`SPIE`STUB`MOCK`TIMER;
 Mock        :(
     [mockId      : `long$()]
     testId       : `.qt.Test$();
+    caseId       : `.qt.Case$();
     kind         : `.qt.MOCKKIND$();
-    namespace    : `symbol$();
-    tags         : ();
-    returns      : ();
-    throws       : ();
-    rejects      : ();
-    target       : ();
-    replacement  : ();
+    namespace    : `symbol$(); 
+    target       : {};
+    replacement  : {};
     doWait       : `boolean$();
-    waitBefore   : `second$();
-    waitAfter    : `second$();
+    waitBefore   : `long$();
+    waitAfter    : `long$();
     called       : `boolean$();
     numCalls     : `long$()
     );
@@ -275,8 +277,8 @@ mock[`FAKE] :   {[mocker]
 
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
-repFn :{[replacement;params] // creates lambda function to be used later
-    `.qt.Invocations insert ();
+repFn :{[replacement;mockId;params] // creates lambda function to be used later
+    `.qt.Invocations insert (1;mockId;params);
     :replacement[params];
     };
 
@@ -290,9 +292,13 @@ M   :{[target;replacement;name;case]
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
     // Initialize representation in mock table.
-    `.qt.Mock insert (); 
+    validReplacement:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
+    if[not validReplacement; :(0b;0b;"replacement should be function")];
+    
+
+    `.qt.Mock insert (1;1;1;`MOCK;ns;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
-    target:repFn[replacement];
+    target:repFn[replacement;mockId];
     };
 
 // Get Mocks by tags
