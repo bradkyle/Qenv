@@ -99,6 +99,10 @@ Test    :(
     revert       : ();
     repeat       : `long$();
     retry        : `long$();
+    beforeEach   : ();
+    afterEach    : ();
+    beforeAll    : ();
+    afterAll     : ();
     start        : `datetime$();
     end          : `datetime$();
     profileRes   : ()
@@ -108,6 +112,10 @@ test : (`.quantest.TESTKIND$())!(); // TODO change to subset of supported types.
 
 test[`UNIT] :   {[tester]
     :0N;
+    };
+
+SkipTest    :{
+
     };
 
 // Mock
@@ -120,13 +128,23 @@ Mock        :(
     [mockId      : `long$()]
     testId       : `long$();
     kind         : `.quantest.MOCKKIND$();
+    tags         : ();
     returns      : ();
     throws       : ();
     rejects      : ();
-    calledWith   : ();
     mocks        : ();
     replaceWith  : ();
+    doWait       : `boolean$();
+    waitBefore   : `second$();
+    waitAfter    : `second$();
+    called       : `boolean$();
     numCalls     : `long$()
+    );
+
+Invocations :(
+    [invokeId      : `long$()]
+    mockId       : `long$();
+    invokedWith  : ();
     );
 
 // TODO restore;
@@ -137,13 +155,21 @@ mock[`FAKE] :   {[mocker]
     };
 
 // Replace a given variable/table/reference etc. with another
-// @param actual An object representing the actual result value
+// @param mocks is the function that is to be replaced.
 // @param expected An object representing the expected value
 // @param msg Description of this test or related message
 // @return reference to mock object which can be used to 
 // make assertions on behavior of function.
-M   :{[mocks;repFn;]
+M   :{[mocks;repFn;tags;name]
 
+    };
+
+// Get Mocks by tags
+// Get Mocks by name
+// TODO skip
+
+SkipMock    :{[]
+    
     };
 
 / // Assert
@@ -177,6 +203,10 @@ A   :{[actual;relation;expected;msg]
 
     }
 
+SkipAssertion   :{[]
+
+    };
+
 // Case
 // ======================================================================>
 
@@ -207,6 +237,10 @@ AddCase     :{[ref;dscr;params]
 
     };
 
+
+SkipCase    :{[]
+
+    };
 
 // Before/After Utils
 // ======================================================================>
