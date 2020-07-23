@@ -216,7 +216,7 @@ Case    :(
     repeat       : `long$();
     retry        : `long$();
     start        : `datetime$();
-    end          : `datetime$();
+    end          : `datetime$()
     );
 
 
@@ -292,9 +292,8 @@ M   :{[target;replacement;name;case]
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
     // Initialize representation in mock table.
-    validReplacement:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
-    if[not validReplacement; :(0b;0b;"replacement should be function")];
-    
+
+    / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
 
     `.qt.Mock insert (1;1;1;`MOCK;ns;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
