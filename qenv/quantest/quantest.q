@@ -171,7 +171,7 @@ ResetTest   :{
 
 runTestCase     :{[test; case]
     test[`beforeEach][];
-
+    test[`func][case[`params]]
     test[`afterEach][];
     };
 
