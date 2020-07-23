@@ -208,6 +208,67 @@ deriveCaseParams :{[params]
     (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
     0f;(1;10f;10f;0f;0f;0f);0N)]];
 
-
 // Test Deposit
 // -------------------------------------------------------------->
+
+test:.qt.UNIT[
+    ".account.Deposit";
+    {[params]
+        time:.z.z;
+
+        eacc:params[`eaccount];
+        ecols:params[`ecols];
+
+        .qt.M[];
+
+        // Execute tested function
+        .account.Deposit[accountId;deposit;time];
+
+        acc:exec from .account.Account where accountId=account[`accountId];
+
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];];
+
+    };;(;;;defaultAfterEach)];
+
+deriveCaseParams :{[params]
+     caseCols:`account`expectedResp`expectedValues;
+    :();
+    };
+
+.qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
+    (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
+    0f;(1;10f;10f;0f;0f;0f);0N)]];
+
+
+// Test Withdraw
+// -------------------------------------------------------------->
+
+test:.qt.UNIT[
+    ".account.Deposit";
+    {[params]
+        time:.z.z;
+
+        eacc:params[`eaccount];
+        ecols:params[`ecols];
+
+        .qt.M[];
+
+        // Execute tested function
+        .account.Deposit[accountId;deposit;time];
+
+        acc:exec from .account.Account where accountId=account[`accountId];
+
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];];
+
+    };;(;;;defaultAfterEach)];
+
+deriveCaseParams :{[params]
+     caseCols:`account`expectedResp`expectedValues;
+    :();
+    };
+
+.qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
+    (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
+    0f;(1;10f;10f;0f;0f;0f);0N)]];

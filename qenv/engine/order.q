@@ -104,19 +104,6 @@ AddTradeEvent  :{[side;qty;price;time]
     :.global.AddEvent[time;`NEW;`TRADE;trade];
     };
 
-// TRADES ARE UN NECCESSARY FOR THE ENGINE.
-/ // Trade
-/ // =====================================================================================>
-/ Trade   :`(
-/     [tradeId    :`long$()]
-/     price       :`float$();
-/     side        :`.order.ORDERSIDE$();
-/     qty         :`float$()
-/     );
-
-/ // TODO fix
-tradeCols:`price`side`qty;
-
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
