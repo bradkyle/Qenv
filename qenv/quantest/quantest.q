@@ -80,6 +80,7 @@ Integration    :{[]
 
 pntAssertion :{[assertion]
     show 50#"-";
+    show "" sv string[assertion[`msg], " not (",assertion[`relation],")"];
     show flip exec actual, expected from assertion;
     };
 
