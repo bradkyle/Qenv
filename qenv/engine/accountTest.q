@@ -331,7 +331,6 @@ test:.qt.Unit[
 
         // Execute tested function
         .account.execFill[account;inventory;p[`fillQty];p[`price];p[`fee]];
-
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
         invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];

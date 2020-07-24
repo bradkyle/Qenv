@@ -79,12 +79,33 @@ Integration    :{[]
 // ======================================================================>
 
 pntAssertion :{[assertion]
+    show 50#"-";
     show flip exec actual, expected from assertion;
     };
 
+pntFailCase     :{[case]
+    .qt.pntAssertion each select from 0!.qt.Assertion where (state in `FAIL`ERROR), caseId=case[`caseId];
+    };
+
 pntCase     :{[case]
-    .qt.pntAssertion each (select from 0!.qt.Assertion where (state in `FAIL`ERROR), caseId=case[`caseId]);
-    }:
+    show " ";
+    show case[`dscr];
+    show case[`state];
+    show 50#"-";
+    show case[`params];
+    show 50#"-";    
+    .qt.pntAssertion each select from 0!.qt.Assertion where caseId=case[`caseId];
+    };
+
+showCase    :{[cId]
+    c:exec from 0!.qt.Case where caseId=cId;
+    .qt.pntCase[c];
+    };
+
+nxtFailCase :{[]
+    c:first select from 0!.qt.Case where state in `FAIL`ERROR;
+    .qt.pntCase[c];
+    };
 
 pntTest      :{[test]
     show 99#"-";
@@ -125,7 +146,6 @@ showFailedTests :{[]
     };
 
 RunTests :{
-    .qt.Revert[];
     runTest each select from 0!.qt.Test where state=`READY;
     show 99#"=";show (45#" "),"TEST";show 99#"=";
     .qt.pntTest each 0!.qt.Test;
