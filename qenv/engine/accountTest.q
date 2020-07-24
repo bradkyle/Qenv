@@ -25,7 +25,6 @@ test:.qt.Unit[
     ".account.execFill";
     {[p;c]
         time:.z.z;
-        show p;
         eacc:p[`eaccount];
         einv:p[`einventory];
         ecols:p[`ecols];
@@ -63,10 +62,10 @@ deriveCaseParams :{[p]
                    `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
     pCols:`account`inventory`params`eaccount`einventory;
     :pCols!(accountCols!(1;500f);
-        (inventoryCols,priceCols)!(1;1;`LONG;100;100;`long$1e9;10f;10f;10f);
+        (inventoryCols,priceCols)!(1;1;`.inventory.POSITIONSIDE$`LONG;100;100;`long$1e9;10f;10f;10f);
         paramsCols!(100;10f;-0.00025); // flat maker fee
         eaccountCols!(1;500.0025f;499.8025;0.0025f;0f);
-        einventoryCols!(1;1;`LONG;200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f));
+        einventoryCols!(1;1;`.inventory.POSITIONSIDE$`LONG;200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f));
     };
 
 //TODO make into array and addCases

@@ -85,20 +85,19 @@ runCase :{[test; case]
     test[`afterEach][];
     };
 
-ZBM:0;
-
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
     test[`start]:.z.z;
-    show 99#"=";
-    .qt.ZBM:(test;cases);
-    runCase (test;cases);
+    {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)];
     test[`end]:.z.z;
     test[`afterAll][];
     `qt.Test upsert test;
     };
 
-RunAllTests :{runTest each select from 0!.qt.Test where state=`READY;};
+RunAllTests :{
+    runTest each select from 0!.qt.Test where state=`READY;
+    
+    };
 
 RunNsTests    :{[nsList;filter;only]
     dline["RUNNING TESTS"];
@@ -229,6 +228,9 @@ RestoreMocks    :{[]
 // TODO skip
 / SkipMock    :{[]};
 
+// TODO Watch
+// ======================================================================>
+
 // Profile
 // ======================================================================>
 
@@ -350,11 +352,6 @@ A   :{[actual;relation;expected;msg;case]
     failFlag::not .[relation; (actual; expected); 0b];
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;(`$string[relation]);expected);
-    show ass;
-    show 99#"=";
-    show type each ass;
-    show 99#"=";
-    show type each first .qt.Assertion;
     `.qt.Assertion upsert ass;
     }
 
