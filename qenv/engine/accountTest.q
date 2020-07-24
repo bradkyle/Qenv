@@ -32,8 +32,6 @@ test:.qt.Unit[
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
         inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
 
-        / .qt.M[];
-
         // Execute tested function
         x:p[`params];
         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
@@ -61,12 +59,15 @@ deriveCaseParams :{[p]
                    `totalCloseVolume`totalCrossVolume`totalOpenVolume,
                    `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
     pCols:`account`inventory`params`eaccount`einventory;
-    :pCols!(accountCols!(1;500f);
-        (inventoryCols,priceCols)!(1;1;`.inventory.POSITIONSIDE$`LONG;100;100;`long$1e9;10f;10f;10f);
-        paramsCols!(100;10f;-0.00025); // flat maker fee
-        eaccountCols!(1;500.0025f;499.8025;0.0025f;0f);
-        einventoryCols!(1;1;`.inventory.POSITIONSIDE$`LONG;200;200;`long$2e9;10f;0.0025f;0f;0f;0f;10f;0;0;100;0f;0f;0.1f));
+    :pCols!(accountCols!p[0];
+        (inventoryCols,priceCols)!p[1];
+        paramsCols!p[2]; // flat maker fee
+        eaccountCols!p[3];
+        einventoryCols!p[4]);
     };
+
+// Hedged tests
+// ------------------------------------------------------------------------------------------------------>
 
 //TODO make into array and addCases
 .qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[(

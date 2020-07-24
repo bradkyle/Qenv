@@ -94,7 +94,7 @@ runTest         :{[test]
     `qt.Test upsert test;
     };
 
-RunAllTests :{
+RunTests :{
     runTest each select from 0!.qt.Test where state=`READY;
     
     };
