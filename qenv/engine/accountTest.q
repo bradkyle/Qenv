@@ -23,7 +23,8 @@ defaultAfterEach: {
 
 test:.qt.Unit[
     ".account.execFill";
-    {[p;c]
+    {[c]
+        p:c[`params];
         time:.z.z;
         eacc:p[`eaccount];
         einv:p[`einventory];
@@ -317,7 +318,8 @@ deriveCaseParams :{[p]
 
 test:.qt.Unit[
     ".account.ApplyFill";
-    {[p;c]
+    {[c]
+        p:c[`params];
         time:.z.z;
 
         eacc:p[`eaccount];
@@ -363,7 +365,7 @@ deriveCaseParams :{[p]
 
 / test:.qt.Unit[
 /     ".account.Deposit";
-/     {[p;c]
+/     {[c]
 /         time:.z.z;
 
 /         eacc:p[`eaccount];
@@ -396,7 +398,7 @@ deriveCaseParams :{[p]
 
 / test:.qt.Unit[
 /     ".account.Withdraw";
-/     {[p;c]
+/     {[c]
 /         time:.z.z;
 
 /         eacc:p[`eaccount];

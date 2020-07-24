@@ -83,7 +83,7 @@ pntAssertion :{[assertion]
     };
 
 pntCase     :{[case]
-    .qt.pntAssertion each (select from 0!.qt.Assertion where (state in `FAIL`ERROR), caseId=case[`caseId])
+    .qt.pntAssertion each (select from 0!.qt.Assertion where (state in `FAIL`ERROR), caseId=case[`caseId]);
     }:
 
 pntTest      :{[test]
@@ -101,7 +101,7 @@ getResults  :{
 // TODO protected execution
 runCase :{[test; case] 
     test[`beforeEach][]; 
-    res:(.[test[`func];(case[`params];case);`ERROR]);
+    res:(@[test[`func];case;`ERROR]);
     $[(`$string[res])=`ERROR; 
         [update state:`.qt.TESTSTATE$`ERROR from `.qt.Case where caseId=case[`caseId]];
       exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
@@ -120,7 +120,12 @@ runTest         :{[test]
     `qt.Test upsert test;
     };
 
+showFailedTests :{[]
+    .qt.pntTest each (select from 0!.qt.Test where state=`FAIL);
+    };
+
 RunTests :{
+    .qt.Revert[];
     runTest each select from 0!.qt.Test where state=`READY;
     show 99#"=";show (45#" "),"TEST";show 99#"=";
     .qt.pntTest each 0!.qt.Test;
@@ -400,5 +405,8 @@ Reset   :{
     };
 
 Revert  :{
-
+    .qt.assertId:.qt.mockId:.qt.invokeId:-1;
+    delete from `.qt.Assertion;
+    delete from `.qt.Invocation;
+    delete from `.qt.Mock;
     };
