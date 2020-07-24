@@ -8,38 +8,6 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
-
-REWARDKIND  :   (`SORTINO;
-                 `VANILLA);   
-
-CurrentStep: 0;
-StepTime: .z.z;
-
-State  :(
-        rebalancefreq       : `long$();
-        maxBalanceRebalance : `long$();
-        withrawFreq         : `long$();
-        minBalanceWithdraw  : `long$();
-        doneBalance         : `long$();
-        maxNumSteps         : `long$();
-        totalSteps          : `long$();
-        rewardKind          : `.state.REWARDKIND$();
-        lookBackSize        : `long$();
-        outageFreq          : `long$();
-        outageMaxLength     : `long$();
-        outageMinLength     : `long$();
-        outageMU            : `float$();
-        outageSigma         : `float$();
-        doBatchedReplay     : `boolean$();
-        batchSize           : `long$();
-        currentStep         : `long$();
-        stepTime            : `datetime$();
-        numFailures         : `long$();
-        numAgentSteps       : `long$();
-        encouragement       : `float$();
-    );
-
-
 // Source State Tables (State Origination and Derivation)
 // =====================================================================================>
 
@@ -60,8 +28,10 @@ AccountEventHistory: (
     balance             : `float$();
     available           : `float$();
     frozen              : `float$();
-    margin              : `float$()
+    maintMargin         : `float$();
+    time                : `datetime$()
     );
+accountCols:`accountId`balance`available`frozen`maintMargin`time;
 
 // Maintains a historic and current record of the 
 // positions (Inventory) each agent has held and
@@ -72,8 +42,10 @@ InventoryEventHistory: (
     side                :  `.inventory.POSITIONSIDE$();
     currentQty          :  `long$();
     realizedPnl         :  `long$();
-    unrealizedPnl       :  `long$()
+    unrealizedPnl       :  `long$();
+    time                : `datetime$()
     );
+inventoryCols:`accountId`side`currentQty`realizedPnl`unrealizedPnl`time;
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
@@ -90,7 +62,8 @@ OrderEventHistory: (
     time            :   `datetime$();
     isClose         :   `boolean$();
     trigger         :   `.order.STOPTRIGGER$();
-    execInst        :   `.order.EXECINST$()
+    execInst        :   `.order.EXECINST$();
+    time                : `datetime$()
     );
 
 // Maintains a historic record of depth snapshots
@@ -99,7 +72,8 @@ OrderEventHistory: (
 // i.e. The depth has been directly affected by 
 // the agent.
 DepthEventHistory: (
-    time            :   `datetime$()
+    time            :   `datetime$();
+    
     );
 
 // Maintains a set of historic trade events
@@ -111,6 +85,7 @@ TradeEventHistory: (
     side            :   `.order.ORDERSIDE$();
     time            :   `datetime$()
     );
+tradeCols:`size`price`side`time;
 
 // TODO batching + 
 
@@ -143,21 +118,11 @@ InsertResultantEvents   :{[events]
             `.state.DepthEventHistory insert ()
         ];
         k=`TRADE;
-        [
-            `state.TradeEventHistory insert ();
-        ];
+        [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
         k=`ACCOUNT_UPDATE;
-        [
-            // if account does not exsit
-            $[event[`datum][`accountId] in .state.AccountEventHistory;
-             [
-                update from `state.AccountEventHistory;
-             ];
-             [
-                 `state.AccountEventHistory insert ();
-             ]
-            ]
-        ];
+        [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
+        k=`INVENTORY_UPDATE;
+        [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
         k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
         [
             $[event[`datum][`orderId] in .state.OrderEventHistory;
@@ -168,19 +133,7 @@ InsertResultantEvents   :{[events]
                     `state.OrderEventHistory upsert ();
                 ]
             ]
-        ]; 
-        k=`INVENTORY_UPDATE;
-        [
-            $[event[`datum][`inventoryId] in .state.InventoryEventHistory;
-                [
-                   `.state.InventoryEventHistory upsert ();
-                ];
-                [
-                   `.state.InventoryEventHistory insert ();
-                ]
-            ]
-            
-        ]
+        ] 
     ];
     };
 

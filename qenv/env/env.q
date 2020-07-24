@@ -1,13 +1,17 @@
 
 Env  :(
+        [envId               :`long$()]
+        initialBalance      : `float$();
+        rebalanceHigh       : `float$();
+        rebalanceLow        : `float$();
         rebalancefreq       : `long$();
         maxBalanceRebalance : `long$();
         withrawFreq         : `long$();
         minBalanceWithdraw  : `long$();
-        doneBalance         : `long$();
+        doneBalance         : `float$();
         maxNumSteps         : `long$();
         totalSteps          : `long$();
-        rewardKind          : `.state.REWARDKIND$();
+        rewardKind          : `.reward.REWARDKIND$();
         lookBackSize        : `long$();
         outageFreq          : `long$();
         outageMaxLength     : `long$();
@@ -22,6 +26,8 @@ Env  :(
         numAgentSteps       : `long$();
         encouragement       : `float$();
     );
+
+activeEnvId:0;
 
 // Exposed State Logic
 // =====================================================================================>

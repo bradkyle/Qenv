@@ -439,11 +439,17 @@ removeOrder    : {[orderId;time]
 /     :events;
 /     };
 
-/ CancelLimitOrder    :{[]
-/     events:();
-/     events:events,removeLimitOrder();
-/     :events;
-/     };
+CancelOrder    :{[]
+
+    };
+
+CancelAllOrders :{[]
+
+    };
+
+AmendOrder      :{[]
+
+    };
 
 / CancelLimitOrderBatch   :{[]
 /     events:();
