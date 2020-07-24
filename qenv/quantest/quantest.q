@@ -78,17 +78,25 @@ Integration    :{[]
 // Main (Callable) Functions.
 // ======================================================================>
 
+getResults  :{
+    t:select caseId, any failed, failedCases:failed, dscr, actual, relation, expected by testId, name from ej[`testId;.qt.Test;(.qt.Case lj (select failed:any state=`FAIL, actual, relation, expected by caseId from .qt.Assertion))]
+    };
+
 // TODO protected execution
 runCase :{[test; case] 
     test[`beforeEach][]; 
-    test[`func][case[`params];case]; 
+    res:(.[test[`func];(case[`params];case);`ERROR]);
+    $[(`$string[res])=`ERROR; 
+        [update state:`.qt.TESTSTATE$`ERROR from `.qt.Case where caseId=case[`caseId]];
+        exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
+        [update state:`.qt.TESTSTATE$`FAIL from `.qt.Case where caseId=case[`caseId]]];
     test[`afterEach][];
     };
 
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
     test[`start]:.z.z;
-    {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)];
+    {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)]; // TODO fix messy
     test[`end]:.z.z;
     test[`afterAll][];
     `qt.Test upsert test;
@@ -96,7 +104,6 @@ runTest         :{[test]
 
 RunTests :{
     runTest each select from 0!.qt.Test where state=`READY;
-    
     };
 
 RunNsTests    :{[nsList;filter;only]
@@ -137,7 +144,7 @@ Case    :(
 AddCase     :{[test;dscr;params]
     $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
     if[not((type[test] in 98 99h) and (test[`testId] in key[.qt.Test]));show "error"]; // TODO better error
-    if[not(type[params] in 98 99h);show 99#"+"]; // TODO better error
+    if[not(type[params] in 98 99h);0N]; // TODO better error
     case:cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;params;0;0;.z.z;.z.z);
     `.qt.Case upsert case;
     };
@@ -171,7 +178,7 @@ Mock        :(
     );
 
 invokeId:-1;
-Invocations :(
+Invocation :(
     [invokeId      : `long$()]
     mockId       : `.qt.Mock$();
     invokedWith  : ()
@@ -180,7 +187,7 @@ Invocations :(
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
 repFn :{[replacement;mId;params] // creates lambda function to be used later
-    `.qt.Invocations insert ((invokeId+:1);mId;params);
+    `.qt.Invocation insert ((invokeId+:1);mId;params);
     update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
     :replacement[params];
     };
@@ -317,6 +324,10 @@ Profile        :{
 
     };
 
+/ // Errors TODO
+/ // ======================================================================>
+
+
 / // Assert
 / // ======================================================================>
 
@@ -355,3 +366,18 @@ A   :{[actual;relation;expected;msg;case]
     `.qt.Assertion upsert ass;
     }
 
+
+/ // Reset
+/ // ======================================================================>
+
+Reset   :{
+    delete from `.qt.Assertion;
+    delete from `.qt.Invocation;
+    delete from `.qt.Mock;
+    delete from `.qt.Case;
+    delete from `.qt.Test;
+    };
+
+Revert  :{
+
+    };
