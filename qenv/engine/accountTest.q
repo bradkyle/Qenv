@@ -359,67 +359,122 @@ deriveCaseParams :{[p]
     (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
     0f;(1;10f;10f;0f;0f;0f);0N)]];
 
+// Test Apply Funding
+// -------------------------------------------------------------->
+
+test:.qt.Unit[
+    ".account.ApplyFunding";
+    {[c]
+        p:c[`params];
+        time:.z.z;
+
+        eacc:p[`eaccount];
+        einv:p[`einventory]
+        ecols:p[`ecols];
+
+        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+
+        // Execute tested function
+        .account.execFill[account;inventory;p[`fillQty];p[`price];p[`fee]];
+        // 
+        acc:exec from .account.Account where accountId=account[`accountId];
+        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];c];
+        .qt.A[invn[ecols];~;einv[ecols];c];
+
+    };();({};{};{};defaultAfterEach);""];
+
+deriveCaseParams :{[p]
+    accountCols: `accountId`balance;
+    priceCols: `markPrice`lastPrice;
+    inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
+                   `execCost`avgPrice);
+    pCols:`fillQty`price`fee;
+    eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
+    einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                   `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                   `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                   `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
+    :();
+    };
+
+.qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
+    (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
+    0f;(1;10f;10f;0f;0f;0f);0N)]];
+
 / // Test Deposit
 / // -------------------------------------------------------------->
 
-/ test:.qt.Unit[
-/     ".account.Deposit";
-/     {[c]
-/         time:.z.z;
+test:.qt.Unit[
+    ".account.Deposit";
+    {[c]
+        time:.z.z;
 
-/         eacc:p[`eaccount];
-/         ecols:p[`ecols];
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
 
-/         .qt.M[];
+        / .qt.M[];
 
-/         // Execute tested function
-/         .account.Deposit[accountId;deposit;cime];
+        // Execute tested function
+        .account.Deposit[accountId;deposit;cime];
 
-/         acc:exec from .account.Account where accountId=account[`accountId];
+        acc:exec from .account.Account where accountId=account[`accountId];
 
-/         // Assertions
-/         .qt.A[acc[ecols];~;eacc[ecols];c];
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];c];
 
-/     };();({};{};{};defaultAfterEach);""];
+    };();({};{};{};defaultAfterEach);""];
 
-/ deriveCaseParams :{[p]
-/      caseCols:`account`expectedResp`expectedValues;
-/     :();
-/     };
+deriveCaseParams :{[p]
+     caseCols:`account`li`si`bi`expectedResp`expectedValues;
+     accountCols: `accountId`balance;
+     inventoryCols: (`accountId`inventoryId`side`currentQty`totalEntry,
+                    `execCost`avgPrice);
+     pCols:`fillQty`price`fee;
+     eaccountCols:accountCols,`available`realizedPnl`unrealizedPnl;
+     einventoryCols:inventoryCols,`realizedPnl`unrealizedPnl,
+                    `totalCloseAmt`totalCrossAmt`totalOpenAmt,
+                    `totalCloseVolume`totalCrossVolume`totalOpenVolume,
+                    `totalCloseMarketValue`totalCrossMarketValue`totalOpenMarketValue;
+    :();
+    };
 
-/ .qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
-/     (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
-/     0f;(1;10f;10f;0f;0f;0f);0N))]];
+.qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
+    (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
+    0f;(1;10f;10f;0f;0f;0f);0N)]];
 
 
 / // Test Withdraw
 / // -------------------------------------------------------------->
 
-/ test:.qt.Unit[
-/     ".account.Withdraw";
-/     {[c]
-/         time:.z.z;
+test:.qt.Unit[
+    ".account.Withdraw";
+    {[c]
+        time:.z.z;
 
-/         eacc:p[`eaccount];
-/         ecols:p[`ecols];
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
 
-/         .qt.M[];
+        / .qt.M[];
 
-/         // Execute tested function
-/         .account.Withdraw[accountId;deposit;cime];
+        // Execute tested function
+        .account.Withdraw[accountId;deposit;cime];
 
-/         acc:exec from .account.Account where accountId=account[`accountId];
+        acc:exec from .account.Account where accountId=account[`accountId];
 
-/         // Assertions
-/         .qt.A[acc[ecols];~;eacc[ecols];c];
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];c];
 
-/     };();({};{};{};defaultAfterEach);""];
+    };();({};{};{};defaultAfterEach);""];
 
-/ deriveCaseParams :{[p]
-/      caseCols:`account`expectedResp`expectedValues;
-/     :();
-/     };
+deriveCaseParams :{[p]
+     caseCols:`account`expectedResp`expectedValues;
+    :();
+    };
 
-/ .qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
-/     (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
-/     0f;(1;10f;10f;0f;0f;0f);0N))]];
+.qt.AddCase[test;"check that no funding occurs";deriveCaseParams[(
+    (1;10f;0f;100f);(`LONG;0;0;0);(`SHORT;1000;0;0);(`BOTH;0;0;0);
+    0f;(1;10f;10f;0f;0f;0f);0N)]];

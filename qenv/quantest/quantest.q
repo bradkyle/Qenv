@@ -94,7 +94,6 @@ pntCase     :{[case]
     show case[`state];
     show 50#"-";
     show case[`params];
-    show 50#"-";    
     .qt.pntAssertion each select from 0!.qt.Assertion where caseId=case[`caseId];
     };
 
@@ -106,6 +105,7 @@ showCase    :{[cId]
 nxtFailCase :{[]
     c:first select from 0!.qt.Case where state in `FAIL`ERROR;
     .qt.pntCase[c];
+    :c;
     };
 
 pntTest      :{[test]
@@ -131,6 +131,17 @@ runCase :{[test; case]
         [update state:`.qt.TESTSTATE$`PASS from `.qt.Case where caseId=case[`caseId]]];
     test[`afterEach][];
     };
+
+runCaseOnly :{[case]
+    t:exec from 0!.qt.Test where testId=case[`testId];
+    runCase[t;case];
+    };
+
+// TODO runs all tests and then gets next fail
+runNxtFail  :{
+    c:.qt.nxtFailCase[];
+    .qt.runCaseOnly[c];
+    }
 
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
@@ -162,6 +173,12 @@ RunNsTests    :{[nsList;filter;only]
     / test[`beforeAll][];
     / dline[test[`name]];
     / uline[test[`dscr]];
+    };
+
+RNxt :{
+    .qt.Revert[];
+    .qt.RunTests[];
+    .qt.nxtFailCase[];
     };
 
 // Case
