@@ -9,6 +9,7 @@ system "d .accountTest";
 defaultAfterEach: {
      delete from `.account.Account;
      delete from `.inventory.Inventory;
+     delete from `.global.Events;
      .account.accountCount:0;
      .inventory.inventoryCount:0;
      .qt.RestoreMocks[];
@@ -17,9 +18,54 @@ defaultAfterEach: {
 // Account CRUD Logic
 // -------------------------------------------------------------->
 
+.qt.Unit[
+    ".account.AddAccountUpdateEvent";
+    {[c]
+        time:.z.z;
+
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
+
+        / .qt.M[];
+
+        // Execute tested function
+        .account.Withdraw[accountId;deposit;cime];
+
+        acc:exec from .account.Account where accountId=account[`accountId];
+
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];c];
+
+    };(
+        ()
+    );({};{};{};defaultAfterEach);""];
+
+.qt.Unit[
+    ".account.NewAccount";
+    {[c]
+        time:.z.z;
+
+        eacc:p[`eaccount];
+        ecols:p[`ecols];
+
+        / .qt.M[];
+
+        // Execute tested function
+        .account.Withdraw[accountId;deposit;cime];
+
+        acc:exec from .account.Account where accountId=account[`accountId];
+
+        // Assertions
+        .qt.A[acc[ecols];~;eacc[ecols];c];
+
+    };(
+        ()
+    );({};{};{};defaultAfterEach);""];
 
 // Test Exec Fill
 // -------------------------------------------------------------->
+
+// TODO get file from where the test is being executed. and namespace.
 
 test:.qt.Unit[
     ".account.execFill";
