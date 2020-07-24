@@ -79,11 +79,19 @@ Integration    :{[]
 // ======================================================================>
 
 // TODO protected execution
-runCase :{[test; case] test[`beforeEach][]; test[`func][case[`params];case]; test[`afterEach][];};
+runCase :{[test; case] 
+    test[`beforeEach][]; 
+    test[`func][case[`params];case]; 
+    test[`afterEach][];
+    };
+
+ZBM:0;
 
 runTest         :{[test]
-    cases:select from `.qt.Case where state=`READY, testId=test[`testId];
+    cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
     test[`start]:.z.z;
+    show 99#"=";
+    .qt.ZBM:(test;cases);
     runCase (test;cases);
     test[`end]:.z.z;
     test[`afterAll][];
@@ -97,7 +105,7 @@ RunNsTests    :{[nsList;filter;only]
     nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
     / a:raze prepareTests each (),nsl;
     / lg $[count a; a; 'noTestsFound];
-    if[count[cases]>0;runTest each (select from .qt.Test where state=`READY)]
+    if[count[cases]>0;runTest each (select from 0!.qt.Test where state=`READY)]
     
     / test[`beforeAll][];
     / dline[test[`name]];
@@ -325,9 +333,9 @@ Assertion   :(
     caseId         : `.qt.Case$();
     kind           : `.qt.ASSERTIONKIND;
     state          : `.qt.TESTSTATE;
-    msg            : `char$();
+    msg            : `symbol$();
     actual         : ();
-    relation       : ();
+    relation       : `symbol$();
     expected       : ()
     );
 
@@ -338,8 +346,15 @@ Assertion   :(
 // @param case the case to which this assertion belongs.
 // @return actual object
 A   :{[actual;relation;expected;msg;case]
+    $[not null[`$msg];msg:`$msg;msg:`$""];
     failFlag::not .[relation; (actual; expected); 0b];
     state:$[failFlag;`FAIL;`PASS];
-    `.qt.Assertion insert ((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;relation;expected);
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;(`$string[relation]);expected);
+    show ass;
+    show 99#"=";
+    show type each ass;
+    show 99#"=";
+    show type each first .qt.Assertion;
+    `.qt.Assertion upsert ass;
     }
 
