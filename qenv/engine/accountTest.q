@@ -41,7 +41,7 @@ defaultAfterEach: {
     );({};{};{};defaultAfterEach);""];
 
 .qt.Unit[
-    ".account.NewAccount";
+    ".account.AddAllAccountsUpdatedEvents";
     {[c]
         time:.z.z;
 
