@@ -78,6 +78,12 @@ Integration    :{[]
 // Main (Callable) Functions.
 // ======================================================================>
 
+pntCase     :{[case]
+    a:select from .qt.Assertion where caseId=case[`caseId];
+    flip(exec actual,expected from first a)
+    }:
+
+
 getResults  :{
     t:select caseId, any failed, failedCases:failed, dscr, actual, relation, expected by testId, name from ej[`testId;.qt.Test;(.qt.Case lj (select failed:any state=`FAIL, actual, relation, expected by caseId from .qt.Assertion))]
     };
@@ -95,6 +101,7 @@ runCase :{[test; case]
 
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
+    test[`beforeAll][];
     test[`start]:.z.z;
     {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)]; // TODO fix messy
     test[`end]:.z.z;
@@ -111,7 +118,7 @@ RunNsTests    :{[nsList;filter;only]
     nsl:$[11h~abs type nsList; nsList; `$".",/:string a where (lower a:key `) like "*test"];     
     / a:raze prepareTests each (),nsl;
     / lg $[count a; a; 'noTestsFound];
-    if[count[cases]>0;runTest each (select from 0!.qt.Test where state=`READY)]
+    if[count[cases]>0;runTest each (select from 0!.qt.Test where state=`READY)];
     
     / test[`beforeAll][];
     / dline[test[`name]];
