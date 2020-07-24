@@ -44,7 +44,7 @@ Engine:(
 
 
 
-/ Event Processing logic
+/ Event Processing logic (Write Events)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
 eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported types.
@@ -89,7 +89,7 @@ eventEngine[`PLACE_ORDER] :   {[event]
 
 eventEngine[`PLACE_BATCH_ORDER] :   {[event]
     .logger.Debug["new place batch order"][event];
-    // TODO 
+    .order.NewOrderBatch[event[`datum];event[`time]]
     };
 //
 eventEngine[`CANCEL_ORDER] :   {[event]
@@ -99,7 +99,7 @@ eventEngine[`CANCEL_ORDER] :   {[event]
 
 eventEngine[`CANCEL_BATCH_ORDER] :   {[event]
     .logger.Debug["new cancel batch order"][event];
-    .order.CancelOrder[event[`datum];event[`time]]
+    .order.CancelOrderBatch[event[`datum];event[`time]]
     };
 
 eventEngine[`CANCEL_ALL_ORDERS] :   {[event]
@@ -116,7 +116,7 @@ eventEngine[`AMEND_ORDER] :   {[event]
 // Amend a batch of existing orders
 eventEngine[`AMEND_BATCH_ORDER] :   {[event]
     .logger.Debug["new amend batch order"][event];
-    .order.AmendOrder[event[`datum];event[`time]];
+    .order.AmendOrderBatch[event[`datum];event[`time]];
     };
 
 

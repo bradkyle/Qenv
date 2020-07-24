@@ -8,13 +8,6 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
-// Source State Tables (State Origination and Derivation)
-// =====================================================================================>
-
-PrimaryStepInfo: (
-
-    );
-
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
@@ -110,31 +103,24 @@ StepBuffer  :(
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer
 InsertResultantEvents   :{[events]
-
-    k:event[`kind];
-    $[
-        k=`DEPTH;
-        [
-            `.state.DepthEventHistory insert ()
+    {[event]
+        k:event[`kind];
+        event[`datum][`time]:event[`time]
+        $[
+            k=`DEPTH;
+            [
+                `.state.DepthEventHistory insert () // TODO
+            ];
+            k=`TRADE;
+            [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
+            k=`ACCOUNT_UPDATE;
+            [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
+            k=`INVENTORY_UPDATE;
+            [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
+            k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
+            [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
         ];
-        k=`TRADE;
-        [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
-        k=`ACCOUNT_UPDATE;
-        [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
-        k=`INVENTORY_UPDATE;
-        [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
-        k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
-        [
-            $[event[`datum][`orderId] in .state.OrderEventHistory;
-                [
-                    update from `state.OrderEventHistory;
-                ];
-                [
-                    `state.OrderEventHistory upsert ();
-                ]
-            ]
-        ] 
-    ];
+    } each events;
     };
 
 

@@ -423,23 +423,15 @@ NewOrder       : {[o;time];
     ];
     };
 
-updateOrder    : {[order;time]
-    // TODO add margin etc.
-    // add account updates etc.
-    };
+NewOrderBatch   :{[]
 
-removeOrder    : {[orderId;time]
-    // TODO add margin etc.
-    delete from `order.Order where orderId=orderId;
     };
-
-/ AmendLimitOrder    :{[event]
-/     events:();
-/     events:events,updateLimitOrder();
-/     :events;
-/     };
 
 CancelOrder    :{[]
+
+    };
+
+CancelOrderBatch :{[]
 
     };
 
@@ -451,14 +443,11 @@ AmendOrder      :{[]
 
     };
 
-/ CancelLimitOrderBatch   :{[]
-/     events:();
-/     events:events,CancelLimitOrder each orderIds
-/     };
 
-/ CancelAllLimitOrders    :{[]
+AmendOrderBatch      :{[]
 
-/     };
+    };
+
 
 / Update Market Orders
 
