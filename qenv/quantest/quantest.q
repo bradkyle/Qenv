@@ -44,7 +44,8 @@ Test    :(
     beforeAll    : {};
     afterAll     : {};
     start        : `datetime$();
-    end          : `datetime$()
+    end          : `datetime$();
+    sourceFile   : `symbol$()
     );
 
 SkipTest    :{
@@ -65,8 +66,12 @@ Unit        :{[name;testFn;cases;hooks;dscr]
     / if[not all[validHook each hooks]; :(0b;0b;"invalid hooks specified")];
     / validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
     / if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
-    test:cols[.qt.Test]!((testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z);
+
+    test:cols[.qt.Test]!((testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
     `.qt.Test upsert test;
+
+    if[count[cases]>0;.qt.AddCase[test] each cases];
+
     :test
     };
 
@@ -115,10 +120,6 @@ pntTest      :{[test]
     show 99#"-";
     show select caseId,state,dscr from .qt.Case where testId=test[`testId];
     }
-
-getResults  :{
-    t:select caseId, any failed, failedCases:failed, dscr, actual, relation, expected by testId, name from ej[`testId;.qt.Test;(.qt.Case lj (select failed:any state=`FAIL, actual, relation, expected by caseId from .qt.Assertion))]
-    };
 
 // TODO protected execution
 runCase :{[test; case] 

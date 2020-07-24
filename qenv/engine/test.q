@@ -1,5 +1,8 @@
 \c 500 550
-\l qunit.q
+
+\cd ../quantest
+\l quantest.q
+\cd ../engine
 
 / \l globalTest.q
 / .qunit.runTests `.globalTest

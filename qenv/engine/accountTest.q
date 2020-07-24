@@ -1,7 +1,3 @@
-\cd ../quantest
-\l quantest.q
-\cd ../engine
-
 \l account.q
 system "d .accountTest";
 \l util.q
