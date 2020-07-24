@@ -11,7 +11,7 @@ POSITIONSIDE   : `LONG`SHORT`BOTH;
 
 Inventory: (
     [inventoryId             :  `long$()]
-    accountId                :  `long$();
+    accountId                :  `.account.Account$();
     side                     :  `.inventory.POSITIONSIDE$();
     currentQty               :  `long$();
     avgPrice                 :  `float$();
