@@ -1,6 +1,6 @@
 \l qunit.q
 system "d .qt";
-
+\c 4000 4000
 
 line: {show 99#"-"};
 dline: {show 99#"="};
@@ -78,11 +78,21 @@ Integration    :{[]
 // Main (Callable) Functions.
 // ======================================================================>
 
+pntAssertion :{[assertion]
+    show flip exec actual, expected from assertion;
+    };
+
 pntCase     :{[case]
-    a:select from .qt.Assertion where caseId=case[`caseId];
-    flip(exec actual,expected from first a)
+    .qt.pntAssertion each (select from 0!.qt.Assertion where (state in `FAIL`ERROR), caseId=case[`caseId])
     }:
 
+pntTest      :{[test]
+    show 99#"-";
+    show ("" sv string[test[`name], " (",test[`kind],") :", test[`state]]);
+    show test[`dscr];
+    show 99#"-";
+    show select caseId,state,dscr from .qt.Case where testId=test[`testId];
+    }
 
 getResults  :{
     t:select caseId, any failed, failedCases:failed, dscr, actual, relation, expected by testId, name from ej[`testId;.qt.Test;(.qt.Case lj (select failed:any state=`FAIL, actual, relation, expected by caseId from .qt.Assertion))]
@@ -94,8 +104,9 @@ runCase :{[test; case]
     res:(.[test[`func];(case[`params];case);`ERROR]);
     $[(`$string[res])=`ERROR; 
         [update state:`.qt.TESTSTATE$`ERROR from `.qt.Case where caseId=case[`caseId]];
-        exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
-        [update state:`.qt.TESTSTATE$`FAIL from `.qt.Case where caseId=case[`caseId]]];
+      exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
+        [update state:`.qt.TESTSTATE$`FAIL from `.qt.Case where caseId=case[`caseId]];
+        [update state:`.qt.TESTSTATE$`PASS from `.qt.Case where caseId=case[`caseId]]];
     test[`afterEach][];
     };
 
@@ -111,6 +122,8 @@ runTest         :{[test]
 
 RunTests :{
     runTest each select from 0!.qt.Test where state=`READY;
+    show 99#"=";show (45#" "),"TEST";show 99#"=";
+    .qt.pntTest each 0!.qt.Test;
     };
 
 RunNsTests    :{[nsList;filter;only]
@@ -378,6 +391,7 @@ A   :{[actual;relation;expected;msg;case]
 / // ======================================================================>
 
 Reset   :{
+    .qt.assertId:.qt.mockId:.qt.testId:.qt.invokeId:.qt.caseId:-1;
     delete from `.qt.Assertion;
     delete from `.qt.Invocation;
     delete from `.qt.Mock;
