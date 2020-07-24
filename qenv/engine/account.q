@@ -15,7 +15,7 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // pertaining to what the agent setting is.
 // TODO realized Gross PNL, unrealized Gross PNL, total Unrealized Pnl etc
 // TODO is suspended, state etc.
-// TODO ownFillCount
+// TODO ownFillCount, requestCount
 Account: (
             [accountId          : `long$()]
             balance             : `float$();

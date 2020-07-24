@@ -38,7 +38,7 @@ orderMandatoryFields    :`accountId`side`otype`size;
 Order: (
     [price:`float$(); orderId:`long$()]
     clOrdId         : `long$();
-    accountId       : `long$();
+    accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
     offset          : `float$();
