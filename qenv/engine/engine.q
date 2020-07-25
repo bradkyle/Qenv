@@ -1,12 +1,5 @@
 \l global.q
 
-/*******************************************************
-/ Return code
-RETURNCODE  :   (`INVALID_MEMBER;
-                `INVALID_ORDER_STATUS;
-                `INVALID_ORDER;
-                `OK);
-
 // TODO dropped response etc.
 /*******************************************************
 // represents the offset in milliseconds
@@ -35,7 +28,15 @@ Engine:(
     );
 
 
-/ REST request handling functionality (Reads)
+// TODO add randomization based upon current probability 
+// of order being placed due to overload etc.
+// TODO check within max and min orders, run validation etc.
+
+/ Public REST request handling functionality (Reads)
+/ -------------------------------------------------------------------->
+
+
+/ Private REST request handling functionality (Reads)
 / -------------------------------------------------------------------->
 
 // get orders
@@ -44,7 +45,7 @@ Engine:(
 
 
 
-/ Event Processing logic (Writes)
+/ Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
 eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported types.
@@ -59,6 +60,20 @@ eventEngine[`TRADE] :   {[event]
     .order.ProcessTradeEvent[event];
     };
 
+eventEngine[`FUNDING] :   {[event]
+    .logger.Debug["new funding"][event];
+    .account.ApplyFunding[event];
+    };
+
+
+/ Private Event Processing logic (Writes)
+/ -------------------------------------------------------------------->
+
+eventEngine[`MARK] :   {[event]
+    .logger.Debug["new mark price"][event];
+    .order.UpdateMarkPrice[event];
+    };
+
 eventEngine[`DEPOSIT] :   {[event]
     .logger.Debug["new deposit"][event];
     .account.ProcessDeposit[event];
@@ -69,19 +84,6 @@ eventEngine[`WITHDRAWAL] :   {[event]
     .account.ProcessWithdraw[event];
     };
 
-eventEngine[`FUNDING] :   {[event]
-    .logger.Debug["new funding"][event];
-    .account.ApplyFunding[event];
-    };
-
-eventEngine[`MARK] :   {[event]
-    .logger.Debug["new mark price"][event];
-    .order.UpdateMarkPrice[event];
-    };
-
-// TODO add randomization based upon current probability 
-// of order being placed due to overload etc.
-// TODO check within max and min orders, run validation etc.
 eventEngine[`PLACE_ORDER] :   {[event]
     .logger.Debug["new place order"][event];
     .order.NewOrder[event[`datum];event[`time]]
