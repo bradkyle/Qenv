@@ -1,4 +1,4 @@
-\d .global
+\d .event
 
 
 /*******************************************************
@@ -52,6 +52,9 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 // TODO create combined table.
 
 /*******************************************************
+/ Datum Construction
+
+/*******************************************************
 / Events LOGIC
 
 // TODO move to global
@@ -67,22 +70,22 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 Events  :( // TODO add failure to table
     [eventId    :`long$()]
     time        :`datetime$();
-    cmd         :`.global.EVENTCMD$();
-    kind        :`.global.EVENTKIND$();
+    cmd         :`.event.EVENTCMD$();
+    kind        :`.event.EVENTKIND$();
     datum       :();
-    errKind     :`.global.ERRORKIND$()
+    errKind     :`.event.ERRORKIND$()
     );
 
-eid     :{:count[.global.Events]}
+eid     :{:count[.event.Events]}
 
 // Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
-        $[not (cmd in .global.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
-        $[not (kind in .global.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
+        $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
+        $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
         / if[not] //validate datum 
-        `.global.Events upsert (eventId:eid[];time:time;cmd:cmd;kind:kind;datum:datum;errKind:`NIL);
+        `.event.Events upsert (eventId:eid[];time:time;cmd:cmd;kind:kind;datum:datum;errKind:`NIL);
         };
 
 // Creates an action i.e. a mapping between
@@ -91,16 +94,16 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
 // that conforms to a generaliseable dictionary 
 AddFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
-        if[not (kind in .global.ERRORKIND); :0b];
-        if[not (kind in .global.ERRORKIND); :0b]; // TODO update msg 
-        `.global.Events upsert (eventId:eid[];time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg;errKind:kind);
+        if[not (kind in .event.ERRORKIND); :0b];
+        if[not (kind in .event.ERRORKIND); :0b]; // TODO update msg 
+        `.event.Events upsert (eventId:eid[];time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg;errKind:kind);
         };
 
 // Retrieves all events from the Events table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the events (As a table?)
 PopEvents     :{[]
-        e: .global.Event;
-        delete from `.global.Events;
+        e: .event.Event;
+        delete from `.event.Events;
         :e
         };
