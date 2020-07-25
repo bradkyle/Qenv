@@ -24,24 +24,15 @@ funding:(
 mark:()
 
 // orderbook
-{
-recs:{[u]
-    time:u[`resp][`data][`timestamp];
-    a:flip u[`resp][`data][`asks][0];
-    b:flip u[`resp][`data][`bids][0];
-    :([side:(10#`S),(10#`B);price:`int$((a[0],b[0])*10);time: 20#"Z"$time] intime:20#"Z"$u[`utc_time]; size:`int$(a[1],b[1]));
-    };
+{[ob]
 
-list:{[u]
-    time:u[`resp][`data][`timestamp];
-    a:flip u[`resp][`data][`asks][0];
-    b:flip u[`resp][`data][`bids][0];
-    :((10#`S),(10#`B);`int$((a[0],b[0])*10);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
+    list:{[u]
+        time:u[`resp][`data][`timestamp];
+        a:flip u[`resp][`data][`asks][0];
+        b:flip u[`resp][`data][`bids][0];
+        :((10#`S),(10#`B);`int$((a[0],b[0])*10);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
     };
-
-ups:{[lsts]
-    ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]);
-    }
+    lsts:list each ob;
 / \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
 
 }
@@ -59,12 +50,17 @@ utc_time | "2020-06-10 11:29:06.216479"
 cid      | "trade"
 aid      | "xbtusd"
 \
-{[ob]
+{[trades]
     list:{d:x[`resp][`data];:(`$d[`side]; "Z"$d[`timestamp];`int$(d[`price]*10); "Z"$x[`utc_time];`int$d[`size])}
-    lsts: list each trades
+    lsts: list each trades;
 / \t `trade upsert :([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
 }
 
 / {`book upsert recs[x]} each orderbook far too long
 / \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)
 / {d:x[`resp][`data];:([side:`$d[`side]; time:"Z"$d[`timestamp]; price:`int$(d[`price]*10)] intime:"Z"$x[`utc_time]; size:`int$d[`size])}
+
+{[]
+
+
+}
