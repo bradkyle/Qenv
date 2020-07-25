@@ -27,7 +27,7 @@ Engine:(
     eventCount                  : `long$()
     );
 
-
+// Ingress Queue, Egress Queue
 
 
 // TODO add randomization based upon current probability 
@@ -67,14 +67,13 @@ eventEngine[`FUNDING] :   {[event]
     .account.ApplyFunding[event];
     };
 
-
-/ Private Event Processing logic (Writes)
-/ -------------------------------------------------------------------->
-
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
     .order.UpdateMarkPrice[event];
     };
+
+/ Private Event Processing logic (Writes)
+/ -------------------------------------------------------------------->
 
 eventEngine[`DEPOSIT] :   {[event]
     .logger.Debug["new deposit"][event];

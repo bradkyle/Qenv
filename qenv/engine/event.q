@@ -54,6 +54,14 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 /*******************************************************
 / Datum Construction
 
+MakeDepthEvent   :{[]
+
+        };
+
+MakeTradeEvent   :{[]
+
+        };
+
 /*******************************************************
 / Events LOGIC
 
