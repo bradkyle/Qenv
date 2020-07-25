@@ -35,7 +35,7 @@ Engine:(
     );
 
 
-/ REST request handling functionality
+/ REST request handling functionality (Reads)
 / -------------------------------------------------------------------->
 
 // get orders
@@ -44,7 +44,7 @@ Engine:(
 
 
 
-/ Event Processing logic (Write Events)
+/ Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
 eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported types.
@@ -76,7 +76,7 @@ eventEngine[`FUNDING] :   {[event]
 
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
-    .order.CheckByMarkPrice[event];
+    .order.UpdateMarkPrice[event];
     };
 
 // TODO add randomization based upon current probability 
@@ -137,11 +137,11 @@ ResetEngine     : {
     };
 
 // 
-preprocessEventIngressBatch   :{[]
+prepareIngress   :{[eventBatch]
 
     };
 
-preprocessEventEgressBatch     :{[]
+prepareEgress    :{[eventBatch]
 
     };
 
@@ -149,7 +149,8 @@ preprocessEventEgressBatch     :{[]
 // them with their respective processing 
 // logic above.
 ProcessEvents  : {[eventBatch]
-        eventEngine [eventkind] [event] each eventBatch;
+        eventEngine [eventkind] [event] each prepareIngress[eventBatch];
+        :prepareEgress[.engine.PopEvents[]];
     };
 
 

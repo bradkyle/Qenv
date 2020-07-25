@@ -671,6 +671,10 @@ ProcessTrade  : {[side;size;price;time]
     :processCross[side;size;0b;0N];
     };
 
+
+// Update Mark Price
+// -------------------------------------------------------------->
+
 // Updates the orderbook mark price and subsequently
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.

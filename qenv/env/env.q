@@ -11,8 +11,6 @@ Env  :(
         doneBalance         : `float$();
         maxNumSteps         : `long$();
         totalSteps          : `long$();
-        rewardKind          : `.reward.REWARDKIND$();
-        lookBackSize        : `long$();
         outageFreq          : `long$();
         outageMaxLength     : `long$();
         outageMinLength     : `long$();
@@ -24,7 +22,14 @@ Env  :(
         stepTime            : `datetime$();
         numFailures         : `long$();
         numAgentSteps       : `long$();
-        encouragement       : `float$();
+    );
+
+Agent :(
+    [agentId        :`long$()]
+    accountId       :`long$();
+    rewardKind          : `.reward.REWARDKIND$();
+    lookBackSize        : `long$();
+    encouragement       : `float$();
     );
 
 activeEnvId:0;
@@ -74,10 +79,9 @@ nextEvents   :{[step] // TODO changes in depth due to trades still persist only 
 // THE ACTIONS TOOK PLACE.
 // Appending the actions to the events to be processed.
 derive  :{[actions;time]
-    events: ();
-    events:events, nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
+    events:nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
     // sample a probability space of request time
-    events:events, .adapter.Adapt [] [accountId;action;time;meanWait;stdWait]; // TODO make work
+    .adapter.Adapt[time] each ej[`agentId;actions;.env.Agent]; 
     :events; //TODO implement penalty
     };
 
@@ -102,6 +106,16 @@ advance :{[events;accountIds]
 // utilizes the .j (json) namespace to process a json representation
 // sent to it.
 Config      :{[config]
+
+    // Env Config
+
+    // Agent Config
+    // - reward kind, 
+    // feature kind, 
+    // adapter kind, 
+    // encouragement, 
+    // lookback size
+
 
     };
 

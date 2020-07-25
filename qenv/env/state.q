@@ -10,6 +10,10 @@
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
+
+
+// Singleton State and Lookback Buffers
+// =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
 // agent will percieve in a real exchange.
 
