@@ -135,7 +135,7 @@ UpdateEngineProbs   :{[]
 // Resets engine and its associated state to
 // the initial config set in Setup
 ResetEngine     : {
-
+    //
     };
 
 // 
@@ -163,5 +163,12 @@ ProcessEvents  : {[eventBatch]
 // Initializes agent and respective inventory config
 //  
 Setup   :{[config]
+
+    // Instantiate instrument with given config
+
+    // Instantiate accounts and inventory
+
+    // Run through Configured batch amount of events.
+
 
     }
