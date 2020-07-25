@@ -11,8 +11,12 @@
 .qparquet.init[];
 
 .qparquet.getDataset:{[paths]
-  tab:.qparquet.py.lib[`:getDataset][1_ string file]`;
+  tab:.qparquet.py.lib[`:getDataset][paths]`;
   flip .p.wrap[tab][`:to_dict;`list]`
+  };
+
+.qparquet.getDatasetColumnNames:{[paths]
+  {x where not x like "_*"}`$ .qparquet.py.lib[`:getDatasetColumnNames][1_ string paths]`
   };
 
 .qparquet.getTable:{[file]
@@ -48,7 +52,7 @@
   flip columns!columnData
  };
  
- .qparquet.getTableCustom:{[file;pyConversions;qConversions]
+.qparquet.getTableCustom:{[file;pyConversions;qConversions]
   columns:.qparquet.getColumnNames[file];
   .qparquet.getColumnsCustom[file;columns;pyConversions;qConversions]
  };

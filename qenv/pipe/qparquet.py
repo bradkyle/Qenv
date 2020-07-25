@@ -3,7 +3,10 @@ import pyarrow;
 import pyarrow.parquet as parquet;
 
 def getDataset(paths):
-  return (parquet.Dataset(paths).read()).to_pandas();
+  return parquet.ParquetDataset(paths).read().to_pandas();
+
+def getDatasetColumnNames(paths):
+  return (parquet.ParquetDataset(paths).schema).names;
 
 def getTable(file):
   return (parquet.read_table(file)).to_pandas();
