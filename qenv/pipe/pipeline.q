@@ -2,10 +2,12 @@
 book:([]
   time:`datetime$();
   intime:`datetime$();
-  side:`char$();
+  side:`symbol$();
   price:`int$();
   size:`int$());
 book:`side`price`time xkey book;
+
+upds:()
 
 trade:([]
   time:`datetime$();
@@ -15,10 +17,54 @@ trade:([]
   size:`int$());
 trade:`side`price`time xkey trade;
 
-funding:();
+funding:(
 
-mark:();
+);
 
-ingressD :{[u]
-    `book upsert ([] side:10#`B,10#`S;[] price:`int$(); [] time: "Z"$(); intime: "Z"$(); size:`int$());
+mark:()
+
+// orderbook
+{
+recs:{[u]
+    time:u[`resp][`data][`timestamp];
+    a:flip u[`resp][`data][`asks][0];
+    b:flip u[`resp][`data][`bids][0];
+    :([side:(10#`S),(10#`B);price:`int$((a[0],b[0])*10);time: 20#"Z"$time] intime:20#"Z"$u[`utc_time]; size:`int$(a[1],b[1]));
     };
+
+list:{[u]
+    time:u[`resp][`data][`timestamp];
+    a:flip u[`resp][`data][`asks][0];
+    b:flip u[`resp][`data][`bids][0];
+    :((10#`S),(10#`B);`int$((a[0],b[0])*10);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
+    };
+
+ups:{[lsts]
+    ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]);
+    }
+/ \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
+
+}
+
+// trades
+/
+pid      | "f3c48ba2-2d52-4a2e-b234-043d7d27e290"
+source   | "bitmexagentxbtusd"
+inst     | `xbtusd
+chan     | `trade
+resp     | `table`action`data!("trade";"insert";+`timestamp`symbol`side`size`price`tickDirection`trdMatchID`grossValue`homeNotional`foreignNotional!(,"2020-06-10T11:29:06.105Z";,"XBTUSD";,"Buy";,10f;,9746f;,"PlusTick";,"8dc378cd-57b3-98fb-e50a-3f25d236c444";,102610f;,0.0010261;,10f))
+time     | 1.591789e+09
+timestamp| 1.591789e+09
+utc_time | "2020-06-10 11:29:06.216479"
+cid      | "trade"
+aid      | "xbtusd"
+\
+{[ob]
+    list:{d:x[`resp][`data];:(`$d[`side]; "Z"$d[`timestamp];`int$(d[`price]*10); "Z"$x[`utc_time];`int$d[`size])}
+    lsts: list each trades
+/ \t `trade upsert :([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
+}
+
+/ {`book upsert recs[x]} each orderbook far too long
+/ \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)
+/ {d:x[`resp][`data];:([side:`$d[`side]; time:"Z"$d[`timestamp]; price:`int$(d[`price]*10)] intime:"Z"$x[`utc_time]; size:`int$d[`size])}
