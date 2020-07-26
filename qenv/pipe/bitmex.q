@@ -7,7 +7,12 @@ book:([]
   size:`int$());
 book:`side`price`time xkey book;
 
-upds:()
+/ bookl:([]
+/   intime:`datetime$();
+/   side:`symbol$();
+/   price:`int$();
+/   size:`int$());
+/ bookl:`side`price`time xkey bookl;
 
 trade:([]
   time:`datetime$();
