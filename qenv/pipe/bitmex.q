@@ -1,37 +1,11 @@
 
-book:([]
-  time:`datetime$();
-  intime:`datetime$();
-  side:`symbol$();
-  price:`int$();
-  size:`int$());
-book:`side`price`time xkey book;
-
+tab[`resp]: .j.k each tab[`resp];
 / bookl:([]
 /   intime:`datetime$();
 /   side:`symbol$();
 /   price:`int$();
 /   size:`int$());
 / bookl:`side`price`time xkey bookl;
-
-trade:([]
-  time:`datetime$();
-  intime:`datetime$();
-  side:`char$();
-  price:`int$();
-  size:`int$());
-trade:`side`price`time xkey trade;
-
-funding:(
-  [time:`datetime$()]
-  intime:`datetime$();
-  fundingRate:`float$();
-  fundingRateDaily: `float$());
-
-mark:(
-  [time:`datetime$()]
-  intime:`datetime$();
-  price:`int$());
 
 // orderbook
 {[ob]
@@ -44,7 +18,6 @@ mark:(
     };
     lsts:list each ob;
     `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
-
 }
 
 // trades
@@ -60,10 +33,10 @@ utc_time | "2020-06-10 11:29:06.216479"
 cid      | "trade"
 aid      | "xbtusd"
 \
-{[trades]
-    list:{d:x[`resp][`data];:(`$d[`side]; "Z"$d[`timestamp];`int$(d[`price]*100); "Z"$x[`utc_time];`int$d[`size])}
+{[trades] // todo fix
+    list:{d:x[`resp][`data];:(`$d[`side]; `int$(d[`price]*100); "Z"$d[`timestamp]; "Z"$x[`utc_time]; `int$d[`size])}
     lsts: list each trades;
-   `trade upsert :([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
+   `trade upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
 }
 
 / {`book upsert recs[x]} each orderbook far too long
@@ -78,7 +51,7 @@ aid      | "xbtusd"
 }
 
 {[fnd]
-    list:{d:x[`resp][`data];:("Z"$d[`timestamp];d[`fundingRate];d[`fundingRateDaily];"Z"$x[`utc_time])}
+    list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];d[`fundingRate])}
     lsts: list each ins;
-   `funding upsert :([time:raze[lsts[;0]]] fundingRate:raze[lsts[;1]]; fundingRateDaily:raze[lsts[;2]]; intime:raze[lsts[;3]]);  
+   `funding upsert ([time:raze[lsts[;0]]; intime:raze[lsts[;1]]]; fundingRate:raze[lsts[;2]]);  
 }
