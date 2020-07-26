@@ -8,9 +8,6 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
-// Singleton State and Lookback Buffers
-// =====================================================================================>
-
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -28,13 +25,13 @@ AccountEventHistory: (
     maintMargin         : `float$();
     time                : `datetime$()
     );
-accountCols:`accountId`balance`available`frozen`maintMargin`time;
 
 // Maintains a historic and current record of the 
 // positions (Inventory) each agent has held and
 // subsequently provides agent specific details
 // therin
 InventoryEventHistory: (
+    [inventoryId        :   `long$()]
     accountId           :  `long$();
     side                :  `.inventory.POSITIONSIDE$();
     currentQty          :  `long$();
@@ -42,7 +39,6 @@ InventoryEventHistory: (
     unrealizedPnl       :  `long$();
     time                : `datetime$()
     );
-inventoryCols:`accountId`side`currentQty`realizedPnl`unrealizedPnl`time;
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
@@ -70,8 +66,11 @@ OrderEventHistory: (
 // the agent.
 DepthEventHistory: (
     time            :   `datetime$();
-    
-    );
+    time:`datetime$();
+    intime:`datetime$();
+    side:`symbol$();
+    price:`int$();
+    size:`int$());
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -80,9 +79,25 @@ TradeEventHistory: (
     size            :   `float$();
     price           :   `float$();
     side            :   `.order.ORDERSIDE$();
-    time            :   `datetime$()
-    );
-tradeCols:`size`price`side`time;
+    time            :   `datetime$());
+
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+MarkEventHistory: (
+    size            :   `float$();
+    price           :   `float$();
+    side            :   `.order.ORDERSIDE$();
+    time            :   `datetime$());
+
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+FundingEventHistory: (
+    size            :   `float$();
+    price           :   `float$();
+    side            :   `.order.ORDERSIDE$();
+    time            :   `datetime$());
 
 // TODO batching + 
 

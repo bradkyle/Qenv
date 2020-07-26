@@ -19,8 +19,6 @@ ERRORKIND   :   (
 
 /*******************************************************
 
-
-
 // REQUEST_KIND refers to the type of 
 // 
 REQUESTKIND : (
@@ -65,11 +63,31 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 /*******************************************************
 / Datum Construction
 
-MakeDepthEvent   :{[]
+MakeDepthEvent   :{[depth;time]
 
         };
 
-MakeTradeEvent   :{[]
+MakeTradeEvent   :{[trade;time]
+
+        };
+
+MakeOrderEvent   :{[order;time]
+
+        };
+
+MakeAccountEvent  :{[account;time]
+
+        };
+
+MakeFailureEvent   :{[failure;time]
+
+        };
+
+MakeMarkEvent      :{[mark;time]
+
+        };
+
+MakeFundingEvent    :{[funding;time]
 
         };
 
