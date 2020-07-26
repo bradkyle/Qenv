@@ -18,10 +18,15 @@ trade:([]
 trade:`side`price`time xkey trade;
 
 funding:(
+  [time:`datetime$()]
+  intime:`datetime$();
+  fundingRate:`float$();
+  fundingRateDaily: `float$());
 
-);
-
-mark:()
+mark:(
+  [time:`datetime$()]
+  intime:`datetime$();
+  price:`int$());
 
 // orderbook
 {[ob]
@@ -30,10 +35,10 @@ mark:()
         time:u[`resp][`data][`timestamp];
         a:flip u[`resp][`data][`asks][0];
         b:flip u[`resp][`data][`bids][0];
-        :((10#`S),(10#`B);`int$((a[0],b[0])*10);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
+        :((10#`S),(10#`B);`int$((a[0],b[0])*100);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
     };
     lsts:list each ob;
-/ \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
+    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
 
 }
 
@@ -51,16 +56,24 @@ cid      | "trade"
 aid      | "xbtusd"
 \
 {[trades]
-    list:{d:x[`resp][`data];:(`$d[`side]; "Z"$d[`timestamp];`int$(d[`price]*10); "Z"$x[`utc_time];`int$d[`size])}
+    list:{d:x[`resp][`data];:(`$d[`side]; "Z"$d[`timestamp];`int$(d[`price]*100); "Z"$x[`utc_time];`int$d[`size])}
     lsts: list each trades;
-/ \t `trade upsert :([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)    
+   `trade upsert :([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
 }
 
 / {`book upsert recs[x]} each orderbook far too long
 / \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)
 / {d:x[`resp][`data];:([side:`$d[`side]; time:"Z"$d[`timestamp]; price:`int$(d[`price]*10)] intime:"Z"$x[`utc_time]; size:`int$d[`size])}
 
-{[]
+{[ins]
+    list:{d:x[`resp][`data];$[`markPrice in cols d;:(1b;("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(d[`markPrice]*100)));:(0b;())]}
+    i: list each ins;
+    lsts:i[;1] where[i[;0]]
+   `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
+}
 
-
+{[fnd]
+    list:{d:x[`resp][`data];:("Z"$d[`timestamp];d[`fundingRate];d[`fundingRateDaily];"Z"$x[`utc_time])}
+    lsts: list each ins;
+   `funding upsert :([time:raze[lsts[;0]]] fundingRate:raze[lsts[;1]]; fundingRateDaily:raze[lsts[;2]]; intime:raze[lsts[;3]]);  
 }
