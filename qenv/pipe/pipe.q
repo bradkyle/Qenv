@@ -24,3 +24,6 @@ mark:(
   [time:`datetime$()]
   intime:`datetime$();
   price:`int$());
+
+
+// Derive start and end

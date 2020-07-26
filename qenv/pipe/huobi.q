@@ -16,7 +16,6 @@ tab[`resp]: .j.k each tab[`resp];
     `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
 }
 
-
 // trades
 /
 pid      | "f3c48ba2-2d52-4a2e-b234-043d7d27e290"

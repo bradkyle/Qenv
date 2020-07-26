@@ -9,7 +9,6 @@ tab[`resp]: .j.k each tab[`resp];
 
 // orderbook
 {[ob]
-
     list:{[u]
         time:u[`resp][`data][`timestamp];
         a:flip u[`resp][`data][`asks][0];
