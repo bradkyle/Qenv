@@ -35,6 +35,7 @@ EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;
 
 orderMandatoryFields    :`accountId`side`otype`size;
 
+// TODO change price type to int, longs etc.
 Order: (
     [price:`float$(); orderId:`long$()]
     clOrdId         : `long$();
@@ -95,7 +96,7 @@ OrderBook:(
     qty         :`float$()
     );
 
-AddDepthUpdateEvent :{[depth;time]
+AddDepthUpdateEvent :{[side;size;price;time]
     :.global.AddEvent[time;`UPDATE;`DEPTH;depth];
     };
 

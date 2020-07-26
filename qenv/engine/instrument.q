@@ -4,6 +4,7 @@
 instrumentCount:0;
 activeInstrumentId:0;
 
+// https://blog.bitmex.com/xbt-vs-xbu-chain/
 /*******************************************************
 / instrument enumerations
 MAINTTYPE           :   `TIERED`FLAT;
@@ -55,7 +56,7 @@ Instrument: (
     hasLiquiditySell        : `boolean$();
     maxPrice                : `float$();
     minPrice                : `float$();
-    lotSize                 : `float$();
+    lotSize                 : `float$(); 
     maxOrderSize            : `float$();
     minOrderSize            : `float$();
     junkOrderSize           : `float$();
