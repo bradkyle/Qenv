@@ -29,7 +29,4 @@ mark:(
   intime:`datetime$();
   price:`int$());
 
-SourceEvents:(
-  
-  );
 // Derive start and end

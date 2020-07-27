@@ -3,8 +3,7 @@
 
 /*******************************************************
 / error kind enumerations
-ERRORKIND   :   (
-            `NIL;
+ERRORKIND   :   ( 
             `INVALID_ORDER_TYPE;
             `INVALID_ORDER_SIDE;
             `INVALID_ORDER_TICK_SIZE;
@@ -61,39 +60,39 @@ EVENTCMD      :   `NEW`UPDATE`DELETE`FAILED;
 /*******************************************************
 / Datum Construction
 
-MakeDepthEvent   :{[depth;time]
+MakeDepthEvent   :{[depth]
 
         };
 
-MakeTradeEvent   :{[trade;time]
+MakeTradeEvent   :{[trade]
 
         };
 
-MakeMarkEvent      :{[mark;time]
+MakeMarkEvent      :{[mark]
 
         };
 
-MakeFundingEvent    :{[funding;time]
+MakeFundingEvent    :{[funding]
 
         };
 
-MakeOrderEvent   :{[order;time]
+MakeOrderEvent   :{[order]
 
         };
 
-MakeAccountEvent  :{[account;time]
+MakeAccountEvent  :{[account]
 
         };
 
-MakeWithdrawEvent :{[order;time]
+MakeWithdrawEvent :{[order]
 
         };
 
-MakeDepositEvent  :{[account;time]
+MakeDepositEvent  :{[account]
 
         };
 
-MakeFailureEvent   :{[failure;time]
+MakeFailureEvent   :{[failure]
 
         };
 

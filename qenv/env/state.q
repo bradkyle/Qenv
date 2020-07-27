@@ -99,6 +99,15 @@ FundingEventHistory: (
     side            :   `.order.ORDERSIDE$();
     time            :   `datetime$());
 
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+LiquidationEventHistory: (
+    size            :   `float$();
+    price           :   `float$();
+    side            :   `.order.ORDERSIDE$();
+    time            :   `datetime$());
+
 // TODO batching + 
 
 // Maintains a lookback buffer of 
@@ -138,6 +147,8 @@ InsertResultantEvents   :{[events]
             [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
             k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
             [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
+            k=`LIQUIDATION;
+            [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
         ];
     } each events;
     };
