@@ -52,3 +52,5 @@ aid      | "xbtusd"
     lsts: list each ins;
    `funding upsert ([time:raze[lsts[;0]]; intime:raze[lsts[;1]]]; fundingRate:raze[lsts[;2]]);  
 }
+
+// TODO index load
