@@ -3,21 +3,19 @@
 // Source Event Tables
 // =====================================================================================>
 
-book:([]
-  time:`datetime$();
-  intime:`datetime$();
+book:([
   side:`symbol$();
   price:`int$();
+  time:`datetime$()]
+  intime:`datetime$();
   size:`int$());
-book:`side`price`time xkey book;
 
-trade:([]
-  time:`datetime$();
-  intime:`datetime$();
+trade:([
   side:`symbol$();
+  time:`datetime$()]
+  intime:`datetime$();
   price:`int$();
   size:`int$());
-trade:`side`price`time xkey trade;
 
 funding:(
   [intime:`datetime$()];
@@ -28,5 +26,17 @@ mark:(
   [time:`datetime$()]
   intime:`datetime$();
   price:`int$());
+
+liquidation:(
+  [time:`datetime$()]
+  intime:`datetime$();
+  price:`int$());
+
+event:(
+  time    :  `datetime$()
+  kind    :  `.event.EVENTKIND$();
+  cmd     :  `.event.EVENTCMD$();
+  datum   :  ();  
+  );
 
 // Derive start and end

@@ -3,6 +3,9 @@ tab[`resp]: .j.k each tab[`resp];
 
 ts:1970.01.01+0D00:00:00.001*;
 
+sizeMultiplier:1000;
+priceMultiplier:100;
+
 {[ob]
     list:{[u]
         r:u[`resp];
