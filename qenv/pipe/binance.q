@@ -1,13 +1,13 @@
 
 tab[`resp]: .j.k each tab[`resp];
 
-
+ts:1970.01.01+0D00:00:00.001*;
 
 {[ob]
     list:{[u]
         r:u[`resp];
         d:r[`data];
-        time:d[`timestamp];
+        time:`datetime$(ts d[`timestamp]);
         a:"F"$(flip[ob[`resp][`data][`a]]); 
         b:"F"$(flip[ob[`resp][`data][`b]]);
         ca:count a;
@@ -15,7 +15,7 @@ tab[`resp]: .j.k each tab[`resp];
         a:flip a;
         b:flip b;
         cab: ca+cb;
-        :((ca#`S),(cb#`B);`int$((a[0],$b[0])*100);cab#"Z"$time;cab#"Z"$u[`utc_time];`int$((a[1],b[1])*1000)));
+        :((ca#`S),(cb#`B);`int$((a[0],$b[0])*100);cab#"Z"$time;cab#"Z"$u[`utc_time];`int$((a[1],b[1])*1000));
     };
     lsts:list each ob;
     `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
@@ -45,7 +45,6 @@ aid      | "xbtusd"
     lsts: list each ins;
    `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
 }
-
 
 {[fnd]
     list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
