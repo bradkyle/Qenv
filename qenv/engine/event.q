@@ -17,8 +17,6 @@ ERRORKIND   :   (
             `NO_LIQUIDITY
         );
 
-/*******************************************************
-
 // REQUEST_KIND refers to the type of 
 // 
 REQUESTKIND : (
@@ -71,6 +69,14 @@ MakeTradeEvent   :{[trade;time]
 
         };
 
+MakeMarkEvent      :{[mark;time]
+
+        };
+
+MakeFundingEvent    :{[funding;time]
+
+        };
+
 MakeOrderEvent   :{[order;time]
 
         };
@@ -79,15 +85,15 @@ MakeAccountEvent  :{[account;time]
 
         };
 
+MakeWithdrawEvent :{[order;time]
+
+        };
+
+MakeDepositEvent  :{[account;time]
+
+        };
+
 MakeFailureEvent   :{[failure;time]
-
-        };
-
-MakeMarkEvent      :{[mark;time]
-
-        };
-
-MakeFundingEvent    :{[funding;time]
 
         };
 

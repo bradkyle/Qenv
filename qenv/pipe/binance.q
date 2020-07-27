@@ -21,19 +21,6 @@ ts:1970.01.01+0D00:00:00.001*;
     `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
 }
 
-// trades
-/
-pid      | "f3c48ba2-2d52-4a2e-b234-043d7d27e290"
-source   | "bitmexagentxbtusd"
-inst     | `xbtusd
-chan     | `trade
-resp     | `table`action`data!("trade";"insert";+`timestamp`symbol`side`size`price`tickDirection`trdMatchID`grossValue`homeNotional`foreignNotional!(,"2020-06-10T11:29:06.105Z";,"XBTUSD";,"Buy";,10f;,9746f;,"PlusTick";,"8dc378cd-57b3-98fb-e50a-3f25d236c444";,102610f;,0.0010261;,10f))
-time     | 1.591789e+09
-timestamp| 1.591789e+09
-utc_time | "2020-06-10 11:29:06.216479"
-cid      | "trade"
-aid      | "xbtusd"
-\
 {[trades]
     list:{d:x[`resp][`data];:(`$d[`side];`int$(("F"$d[`price])*100);  "Z"$d[`timestamp]; "Z"$x[`utc_time];"I"$d[`size])}
     lsts: list each trades;
