@@ -17,3 +17,7 @@
 .qtpy.walkDirs:{[path]
     `$(.qtpy.py.lib[`:walkDirs][path]`)
     };
+
+.qtpy.getPartitions:{[path]
+    `$(.qtpy.py.lib[`:getPartitions][path]`)
+    };

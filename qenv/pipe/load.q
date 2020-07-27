@@ -4,13 +4,24 @@
 basePath:"/home/kx/qenv/lcl/mnt/lcl/436768776d1d4b9ea142bbafae1554a1/utc_day=20200726/sid=binancefuturesagent";
 
 write:{
- t:.Q.en[dst] update sym:`p#sym from `sym xasc y;
- $[count dsp;
-  (` sv dsp,(`$"d",string dspx),`$x) set t;
-  (` sv dst,`$x) set t];}
+
+  `:/path/to/dbroot/splay/ upsert .Q.en[] z;
+  }
 
 
-getAndPersist   :{[dds;sds] write[0;"/data/";.qparquet.getDataset[string[sds]]]};
+getAndPersist   :{[dds;sds]  
+  a:"/" vs sds;
+  a:({"=" vs x} each (a where[a like "*=*"]))[;1];
+  dest: .Q.dd[`$(":",dds);`$a];
+  show dest;
+  dir: (":" vs (string dest))[1];
+  show dir;
+  show ("mkdir ", dir);
+  dest upsert .Q.en[`$(":",dds)] .qparquet.getDataset[sds];
+  };
+
+
+paths: (string .qtpy.walkDirs[basePath])
 
 // TODO change to peach
-getAndPersist["data"] each .qtpy.walkDirs[basePath]
+getAndPersist["data"] peach (paths where[paths like "*aid=*"])  
