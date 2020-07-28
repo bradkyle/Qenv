@@ -28,7 +28,7 @@ TieredRisk:NewRiskTier[(
 
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
 // fees for referral
-TieredFeeRf:NewFeeTier[(
+TieredFee:NewFeeTier[(
         50      0.0006    0.0006    600f;
         500     0.00054   0.0006    600f;
         1500    0.00048   0.0006    600f;
