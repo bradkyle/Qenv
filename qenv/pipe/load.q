@@ -4,19 +4,20 @@
 getPaths  :{
   bp:read0[`:path.txt];
   paths:string[.qtpy.walkDirs[first bp]];
-  :(paths where[paths like "*aid=*"])  
+  :(paths where[paths like "*aid=*"]);  
   };
 
 writePath:{h:hopen `:./db/par.txt;neg[h] x;hclose h;};
 
 getPathParams :{[path]
-  a:"/" vs sds;
+  a:"/" vs path;
   a:({"=" vs x} each (a where[a like "*=*"]))[;1]; 
   :a;
   };
 
 / sds: first paths;
 getAndPersist : {[sds]
+  show sds;
   a: getPathParams[sds];
   path: `$(":./data/",("/" sv (a 1 0 3)),"/");
   dbname:a 1;
@@ -29,8 +30,14 @@ getAndPersist : {[sds]
   };
 / show paths;
 
-getAndPersistPeach  : {[paths]
-      getAndPersist each paths;
+getAndPersistGrp  : {[paths]
+  show paths;
+  getAndPersist each paths;
   };
 
+getAndPersistPeach  :{[paths]
+  paths:`grp xgroup flip[`pth`grp!(paths;getPathParams each paths)];
+  {getAndPersistGrp[x[`pth]]} peach paths;
+  };
+ 
 / getAndPersist each paths;
