@@ -41,5 +41,3 @@ priceMultiplier:100;
     lsts: list each ins;
    `funding upsert :([time:raze[lsts[;0]]] intime:raze[lsts[;3]]; fundingRate:raze[lsts[;1]]);   
 }
-
-// TODO load extra data
