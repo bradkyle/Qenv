@@ -9,7 +9,6 @@
     adj factor: 
     funding interval: 8hours
     settlement: 8hours 4,12,20 (GMT+8)
-    
 \
 
 // max amt of contracts, mmr, imr, max leverage // TODO mmr
