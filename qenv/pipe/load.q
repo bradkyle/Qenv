@@ -12,14 +12,10 @@ write:{
 getAndPersist   :{[dds;sds]  
   a:"/" vs sds;
   a:({"=" vs x} each (a where[a like "*=*"]))[;1];
-  dest: .Q.dd[`$(":",dds);`$a];
-  show dest;
-  dir: (":" vs (string dest))[1];
-  show dir;
-  show ("mkdir ", dir);
+  dest: .Q.dd[`$(":",dds);`$1_a]; 
   dest upsert .Q.en[`$(":",dds)] .qparquet.getDataset[sds];
+  show dest;
   };
-
 
 paths: (string .qtpy.walkDirs[basePath])
 

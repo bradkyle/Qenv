@@ -380,14 +380,7 @@ NewOrder       : {[o;time];
 
                     // Update the account with the respective
                     // order premium etc.
-                    update 
-                        openBuyPremium:0f,
-                        openSellPremium:0f,
-                        openBuyOrderQty:0,
-                        openSellOrderQty:0,
-                        orderMargin:0f,
-                        frozen:0f,
-                        available:0f from `.account.Account where accountId=o[`accountId]; 
+                    // TODO implement order margin here
 
                     // TODO make better
                     o[`execInst]:`ALLORNONE;

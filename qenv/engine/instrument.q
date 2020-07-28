@@ -118,3 +118,13 @@ UpdateActiveInstrument  :{[instrument;time]
     :UpdateInstrument[instrument];
     };
 
+
+// Inventory CRUD Logic
+// -------------------------------------------------------------->
+pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
+
+
+deriveMaintenenceMargin     :{[]
+
+    };
+
