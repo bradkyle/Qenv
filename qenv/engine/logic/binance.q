@@ -93,6 +93,7 @@ Instrument:NewInstrument[
 
 // liquidation
 
+
 // Funding
 / Funding Amount=Nominal Value of Positions* ×Funding Rate
 / *Nominal Value of Positions = Mark Price x Size of a Contract
