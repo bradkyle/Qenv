@@ -1,6 +1,66 @@
 
+\d .bitmex
 
-maintMarginCoeff  :{[takerFee;fundingRate] 0.005 + takerFee + fundingRate}
+Instrument:NewInstrument[
+
+    ];
+
+pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
+
+derivePremium   :{[]
+
+    };
+/ reserveOrderMargin  : {[side;price;size;orderId;time]
+/     // 
+/     events:();
+/     markPrice: 0;
+/     faceValue: 0;
+/     leverage:0;
+/     $[side=`BUY & price>markPrice; 
+/       premium:floor[(price-markPrice)*faceValue];
+/       side=`SELL & price<markPrice;
+/       premium:floor[(markPrice-price)*faceValue];
+/       premium:0;
+/     ];
+
+/     $[side=`SELL & longOpenQty>sellOpenQty;
+/      charged:max[size-(longOpenQty-sellOrderQty),0];
+/      side=`BUY & shortOpenQty>buyOrderQty;
+/      charged:max[size-(shortOpenQty-buyOrderQty),0];
+/      charged:0;
+/     ];
+    
+/     reserved: floor[((charged+(initialMarginCoefficient*charged*faceValue)+changed*premium)%price)%leverage];
+/     $[(reserved<availableBalance) | (reserved=0);
+/         [
+/             orderMargin:reserved;
+/             :1b;
+/         ];
+/         [:0b]
+/     ];
+/     :events;
+/     };
+/ Symbol	Base Risk Limit	Step	Base Maintenance Margin	Base Initial Margin
+/ XRPU20	50 XBT	50 XBT	2.50%	5.00%
+/ If a contract uses Fair Price Marking initial margin will be calculated differently. 
+/ If a buy order is placed above the mark price, or if a sell order is placed below 
+/ the mark price then the trader must fully fund the difference between the order 
+/ price and the mark price. For example, if the mark price is $100 and the trader 
+/ submits a bid order for 10 contracts at $110, then the 
+/ initial margin required = (IM * 10 contracts * $110 * Multiplier) + 
+/ (100% * 10 contracts * ($110 - $100) * Multiplier).
+deriveInitialMargin         :{[]
+
+    };
+
+/ / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
+/ / The amount of commission applicable to close out all your positions will also be added onto 
+/ / your maintenance margin requirement.
+/ deriveMainteneceMargin  : {[]
+
+/     };
+
+maintMarginCoeff  :{[takerFee;fundingRate] 0.004 + takerFee + fundingRate}
 
 // derive maintenence margin
 / This is the minimum amount of margin you must maintain to avoid liquidation on your position.

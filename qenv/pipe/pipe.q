@@ -32,11 +32,5 @@ liquidation:(
   intime:`datetime$();
   price:`int$());
 
-event:(
-  time    :  `datetime$()
-  kind    :  `.event.EVENTKIND$();
-  cmd     :  `.event.EVENTCMD$();
-  datum   :  ();  
-  );
 
 // Derive start and end

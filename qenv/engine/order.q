@@ -230,43 +230,7 @@ ProcessDepthUpdate  : {[time;asks;bids]
 // a given instrument i.e. the maintenence type and associated logic, fee type and associated
 // logic, liquidation strategy and settlement type. 
 
-/ reserveOrderMargin  : {[side;price;size;orderId;time]
-/     // 
-/     events:();
-/     markPrice: 0;
-/     faceValue: 0;
-/     leverage:0;
-/     $[side=`BUY & price>markPrice; 
-/       premium:floor[(price-markPrice)*faceValue];
-/       side=`SELL & price<markPrice;
-/       premium:floor[(markPrice-price)*faceValue];
-/       premium:0;
-/     ];
 
-/     $[side=`SELL & longOpenQty>sellOpenQty;
-/      charged:max[size-(longOpenQty-sellOrderQty),0];
-/      side=`BUY & shortOpenQty>buyOrderQty;
-/      charged:max[size-(shortOpenQty-buyOrderQty),0];
-/      charged:0;
-/     ];
-    
-/     reserved: floor[((charged+(initialMarginCoefficient*charged*faceValue)+changed*premium)%price)%leverage];
-/     $[(reserved<availableBalance) | (reserved=0);
-/         [
-/             orderMargin:reserved;
-/             :1b;
-/         ];
-/         [:0b]
-/     ];
-/     :events;
-/     };
-
-/ / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
-/ / The amount of commission applicable to close out all your positions will also be added onto 
-/ / your maintenance margin requirement.
-/ deriveMainteneceMargin  : {[]
-
-/     };
 
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
