@@ -10,8 +10,7 @@
 \
 
 // max amt of contracts, mmr, minimum initial margin ratio, max leverage
-TieredRisk:NewRiskTier[
-    (
+TieredRisk:NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f;
         550000    0.015    0.02    50f;
@@ -30,8 +29,7 @@ TieredRisk:NewRiskTier[
         3800000   0.08     0.085   11.76f;
         4050000   0.085    0.09    11.11f;
         4300000   0.09     0.095   10.52
-    );
-    ];
+    )];
 
 / The 30-day trading volume of Perpetual Swap trading is calculated in BTC USD price. 
 / Trading volume is converted into BTC and settled at 00:00 (UTC+8) every day, 
