@@ -13,8 +13,7 @@
 \
 
 // max amt of contracts, mmr, imr, max leverage // TODO mmr
-TieredRisk:NewRiskTier[
-    (
+TieredRisk:NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f;
         1000000     0.01     0.02     50f;
@@ -25,12 +24,10 @@ TieredRisk:NewRiskTier[
         200000000   0.15     0.333    3f;
         500000000   0.25     0.50     2f;
         500000000   0.25     1.0      1f
-    );
-    ];
+    )];
 
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
-TieredFee:NewFeeTier[ // todo withdraw limit
-    (
+TieredFee:NewFeeTier[ (
         50      0.00075   0.00075   600f;
         500     0.00075   0.00075   600f;
         1500    0.0006    0.00075   600f;
@@ -40,9 +37,7 @@ TieredFee:NewFeeTier[ // todo withdraw limit
         40000   0.0003    0.000450  600f;
         80000   0.000225  0.000375  600f;
         150000  0.000150  0.0003    600f
-        
-    )
-    ];
+    )];
 
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
 // fees for referral

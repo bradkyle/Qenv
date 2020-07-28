@@ -43,8 +43,7 @@ TieredRisk:NewRiskTier[
 / price into BTC and settle the accumulated trading volume of the last 30 
 / days at 00:00 (UTC+8) every day.
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
-TieredFee:NewFeeTier[
-    (
+TieredFee:NewFeeTier[(
         5000    0.00015     0.0003    600f;
         10000   0.00005     0.0003    800f;
         20000   0           0.0003    1000f;
@@ -52,8 +51,7 @@ TieredFee:NewFeeTier[
         100000  -0.00008    0.0003    1500f;
         150000  -0.00010    0.0003    1800f;
         200000  -0.00015    0.03      2000f
-    )
-    ];
+    )];
 
 // Default Hedged position
 Instrument:NewInstrument[
