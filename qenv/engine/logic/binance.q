@@ -49,17 +49,30 @@ Instrument:NewInstrument[
 
     ];
 
-// derive maintenence margin
+// derive initial margin
+deriveInitialMargin         :{[]
 
+    };
+
+// derive maintenence margin
+deriveMaintenenceMargin     :{[]
+
+    };
 
 // derive unrealized pnl
+deriveUnrealizedPnl         :{[]
 
+    };
 
 // derive realized pnl
+deriveRealizedPnl           :{[]
 
+    };
 
 // derive liquidation price
+deriveLiquididationPrice     :{[]
 
+    };
 
 // derive bankruptcy price
 
