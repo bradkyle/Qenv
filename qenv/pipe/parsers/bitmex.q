@@ -1,6 +1,21 @@
 
+Piv:{[t;k;p;v]
+    f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
+    v:(),v; 
+    k:(),k; 
+    p:(),p;
+    G:group flip k!(t:.Q.v t)k;
+    F:group flip p!t p;
+    key[G]!flip(C:f[v]P:flip value flip key F)!raze{[i;j;k;x;y]
+        a:count[x]#x 0N;a[y]:x y;
+        b:count[x]#0b;
+        b[y]:1b;
+        c:a i;
+        c[k]:first'[a[j]@'where'[b j]];
+        c
+    }[I[;0];I J;J:where 1<>count'[I:value G]]/:\:[t v;value F]};
 
-bookLvlDeltas:{[]
+bookLvlDeltas:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
@@ -8,12 +23,14 @@ bookLvlDeltas:{[]
         :(((til 10),(til 10));20#"Z"$time;20#u[`utc_time];((10#`S),(10#`B));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
     x:derive each rows;
-    y:raze each (x[;0];x[;1];x[;2];x[;3];x[;4]);
-    i:`lvl`time`intime`side`price`size!y;
-    j:Piv[`i;`time;`lvl`side;`price`size];
+    y:raze each (x[;0];x[;1];x[;2];x[;3];x[;4];x[;5]);
+    j:flip(`lvl`time`intime`side`price`size!y);
+    / j:Piv[`i;`time;`lvl`side;`price`size];
     j:update dlt:{1_deltas x}size by lvl, side from j;
     j:j where[j[`dlt]<>0];
-    
+    j[`kind]:`DEPTH;
+    j[`cmd]:`UPDATE;
+    :j;
     };
 
 // DEPTHS

@@ -13,8 +13,7 @@ tab[`resp]: .j.k each tab[`resp];
         :((10#`S),(10#`B);`int$((a[0],b[0])*100);20#"Z"$time;20#"Z"$u[`utc_time];`int$(a[1],b[1]));
     };
     lsts:list each ob;
-    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
-}
+    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) }
 
 // trades
 /
@@ -32,8 +31,7 @@ aid      | "xbtusd"
 {[trades] // todo fix
     list:{d:x[`resp][`data];:(`$d[`side]; `int$(d[`price]*100); "Z"$d[`timestamp]; "Z"$x[`utc_time]; `int$d[`size])}
     lsts: list each trades;
-   `trade upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
-}
+   `trade upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) }
 
 
 / {`book upsert recs[x]} each orderbook far too long
