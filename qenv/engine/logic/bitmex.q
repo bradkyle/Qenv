@@ -1,8 +1,13 @@
 
 \d .bitmex
 
-TieredRisk :NewRiskTier[];
-FlatFee    :NewFlatFee[];
+TieredRisk :NewRiskTier[(
+
+    )];
+    
+FlatFee    :NewFlatFee[(
+
+    )];
 
 Instrument:NewInstrument[
 
