@@ -7,7 +7,12 @@ bookLvlDeltas:{[]
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
         :(((til 10),(til 10));20#"Z"$time;20#u[`utc_time];((10#`S),(10#`B));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
-
+    x:derive each rows;
+    y:raze each (x[;0];x[;1];x[;2];x[;3];x[;4]);
+    i:`lvl`time`intime`side`price`size!y;
+    j:Piv[`i;`time;`lvl`side;`price`size];
+    j:update dlt:{1_deltas x}size by lvl, side from j;
+    
     };
 
 // DEPTHS
