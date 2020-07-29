@@ -12,6 +12,7 @@ bookLvlDeltas:{[]
     i:`lvl`time`intime`side`price`size!y;
     j:Piv[`i;`time;`lvl`side;`price`size];
     j:update dlt:{1_deltas x}size by lvl, side from j;
+    j:j where[j[`dlt]<>0];
     
     };
 

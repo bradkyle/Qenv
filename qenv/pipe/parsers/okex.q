@@ -15,8 +15,8 @@
         :((ca#`S),(cb#`B);`int$((("F"$a[0]),("F"$b[0]))*100);cab#"Z"$time;cab#"Z"$u[`utc_time];("I"$a[1]),("I"$b[1]));
     };
     lsts:list each ob;
-    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) / = 2044 (258499)    
-}
+    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]])
+    }
 
 // trades
 /
