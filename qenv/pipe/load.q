@@ -24,7 +24,7 @@ getAndPersist : {[sds]
   tab:.qparquet.getDataset[sds];
   tab:delete pid,time,timestamp from tab;
   tab:update inst:`$inst, chan:`$chan, inst:`$inst, "Z"$utc_time, resp:.j.k peach resp from tab;
-  path set .Q.en[`:db;] tab; //todo check that is not overwriting 
+  path upsert .Q.en[`:db;] tab; //todo check that is not overwriting 
   writePath["/" sv (first system["pwd"];"data";dbname)];
   show path;
   };
