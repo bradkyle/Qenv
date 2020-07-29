@@ -1,12 +1,12 @@
+\l ../engine/event.q
 
-
-event:(
-  time    :  `datetime$()
+events:(
+  time    :  `datetime$();
+  intime  :  `datetime$();
   kind    :  `.event.EVENTKIND$();
   cmd     :  `.event.EVENTCMD$();
-  datum   :  ();  
-  );
+  datum   :  ());
 
 
 
-events: processBitmex each `chan xgroup select from data where source=`bitmexagentxbtusd, inst=`xbtusd;
+/ events: processBitmex each `chan xgroup select from data where source=`bitmexagentxbtusd, inst=`xbtusd;

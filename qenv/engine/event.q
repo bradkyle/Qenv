@@ -26,7 +26,7 @@ REQUESTKIND : (
         `CANCEL_ALL_ORDERS;
         `AMEND_ORDER;
         `AMEND_BATCH_ORDER;
-        `LEVERAGE_UPDATE;
+        `LEVERAGE_UPDATE
         );
 
 INGRESSKIND :(
@@ -45,7 +45,7 @@ EGRESSKIND :(
         `ORDER_DELETED;
         `AGENT_FORCED_CLOSE_ORDERS;
         `AGENT_LIQUIDATED;
-        `LIQUIDATION;
+        `LIQUIDATION
         );
 
 / event kind enumerations
