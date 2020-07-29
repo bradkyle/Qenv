@@ -1,4 +1,6 @@
 
+// all events should follow the format time, intime, kind, cmd datum...
+
 Piv:{[t;k;p;v]
     f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
     v:(),v; 
@@ -31,6 +33,10 @@ bookLvlDeltas:{[rows]
     j[`kind]:`DEPTH;
     j[`cmd]:`UPDATE;
     :j;
+    };
+
+bookLvlEvents :{[rows]
+    :flip bookLvlDeltas[rows][`time`intime`kind`cmd`side`price`size];
     };
 
 // DEPTHS
