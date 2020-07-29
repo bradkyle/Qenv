@@ -18,7 +18,9 @@ getAndPersist   :{[p]
       tab:delete pid,time,timestamp,sid,aid,cid from tab;      
       tab:(0!(`utc_day`source`inst`chan xgroup tab));
       {
-        (` sv `:./data/,(x[`source],x[`inst],`$string[x[`utc_day]]),x[`chan],(`$"/")) upsert .Q.en[`:db;] flip[x];
+        path:(` sv `:./data/,(x[`source],x[`inst],`$string[x[`utc_day]]),x[`chan],`$"");
+        path upsert .Q.en[`:db;] flip[x];
+        show path;
       } peach tab; 
       {
         writePath["/" sv (first system["pwd"];"data";string x[`source];string x[`inst])];
@@ -26,5 +28,5 @@ getAndPersist   :{[p]
     };
 
 sst:"sid=bitmexagentxbtusd";
-paths:distinct {(sst vs x)[0]} each getPaths[sst;p]
+paths:distinct {(sst vs x)[0],sst} each getPaths[sst;p]
 / getAndPersist peach paths;
