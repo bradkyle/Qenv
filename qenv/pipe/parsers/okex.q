@@ -43,7 +43,6 @@ aid      | "xbtusd"
    `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
 }
 
-
 {[fnd]
     list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
     lsts: list each ins;
