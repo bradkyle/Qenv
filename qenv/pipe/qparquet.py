@@ -3,9 +3,9 @@ import pyarrow;
 import pyarrow.parquet as parquet;
 import json
 
-def getDatasetJ(paths):
-  paths=json.loads(paths);
-  return parquet.ParquetDataset(paths).read().to_pandas();
+# def getDatasets(paths):
+#   paths=json.loads(paths);
+#   return parquet.ParquetDataset(paths).read().to_pandas();
 
 def getDataset(paths):
   return parquet.ParquetDataset(paths).read().to_pandas();

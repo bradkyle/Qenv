@@ -10,10 +10,10 @@
 
 .qparquet.init[];
 
-.qparquet.getDatasetJ:{[paths]
-  tab:.qparquet.py.lib[`:getDatasetJ][paths]`;
-  flip .p.wrap[tab][`:to_dict;`list]`
-  };
+/ .qparquet.getDatasets:{[paths]
+/   tab:.qparquet.py.lib[`:getDatasets][paths]`;
+/   flip .p.wrap[tab][`:to_dict;`list]`
+/   };
 
 .qparquet.getDataset:{[paths]
   tab:.qparquet.py.lib[`:getDataset][paths]`;
