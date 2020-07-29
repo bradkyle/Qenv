@@ -7,6 +7,11 @@ getPaths  :{
   :(paths where[paths like "*aid=*"]);  
   };
 
+getPathsBp  :{[bp]
+  paths:string[.qtpy.walkDirs[first bp]];
+  :(paths where[paths like "*aid=*"]);  
+  };
+
 writePath:{h:hopen `:./db/par.txt;neg[h] x;hclose h;};
 
 getPathParams :{[path]
