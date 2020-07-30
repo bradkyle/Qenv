@@ -28,7 +28,7 @@ bookParser:{[ob]
     x:update dlt:{1_deltas x}size by price, side from `time xasc x;
     cx:count x;
     x:flip value flip x;
-    :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;(x[;3 +til 3]));
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`DEPTH;cx#`UPDATE;(x[;2 +til 3]));
     };
 
 tradeParser:{[u]
@@ -52,7 +52,7 @@ markParser:{[u]
     x: derive each u;
     x:flip raze each flip x;
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;x[;2]);
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
     };
 
 fundingParser:{[u]
@@ -64,5 +64,5 @@ fundingParser:{[u]
     x: derive each u;
     x:flip raze each flip x;
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;x[;2]);
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
     };
