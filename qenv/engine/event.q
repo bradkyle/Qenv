@@ -26,15 +26,20 @@ REQUESTKIND : (
         `CANCEL_ALL_ORDERS;
         `AMEND_ORDER;
         `AMEND_BATCH_ORDER;
-        `LEVERAGE_UPDATE
+        `LEVERAGE_UPDATE;
+        `DEPOSIT;
+        `WITHDRAW
         );
 
 INGRESSKIND :(
-        `DEPTH_UPDATE;
+        `DEPTH;
         `TRADE;
         `FUNDING;
-        `MARK
-        );
+        `MARK;
+        `SETTLEMENT;
+        `LIQUIDATION;
+        `PRICERANGE
+        ), REQUESTKIND;
 
 EGRESSKIND :(
         `ORDER_UPDATE;
@@ -49,7 +54,7 @@ EGRESSKIND :(
         );
 
 / event kind enumerations
-EVENTKIND    :  REQUESTKIND,INGRESSKIND,EGRESSKIND;
+EVENTKIND    :  INGRESSKIND,EGRESSKIND;
 
 // TODO functions for making evens
 

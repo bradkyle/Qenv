@@ -1,4 +1,4 @@
-\l inventory.q
+/ \l inventory.q
 
 \d .account
 \l util.q
@@ -93,9 +93,6 @@ NewAccount :{[account;time]
 
     accountId:account[`accountId];
     AddAccountUpdateEvent[accountId;time];
-    .inventory.NewInventory[.inventory.mandCols!(accountId;`LONG);time];
-    .inventory.NewInventory[.inventory.mandCols!(accountId;`SHORT);time];
-    .inventory.NewInventory[.inventory.mandCols!(accountId;`BOTH);time];
     };
 
 // TODO
@@ -182,5 +179,4 @@ Withdraw       :{[withdrawn;time;accountId]
             where accountId=accountId;
         :AddAccountUpdateEvent[accountId;time];
     ];  
-    :();
     };

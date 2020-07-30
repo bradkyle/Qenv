@@ -1,5 +1,7 @@
-\l global.q
-
+\l instrument.q 
+\l event.q
+/ \l order.q
+\d .engine
 // TODO dropped response etc.
 /*******************************************************
 // represents the offset in milliseconds
@@ -45,21 +47,23 @@ Engine:(
 // get account
 // 
 
+show 99#"=";
 
 
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-eventEngine : (`.global.EVENTKIND$())!(); // TODO change to subset of supported types.
+eventEngine : (`.event.INGRESSKIND$())!(); // TODO change to subset of supported types.
 
-eventEngine[`DEPTH] :   {[event]
+eventEngine[`DEPTH]:   {[event]
     .logger.Debug["new depth"][event];
     .order.ProcessDepthUpdate[event];
     };
 
 eventEngine[`TRADE] :   {[event]
     .logger.Debug["new trade"][event];
-    .order.ProcessTradeEvent[event];
+    show 99#"=";
+    / .order.ProcessTradeEvent[event];
     };
 
 eventEngine[`FUNDING] :   {[event]
@@ -85,7 +89,7 @@ eventEngine[`DEPOSIT] :   {[event]
     .account.ProcessDeposit[event];
     };
 
-eventEngine[`WITHDRAWAL] :   {[event]
+eventEngine[`WITHDRAW] :   {[event]
     .logger.Debug["new withdrawal"][event];
     .account.ProcessWithdraw[event];
     };
@@ -146,7 +150,7 @@ ResetEngine     : {
 
 // 
 prepareIngress   :{[eventBatch]
-
+    :eventBatch;
     };
 
 prepareEgress    :{[eventBatch]
@@ -157,8 +161,8 @@ prepareEgress    :{[eventBatch]
 // them with their respective processing 
 // logic above.
 ProcessEvents  : {[eventBatch]
-        eventEngine [eventkind] [event] each prepareIngress[eventBatch];
-        :prepareEgress[.engine.PopEvents[]];
+        {eventEngine[(`.event.INGRESSKIND$x[`kind])][x]} each prepareIngress[eventBatch];
+        / :prepareEgress[.engine.PopEvents[]];
     };
 
 

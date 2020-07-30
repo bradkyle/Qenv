@@ -1,3 +1,4 @@
+\l account.q
 \d .order
 \l util.q
 
@@ -615,10 +616,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // was derived from a market trade stream and returns the resultant
 // set of events.
 processCross     :{[side;leaves;isAgent;accountId;isClose;time] 
-        $[0;
-            [while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]]];
-            [:MakeFailure[time;`]]
-        ];
+        while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]];
     };
 
 // Processes a trade that was not made by an agent
@@ -626,7 +624,8 @@ processCross     :{[side;leaves;isAgent;accountId;isClose;time]
 ProcessTrade  : {[side;size;price;time]
     // TODO price invariant?
     // TODO check for limit stop orders.
-    :processCross[side;size;0b;0N];
+    show 99#"=";
+    / :processCross[side;size;0b;0N];
     };
 
 
