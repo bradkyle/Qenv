@@ -5,7 +5,7 @@ sizeMultiplier:1;
 priceMultiplier:100;
 
 // DEPTHS
-bookLvlOnlyDeltasParser:{[rows]
+bookParser:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
@@ -20,25 +20,6 @@ bookLvlOnlyDeltasParser:{[rows]
     x:flip value flip x;
     :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;(x[;3 +til 3]));
     };
-
-/ // DEPTHS
-/ bookParser:{[rows]
-/     kind:`DEPTH;
-/     cmd:`UPDATE;
-/     derive:{[u]
-/         time:u[`resp][`data][`timestamp]; // should use this as ingress time
-/         a:flip u[`resp][`data][`asks][0];
-/         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
-/         :(20#"Z"$time;20#u[`utc_time];((10#`S),(10#`B));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
-/     }; // side, price, time, intime, size
-/     x:derive each rows;
-/     x:flip raze each flip x; 
-/     cy:count first y;
-/     // time;intime;kind;cmd;side;price;size
-/     :eventCols!(y[0];y[1];cy#kind;cy#cmd;y[2];y[3];y[4]);
-/     };
-
-// derive diffs
 
 // TRADES zzss TODO check many
 tradeParser:{[rows] // todo fix
