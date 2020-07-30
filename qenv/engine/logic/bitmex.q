@@ -71,14 +71,14 @@ deriveInitialMargin         :{[]
 
 /     };
 
-maintMarginCoeff  :{[takerFee;fundingRate] 0.004 + takerFee + fundingRate}
+maintMarginCoeff  :{[coeff;takerFee;fundingRate] coeff + (takerFee*2) + fundingRate}
 
 // derive maintenence margin
 / This is the minimum amount of margin you must maintain to avoid liquidation on your position.
 / The amount of commission applicable to close out all your positions will also be added onto 
 / your maintenance margin requirement. // TODO make strategy dependent
 deriveMaintainenceMargin    :{[currentQty;takerFee;markPrice;faceValue]
-    :((maintMarginCoeff[takerFee;markPrice]+takerFee)*currentQty)*
+    :(maintMarginCoeff[coeff;takerFee;markPrice]*currentQty)*
         pricePerContract[faceValue;markPrice];
     };
 
@@ -107,7 +107,7 @@ deriveRealisedPnl :{[avgPrice;fillPrice;faceValue;fillQty]; // TODO is fillQty s
 / (200000 * (1/10000 - 1/Liquidation Price)) = (1 - 0.1178517) * -1
 / Liquidation Price = $9577.56
 deriveLiquidationPrice      :{[currentQty;avgPrice;initMargin;maintMargin]
-        :(currentQty%((currentQty%avgPrice)-((initMargin-maintMargin)*-1)))
+    :(currentQty%((currentQty%avgPrice)-((initMargin-maintMargin)*-1)))
     };
 
 

@@ -142,7 +142,7 @@ ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
 // TODO next funding rate and next funding time (funding time delta)
 ApplyFunding       :{[fundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
 
-    // todo available, 
+    // todo available, frozen
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),

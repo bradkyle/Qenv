@@ -80,13 +80,15 @@ deriveRealizedPnl           :{[]
 
     };
 
-// derive liquidation price
+// derive liquidation price // todo add noise
 deriveLiquididationPrice     :{[]
 
     };
 
 // derive bankruptcy price
-
+deriveBankruptPrice          :{[currentQty;avgPrice;initMargin]
+    :(currentQty%((currentQty%avgPrice)-(initMargin*-1)))
+    };
 
 // derive breakeven price
 
