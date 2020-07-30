@@ -5,7 +5,7 @@ persist:    {[events; dest]
     {[dest;events]
         path:`$("/" sv (dest;string[first events[`utc_day]];"events/")); 
         events:flip[enlist[`utc_day] _ events];
-        path upsert .Q.en[`:db;] events;
+        path upsert .Q.en[`:/home/kx/qenv/lcl/db;] events;
         show path;
     }[dest] each 0!events;
     };
