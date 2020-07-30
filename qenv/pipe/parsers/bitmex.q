@@ -1,8 +1,8 @@
-
+\d .bitmex
 // all events should follow the format time, intime, kind, cmd datum...
 
 // DEPTHS
-bookLvlOnlyDeltas:{[rows]
+bookLvlOnlyDeltasParser:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
@@ -14,6 +14,7 @@ bookLvlOnlyDeltas:{[rows]
     x:update dlt:{1_deltas x}size by lvl, side from x;
     x:x where[x[`dlt]<>0]; 
     cx:count x;
+    x:flip value flip x;
     :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;(x[;3 +til 3]));
     };
 
@@ -36,7 +37,7 @@ bookLvlOnlyDeltas:{[rows]
 
 // derive diffs
 
-// TRADES
+// TRADES zzss
 tradeParser:{[rows] // todo fix
     derive:{d:x[`resp][`data];:("Z"$d[`timestamp]; count[d]#x[`utc_time]; upper `$d[`side]; `int$(d[`price]*100); `int$d[`size])};
     x: derive each rows;
@@ -51,7 +52,7 @@ markParser:{[rows]
     x: derive each rows;
     x:x[;1] where[x[;0]];
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;(x[;2]));
+    :flip `time`intime`kind`cmd`datum!(raze x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
     };
 
 // FUNDING
@@ -62,7 +63,7 @@ fundingParser:{[rows]
     derive:{d:x[`resp][`data];:("Z"$d[`timestamp];x[`utc_time];d[`fundingRate])};
     x: derive each rows;
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`FUNDING;cx#`UPDATE;(x[;2]));
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;0];cx#`FUNDING;cx#`UPDATE;enlist each x[;2]);
     };
 
 // .Q.ind[trade;til 5]
