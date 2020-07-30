@@ -13,8 +13,7 @@ ERRORKIND   :   (
             `INVALID_ACCOUNTID;
             `INVALID_ORDER_SIZE;
             `PARTICIPATE_DONT_INITIATE;
-            `NO_LIQUIDITY
-        );
+            `NO_LIQUIDITY);
 
 // REQUEST_KIND refers to the type of 
 // 
@@ -28,8 +27,7 @@ REQUESTKIND : (
         `AMEND_BATCH_ORDER;
         `LEVERAGE_UPDATE;
         `DEPOSIT;
-        `WITHDRAW
-        );
+        `WITHDRAW);
 
 INGRESSKIND :(
         `DEPTH;
@@ -38,8 +36,7 @@ INGRESSKIND :(
         `MARK;
         `SETTLEMENT;
         `LIQUIDATION;
-        `PRICERANGE
-        ), REQUESTKIND;
+        `PRICERANGE), REQUESTKIND;
 
 EGRESSKIND :(
         `ORDER_UPDATE;
@@ -50,8 +47,7 @@ EGRESSKIND :(
         `ORDER_DELETED;
         `AGENT_FORCED_CLOSE_ORDERS;
         `AGENT_LIQUIDATED;
-        `LIQUIDATION
-        );
+        `LIQUIDATION);
 
 / event kind enumerations
 EVENTKIND    :  INGRESSKIND,EGRESSKIND;

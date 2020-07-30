@@ -44,8 +44,7 @@ Inventory: (
     effectiveLeverage        :  `float$();
     totalCommission          :  `float$();
     faceValue                :  `long$();
-    fillCount                :  `long$()
-    );
+    fillCount                :  `long$());
 
 mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
 defaults:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,100f,0f,1,0)};
