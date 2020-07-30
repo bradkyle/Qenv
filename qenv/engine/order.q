@@ -1,5 +1,5 @@
 \d .order
-.global.Require[("/engine/util.q"; "/engine/event.q")];
+\l util.q
 
 orderCount:0;
 

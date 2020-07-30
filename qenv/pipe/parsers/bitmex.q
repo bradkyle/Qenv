@@ -1,12 +1,12 @@
-.global.Require[("/engine/order.q"; "/engine/event.q")];
+
 // all events should follow the format time, intime, kind, cmd datum...
 
-bookLvlDeltas:{[rows]
+bookLvlOnlyDeltas:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
-        :(((til 10),(til 10));20#"Z"$time;20#u[`utc_time];((10#`.order.ORDERSIDE$`SELL),(10#`.order.ORDERSIDE$`BUY));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
+        :(((til 10),(til 10));20#"Z"$time;20#u[`utc_time];((10#`SELL),(10#`BUY));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
     x:derive each rows;
     y:raze each (x[;0];x[;1];x[;2];x[;3];x[;4];x[;5]);
@@ -14,13 +14,14 @@ bookLvlDeltas:{[rows]
     / j:Piv[`i;`time;`lvl`side;`price`size];
     j:update dlt:{1_deltas x}size by lvl, side from j;
     j:j where[j[`dlt]<>0];
-    j[`kind]:`.event.EVENTKIND$`DEPTH;
-    j[`cmd]:`.event.EVENTCMD$`UPDATE;
+    j[`kind]:`DEPTH;
+    j[`cmd]:`UPDATE;
     :j;
     };
 
 bookLvlEvents :{[rows]
-    :flip bookLvlDeltas[rows][`time`intime`kind`cmd`side`price`size];
+    ev:bookLvlDeltas[rows];
+    :flip `time`intime`kind`cmd`datum!(ev[;0];ev[;1];ev[;2];ev[;3];(ev[;4+til 3]));
     };
 
 // DEPTHS

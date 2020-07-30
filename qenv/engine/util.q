@@ -1,5 +1,4 @@
-\l logger.q
-\l global.q
+\l logger.q 
 
 // Shortened enlist
 E:{[x] :enlist[x]};
