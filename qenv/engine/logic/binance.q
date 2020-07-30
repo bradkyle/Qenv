@@ -60,6 +60,17 @@ deriveMaintenenceMargin     :{[]
     };
 
 // derive unrealized pnl
+/ Mark Price is a better estimate of the ‘true’ value of the contract, 
+/ compared to Perpetual Futures prices which can be more volatile in the short term. 
+/ We use this price to prevent unnecessary liquidations for traders and to discourage 
+/ any market manipulations by poor actors.
+/ Unrealized PnL is thus calculated as (all values in USDT):
+/ Net Negative Position: UnrealizedPnL= (Entry Price−MarkPrice)×S
+/ Net Positive Position: UnrealizedPnL=(MarkPrice−InitialBuyPrice)×Position
+/ Total Collateral for Margin and Liquidation purposes: 
+/       Collateral=InitialCollateral+RealizedPnL+UnrealizedPnL
+/ The maximum amount of collateral can be withdrawn from the account so long 
+/ as collateral > (initial margin + borrowed amount) . 
 deriveUnrealizedPnl         :{[]
 
     };
@@ -81,7 +92,9 @@ deriveLiquididationPrice     :{[]
 
 
 // exec fill
-
+execFill    :{[account;inventory;fillQty;price;fee]
+    
+    };
 
 // update order margin
 

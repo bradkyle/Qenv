@@ -2,7 +2,7 @@
 
 sizeMultiplier:1;
 priceMultiplier:100;
-
+tab:7;
 
 bookParser:{[ob]
     derive:{[u]
@@ -24,6 +24,8 @@ bookParser:{[ob]
     };
     x:derive each ob;
     x:flip `time`intime`side`price`size!raze each flip x;
+    / `.okex.tab set x;
+    x:delete from x where[(type each exec size from x)=101h];
     x:update dlt:{1_deltas x}size by price, side from `time xasc x;
     cx:count x;
     x:flip value flip x;
