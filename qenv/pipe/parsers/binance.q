@@ -31,6 +31,7 @@ bookParser:{[ob]
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`DEPTH;cx#`UPDATE;(x[;2 +til 3]));
     };
 
+// TODO check many
 tradeParser:{[u]
     derive:{
         d:x[`resp][`data];
@@ -64,5 +65,7 @@ fundingParser:{[u]
     x: derive each u;
     x:flip raze each flip x;
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`FUNDING;cx#`UPDATE;enlist each x[;2]);
     };
+
+// TODO get historical funding and mark price for binance

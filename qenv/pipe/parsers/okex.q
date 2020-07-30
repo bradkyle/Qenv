@@ -1,50 +1,65 @@
+\d .okex
+
+sizeMultiplier:1;
+priceMultiplier:100;
 
 
-{[ob]
-    list:{[u]
+bookParser:{[ob]
+    derive:{[u]
         r:u[`resp];
-        d:r[`data];
-        time:d[`timestamp];
-        a:raze[(ob[`resp][4][`data])[`asks]]; 
-        b:raze[(ob[`resp][4][`data])[`bids]];
-        ca:count a;
-        cb:count b;
-        a:flip a;
-        b:flip b;
-        cab: ca+cb;
-        :((ca#`S),(cb#`B);`int$((("F"$a[0]),("F"$b[0]))*100);cab#"Z"$time;cab#"Z"$u[`utc_time];("I"$a[1]),("I"$b[1]));
+        d:first r[`data];
+        time:"Z"$d[`timestamp];
+        a:"F"$(r[`data][`asks][0]); 
+        b:"F"$(r[`data][`bids][0]); // TODO if count is greater than one.
+        ca:count[a];
+        cb:count[b];
+        cab:ca+cb; 
+        $[(ca>0) and (cb>0);
+          :(cab#time;cab#u[`utc_time];((ca#`SELL),(cb#`BUY));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
+          ca>0;
+          :(ca#time;ca#u[`utc_time];(ca#`SELL);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
+          cb>0;
+          :(cb#time;cb#u[`utc_time];(cb#`BUY);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
+        ];   
     };
-    lsts:list each ob;
-    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]])
-    }
+    x:derive each ob;
+    x:flip `time`intime`side`price`size!raze each flip x;
+    x:update dlt:{1_deltas x}size by price, side from `time xasc x;
+    cx:count x;
+    x:flip value flip x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`DEPTH;cx#`UPDATE;(x[;2 +til 3]));
+    };
 
-// trades
-/
-pid      | "f3c48ba2-2d52-4a2e-b234-043d7d27e290"
-source   | "bitmexagentxbtusd"
-inst     | `xbtusd
-chan     | `trade
-resp     | `table`action`data!("trade";"insert";+`timestamp`symbol`side`size`price`tickDirection`trdMatchID`grossValue`homeNotional`foreignNotional!(,"2020-06-10T11:29:06.105Z";,"XBTUSD";,"Buy";,10f;,9746f;,"PlusTick";,"8dc378cd-57b3-98fb-e50a-3f25d236c444";,102610f;,0.0010261;,10f))
-time     | 1.591789e+09
-timestamp| 1.591789e+09
-utc_time | "2020-06-10 11:29:06.216479"
-cid      | "trade"
-aid      | "xbtusd"
-\
-{[trades]
-    list:{d:x[`resp][`data];:(`$d[`side];`int$(("F"$d[`price])*100);  "Z"$d[`timestamp]; "Z"$x[`utc_time];"I"$d[`size])}
-    lsts: list each trades;
-   `trade upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
-}
+// TODO check many
+tradeParser:{[u]
+    derive:{
+        d:x[`resp][`data][0]; 
+        :("Z"$d[`timestamp]; x[`utc_time];$[d[`side]~"sell"; `SELL; `BUY];`int$(("F"$d[`price])*.okex.priceMultiplier);`int$(("F"$d[`size])*.okex.sizeMultiplier));
+    };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
+    };
 
-{[ins]
-    list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(("F"$d[`mark_price])*100))}
-    lsts: list each ins;
-   `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
-}
+markParser:{[u]
+    derive:{
+        d:x[`resp][`data][0]; 
+        :("Z"$d[`timestamp]; x[`utc_time];`int$(("F"$d[`mark_price])*.okex.priceMultiplier));
+    };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
+    };
 
-{[fnd]
-    list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
-    lsts: list each ins;
-   `funding upsert :([time:raze[lsts[;0]]] intime:raze[lsts[;3]]; fundingRate:raze[lsts[;1]]);   
-}
+fundingParser:{[u]
+    derive:{
+        d:x[`resp][`data][0]; 
+        :(x[`utc_time]; x[`utc_time]; "F"$d[`funding_rate]);
+    };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`FUNDING;cx#`UPDATE;enlist each x[;2]);
+    };

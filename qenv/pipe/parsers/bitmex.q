@@ -40,7 +40,7 @@ bookLvlOnlyDeltasParser:{[rows]
 
 // derive diffs
 
-// TRADES zzss
+// TRADES zzss TODO check many
 tradeParser:{[rows] // todo fix
     derive:{d:x[`resp][`data];:("Z"$d[`timestamp]; count[d]#x[`utc_time]; upper `$d[`side]; `int$(d[`price]*100); `int$d[`size])};
     x: derive each rows;
