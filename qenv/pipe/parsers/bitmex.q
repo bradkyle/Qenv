@@ -1,17 +1,20 @@
 \d .bitmex
 // all events should follow the format time, intime, kind, cmd datum...
 
+sizeMultiplier:1;
+priceMultiplier:100;
+
 // DEPTHS
 bookLvlOnlyDeltasParser:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
-        :(((til 10),(til 10));20#"Z"$time;20#u[`utc_time];((10#`SELL),(10#`BUY));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
+        :(20#"Z"$time;20#u[`utc_time];((10#`SELL),(10#`BUY));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
     x:derive each rows;
-    x:flip `lvl`time`intime`side`price`size!raze each flip x; 
-    x:update dlt:{1_deltas x}size by lvl, side from x;
+    x:flip `time`intime`side`price`size!raze each flip x; 
+    x:update dlt:{1_deltas x}size by price, side from x;
     x:x where[x[`dlt]<>0]; 
     cx:count x;
     x:flip value flip x;

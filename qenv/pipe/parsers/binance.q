@@ -1,43 +1,57 @@
-
-tab[`resp]: .j.k each tab[`resp];
+\d .binance
 
 ts:1970.01.01+0D00:00:00.001*;
 
 sizeMultiplier:1000;
 priceMultiplier:100;
 
-{[ob]
-    list:{[u]
+
+bookParser:{[ob]
+    derive:{[u]
         r:u[`resp];
         d:r[`data];
-        time:`datetime$(ts d[`timestamp]);
-        a:"F"$(flip[ob[`resp][`data][`a]]); 
-        b:"F"$(flip[ob[`resp][`data][`b]]);
-        ca:count a;
-        cb:count b;
-        a:flip a;
-        b:flip b;
-        cab: ca+cb;
-        :((ca#`S),(cb#`B);`int$((a[0],$b[0])*100);cab#"Z"$time;cab#"Z"$u[`utc_time];`int$((a[1],b[1])*1000));
+        time:`datetime$(.binance.ts `long$d[`T]);
+        a:"F"$(flip[u[`resp][`data][`a]]); 
+        b:"F"$(flip[u[`resp][`data][`b]]); // TODO if count is greater than one.
+        $[count a>0;[a:flip a;ca:count a];ca:0];
+        $[count b>0;[b:flip b;cb:count b];cb:0];
+        cab:ca+cb;
+        $[(ca>0) and (cb>0);
+          :(cab#time;cab#u[`utc_time];((ca#`SELL),(cb#`BUY));`int$((a[;0],b[;0])*.binance.priceMultiplier);`int$((a[;1],b[;1])*.binance.sizeMultiplier));
+          ca>0;
+          :(ca#time;ca#u[`utc_time];(ca#`SELL);`int$(a[;0]*.binance.priceMultiplier);`int$(a[;1]*.binance.sizeMultiplier));
+          cb>0;
+          :(cb#time;cb#u[`utc_time];(cb#`BUY);`int$(b[;0]*.binance.priceMultiplier);`int$(b[;1]*.binance.sizeMultiplier));
+        ];   
     };
-    lsts:list each ob;
-    `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]])    
-    };
-
-{[trades]
-    list:{d:x[`resp][`data];:(`$d[`side];`int$(("F"$d[`price])*100);  "Z"$d[`timestamp]; "Z"$x[`utc_time];"I"$d[`size])}
-    lsts: list each trades;
-   `trade upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) /\t = 2044s (258499)    
-    };
-
-{[ins]
-    list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(("F"$d[`mark_price])*100))}
-    lsts: list each ins;
-   `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
+    x:derive each ob;
+    x:flip `time`intime`side`price`size!raze each flip x;
+    x:update dlt:{1_deltas x}size by price, side from `time xasc x;
+    cx:count x;
+    x:flip value flip x;
+    :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;(x[;3 +til 3]));
     };
 
-{[fnd]
-    list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
-    lsts: list each ins;
-   `funding upsert :([time:raze[lsts[;0]]] intime:raze[lsts[;3]]; fundingRate:raze[lsts[;1]]);   
+tradeParser:{[u]
+    derive:{
+        d:x[`resp][`data];
+        time:`datetime$(.binance.ts `long$d[`T]);
+        :(time; x[`utc_time];$[d[`m]; `SELL; `BUY];`int$(("F"$d[`p])*.binance.priceMultiplier);`int$(("F"$d[`q])*.binance.sizeMultiplier));
     };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
+    };
+
+/ {[ins]
+/     list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(("F"$d[`mark_price])*.binance.priceMultiplier))}
+/     lsts: list each ins;
+/    `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
+/     };
+
+/ {[fnd]
+/     list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
+/     lsts: list each ins;
+/    `funding upsert :([time:raze[lsts[;0]]] intime:raze[lsts[;3]]; fundingRate:raze[lsts[;1]]);   
+/     };
