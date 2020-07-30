@@ -45,24 +45,3 @@ tradeParser:{[u]
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
     };
 
-
-// TODO get mark price and funding for huobi
-
-/ / {`book upsert recs[x]} each orderbook far too long
-/ / \t `book upsert ([side:raze[lsts[;0]];price:raze[lsts[;1]];time:raze[lsts[;2]]] intime:raze[lsts[;3]]; size:raze[lsts[;4]]) = 2044 (258499)
-/ / {d:x[`resp][`data];:([side:`$d[`side]; time:"Z"$d[`timestamp]; price:`int$(d[`price]*10)] intime:"Z"$x[`utc_time]; size:`int$d[`size])}
-
-/ {[ins]
-/     list:{d:x[`resp][`data];$[`markPrice in cols d;:(1b;("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(d[`markPrice]*100)));:(0b;())]}
-/     i: list each ins;
-/     lsts:i[;1] where[i[;0]]
-/    `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
-/ }
-
-/ {[fnd]
-/     list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];d[`fundingRate])}
-/     lsts: list each ins;
-/    `funding upsert ([time:raze[lsts[;0]]; intime:raze[lsts[;1]]]; fundingRate:raze[lsts[;2]]);  
-/ }
-
-// TODO index load
