@@ -1,7 +1,6 @@
 
 \d .inventory
-\l util.q
-\l logger.q
+.global.Require[("/engine/util.q"; "/engine/logger.q")];
 
 inventoryCount:0;
 
