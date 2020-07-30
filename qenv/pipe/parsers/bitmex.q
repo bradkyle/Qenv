@@ -55,7 +55,7 @@ markParser:{[rows]
     x: derive each rows;
     x:x[;1] where[x[;0]];
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(raze x[;0];x[;1];cx#`MARK;cx#`UPDATE;enlist each x[;2]);
+    :flip `time`intime`kind`cmd`datum!(raze x[;0];x[;1];cx#`MARK;cx#`UPDATE;x[;2]);
     };
 
 // FUNDING
@@ -63,10 +63,10 @@ markParser:{[rows]
 fundingParser:{[rows]
     kind:`FUNDING;
     cmd:`UPDATE;
-    derive:{d:x[`resp][`data];:("Z"$d[`timestamp];x[`utc_time];d[`fundingRate])};
+    derive:{d:x[`resp][`data];:("Z"$d[`timestamp];x[`utc_time];d[`fundingRate])}; // TODO next funding time
     x: derive each rows;
     cx:count x;
-    :flip `time`intime`kind`cmd`datum!(x[;0];x[;0];cx#`FUNDING;cx#`UPDATE;enlist each x[;2]);
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;0];cx#`FUNDING;cx#`UPDATE;x[;2]);
     };
 
 // .Q.ind[trade;til 5]

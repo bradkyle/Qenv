@@ -5,7 +5,6 @@ ts:1970.01.01+0D00:00:00.001*;
 sizeMultiplier:1000;
 priceMultiplier:100;
 
-
 bookParser:{[ob]
     derive:{[u]
         r:u[`resp];
@@ -44,14 +43,26 @@ tradeParser:{[u]
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
     };
 
-/ {[ins]
-/     list:{d:x[`resp][`data];:("Z"$d[`timestamp];"Z"$x[`utc_time];`int$(("F"$d[`mark_price])*.binance.priceMultiplier))}
-/     lsts: list each ins;
-/    `mark upsert ([time:raze[lsts[;0]]] intime:raze[lsts[;1]]; price:raze[lsts[;2]]);  
-/     };
+markParser:{[u]
+    derive:{
+        d:x[`resp][`data];
+        time:`datetime$(.binance.ts `long$d[`T]);
+        :(time; x[`utc_time]; `int$(("F"$d[`p])*.binance.priceMultiplier));
+    };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;x[;2]);
+    };
 
-/ {[fnd]
-/     list:{d:x[`resp][`data];:("Z"$d[`funding_time];"F"$d[`funding_rate];"Z"$x[`utc_time])}
-/     lsts: list each ins;
-/    `funding upsert :([time:raze[lsts[;0]]] intime:raze[lsts[;3]]; fundingRate:raze[lsts[;1]]);   
-/     };
+fundingParser:{[u]
+    derive:{
+        d:x[`resp][`data];
+        time:`datetime$(.binance.ts `long$d[`T]);
+        :(time; x[`utc_time];"F"$d[`r]); // TODO next funding time
+    };
+    x: derive each u;
+    x:flip raze each flip x;
+    cx:count x;
+    :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`MARK;cx#`UPDATE;x[;2]);
+    };
