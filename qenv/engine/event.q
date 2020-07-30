@@ -114,11 +114,7 @@ Events  :( // TODO add failure to table
     time        :`datetime$();
     cmd         :`.event.EVENTCMD$();
     kind        :`.event.EVENTKIND$();
-    datum       :();
-    errKind     :`.event.ERRORKIND$()
-    );
-
-eid     :{:count[.event.Events]}
+    datum       :());
 
 // Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation

@@ -72,6 +72,11 @@ eventEngine[`MARK] :   {[event]
     .order.UpdateMarkPrice[event];
     };
 
+eventEngine[`SETTLEMENT] :   {[event]
+    .logger.Debug["new settlement"][event];
+    .order.DoSettlement[event];
+    };
+
 / Private Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
