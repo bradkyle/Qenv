@@ -18,7 +18,7 @@ bookParser:{[rows]
     x:x where[x[`dlt]<>0]; 
     cx:count x;
     x:flip value flip x;
-    :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;(x[;3 +til 3]));
+    :flip `time`intime`kind`cmd`datum!(x[;1];x[;2];cx#`DEPTH;cx#`UPDATE;enlist each x[;3 +til 3]);
     };
 
 // TRADES zzss TODO check many
