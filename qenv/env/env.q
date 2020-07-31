@@ -56,47 +56,6 @@ getResultantRewards  :{[accountIds] // TODO apply given reward function by agent
     stepReturns: select deltas last amount by accountId, (`date$time) + 1 xbar `minute$time from account where time >= `minute$rewardLookbackMinutes // TODO make reward lookback minutes configurable
     };
 
-
-// Secondary state functions
-// --------------------------------------------------->
-
-// Uses a preset query to derive a set of events
-// that represent the progression of state on
-// an exchange, thereafter the events are parsed
-// into the forms defined by the models after which
-// they are returned.
-nextEvents   :{[step] // TODO changes in depth due to trades still persist only when agent order do change?
-        :(
-            select from .schema.SourceDepth where step=step; // returns the set of depth updates (including trades) that happen.
-            select from .schema.SourceTrades where step=step; // returns the set of trades (not made by the agent) in period
-            select from .schema.SourceMarks where step=step; // returns the set of mark price updates that occur in the period
-            select from .schema.SourceFundings where step=step; // returns the set of funding events that occur in the period
-        );
-    };
-
-// Derives a set of events that would constitute
-// the transition of state of the exchange BEFORE
-// THE ACTIONS TOOK PLACE.
-// Appending the actions to the events to be processed.
-derive  :{[actions;time]
-    events:nextEvents[.state.CurrentStep]; // Utilizes a global variable to denote the current step.
-    // sample a probability space of request time
-    .adapter.Adapt[time] each ej[`agentId;actions;.env.Agent]; 
-    :events; //TODO implement penalty
-    };
-
-// Inserts the step wise events recieved (back)
-// from the engine and adds them to their 
-// respective table before deriving a feature
-// vector and resultant reward for each agent
-// participating in the environment.
-advance :{[events;accountIds]
-    InsertResultantEvents[events]; // TODO try catch etc.
-    featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
-    .state.CurrentStep+:1;
-    :featureVectors;
-    };
-
 // Main Callable functions
 // --------------------------------------------------->
 
@@ -151,12 +110,13 @@ Step    :{[actions]
     // TODO format actions
 
     // TODO actions as a tuple of account id and action: derive account ids from actions.
-    events:derive[actions];
+    .adapter.Adapt[time] each ej[`agentId;actions;.env.Agent]; 
 
     // The engine produces a set of new events.
     newEvents: .engine.ProcessEventBatch[events];
 
-    obs:  advance[newEvents;accountIds];
+    InsertResultantEvents[events]; // TODO try catch etc.
+    featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
 
     // Generates a set of resultant rewards based on the config
     // of each agent, the rewards are returned as a table indexed
