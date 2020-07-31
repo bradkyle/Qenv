@@ -13,7 +13,7 @@
 \
 
 // max amt of contracts, mmr, imr, max leverage // TODO mmr
-TieredRisk:NewRiskTier[(
+TieredRisk:.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f;
         1000000     0.01     0.02     50f;
@@ -28,7 +28,7 @@ TieredRisk:NewRiskTier[(
 
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
 // fees for referral
-TieredFee:NewFeeTier[(
+TieredFee:.instrument.NewFeeTier[(
         50      0.0006    0.0006    600f;
         500     0.00054   0.0006    600f;
         1500    0.00048   0.0006    600f;
@@ -45,7 +45,7 @@ TieredFee:NewFeeTier[(
 // 0  0.001    , 0.0004 
 
 // Default Hedged position
-Instrument:NewInstrument[
+Instrument:.instrument.NewInstrument[
 
     ];
 
