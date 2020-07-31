@@ -98,12 +98,12 @@ OrderBook:(
     );
 
 AddDepthUpdateEvent :{[side;size;price;time]
-    :.global.AddEvent[time;`UPDATE;`DEPTH;depth];
+    :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
     };
 
 
 AddTradeEvent  :{[side;qty;price;time]
-    :.global.AddEvent[time;`NEW;`TRADE;trade];
+    :.event.AddEvent[time;`NEW;`TRADE;trade];
     };
 
 // Orderbook Utilities
@@ -242,28 +242,28 @@ NewOrder       : {[o;time];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
     if[null o[`isClose];o[`isClose]:0b];
     if[null o[`execInst];o[`execInst]:()];
-    if[null o[`accountId]; :MakeFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    if[not (o[`side] in .order.ORDERSIDE); :MakeFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
-    if[not (o[`otype] in .order.ORDERTYPE); :MakeFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
-    if[not (o[`timeinforce] in .order.TIMEINFORCE); :MakeFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
-    if[not (all o[`execInst] in .order.EXECINST); :MakeFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
+    if[null o[`accountId]; :AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    if[not (o[`side] in .order.ORDERSIDE); :AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
+    if[not (o[`otype] in .order.ORDERTYPE); :AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
+    if[not (o[`timeinforce] in .order.TIMEINFORCE); :AddFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
+    if[not (all o[`execInst] in .order.EXECINST); :AddFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
 
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
-    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:MakeFailure[time;`INVALID;""];o[`stopprice]:0f];
-    $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:MakeFailure[time;`INVALID;""];o[`limitprice]:0f];
+    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:AddFailure[time;`INVALID;""];o[`stopprice]:0f];
+    $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:AddFailure[time;`INVALID;""];o[`limitprice]:0f];
 
     // Instrument related validation
     ins:.instrument.GetActiveInstrument[];
-    if[(o[`price] mod ins[`tickSize])<>0;:MakeFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
-    if[o[`price]>ins[`maxPrice];:MakeFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`price]<ins[`minPrice];:MakeFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`size]>ins[`maxOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
-    if[o[`size]<ins[`minOrderSize];:MakeFailure[time;`INVALID_ORDER_SIZE;""]];
+    if[(o[`price] mod ins[`tickSize])<>0;:AddFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
+    if[o[`price]>ins[`maxPrice];:AddFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`price]<ins[`minPrice];:AddFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`size]>ins[`maxOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
+    if[o[`size]<ins[`minOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;""]];
 
     // TODO if market order etc.
 
     // Account related validation
-    if[not(o[`accountId] in key .account.Account);:MakeFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+    if[not(o[`accountId] in key .account.Account);:AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
     // TODO 
     / Duplicate clOrdID
@@ -322,7 +322,7 @@ NewOrder       : {[o;time];
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
-                            .global.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
+                            .event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
                             processCross[ // The order crosses the bid ask spread.
@@ -439,7 +439,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
         // TODO checking price is not more/less than best price
         / minOffset:exec 
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
-            [:.global.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
+            [:.event.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
                 price:exec min price from .order.OrderBook where side=nside;
                 hasAgentOrders:(count select from .order.Order where side=nside)>0;
@@ -640,7 +640,10 @@ ProcessTradeEvent  : {[event] // TODO change to events.
         $[count[.order.Order]>0;
             [
               // If has agent orders at best ask/bid
-              processCross[side;size;0b;0N];
+              while [(
+                (leaves>0) and 
+                count[.order.Order@[exec min price by side from .order.OrderBook]]>0
+                );fillTrade[side;leaves;isClose;isAgent;accountId;time]];
             ];
             [
                 // todo reinsert all trade events into buffer
