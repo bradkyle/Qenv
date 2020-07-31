@@ -244,15 +244,12 @@ test:.qt.Unit[
     "update the orderbook and order state and return the new representation"];
 
 // TODO figure out how events will be returned?
-/ .qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
+
+.qt.AddCase[test;"Should process both sides";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should error when the format does not match";
+    deriveCaseParams[]];
 
 
 test:.qt.Unit[
@@ -448,6 +445,11 @@ test:.qt.Unit[
 .qt.AddCase[test;"no liquidity";
     deriveCaseParams[]];
 
+.qt.AddCase[test;"should update instrument etc. last price";
+    deriveCaseParams[]];
+
+/ .qt.AddCase[test;"should update open interest, open value etc.";
+    / deriveCaseParams[]];
 
 test:.qt.Unit[
     ".order.processCross";
@@ -531,3 +533,25 @@ test:.qt.Unit[
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
+
+.qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should liquidate relevant inventory/accounts depending on the configuration";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should trigger triggerable stop limit orders";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should not trigger non-triggerable stop limit orders";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should trigger triggerable stop market orders";
+    deriveCaseParams[]];
+
+.qt.AddCase[test;"Should not trigger non-triggerable stop market orders";
+    deriveCaseParams[]];
+
