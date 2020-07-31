@@ -56,8 +56,7 @@ OrderEventHistory: (
     isClose         :   `boolean$();
     trigger         :   `.order.STOPTRIGGER$();
     execInst        :   `.order.EXECINST$();
-    time                : `datetime$()
-    );
+    time                : `datetime$());
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
