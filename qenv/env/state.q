@@ -8,6 +8,9 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 
+CurrentDepth:(
+
+    );
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -64,7 +67,6 @@ OrderEventHistory: (
 // i.e. The depth has been directly affected by 
 // the agent.
 DepthEventHistory: (
-    time            :   `datetime$();
     time:`datetime$();
     intime:`datetime$();
     side:`symbol$();
