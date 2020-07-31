@@ -4,11 +4,11 @@
 
 / log information in the console 
 Debug : {[msg; arg]
-        1 "DEBUG:[" , (string .z.Z) , "] ";
-        $[100=type arg; 
-            [show msg; show value arg];
-            [show msg; show arg]
-        ];
+        / 1 "DEBUG:[" , (string .z.Z) , "] ";
+        / $[100=type arg; 
+        /     [show msg; show value arg];
+        /     [show msg; show arg]
+        / ];
     }
 
 / log information in the console 

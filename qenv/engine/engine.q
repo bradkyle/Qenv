@@ -1,6 +1,6 @@
 \l instrument.q 
 \l event.q
-/ \l order.q
+\l order.q
 \d .engine
 // TODO dropped response etc.
 /*******************************************************
@@ -47,8 +47,6 @@ Engine:(
 // get account
 // 
 
-show 99#"=";
-
 
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
@@ -62,8 +60,7 @@ eventEngine[`DEPTH]:   {[event]
 
 eventEngine[`TRADE] :   {[event]
     .logger.Debug["new trade"][event];
-    show 99#"=";
-    / .order.ProcessTradeEvent[event];
+    .order.ProcessTradeEvent[event];
     };
 
 eventEngine[`FUNDING] :   {[event]
@@ -150,7 +147,7 @@ ResetEngine     : {
 
 // 
 prepareIngress   :{[eventBatch]
-    :eventBatch;
+    :0!`kind xgroup eventBatch;
     };
 
 prepareEgress    :{[eventBatch]

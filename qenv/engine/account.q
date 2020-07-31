@@ -170,6 +170,7 @@ Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
 
     $[withdrawn < acc[`available];
+        [
         // TODO more expressive and complete upddate statement accounting for margin etc.
         update 
             balance:balance-withdrawAmount 
@@ -178,5 +179,9 @@ Withdraw       :{[withdrawn;time;accountId]
             from `.account.Account 
             where accountId=accountId;
         :AddAccountUpdateEvent[accountId;time];
+        ];
+        [
+            0N; //TODO create failure
+        ]
     ];  
     };

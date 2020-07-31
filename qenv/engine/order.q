@@ -217,9 +217,9 @@ processSideUpdate   :{[side;nxt]
 
 ProcessDepthUpdate  : {[time;asks;bids]
     // Derive the deltas for each level given the new update
-    processSideUpdate[`SELL;event[`datum][`asks]];
-    processSideUpdate[`BUY;event[`datum][`bids]];
-    AddDepthEvent[nextAsks;nextBids];
+    / processSideUpdate[`SELL;event[`datum][`asks]];
+    / processSideUpdate[`BUY;event[`datum][`bids]];
+    / AddDepthEvent[nextAsks;nextBids];
     };
 
 // Limit Order Manipulation CRUD Logic
@@ -379,6 +379,9 @@ NewOrder       : {[o;time];
             / `order.Order insert order;
             show "STOP_LIMIT";
         ];
+      [
+          0N;
+      ]
     ];
     };
 
@@ -450,7 +453,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 // If the quantity left to trade is less than the 
                                 // smallest agent offset i.e. not agent orders will
                                 // be filled.
-                                $[isAgent;
+                                if[isAgent;
                                     // If the market order was placed by an agent.
                                     .account.ApplyFill[
                                         qty;
@@ -492,7 +495,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             1b; // not isMaker
                                             nxt[`accountId]];
 
-                                        $[isAgent;
+                                        if[isAgent;
                                             // If the order was made by an agent the first level of
                                             // the orderbook should represent the change otherwise not
                                             // captured.
@@ -528,7 +531,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             nxt[`accountId]
                                         ];
 
-                                        $[isAgent;
+                                        if[isAgent;
                                             // If the order was made by an agent the first level of
                                             // the orderbook should represent the change otherwise not
                                             // captured.
@@ -621,10 +624,10 @@ processCross     :{[side;leaves;isAgent;accountId;isClose;time]
 
 // Processes a trade that was not made by an agent
 // i.e. it was derived from an exchange data stream.
-ProcessTrade  : {[side;size;price;time]
+ProcessTradeEvent  : {[side;size;price;time]
     // TODO price invariant?
     // TODO check for limit stop orders.
-    show 99#"=";
+    / show 99#"=";
     / :processCross[side;size;0b;0N];
     };
 
