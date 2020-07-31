@@ -1,5 +1,6 @@
 \d .event
 
+// TODO setup in seperate process?
 
 /*******************************************************
 / error kind enumerations

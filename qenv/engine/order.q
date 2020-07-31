@@ -38,18 +38,18 @@ orderMandatoryFields    :`accountId`side`otype`size;
 
 // TODO change price type to int, longs etc.
 Order: (
-    [price:`float$(); orderId:`long$()]
+    [price:`int$(); orderId:`long$()]
     clOrdId         : `long$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
-    offset          : `float$();
+    offset          : `int$();
     timeinforce     : `.order.TIMEINFORCE$();
-    size            : `float$(); / multiply by 100
-    leaves          : `float$();
-    filled          : `float$();
-    limitprice      : `float$(); / multiply by 100
-    stopprice       : `float$(); / multiply by 100
+    size            : `int$(); / multiply by 100
+    leaves          : `int$();
+    filled          : `int$();
+    limitprice      : `int$(); / multiply by 100
+    stopprice       : `int$(); / multiply by 100
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
     isClose         : `boolean$();
@@ -618,23 +618,38 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
+cond:{
+    leaves>0;
+    count[.order.Order@[exec min price by side from .order.OrderBook]]>0;
+    
+    };
+
 processCross     :{[side;leaves;isAgent;accountId;isClose;time] 
         while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]];
     };
 
+
+
 // Processes a trade that was not made by an agent
 // i.e. it was derived from an exchange data stream.
 // event conforms 
-ProcessTradeEvent  : {[event]
-    / show price;
-    / show size;
-    / show time;
-    // TODO price invariant?
-    // TODO check for limit stop orders.
-    / show 99#"=";
-
-    // If has agent orders at best ask/bid
-    :processCross[side;size;0b;0N];
+ProcessTradeEvent  : {[event] // TODO change to events.
+        / show price;
+        / show size;
+        / show time;
+        // TODO price invariant?
+        // TODO check for limit stop orders.
+        / show 99#"=";
+        $[count[.order.Order]>0;
+            [
+            // If has agent orders at best ask/bid
+            :processCross[side;size;0b;0N];
+            ];
+            [
+                // todo reinsert all trade events into buffer
+                0n;
+            ]
+        ];
     };
 
 
