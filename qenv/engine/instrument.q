@@ -2,7 +2,6 @@
 \l util.q
 
 instrumentCount:0;
-activeInstrumentId:0;
 
 // https://blog.bitmex.com/xbt-vs-xbu-chain/
 /*******************************************************
@@ -99,22 +98,9 @@ NewInstrument            :{[instrument; isActive; time]
 GetInstrument             :{[instrumentId]
     if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]
     };
-
-// TODO check if active instrument present etc.
-// Returns the current state of the active instrument denoted by
-// the activeInstrumentId
-GetActiveInstrument        :{[]
-    if[count[.instrument.Instrument]>0;:GetInstrument[.instrument.activeInstrumentId]];
-    };
-
+ 
 UpdateInstrument      :{[instrument;time]
-    isMark:`markPrice in cols[instrument];
     instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
     `.instrument.Instrument upsert instrument;
-    };
-
-UpdateActiveInstrument  :{[instrument;time]
-    instrument[`instrumentId]:.instrument.activeInstrumentId;
-    :UpdateInstrument[instrument];
     };
 
