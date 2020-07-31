@@ -51,28 +51,43 @@ Instrument:NewInstrument[
 
     ];
 
+// derive initial margin
+deriveInitialMargin         :{[]
+
+    };
+
 // derive maintenence margin
+deriveMaintenenceMargin     :{[]
+
+    };
 
 
 // derive unrealized pnl
+deriveUnrealizedPnl         :{[]
 
+    };
 
 // derive realized pnl
+deriveRealizedPnl           :{[]
 
+    };
 
 // derive liquidation price
+deriveLiquididationPrice     :{[]
 
+    };
 
 // derive bankruptcy price
+deriveBankruptPrice          :{[]
 
-
-// derive breakeven price
-
+    };
 
 // exec fill
-
-
-// update order margin
-
+execFill    :{[account;inventory;fillQty;price;fee]
+    
+    };
 
 // liquidation
+liquidation     :{[]
+
+    };

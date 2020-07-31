@@ -81,6 +81,9 @@ deriveLiquidationPrice  :{[]
     };
 
 // derive bankruptcy price
+deriveBankruptPrice          :{[]
+
+    };
 
 
 // derive breakeven price
@@ -90,6 +93,9 @@ deriveLiquidationPrice  :{[]
 
 
 // exec fill
+execFill    :{[]
+    
+    };
 
 
 // update order margin
@@ -117,3 +123,6 @@ deriveLiquidationPrice  :{[]
 / of tier 1, the position will be closed at its bankruptcy price 
 / (at which all margins are lost) and taken over by the 
 / liquidation engine.
+liquidation     :{[]
+
+    };

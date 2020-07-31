@@ -98,9 +98,6 @@ execFill    :{[account;inventory;fillQty;price;fee]
     
     };
 
-// update order margin
-
-
 // liquidation
 liquidation     :{[]
 
