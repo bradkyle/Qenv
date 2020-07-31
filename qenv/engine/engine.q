@@ -148,6 +148,7 @@ ResetEngine     : {
 // 
 prepareIngress   :{[eventBatch]
     :0!`kind xgroup eventBatch;
+    / `f xgroup update f:{sums((<>) prior x)}kind from e
     };
 
 prepareEgress    :{[eventBatch]
