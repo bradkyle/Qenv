@@ -80,9 +80,19 @@ test:.qt.Unit[
 
 //TODO make into array and addCases
 .qt.AddCase[test;"simple ask update no agent orders or previous depth";deriveCaseParams[(
+    ();();
+    `SELL;
+    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+    )]];
+
+.qt.AddCase[test;"single agent ask decreasing (delta less than offset)";deriveCaseParams[(
     ();
+    genTestOrders[];
+    `SELL;
     `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+    ()
     )]];
 
 test:.qt.Unit[
