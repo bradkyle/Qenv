@@ -65,14 +65,8 @@ Info        :{[accountIds]
 // ids have been included into the ids parameter
 Reset       :{[accountIds] // TODO make into accountConfigs 
     // Reset public singletons
-    .state.CurrentStep:0; // TODO include buffer i.e. set current step to 10
-    .state.StepTime: exec from .state.PrimaryStepInfo where step=0; // returns the current step info i.e. time, loadshedding prob etc.
-    
-    // Derive the primary set of events derived from exchange
-    events: nextEvents[.state.CurrentStep]; // TODO derive actual events from datums
-    // TODO reset accounts inventory orders instrument
-
-    :advance[events;accountIds];
+    .engine.Reset[accountIds];
+    :.state.Reset[accountIds];
     };
 
 // Carries out a step in the exchange environment
@@ -83,6 +77,7 @@ Reset       :{[accountIds] // TODO make into accountConfigs
 // It will thereafter advance the state and return
 // the next observations, rewards, done and info
 // for each agent
+// TODO is done, buffering/historic replay etc.
 Step    :{[actions]
     // TODO format actions
 
@@ -92,21 +87,19 @@ Step    :{[actions]
     // The engine produces a set of new events.
     newEvents: .engine.ProcessEventBatch[events];
 
-    InsertResultantEvents[events]; // TODO try catch etc.
-    featureVectors: getFeatureVector[accountIds]; // TODO parrellelize
-
-    // Generates a set of resultant rewards based on the config
-    // of each agent, the rewards are returned as a table indexed
-    // by the respective accountIds
-    rewards: getResultantReward[accountIds]; // TODO parrellelize
+    // Advances the current state of the environment
+    result: .state.Advance[accountIds; newEvents];
 
     // Derive the current info for the
     // entire engine and for each subsequent
     // account referenced in accountIds
     // Returns a table of Info indexed by accountId
     info: Info[accountIds];
-    
-    // TODO log info to analytics
 
-    :(uj)over(obs;rewards;info);
+    if[.env.ActiveEnv[`doAnalytics]; 
+        .analytics.LogStep[actions;result[0];result[1];info;newEvents]];
+
+    // Returns a set of observations, rewards and info
+    // to the agents (uj by agent)
+    :(uj)over(result[0];result[1];info);
     };
