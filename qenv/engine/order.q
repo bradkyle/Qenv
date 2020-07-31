@@ -618,14 +618,11 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-cond:{
-    leaves>0;
-    count[.order.Order@[exec min price by side from .order.OrderBook]]>0;
-    
-    };
-
 processCross     :{[side;leaves;isAgent;accountId;isClose;time] 
-        while [leaves>0;fillTrade[side;leaves;isClose;isAgent;accountId;time]];
+        while [(
+            (leaves>0) and 
+            count[.order.Order@[exec min price by side from .order.OrderBook]]>0
+        );fillTrade[side;leaves;isClose;isAgent;accountId;time]];
     };
 
 
@@ -642,8 +639,8 @@ ProcessTradeEvent  : {[event] // TODO change to events.
         / show 99#"=";
         $[count[.order.Order]>0;
             [
-            // If has agent orders at best ask/bid
-            :processCross[side;size;0b;0N];
+              // If has agent orders at best ask/bid
+              processCross[side;size;0b;0N];
             ];
             [
                 // todo reinsert all trade events into buffer
