@@ -17,10 +17,6 @@ Instrument:.instrument.NewInstrument[
 
 pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
 
-derivePremium   :{[]
-
-    };
-    
 / reserveOrderMargin  : {[side;price;size;orderId;time]
 /     // 
 /     events:();

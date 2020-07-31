@@ -104,3 +104,22 @@ UpdateInstrument      :{[instrument;time]
     `.instrument.Instrument upsert instrument;
     };
 
+
+NewRiskTier             :{[]
+
+
+    };
+
+NewRiskProcedural       :{[]
+
+
+    };
+
+NewFeeTier              :{[]
+
+    };
+
+
+NewFlatFee              :{[]
+
+    };
