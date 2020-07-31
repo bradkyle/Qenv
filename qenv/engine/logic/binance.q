@@ -102,7 +102,9 @@ execFill    :{[account;inventory;fillQty;price;fee]
 
 
 // liquidation
+liquidation     :{[]
 
+    };
 
 // Funding
 / Funding Amount=Nominal Value of Positions* ×Funding Rate

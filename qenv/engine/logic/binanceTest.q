@@ -201,7 +201,7 @@ test:.qt.Unit[
 
 
 test:.qt.Unit[
-    ".binance.checkliquidation";
+    ".binance.liquidation";
     {[c]
         p:c[`params];
         time:.z.z;
