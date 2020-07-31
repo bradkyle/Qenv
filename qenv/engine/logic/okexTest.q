@@ -19,7 +19,6 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 
-
 test:.qt.Unit[
     ".okex.deriveUnrealizedPnl";
     {[c]
@@ -27,7 +26,6 @@ test:.qt.Unit[
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
-
 
 
 test:.qt.Unit[
