@@ -92,9 +92,9 @@ AddCancelAllOrdersEvent :{[]
 // offsets: represent the given offsets of a set of agent(s') orders 
 // sizes: represent the given order sizes of a set of agent(s') orders
 OrderBook:(
-    [price      :`float$()]
+    [price      :`int$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`float$()
+    qty         :`int$()
     );
 
 AddDepthUpdateEvent :{[side;size;price;time]
@@ -128,12 +128,9 @@ AddTradeEvent  :{[side;qty;price;time]
 // nxt is a dictionary of price:qty
 // side is an enum (ORDERSIDE) of `BUY, `SELL 
 // TODO do validation based on instrument
-processSideUpdate   :{[side;nxt]
+processSideUpdate   :{[nxt]
     nxtCount:count[nxt];
 
-    if[not (type nxt)=99h; :0b];
-    if[not (side in .order.ORDERSIDE); :0b];
-    if[not (nxtCount>0); :0b];
     // TODO prices cannot overlap
     // asc desc for ask vs bid
 
@@ -204,21 +201,22 @@ processSideUpdate   :{[side;nxt]
                 ];
                 [
                     // No orders exist therefore a simple upsert 
-                    `.order.OrderBook upsert ([] price:`float$key[nxt]; side:nxtCount#side; qty:`float$value[nxt]); 
+                    `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt;
                 ]
             ];
         ]; 
         [
-            / `.order.OrderBook upsert nxt; 
-            `.order.OrderBook insert (`float$key[nxt];nxtCount#side;`float$value[nxt]); 
+            / `.order.OrderBook upsert nxt; // todo preset side
+            `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt;
         ]
     ];
     };
 
 ProcessDepthUpdate  : {[time;asks;bids]
     // Derive the deltas for each level given the new update
-    / processSideUpdate[`SELL;event[`datum][`asks]];
-    / processSideUpdate[`BUY;event[`datum][`bids]];
+    // `price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from d where[(d[`datum][;0][;0])=`SELL]
+    / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
+    / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];
     };
 
