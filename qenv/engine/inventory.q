@@ -55,16 +55,16 @@ allCols: cols Inventory;
 
 AddInventoryUpdateEvent   :  {[inventory;time];
     // TODO check if value is null
-    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
+    :.event.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;inventory];
     };
 
 // TODO make work
 AddAccountInventoryUpdateEvent : {[time]
-    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
+    :.event.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all for account
     };
 
 AddAllInventoryUpdateEvent :{[time]
-    :.global.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all inventory
+    :.event.AddEvent[time;`UPDATE;`INVENTORY_UPDATE;()]; // TODO get all inventory
     };
 
 // Inventory CRUD Logic

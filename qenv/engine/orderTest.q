@@ -1,5 +1,6 @@
 \l account.q
 \l inventory.q
+\l event.q
 \l order.q
 system "d .orderTest";
 \l util.q
@@ -38,7 +39,7 @@ randOrder:{[num;prices;oidstart]
 defaultAfterEach: {
      delete from `.account.Account;
      delete from `.inventory.Inventory;
-     delete from `.global.Events;
+     delete from `.event.Events;
      .account.accountCount:0;
      .inventory.inventoryCount:0;
      .qt.RestoreMocks[];
@@ -77,6 +78,12 @@ test:.qt.Unit[
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
+//TODO make into array and addCases
+.qt.AddCase[test;"simple ask update no agent orders or previous depth";deriveCaseParams[(
+    ();
+    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    )]];
 
 test:.qt.Unit[
     ".order.ProcessDepthUpdate";

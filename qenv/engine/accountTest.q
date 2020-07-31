@@ -1,5 +1,6 @@
 \l account.q
 \l inventory.q
+\l event.q
 system "d .accountTest";
 \l util.q
 \cd ../quantest/
@@ -9,7 +10,7 @@ system "d .accountTest";
 defaultAfterEach: {
      delete from `.account.Account;
      delete from `.inventory.Inventory;
-     delete from `.global.Events;
+     delete from `.event.Events;
      .account.accountCount:0;
      .inventory.inventoryCount:0;
      .qt.RestoreMocks[];
