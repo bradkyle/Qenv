@@ -60,7 +60,11 @@ eventEngine[`DEPTH]:   {[event]
 
 eventEngine[`TRADE] :   {[event]
     .logger.Debug["new trade"][event];
-    .order.ProcessTradeEvent[event];
+    e:flip event;
+    d:e[`datum];
+    show d;
+    show count flip event;
+    .order.ProcessTradeEvent[d[0];d[1];d[2];event[`time]];
     };
 
 eventEngine[`FUNDING] :   {[event]

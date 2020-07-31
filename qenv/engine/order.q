@@ -624,11 +624,15 @@ processCross     :{[side;leaves;isAgent;accountId;isClose;time]
 
 // Processes a trade that was not made by an agent
 // i.e. it was derived from an exchange data stream.
-ProcessTradeEvent  : {[side;size;price;time]
+ProcessTradeEvent  : {[side;price;size;time]
+    show side;
+    / show price;
+    / show size;
+    / show time;
     // TODO price invariant?
     // TODO check for limit stop orders.
     / show 99#"=";
-    / :processCross[side;size;0b;0N];
+    :processCross[side;size;0b;0N];
     };
 
 
