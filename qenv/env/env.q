@@ -32,29 +32,6 @@ Agent :(
     encouragement       : `float$();
     );
 
-activeEnvId:0;
-
-// Exposed State Logic
-// =====================================================================================>
-
-/
-The state module utilizes historic lookback buffers to
-represent the state thate an agent would recieve when 
-subscribed to an exchange.
-TODO move adapters into here
-\
-
-
-getFeatureVector    :{[]
-
-    };
-
-// Returns the resultant rewards for a set of agent
-// ids based upon the configuration set i.e.
-// sortino ratio etc.
-getResultantRewards  :{[accountIds] // TODO apply given reward function by agent specified reward function.
-    stepReturns: select deltas last amount by accountId, (`date$time) + 1 xbar `minute$time from account where time >= `minute$rewardLookbackMinutes // TODO make reward lookback minutes configurable
-    };
 
 // Main Callable functions
 // --------------------------------------------------->
@@ -128,7 +105,7 @@ Step    :{[actions]
     // account referenced in accountIds
     // Returns a table of Info indexed by accountId
     info: Info[accountIds];
-
+    
     // TODO log info to analytics
 
     :(uj)over(obs;rewards;info);
