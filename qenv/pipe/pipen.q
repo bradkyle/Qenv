@@ -27,6 +27,7 @@ getAndPersist   :{[p]
       } each (distinct select source,inst from tab);
     };
 
-sst:"sid=bitmexagentxbtusd";
+sst:"sid=huobifuturesagent";
 paths:distinct {(sst vs x)[0],sst} each getPaths[sst;p]
 / getAndPersist peach paths;
+show paths;
