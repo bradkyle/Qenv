@@ -92,7 +92,7 @@ NewAccount :{[account;time]
     `.account.Account upsert account;
 
     accountId:account[`accountId];
-    AddAccountUpdateEvent[accountId;time];
+    / AddAccountUpdateEvent[accountId;time];
     };
 
 // TODO

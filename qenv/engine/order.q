@@ -32,14 +32,13 @@ TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90
                 `NIL);
 
 STOPTRIGGER :   `LIMIT`MARK`INDEX`NIL; 
-EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY;   
+EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY`NIL;   
 
 orderMandatoryFields    :`accountId`side`otype`size;
 
 // TODO change price type to int, longs etc.
 Order: (
     [price:`int$(); orderId:`long$()]
-    clOrdId         : `long$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
@@ -61,7 +60,7 @@ ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
 isActiveLimit:{[side; validPrices]
               :((>;`size;0);
-               (in;`status;enlist[`FILLED`FAILED`CANCELED]);
+               (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;validPrices);
                (=;`otype;`.order.ORDERTYPE$`LIMIT);
                (=;`side;`.order.ORDERSIDE$side));
@@ -135,7 +134,7 @@ processSideUpdate   :{[nxt]
     // asc desc for ask vs bid
 
     // Retrieve the latest snapshot from the orderbook
-    qtys:exec qty by price from .order.OrderBook where side=side;
+    qtys:select qty by price from .order.OrderBook where side=side;
     // sanitize/preprocess
 
     // Generate the set of differences between the current
@@ -146,18 +145,20 @@ processSideUpdate   :{[nxt]
             // TODO only calculate if has agent orders
             // TODO sort qtys etc.
             // TODO remove levels where qty=0
-            dlt:first'[nxt-qtys];
+            // dlt and qtys should be 
+            dlt:raze'[nxt-qtys];
             
             // Remove all levels that aren't supposed to change 
-            dlt:where[dlt<>0]#dlt;           
+            dlt:dlt where[dlt[;1]<>0];           
             numLvls:count dlt;
 
             // TODO grouping by price, orderId
-            odrs:?[.order.Order;isActiveLimit[side;key dlt];0b;()];
+            odrs:?[.order.Order;isActiveLimit[side;dlt[;]];0b;()];
             // If the orderbook contains agent limit orders then
             // update the current offsets.
             $[((numLvls>0) & (count[odrs]>0)); // TODO check
                 [
+                    odrs:0!(`price xgroup odrs);
                     offsets: PadM[odrs[`offset]]; // TODO padding
                     sizes: PadM[odrs[`size]]; // TODO padding
                     maxNumUpdates: max count'[offsets];
@@ -201,13 +202,13 @@ processSideUpdate   :{[nxt]
                 ];
                 [
                     // No orders exist therefore a simple upsert 
-                    `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt;
+                    `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt);
                 ]
             ];
         ]; 
         [
             / `.order.OrderBook upsert nxt; // todo preset side
-            `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt;
+            `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt);
         ]
     ];
     };
