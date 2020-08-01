@@ -18,49 +18,49 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // TODO ownFillCount, requestCount
 Account: (
             [accountId          : `long$()]
-            balance             : `float$();
-            frozen              : `float$();
-            maintMargin         : `float$();
-            available           : `float$();
-            withdrawable        : `float$();
+            balance             : `long$();
+            frozen              : `long$();
+            maintMargin         : `long$();
+            available           : `long$();
+            withdrawable        : `long$();
             openBuyOrderQty     : `long$();
-            openBuyPremium      : `float$();
+            openBuyPremium      : `long$();
             openSellOrderQty    : `long$();
-            openSellPremium     : `float$();
-            orderMargin         : `float$();
+            openSellPremium     : `long$();
+            orderMargin         : `long$();
             marginType          : `.account.MARGINTYPE$();
             positionType        : `.account.POSITIONTYPE$();
-            depositAmount       : `float$();
+            depositAmount       : `long$();
             depositCount        : `long$();
-            withdrawAmount      : `float$();
+            withdrawAmount      : `long$();
             withdrawCount       : `long$();
             tradeVolume         : `long$();
             tradeCount          : `long$();
             netLongPosition     : `long$();
             netShortPosition    : `long$();
-            posMargin           : `float$();
-            longMargin          : `float$();
-            shortMargin         : `float$();
-            longValue           : `float$();
-            shortValue          : `float$();
-            shortFundingCost    : `float$();
-            longFundingCost     : `float$();
-            totalFundingCost    : `float$();
-            totalLossPnl        : `float$();
-            totalGainPnl        : `float$();
-            realizedPnl         : `float$();
-            liquidationPrice    : `float$();
-            bankruptPrice       : `float$();
-            longUnrealizedPnl   : `float$();
-            shortUnrealizedPnl  : `float$();
-            unrealizedPnl       : `float$();
-            activeMakerFee      : `float$();
-            activeTakerFee      : `float$();
-            totalCommission     : `float$()
+            posMargin           : `long$();
+            longMargin          : `long$();
+            shortMargin         : `long$();
+            longValue           : `long$();
+            shortValue          : `long$();
+            shortFundingCost    : `long$();
+            longFundingCost     : `long$();
+            totalFundingCost    : `long$();
+            totalLossPnl        : `long$();
+            totalGainPnl        : `long$();
+            realizedPnl         : `long$();
+            liquidationPrice    : `long$();
+            bankruptPrice       : `long$();
+            longUnrealizedPnl   : `long$();
+            shortUnrealizedPnl  : `long$();
+            unrealizedPnl       : `long$();
+            activeMakerFee      : `long$();
+            activeTakerFee      : `long$();
+            totalCommission     : `long$()
         );
 
 mandCols:();
-defaults:{:((accountCount+:1),0f,0f,0f,0f,0f,0,0f,0,0f,0f,`CROSS,`COMBINED,0f,0,0f,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -169,41 +169,41 @@ Inventory: (
         accountId    :  `.account.Account$();
         side         :  `.account.POSITIONSIDE$()
     ]
-    currentQty               :  `int$();
-    avgPrice                 :  `int$();
-    realizedPnl              :  `int$();
-    unrealizedPnl            :  `int$();
-    posMargin                :  `int$();
-    initMargin               :  `int$();
-    entryValue               :  `int$();
-    totalCost                :  `int$();
-    totalEntry               :  `int$();
-    execCost                 :  `int$();
-    totalCloseVolume         :  `int$();
-    totalCrossVolume         :  `int$();
-    totalOpenVolume          :  `int$(); 
-    totalCloseMarketValue    :  `int$();
-    totalCrossMarketValue    :  `int$();
-    totalOpenMarketValue     :  `int$(); 
-    totalCloseAmt            :  `int$();
-    totalCrossAmt            :  `int$();
-    totalOpenAmt             :  `int$(); 
-    liquidationPrice         :  `int$();
-    bankruptPrice            :  `int$();
-    breakEvenPrice           :  `int$(); 
-    lastValue                :  `int$(); 
-    markValue                :  `int$();
-    initMarginReq            :  `int$();
-    maintMarginReq           :  `int$();
-    leverage                 :  `int$();
-    effectiveLeverage        :  `int$();
-    totalCommission          :  `int$();
-    faceValue                :  `int$();
-    fillCount                :  `int$());
+    currentQty               :  `long$();
+    avgPrice                 :  `long$();
+    realizedPnl              :  `long$();
+    unrealizedPnl            :  `long$();
+    posMargin                :  `long$();
+    initMargin               :  `long$();
+    entryValue               :  `long$();
+    totalCost                :  `long$();
+    totalEntry               :  `long$();
+    execCost                 :  `long$();
+    totalCloseVolume         :  `long$();
+    totalCrossVolume         :  `long$();
+    totalOpenVolume          :  `long$(); 
+    totalCloseMarketValue    :  `long$();
+    totalCrossMarketValue    :  `long$();
+    totalOpenMarketValue     :  `long$(); 
+    totalCloseAmt            :  `long$();
+    totalCrossAmt            :  `long$();
+    totalOpenAmt             :  `long$(); 
+    liquidationPrice         :  `long$();
+    bankruptPrice            :  `long$();
+    breakEvenPrice           :  `long$(); 
+    lastValue                :  `long$(); 
+    markValue                :  `long$();
+    initMarginReq            :  `long$();
+    maintMarginReq           :  `long$();
+    leverage                 :  `long$();
+    effectiveLeverage        :  `long$();
+    totalCommission          :  `long$();
+    faceValue                :  `long$();
+    fillCount                :  `long$());
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,0,1,0i)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,0,1,0)};
 
 / default:  
 NewInventory : {[inventory;time] 
@@ -225,15 +225,22 @@ AddFill     :{[accountId; price; side; time; isClose; isMaker]
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
-    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-
     acc:.account.Account@accountId;
+    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
+    if[]
+
     $[acc[`positionType]=`HEDGED;
-        [
+        $[isClose;
+            [
 
+            ];
+            [
+
+            ]
         ];
-        [
-
+        $[isClose or ();
+            [];
+            []
         ]
     ];
     }
