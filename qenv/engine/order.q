@@ -235,33 +235,33 @@ NewOrder       : {[o;time];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
     if[null o[`isClose];o[`isClose]:0b];
     if[null o[`execInst];o[`execInst]:()];
-    if[null o[`accountId]; :AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    if[not (o[`side] in .order.ORDERSIDE); :AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
-    if[not (o[`otype] in .order.ORDERTYPE); :AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
-    if[not (o[`timeinforce] in .order.TIMEINFORCE); :AddFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
-    if[not (all o[`execInst] in .order.EXECINST); :AddFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
+    if[null o[`accountId]; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    if[not (o[`side] in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
+    if[not (o[`otype] in .order.ORDERTYPE); :.event.AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
+    if[not (o[`timeinforce] in .order.TIMEINFORCE); :.event.AddFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
+    if[not (all o[`execInst] in .order.EXECINST); :.event.AddFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
 
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
-    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:AddFailure[time;`INVALID;""];o[`stopprice]:0f];
-    $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:AddFailure[time;`INVALID;""];o[`limitprice]:0f];
+    $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:.event.AddFailure[time;`INVALID;""];o[`stopprice]:0f];
+    $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:.event.AddFailure[time;`INVALID;""];o[`limitprice]:0f];
 
     // Instrument related validation
     ins:.instrument.GetActiveInstrument[];
-    if[(o[`price] mod ins[`tickSize])<>0;:AddFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
-    if[o[`price]>ins[`maxPrice];:AddFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`price]<ins[`minPrice];:AddFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`size]>ins[`maxOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
-    if[o[`size]<ins[`minOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;""]];
+    if[(o[`price] mod ins[`tickSize])<>0;:.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
+    if[o[`price]>ins[`maxPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`price]<ins[`minPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
+    if[o[`size]>ins[`maxOrderSize];:.event.AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
+    if[o[`size]<ins[`minOrderSize];:.event.AddFailure[time;`INVALID_ORDER_SIZE;""]];
 
     // Account related validation
     if[not(o[`accountId] in key .account.Account);
-        :AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
     acc:.account.Account@o[`accountId];
     if[o[`isClose] and 
         ((o[`side]=`SHORT and (o[`size]> acc[`netShortPosition])) or
         (o[`side]=`LONG and (o[`size]> acc[`netLongPosition])));
-        :AddFailure[time;`INVALID_ORDER_SIZE; "Close order larger than position"]];
+        :.event.AddFailure[time;`INVALID_ORDER_SIZE; "Close order larger than position"]];
 
 
 
