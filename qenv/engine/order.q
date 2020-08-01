@@ -664,6 +664,14 @@ ProcessTradeEvent  : {[event] // TODO change to events.
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;time]
-    // TODO check for stop orders
+    update markPrice:markPrice from `.instrument.Instrument;
     // TODO check for liquidations
+    liquidateInvs: select from .account.inventory
+        where ;
+
+    activatedStops:select from .order.Order 
+        where otype in (`STOP_LIMIT`STOPMARKET), 
+        (side=`SELL and price>stopprice),
+        (sid`BUY and price<stopprice);
+
     }

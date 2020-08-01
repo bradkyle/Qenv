@@ -169,7 +169,7 @@ Inventory: (
         accountId    :  `.account.Account$();
         side         :  `.account.POSITIONSIDE$()
     ]
-    currentQty               :  `long$();
+    amt               :  `long$();
     avgPrice                 :  `long$();
     realizedPnl              :  `long$();
     unrealizedPnl            :  `long$();
@@ -219,31 +219,130 @@ NewInventory : {[inventory;time]
 // Fill
 // -------------------------------------------------------------->
 
-AddFill     :{[accountId; price; side; time; isClose; isMaker]
+// Gets the position side that an order fills
+HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
+HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
+
+hedgedLiquidationPrice  :{[]
+
+    };
+
+// TODO make global enums file
+AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
+    qty:abs[qty];
+    if[qty=0;:.event.AddFailure[]];
+    if[not(side in );];
 
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not(accountId in key .account.Account);
-        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[accountId]," could not be found"]];
+
+    if[null instrumentId; :.event.AddFailure[time;`INVALID_INSTRUMENTID;"instrumentId is null"]];
+    if[not(instrumentId in key .instrument.Instrument);
+        :.event.AddFailure[time;`INVALID_INSTRUMENTID;"An instrument with the id:",string[instrumentId]," could not be found"]];
 
     acc:.account.Account@accountId;
+    ins:.instrument.Instrument@instrumentId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-    if[]
 
     $[acc[`positionType]=`HEDGED;
-        $[isClose;
+        $[reduceOnly;
             [
-                // OPEN given side for position
+                // CLOSE given side for position
+                i:.account.Inventory@(accountId;HedgedNegSide[side]);
+                oi:.account.Inventory@(accountId;HedgedSide[side]);
+
+                if[size>i[`amt];:.event.AddFailure[]];
+
+                cost:qty*fee;
+                rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
+                i[`totalCommission]+:cost;
+                i[`realizedGrossPnl]+:(rpl-cost);
+                i[`realizedPnl]+:rpl;
+                i[`amt]-:qty;
+                i[`fillCount]+:1;
+                i[`tradeVolume]+:qty;
+
+                // TODO make instrument agnostic
+                i[`totalCloseVolume]+:abs[fillQty]; 
+                i[`totalCloseAmt]+:abs[fillQty%price];
+                i[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
+                i[`totalLossRpnl]+:min[realizedPnlDelta,0];
+                i[`totalGainRpnl]+:max[realizedPnlDelta,0]; 
+
+                i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+
+                i[`initMargin]:i[`entryValue]%acc[`leverage];
+                i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                if[isMaker;i[`orderMargin]];
+                i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+
+                acc[`balance]+:(rpl-cost); 
+                acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+                acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+                acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+                acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
             ];
             [
                 // OPEN given side for position
+                i:.account.Inventory@(accountId;HedgedNegSide[side]);
+                oi:.account.Inventory@(accountId;HedgedSide[side]);
+
+                i[`currentQty]+:qty;
+
+                cost:qty*fee;
+                i[`totalCommission]+:cost;
+                i[`fillCount]+:1;
+                i[`tradeVolume]+:qty;
+                i[`realizedPnl]-:cost;
+
+                / Because the current position is being increased
+                / an entry is added for calculation of average entry
+                / price. 
+                i[`totalEntry]+: abs[qty];
+                i[`execCost]+: floor[1e8%price] * abs[qty]; // TODO make unilaterally applicable.
+                i[`totalOpenVolume]+:abs[qty];
+                i[`totalOpenAmt]+:abs[qty%price];
+                i[`totalOpenMarketValue]+:abs[qty%price]%leverage;
+
+                / Calculates the average price of entry for the current postion, used in calculating 
+                / realized and unrealized pnl.
+                i[`avgPrice]: {$[x[`side]=`LONG;
+                    1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
+                    1e8%ceiling[x[`execCost]%x[`totalEntry]]
+                    ]}[i];
+
+                i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+
+                i[`entryValue]:i[`amt]%i[`avgPrice];
+                i[`initMargin]:i[`entryValue]%acc[`leverage];
+                i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+
+                i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+
+                lp:0;
+                bp:0;
+ 
+                acc[`balance]+:(rpl-cost); 
+                acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+                acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+                acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+                acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
             ]
         ];
-        $[isClose or (acc[`net]);
+        $[reduceOnly or (acc[`net]);
             [
                 // Close positionType BOTH
+                i:.account.Inventory@(accountId;`BOTH);
+
             ];
             [
+                // Open position
+                i:.account.Inventory@(accountId;`BOTH);
 
+                // TODO cross position.
             ]
         ]
     ];

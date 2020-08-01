@@ -272,7 +272,10 @@ execFill    :{[account;inventory;fillQty;price;fee]
     account[`totalGainPnl]+:max[realizedPnlDelta,0]; // TODO cut off 0
     account[`unrealizedPnl]:account[`longUnrealizedPnl]+account[`shortUnrealizedPnl];
     account[`balance]+:realizedPnlDelta; 
-    account[`available]:((account[`balance]+account[`unrealizedPnl])-(account[`orderMargin]+account[`posMargin])); 
+    account[`available]:(
+        (account[`balance]+account[`unrealizedPnl])
+        -(account[`orderMargin]+account[`posMargin])
+    ); 
 
     // TODO account average entry price
 
