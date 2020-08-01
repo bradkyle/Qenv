@@ -1,16 +1,15 @@
 
-\l order.q
-\l engine.q
 \l util.q
 \d .state
 
 
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
-
+maxLvls:20;
 CurrentDepth:(
-
-    );
+    [price:`int$()];
+    side:`symbol$();
+    size:`int$());
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -21,12 +20,14 @@ CurrentDepth:(
 // representative of what the agent will see when
 // interacting with a live exchange. 
 AccountEventHistory: (
-    [accountId          : `long$()]
+    [
+        accountId          : `long$();
+        time               : `datetime$()
+    ]
     balance             : `float$();
     available           : `float$();
     frozen              : `float$();
     maintMargin         : `float$();
-    time                : `datetime$()
     );
 
 // Maintains a historic and current record of the 
@@ -34,13 +35,15 @@ AccountEventHistory: (
 // subsequently provides agent specific details
 // therin
 InventoryEventHistory: (
-    [inventoryId        :   `long$()]
+    [
+        inventoryId        :   `long$();
+        time               : `datetime$()
+    ]
     accountId           :  `long$();
-    side                :  `.inventory.POSITIONSIDE$();
+    side                :  `symbol$();
     currentQty          :  `long$();
     realizedPnl         :  `long$();
-    unrealizedPnl       :  `long$();
-    time                : `datetime$()
+    unrealizedPnl       :  `long$()
     );
 
 // Maintains a historic and current record of orders
@@ -48,18 +51,18 @@ InventoryEventHistory: (
 OrderEventHistory: (
     [orderId        :   `long$()]
     accountId       :   `long$();
-    side            :   `.order.ORDERSIDE$();
-    otype           :   `.order.ORDERTYPE$();
+    side            :   `symbol$();
+    otype           :   `symbol$();
     leaves          :   `long$();
     filled          :   `long$();
     limitprice      :   `long$(); / multiply by 100
     stopprice       :   `long$(); / multiply by 100
-    status          :   `.order.ORDERSTATUS$();
+    status          :   `symbol$();
     time            :   `datetime$();
     isClose         :   `boolean$();
-    trigger         :   `.order.STOPTRIGGER$();
-    execInst        :   `.order.EXECINST$();
-    time                : `datetime$());
+    trigger         :   `symbol$();
+    execInst        :   `symbol$();
+    time            : `datetime$());
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
@@ -79,7 +82,7 @@ DepthEventHistory: (
 TradeEventHistory: (
     size            :   `float$();
     price           :   `float$();
-    side            :   `.order.ORDERSIDE$();
+    side            :   `symbol$();
     time            :   `datetime$());
 
 // Maintains a set of historic trade events
@@ -88,7 +91,7 @@ TradeEventHistory: (
 MarkEventHistory: (
     size            :   `float$();
     price           :   `float$();
-    side            :   `.order.ORDERSIDE$();
+    side            :   `symbol$();
     time            :   `datetime$());
 
 // Maintains a set of historic trade events
@@ -97,7 +100,7 @@ MarkEventHistory: (
 FundingEventHistory: (
     size            :   `float$();
     price           :   `float$();
-    side            :   `.order.ORDERSIDE$();
+    side            :   `symbol$();
     time            :   `datetime$());
 
 // Maintains a set of historic trade events
@@ -106,7 +109,7 @@ FundingEventHistory: (
 LiquidationEventHistory: (
     size            :   `float$();
     price           :   `float$();
-    side            :   `.order.ORDERSIDE$();
+    side            :   `symbol$();
     time            :   `datetime$());
 
 // TODO batching + 
@@ -134,7 +137,7 @@ StepBuffer  :(
 InsertResultantEvents   :{[events]
     {[event]
         k:event[`kind];
-        event[`datum][`time]:event[`time]
+        t:event[`time]
         $[
             k=`DEPTH;
             [`.state.DepthEventHistory insert ()];
@@ -152,4 +155,6 @@ InsertResultantEvents   :{[events]
     } each events;
     };
 
+Advance :{[]
 
+    };

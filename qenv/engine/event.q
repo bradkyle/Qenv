@@ -99,6 +99,9 @@ MakeFailureEvent   :{[failure]
         };
 
 /*******************************************************
+/ Datum Construction
+
+/*******************************************************
 / Events LOGIC
 
 // TODO move to global

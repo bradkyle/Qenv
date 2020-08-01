@@ -22,26 +22,33 @@ environment agent state.
 // Event Creation Utilities
 // --------------------------------------------------->
 
-getPriceAtLevel               :{[level;side]
-    // TODO
+MakeActionEvent :{[agentId;kind;time]
+    :`time`intime`kind`cmd`datum!();
     };
 
+// TODO add error handling
+getPriceAtLevel         :{[level;side]
+    :(select price from .state.CurrentDepth where side=side)[level][`price]
+    };
+
+// Return all open positions for an account
 getOpenPositions              :{[accountId]
-
+    :(select from .state.InventoryEventHistory where accountId=accountId)
     };
 
-getCurrentOrderLvlDist        :{[numAskLvls;numBidLvls]
-    
+// Get the current qtys at each order level
+getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
+    :exec sum leaves by price from .state.OrderEventHisory 
+        where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
     };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
 createOrderEventsAtLevel     :{[level;side;size;accountId]
-    events:();
+    
     price: getPriceAtLevel[level;side];
-    events:events,.global.MakeOrderEvent[side;price;size];
-    :events;
+    :MakeActionEvent[`];
     };
 
 // Generates a set of events that represent
@@ -64,29 +71,25 @@ createOrderEventsByLevelDeltas :{[lvlDeltas]
 
 // Creates a simple market order event for the
 // respective agent
-createMarketOrderEvent      :{[]
+createMarketOrderEvent      :{[accountId;time;size]
 
+    };
+
+// Creates an event that cancels all open orders for
+// a given agent.
+createCancelAllOrdersEvent  :{[accountId]
+    :MakeActionEvent[accountId;`CANCEL_ALL_ORDERS];
     };
 
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
 // market orders for a specific agent
-createFlattenEvents          :{[accountId]
-    events:();
-    positions: getOpenPositions[accountId];
-    
-    $[side=`SELL;`BUY;`SELL]
-    abs currentQty
-    events:events,[]
+createFlattenEvents          :{[accountId; time]
+    openQty:select sum currentQty by side from .state.InventoryEventHistory;
+    {createMarketOrderEvent[
+        x;y;z[`currentQty]
+    ]}[accountId;time] each (openQty where[openQty[`currentQty]>0])
     };  
-
-// Creates an event that cancels all open orders for
-// a given agent.
-createCancelAllOrdersEvent  :{[]
-    events:();
-    events:events,.global.MakeCancelAllOrdersEvent[];
-    :events;
-    };
 
 createOrderEventsFromDist   :{[]
 
@@ -96,15 +99,20 @@ createMarketOrderEventsFromDist :{[]
 
     };
 
-createDepositEvent  :{[]
-
+createDepositEvent  :{[accountId;amt]
+    :MakeActionEvent[accountId;`DEPOSIT;amt];
     };
 
-createWithdrawEvent  :{[]
-
+createWithdrawEvent  :{[accountId;amt]
+    :MakeActionEvent[accountId;`WITHDRAW;amt];
     };
 
-createNaiveStopEvents  :{[]
+// Creates a set of stop orders that oppose the 
+// current position accoutding to a certain loss
+// fraction, if the current orders that are open
+// do not have correct price, size they are either
+// cancelled or amended depending on the configuration.
+createNaiveStopEvents  :{[accountId;loss]
 
     };
 
@@ -115,7 +123,7 @@ adapters : (`.state.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
 adapters[`DISCRETE]     :{[action;accountId]
-    events:();
+    
     penalty:0f;
     $[
         action=0;
@@ -130,8 +138,7 @@ adapters[`DISCRETE]     :{[action;accountId]
         createMarketOrderEventsFromDist[0.05;`SELL];
         action=5;
         createFlattenEvents[];
-        [];
-    ]
+        []];
     };
 
 // SIMBLEBOX generates the set of actions that
@@ -160,16 +167,24 @@ adapters[`DISCRETE]     :{[action;accountId]
     // TODO
     / };
 
-makerBuySell : {[buyLvl;sellLvl;limitSize;accountId]
-    res:();
-    res,:createOrderEventsAtLevels[0;`SELL;limitSize;accountId];
-    res,:createOrderEventsAtLevels[4;`BUY;limitSize;accountId];
-    :res:
+makerBuySell : {[accountId;buyLvl;sellLvl;limitSize;accountId]
+    
+    currentBidQtyByPrice:0;
+    currentAskQtyByPrice:0;
+    targetBidQtyByPrice:0;
+    targetAskQtyByPrice:0;
+
+    bidDeltas:targetBidQtyByPrice - currentBidQtyByPrice;
+    askDeltas:targetAskQtyByPrice - currentAskQtyByPrice;
+
+     
+    
+    
     };
 
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[action;accountId]
-    events:();
+    
     penalty:0f;
     limitSize: 8;
     marketSize: 10;
@@ -214,8 +229,8 @@ adapters[`MARKETMAKER]   :{[action;accountId]
         createMarketOrderEvent[`SELL;marketSize];
         action=19;
         createCancelAllOrdersEvent[]; // TODO add more
-        [:0N] // TODO errors
-    ];
+        [:0N]];
+    
     :res;
     };
 
