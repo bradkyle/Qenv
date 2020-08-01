@@ -43,6 +43,7 @@ InventoryEventHistory: (
     side                :  `symbol$();
     currentQty          :  `long$();
     realizedPnl         :  `long$();
+    avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$()
     );
 

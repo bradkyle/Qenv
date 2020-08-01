@@ -22,7 +22,7 @@ environment agent state.
 // Event Creation Utilities
 // --------------------------------------------------->
 
-MakeActionEvent :{[agentId;kind;time]
+MakeActionEvent :{[accountId;kind;time;datum]
     :`time`intime`kind`cmd`datum!();
     };
 
@@ -72,26 +72,26 @@ createOrderEventsByLevelDeltas :{[lvlDeltas]
 // Creates a simple market order event for the
 // respective agent
 createMarketOrderEvent      :{[accountId;time;size]
-
+    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;size)];
     };
 
 // Creates an event that cancels all open orders for
 // a given agent.
-createCancelAllOrdersEvent  :{[accountId]
-    :MakeActionEvent[accountId;`CANCEL_ALL_ORDERS];
+createCancelAllOrdersEvent  :{[accountId;time]
+    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId)];
     };
 
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
 // market orders for a specific agent
 createFlattenEvents          :{[accountId; time]
-    openQty:select sum currentQty by side from .state.InventoryEventHistory;
+    openQty:select sum currentQty by side from .state.InventoryEventHistory where accountId=accountId;
     {createMarketOrderEvent[
         x;y;z[`currentQty]
     ]}[accountId;time] each (openQty where[openQty[`currentQty]>0])
     };  
 
-createOrderEventsFromDist   :{[]
+createOrderEventsFromDist   :{[accountId;time;dist;side]
 
     };
 
@@ -99,12 +99,12 @@ createMarketOrderEventsFromDist :{[]
 
     };
 
-createDepositEvent  :{[accountId;amt]
-    :MakeActionEvent[accountId;`DEPOSIT;amt];
+createDepositEvent  :{[accountId;amt;time]
+    :MakeActionEvent[time;`DEPOSIT;(accountId; amt)];
     };
 
-createWithdrawEvent  :{[accountId;amt]
-    :MakeActionEvent[accountId;`WITHDRAW;amt];
+createWithdrawEvent  :{[accountId;amt;time]
+    :MakeActionEvent[time;`WITHDRAW;(accountId; amt)];
     };
 
 // Creates a set of stop orders that oppose the 
@@ -112,8 +112,11 @@ createWithdrawEvent  :{[accountId;amt]
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createNaiveStopEvents  :{[accountId;loss]
+createNaiveStopEvents  :{[accountId;loss;time]
+    openInv:select by side from .state.InventoryEventHistory where accountId=accountId, abs[currentQty]>0;
+    {
 
+    }[accountId;loss;time] each openInv;
     };
 
 
@@ -129,15 +132,15 @@ adapters[`DISCRETE]     :{[action;accountId]
         action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()
         action=1;
-        createOrderEventsFromDist[0.05;`BUY];
+        createOrderEventsFromDist[accountId;time;0.05;`BUY];
         action=2;
-        createOrderEventsFromDist[0.05;`SELL];
+        createOrderEventsFromDist[accountId;time;0.05;`SELL];
         action=3;
-        createMarketOrderEventsFromDist[0.05;`BUY];
+        createMarketOrderEventsFromDist[accountId;time;0.05;`BUY];
         action=4;
-        createMarketOrderEventsFromDist[0.05;`SELL];
+        createMarketOrderEventsFromDist[accountId;time;0.05;`SELL];
         action=5;
-        createFlattenEvents[];
+        createFlattenEvents[accountId;time];
         []];
     };
 
