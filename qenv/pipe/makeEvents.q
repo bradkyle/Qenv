@@ -28,14 +28,14 @@
 / \cd /home/kx/qenv/qenv/pipe
 
 / // LOAD okex events
-\l ../../lcl/data/okexagent/btcusdswap
-bp:":/home/kx/qenv/lcl/events/okexbtcusdswap";
-/ .parser.Parse[trade;bp;.okex.tradeParser;10000];
-.parser.Parse[depth;bp;.okex.bookParser;10000];
-.parser.Parse[markprice;bp;.okex.markParser;10000];
-.parser.Parse[fundingrate;bp;.okex.fundingParser;10000];
-delete from `.;
-\cd /home/kx/qenv/qenv/pipe
+/ \l ../../lcl/data/okexagent/btcusdswap
+/ bp:":/home/kx/qenv/lcl/events/okexbtcusdswap";
+/ / .parser.Parse[trade;bp;.okex.tradeParser;10000];
+/ .parser.Parse[depth;bp;.okex.bookParser;10000];
+/ .parser.Parse[markprice;bp;.okex.markParser;10000];
+/ .parser.Parse[fundingrate;bp;.okex.fundingParser;10000];
+/ delete from `.;
+/ \cd /home/kx/qenv/qenv/pipe
 
 
 / // LOAD huobi events
