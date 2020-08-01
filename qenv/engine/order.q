@@ -24,7 +24,7 @@ ORDERSTATUS :   (`NEW;          / begining of life cycle
                 `FAILED;        / failed due to expiration etc
                 `UNTRIGGERED;
                 `TRIGGERED;
-                `CANCELED);     / user or system cancel
+                `CANCELLED);     / user or system cancel
 
 TIMEINFORCE :   (`GOODTILCANCEL;     / good til user manual cancellation (max 90days)
                 `IMMEDIATEORCANCEL; / fill immediately or cancel, allow partially fill
@@ -393,16 +393,35 @@ NewOrderBatch   :{[]
 
     };
 
-CancelOrder    :{[]
+CancelOrder    :{[accountId;orderId]
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
+    // TODO fix
+    if[not(orderId in key .order.Order);
+        :.event.AddFailure[time;`INVALID_ORDERID;"An order with the id:",string[orderId]," could not be found"]];
+
+    // If the order does not belong to the account
+    if[not()];
+
+    update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where id=orderId;
     };
 
-CancelOrderBatch :{[]
+CancelOrderBatch :{[accountId;orderIds]
+    // TODO limit max orders
 
+    CancelOrder each orders;
     };
 
-CancelAllOrders :{[]
+CancelAllOrders :{[accountId]
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
+    update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;
     };
 
 AmendOrder      :{[]
