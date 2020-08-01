@@ -389,8 +389,13 @@ NewOrder       : {[o;time];
     ];
     };
 
-NewOrderBatch   :{[]
+NewOrderBatch   :{[accountId;orders]
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
+    NewOrder each orders;
     };
 
 CancelOrder    :{[accountId;orderId]
@@ -410,7 +415,10 @@ CancelOrder    :{[accountId;orderId]
     };
 
 CancelOrderBatch :{[accountId;orderIds]
-    // TODO limit max orders
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     CancelOrder each orders;
     };
@@ -424,13 +432,24 @@ CancelAllOrders :{[accountId]
     update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;
     };
 
-AmendOrder      :{[]
+AmendOrder      :{[accountId;order]
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
+    update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;    
     };
 
 
-AmendOrderBatch      :{[]
+AmendOrderBatch      :{[accountId;orders]
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    // Account related validation
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
+    AmendOrder each orders;
     };
 
 
