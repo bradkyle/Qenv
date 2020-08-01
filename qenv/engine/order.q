@@ -221,15 +221,9 @@ ProcessDepthUpdate  : {[time;asks;bids]
     / AddDepthEvent[nextAsks;nextBids];
     };
 
+
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
-
-// Conditional Utilities
-// -------------------------------------------------------------->
-// conditional utilities define transition logic based upon the configuration defined for
-// a given instrument i.e. the maintenence type and associated logic, fee type and associated
-// logic, liquidation strategy and settlement type. 
-
 
 
 // Adds an agent order with its given details to the state
@@ -259,16 +253,16 @@ NewOrder       : {[o;time];
     if[o[`size]>ins[`maxOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
     if[o[`size]<ins[`minOrderSize];:AddFailure[time;`INVALID_ORDER_SIZE;""]];
 
-    // TODO if market order etc.
-
     // Account related validation
-    if[not(o[`accountId] in key .account.Account);:AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+    if[not(o[`accountId] in key .account.Account);
+        :AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
     acc:.account.Account@o[`accountId];
     if[o[`isClose] and 
         ((o[`side]=`SHORT and (o[`size]> acc[`netShortPosition])) or
         (o[`side]=`LONG and (o[`size]> acc[`netLongPosition])));
-        :AddFailure[time; ]];
+        :AddFailure[time;`INVALID_ORDER_SIZE; "Close order larger than position"]];
+
 
 
 

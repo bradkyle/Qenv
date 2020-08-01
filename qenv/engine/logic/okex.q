@@ -56,6 +56,10 @@ Instrument:.instrument.NewInstrument[
 
     ];
 
+positionValue           :{[faceValue;currentQty;markPrice]
+    :faceValue*currentQty*markPrice
+    };
+
 // derive maintenence margin
 deriveMaintenenceMargin :{[]
 
