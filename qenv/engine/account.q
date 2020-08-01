@@ -232,18 +232,18 @@ AddFill     :{[accountId; price; side; time; isClose; isMaker]
     $[acc[`positionType]=`HEDGED;
         $[isClose;
             [
-
+                // OPEN given side for position
             ];
             [
-
+                // OPEN given side for position
             ]
         ];
         $[isClose or (acc[`net]);
             [
-
+                // Close positionType BOTH
             ];
             [
-                
+
             ]
         ]
     ];
