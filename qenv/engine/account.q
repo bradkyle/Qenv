@@ -95,14 +95,6 @@ NewAccount :{[account;time]
     / AddAccountUpdateEvent[accountId;time];
     };
 
-// Fill and Position Related Logic
-// -------------------------------------------------------------->
-
-getInventory    :{[accountId;side]
-    exec from .account.Inventory where accountId=accountId & side=side;
-    };
-
-
 // Funding Event/Logic //TODO convert to cnt for reference
 // -------------------------------------------------------------->
 // Positive funding rate means long pays short an amount equal to their current position
