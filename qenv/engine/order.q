@@ -264,6 +264,17 @@ NewOrder       : {[o;time];
     // Account related validation
     if[not(o[`accountId] in key .account.Account);:AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
+    acc:.account.Account@o[`accountId];
+    if[o[`isClose] and 
+        ((o[`side]=`SHORT and (o[`size]> acc[`netShortPosition])) or
+        (o[`side]=`LONG and (o[`size]> acc[`netLongPosition])));
+        :AddFailure[time; ]];
+
+
+
+    // calculate initial margin requirements of order
+
+
     // TODO 
     / Duplicate clOrdID
     / Invalid orderID

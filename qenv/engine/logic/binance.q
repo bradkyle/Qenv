@@ -1,4 +1,4 @@
-
+\d .binance
 / Important note: Perpetual contracts on Binance Futures are not an inverse contract, 
 / they have clear pricing rules and are settled in USDT. 
 /
@@ -10,6 +10,17 @@
     base initial margin rate:0.0080
     base maint margin rate:0.0040
     liquidation fee: 0.003
+
+    Symbol: BTCUSDT
+    Type: USDT quoted and settled
+    Initial Margin: 1% + Entry Taker Fee
+    Maint. Margin: 0.5% + Funding Rate
+    Funding Interval: every 8 hours
+    Mark Price: Index Price * (1 + Funding Basis)
+    Leverages: 100x, 50x, 20x, 10x, 5x, 3x, 2x, 1x
+    Contract Size: 1 BTC
+    Lot Size: 0.0001 Contract
+    Tick Size: 0.1 USDT
 \
 
 // max amt of contracts, mmr, imr, max leverage // TODO mmr
@@ -61,7 +72,9 @@ deriveInitialMargin         :{[]
 
 // derive maintenence margin
 deriveMaintenenceMargin     :{[currentQty;markPrice]
-    
+        notionalValue:currentQty*markPrice;
+        mmr:.binance.TieredRisk[currentQty][0];
+        :(notionalValue * mmr) 
     };
 
 // derive unrealized pnl
@@ -76,8 +89,10 @@ deriveMaintenenceMargin     :{[currentQty;markPrice]
 /       Collateral=InitialCollateral+RealizedPnL+UnrealizedPnL
 / The maximum amount of collateral can be withdrawn from the account so long 
 / as collateral > (initial margin + borrowed amount) . 
-deriveUnrealizedPnl         :{[]
-
+deriveUnrealizedPnl         :{[account]
+        $[
+            ;
+        ];
     };
 
 // derive realized pnl
