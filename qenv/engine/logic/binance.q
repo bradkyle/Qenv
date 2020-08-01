@@ -49,8 +49,17 @@ Instrument:.instrument.NewInstrument[
 
     ];
 
+
+deriveOpenPremium           :{[noc;direction;markPrice;orderPrice]
+    :noc * abs[min[0,direction*(markPrice-orderPrice)]]
+    };
+
 // derive initial margin
 deriveInitialMargin         :{[]
+    initialMargin:notionalValue%leverage
+    };
+
+deriveOpenCost              :{[]
 
     };
 
