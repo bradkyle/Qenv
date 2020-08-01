@@ -10,7 +10,7 @@
 \
 
 // max amt of contracts, mmr, minimum initial margin ratio, max leverage
-TieredRisk:.instrument.NewRiskTier[(
+Risk:.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f;
         550000    0.015    0.02    50f;
@@ -41,7 +41,7 @@ TieredRisk:.instrument.NewRiskTier[(
 / price into BTC and settle the accumulated trading volume of the last 30 
 / days at 00:00 (UTC+8) every day.
 // 30day trading volume(BTC), makerFee, takerFee, withdrawal limit
-TieredFee:.instrument.NewFeeTier[(
+Fee:.instrument.NewFeeTier[(
         5000    0.00015     0.0003    600f;
         10000   0.00005     0.0003    800f;
         20000   0           0.0003    1000f;

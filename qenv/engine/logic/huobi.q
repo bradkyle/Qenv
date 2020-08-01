@@ -12,7 +12,7 @@
 \
 
 // max amt of contracts, mmr, imr, max leverage // TODO mmr
-TieredRisk:.instrument.NewRiskTier[(
+Risk:.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f;
         1000000     0.01     0.02     50f;
@@ -34,7 +34,7 @@ TieredRisk:.instrument.NewRiskTier[(
 //      an order of the orderbook. (Please note when your limit 
 //      order is executed against other user's limit order and 
 //      his/her order placed earlier than your order, you will pay taker fees.)
-TieredFee:.instrument.NewFeeTier[(
+Fee:.instrument.NewFeeTier[(
         25e6  0.0002   0.0005   600f;
         5e7   0.00015  0.0005   600f;
         1e8   0.0001   0.0005   600f;

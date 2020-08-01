@@ -258,13 +258,13 @@ NewOrder       : {[o;time];
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
 
     acc:.account.Account@o[`accountId];
-    if[o[`isClose] and 
+    if[o[`isClose] and (order[`otype] in `LIMIT`MARKET)
         ((o[`side]=`SHORT and (o[`size]> acc[`netShortPosition])) or
         (o[`side]=`LONG and (o[`size]> acc[`netLongPosition])));
         :.event.AddFailure[time;`INVALID_ORDER_SIZE; "Close order larger than position"]];
 
-
-
+    if[(acc[`orderCount]+1) > ins[`maxOpenOrders];:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+    if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // calculate initial margin requirements of order
 

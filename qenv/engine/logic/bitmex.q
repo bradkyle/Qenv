@@ -3,7 +3,7 @@
 
 / Symbol	Base Risk Limit	   Step	      Base Maintenance Margin	 Base Initial Margin
 / XBTUSD	200 XBT	          100 XBT	  0.35%	                    1.00%
-TieredRisk :.instrument.NewRiskTier[(
+Risk :.instrument.NewRiskTier[(
 
     )];
 
