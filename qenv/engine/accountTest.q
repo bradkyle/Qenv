@@ -7,6 +7,32 @@ system "d .accountTest";
 \l quantest.q 
 \cd ../engine/
 
+// UTils
+// -------------------------------------------------------------->
+
+
+MakeAccounts :{[aids]
+        {
+            .account.NewAccount[enlist[`accountId]!enlist[x];.z.z];
+        } each aids;
+    };
+
+MakeInventory :{[aids]
+        {
+            {   
+                i:(cols .account.Inventory)!.account.DefaultInventory[];
+                i[`accountId]:x;
+                i[`side]:y;
+                `.account.Inventory upsert i;
+            }[x] each .account.POSITIONSIDE; 
+        } each aids;
+    };
+
+
+
+// Before/After
+// -------------------------------------------------------------->
+
 defaultAfterEach: {
      delete from `.account.Account;
      delete from `.inventory.Inventory;

@@ -95,32 +95,13 @@ NewAccount :{[account;time]
     / AddAccountUpdateEvent[accountId;time];
     };
 
-// Deriving Isolated Values
-// -------------------------------------------------------------->
-
-
-// TODO
-/ isolatedLiquidationPrice{[]0N};
-
 // Fill and Position Related Logic
 // -------------------------------------------------------------->
 
 getInventory    :{[accountId;side]
-    exec from .inventory.Inventory where accountId=accountId & side=side;
+    exec from .account.Inventory where accountId=accountId & side=side;
     };
 
-// TODO type assertions
-// Apply fill is an internal function i.e. it is not exposed
-// to the engine but is used by the orderbook to add a given
-// qty to the active position of an account.
-// todo allow for onlyclose and calcualte fee
-// TODO update active fees
-ApplyFill  :{[qty;price;side;time;isClose;isMaker;accountId]
-    ins:.instrument.GetActiveInstrument[];
-    acc: exec from Account where accountId=accountId;
-    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-    
-    };
 
 // Funding Event/Logic //TODO convert to cnt for reference
 // -------------------------------------------------------------->
@@ -182,56 +163,55 @@ Withdraw       :{[withdrawn;time;accountId]
     };
 
 
+// Inventory Management
+// -------------------------------------------------------------->
+
 /*******************************************************
-/ Inventory Related Enumerations
+/ Inventory 
 
 inventoryCount:0;
-
-/*******************************************************
-/ position related enumerations  
 POSITIONSIDE   : `LONG`SHORT`BOTH;
 
 Inventory: (
-    [inventoryId             :  `long$()]
-    accountId                :  `.account.Account$();
-    side                     :  `.inventory.POSITIONSIDE$();
-    currentQty               :  `long$();
-    avgPrice                 :  `float$();
-    realizedPnl              :  `float$();
-    unrealizedPnl            :  `float$();
-    posMargin                :  `float$();
-    initMargin               :  `float$();
-    entryValue               :  `float$();
-    totalCost                :  `long$();
-    totalEntry               :  `long$();
-    execCost                 :  `long$();
-    totalCloseVolume         :  `long$();
-    totalCrossVolume         :  `long$();
-    totalOpenVolume          :  `long$(); 
-    totalCloseMarketValue    :  `float$();
-    totalCrossMarketValue    :  `float$();
-    totalOpenMarketValue     :  `float$(); 
-    totalCloseAmt            :  `float$();
-    totalCrossAmt            :  `float$();
-    totalOpenAmt             :  `float$(); 
-    liquidationPrice         :  `float$();
-    bankruptPrice            :  `float$();
-    breakEvenPrice           :  `float$();
-    lastPrice                :  `float$();
-    lastValue                :  `float$();
-    markPrice                :  `float$();
-    markValue                :  `float$();
-    initMarginReq            :  `float$();
-    maintMarginReq           :  `float$();
-    leverage                 :  `float$();
-    effectiveLeverage        :  `float$();
-    totalCommission          :  `float$();
-    faceValue                :  `long$();
-    fillCount                :  `long$());
+    [
+        accountId    :  `.account.Account$();
+        side         :  `.account.POSITIONSIDE$()
+    ]
+    currentQty               :  `int$();
+    avgPrice                 :  `int$();
+    realizedPnl              :  `int$();
+    unrealizedPnl            :  `int$();
+    posMargin                :  `int$();
+    initMargin               :  `int$();
+    entryValue               :  `int$();
+    totalCost                :  `int$();
+    totalEntry               :  `int$();
+    execCost                 :  `int$();
+    totalCloseVolume         :  `int$();
+    totalCrossVolume         :  `int$();
+    totalOpenVolume          :  `int$(); 
+    totalCloseMarketValue    :  `int$();
+    totalCrossMarketValue    :  `int$();
+    totalOpenMarketValue     :  `int$(); 
+    totalCloseAmt            :  `int$();
+    totalCrossAmt            :  `int$();
+    totalOpenAmt             :  `int$(); 
+    liquidationPrice         :  `int$();
+    bankruptPrice            :  `int$();
+    breakEvenPrice           :  `int$(); 
+    lastValue                :  `int$(); 
+    markValue                :  `int$();
+    initMarginReq            :  `int$();
+    maintMarginReq           :  `int$();
+    leverage                 :  `int$();
+    effectiveLeverage        :  `int$();
+    totalCommission          :  `int$();
+    faceValue                :  `int$();
+    fillCount                :  `int$());
 
+/ .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-mandCols:`accountId`side; // TODO update defaults function to derive from default instrument
-DefaultInventory:{((inventoryCount+:1),0,`BOTH,0,0f,0f,0f,0f,0f,0f,0,0,0,0,0,0,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,100f,100f,0f,1,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,0,1,0i)};
 
 / default:  
 NewInventory : {[inventory;time] 
@@ -239,6 +219,29 @@ NewInventory : {[inventory;time]
     inventory:Sanitize[inventory;defaults[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
 
-    `.inventory.Inventory upsert inventory; // TODO check if successful
+    `.account.Inventory upsert inventory; // TODO check if successful
 
     };
+
+
+// Fill
+// -------------------------------------------------------------->
+
+AddFill     :{[accountId; price; side; time; isClose; isMaker]
+
+    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    if[not(accountId in key .account.Account);
+        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+
+    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
+
+    acc:.account.Account@accountId;
+    $[acc[`positionType]=`HEDGED;
+        [
+
+        ];
+        [
+
+        ]
+    ];
+    }
