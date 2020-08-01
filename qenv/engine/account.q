@@ -238,9 +238,13 @@ AddFill     :{[accountId; price; side; time; isClose; isMaker]
 
             ]
         ];
-        $[isClose or ();
-            [];
-            []
+        $[isClose or (acc[`net]);
+            [
+
+            ];
+            [
+                
+            ]
         ]
     ];
     }
