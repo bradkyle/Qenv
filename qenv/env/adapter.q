@@ -71,8 +71,8 @@ createOrderEventsByLevelDeltas :{[lvlDeltas]
 
 // Creates a simple market order event for the
 // respective agent
-createMarketOrderEvent      :{[accountId;time;size]
-    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;size)];
+createMarketOrderEvent      :{[accountId;time;size;side]
+    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;side;size)];
     };
 
 // Creates an event that cancels all open orders for
@@ -170,7 +170,7 @@ adapters[`DISCRETE]     :{[action;accountId]
     // TODO
     / };
 
-makerBuySell : {[accountId;buyLvl;sellLvl;limitSize;accountId]
+makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     
     currentBidQtyByPrice:0;
     currentAskQtyByPrice:0;
@@ -187,54 +187,56 @@ makerBuySell : {[accountId;buyLvl;sellLvl;limitSize;accountId]
 
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[action;accountId]
-    
+
     penalty:0f;
     limitSize: 8;
     marketSize: 10;
+    makerFn:makerBuySell[accountId;time;limitSize];
+    takerFn:createMarketOrderEvent[accountId;time;marketSize];
     res: $[
         action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO derive config from account?
         action=1;
-        makerBuySell[];
+        makerFn[];
         action=2;
-        makerBuySell[];
+        makerFn[];
         action=3;
-        makerBuySell[];
+        makerFn[];
         action=4;
-        makerBuySell[];
+        makerFn[];
         action=5;
-        makerBuySell[];
+        makerFn[];
         action=6;
-        makerBuySell[];
+        makerFn[];
         action=7;
-        makerBuySell[];
+        makerFn[];
         action=8;
-        makerBuySell[];
+        makerFn[];
         action=9;
-        makerBuySell[];
+        makerFn[];
         action=10;
-        makerBuySell[];
+        makerFn[];
         action=11;
-        makerBuySell[];
+        makerFn[];
         action=12;
-        makerBuySell[];
+        makerFn[];
         action=13;
-        makerBuySell[];
+        makerFn[];
         action=14;
-        makerBuySell[];
+        makerFn[];
         action=15;
-        makerBuySell[];
+        makerFn[];
         action=16;
         createFlattenEvents[];
         action=17;
-        createMarketOrderEvent[`BUY;marketSize];
+        takerFn[`BUY];
         action=18;
-        createMarketOrderEvent[`SELL;marketSize];
+        takerFn[`SELL];
         action=19;
         createCancelAllOrdersEvent[]; // TODO add more
         [:0N]];
     
-    :res;
+    :(penalty;res);
     };
 
 // Converts a scalar action representing a target state
