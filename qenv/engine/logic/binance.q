@@ -89,15 +89,15 @@ deriveMaintenenceMargin     :{[currentQty;markPrice]
 /       Collateral=InitialCollateral+RealizedPnL+UnrealizedPnL
 / The maximum amount of collateral can be withdrawn from the account so long 
 / as collateral > (initial margin + borrowed amount) . 
-deriveUnrealizedPnl         :{[account]
-        $[
-            ;
+deriveUnrealizedPnl         :{[account;markPrice]
+        $[(account[`netShortPosition]>account[`netLongPosition])
+            :(account[`avgPrice]-markPrice)*account[];
         ];
     };
 
 // derive realized pnl
 deriveRealizedPnl           :{[]
-
+    :(pricePerContract[faceValue;avgPrice] - pricePerContract[faceValue;fillPrice])*fillQty;
     };
 
 // derive liquidation price // todo add noise
@@ -114,7 +114,7 @@ deriveBankruptPrice          :{[currentQty;avgPrice;initMargin]
 
 
 // exec fill
-execFill    :{[account;inventory;fillQty;price;fee]
+execFill    :{[account;fillQty;price;fee]
     
     };
 
