@@ -137,9 +137,7 @@ InsertResultantEvents   :{[events]
         event[`datum][`time]:event[`time]
         $[
             k=`DEPTH;
-            [
-                `.state.DepthEventHistory insert () // TODO
-            ];
+            [`.state.DepthEventHistory insert ()];
             k=`TRADE;
             [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
             k=`ACCOUNT_UPDATE;

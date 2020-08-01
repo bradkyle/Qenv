@@ -59,13 +59,9 @@ deriveInitialMargin         :{[]
     initialMargin:notionalValue%leverage
     };
 
-deriveOpenCost              :{[]
-
-    };
-
 // derive maintenence margin
-deriveMaintenenceMargin     :{[]
-
+deriveMaintenenceMargin     :{[currentQty;markPrice]
+    
     };
 
 // derive unrealized pnl
