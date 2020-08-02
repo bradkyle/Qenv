@@ -190,8 +190,8 @@ makerSide   :{[aId;lvls;sizes;side]
     dlt: neg[cb] + (1!([]price:p;dlt:sizes));
     j:ej[`dlt;dlt;`dlt xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=side];
     
-    amd:`orderId`size!flip raze [{flip(x[`orderId];1_Clip[(+\)x[`dlt],x[`leaves]])}each j where j[`dlt]<0];
-    nord: select price,dlt from j where dlt>0;
+    amd:{} each `orderId`size!flip raze [{flip(x[`orderId];1_Clip[(+\)x[`dlt],x[`leaves]])}each j where j[`dlt]<0];
+    nord:{} select price,dlt from j where dlt>0;
     };
 
 makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
