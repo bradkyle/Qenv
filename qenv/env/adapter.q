@@ -1,3 +1,4 @@
+\d .adapter
 \l state.q
 // Adapters
 // =====================================================================================>
@@ -22,18 +23,18 @@ environment agent state.
 // Event Creation Utilities
 // --------------------------------------------------->
 
-MakeActionEvent :{[accountId;kind;time;datum]
-    :`time`intime`kind`cmd`datum!();
+MakeActionEvent :{[kind;time;datum]
+    :`time`intime`kind`cmd`datum!(time;time;kind;`NEW;datum);
     };
 
 // TODO add error handling
 getPriceAtLevel         :{[level;side]
-    :(select price from .state.CurrentDepth where side=side)[level][`price]
+    :(select price from .state.CurrentDepth where side=side)[level][`price];
     };
 
 // Return all open positions for an account
 getOpenPositions              :{[accountId]
-    :(select from .state.InventoryEventHistory where accountId=accountId)
+    :(select from .state.InventoryEventHistory where accountId=accountId);
     };
 
 // Get the current qtys at each order level
@@ -48,7 +49,7 @@ getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
 createOrderEventsAtLevel     :{[level;side;size;accountId]
     
     price: getPriceAtLevel[level;side];
-    :MakeActionEvent[`];
+    / :MakeActionEvent[`];
     };
 
 // Generates a set of events that represent
@@ -88,7 +89,7 @@ createFlattenEvents          :{[accountId; time]
     openQty:select sum currentQty by side from .state.InventoryEventHistory where accountId=accountId;
     {createMarketOrderEvent[
         x;y;z[`currentQty]
-    ]}[accountId;time] each (openQty where[openQty[`currentQty]>0])
+        ]}[accountId;time] each (openQty where[openQty[`currentQty]>0]);
     };  
 
 createOrderEventsFromDist   :{[accountId;time;dist;side]
@@ -115,21 +116,20 @@ createWithdrawEvent  :{[accountId;amt;time]
 createNaiveStopEvents  :{[accountId;loss;time]
     openInv:select by side from .state.InventoryEventHistory where accountId=accountId, abs[currentQty]>0;
     {
-
+        0n;
     }[accountId;loss;time] each openInv;
     };
 
 
 // Action Adapters
 // --------------------------------------------------->
-adapters : (`.state.ADAPTERTYPE$())!();
+adapters : (`.adapter.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
 adapters[`DISCRETE]     :{[action;accountId]
     
     penalty:0f;
-    $[
-        action=0;
+    $[action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()
         action=1;
         createOrderEventsFromDist[accountId;time;0.05;`BUY];
@@ -180,8 +180,8 @@ makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     bidDeltas:targetBidQtyByPrice - currentBidQtyByPrice;
     askDeltas:targetAskQtyByPrice - currentAskQtyByPrice;
 
-     
     };
+
 
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[time;action;accountId]
@@ -241,6 +241,6 @@ adapters[`MARKETMAKER]   :{[time;action;accountId]
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter.
-Adapt :{[adapterType; action; accountId]
-    :adapters[adapterType] [action;accountId];
+Adapt :{[adapterType; actions]
+    :adapters[adapterType] each actions;
     };

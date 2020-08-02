@@ -29,7 +29,8 @@ Advance :{[step;actions]
         idx:StepIndex@step;
         nevents:EventBatch@idx;
         / feature:FeatureBatch@thresh;
-        // should add a common offset.
+        // should add a common offset to actions before inserting them into
+        // the events.
         aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
 
     ];

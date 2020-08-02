@@ -7,7 +7,7 @@
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 maxLvls:20;
 CurrentDepth:(
-    [price:`int$()];
+    [price:`int$()]
     side:`symbol$();
     size:`int$());
 
@@ -20,14 +20,11 @@ CurrentDepth:(
 // representative of what the agent will see when
 // interacting with a live exchange. 
 AccountEventHistory: (
-    [
-        accountId          : `long$();
-        time               : `datetime$()
-    ]
+    [accountId : `long$(); time : `datetime$()]
     balance             : `float$();
     available           : `float$();
     frozen              : `float$();
-    maintMargin         : `float$();
+    maintMargin         : `float$()
     );
 
 // Maintains a historic and current record of the 
@@ -35,17 +32,13 @@ AccountEventHistory: (
 // subsequently provides agent specific details
 // therin
 InventoryEventHistory: (
-    [
-        inventoryId        :   `long$();
-        time               : `datetime$()
-    ]
+    [inventoryId : `long$();time : `datetime$()]
     accountId           :  `long$();
     side                :  `symbol$();
     currentQty          :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
-    unrealizedPnl       :  `long$()
-    );
+    unrealizedPnl       :  `long$());
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
@@ -122,37 +115,36 @@ LiquidationEventHistory: (
 // sorted by time for which normalization
 // and feature scaling that requires more
 // than a single row can be done. 
-FeatureBuffer   :(
+/ FeatureBuffer   :(
 
-    );
+/     );
 
 // The step buffer maintains a set of observation ids,
 // rewards, info etc for prioritized experience replay
 // diagnostics etc.
-StepBuffer  :(
+/ StepBuffer  :(
 
-    );
+/     );
 
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer
 InsertResultantEvents   :{[events]
     {[event]
         k:event[`kind];
-        t:event[`time]
-        $[
-            k=`DEPTH;
-            [`.state.DepthEventHistory insert ()];
-            k=`TRADE;
-            [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
-            k=`ACCOUNT_UPDATE;
-            [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
-            k=`INVENTORY_UPDATE;
-            [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
-            k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
-            [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
-            k=`LIQUIDATION;
-            [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
-        ];
+        t:event[`time];
+        $[k=`DEPTH;
+          [`.state.DepthEventHistory insert ()];
+          k=`TRADE;
+          [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
+          k=`ACCOUNT_UPDATE;
+          [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
+          k=`INVENTORY_UPDATE;
+          [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
+          k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
+          [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
+          k=`LIQUIDATION;
+          [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
+          [0N]];
     } each events;
     };
 
