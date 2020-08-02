@@ -200,7 +200,7 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     a:makerSide[aId;sellLvls;count[sellLvls]#limitSize;`SELL;time];
     b:makerSide[aId;buyLvls;count[buyLvls]#limitSize;`BUY;time];
 
-    reqs:();
+    // Create batched requests
     reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;]}[time] each `req xgroup ({}(a[0],b[0]));
     reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;]}[time] each `req xgroup ({}(a[1],b[1]));
     :reqs;
