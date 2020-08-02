@@ -184,7 +184,7 @@ getOrders   :{select qty:sum leaves by price from .state.OrderEventHistory where
 
 // TODO add logic for reducing order count
 // TODO logic for simulating batched events etc.
-makerSide   :{[aId;lvls;sizes;side;time;maxBatch]
+makerSide   :{[aId;lvls;sizes;side;time]
 
     p:.adapter.getPriceAtLevel[buyLvls;side];
     c:select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;
@@ -197,36 +197,12 @@ makerSide   :{[aId;lvls;sizes;side;time;maxBatch]
 
 makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     
-    bp:.adapter.getPriceAtLevel[buyLvls;`BUY];
-    sp:.adapter.getPriceAtLevel[sellLvls;`SELL];
-    bsz:count[bp]#limitSize;
-    ssz:count[sp]#limitSize;
-    
-    // TODO check for max orders
-    $[count[.state.OrderEventHisory]>0;[ // TODO check cb, ca>0;
-        cb:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0; // todo move
-        ca:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`SELL, leaves>0;
-        bdlt:neg[cb] + (1!([]price:bp;qty:bsz));
-        adlt:neg[ca] + (1!([]price:sp;qty:ssz));
-        j:ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
-        / `orderId`size!(j1[`orderId];(1_Clip[(+\)j1[`qty],j1[`leaves]]))
-        // get all amend orders (decrease in size)
-        // (0!bdlt)[`price] except j[`price]
-
-        // Amend is used to reduce order size or cancel orders
-        // and thus all orders where delta<0 amends are used
-        amdb:`orderId`size!flip raze [{flip(x[`orderId];1_Clip[(+\)x[`qty],x[`leaves]])}each j where j[`qty]<0];
-        nbds: select price,qty from j where qty>0;
-
-
-    ];[ // TODO check count[deltas]>0
-        bdlt:([]price:bt;qty:bsz);
-        adlt:([]price:sp;qty:ssz);
-    ]];
+    a:makerSide[aId;sellLvls;count[sellLvls]#limitSize;`SELL;time];
+    b:makerSide[aId;buyLvls;count[buyLvls]#limitSize;`BUY;time];
 
     reqs:();
-    reqs,:{.adapter.MakeActionEvent[]}[time];
-    reqs,:{.adapter.MakeActionEvent[`]}[time] each ;
+    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;]}[time] each ;
+    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;]}[time] each ;
     };
 
 
