@@ -1,5 +1,6 @@
 \d .adapter
 \l state.q
+\l util.q
 // Adapters
 // =====================================================================================>
 
@@ -185,22 +186,25 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     bsz:count[bp]#limitSize;
     ssz:count[sp]#limitSize;
     
+    // TODO check for max orders
     $[count[.state.OrderEventHisory]>0;[ // TODO check cb, ca>0;
         cb:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0; // todo move
         ca:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`SELL, leaves>0;
         bdlt:neg[cb] + (1!([]price:bp;qty:bsz));
         adlt:neg[ca] + (1!([]price:sp;qty:ssz));
-
+        / j:ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
+        / `orderId`size!(j1[`orderId];(1_Clip[(+\)j1[`qty],j1[`leaves]]))
+        // get all amend orders (decrease in size)
+        // (0!bdlt)[`price] except j[`price]
         amdb:(1_Clip[(+\)j1[`qty],j1[`leaves]]);
         amda:(1_Clip[(+\)j1[`qty],j1[`leaves]]);
+
+        nord:
 
     ];[ // TODO check count[deltas]>0
         bdlt:([]price:bt;qty:bsz);
         adlt:([]price:sp;qty:ssz);
     ]];
-
-    
-
 
 
     };
