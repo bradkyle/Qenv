@@ -201,12 +201,13 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     b:makerSide[aId;buyLvls;count[buyLvls]#limitSize;`BUY;time];
 
     // Group amend [ask,bid;max count per req]
+    // assumes amend to 0 cancels order
     amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);10];
     nord:a[1],b[0];
 
     // Create batched requests
-    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;]}[time] each `req xgroup ({}(a[0],b[0]));
-    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;]}[time] each `req xgroup ({}(a[1],b[1]));
+    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;]}[time] each amd;
+    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;]}[time] each nord;
     :reqs;
     };
 
