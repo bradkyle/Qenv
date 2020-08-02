@@ -46,7 +46,7 @@ InventoryEventHistory: (
 / `.state.OrderEventHistory upsert (
 /     []orderId:til 10;
 /     accountId:10#1;
-/     side:(5#`BUY),(5#`SELL);
+/     side:(5#`SELL),(5#`BUY);
 /     price:(1000+til 5),(1001-til 5);
 /     otype:10#`LIMIT;
 /     leaves:10#1000;
@@ -61,7 +61,7 @@ InventoryEventHistory: (
 / `.state.OrderEventHistory upsert (
 /    []orderId:(10+til 10);
 /    accountId:10#1;
-/    side:(5#`BUY),(5#`SELL);
+/    side:(5#`SELL),(5#`BUY);
 /    price:(1000+til 5),(1001-til 5);
 /    otype:10#`LIMIT;
 /    leaves:10#1000;

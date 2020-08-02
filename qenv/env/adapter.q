@@ -180,8 +180,8 @@ adapters[`DISCRETE]     :{[action;accountId]
 / ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
 makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     
-    bp:getPriceAtLevel[buyLvls;`BUY];
-    sp:getPriceAtLevel[sellLvls;`SELL];
+    bp:.adapter.getPriceAtLevel[buyLvls;`BUY];
+    sp:.adapter.getPriceAtLevel[sellLvls;`SELL];
     bsz:count[bp]#limitSize;
     ssz:count[sp]#limitSize;
     
@@ -191,6 +191,8 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
         bdlt:neg[cb] + (1!([]price:bp;qty:bsz));
         adlt:neg[ca] + (1!([]price:sp;qty:ssz));
 
+        amdb:(1_Clip[(+\)j1[`qty],j1[`leaves]]);
+        amda:(1_Clip[(+\)j1[`qty],j1[`leaves]]);
 
     ];[ // TODO check count[deltas]>0
         bdlt:([]price:bt;qty:bsz);
