@@ -184,7 +184,7 @@ makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     };
 
 // TODO remove redundancy
-adapters[`MARKETMAKER]   :{[action;accountId]
+adapters[`MARKETMAKER]   :{[time;action;accountId]
 
     penalty:0f;
     limitSize: 8;

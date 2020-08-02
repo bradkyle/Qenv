@@ -6,12 +6,12 @@
 // Source Event Tables
 // =====================================================================================>
 
-
+Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+BatchSize:0;
 StepIndex:();
 EventBatch:();
 FeatureBatch:();
 
-tnum:0;
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
 // batching/episodes and episode randomization/replay buffer.
@@ -24,12 +24,14 @@ SetBatch: {[]
     };
 
 // SIMPLE DERIVE STEP RATE
-Derive :{[step;batchSize]
-    $[(step<(.pipe.tnum-1));[
-        thresh:StepIndex@step;
-        nevents:EventBatch@thresh;
+Advance :{[step;actions]
+    $[(step<(count[.pipe.StepIndex]-1));[
+        idx:StepIndex@step;
+        nevents:EventBatch@idx;
         / feature:FeatureBatch@thresh;
-        
+        // should add a common offset.
+        aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+
     ];
     [
         .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within[];

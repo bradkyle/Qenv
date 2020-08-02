@@ -82,9 +82,7 @@ Step    :{[actions]
     // TODO format actions
 
     // TODO actions as a tuple of account id and action: derive account ids from actions.
-    result:.adapter.Adapt[time] each ej[`accountId;actions;.env.Agent]; 
-    penalty:result[0];
-    actions:result[1];
+    
 
     // The engine produces a set of new events.
     newEvents: .engine.ProcessEventBatch[events];
