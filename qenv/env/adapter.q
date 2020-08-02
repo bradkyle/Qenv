@@ -179,7 +179,7 @@ makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     buyPrice:getPriceAtLevel[buyLvl;`BUY];
     sellPrice:getPriceAtLevel[sellLvl;`SELL];
     
-    cb:();
+    cb:0;
     ca:0;
     tb:0;
     ta:0;
