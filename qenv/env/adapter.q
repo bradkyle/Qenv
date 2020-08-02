@@ -27,9 +27,13 @@ MakeActionEvent :{[kind;time;datum]
     :`time`intime`kind`cmd`datum!(time;time;kind;`NEW;datum);
     };
 
+getLevelPrices          :{[s]
+    :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
+    };
+
 // TODO add error handling
-getPriceAtLevel         :{[level;side]
-    :(select price from .state.CurrentDepth where side=side)[level][`price];
+getPriceAtLevel         :{[level;s]
+    :getLevelPrices[s][level];
     };
 
 // Return all open positions for an account
@@ -172,10 +176,13 @@ adapters[`DISCRETE]     :{[action;accountId]
 
 makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     
-    currentBidQtyByPrice:0;
-    currentAskQtyByPrice:0;
-    targetBidQtyByPrice:0;
-    targetAskQtyByPrice:0;
+    buyPrice:getPriceAtLevel[buyLvl;`BUY];
+    sellPrice:getPriceAtLevel[sellLvl;`SELL];
+    
+    cb:();
+    ca:0;
+    tb:0;
+    ta:0;
 
     bidDeltas:targetBidQtyByPrice - currentBidQtyByPrice;
     askDeltas:targetAskQtyByPrice - currentAskQtyByPrice;

@@ -6,6 +6,7 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 maxLvls:20;
+/`.state.CurrentDepth upsert ([]price:(1000+til 20),(1000-til 20);side:(20#`SELL),(20#`BUY);size:40#1000)
 CurrentDepth:(
     [price:`int$()]
     side:`symbol$();
