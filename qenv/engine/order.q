@@ -53,8 +53,7 @@ Order: (
     time            : `datetime$();
     isClose         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
-    execInst        : `.order.EXECINST$()
-    );
+    execInst        : `.order.EXECINST$());
 
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
@@ -127,14 +126,13 @@ AddTradeEvent  :{[side;qty;price;time]
 // nxt is a dictionary of price:qty
 // side is an enum (ORDERSIDE) of `BUY, `SELL 
 // TODO do validation based on instrument
-processSideUpdate   :{[nxt]
+processSideUpdate   :{[s;nxt]
     nxtCount:count[nxt];
-
     // TODO prices cannot overlap
     // asc desc for ask vs bid
 
     // Retrieve the latest snapshot from the orderbook
-    qtys:select qty by price from .order.OrderBook where side=side;
+    qtys:select qty by price from .order.OrderBook where side=s;
     // sanitize/preprocess
 
     // Generate the set of differences between the current
@@ -153,7 +151,7 @@ processSideUpdate   :{[nxt]
             numLvls:count dlt;
 
             // TODO grouping by price, orderId
-            odrs:?[.order.Order;isActiveLimit[side;dlt[;]];0b;()];
+            odrs:?[.order.Order;.order.isActiveLimit[s;dlt[;]];0b;()];
             // If the orderbook contains agent limit orders then
             // update the current offsets.
             $[((numLvls>0) & (count[odrs]>0)); // TODO check
@@ -202,20 +200,19 @@ processSideUpdate   :{[nxt]
                 ];
                 [
                     // No orders exist therefore a simple upsert 
-                    `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt);
+                    `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
                 ]
             ];
         ]; 
         [
-            / `.order.OrderBook upsert nxt; // todo preset side
-            `.order.OrderBook upsert (select side:`.order.ORDERSIDE$(last datum[;0][;0]), qty:last (datum[;0][;2]) by price:datum[;0][;1] from nxt);
+            `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
         ]
     ];
     };
 
-ProcessDepthUpdate  : {[time;asks;bids]
+ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update
-    // `price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from d where[(d[`datum][;0][;0])=`SELL]
+    asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];

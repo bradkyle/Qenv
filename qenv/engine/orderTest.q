@@ -78,6 +78,7 @@ test:.qt.Unit[
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
+// Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
 .qt.AddCase[test;"simple ask update no agent orders or previous depth";deriveCaseParams[(
     ();();
