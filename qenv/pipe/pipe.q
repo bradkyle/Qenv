@@ -28,6 +28,7 @@ Advance :{[step;actions]
     $[(step<(count[.pipe.StepIndex]-1));[
         idx:StepIndex@step;
         nevents:EventBatch@idx;
+        
         / feature:FeatureBatch@thresh;
         // should add a common offset to actions before inserting them into
         // the events.
@@ -35,7 +36,7 @@ Advance :{[step;actions]
         aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
         newEvents: .engine.ProcessEventBatch[(nevents,aevents)];
 
-        
+        .state.InsertResultantEvents[newEvents];
     ];
     [
         .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within[];
