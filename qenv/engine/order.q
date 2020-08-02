@@ -133,6 +133,7 @@ processSideUpdate   :{[s;nxt]
 
     // Retrieve the latest snapshot from the orderbook
     qtys:select qty by price from .order.OrderBook where side=s;
+    / (0!qtys)[`qty] ,' (0!dlt)[`qty]
     // sanitize/preprocess
 
     // Generate the set of differences between the current
