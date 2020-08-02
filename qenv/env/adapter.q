@@ -175,19 +175,23 @@ adapters[`DISCRETE]     :{[action;accountId]
     / };
 
 // TODO change to fraction
-makerBuySell : {[aId;time;limitSize;buyLvl;sellLvl]
+makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     
-    buyPrice:getPriceAtLevel[buyLvl;`BUY];
-    sellPrice:getPriceAtLevel[sellLvl;`SELL];
+    bp:getPriceAtLevel[buyLvls;`BUY];
+    sp:getPriceAtLevel[sellLvls;`SELL];
+    bsz:count[bp]#limitSize;
+    ssz:count[sp]#limitSize;
     
     $[count[.state.OrderEventHisory]>0;[ // TODO check cb, ca>0;
         cb:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0; // todo move
         ca:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`SELL, leaves>0;
-        bidDeltas:neg[cb] + ([]price:0;qty:0);
-        askDeltas:neg[ca] + ([]price:0;qty:0);
-    ];[ 
-        bidDeltas:([]price:0;qty:0);
-        askDeltas:([]price:0;qty:0);
+        bdlt:neg[cb] + ([]price:bp;qty:bsz);
+        adlt:neg[ca] + ([]price:sp;qty:ssz);
+        
+
+    ];[ // TODO check count[deltas]>0
+        bdlt:([]price:bt;qty:bsz);
+        adlt:([]price:sp;qty:ssz);
     ]];
 
     
