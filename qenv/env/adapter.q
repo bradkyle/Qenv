@@ -191,7 +191,7 @@ makerSide   :{[aId;lvls;sizes;s;time]
     j:ej[`price;dlt;`price xgroup `time xdesc (select orderId,leaves by price, time from .state.OrderEventHistory where side=s)];
     
     amd:flip `orderId`size!flip raze[{flip (raze[x[`orderId]]; 1_Clip[(+\) raze[x[`dlt]],raze[x[`leaves]]])}each j where j[`dlt]<0];
-    nord: select price,dlt from j where dlt>0;    
+    nord: select price,dlt,side from j where dlt>0;    
     :(amd;nord);
     };
 
@@ -202,12 +202,13 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
 
     // Group amend [ask,bid;max count per req]
     // assumes amend to 0 cancels order
+    // TODO add participate don't initiate
     amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);10];
-    nord:a[1],b[0];
+    nord:{x[`i]:{floor[x%y]}[til count[x];y];x[`otype]:`LIMIT;:`i xgroup x}[(a[1],b[1]);10];
 
     // Create batched requests
-    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;]}[time] each amd;
-    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;]}[time] each nord;
+    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;flip[y]]}[time] each amd;
+    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;flip[y]]}[time] each nord;
     :reqs;
     };
 
