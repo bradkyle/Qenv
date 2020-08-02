@@ -200,7 +200,8 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     a:makerSide[aId;sellLvls;count[sellLvls]#limitSize;`SELL;time];
     b:makerSide[aId;buyLvls;count[buyLvls]#limitSize;`BUY;time];
 
-    amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);5];
+    // Group amend [ask,bid;max count per req]
+    amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);10];
     nord:a[1],b[0];
 
     // Create batched requests
