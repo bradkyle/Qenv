@@ -183,15 +183,16 @@ adapters[`DISCRETE]     :{[action;accountId]
 getOrders   :{select qty:sum leaves by price from .state.OrderEventHistory where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0}
 
 // TODO add logic for reducing order count
-makerSide   :{[aId;lvls;sizes;side]
+// TODO logic for simulating batched events etc.
+makerSide   :{[aId;lvls;sizes;side;time;maxBatch]
 
     p:.adapter.getPriceAtLevel[buyLvls;side];
     c:select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;
     dlt: neg[cb] + (1!([]price:p;dlt:sizes));
     j:ej[`dlt;dlt;`dlt xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=side];
     
-    amd:{} each `orderId`size!flip raze [{flip(x[`orderId];1_Clip[(+\)x[`dlt],x[`leaves]])}each j where j[`dlt]<0];
-    nord:{} select price,dlt from j where dlt>0;
+    amd:`orderId`size!flip raze [{flip(x[`orderId];1_Clip[(+\)x[`dlt],x[`leaves]])}each j where j[`dlt]<0];
+    nord: select price,dlt from j where dlt>0;    
     };
 
 makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
@@ -223,7 +224,9 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
         adlt:([]price:sp;qty:ssz);
     ]];
 
-
+    reqs:();
+    reqs,:{.adapter.MakeActionEvent[]}[time];
+    reqs,:{.adapter.MakeActionEvent[`]}[time] each ;
     };
 
 
