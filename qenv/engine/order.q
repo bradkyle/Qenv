@@ -704,12 +704,12 @@ ProcessTradeEvent  : {[event] // TODO change to events.
 UpdateMarkPrice : {[markPrice;time]
     update markPrice:markPrice from `.instrument.Instrument;
     // TODO check for liquidations
-    liquidateInvs: select from .account.inventory
-        where ;
+    / liquidateInvs: select from .account.inventory
+        / where ;
 
     activatedStops:select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 
         (side=`SELL and price>stopprice),
         (sid`BUY and price<stopprice);
 
-    }
+    };

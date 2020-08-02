@@ -21,6 +21,8 @@ the current environment agent state to the desired
 environment agent state.
 \
 
+// TODO create functionality for requesting state when there is none
+
 // Event Creation Utilities
 // --------------------------------------------------->
 

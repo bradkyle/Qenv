@@ -1,7 +1,7 @@
 
 \d .pipe
 
-\l ../../lcl/ev
+/ \l ../../lcl/ev
 
 // Source Event Tables
 // =====================================================================================>
@@ -25,21 +25,30 @@ SetBatch: {[]
 
 // SIMPLE DERIVE STEP RATE
 Advance :{[step;actions]
-    $[(step<(count[.pipe.StepIndex]-1));[
-        idx:StepIndex@step;
-        nevents:EventBatch@idx;
-        
-        / feature:FeatureBatch@thresh;
-        // should add a common offset to actions before inserting them into
-        // the events.
-        // TODO offset
-        aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
-        newEvents: .engine.ProcessEventBatch[(nevents,aevents)];
+    $[
+        (step=0);
+        [
+            idx:[.pipe.StepIndex@step];
+        ];
+        (step<(count[.pipe.StepIndex]-1));
+        [
+            idx:[.pipe.StepIndex@step];
+            nevents:flip[.pipe.EventBatch@idx];
+            
+            / feature:FeatureBatch@thresh;
+            // should add a common offset to actions before inserting them into
+            // the events.
+            // TODO offset
+            // TODO 
+            aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+            newEvents: .engine.ProcessEvents[(nevents,aevents)];
 
-        .state.InsertResultantEvents[newEvents];
+            .state.InsertResultantEvents[newEvents];
+        ];
+        [
+            .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where day=0;
+            .pipe.StepIndex:key .pipe.EventBatch;
+            / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
+        ]
     ];
-    [
-        .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where day=0;
-        .pipe.StepIndex:key .pipe.EventBatch;
-        / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
-    ]};
+    };
