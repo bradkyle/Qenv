@@ -195,10 +195,11 @@ makerSide   :{[aId;lvls;sizes;s;time]
     :(amd;nord);
     };
 
+// TODO test for 1, 0 count lvl etc
 makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     
-    a:makerSide[aId;sellLvls;count[sellLvls]#limitSize;`SELL;time];
-    b:makerSide[aId;buyLvls;count[buyLvls]#limitSize;`BUY;time];
+    a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
+    b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
 
     // Group amend [ask,bid;max count per req]
     // assumes amend to 0 cancels order
@@ -207,6 +208,7 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     nord:{x[`i]:{floor[x%y]}[til count[x];y];x[`otype]:`LIMIT;:`i xgroup x}[(a[1],b[1]);10];
 
     // Create batched requests
+    reqs:();
     reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;flip[y]]}[time] each amd;
     reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;flip[y]]}[time] each nord;
     :reqs;
