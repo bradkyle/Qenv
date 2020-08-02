@@ -152,8 +152,8 @@ ResetEngine     : {
 
 // 
 prepareIngress   :{[eventBatch]
-    :0!`kind xgroup eventBatch;
-    / `f xgroup update f:{sums((<>) prior x)}kind from e
+    / :0!`kind xgroup eventBatch;
+    :`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch;
     };
 
 prepareEgress    :{[eventBatch]
@@ -164,7 +164,7 @@ prepareEgress    :{[eventBatch]
 // them with their respective processing 
 // logic above.
 ProcessEvents  : {[eventBatch]
-        {eventEngine[(`.event.INGRESSKIND$x[`kind])][x]} each prepareIngress[eventBatch];
+        {eventEngine[(`.event.INGRESSKIND$first[x[`kind]])][x]} each prepareIngress[eventBatch];
         / :prepareEgress[.engine.PopEvents[]];
     };
 
