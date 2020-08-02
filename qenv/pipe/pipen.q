@@ -31,3 +31,5 @@ sst:"sid=huobifuturesagent";
 paths:distinct {(sst vs x)[0],sst} each getPaths[sst;p]
 / getAndPersist peach paths;
 show paths;
+
+// TODO run tests on resultant data
