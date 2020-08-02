@@ -43,11 +43,27 @@ InventoryEventHistory: (
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
+/ `.state.OrderEventHistory upsert (
+/     []orderId:til 10;
+/     accountId:10#1;
+/     side:(5#`BUY),(5#`SELL);
+/     price:(1000+til 5),(1000-til 5);
+/     otype:10#`LIMIT;
+/     leaves:10#1000;
+/     filled:10#1000;
+/     limitprice:10#0;
+/     stopprice:10#0;
+/     status:10#`NEW;
+/     time:10#.z.z;
+/     isClose:10#0b;
+/     trigger:10#`NIL);
+
 OrderEventHistory: (
     [orderId        :   `long$()]
     accountId       :   `long$();
     side            :   `symbol$();
     otype           :   `symbol$();
+    price           :   `long$();
     leaves          :   `long$();
     filled          :   `long$();
     limitprice      :   `long$(); / multiply by 100
@@ -56,8 +72,7 @@ OrderEventHistory: (
     time            :   `datetime$();
     isClose         :   `boolean$();
     trigger         :   `symbol$();
-    execInst        :   `symbol$();
-    time            : `datetime$());
+    execInst        :   `symbol$());
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon

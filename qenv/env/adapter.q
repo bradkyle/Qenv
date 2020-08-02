@@ -174,18 +174,25 @@ adapters[`DISCRETE]     :{[action;accountId]
     // TODO
     / };
 
-makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
+// TODO change to fraction
+makerBuySell : {[aId;time;limitSize;buyLvl;sellLvl]
     
     buyPrice:getPriceAtLevel[buyLvl;`BUY];
     sellPrice:getPriceAtLevel[sellLvl;`SELL];
     
-    cb:0;
-    ca:0;
-    tb:0;
-    ta:0;
+    $[count[.state.OrderEventHisory]>0;[ // TODO check cb, ca>0;
+        cb:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0; // todo move
+        ca:select qty:sum leaves by price from .state.OrderEventHistory where accountId=aid, status in `NEW`PARTIALFILLED, side=`SELL, leaves>0;
+        bidDeltas:neg[cb] + ([]price:0;qty:0);
+        askDeltas:neg[ca] + ([]price:0;qty:0);
+    ];[ 
+        bidDeltas:([]price:0;qty:0);
+        askDeltas:([]price:0;qty:0);
+    ]];
 
-    bidDeltas:targetBidQtyByPrice - currentBidQtyByPrice;
-    askDeltas:targetAskQtyByPrice - currentAskQtyByPrice;
+    
+
+
 
     };
 
