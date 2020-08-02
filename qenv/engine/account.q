@@ -169,7 +169,7 @@ Inventory: (
         accountId    :  `.account.Account$();
         side         :  `.account.POSITIONSIDE$()
     ]
-    amt               :  `long$();
+    amt                      :  `long$();
     avgPrice                 :  `long$();
     realizedPnl              :  `long$();
     unrealizedPnl            :  `long$();

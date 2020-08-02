@@ -181,8 +181,6 @@ makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
     askDeltas:targetAskQtyByPrice - currentAskQtyByPrice;
 
      
-    
-    
     };
 
 // TODO remove redundancy
