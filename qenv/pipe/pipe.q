@@ -39,7 +39,7 @@ Advance :{[step;actions]
         .state.InsertResultantEvents[newEvents];
     ];
     [
-        .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within[];
+        .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where day=0;
         .pipe.StepIndex:key .pipe.EventBatch;
         / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
     ]};
