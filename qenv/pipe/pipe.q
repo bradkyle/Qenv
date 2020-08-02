@@ -33,8 +33,9 @@ Advance :{[step;actions]
         // the events.
         // TODO offset
         aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+        newEvents: .engine.ProcessEventBatch[(nevents,aevents)];
 
-        events:nevents,aevents;
+        
     ];
     [
         .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within[];
