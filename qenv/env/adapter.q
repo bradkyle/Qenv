@@ -185,57 +185,56 @@ makerBuySell : {[accountId;time;limitSize;buyLvl;sellLvl]
 
 // TODO remove redundancy
 adapters[`MARKETMAKER]   :{[time;action]
-    action:action[0];
-    accountId:action[1];
-    penalty:0f;
+    a:action[0];
+    aId:action[1];
     limitSize: 8;
     marketSize: 10;
-    makerFn:makerBuySell[accountId;time;limitSize];
-    takerFn:createMarketOrderEvent[accountId;time;marketSize];
+    makerFn:makerBuySell[aId;time;limitSize];
+    takerFn:createMarketOrderEvent[aId;time;marketSize];
     res: $[
-        action=0;
-        [:(();penalty+:.global.Encouragement)]; // TODO derive config from account?
-        action=1;
+        a=0;
+        [0N]; // TODO derive config from account?
+        a=1;
         makerFn[];
-        action=2;
+        a=2;
         makerFn[];
-        action=3;
+        a=3;
         makerFn[];
-        action=4;
+        a=4;
         makerFn[];
-        action=5;
+        a=5;
         makerFn[];
-        action=6;
+        a=6;
         makerFn[];
-        action=7;
+        a=7;
         makerFn[];
-        action=8;
+        a=8;
         makerFn[];
-        action=9;
+        a=9;
         makerFn[];
-        action=10;
+        a=10;
         makerFn[];
-        action=11;
+        a=11;
         makerFn[];
-        action=12;
+        a=12;
         makerFn[];
-        action=13;
+        a=13;
         makerFn[];
-        action=14;
+        a=14;
         makerFn[];
-        action=15;
+        a=15;
         makerFn[];
-        action=16;
+        a=16;
         createFlattenEvents[];
-        action=17;
+        a=17;
         takerFn[`BUY];
-        action=18;
+        a=18;
         takerFn[`SELL];
-        action=19;
+        a=19;
         createCancelAllOrdersEvent[]; // TODO add more
         [:0N]];
     
-    :(penalty;res);
+    :res;
     };
 
 // Converts a scalar action representing a target state
