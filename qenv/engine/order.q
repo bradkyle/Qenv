@@ -89,11 +89,11 @@ AddCancelAllOrdersEvent :{[]
 // qtys: represent the different level quantities at their given prices
 // offsets: represent the given offsets of a set of agent(s') orders 
 // sizes: represent the given order sizes of a set of agent(s') orders
+// `.order.OrderBook upsert ([price:(`int$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`int$(40#1000)))
 OrderBook:(
     [price      :`int$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`int$()
-    );
+    qty         :`int$());
 
 AddDepthUpdateEvent :{[side;size;price;time]
     :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
@@ -107,112 +107,17 @@ AddTradeEvent  :{[side;qty;price;time]
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
-// Sets the order qtys on a given side to the target
-// ?[`OrderBook;(enlist(=;`side;enlist `SELL)); 0b; ()]
 
-// Depth Update Logic
-// -------------------------------------------------------------->
-
-// Derives new agent order offsets for the entire side of the book.
-// assumes that the lvl_offsets and lvl_sizes are sorted such that 
-// each scalar column represents one order.
-// lvl_qtys: total size of level
-// lvl_deltas: change in the size of the given lvl
-// lvl_sizes: the size of orders at a given lvl
-// lvl_offsets: the offsets for the orders at a given lvl 
-// Returns the new order offsets for all the agent orders
-// and the resultant derived deltas (how much has each order 
-// offset been changed)
-// nxt is a dictionary of price:qty
-// side is an enum (ORDERSIDE) of `BUY, `SELL 
-// TODO do validation based on instrument
-processSideUpdate   :{[s;nxt]
-    nxtCount:count[nxt];
-    // TODO prices cannot overlap
-    // asc desc for ask vs bid
-
-    // Retrieve the latest snapshot from the orderbook
-    qtys:select qty by price from .order.OrderBook where side=s;
-    / (0!qtys)[`qty] ,' (0!dlt)[`qty]
-    // sanitize/preprocess
-
-    // Generate the set of differences between the current
-    // orderbook snapshot and the target (nxt) snapshot
-    // to which the orderbook is to transition.
-    $[count[qtys]>0;
-        [
-            // TODO only calculate if has agent orders
-            // TODO sort qtys etc.
-            // TODO remove levels where qty=0
-            // dlt and qtys should be 
-            dlt:raze'[nxt-qtys];
-            
-            // Remove all levels that aren't supposed to change 
-            dlt:dlt where[dlt[;1]<>0];           
-            numLvls:count dlt;
-
-            // TODO grouping by price, orderId
-            odrs:?[.order.Order;.order.isActiveLimit[s;dlt[;]];0b;()];
-            // If the orderbook contains agent limit orders then
-            // update the current offsets.
-            $[((numLvls>0) & (count[odrs]>0)); // TODO check
-                [
-                    odrs:0!(`price xgroup odrs);
-                    offsets: PadM[odrs[`offset]]; // TODO padding
-                    sizes: PadM[odrs[`size]]; // TODO padding
-                    maxNumUpdates: max count'[offsets];
-
-                    / Calculate the shifted offsets, which infers
-                    / the amount of space between each offset
-                    shft: sizes + offsets;
-                    lshft: shft[;count shft];
-                    lpad: maxNumUpdates+1;
-
-                    / Initialize non agent quantities matrix
-                    / The first column is set to the first lvl_offset
-                    / The last column is set to the size of the level minus the size of the last offset + order size
-                    / adn all levels in between this are set to the lvl_offsets minus the shifted offset 
-                    nonAgentQtys: (numLvls, lpad)#0;
-                    nonAgentQtys[;0]: offsets[;0];
-                    nonAgentQtys[;1+til maxNumUpdates]: Clip[(offsets[;1] - lshft)]; 
-                    nonAgentQtys[;lpad]:Clip[qtys - lshft]; 
-
-                    lvlNonAgentQtys: sum'[nonAgentQtys];
-                    derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
-
-                    // Update the new offsets to equal the last
-                    // offsets + the derived deltas
-                    newOffsets: Clip[offsets + derivedDeltas];
-                    // Combine the new offsets with the respective offset ids in an 
-                    // update statement that will update the respective offsets.
-                    update offset:newOffsets from .order.Order where orderId in ordrs[`orderId]; // TODO update
-                    
-                    // considering no changes have been made to the sizes of the given orders
-                    // the new shft would be the new offsets + the previous sizes
-                    newShft:sizes + newOffsets;
-
-                    // Update the orderbook lvl qtys to represent the change                
-                    // Replace all instances of the update with the maximum shft (offset + size)
-                    // for each price whereby the update is smaller than the given shft (offset+size)
-                    // ensures that an accurate representation is kept. 
-                    nxtQty:value[nxt];
-                    maxShft:max'[newShft];
-                    update qty:?[nxtQty>maxShft;nxtQty;maxShft] from .order.OrderBook where price in key[nxt]; // TODO update
-                ];
-                [
-                    // No orders exist therefore a simple upsert 
-                    `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
-                ]
-            ];
-        ]; 
-        [
-            `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
-        ]
-    ];
-    };
 
 ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update
+    $[[];
+      [
+
+      ];
+      [
+          
+      ]];
     asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
