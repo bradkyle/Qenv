@@ -132,12 +132,12 @@ deriveCaseParams    :{[params]
     ();()
     )]];
 
-.qt.AddCase[test;"1 order at 1 level";deriveCaseParams[(
-    ();();
-    ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000);(10#z,(z+`second$5)));
-    ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000i));
-    ();()
-    )]];
+/ .qt.AddCase[test;"1 order at 1 level, previous depth";deriveCaseParams[(
+/     ();();
+/     ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000);(10#z,(z+`second$5)));
+/     ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000i));
+/     ();()
+/     )]];
 
 / .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
 /     (); // currentOB
@@ -266,32 +266,19 @@ deriveCaseParams    :{[params]
 /     ()
 /     )]];
 
-/ test:.qt.Unit[
-/     ".order.NewOrder";
-/     {[c]
-/         p:c[`params];
-/         time:.z.z;
-/         eacc:p[`eaccount];
-/         einv:p[`einventory];
-/         ecols:p[`ecols];
+test:.qt.Unit[
+    ".order.NewOrder";
+    {[c]
+        p:c[`params]; 
+  
+        o:params[`order];
+        .order.NewOrder[];
+ 
+        // Assertions
+        .qt.A[.order.Order@(o[`price];o[`orderId]);~;eacc;"order";c];
 
-/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
-
-/         // Execute tested function
-/         x:p[`params];
-/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-/         // 
-/         acc:exec from .account.Account where accountId=account[`accountId];
-/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
-
-/         // Assertions
-/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
 
 
 / .qt.AddCase[test;"New simple ask limit order";
