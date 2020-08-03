@@ -111,12 +111,14 @@ AddTradeEvent  :{[side;qty;price;time]
 
 ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update
-    $[[];
+    // If has bids and asks and orders update orderbook else simply insert last events
+    // return a depth event for each. (add randomizeation)
+    $[[()];
       [
 
       ];
       [
-          
+         `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
       ]];
     asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]

@@ -228,6 +228,7 @@ hedgedLiquidationPrice  :{[]
     };
 
 // TODO make global enums file
+// TOD
 AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
     qty:abs[qty];
     if[qty=0;:.event.AddFailure[]];
