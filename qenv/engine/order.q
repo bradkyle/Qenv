@@ -271,6 +271,7 @@ NewOrder       : {[o;time];
     // TODO set offset
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
+    // TODO check position smaller than order
     $[o[`otype]=`LIMIT;
         [
             $[((o[`side]=`SELL) and (o[`price] < ins[`bestBidPrice])) or 
