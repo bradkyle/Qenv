@@ -73,15 +73,11 @@ AddNewOrderEvent   :{[order;time]
     }
 
 AddOrderUpdateEvent :{[]
-
+    :.event.AddEvent[time;`UPDATE;`ORDER;order];
     }
-
-AddBatchOrderEvent   :{[]
-
-    }
-
-AddCancelAllOrdersEvent :{[]
-
+ 
+AddCancelOrderEvent :{[]
+    :.event.AddEvent[time;`DELETE;`ORDER;order];
     }
 
 
@@ -340,7 +336,7 @@ NewOrder       : {[o;time];
                     o[`filled]: 0i;
                     o[`time]: time;
                     `.order.Order insert o;
-                    .order.AddNewOrderEvent[o];
+                    .order.AddNewOrderEvent[o;time];
                 ]
             ];
         ];

@@ -112,6 +112,7 @@ MakeFailureEvent   :{[failure]
 // The events table is used exclusively within the engine and is not used
 // by for example the state.
 // Acts like a kafka queue/pubsub.
+eventCount:0;
 Events  :( // TODO add failure to table
     [eventId    :`long$()]
     time        :`datetime$();
@@ -119,16 +120,16 @@ Events  :( // TODO add failure to table
     kind        :`.event.EVENTKIND$();
     datum       :());
 
-eid:    {0}
-
 // Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
         $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
+        cmd:(`.event.EVENTCMD$cmd);
+        kind:(`.event.EVENTKIND$kind);
         / if[not] //validate datum 
-        `.event.Events upsert (eventId:eid[];time:time;cmd:cmd;kind:kind;datum:datum;errKind:`NIL);
+        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:cmd;kind:kind;datum:datum);
         };
 
 // Creates an action i.e. a mapping between
@@ -139,7 +140,7 @@ AddFailure   : {[time;kind;msg]
         if[not (type time)=-15h; :0b]; //TODO fix
         if[not (kind in .event.ERRORKIND); :0b];
         if[not (kind in .event.ERRORKIND); :0b]; // TODO update msg 
-        `.event.Events upsert (eventId:eid[];time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg;errKind:kind);
+        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg);
         };
 
 // Retrieves all events from the Events table and then
