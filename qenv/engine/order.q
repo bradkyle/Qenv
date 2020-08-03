@@ -55,7 +55,7 @@ Order: (
     isClose         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$());
-
+orderCount:0;
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
 isActiveLimit:{:((>;`size;0);
@@ -92,6 +92,9 @@ OrderBook:(
     [price      :`int$()]
     side        :`.order.ORDERSIDE$(); 
     qty         :`int$());
+
+maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
+minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 
 AddDepthUpdateEvent :{[side;size;price;time]
     :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
@@ -278,16 +281,16 @@ NewOrder       : {[o;time];
     / Invalid currency
     / Invalid settlCurrency
 
-    
-    o[`orderId]:orderCount+1;
+
+    o[`orderId]:.order.orderCount+1;
     // TODO set offset
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
     // TODO check position smaller than order
     $[o[`otype]=`LIMIT;
         [
-            $[((o[`side]=`SELL) and (o[`price] < ins[`bestBidPrice])) or 
-              ((o[`side]=`BUY) and (o[`price] > ins[`bestAskPrice]));
+            $[((o[`side]=`SELL) and (o[`price] < (minPrice[][`Sell]))) or 
+              ((o[`side]=`BUY) and (o[`price] > (maxPrice[][`BUY])));
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
@@ -305,6 +308,8 @@ NewOrder       : {[o;time];
                     ]
                 ];
                 [
+                    show 99#"M";
+                    
                     // add orderbook references
                     // TODO update order init margin etc.
                     // TODO update order margin etc.
