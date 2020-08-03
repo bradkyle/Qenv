@@ -104,8 +104,6 @@ AddTradeEvent  :{[side;qty;price;time]
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
-BAM:();
-
 // TODO partial vs full book update.
 ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update

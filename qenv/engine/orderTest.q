@@ -51,7 +51,8 @@ defaultBeforeEach: {
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
-     show 99#"B";
+     .account.NewAccount[`accountId`other!1 2;.z.z];
+     .account.NewAccount[`accountId`other!2 2;.z.z];
     };
 
 test:.qt.Unit[
@@ -93,6 +94,9 @@ deriveCaseParams    :{[params]
         );
     :p;
     };
+
+// TODO test removes OB level when zero
+// 
 
 // Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
