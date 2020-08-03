@@ -62,7 +62,6 @@ isActiveLimit:{[side; validPrices]
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;validPrices);
                (=;`otype;`.order.ORDERTYPE$`LIMIT);
-               (=;`side;`.order.ORDERSIDE$side));
                };
 
 AddNewOrderEvent   :{[]
@@ -113,14 +112,23 @@ ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
-    $[[()];
+    $[();
       [
+          u:0!(`price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2], side:datum[;0][;0] from event);
+          odrs:?[.order.Order;.order.isActiveLimit[u[`price]];0b;()];
 
+          // get all negative deltas then update the offsets of each order 
+          // with
+          dlt:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each u;
+          dlt:dlt where[dlt[`d]<>0];           
+
+             
       ];
       [
          `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
       ]];
-    asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
+    / `price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2] from (e@2)
+    / asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];
