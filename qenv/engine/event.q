@@ -121,6 +121,8 @@ Events  :( // TODO add failure to table
     kind        :`.event.EVENTKIND$();
     datum       :());
 
+eid:    {0}
+
 // Adds an event to the Events table.
 AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //

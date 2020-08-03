@@ -58,7 +58,6 @@ defaultBeforeEach: {
      delete from `.order.OrderBook;
      .account.NewAccount[`accountId`other!1 2;.z.z];
      .account.NewAccount[`accountId`other!2 2;.z.z];
-     .instrument.NewInstrument[enlist[`instrumentId]!enlist[1];1b;.z.z];
     };
 
 
@@ -276,6 +275,13 @@ deriveCaseParams    :{[params]
 // New Order Tests
 // -------------------------------------------------------------->
 
+oBeforeAll :{
+    .instrument.NewInstrument[
+        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize!
+        (1;0.5;1e5f;0f;1e7f;0f);
+        1b;.z.z];
+    };
+
 test:.qt.Unit[
     ".order.NewOrder";
     {[c]
@@ -283,13 +289,15 @@ test:.qt.Unit[
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
   
         o:p[`order];
+        / show .instrument.Instrument;
+        show o[`instrumentId];
         res:.order.NewOrder[o;.z.z];
         show res;
         // Assertions
         show .order.Order;
         .qt.A[.order.Order@(o[`price];o[`orderId]);~;p[`eOrd];"order";c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();(oBeforeAll;{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params]
@@ -313,21 +321,6 @@ deriveCaseParams    :{[params]
         );
     :p;
     };
-
-/ `.state.OrderEventHistory upsert (
-/     []orderId:til 10;
-/     accountId:10#1;
-/     side:(5#`SELL),(5#`BUY);
-/     price:(1000+til 5),(999-til 5);
-/     otype:10#`LIMIT;
-/     leaves:10#1000;
-/     filled:10#1000;
-/     limitprice:10#0;
-/     stopprice:10#0;
-/     status:10#`NEW;
-/     time:10#.z.z;
-/     isClose:10#0b;
-/     trigger:10#`NIL);
 
 
 .qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";

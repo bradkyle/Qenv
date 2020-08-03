@@ -39,6 +39,7 @@ orderMandatoryFields    :`accountId`side`otype`size;
 // TODO change price type to int, longs etc.
 Order: (
     [price:`int$(); orderId:`long$()]
+    instrumentId   : `.instrument.Instrument$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
@@ -187,8 +188,8 @@ NewOrder       : {[o;time];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
     if[null o[`isClose];o[`isClose]:0b];
     if[null o[`execInst];o[`execInst]:()];
-    if[null o[`instrumentId]; :.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]];
-    if[null o[`accountId]; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+    if[null o[`instrumentId]; (.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]; 'INVALID_INSTRUMENTID)];
+    if[null o[`accountId]; (.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]; 'INVALID_ACCOUNTID)];
 
     if[not (o[`side] in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
     if[not (o[`otype] in .order.ORDERTYPE); :.event.AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
@@ -205,7 +206,8 @@ NewOrder       : {[o;time];
 
     // Instrument related validation
     ins:.instrument.Instrument@o[`instrumentId];
-    if[(o[`price] mod ins[`tickSize])<>0;:.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;""]];
+
+    if[((`float$(o[`price]) mod ins[`tickSize])<>0;(.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;"not right"]; 'INVALID_ORDER_TICK_SIZE)];
     if[o[`price]>ins[`maxPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
     if[o[`price]<ins[`minPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
     if[o[`size]>ins[`maxOrderSize];:.event.AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
