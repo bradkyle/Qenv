@@ -47,6 +47,7 @@ defaultAfterEach: {
      delete from `.order.Order;
      delete from `.order.OrderBook;
      .account.accountCount:0;
+     .order.orderCount:0;
      .qt.RestoreMocks[];
     };
 
@@ -277,10 +278,12 @@ deriveCaseParams    :{[params]
 
 oBeforeAll :{
     .instrument.NewInstrument[
-        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize!
-        (1;0.5;1e5f;0f;1e7f;0f);
+        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
+        (1;0.5;1e5f;0f;1e7f;0f;1);
         1b;.z.z];
     };
+
+BING:();
 
 test:.qt.Unit[
     ".order.NewOrder";
@@ -292,10 +295,11 @@ test:.qt.Unit[
         / show .instrument.Instrument;
         show o[`instrumentId];
         res:.order.NewOrder[o;.z.z];
-        show res;
+
         // Assertions
-        show .order.Order;
-        .qt.A[.order.Order@(o[`price];o[`orderId]);~;p[`eOrd];"order";c];
+        k:key p[`eOrd]; 
+        o1:first (0!select from .order.Order where orderId=1);
+        .qt.A[o1[k];~;p[`eOrd][k];"order";c];
 
     };();(oBeforeAll;{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
@@ -328,7 +332,7 @@ deriveCaseParams    :{[params]
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
-    ();
+    (`price`offset!(1000i;1000i));
     ()
     )]];
 

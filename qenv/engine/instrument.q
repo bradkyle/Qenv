@@ -33,7 +33,8 @@ Instrument: (
     flatMakerFee            : `float$();
     flatTakerFee            : `float$();
     tickSize                : `float$();
-    multiplier              : `float$();
+    priceMultiplier         : `long$();
+    sizeMultiplier          : `long$();
     riskTierType            : `.instrument.RISKTIERTYPE$();
     flatRiskLimit           : `float$();
     flatRiskStep            : `float$();
@@ -72,7 +73,7 @@ mandCols:();
 // Defaults approximate the values seen with bitmex XBTUSD
 defaults:{:(
     (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,
-    `FLAT,`FLAT,-0.00025,0.00025,0.5,1f,`PROCEDURAL,200f,100f,0f,0f,
+    `FLAT,`FLAT,-0.00025,0.00025,0.5,10,1,`PROCEDURAL,200f,100f,0f,0f,
     (`timespan$(`minute$480)),0,0,0f,1e6f,0f,0,0f,0b,1b,0b,0b,0b,1e6f,0f,1f,1e5f,0f,
     25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0)};
 allCols:cols Instrument;

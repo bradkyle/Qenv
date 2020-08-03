@@ -2,6 +2,7 @@
 \d .order
 \l util.q
 
+BAM:();
 orderCount:0;
 
 // Order
@@ -55,6 +56,7 @@ Order: (
     isClose         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$());
+
 orderCount:0;
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
@@ -181,6 +183,7 @@ ProcessDepthUpdate  : {[event]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
+multiply:{x[y]:`int$(x[y]*z);:x};
 
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
@@ -190,7 +193,8 @@ NewOrder       : {[o;time];
     o:ordSubmitFields!o[ordSubmitFields];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
     if[null o[`isClose];o[`isClose]:0b];
-    if[null o[`execInst];o[`execInst]:()];
+    if[null o[`execInst];o[`execInst]:`NIL];
+    if[null o[`trigger];o[`trigger]:`NIL];
     if[null o[`instrumentId]; (.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]; 'INVALID_INSTRUMENTID)];
     if[null o[`accountId]; (.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]; 'INVALID_ACCOUNTID)];
 
@@ -228,6 +232,16 @@ NewOrder       : {[o;time];
         ((o[`side]=`BUY) and (o[`size]> acc[`netLongPosition])));
         (.event.AddFailure[time;`INVALID_ORDER_SIZE;"Close order larger than position"]; 'INVALID_ORDER_SIZE)];
     if[(acc[`orderCount]+1) > ins[`maxOpenOrders];:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+
+    m:ins[`priceMultiplier];
+    o:multiply[o;`limitprice`stopprice`price;m];
+    o[`execInst]:`.order.EXECINST$o[`execInst];
+    o[`trigger]:`.order.STOPTRIGGER$o[`trigger];
+    o[`otype]:`.order.ORDERTYPE$o[`otype];
+    o[`side]:`.order.ORDERSIDE$o[`side];
+    o[`timeinforce]:`.order.TIMEINFORCE$o[`timeinforce];
+    o[`status]: (`.order.ORDERSTATUS$`NEW);
+
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
@@ -308,28 +322,22 @@ NewOrder       : {[o;time];
                     ]
                 ];
                 [
-                    show 99#"M";
                     
                     // add orderbook references
                     // TODO update order init margin etc.
                     // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
-                    qty:.order.OrderBook[o[`price]][`qty];
-                    o[`offset]: $[not null[qty];qty;0f];
-
+                    qty:(.order.OrderBook@o[`price])[`qty];
+                    o[`offset]: $[not null[qty];qty;0i];
                     // Update the account with the respective
                     // order premium etc.
                     // TODO implement order margin here
 
                     // TODO make better
-                    o[`execInst]:`ALLORNONE;
                     o[`leaves]: o[`size];
-                    o[`filled]: 0f;
-                    o[`status]: `NEW;
+                    o[`filled]: 0i;
                     o[`time]: time;
                     `.order.Order insert o;
-                    / events:events,.order.MakeNewOrderEvent[];
-                    / events:events,.account.MakeAccountUpdateEvent[]
                 ]
             ];
         ];
