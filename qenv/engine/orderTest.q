@@ -76,8 +76,11 @@ test:.qt.Unit[
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
-deriveCaseParams    :{[cOB;COrd;]
+deriveCaseParams    :{[params]
 
+    :`cOB`cOrd`upd`eON`eOrd!(
+
+    );
     };
 
 // Add time to allow for multiple simultaneous updates.
