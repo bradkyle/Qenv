@@ -5,6 +5,8 @@
 BAM:();
 orderCount:0;
 
+multiply:{x[y]:`int$(x[y]*z);:x};
+
 // Order
 // =====================================================================================>
 /*******************************************************
@@ -183,7 +185,6 @@ ProcessDepthUpdate  : {[event]
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
-multiply:{x[y]:`int$(x[y]*z);:x};
 
 // Adds an agent order with its given details to the state
 // reserves order margin (checks that account has enough margin) 
