@@ -12,7 +12,7 @@ z:.z.z;
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / .account.NewAccount[`accountId`other!1 2;.z.z]
-randOrder:{[num;oidstart;params]
+randOrders:{[num;oidstart;params]
     // params is a dictionary of values that are sanitized below
 
 
@@ -38,6 +38,8 @@ randOrder:{[num;oidstart;params]
         execInst        : num#`.order.EXECINST$`NIL
     )
     };
+
+randOrder   :{[params;oid] first[.order.randOrders[1;oid;params]]}
 
 defaultAfterEach: {
      delete from `.account.Account;
@@ -305,7 +307,7 @@ deriveCaseParams    :{[params]
     :p;
     };
 
-.qt.AddCase[test;"New simple ask limit order";
+.qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";
     deriveCaseParams[(
     ();();
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
