@@ -56,7 +56,7 @@ test:.qt.Unit[
 
         .order.ProcessDepthUpdate[p[`event]];
         // Assertions
-        / .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"orderbook";c];
+        .qt.A[.order.OrderBook;~;p[`eOB];"orderbook";c];
         / .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
@@ -69,11 +69,15 @@ deriveCaseParams    :{[params]
         d:params[2];
         if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
         // Side, Price, Size
-        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;(x[0];x[1];x[2]))} each flip[d];
+        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
+        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
         e:flip[d];
         ]];
+    
+    / eOB:params[3];
+    / eOB:update price:`int$price, 
 
-    p:`cOB`cOrd`event`eON`eOrd`eEvents!(
+    p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
         params[0];
         params[1];
         e;
@@ -88,8 +92,8 @@ deriveCaseParams    :{[params]
 //TODO make into array and addCases
 .qt.AddCase[test;"simple ask update no agent orders or previous depth (single update) one side";deriveCaseParams[(
     ();();
-    ((10#`.order.ORDERSIDE$`SELL);`int$(1000+til 10);`int$(10#1000));
-    ([price:(1000+til 10)] size:(10#1000i); side:(10#`BUY));
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
     ();()
     )]];
 

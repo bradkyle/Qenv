@@ -192,6 +192,7 @@ Case    :(
     testId       : `.qt.Test$();
     state        : `.qt.TESTSTATE$();
     dscr         : `symbol$();
+    msg          : `symbol$();
     params       : {};
     repeat       : `long$();
     retry        : `long$();
@@ -210,7 +211,7 @@ AddCase     :{[test;dscr;params]
     $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
     if[not((type[test] in 98 99h) and (test[`testId] in key[.qt.Test]));show "error"]; // TODO better error
     if[not(type[params] in 98 99h);0N]; // TODO better error
-    case:cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;params;0;0;.z.z;.z.z);
+    case:cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;(`$"");params;0;0;.z.z;.z.z);
     `.qt.Case upsert case;
     };
 
