@@ -49,13 +49,16 @@ defaultBeforeEach: {
     };
 
 test:.qt.Unit[
-    ".order.processSideUpdate";
+    ".order.ProcessDepthUpdate";
     {[c]
         p:c[`params];
+        show params[`event];
+
+        .order.ProcessDepthUpdate[p[`event]];
 
         // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+        / .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"orderbook";c];
+        / .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Given a side update which consists of a table of price, time,",
@@ -63,484 +66,457 @@ test:.qt.Unit[
 
 deriveCaseParams    :{[params]
 
-    :`cOB`cOrd`upd`eON`eOrd!(
-
+    event:params[2];
+    event:update time:.z.z from event;
+    p:`cOB`cOrd`event`eON`eOrd`eEvents!(
+        params[0];
+        params[1];
+        event;
+        params[3];
+        params[4];
+        params[5]
         );
+    show p;
+    :p;
     };
 
 // Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
-.qt.AddCase[test;"simple ask update no agent orders or previous depth (single update)";deriveCaseParams[(
+.qt.AddCase[test;"simple ask update no agent orders or previous depth (single update) one side";deriveCaseParams[(
     ();();
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+    ([price:(1000+til 10)] size:(10#1000i); side:(10#`BUY));
+    ([price:(1000+til 10)] size:(10#1000i); side:(10#`BUY));
+    ();()
     )]];
 
-.qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
-    (); // currentOB
-    genTestOrders[]; // current Orders
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"1 order at 1 level (single update)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"3 orders at 1 level (single update)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"1 order at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"3 orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-
-.qt.AddCase[test;"depth update overlaps with current depth of opposing side (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-
-.qt.AddCase[test;"depth update does not conform to tick size (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-.qt.AddCase[test;"depth update does not conform to lot size (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-
-.qt.AddCase[test;"agent offsets are zero and update is less than agent order size (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-
-.qt.AddCase[test;"depth update contains depth for which the next value is zero (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
+/ .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
+/     (); // currentOB
+/     genTestOrders[]; // current Orders
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"1 order at 1 level (single update)";deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"3 orders at 1 level (single update)";deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"1 order at 3 different levels and differing offsets (single update)";deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"3 orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+
+/ .qt.AddCase[test;"depth update overlaps with current depth of opposing side (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+
+/ .qt.AddCase[test;"depth update does not conform to tick size (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+/ .qt.AddCase[test;"depth update does not conform to lot size (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
+
+
+/ .qt.AddCase[test;"agent offsets are zero and update is less than agent order size (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
 
-.qt.AddCase[test;"check that best ask, best bid, is liquid variables are updated (single update)";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
 
+/ .qt.AddCase[test;"depth update contains depth for which the next value is zero (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
 
-test:.qt.Unit[
-    ".order.ProcessDepthUpdate";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/ .qt.AddCase[test;"check that best ask, best bid, is liquid variables are updated (single update)";
+/     deriveCaseParams[(
+/     ();
+/     genTestOrders[];
+/     `SELL;
+/     `price`qty!(`s#993150 993250i;2689711 2689711i);
+/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+/     ()
+/     )]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/ test:.qt.Unit[
+/     ".order.NewOrder";
+/     {[c]
+/         p:c[`params];
+/         time:.z.z;
+/         eacc:p[`eaccount];
+/         einv:p[`einventory];
+/         ecols:p[`ecols];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/         // Execute tested function
+/         x:p[`params];
+/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+/         // 
+/         acc:exec from .account.Account where accountId=account[`accountId];
+/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Given a set of events of the exemplary format (canonical event format)",
-    "update the orderbook and order state and return the new representation"];
+/         // Assertions
+/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-// TODO figure out how events will be returned?
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-.qt.AddCase[test;"Should process both sides";
-    deriveCaseParams[]];
 
-.qt.AddCase[test;"Should error when the format does not match";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"New simple ask limit order";
+/     deriveCaseParams[ ]];
 
+/ .qt.AddCase[test;"New simple market order";
+/     deriveCaseParams[ ]];
 
-test:.qt.Unit[
-    ".order.NewOrder";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/ .qt.AddCase[test;"New simple stop market order";
+/     deriveCaseParams[ ]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/ .qt.AddCase[test;"New simple stop limit order";
+/     deriveCaseParams[ ]];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/ .qt.AddCase[test;"Trash fields present";
+/     deriveCaseParams[]];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/ .qt.AddCase[test;"Invalid Account Id (form)";
+/     deriveCaseParams[]];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+/ .qt.AddCase[test;"Invalid Order side";
+/     deriveCaseParams[]];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+/ .qt.AddCase[test;"Invalid Order type";
+/     deriveCaseParams[]];
 
+/ .qt.AddCase[test;"Invalid time in force";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"New simple ask limit order";
-    deriveCaseParams[ ]];
+/ .qt.AddCase[test;"Invalid Exec inst";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"New simple market order";
-    deriveCaseParams[ ]];
+/ .qt.AddCase[test;"Invalid price tick size";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"New simple stop market order";
-    deriveCaseParams[ ]];
+/ .qt.AddCase[test;"order price>max price";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"New simple stop limit order";
-    deriveCaseParams[ ]];
+/ .qt.AddCase[test;"order price<min price";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Trash fields present";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"order size>max order size";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid Account Id (form)";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"order price<min order size";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid Order side";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Account id not found";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid Order type";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Duplicate clOrdId";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid time in force";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Duplicate orderId";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid Exec inst";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Not enough margin to execute order";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid price tick size";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Accounts do not match";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"order price>max price";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Invalid stopPrice for order type";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"order price<min price";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Invalid order type for exec inst";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"order size>max order size";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Account id not found";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"order price<min order size";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Order placed in book offset = offset at depth price";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Account id not found";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Order placed in book offset when no depth orders exist";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Duplicate clOrdId";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Participate dont initiate cross throws error";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Duplicate orderId";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Dont participate dont initiate cross calls/places market order";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Not enough margin to execute order";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Order placed in book";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Accounts do not match";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Incorrect time format for event";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid stopPrice for order type";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Close order larger than inventory";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid order type for exec inst";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Close order with no inventory";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Account id not found";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"multiple close orders (of STOP_LIMIT, STOP_MARKET, LIMIT), collectively than inventory";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Order placed in book offset = offset at depth price";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"Invalid stop order price for trigger";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Order placed in book offset when no depth orders exist";
-    deriveCaseParams[]];
+/ test:.qt.Unit[
+/     ".order.fillTrade";
+/     {[c]
+/         p:c[`params];
+/         time:.z.z;
+/         eacc:p[`eaccount];
+/         einv:p[`einventory];
+/         ecols:p[`ecols];
 
-.qt.AddCase[test;"Participate dont initiate cross throws error";
-    deriveCaseParams[]];
+/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
-.qt.AddCase[test;"Dont participate dont initiate cross calls/places market order";
-    deriveCaseParams[]];
+/         // Execute tested function
+/         x:p[`params];
+/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
 
-.qt.AddCase[test;"Order placed in book";
-    deriveCaseParams[]];
+/         // 
+/         acc:exec from .account.Account where accountId=account[`accountId];
+/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
-.qt.AddCase[test;"Incorrect time format for event";
-    deriveCaseParams[]];
+/         // Assertions
+/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-.qt.AddCase[test;"Close order larger than inventory";
-    deriveCaseParams[]];
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-.qt.AddCase[test;"Close order with no inventory";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"multiple close orders (of STOP_LIMIT, STOP_MARKET, LIMIT), collectively than inventory";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"Invalid stop order price for trigger";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is smaller than best qty";
+/     deriveCaseParams[]];
 
-test:.qt.Unit[
-    ".order.fillTrade";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/ .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
+/     deriveCaseParams[]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/ .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is smaller than best qty";
+/     deriveCaseParams[]];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/ .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
+/     deriveCaseParams[]];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/ .qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is agent";
+/     deriveCaseParams[]];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+/ .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is not agent";
+/     deriveCaseParams[]];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+/ .qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is not agent";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"agent order fills another agents order";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"agent fills its own limit order";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is smaller than best qty";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"agent order fills another agents order";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"no liquidity";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is smaller than best qty";
-    deriveCaseParams[]];
+/ .qt.AddCase[test;"should update instrument etc. last price";
+/     deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
-    deriveCaseParams[]];
+/ / .qt.AddCase[test;"should update open interest, open value etc.";
+/     / deriveCaseParams[]];
 
-.qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is agent";
-    deriveCaseParams[]];
+/ test:.qt.Unit[
+/     ".order.processCross";
+/     {[c]
+/         p:c[`params];
+/         time:.z.z;
+/         eacc:p[`eaccount];
+/         einv:p[`einventory];
+/         ecols:p[`ecols];
 
-.qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is not agent";
-    deriveCaseParams[]];
+/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
-.qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is not agent";
-    deriveCaseParams[]];
+/         // Execute tested function
+/         x:p[`params];
+/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
 
-.qt.AddCase[test;"agent order fills another agents order";
-    deriveCaseParams[]];
+/         // 
+/         acc:exec from .account.Account where accountId=account[`accountId];
+/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
-.qt.AddCase[test;"agent fills its own limit order";
-    deriveCaseParams[]];
+/         // Assertions
+/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-.qt.AddCase[test;"agent order fills another agents order";
-    deriveCaseParams[]];
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-.qt.AddCase[test;"no liquidity";
-    deriveCaseParams[]];
 
-.qt.AddCase[test;"should update instrument etc. last price";
-    deriveCaseParams[]];
+/ test:.qt.Unit[
+/     ".order.ProcessTradeEvent";
+/     {[c]
+/         p:c[`params];
+/         time:.z.z;
+/         eacc:p[`eaccount];
+/         einv:p[`einventory];
+/         ecols:p[`ecols];
 
-/ .qt.AddCase[test;"should update open interest, open value etc.";
-    / deriveCaseParams[]];
+/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
-test:.qt.Unit[
-    ".order.processCross";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/         // Execute tested function
+/         x:p[`params];
+/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/         // 
+/         acc:exec from .account.Account where accountId=account[`accountId];
+/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/         // Assertions
+/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+/ test:.qt.Unit[
+/     ".order.UpdateMarkPrice";
+/     {[c]
+/         p:c[`params];
+/         time:.z.z;
+/         eacc:p[`eaccount];
+/         einv:p[`einventory];
+/         ecols:p[`ecols];
 
+/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
+/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
-test:.qt.Unit[
-    ".order.ProcessTradeEvent";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/         // Execute tested function
+/         x:p[`params];
+/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/         // 
+/         acc:exec from .account.Account where accountId=account[`accountId];
+/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/         // Assertions
+/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+/ .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
+/     deriveCaseParams[]];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+/ .qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
+/     deriveCaseParams[]];
 
+/ .qt.AddCase[test;"Should liquidate relevant inventory/accounts depending on the configuration";
+/     deriveCaseParams[]];
 
-test:.qt.Unit[
-    ".order.UpdateMarkPrice";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
+/ .qt.AddCase[test;"Should trigger triggerable stop limit orders";
+/     deriveCaseParams[]];
 
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+/ .qt.AddCase[test;"Should not trigger non-triggerable stop limit orders";
+/     deriveCaseParams[]];
 
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+/ .qt.AddCase[test;"Should trigger triggerable stop market orders";
+/     deriveCaseParams[]];
 
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+/ .qt.AddCase[test;"Should not trigger non-triggerable stop market orders";
+/     deriveCaseParams[]];
 
-        // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-.qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should liquidate relevant inventory/accounts depending on the configuration";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should trigger triggerable stop limit orders";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should not trigger non-triggerable stop limit orders";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should trigger triggerable stop market orders";
-    deriveCaseParams[]];
-
-.qt.AddCase[test;"Should not trigger non-triggerable stop market orders";
-    deriveCaseParams[]];
-
+.qt.RunTests[];
