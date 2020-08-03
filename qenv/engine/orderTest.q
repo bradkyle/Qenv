@@ -326,7 +326,7 @@ deriveCaseParams    :{[params]
 .qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";
     deriveCaseParams[(
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
-    `accountId`instrumentId`side`otype`price!(1;1;`SELL;`LIMIT;1000);
+    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
     ();
     ()

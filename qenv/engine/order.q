@@ -207,24 +207,26 @@ NewOrder       : {[o;time];
     // Instrument related validation
     ins:.instrument.Instrument@o[`instrumentId];
 
-    if[((`float$(o[`price]) mod ins[`tickSize])<>0;(.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;"not right"]; 'INVALID_ORDER_TICK_SIZE)];
-    if[o[`price]>ins[`maxPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`price]<ins[`minPrice];:.event.AddFailure[time;`INVALID_ORDER_PRICE;""]];
-    if[o[`size]>ins[`maxOrderSize];:.event.AddFailure[time;`INVALID_ORDER_SIZE;("The order size:",string[o[`size]]," is larger than the max size:", string[ins[`maxOrderSize]])]];
-    if[o[`size]<ins[`minOrderSize];:.event.AddFailure[time;`INVALID_ORDER_SIZE;""]];
+    if[((`float$o[`price]) mod ins[`tickSize])<>0;(.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;"not right"]; 'INVALID_ORDER_TICK_SIZE)];
+    if[o[`price]>ins[`maxPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
+    if[o[`price]<ins[`minPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
+    if[o[`size]>ins[`maxOrderSize];(.event.AddFailure[time;`INVALID_ORDER_SIZE;"not right"]; 'INVALID_ORDER_SIZE)];
+    if[o[`size]<ins[`minOrderSize];(.event.AddFailure[time;`INVALID_ORDER_SIZE;"not right"]; 'INVALID_ORDER_SIZE)];
 
     // Account related validation
-    if[not(o[`accountId] in key .account.Account);
-        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[o[`accountId]]," could not be found"]];
+    if[not(o[`accountId] in key .account.Account);(.event.AddFailure[time;`INVALID_ACCOUNTID;"not right"]; 'INVALID_ACCOUNTID)];
 
     acc:.account.Account@o[`accountId];
-    if[o[`isClose] and (order[`otype] in `LIMIT`MARKET)
-        ((o[`side]=`SHORT and (o[`size]> acc[`netShortPosition])) or
-        (o[`side]=`LONG and (o[`size]> acc[`netLongPosition])));
-        :.event.AddFailure[time;`INVALID_ORDER_SIZE; "Close order larger than position"]];
 
+    show ((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition]));
+
+    if[o[`isClose] and (o[`otype] in `LIMIT`MARKET) and
+        (((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition])) or
+        ((o[`side]=`BUY) and (o[`size]> acc[`netLongPosition])));
+        (.event.AddFailure[time;`INVALID_ORDER_SIZE;"Close order larger than position"]; 'INVALID_ORDER_SIZE)];
     if[(acc[`orderCount]+1) > ins[`maxOpenOrders];:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
-    if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+
+    / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // calculate initial margin requirements of order
 
@@ -275,6 +277,8 @@ NewOrder       : {[o;time];
     / Invalid multiLegReportingType
     / Invalid currency
     / Invalid settlCurrency
+
+    
     o[`orderId]:orderCount+1;
     // TODO set offset
     // TODO check orderbook has liquidity
