@@ -39,13 +39,19 @@ defaultAfterEach: {
      delete from `.account.Account;
      delete from `.account.Inventory;
      delete from `.event.Events;
+     delete from `.order.Order;
+     delete from `.order.OrderBook;
      .account.accountCount:0;
      .qt.RestoreMocks[];
     };
 
 defaultBeforeEach: {
-     .account.NewAccount[`accountId`other!1 2;.z.z];
-     .account.NewAccount[`accountId`other!2 2;.z.z]
+     delete from `.account.Account;
+     delete from `.account.Inventory;
+     delete from `.event.Events;
+     delete from `.order.Order;
+     delete from `.order.OrderBook;
+     show 99#"B";
     };
 
 test:.qt.Unit[
@@ -99,8 +105,8 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both";deriveCaseParams[(
     ();();
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    (((10#`SELL),(10#`BUY));`int$((1000+til 10),(999-til 10));`int$(20#1000));
+    ([price:(`int$((1000+til 10),(999-til 10)))] side:(`.order.ORDERSIDE$((10#`SELL),(10#`BUY)));qty:(20#1000i));
     ();()
     )]];
 

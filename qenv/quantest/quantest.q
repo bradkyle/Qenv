@@ -39,10 +39,10 @@ Test    :(
     func         : {};
     repeat       : `long$();
     retry        : `long$();
-    beforeEach   : {};
-    afterEach    : {};
     beforeAll    : {};
     afterAll     : {};
+    beforeEach   : {};
+    afterEach    : {};
     start        : `datetime$();
     end          : `datetime$();
     sourceFile   : `symbol$()
