@@ -57,12 +57,10 @@ Order: (
 
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
-isActiveLimit:{[side; validPrices]
-              :((>;`size;0);
+isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
-               (in;`price;validPrices);
-               (=;`otype;`.order.ORDERTYPE$`LIMIT));
-               };
+               (in;`price;x);
+               (=;`otype;`.order.ORDERTYPE$`LIMIT))};
 
 AddNewOrderEvent   :{[]
 
@@ -114,14 +112,10 @@ ProcessDepthUpdate  : {[event]
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
     event:flip event;
-    show event;
     nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
-    .order.BAM:nxt;
-    show nxt;
-    $[(count[event]>0) and (count[.order.OrderBook]>0);
+    odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
+    $[(count[event]>0) and (count[odrs]>0);
       [
-          u:0!(`price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2], side:datum[;0][;0] from event);
-          odrs:?[.order.Order;.order.isActiveLimit[u[`price]];0b;()];
           
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
