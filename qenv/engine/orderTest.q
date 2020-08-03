@@ -7,11 +7,12 @@ system "d .orderTest";
 \l quantest.q 
 \cd ../engine/
 
+z:.z.z;
 
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / .account.NewAccount[`accountId`other!1 2;.z.z]
-randOrder:{[num;prices;oidstart]
+randOrder:{[num;oidstart;prices;offsets;sizes;leaves;stats;times;otypes]
     :(
         [
             price:`int$(num?prices); 
@@ -123,8 +124,15 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both; Multi temporal";deriveCaseParams[(
     ();();
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000 100);(10#z,(z+`second$5)));
+    ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#100i));
+    ();()
+    )]];
+
+.qt.AddCase[test;"1 order at 1 level";deriveCaseParams[(
+    ();();
+    ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000);(10#z,(z+`second$5)));
+    ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000i));
     ();()
     )]];
 
