@@ -112,16 +112,17 @@ ProcessDepthUpdate  : {[event]
     // Derive the deltas for each level given the new update
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
-    $[();
+    event:flip event;
+    odrs:?[.order.Order;.order.isActiveLimit[u[`price]];0b;()];
+    $[(count[event]>0) and (count[odrs]>0);
       [
           u:0!(`price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2], side:datum[;0][;0] from event);
-          odrs:?[.order.Order;.order.isActiveLimit[u[`price]];0b;()];
           
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level.
-          dlt:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each u;
-          dneg:dlt where[dlt[`d]<0];           
+          ob:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each u;
+          dneg:ob where[ob[`d]<0];           
           
           // If the number of negative deltas and order
           // count is greater than 0, update the offsets.
