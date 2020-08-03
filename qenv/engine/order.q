@@ -157,10 +157,14 @@ ProcessDepthUpdate  : {[event]
             maxShft:max'[newShft];
             update qty:?[nxtQty>maxShft;nxtQty;maxShft] from `.order.OrderBook where price in key[nxt];
           ]];
-             
+
+          // TODO update orderbook
+          // TODO emit orderbook snapshot
       ];
       [
          `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
+         // TODO update orderbook
+         // TODO emit orderbook snapshot
       ]];
     / `price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2] from (e@2)
     / asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
