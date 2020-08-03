@@ -39,7 +39,7 @@ randOrders:{[num;oidstart;params]
     )
     };
 
-randOrder   :{[params;oid] first[.order.randOrders[1;oid;params]]}
+randOrder   :{[params] first[.order.randOrders[1;params[`orderId];params]]}
 
 defaultAfterEach: {
      delete from `.account.Account;
@@ -283,9 +283,8 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params]
-    e:();
-    if [count[params[2]]>0;[
-        d:params[2];
+    if [count[params[0]]>0;[
+        d:params[0];
         if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
         // Side, Price, Size
         d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
@@ -309,8 +308,8 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";
     deriveCaseParams[(
-    ();();
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
+    `accountId`side`otype`price!(1;`SELL;`LIMIT;1000);
     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
     ();()
     )]];
