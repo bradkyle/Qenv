@@ -1,5 +1,4 @@
 \l account.q
-\l inventory.q
 \l event.q
 \l order.q
 system "d .orderTest";
@@ -38,10 +37,9 @@ randOrder:{[num;prices;oidstart]
 
 defaultAfterEach: {
      delete from `.account.Account;
-     delete from `.inventory.Inventory;
+     delete from `.account.Inventory;
      delete from `.event.Events;
      .account.accountCount:0;
-     .inventory.inventoryCount:0;
      .qt.RestoreMocks[];
     };
 
@@ -60,7 +58,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -68,7 +66,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -226,7 +224,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -234,7 +232,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -263,7 +261,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -271,7 +269,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -390,7 +388,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -398,7 +396,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -462,7 +460,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -470,7 +468,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -490,7 +488,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -498,7 +496,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -518,7 +516,7 @@ test:.qt.Unit[
         ecols:p[`ecols];
 
         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
+        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
 
         // Execute tested function
         x:p[`params];
@@ -526,7 +524,7 @@ test:.qt.Unit[
 
         // 
         acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
