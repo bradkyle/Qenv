@@ -52,21 +52,6 @@ test:.qt.Unit[
     ".order.processSideUpdate";
     {[c]
         p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
-
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
-
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -80,18 +65,18 @@ deriveCaseParams    :{[params]
 
     :`cOB`cOrd`upd`eON`eOrd!(
 
-    );
+        );
     };
 
 // Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
-.qt.AddCase[test;"simple ask update no agent orders or previous depth";deriveCaseParams[(
+.qt.AddCase[test;"simple ask update no agent orders or previous depth (single update)";deriveCaseParams[(
     ();();
     `price`qty`side!(`s#993150 993250i;2689711 2689711i);
     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
     )]];
 
-.qt.AddCase[test;"single agent ask decreasing (delta less than offset)";deriveCaseParams[(
+.qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
     (); // currentOB
     genTestOrders[]; // current Orders
     `price`qty!(`s#993150 993250i;2689711 2689711i);
@@ -99,7 +84,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"1 order at 1 level";deriveCaseParams[(
+.qt.AddCase[test;"1 order at 1 level (single update)";deriveCaseParams[(
     ();
     genTestOrders[];
     `SELL;
@@ -108,7 +93,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"3 orders at 1 level";deriveCaseParams[(
+.qt.AddCase[test;"3 orders at 1 level (single update)";deriveCaseParams[(
     ();
     genTestOrders[];
     `SELL;
@@ -117,7 +102,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"1 order at 3 different levels and differing offsets";deriveCaseParams[(
+.qt.AddCase[test;"1 order at 3 different levels and differing offsets (single update)";deriveCaseParams[(
     ();
     genTestOrders[];
     `SELL;
@@ -126,7 +111,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"3 orders of different quantities at 3 different levels and differing offsets";deriveCaseParams[(
+.qt.AddCase[test;"3 orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
     ();
     genTestOrders[];
     `SELL;
@@ -135,7 +120,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets";deriveCaseParams[(
+.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
     ();
     genTestOrders[];
     `SELL;
@@ -144,7 +129,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left";
+.qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
@@ -155,7 +140,7 @@ deriveCaseParams    :{[params]
     )]];
 
 
-.qt.AddCase[test;"depth update overlaps with current depth of opposing side";
+.qt.AddCase[test;"depth update overlaps with current depth of opposing side (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
@@ -166,7 +151,7 @@ deriveCaseParams    :{[params]
     )]];
 
 
-.qt.AddCase[test;"depth update does not conform to tick size";
+.qt.AddCase[test;"depth update does not conform to tick size (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
@@ -176,18 +161,7 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"depth update does not conform to lot size";
-    deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
-    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-    ()
-    )]];
-
-
-.qt.AddCase[test;"agent offsets are zero and update is less than agent order size";
+.qt.AddCase[test;"depth update does not conform to lot size (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
@@ -198,7 +172,7 @@ deriveCaseParams    :{[params]
     )]];
 
 
-.qt.AddCase[test;"depth update contains depth for which the next value is zero";
+.qt.AddCase[test;"agent offsets are zero and update is less than agent order size (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
@@ -208,7 +182,18 @@ deriveCaseParams    :{[params]
     ()
     )]];
 
-.qt.AddCase[test;"check that best ask, best bid, is liquid variables are updated";
+
+.qt.AddCase[test;"depth update contains depth for which the next value is zero (single update)";
+    deriveCaseParams[(
+    ();
+    genTestOrders[];
+    `SELL;
+    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
+    ()
+    )]];
+
+.qt.AddCase[test;"check that best ask, best bid, is liquid variables are updated (single update)";
     deriveCaseParams[(
     ();
     genTestOrders[];
