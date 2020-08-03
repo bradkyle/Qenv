@@ -280,9 +280,38 @@ test:.qt.Unit[
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
+deriveCaseParams    :{[params]
+    e:();
+    if [count[params[2]]>0;[
+        d:params[2];
+        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
+        // Side, Price, Size
+        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
+        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
+        e:flip[d];
+        ]];
+    
+    / eOB:params[3];
+    / eOB:update price:`int$price, 
 
-/ .qt.AddCase[test;"New simple ask limit order";
-/     deriveCaseParams[ ]];
+    p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
+        params[0];
+        params[1];
+        e;
+        params[3];
+        params[4];
+        params[5]
+        );
+    :p;
+    };
+
+.qt.AddCase[test;"New simple ask limit order";
+    deriveCaseParams[(
+    ();();
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ();()
+    )]];
 
 / .qt.AddCase[test;"New simple market order";
 /     deriveCaseParams[ ]];
