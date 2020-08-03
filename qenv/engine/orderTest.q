@@ -66,17 +66,18 @@ test:.qt.Unit[
 
 deriveCaseParams    :{[params]
 
-    event:{(time:.z.z;intime:.z.z;kind:`DEPTH;cmd:`UPDATE;datum:(x[0];x[1];x[2]))} each flip[params[2]];
-
-    event:update time:.z.z from event;
-
-    // convert table into events
-
+    e:();
+    if [count[params[2]]>0;[
+        e:params[2];
+        if[count[e]<4;e,:enlist(count[first[e]]#.z.z)];
+        // Side, Price, Size
+        e:{(time:x[3];intime:x[3];kind:`DEPTH;cmd:`UPDATE;datum:(x[0];x[1];x[2]))} each flip[e];
+    ]];
 
     p:`cOB`cOrd`event`eON`eOrd`eEvents!(
         params[0];
         params[1];
-        event;
+        e;
         params[3];
         params[4];
         params[5]
@@ -89,7 +90,7 @@ deriveCaseParams    :{[params]
 //TODO make into array and addCases
 .qt.AddCase[test;"simple ask update no agent orders or previous depth (single update) one side";deriveCaseParams[(
     ();();
-    (();();();());
+    ((10#`.order.ORDERSIDE$`SELL);`int$(1000+til 10);`int$(10#1000));
     ([price:(1000+til 10)] size:(10#1000i); side:(10#`BUY));
     ();()
     )]];
