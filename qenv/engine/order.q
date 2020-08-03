@@ -86,8 +86,8 @@ AddCancelOrderEvent :{[]
 
 // Instantiate a singleton class of Orderbook
 // qtys: represent the different level quantities at their given prices
-// offsets: represent the given offsets of a set of agent(s') orders 
-// sizes: represent the given order sizes of a set of agent(s') orders
+// the events will be generated using the sum of the quantities and the 
+// orderbook sizes at each price.
 // `.order.OrderBook upsert ([price:(`int$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`int$(40#1000)))
 OrderBook:(
     [price      :`int$()]
@@ -240,7 +240,7 @@ NewOrder       : {[o;time];
     o[`timeinforce]:`.order.TIMEINFORCE$o[`timeinforce];
     o[`status]: (`.order.ORDERSTATUS$`NEW);
 
-    
+
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
