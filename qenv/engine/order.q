@@ -106,6 +106,7 @@ AddTradeEvent  :{[side;qty;price;time]
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
+BAM:();
 
 // TODO partial vs full book update.
 ProcessDepthUpdate  : {[event]
@@ -113,7 +114,11 @@ ProcessDepthUpdate  : {[event]
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
     event:flip event;
-    $[(count[event]>0);
+    show event;
+    nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+    .order.BAM:nxt;
+    show nxt;
+    $[(count[event]>0) and (count[.order.OrderBook]>0);
       [
           u:0!(`price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2], side:datum[;0][;0] from event);
           odrs:?[.order.Order;.order.isActiveLimit[u[`price]];0b;()];
@@ -163,7 +168,7 @@ ProcessDepthUpdate  : {[event]
              
       ];
       [
-         `.order.OrderBook upsert flip(price:nxt[`price]; side:count[nxt]#`.order.ORDERSIDE$s; size:last'[nxt[`size]]); 
+         `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
       ]];
     / `price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2] from (e@2)
     / asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]

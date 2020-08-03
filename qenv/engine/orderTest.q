@@ -52,10 +52,9 @@ test:.qt.Unit[
     ".order.ProcessDepthUpdate";
     {[c]
         p:c[`params];
-        show params[`event];
+        / show p[`event];
 
         .order.ProcessDepthUpdate[p[`event]];
-
         // Assertions
         / .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"orderbook";c];
         / .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
@@ -65,14 +64,14 @@ test:.qt.Unit[
     "size update the orderbook and the individual order offsets"];
 
 deriveCaseParams    :{[params]
-
     e:();
     if [count[params[2]]>0;[
-        e:params[2];
-        if[count[e]<4;e,:enlist(count[first[e]]#.z.z)];
+        d:params[2];
+        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
         // Side, Price, Size
-        e:{(time:x[3];intime:x[3];kind:`DEPTH;cmd:`UPDATE;datum:(x[0];x[1];x[2]))} each flip[e];
-    ]];
+        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;(x[0];x[1];x[2]))} each flip[d];
+        e:flip[d];
+        ]];
 
     p:`cOB`cOrd`event`eON`eOrd`eEvents!(
         params[0];
@@ -82,7 +81,6 @@ deriveCaseParams    :{[params]
         params[4];
         params[5]
         );
-    show p;
     :p;
     };
 

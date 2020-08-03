@@ -124,7 +124,8 @@ pntTest      :{[test]
 // TODO protected execution
 runCase :{[test; case] 
     test[`beforeEach][]; 
-    res:(@[test[`func];case;`ERROR]);
+    res:(@[test[`func];case;{show 99#"#";show "Error occurred in test:", x;show 99#"#"; :`ERROR}]);
+   show res;
     $[(`$string[res])=`ERROR; 
         [update state:`.qt.TESTSTATE$`ERROR from `.qt.Case where caseId=case[`caseId]];
       exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
