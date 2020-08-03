@@ -216,7 +216,7 @@ NewOrder       : {[o;time];
     if[o[`price]>ins[`maxPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
     if[o[`price]<ins[`minPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
     if[o[`size]>ins[`maxOrderSize];(.event.AddFailure[time;`INVALID_ORDER_SIZE;"not right"]; 'INVALID_ORDER_SIZE)];
-    if[o[`size]<ins[`minOrderSize];(.event.AddFailure[time;`INVALID_ORDER_SIZE;"not right"]; 'INVALID_ORDER_SIZE)];
+    if[o[`size]<ins[`minOrderSize];(.event.AddFailure[time;`INVALID_ORDER_SIZE;"not right"]; 'INVALID_ORDER_SIZE)]; // TODO should signal?
 
     // Account related validation
     if[not(o[`accountId] in key .account.Account);(.event.AddFailure[time;`INVALID_ACCOUNTID;"not right"]; 'INVALID_ACCOUNTID)];
@@ -240,6 +240,7 @@ NewOrder       : {[o;time];
     o[`timeinforce]:`.order.TIMEINFORCE$o[`timeinforce];
     o[`status]: (`.order.ORDERSTATUS$`NEW);
 
+    
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 

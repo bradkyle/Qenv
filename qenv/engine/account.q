@@ -227,6 +227,10 @@ hedgedLiquidationPrice  :{[]
 
     };
 
+/ AddOrder    :{[order]
+
+    / };
+
 // TODO make global enums file
 // TOD
 AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
