@@ -1,4 +1,5 @@
 \l account.q
+\l instrument.q
 \l event.q
 \l order.q
 system "d .orderTest";
@@ -9,18 +10,16 @@ system "d .orderTest";
 
 z:.z.z;
 
+
+// Test order generation
+// -------------------------------------------------------------->
+
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / .account.NewAccount[`accountId`other!1 2;.z.z]
-randOrders:{[num;oidstart;params]
+testOrders:{[num;oidstart;params]
     // params is a dictionary of values that are sanitized below
-
-
-    :(
-        [
-            price:`int$(num?prices); 
-            orderId:`int$(oidstart+til num)
-        ]
+    :([price:`int$(num?prices); orderId:`int$(oidstart+til num)]
         accountId       : `int$(num#1);
         side            : num?(`.order.ORDERSIDE$`BUY;`.order.ORDERSIDE$`SELL);
         otype           : num#`.order.ORDERTYPE$`LIMIT;
@@ -35,11 +34,11 @@ randOrders:{[num;oidstart;params]
         time            : num#.z.z;
         isClose         : `boolean$(num?(1 0));
         trigger         : num#`.order.STOPTRIGGER$`NIL;
-        execInst        : num#`.order.EXECINST$`NIL
-    )
+        execInst        : num#`.order.EXECINST$`NIL)
     };
 
-randOrder   :{[params] first[.order.randOrders[1;params[`orderId];params]]}
+// Before and after defaults
+// -------------------------------------------------------------->
 
 defaultAfterEach: {
      delete from `.account.Account;
@@ -59,7 +58,12 @@ defaultBeforeEach: {
      delete from `.order.OrderBook;
      .account.NewAccount[`accountId`other!1 2;.z.z];
      .account.NewAccount[`accountId`other!2 2;.z.z];
+     .instrument.NewInstrument[enlist[`instrumentId]!enlist[1];1b;.z.z];
     };
+
+
+// Process Depth Update
+// -------------------------------------------------------------->
 
 test:.qt.Unit[
     ".order.ProcessDepthUpdate";
@@ -268,37 +272,41 @@ deriveCaseParams    :{[params]
 /     ()
 /     )]];
 
+
+// New Order Tests
+// -------------------------------------------------------------->
+
 test:.qt.Unit[
     ".order.NewOrder";
     {[c]
         p:c[`params]; 
+        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
   
-        o:params[`order];
-        .order.NewOrder[];
- 
+        o:p[`order];
+        res:.order.NewOrder[o;.z.z];
+        show res;
         // Assertions
-        .qt.A[.order.Order@(o[`price];o[`orderId]);~;eacc;"order";c];
+        show .order.Order;
+        .qt.A[.order.Order@(o[`price];o[`orderId]);~;p[`eOrd];"order";c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params]
+    ob:();
     if [count[params[0]]>0;[
         d:params[0];
         if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
         // Side, Price, Size
         d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
         ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
-        e:flip[d];
+        ob:flip[d];
         ]];
     
-    / eOB:params[3];
-    / eOB:update price:`int$price, 
-
-    p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
-        params[0];
+    p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
+        ob;
         params[1];
-        e;
+        params[2];
         params[3];
         params[4];
         params[5]
@@ -306,12 +314,29 @@ deriveCaseParams    :{[params]
     :p;
     };
 
+/ `.state.OrderEventHistory upsert (
+/     []orderId:til 10;
+/     accountId:10#1;
+/     side:(5#`SELL),(5#`BUY);
+/     price:(1000+til 5),(999-til 5);
+/     otype:10#`LIMIT;
+/     leaves:10#1000;
+/     filled:10#1000;
+/     limitprice:10#0;
+/     stopprice:10#0;
+/     status:10#`NEW;
+/     time:10#.z.z;
+/     isClose:10#0b;
+/     trigger:10#`NIL);
+
+
 .qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";
     deriveCaseParams[(
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
-    `accountId`side`otype`price!(1;`SELL;`LIMIT;1000);
+    `accountId`instrumentId`side`otype`price!(1;1;`SELL;`LIMIT;1000);
     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
-    ();()
+    ();
+    ()
     )]];
 
 / .qt.AddCase[test;"New simple market order";
@@ -409,6 +434,11 @@ deriveCaseParams    :{[params]
 
 / .qt.AddCase[test;"Invalid stop order price for trigger";
 /     deriveCaseParams[]];
+
+
+
+// Fill Trade tests
+// -------------------------------------------------------------->
 
 / test:.qt.Unit[
 /     ".order.fillTrade";
@@ -511,7 +541,7 @@ deriveCaseParams    :{[params]
 
 
 / test:.qt.Unit[
-/     ".order.ProcessTradeEvent";
+/     ".order.ProcessTrade";
 /     {[c]
 /         p:c[`params];
 /         time:.z.z;
@@ -537,6 +567,9 @@ deriveCaseParams    :{[params]
 /     };();({};{};defaultBeforeEach;defaultAfterEach);
 /     "Global function for processing new orders"];
 
+
+// Update Mark Price
+// -------------------------------------------------------------->
 
 / test:.qt.Unit[
 /     ".order.UpdateMarkPrice";
