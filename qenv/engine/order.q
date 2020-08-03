@@ -125,7 +125,7 @@ ProcessDepthUpdate  : {[event]
           
           // If the number of negative deltas and order
           // count is greater than 0, update the offsets.
-          if[(count[dneg]>0) and (count[odrs]>0);[
+          if[(count[dneg]>0);[
             odrs:0!(`price xgroup odrs);
             offsets: PadM[odrs[`offset]];
             sizes: PadM[odrs[`size]]; 
@@ -137,6 +137,27 @@ ProcessDepthUpdate  : {[event]
             lshft: shft[;count shft];
             lpad: maxNumUpdates+1;
 
+            lvlNonAgentQtys: sum'[nonAgentQtys];
+            derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
+
+            // Update the new offsets to equal the last
+            // offsets + the derived deltas
+            newOffsets: Clip[offsets + derivedDeltas];
+            // Combine the new offsets with the respective offset ids in an 
+            // update statement that will update the respective offsets.
+            update offset:newOffsets from `.order.Order where orderId in ordrs[`orderId]; // TODO update
+            
+            // considering no changes have been made to the sizes of the given orders
+            // the new shft would be the new offsets + the previous sizes
+            newShft:sizes + newOffsets;
+
+            // Update the orderbook lvl qtys to represent the change                
+            // Replace all instances of the update with the maximum shft (offset + size)
+            // for each price whereby the update is smaller than the given shft (offset+size)
+            // ensures that an accurate representation is kept. 
+            nxtQty:value[nxt];
+            maxShft:max'[newShft];
+            update qty:?[nxtQty>maxShft;nxtQty;maxShft] from `.order.OrderBook where price in key[nxt];
           ]];
              
       ];
