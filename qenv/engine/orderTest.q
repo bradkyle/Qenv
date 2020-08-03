@@ -12,7 +12,10 @@ z:.z.z;
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / .account.NewAccount[`accountId`other!1 2;.z.z]
-randOrder:{[num;oidstart;prices;offsets;sizes;leaves;stats;times;otypes]
+randOrder:{[num;oidstart;params]
+    // params is a dictionary of values that are sanitized below
+
+
     :(
         [
             price:`int$(num?prices); 
