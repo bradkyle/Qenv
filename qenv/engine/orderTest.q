@@ -76,19 +76,21 @@ test:.qt.Unit[
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
+deriveCaseParams    :{[cOB;COrd;]
+
+    };
+
 // Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
 .qt.AddCase[test;"simple ask update no agent orders or previous depth";deriveCaseParams[(
     ();();
-    `SELL;
-    `price`qty!(`s#993150 993250i;2689711 2689711i);
+    `price`qty`side!(`s#993150 993250i;2689711 2689711i);
     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
     )]];
 
 .qt.AddCase[test;"single agent ask decreasing (delta less than offset)";deriveCaseParams[(
-    ();
-    genTestOrders[];
-    `SELL;
+    (); // currentOB
+    genTestOrders[]; // current Orders
     `price`qty!(`s#993150 993250i;2689711 2689711i);
     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
     ()
