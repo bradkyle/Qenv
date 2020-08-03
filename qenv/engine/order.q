@@ -114,13 +114,13 @@ ProcessDepthUpdate  : {[event]
     event:flip event;
     nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
-    $[(count[event]>0) and (count[odrs]>0);
+    $[(count[odrs]>0);
       [
           
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level.
-          ob:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each u;
+          ob:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each nxt;
           dneg:ob where[ob[`d]<0];           
           
           // If the number of negative deltas and order

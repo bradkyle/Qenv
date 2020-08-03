@@ -90,12 +90,41 @@ deriveCaseParams    :{[params]
 
 // Add time to allow for multiple simultaneous updates.
 //TODO make into array and addCases
-.qt.AddCase[test;"simple ask update no agent orders or previous depth (single update) one side";deriveCaseParams[(
+.qt.AddCase[test;"simple update no agent orders or previous depth one side";deriveCaseParams[(
     ();();
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
     ();()
     )]];
+
+.qt.AddCase[test;"simple update no agent orders or previous depth both";deriveCaseParams[(
+    ();();
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ();()
+    )]];
+
+.qt.AddCase[test;"simple update no agent orders or previous depth both (crossing)";deriveCaseParams[(
+    ();();
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ();()
+    )]];
+
+/ .qt.AddCase[test;"multiple events after eachother temporally";deriveCaseParams[(
+/     ();();
+/     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+/     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+/     ();()
+/     )]];
+
+
+/ .qt.AddCase[test;"simple ask update no agent orders or previous depth (single update) one side";deriveCaseParams[(
+/     ();();
+/     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
+/     ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+/     ();()
+/     )]];
 
 / .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
 /     (); // currentOB
