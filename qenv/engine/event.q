@@ -40,12 +40,10 @@ INGRESSKIND :(
         `PRICERANGE), REQUESTKIND;
 
 EGRESSKIND :(
-        `ORDER_UPDATE;
-        `INVENTORY_UPDATE;
-        `ACCOUNT_UPDATE;
-        `INSTRUMENT_UPDATE;
-        `NEW_ORDER;
-        `ORDER_DELETED;
+        `ORDER;
+        `INVENTORY;
+        `ACCOUNT;
+        `INSTRUMENT;
         `AGENT_FORCED_CLOSE_ORDERS;
         `AGENT_LIQUIDATED;
         `LIQUIDATION);

@@ -67,8 +67,9 @@ isActiveLimit:{:((>;`size;0);
                (in;`price;x);
                (=;`otype;`.order.ORDERTYPE$`LIMIT))};
 
-AddNewOrderEvent   :{[]
-
+// TODO clean
+AddNewOrderEvent   :{[order;time]
+    :.event.AddEvent[time;`NEW;`ORDER;order];
     }
 
 AddOrderUpdateEvent :{[]
@@ -100,13 +101,13 @@ OrderBook:(
 maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
 minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 
-AddDepthUpdateEvent :{[side;size;price;time]
-    :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
+AddDepthUpdateEvent :{[depth;time]
+    :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
     };
 
 
-AddTradeEvent  :{[side;qty;price;time]
-    :.event.AddEvent[time;`NEW;`TRADE;trade];
+AddTradeEvent  :{[trade;time]
+    :.event.AddEvent[time;`NEW;`TRADE;(`side`size`price!trade)];
     };
 
 // Orderbook Utilities
@@ -339,6 +340,7 @@ NewOrder       : {[o;time];
                     o[`filled]: 0i;
                     o[`time]: time;
                     `.order.Order insert o;
+                    .order.AddNewOrderEvent[o];
                 ]
             ];
         ];
