@@ -328,7 +328,7 @@ deriveCaseParams    :{[params]
     };
 
 
-.qt.AddCase[test;"New simple ask limit order no previous depth or orders should update";
+.qt.AddCase[test;"New limit order no previous depth or orders should update";
     deriveCaseParams[(
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
@@ -336,6 +336,16 @@ deriveCaseParams    :{[params]
     (`price`offset!(1000i;1000i));
     ()
     )]];
+
+.qt.AddCase[test;"New limit order participate don't initiate not triggered, calls processCross";
+    deriveCaseParams[(
+    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
+    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
+    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    (`price`offset!(1000i;1000i));
+    ()
+    )]];
+
 
 / .qt.AddCase[test;"New simple market order";
 /     deriveCaseParams[ ]];
