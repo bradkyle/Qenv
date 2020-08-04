@@ -167,12 +167,12 @@ InsertResultantEvents   :{[events]
           [`.state.DepthEventHistory insert ()];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
-          k=`ACCOUNT_UPDATE;
+          k=`ACCOUNT;
           [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
-          k=`INVENTORY_UPDATE;
-          [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
-          k=`ORDER_UPATE`NEW_ORDER`ORDER_DELETED;
-          [`.state.AccountEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
+          k=`INVENTORY;
+          [`.state.InventoryEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
+          k=`ORDER;
+          [`.state.AccountEventHistory upsert (.state.orderCols!(event[`datum][.state.orderCols]))]; 
           k=`LIQUIDATION;
           [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
           [0N]];
