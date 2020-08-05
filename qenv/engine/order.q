@@ -62,6 +62,8 @@ Order: (
 orderCount:0;
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
+NegSide: {:$[x=`.order.ORDERSIDE$`SELL;`.order.ORDERSIDE$`BUY;`.order.ORDERSIDE$`SELL]}
+
 isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x);
@@ -445,14 +447,17 @@ AmendOrderBatch      :{[accountId;orders]
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
 fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
-        nside: NegSide[side];
+        if[not (side in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
+        nside: .order.NegSide[side];
         // TODO checking price is not more/less than best price
         / minOffset:exec 
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:.event.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
+
                 price:exec min price from .order.OrderBook where side=nside;
                 hasAgentOrders:(count select from .order.Order where side=nside)>0;
+
                 $[hasAgentOrders;
                     [
                         // TODO check that the min offset in this instance only pertains to the price+side
@@ -564,8 +569,10 @@ fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
                     ];
                     [
                         // If the orderbook does not currently possess agent orders.
+
                         $[isAgent;
                             [
+                                
                                 // If the order was placed by an agent.
                                 bestQty: exec first qty from .order.OrderBook where side=nside, price=price;
                                 $[bestQty>0;
@@ -573,7 +580,7 @@ fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
                                         [
                                             nqty:bestQty-qty;
                                             update qty:nqty from `.order.OrderBook where side=nside, price=price;
-                                            .order.AddTradeEvent[side;bestQty;price;time];
+                                            .order.AddTradeEvent[(side;bestQty;price);time];
                                             .account.ApplyFill[
                                                     qty;
                                                     price;
@@ -665,18 +672,42 @@ ProcessTradeEvent  : {[event] // TODO change to events.
 // Update Mark Price
 // -------------------------------------------------------------->
 
+getActivatedStops       :{
+
+    };
+
 // Updates the orderbook mark price and subsequently
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
-UpdateMarkPrice : {[markPrice;time]
-    update markPrice:markPrice from `.instrument.Instrument;
+UpdateMarkPrice : {[markPrice;instrumentId;time]
+    update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
+    ins:.instrument.Instrument@instrumentId;
+
     // TODO check for liquidations
-    / liquidateInvs: select from .account.inventory
-        / where ;
+    update unrealizedPnl:unrealizedPnl[avgPrice;amt;ins] from `.account.Inventory;
+    update 
+        unrealizedPnl:0, 
+        posMargin:0, 
+        available:0, 
+        leverage:0 from `.account.Inventory;
+
+    insolvent: select from .account.Account where (initMargin+realizedPnl+unrealizedPnl)<maintMargin;
+
+    // do liquidation protocol
+    {
+        .order.CancelAllOrders[x];
+        acc:.account.Account@x;
+        if[acc[`initMargin];[
+            
+        ]];
+    }
 
     activatedStops:select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 
         (side=`SELL and price>stopprice),
         (sid`BUY and price<stopprice);
+    
+    update otype:{}
+    .order.NewOrder each {}activatedStops;
 
     };

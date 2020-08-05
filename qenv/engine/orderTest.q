@@ -457,6 +457,7 @@ test:.qt.Unit[
     ".order.fillTrade";
     {[c]
         p:c[`params];
+        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
 
         // instantiate mock for ApplyFill
         mck: .qt.M[`.account.ApplyFill;p[`mFn];c];
@@ -465,8 +466,8 @@ test:.qt.Unit[
         res:.order.fillTrade[t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
 
         // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+        / .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+        / .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
@@ -497,9 +498,11 @@ deriveCaseParams    :{[params]
     :p;
     };
 
+// TODO no liquidity
+
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
     deriveCaseParams[(
-        ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();();
+        ((10#`BUY);`int$(1000+til 10);`int$(10#1000));();
         (`SELL;100;0b;1b;1;.z.z);();()
     )]];
 
@@ -604,35 +607,20 @@ deriveCaseParams    :{[params]
 // Update Mark Price
 // -------------------------------------------------------------->
 
-/ test:.qt.Unit[
-/     ".order.UpdateMarkPrice";
-/     {[c]
-/         p:c[`params];
-/         time:.z.z;
-/         eacc:p[`eaccount];
-/         einv:p[`einventory];
-/         ecols:p[`ecols];
+test:.qt.Unit[
+    ".order.UpdateMarkPrice";
+    {[c]
+        p:c[`params];
+        
+        res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
-/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
 
-/         // Execute tested function
-/         x:p[`params];
-/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-/         // 
-/         acc:exec from .account.Account where accountId=account[`accountId];
-/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
-
-/         // Assertions
-/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
-
-/ .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
-/     deriveCaseParams[]];
+.qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
+    deriveCaseParams[(
+        ();();96000;
+    )]];
 
 / .qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
 /     deriveCaseParams[]];
