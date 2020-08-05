@@ -5,7 +5,7 @@
 BAM:();
 orderCount:0;
 
-multiply:{x[y]:`int$(x[y]*z);:x};
+multiply:{x[y]:`long$(x[y]*z);:x};
 
 // Order
 // =====================================================================================>
@@ -41,18 +41,18 @@ orderMandatoryFields    :`accountId`side`otype`size;
 
 // TODO change price type to int, longs etc.
 Order: (
-    [price:`int$(); orderId:`long$()]
+    [price:`long$(); orderId:`long$()]
     instrumentId   : `.instrument.Instrument$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
-    offset          : `int$();
+    offset          : `long$();
     timeinforce     : `.order.TIMEINFORCE$();
-    size            : `int$(); / multiply by 100
-    leaves          : `int$();
-    filled          : `int$();
-    limitprice      : `int$(); / multiply by 100
-    stopprice       : `int$(); / multiply by 100
+    size            : `long$(); / multiply by 100
+    leaves          : `long$();
+    filled          : `long$();
+    limitprice      : `long$(); / multiply by 100
+    stopprice       : `long$(); / multiply by 100
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
     reduceOnly         : `boolean$();
@@ -90,11 +90,11 @@ AddCancelOrderEvent :{[order;time]
 // qtys: represent the different level quantities at their given prices
 // the events will be generated using the sum of the quantities and the 
 // orderbook sizes at each price.
-// `.order.OrderBook upsert ([price:(`int$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`int$(40#1000)))
+// `.order.OrderBook upsert ([price:(`long$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`long$(40#1000)))
 OrderBook:(
-    [price      :`int$()]
+    [price      :`long$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`int$());
+    qty         :`long$());
 
 maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
 minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
@@ -623,7 +623,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                 // represent the change due to trades, simply
                                 // make a trade event and revert the qty to be 
                                 // traded.
-                                .order.AddTradeEvent[(side;`float$qty;price);time];
+                                .order.AddTradeEvent[(side;qty;price);time];
                                 qty:0;
                             ]
                         ]

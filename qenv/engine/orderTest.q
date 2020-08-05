@@ -19,17 +19,17 @@ z:.z.z;
 / .account.NewAccount[`accountId`other!1 2;.z.z]
 testOrders:{[num;oidstart;params]
     // params is a dictionary of values that are sanitized below
-    :([price:`int$(num?prices); orderId:`int$(oidstart+til num)]
-        accountId       : `int$(num#1);
+    :([price:`long$(num?prices); orderId:`long$(oidstart+til num)]
+        accountId       : `long$(num#1);
         side            : num?(`.order.ORDERSIDE$`BUY;`.order.ORDERSIDE$`SELL);
         otype           : num#`.order.ORDERTYPE$`LIMIT;
-        offset          : `int$(num?til 10000);
+        offset          : `long$(num?til 10000);
         timeinforce     : num#`.order.TIMEINFORCE$`NIL;
-        size            : `int$(num?til 10000); / multiply by 100
-        leaves          : `int$(num?til 10000);
-        filled          : `int$(num?til 10000);
-        limitprice      : `int$(num?til 10000); / multiply by 100
-        stopprice       : `int$(num?til 10000); / multiply by 100
+        size            : `long$(num?til 10000); / multiply by 100
+        leaves          : `long$(num?til 10000);
+        filled          : `long$(num?til 10000);
+        limitprice      : `long$(num?til 10000); / multiply by 100
+        stopprice       : `long$(num?til 10000); / multiply by 100
         status          : num#`.order.ORDERSTATUS$`NEW;
         time            : num#.z.z;
         isClose         : `boolean$(num?(1 0));
@@ -112,36 +112,36 @@ deriveCaseParams    :{[params]
 //TODO make into array and addCases
 .qt.AddCase[test;"simple update no agent orders or previous depth one side";deriveCaseParams[(
     ();();
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ((10#`SELL);1000+til 10;10#1000);
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
     ();()
     )]];
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both";deriveCaseParams[(
     ();();
-    (((10#`SELL),(10#`BUY));`int$((1000+til 10),(999-til 10));`int$(20#1000));
-    ([price:(`int$((1000+til 10),(999-til 10)))] side:(`.order.ORDERSIDE$((10#`SELL),(10#`BUY)));qty:(20#1000i));
+    (((10#`SELL),(10#`BUY));((1000+til 10),(999-til 10));20#1000);
+    ([price:(((1000+til 10),(999-til 10)))] side:(`.order.ORDERSIDE$((10#`SELL),(10#`BUY)));qty:(20#1000));
     ();()
     )]];
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both (crossing)";deriveCaseParams[(
     ();();
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
+    ((10#`SELL);1000+til 10;10#1000);
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
     ();()
     )]];
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both; Multi temporal";deriveCaseParams[(
     ();();
-    ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000 100);(10#z,(z+`second$5)));
-    ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#100i));
+    ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000 100;(10#z,(z+`second$5)));
+    ([price:(1000+til 5)] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#100));
     ();()
     )]];
 
 / .qt.AddCase[test;"1 order at 1 level, previous depth";deriveCaseParams[(
 /     ();();
-/     ((10#`SELL);`int$(raze flip 2#{(1000+x;1000+x)}til 5);`int$(10#1000);(10#z,(z+`second$5)));
-/     ([price:(`int$(1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000i));
+/     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5)));
+/     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000));
 /     ();()
 /     )]];
 
@@ -335,19 +335,19 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"New limit order no previous depth or orders should update";
     deriveCaseParams[(
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
+    ((10#`SELL);1000+til 10;10#1000);();
     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
-    (`price`offset!(1000i;1000i));
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
+    (`price`offset!(1000;1000));
     ()
     )]];
 
 .qt.AddCase[test;"New limit order participate don't initiate not triggered, calls processCross";
     deriveCaseParams[(
-    ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
+    ((10#`SELL);1000+til 10;10#1000);();
     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-    ([price:(`int$(1000+til 10))] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000i));
-    (`price`offset!(1000i;1000i));
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
+    (`price`offset!(1000;1000));
     ()
     )]];
 
@@ -453,6 +453,7 @@ deriveCaseParams    :{[params]
 // Fill Trade tests
 // -------------------------------------------------------------->
 
+// TODO better (more consice/shorter test)
 test:.qt.Unit[
     ".order.fillTrade";
     {[c]
@@ -521,8 +522,8 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
     deriveCaseParams[(
-        ((10#`BUY);`int$(1000+til 10);`int$(10#1000));();
-        (1;`SELL;100;0b;0b;1;.z.z);();();(1b;1;());(0b;0;())
+        ((10#`BUY);1000+til 10;10#1000);();
+        (1;`SELL;100;0b;0b;1;.z.z);();();(1b;1;(`.order.ORDERSIDE$`SELL;100;1000));(0b;0;())
     )]];
 
 / .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
