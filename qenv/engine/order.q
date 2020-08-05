@@ -446,7 +446,7 @@ AmendOrderBatch      :{[accountId;orders]
 // TODO compactify!
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
-fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
+fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
         if[not (side in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
         nside: .order.NegSide[side];
         // TODO checking price is not more/less than best price
@@ -471,13 +471,14 @@ fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
                                 if[isAgent;
                                     // If the market order was placed by an agent.
                                     .account.ApplyFill[
-                                        qty;
+                                        accountId;
+                                        instrumentId;
                                         price;
                                         side;
+                                        qty;
                                         time;
                                         reduceOnly;
-                                        0b; // not isMaker
-                                        accountId];
+                                        0b];
                                     fill:qty; // TODO remove 
                                     update qty:qty-fill from `.order.OrderBook where side=nside, price=price;
                                 ];
@@ -501,28 +502,29 @@ fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
                                         // respective trade event. // TODO if order made by agent!
                                         // TODO completely fill limit order
                                         .account.ApplyFill[
-                                            nxt[`size],
+                                            nxt[`accountId];
+                                            instrumentId;
                                             price;
                                             nside;
+                                            nxt[`size];
                                             time;
                                             nxt[`reduceOnly];
-                                            1b; // not isMaker
-                                            nxt[`accountId]];
+                                            0b];
 
                                         if[isAgent;
                                             // If the order was made by an agent the first level of
                                             // the orderbook should represent the change otherwise not
                                             // captured.
-                                            decrementQty[side;price;smallestOffset]; 
+                                            / decrementQty[side;price;smallestOffset]; 
                                             .account.ApplyFill[
-                                                qty,
+                                                nxt[`accountId];
+                                                instrumentId;
                                                 price;
                                                 side;
+                                                qty;
                                                 time;
                                                 reduceOnly;
-                                                0b; // not isMaker
-                                                accountId
-                                            ];
+                                                0b];
                                         ];
 
                                         .order.AddTradeEvent[];
@@ -677,12 +679,12 @@ ProcessTradeEvent  : {[event] // TODO change to events.
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;instrumentId;time]
 
-    activatedStops:select from .order.Order 
-        where otype in (`STOP_LIMIT`STOPMARKET), 
-        (side=`SELL and price>stopprice),
-        (sid`BUY and price<stopprice);
+    / activatedStops:select from .order.Order 
+    /     where otype in (`STOP_LIMIT`STOPMARKET), 
+    /     (side=`SELL and price>stopprice),
+    /     (sid`BUY and price<stopprice);
     
-    update otype:{}
-    .order.NewOrder each {}activatedStops;
+    / update otype:{}
+    / .order.NewOrder each {}activatedStops;
 
     };

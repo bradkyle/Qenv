@@ -460,7 +460,7 @@ test:.qt.Unit[
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
 
         // instantiate mock for ApplyFill
-        mck: .qt.M[`.account.ApplyFill;p[`mFn];c];
+        mck: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g] };c];
         
         t:p[`trade];
         res:.order.fillTrade[t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
@@ -486,13 +486,12 @@ deriveCaseParams    :{[params]
     t:`side`qty`isClose`isAgent`accountId`time!params[2];
     t[`side]:`.order.ORDERSIDE$t[`side];
     
-    p:`cOB`cOrd`trade`eOB`eEvents`mFn`eAux!(
+    p:`cOB`cOrd`trade`eOB`eEvents`eAux!(
         ob;
         params[1];
         t;
         params[3];
         params[4];
-        { };
         params[5]
         );
     :p;
@@ -607,20 +606,20 @@ deriveCaseParams    :{[params]
 // Update Mark Price
 // -------------------------------------------------------------->
 
-test:.qt.Unit[
-    ".order.UpdateMarkPrice";
-    {[c]
-        p:c[`params];
+/ test:.qt.Unit[
+/     ".order.UpdateMarkPrice";
+/     {[c]
+/         p:c[`params];
         
-        res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
+/         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Global function for processing new orders"];
 
-.qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
-    deriveCaseParams[(
-        ();();96000;
-    )]];
+/ .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
+/     deriveCaseParams[(
+/         ();();96000;
+/     )]];
 
 / .qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
 /     deriveCaseParams[]];

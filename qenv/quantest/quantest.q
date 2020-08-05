@@ -235,6 +235,7 @@ Mock        :(
     caseId       : `.qt.Case$();
     kind         : `.qt.MOCKKIND$();
     namespace    : `symbol$(); 
+    targetPath   : `symbol$();
     target       : {};
     replacement  : {};
     doWait       : `boolean$();
@@ -251,16 +252,16 @@ Invocation :(
     invokedWith  : ()
     );
 
-
+/ makeWrapFunc : {[f] callerfunc:{[f;params] f . params}f; '[callerfunc;enlist]};
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
 wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
-
+    show params;
     callerfunc:{[f;mId;params] ;
         `.qt.Invocation insert ((.qt.invokeId+:1);mId;params);
         update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
         f . params;
-    }[replacement;mId]; 
+    }[replacement; mId]; 
  
     :'[callerfunc;enlist];
     };
@@ -294,7 +295,7 @@ M   :{[target;replacement;case]
     // TODO check that target and replacement have the same number of params if function 
     / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
     .qt.mockId+:1;
-    mck:(.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0);
+    mck:(.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;get target;replacement;0b;0;0;0b;0);
     `.qt.Mock insert mck; 
     // Replace target with mock replacement
     target set wrapperFn[replacement;.qt.mockId];
@@ -302,7 +303,7 @@ M   :{[target;replacement;case]
     };
 
 RestoreMocks  :{[]
-    
+    {x[`targetPath] set x[`target]}each .qt.Mock;
     };
 
 // Get Mocks by tags
