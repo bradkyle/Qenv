@@ -486,9 +486,8 @@ test:.qt.Unit[
 makeOrders :{
     :$[count[x]>0;[ 
         // Side, Price, Size
-        x:{:`instrumentId`accountId`side`otype`offset`size!(
+        :{:`instrumentId`accountId`side`otype`offset`size!(
             x[0];x[1];(`.order.ORDERSIDE$x[2]);(`.order.ORDERTYPE$x[3]);x[4];x[5])} each flip[x];
-        :flip[x];
         ];()]};
 
 deriveCaseParams    :{[params]
@@ -498,12 +497,9 @@ deriveCaseParams    :{[params]
 
     mCols:`called`numCalls`calledWith;
     
-
-
-
     p:`cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty!(
         makeDepth[params[0]];
-        ();
+        makeOrders[params[1]];
         t;
         params[3];
         params[4];
@@ -552,7 +548,7 @@ cTime:.z.z;
 // TODO check this
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000+til 10;10#1000);(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100);
         (1;`SELL;1500;0b;0b;1;cTime);();();
         (1b;1;((`.order.ORDERSIDE$`SELL;1500;1000);cTime));
         (0b;0;());0
