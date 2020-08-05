@@ -483,6 +483,7 @@ deriveCaseParams    :{[params]
         ]];
 
     t:`side`qty`isClose`isAgent`accountId`time!params[2];
+    t[`side]:`.order.ORDERSIDE$t[`side];
     
     p:`cOB`cOrd`trade`eOB`eEvents`mFn`eAux!(
         ob;
@@ -499,7 +500,7 @@ deriveCaseParams    :{[params]
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
     deriveCaseParams[(
         ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();();
-        (`.order.ORDERSIDE$`SELL;);();()
+        (`SELL;100;0b;1b;1;.z.z);();()
     )]];
 
 / .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";

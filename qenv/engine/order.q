@@ -55,7 +55,7 @@ Order: (
     stopprice       : `int$(); / multiply by 100
     status          : `.order.ORDERSTATUS$();
     time            : `datetime$();
-    isClose         : `boolean$();
+    reduceOnly         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$());
 
@@ -192,7 +192,7 @@ NewOrder       : {[o;time];
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
     if[null o[`timeinforce];o[`timeinforce]:`NIL];
-    if[null o[`isClose];o[`isClose]:0b];
+    if[null o[`reduceOnly];o[`reduceOnly]:0b];
     if[null o[`execInst];o[`execInst]:`NIL];
     if[null o[`trigger];o[`trigger]:`NIL];
     if[null o[`instrumentId]; (.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]; 'INVALID_INSTRUMENTID)];
@@ -225,7 +225,7 @@ NewOrder       : {[o;time];
 
     acc:.account.Account@o[`accountId];
 
-    if[o[`isClose] and (o[`otype] in `LIMIT`MARKET) and
+    if[o[`reduceOnly] and (o[`otype] in `LIMIT`MARKET) and
         (((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition])) or
         ((o[`side]=`BUY) and (o[`size]> acc[`netLongPosition])));
         (.event.AddFailure[time;`INVALID_ORDER_SIZE;"Close order larger than position"]; 'INVALID_ORDER_SIZE)];
@@ -444,7 +444,7 @@ AmendOrderBatch      :{[accountId;orders]
 // TODO compactify!
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
-fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
+fillTrade   :{[side;qty;reduceOnly;isAgent;accountId;time]
         nside: NegSide[side];
         // TODO checking price is not more/less than best price
         / minOffset:exec 
@@ -470,7 +470,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                         price;
                                         side;
                                         time;
-                                        isClose;
+                                        reduceOnly;
                                         0b; // not isMaker
                                         accountId];
                                     fill:qty; // TODO remove 
@@ -500,7 +500,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             price;
                                             nside;
                                             time;
-                                            nxt[`isClose];
+                                            nxt[`reduceOnly];
                                             1b; // not isMaker
                                             nxt[`accountId]];
 
@@ -514,7 +514,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                                 price;
                                                 side;
                                                 time;
-                                                isClose;
+                                                reduceOnly;
                                                 0b; // not isMaker
                                                 accountId
                                             ];
@@ -535,7 +535,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                             price;
                                             nside;
                                             time;
-                                            nxt[`isClose];
+                                            nxt[`reduceOnly];
                                             1b; // isMaker
                                             nxt[`accountId]
                                         ];
@@ -550,7 +550,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                                 price;
                                                 side;
                                                 time;
-                                                isClose;
+                                                reduceOnly;
                                                 0b; // not isMaker
                                                 accountId
                                             ];
@@ -579,7 +579,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                                     price;
                                                     side;
                                                     time;
-                                                    isClose;
+                                                    reduceOnly;
                                                     0b; // not isMaker
                                                     accountId];
                                             qty:0;
@@ -595,7 +595,7 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                                     price;
                                                     side;
                                                     time;
-                                                    isClose;
+                                                    reduceOnly;
                                                     0b; // not isMaker
                                                     accountId]; // TODO
                                             qty-:bestQty;
@@ -627,11 +627,11 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
 // Processes a market order that was either derived from an agent or 
 // was derived from a market trade stream and returns the resultant
 // set of events.
-processCross     :{[side;leaves;isAgent;accountId;isClose;time] 
+processCross     :{[side;leaves;isAgent;accountId;reduceOnly;time] 
         while [(
             (leaves>0) and 
             count[.order.Order@[exec min price by side from .order.OrderBook]]>0
-        );fillTrade[side;leaves;isClose;isAgent;accountId;time]];
+        );fillTrade[side;leaves;reduceOnly;isAgent;accountId;time]];
     };
 
 
@@ -652,7 +652,7 @@ ProcessTradeEvent  : {[event] // TODO change to events.
               while [(
                 (leaves>0) and 
                 count[.order.Order@[exec min price by side from .order.OrderBook]]>0
-                );fillTrade[side;leaves;isClose;isAgent;accountId;time]];
+                );fillTrade[side;leaves;reduceOnly;isAgent;accountId;time]];
             ];
             [
                 // todo reinsert all trade events into buffer
