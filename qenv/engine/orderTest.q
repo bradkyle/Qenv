@@ -481,7 +481,8 @@ test:.qt.Unit[
         .qt.A[(mck[`called]);=;(p[`eAddTradeEvent][`called]);"called";c];
         .qt.A[(mck[`numCalls]);=;(p[`eAddTradeEvent][`numCalls]);"numCalls";c];
         if[mck[`called]; [
-            i:.qt.Invocation@(mck2;1)
+            i:.qt.Invocation@(mck2;1);
+            show i;
             .qt.A[(i[`invokedWith]);=;(p[`eAddTradeEvent][`calledWith]);"numCalls";c];
             ]];
         

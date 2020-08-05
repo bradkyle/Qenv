@@ -256,8 +256,7 @@ Invocation :(
 wrapperFn :{[replacement;mId] // creates lambda function to be used later
     callerfunc:{[f;mId;params] // todo assert params count matches
         update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
-        `.qt.Invocation insert (mId;((.qt.Mock@mId)[`numCalls]);params);
-
+        `.qt.Invocation upsert ([mockId:enlist mId;invokeId: enlist (.qt.Mock@mId)[`numCalls]];invokedWith: enlist params);
         f . params;
     }[replacement; mId]; 
     
