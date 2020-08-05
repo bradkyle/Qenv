@@ -672,10 +672,6 @@ ProcessTradeEvent  : {[event] // TODO change to events.
 // Update Mark Price
 // -------------------------------------------------------------->
 
-getActivatedStops       :{
-
-    };
-
 // Updates the orderbook mark price and subsequently
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.

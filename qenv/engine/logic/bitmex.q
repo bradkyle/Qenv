@@ -338,4 +338,16 @@ openPosition        :{[]
         frozen:0f,
         available:0f from `.account.Account where accountId=o[`accountId]; 
 };
-                    
+
+BitMEX employs a partial liquidation process involving automatic reduction of maintenance margin in an attempt to avoid a full liquidation of a trader’s position.
+
+Users on the Lowest Risk Limit tiers
+BitMEX cancels any open orders in the contract.
+If this does not satisfy the maintenance margin requirement then the position will be liquidated by the liquidation engine at the bankruptcy price.
+Users on Higher Risk Limit tiers
+The liquidation system attempts to bring a user down to a lower Risk Limit, and thus lower margin requirements by:
+
+Attempting to bring a user down to a Risk Limit associated with their open orders and current position.
+Cancelling any open orders and then attempting to bring a user down to a Risk Limit associated with their current position.
+Submitting a FillOrKill order of the difference between the current Risk Limit position size and the position size to satisfy the margin requirement to avoid liquidation.
+If the position is still in liquidation then the entire position is taken over by the liquidation engine and a limit order to close the position is placed at the bankruptcy price.

@@ -119,6 +119,58 @@ execFill    :{[account;fillQty;price;fee]
     };
 
 // liquidation
+/ 
+Binance uses Mark Price to avoid unnecessary liquidations and to combat 
+market manipulation. 
+
+Risk and Leverage are adjusted based on the customer’s total exposure; 
+the larger the total position, the higher the required margin, and the 
+lower the leverage. A liquidation is triggered when 
+
+Collateral = Initial Collateral + Realized PnL + Unrealized PnL < Maintenance Margin
+
+On liquidation, all open orders are immediately cancelled. 
+All traders will be subject to the same liquidation protocols referred to as 
+“Smart Liquidation.” Binance avoids full clear of the user’s position whenever possible,
+and a precise example is listed below. For any traders that are cleared via forced 
+liquidation and not by an order issued from the trader, 
+a liquidation fee (0.3% on BTC/USDT perpetual contract; 0.5% on 75x futures contracts 
+and 0.75% on 50x futures contracts) will be charged on the amount liquidated only 
+(not the notional value of the position).
+
+All orders will be issued at the bankruptcy price on the market. 
+If the position cannot be fully closed, the insurance fund and / or 
+counterparty-liquidation will take effect. The insurance fund will accumulate 
+USDT reserves based on liquidations above the bankruptcy price from the 
+liquidation fee rate.
+
+It is important to mention that, as a general rule, users who hold relatively 
+smaller positions that enter liquidation will almost always be fully liquidated. 
+Larger users will see a smaller percentage of their accounts liquidated compared 
+to smaller users. This is because maintenance margin is based around a user’s 
+position size, and not their leverage selection. As a result, for smaller users, 
+the effective maintenance margin is lower than the liquidation fee rate, so 
+they are already bankrupt when first entering liquidation, regardless of the 
+final price when clearing.
+
+Note that all orders for liquidations are Immediate or Cancel orders. 
+The order will fill as much as possible, and cancel the rest. 
+This is different from a Fill or Kill order which will only execute 
+if the order can be completely executed, and will be cancelled, if otherwise. 
+The remaining positions will be either assigned to the insurance fund or 
+counterparty liquidated.
+
+For all traders, the system will first cancel all open orders, 
+then attempt to reduce the trader’s margin usage with one *single* 
+large Immediate or Cancel order without fully liquidating the trader.  
+If the trader is margin compliant after the order and liquidation fee, 
+the liquidation event is over. If the trader is still margin deficient, 
+the trader’s position will be closed down at the bankruptcy price and the 
+insurance fund will take over the position, and the trader is declared bankrupt. 
+A portion of the remaining collateral (if any) will go to the insurance fund. 
+If an account becomes bankrupt (negative wallet balance), the insurance fund 
+will pay out to bring the account's balance back to 0.
+\
 liquidation     :{[]
 
     };

@@ -53,7 +53,7 @@ Master  :{:(.engine.Engine@0)}
 / Engine specific logic
 / -------------------------------------------------------------------->
 
-UpdateMarkPrice :{[]
+UpdateMarkPrice :{[event]
     instrumentId:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
