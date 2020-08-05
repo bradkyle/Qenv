@@ -288,6 +288,7 @@ AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMa
                 acc[`posMargin]: i[`posMargin]+oi[`posMargin];
                 acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
 
+                // TODO account netShortPosition, netLongPosition
             ];
             [
                 // OPEN given side for position
@@ -334,6 +335,7 @@ AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMa
                 acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
                 acc[`posMargin]: i[`posMargin]+oi[`posMargin];
                 acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+                // TODO account netShortPosition, netLongPosition
 
             ]
         ];
@@ -341,6 +343,7 @@ AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMa
             [
                 // Close positionType BOTH
                 i:.account.Inventory@(accountId;`BOTH);
+                // TODO account netShortPosition, netLongPosition
 
             ];
             [
@@ -348,6 +351,8 @@ AddFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMa
                 i:.account.Inventory@(accountId;`BOTH);
 
                 // TODO cross position.
+                // TODO account netShortPosition, netLongPosition
+
             ]
         ]
     ];

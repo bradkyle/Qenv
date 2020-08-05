@@ -118,7 +118,7 @@ ProcessDepthUpdate  : {[event]
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
     $[(count[odrs]>0);
       [
-          
+          // SHOULD COMBINE INTERNAL REPRESENTATION OF DEPTH AND AGENT ORDER AMOUNTS.
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level.
@@ -140,6 +140,9 @@ ProcessDepthUpdate  : {[event]
             lpad: maxNumUpdates+1;
 
             lvlNonAgentQtys: sum'[nonAgentQtys];
+
+            // Derived deltas represents an equal distribution of 
+            // orders throughout the book.
             derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
 
             // Update the new offsets to equal the last
