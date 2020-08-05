@@ -251,12 +251,18 @@ Invocation :(
     invokedWith  : ()
     );
 
+
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
 wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
-    `.qt.Invocation insert ((invokeId+:1);mId;params);
-    update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
-    :(replacement . params);
+
+    callerfunc:{[f;mId;params] ;
+        `.qt.Invocation insert ((.qt.invokeId+:1);mId;params);
+        update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
+        f . params;
+    }[replacement;mId]; 
+ 
+    :'[callerfunc;enlist];
     };
 
 // Replace a given variable/table/reference etc. with another
