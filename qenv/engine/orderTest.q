@@ -460,7 +460,7 @@ test:.qt.Unit[
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
 
         // instantiate mock for ApplyFill
-        mck: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g] };c];
+        mck: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h] show enlist[a;b;c;d;e;f;g;h]};c];
         
         t:p[`trade];
         res:.order.fillTrade[t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];

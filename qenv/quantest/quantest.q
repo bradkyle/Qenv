@@ -256,14 +256,14 @@ Invocation :(
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
 wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
-    show params;
-    callerfunc:{[f;mId;params] ;
+    callerfunc:{[f;mId;params] 
+        show 99#"X";
         `.qt.Invocation insert ((.qt.invokeId+:1);mId;params);
         update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
         f . params;
     }[replacement; mId]; 
  
-    :'[callerfunc;enlist];
+    :('[callerfunc;enlist]);
     };
 
 // Replace a given variable/table/reference etc. with another
@@ -303,7 +303,7 @@ M   :{[target;replacement;case]
     };
 
 RestoreMocks  :{[]
-    {x[`targetPath] set x[`target]}each .qt.Mock;
+    / {x[`targetPath] set x[`target]}each .qt.Mock;
     };
 
 // Get Mocks by tags
