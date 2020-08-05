@@ -481,12 +481,13 @@ deriveCaseParams    :{[params]
         ob:flip[d];
         ]];
     
-    p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
+    p:`cOB`cOrd`order`eOB`eEvents`mFn`eAux!(
         ob;
         params[1];
         params[2];
         params[3];
         params[4];
+        { };
         params[5]
         );
     :p;

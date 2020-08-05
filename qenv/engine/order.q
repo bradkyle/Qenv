@@ -312,13 +312,8 @@ NewOrder       : {[o;time];
                             :.event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
-                            .order.processCross[ // The order crosses the bid ask spread.
-                                o[`side];
-                                o[`size];
-                                1b;
-                                o[`accountId];
-                                o[`isClose];
-                                time];
+                            o[`otype]: `MARKET;
+                            .o.NewOrder[o;time];
                         ]
                     ]
                 ];
@@ -358,9 +353,7 @@ NewOrder       : {[o;time];
             // todo if close
             `.order.Order insert order;
         ];
-      [
-          0N;
-      ]
+      :.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]
     ];
     };
 
