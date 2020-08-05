@@ -618,11 +618,12 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                 ];
                             ];
                             [
+
                                 // Considering the orderbook updates already 
                                 // represent the change due to trades, simply
                                 // make a trade event and revert the qty to be 
                                 // traded.
-                                .order.AddTradeEvent[side;`float$qty;price;time];
+                                .order.AddTradeEvent[(side;`float$qty;price);time];
                                 qty:0;
                             ]
                         ]

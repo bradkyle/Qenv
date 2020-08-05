@@ -125,7 +125,6 @@ pntTest      :{[test]
 runCase :{[test; case] 
     test[`beforeEach][]; 
     res:(@[test[`func];case;{show 99#"#";show "Error occurred in test:", x;show 99#"#"; :`ERROR}]);
-   show res;
     $[(`$string[res])=`ERROR; 
         [update state:`.qt.TESTSTATE$`ERROR from `.qt.Case where caseId=case[`caseId]];
       exec any state=`FAIL from .qt.Assertion where caseId=case[`caseId];
@@ -245,25 +244,24 @@ Mock        :(
     numCalls     : `long$()
     );
 
-invokeId:-1;
 Invocation :(
-    [invokeId      : `long$()]
-    mockId       : `.qt.Mock$();
+    [mockId       : `.qt.Mock$();
+    invokeId      : `long$()]
     invokedWith  : ()
     );
 
 / makeWrapFunc : {[f] callerfunc:{[f;params] f . params}f; '[callerfunc;enlist]};
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
-wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
-    callerfunc:{[f;mId;params] 
-        show 99#"X";
-        `.qt.Invocation insert ((.qt.invokeId+:1);mId;params);
+wrapperFn :{[replacement;mId] // creates lambda function to be used later
+    callerfunc:{[f;mId;params] // todo assert params count matches
         update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
+        `.qt.Invocation insert (mId;((.qt.Mock@mId)[`numCalls]);params);
+
         f . params;
     }[replacement; mId]; 
- 
-    :('[callerfunc;enlist]);
+    
+    '[callerfunc;enlist]
     };
 
 // Replace a given variable/table/reference etc. with another
@@ -299,11 +297,11 @@ M   :{[target;replacement;case]
     `.qt.Mock insert mck; 
     // Replace target with mock replacement
     target set wrapperFn[replacement;.qt.mockId];
-    :mck;
+    :.qt.mockId;
     };
 
 RestoreMocks  :{[]
-    / {x[`targetPath] set x[`target]}each .qt.Mock;
+    {x[`targetPath] set x[`target]}each .qt.Mock;
     };
 
 // Get Mocks by tags
@@ -445,7 +443,7 @@ A   :{[actual;relation;expected;msg;case]
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;(`$string[relation]);expected);
     `.qt.Assertion upsert ass;
-    :ass;
+    :{.qt.Assertion@x}.qt.assertId;
     }
 
 
