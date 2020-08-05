@@ -67,12 +67,11 @@ Unit        :{[name;testFn;cases;hooks;dscr]
     / validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
     / if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
 
-    test:cols[.qt.Test]!((testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
-    `.qt.Test upsert test;
+    `.qt.Test upsert (cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f));
 
     if[count[cases]>0;.qt.AddCase[test] each cases];
 
-    :test
+    :.qt.Test@.qt.testId;
     };
 
 Integration    :{[]
@@ -211,8 +210,9 @@ AddCase     :{[test;dscr;params]
     $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
     if[not((type[test] in 98 99h) and (test[`testId] in key[.qt.Test]));show "error"]; // TODO better error
     if[not(type[params] in 98 99h);0N]; // TODO better error
-    case:cols[.qt.Case]!((caseId+:1);test[`testId];`READY;dscr;(`$"");params;0;0;.z.z;.z.z);
+    case:cols[.qt.Case]!((.qt.caseId+:1);test[`testId];`READY;dscr;(`$"");params;0;0;.z.z;.z.z);
     `.qt.Case upsert case;
+    :.qt.Case@.qt.caseId;
     };
 
 
