@@ -252,7 +252,7 @@ Invocation :(
 
 // Wraps a given rep function with common logic
 // @param repFn function that replaces the given target
-repFn :{[replacement;mId;params] // creates lambda function to be used later
+wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
     `.qt.Invocation insert ((invokeId+:1);mId;params);
     update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
     :replacement[params];
@@ -264,22 +264,22 @@ repFn :{[replacement;mId;params] // creates lambda function to be used later
 // @param msg Description of this test or related message
 // @return reference to mock object which can be used to 
 // make assertions on behavior of function.
-M   :{[target;replacement;name;case]
-    r:@[{(1b;value x)}; name;00b];
-    / if variable has an existing value
-    $[(not name in unsetMocks) and first r;
-        [if[not name in key mocks; mocks[name]:r 1]]; / store original value 
-        unsetMocks,:name];
+M   :{[target;replacement;case]
+    / r:@[{(1b;value x)}; name;00b];
+    / / if variable has an existing value
+    / $[(not name in unsetMocks) and first r;
+    /     [if[not name in key mocks; mocks[name]:r 1]]; / store original value 
+    /     unsetMocks,:name];
     
-    / make sure func declared in same ns as any existing function        
-    if[100h~type fn:mocks name;
-        lg "isFunc";
-        ns:string first (value fn) 3;
-        lg "ns = ",ns;
-        v:string $[ns~"";name;last ` vs name];
-        lg "v = ",v;
-        runInNs[ns; v,":",string replacement];
-        :name];
+    / / make sure func declared in same ns as any existing function        
+    / if[100h~type fn:mocks name;
+    /     lg "isFunc";
+    /     ns:string first (value fn) 3;
+    /     lg "ns = ",ns;
+    /     v:string $[ns~"";name;last ` vs name];
+    /     lg "v = ",v;
+    /     runInNs[ns; v,":",string replacement];
+    /     :name];
 
     // TODO check target, replacement, tags, name
     // TODO create mockid etc.
@@ -289,11 +289,11 @@ M   :{[target;replacement;name;case]
     .qt.mockId+:1;
     `.qt.Mock insert (.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
-    target set repFn[replacement;.qt.mockId];
+    target set wrapperFn[replacement;.qt.mockId];
     };
 
-RestoreMocks    :{[]
-
+RestoreMocks  :{[]
+    
     };
 
 // Get Mocks by tags
