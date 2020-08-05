@@ -240,7 +240,9 @@ NewOrder       : {[o;time];
     o[`timeinforce]:`.order.TIMEINFORCE$o[`timeinforce];
     o[`status]: (`.order.ORDERSTATUS$`NEW);
 
-
+    o[`leaves]: o[`size];
+    o[`filled]: 0i;
+    o[`time]: time;
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
@@ -333,9 +335,6 @@ NewOrder       : {[o;time];
                     // TODO implement order margin here
 
                     // TODO make better
-                    o[`leaves]: o[`size];
-                    o[`filled]: 0i;
-                    o[`time]: time;
                     `.order.Order insert o;
                     .order.AddNewOrderEvent[o;time];
                 ]
@@ -352,14 +351,12 @@ NewOrder       : {[o;time];
       o[`otype]=`STOP_MARKET;
         [
             // todo if close 
-            / `order.Order insert order;
-            show "STOP_MARKET";
+            `.order.Order insert order;
         ];
       o[`otype]=`STOP_LIMIT;
         [
             // todo if close
-            / `order.Order insert order;
-            show "STOP_LIMIT";
+            `.order.Order insert order;
         ];
       [
           0N;
