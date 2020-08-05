@@ -680,27 +680,6 @@ getActivatedStops       :{
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;instrumentId;time]
-    update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
-    ins:.instrument.Instrument@instrumentId;
-
-    // TODO check for liquidations
-    update unrealizedPnl:unrealizedPnl[avgPrice;amt;ins] from `.account.Inventory;
-    update 
-        unrealizedPnl:0, 
-        posMargin:0, 
-        available:0, 
-        leverage:0 from `.account.Inventory;
-
-    insolvent: select from .account.Account where (initMargin+realizedPnl+unrealizedPnl)<maintMargin;
-
-    // do liquidation protocol
-    {
-        .order.CancelAllOrders[x];
-        acc:.account.Account@x;
-        if[acc[`initMargin];[
-            
-        ]];
-    }
 
     activatedStops:select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 

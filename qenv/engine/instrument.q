@@ -124,3 +124,7 @@ NewFeeTier              :{[]
 NewFlatFee              :{[]
 
     };
+
+UpdateMarkPrice : {[markPrice;instrumentId;time]
+    update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
+    };

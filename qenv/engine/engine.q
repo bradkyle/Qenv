@@ -10,7 +10,7 @@
 // TODO supported event types
 Engine:(
     [engineId                   :`long$()];
-    instrument                  : `.instrument.Instrument();
+    instrumentId                : `.instrument.Instrument();
     isConfigured                : `boolean$();
     loadSheddingProbability     : `float$();
     placeOrderOffsetMu          : `float$(); 
@@ -28,6 +28,8 @@ Engine:(
     commonOffset                : `long$(); 
     eventCount                  : `long$()
     );
+
+Master  :{:(.engine.Engine@0)}
 
 // Ingress Queue, Egress Queue
 
@@ -47,6 +49,16 @@ Engine:(
 // get account
 // 
 
+
+/ Engine specific logic
+/ -------------------------------------------------------------------->
+
+UpdateMarkPrice :{[]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+    };
 
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
@@ -70,7 +82,7 @@ eventEngine[`FUNDING] :   {[event]
 
 eventEngine[`MARK] :   {[event]
     .logger.Debug["new mark price"][event];
-    .order.UpdateMarkPrice[event];
+    .engine.UpdateMarkPrice[event];
     };
 
 eventEngine[`SETTLEMENT] :   {[event]
