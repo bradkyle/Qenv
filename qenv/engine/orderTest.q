@@ -295,6 +295,10 @@ test:.qt.Unit[
         p:c[`params]; 
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
   
+
+        // instantiate mock for processCross
+        mck: .qt.M[`.order.processCross;p[`mFn];c];
+
         o:p[`order];
         / show .instrument.Instrument;
         res:.order.NewOrder[o;.z.z];
@@ -454,6 +458,9 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
+        // instantiate mock for ApplyFill
+        mck: .qt.M[`.account.ApplyFill;p[`mFn];c];
+        
         res:.order.fillTrade[p[`side];p[`qty];p[`isClose];p[`isAgent];p[`accountId];p[`time]];
 
         // Assertions

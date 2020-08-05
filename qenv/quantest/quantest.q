@@ -255,7 +255,7 @@ Invocation :(
 wrapperFn :{[replacement;mId;params] // creates lambda function to be used later
     `.qt.Invocation insert ((invokeId+:1);mId;params);
     update called:1b, numCalls:numCalls+1 from `.qt.Mock where mockId=mId;
-    :replacement[params];
+    :(replacement . params);
     };
 
 // Replace a given variable/table/reference etc. with another
@@ -290,6 +290,7 @@ M   :{[target;replacement;case]
     `.qt.Mock insert (.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
     // Replace target with mock replacement
     target set wrapperFn[replacement;.qt.mockId];
+    :.qt.Mock@.qt.mockId;
     };
 
 RestoreMocks  :{[]
