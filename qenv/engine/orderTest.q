@@ -11,8 +11,17 @@ system "d .orderTest";
 z:.z.z;
 
 
-// Test order generation
+// Test data generation
 // -------------------------------------------------------------->
+
+makeDepth :{
+    :$[count[x]>0;[ 
+        if[count[x]<4;d,:enlist(count[first[x]]#.z.z)];
+        // Side, Price, Size
+        x:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
+        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[x];
+        :flip[x];
+        ];()]};
 
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
@@ -82,22 +91,14 @@ test:.qt.Unit[
 
 deriveCaseParams    :{[params]
     e:();
-    if [count[params[2]]>0;[
-        d:params[2];
-        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
-        // Side, Price, Size
-        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
-        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
-        e:flip[d];
-        ]];
     
     / eOB:params[3];
     / eOB:update price:`int$price, 
 
     p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
-        params[0];
+        makeDepth[params[0]];
         params[1];
-        e;
+        makeDepth[params[2]];
         params[3];
         params[4];
         params[5]
@@ -312,18 +313,9 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params]
-    ob:();
-    if [count[params[0]]>0;[
-        d:params[0];
-        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
-        // Side, Price, Size
-        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
-        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
-        ob:flip[d];
-        ]];
     
     p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
-        ob;
+        makeDepth[params[0]];
         params[1];
         params[2];
         params[3];
@@ -490,24 +482,18 @@ test:.qt.Unit[
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
 
-deriveCaseParams    :{[params]
-    ob:();
-    if [count[params[0]]>0;[
-        d:params[0];
-        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
-        // Side, Price, Size
-        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
-        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
-        ob:flip[d];
-        ]];
 
+
+
+deriveCaseParams    :{[params]
+    
     t:`iId`side`qty`isClose`isAgent`accountId`time!params[2];
     t[`side]:`.order.ORDERSIDE$t[`side];
 
     mCols:`called`numCalls`calledWith;
     
     p:`cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty!(
-        ob;
+        makeDepth[params[0]];
         params[1];
         t;
         params[3];
@@ -563,13 +549,13 @@ cTime:.z.z;
         (0b;0;());0
     )]];
 
-.qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
-    deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
-        (1;`SELL;1500;0b;0b;1;cTime);();();
-        (1b;1;((`.order.ORDERSIDE$`SELL;1500;1000);cTime));
-        (0b;0;());0
-    )]];
+/ .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
+/     deriveCaseParams[(
+/         ((10#`BUY);1000+til 10;10#1000);();
+/         (1;`SELL;1500;0b;0b;1;cTime);();();
+/         (1b;1;((`.order.ORDERSIDE$`SELL;1500;1000);cTime));
+/         (0b;0;());0
+/     )]];
 
 / .qt.AddCase[test;
 /     deriveCaseParams[]];
