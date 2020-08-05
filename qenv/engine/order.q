@@ -582,7 +582,6 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                         [
                                             nqty:bestQty-qty;
                                             update qty:nqty from `.order.OrderBook where side=nside, price=price;
-                                            .order.AddTradeEvent[(side;bestQty;price);time];
                                             .account.ApplyFill[
                                                     qty;
                                                     price;
@@ -591,6 +590,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                                     reduceOnly;
                                                     0b; // not isMaker
                                                     accountId];
+                                            .order.AddTradeEvent[(side;qty;price);time];
                                             qty:0;
                                         ];
                                         [
@@ -598,7 +598,6 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                             // the level of the orderbook is to be removed and the resultant size of the
                                             // trade should be equal to the size of the bestQty
                                             delete from `.order.OrderBook where side=nside, price=price; // TODO orderbook update etc.
-                                            .order.AddTradeEvent[side;bestQty;price;time]; // TODO
                                             .account.ApplyFill[
                                                     bestQty;
                                                     price;
@@ -607,6 +606,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                                     reduceOnly;
                                                     0b; // not isMaker
                                                     accountId]; // TODO
+                                            .order.AddTradeEvent[(side;bestQty;price);time]; // TODO
                                             qty-:bestQty;
                                         ]
                                     ];
@@ -631,6 +631,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
             ]
         ]
     ];
+    :qty;
     };
 
 
