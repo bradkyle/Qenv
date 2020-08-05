@@ -223,8 +223,6 @@ NewOrder       : {[o;time];
 
     acc:.account.Account@o[`accountId];
 
-    show ((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition]));
-
     if[o[`isClose] and (o[`otype] in `LIMIT`MARKET) and
         (((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition])) or
         ((o[`side]=`BUY) and (o[`size]> acc[`netLongPosition])));
@@ -307,10 +305,10 @@ NewOrder       : {[o;time];
                 [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
-                            .event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
+                            :.event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
-                            processCross[ // The order crosses the bid ask spread.
+                            .order.processCross[ // The order crosses the bid ask spread.
                                 o[`side];
                                 o[`size];
                                 1b;
@@ -343,7 +341,7 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`MARKET;
         [
-            processCross[
+            .order.processCross[
                 o[`side];
                 o[`size];
                 1b;
@@ -499,7 +497,6 @@ fillTrade   :{[side;qty;isClose;isAgent;accountId;time]
                                 .order.AddTradeEvent[side;nxt[`offset];price;time]; 
                                 $[qty>=nxt[`size];
                                     [
-                                        show 99#"H";
                                         // If the quantity to be traded is greater than or
                                         // equal to the next agent order, fill the agent order
                                         // updating its state and subsequently removing it from

@@ -164,7 +164,7 @@ InsertResultantEvents   :{[events]
         k:event[`kind];
         t:event[`time];
         $[k=`DEPTH;
-          [`.state.DepthEventHistory insert ()];
+          [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols])];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;

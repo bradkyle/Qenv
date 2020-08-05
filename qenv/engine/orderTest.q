@@ -283,6 +283,9 @@ oBeforeAll :{
         1b;.z.z];
     };
 
+oAfterAll :{
+    delete from `.instrument.Instrument;
+    };
 
 BING:();
 
@@ -294,7 +297,6 @@ test:.qt.Unit[
   
         o:p[`order];
         / show .instrument.Instrument;
-        show o[`instrumentId];
         res:.order.NewOrder[o;.z.z];
 
         // Assertions
@@ -302,7 +304,7 @@ test:.qt.Unit[
         o1:first (0!select from .order.Order where orderId=1);
         .qt.A[o1[k];~;p[`eOrd][k];"order";c];
 
-    };();(oBeforeAll;{};defaultBeforeEach;defaultAfterEach);
+    };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params]

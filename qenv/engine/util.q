@@ -22,7 +22,6 @@ NegSide :{[side]$[side=`SELL;:`BUY;:`SELL]};
 // if the fields provided are iterable set all given names
 // in fields to value given
 Default	:{[d;f;a;v] 
-	show d;
 	$[(count f)=1;f:enlist f;0N];
 	/ d[f[where[d[f]=0N]]]:v;
 	d[where[null d[a]] inter f]:v; 
