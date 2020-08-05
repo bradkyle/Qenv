@@ -72,11 +72,11 @@ AddNewOrderEvent   :{[order;time]
     :.event.AddEvent[time;`NEW;`ORDER;order];
     }
 
-AddOrderUpdateEvent :{[]
+AddOrderUpdateEvent :{[order;time]
     :.event.AddEvent[time;`UPDATE;`ORDER;order];
     }
  
-AddCancelOrderEvent :{[]
+AddCancelOrderEvent :{[order;time]
     :.event.AddEvent[time;`DELETE;`ORDER;order];
     }
 
@@ -100,7 +100,6 @@ minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 AddDepthUpdateEvent :{[depth;time]
     :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
     };
-
 
 AddTradeEvent  :{[trade;time]
     :.event.AddEvent[time;`NEW;`TRADE;(`side`size`price!trade)];
