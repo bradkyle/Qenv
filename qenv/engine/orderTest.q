@@ -461,7 +461,8 @@ test:.qt.Unit[
         // instantiate mock for ApplyFill
         mck: .qt.M[`.account.ApplyFill;p[`mFn];c];
         
-        res:.order.fillTrade[p[`side];p[`qty];p[`isClose];p[`isAgent];p[`accountId];p[`time]];
+        t:p[`trade];
+        res:.order.fillTrade[t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
 
         // Assertions
         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
@@ -480,11 +481,13 @@ deriveCaseParams    :{[params]
         ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
         ob:flip[d];
         ]];
+
+    t:`side`qty`isClose`isAgent`accountId`time!params[2];
     
-    p:`cOB`cOrd`order`eOB`eEvents`mFn`eAux!(
+    p:`cOB`cOrd`trade`eOB`eEvents`mFn`eAux!(
         ob;
         params[1];
-        params[2];
+        t;
         params[3];
         params[4];
         { };
@@ -493,8 +496,11 @@ deriveCaseParams    :{[params]
     :p;
     };
 
-/ .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
-/     deriveCaseParams[]];
+.qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
+    deriveCaseParams[(
+        ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();();
+        (`.order.ORDERSIDE$`SELL;);();()
+    )]];
 
 / .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
 /     deriveCaseParams[]];

@@ -353,7 +353,7 @@ NewOrder       : {[o;time];
             // todo if close
             `.order.Order insert order;
         ];
-      :.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]
+      [:.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]]
     ];
     };
 

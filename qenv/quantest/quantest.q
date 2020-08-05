@@ -67,11 +67,12 @@ Unit        :{[name;testFn;cases;hooks;dscr]
     / validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
     / if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
 
-    `.qt.Test upsert (cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f));
+    test:cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
+    `.qt.Test upsert test;
 
     if[count[cases]>0;.qt.AddCase[test] each cases];
 
-    :.qt.Test@.qt.testId;
+    :test;
     };
 
 Integration    :{[]
@@ -212,7 +213,7 @@ AddCase     :{[test;dscr;params]
     if[not(type[params] in 98 99h);0N]; // TODO better error
     case:cols[.qt.Case]!((.qt.caseId+:1);test[`testId];`READY;dscr;(`$"");params;0;0;.z.z;.z.z);
     `.qt.Case upsert case;
-    :.qt.Case@.qt.caseId;
+    :case;
     };
 
 
@@ -287,10 +288,11 @@ M   :{[target;replacement;case]
     // TODO check that target and replacement have the same number of params if function 
     / $[ns~`.; target; `${"." sv x} each string ns,/:fl];
     .qt.mockId+:1;
-    `.qt.Mock insert (.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0); 
+    mck:(.qt.mockId;case[`testId];case[`caseId];`MOCK;`.extern;target;replacement;0b;0;0;0b;0);
+    `.qt.Mock insert mck; 
     // Replace target with mock replacement
     target set wrapperFn[replacement;.qt.mockId];
-    :.qt.Mock@.qt.mockId;
+    :mck;
     };
 
 RestoreMocks  :{[]
@@ -436,6 +438,7 @@ A   :{[actual;relation;expected;msg;case]
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;(`$string[relation]);expected);
     `.qt.Assertion upsert ass;
+    :ass;
     }
 
 
