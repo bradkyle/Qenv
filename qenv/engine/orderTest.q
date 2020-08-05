@@ -483,7 +483,13 @@ test:.qt.Unit[
     "process trades from the historical data or agent orders"];
 
 
-
+makeOrders :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        x:{:`instrumentId`accountId`side`otype`offset`size!(
+            x[0];x[1];(`.order.ORDERSIDE$x[2]);(`.order.ORDERTYPE$x[3]);x[4];x[5])} each flip[x];
+        :flip[x];
+        ];()]};
 
 deriveCaseParams    :{[params]
     
@@ -492,9 +498,12 @@ deriveCaseParams    :{[params]
 
     mCols:`called`numCalls`calledWith;
     
+
+
+
     p:`cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty!(
         makeDepth[params[0]];
-        params[1];
+        ();
         t;
         params[3];
         params[4];
