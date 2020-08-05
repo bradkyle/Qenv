@@ -329,7 +329,6 @@ deriveCaseParams    :{[params]
     :p;
     };
 
-
 .qt.AddCase[test;"New limit order no previous depth or orders should update";
     deriveCaseParams[(
     ((10#`SELL);`int$(1000+til 10);`int$(10#1000));();
@@ -450,32 +449,41 @@ deriveCaseParams    :{[params]
 // Fill Trade tests
 // -------------------------------------------------------------->
 
-/ test:.qt.Unit[
-/     ".order.fillTrade";
-/     {[c]
-/         p:c[`params];
-/         time:.z.z;
-/         eacc:p[`eaccount];
-/         einv:p[`einventory];
-/         ecols:p[`ecols];
+test:.qt.Unit[
+    ".order.fillTrade";
+    {[c]
+        p:c[`params];
 
-/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
+        res:.order.fillTrade[p[`side];p[`qty];p[`isClose];p[`isAgent];p[`accountId];p[`time]];
 
-/         // Execute tested function
-/         x:p[`params];
-/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
+        // Assertions
+        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
+        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
 
-/         // 
-/         acc:exec from .account.Account where accountId=account[`accountId];
-/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "process trades from the historical data or agent orders"];
 
-/         // Assertions
-/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
+deriveCaseParams    :{[params]
+    ob:();
+    if [count[params[0]]>0;[
+        d:params[0];
+        if[count[d]<4;d,:enlist(count[first[d]]#.z.z)];
+        // Side, Price, Size
+        d:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
+        ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[d];
+        ob:flip[d];
+        ]];
+    
+    p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
+        ob;
+        params[1];
+        params[2];
+        params[3];
+        params[4];
+        params[5]
+        );
+    :p;
+    };
 
 / .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
 /     deriveCaseParams[]];
