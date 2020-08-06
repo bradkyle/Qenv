@@ -453,12 +453,28 @@ A   :{[actual;relation;expected;msg;case]
 // @return actual object
 AIn  :{[actual;expected;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
-    failFlag::not all[actual in expected];
+    failFlag::not all[expected in actual];
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`allin;expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
     }
+
+// Runs an assertion on a mock
+// todo make sure mock in mock table
+MA      :{[mId;called;numCalls;calledWith;case]
+        m:.qt.Mock@mId;
+        t:string[m[`targetPath]];
+
+        .qt.A[m[`called];=;called;t," called";case];
+        .qt.A[m[`numCalls];=;numCalls;t, " numCalls";case];
+
+        if[count[calledWith]>0;[
+            .qt.AIn[exec invokedWith from .qt.Invocation where mockId=mId;calledWith;t," invokedWith";case];
+        ]];
+        
+    };
+
 
 / // Reset
 / // ======================================================================>

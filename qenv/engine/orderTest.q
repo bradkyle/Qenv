@@ -448,21 +448,7 @@ deriveCaseParams    :{[params]
 deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
 
-// Runs an assertion on a mock
-// todo make sure mock in mock table
-MA      :{[mId;called;numCalls;calledWith;case]
-        m:.qt.Mock@mId;
-        t:string[m[`targetPath]];
 
-        .qt.A[called;=;m[`called];t," was called called";case];
-        .qt.A[numCalls;=;m[`numCalls];t, " numCalls";case];
-
-        if[count[calledWith]>0;[
-
-            .qt.AIn[calledWith;exec invokedWith from .qt.Invocation where mockId=mId;t," invokedWith";case];
-        ]];
-        
-    };
 
 
 // TODO better (more consice/shorter test)
@@ -482,13 +468,13 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
-        .orderTest.MA[
+        .qt.MA[
             mck1;
             p[`eApplyFill][`called];
             p[`eApplyFill][`numCalls];
             p[`eApplyFill][`calledWith];c];
 
-        .orderTest.MA[
+        .qt.MA[
             mck2;
             p[`eAddTradeEvent][`called];
             p[`eAddTradeEvent][`numCalls];
@@ -579,6 +565,7 @@ cTime:.z.z;
         (0b;0;());0
     )]];
 
+/ `cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty
 .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
     deriveCaseParams[(
         ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
