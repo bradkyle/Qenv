@@ -572,7 +572,7 @@ cTime:.z.z;
         ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
         (1;`SELL;150;0b;1b;1;cTime);
         ();(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
-        (1b;1;((`.order.ORDERSIDE$`SELL;150;1000);cTime));
+        (1b;1;((`.order.ORDERSIDE$`SELL;100;1000);cTime));
         (0b;0;());0
     )]];
 
