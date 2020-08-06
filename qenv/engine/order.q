@@ -210,7 +210,6 @@ NewOrder       : {[o;time];
     if[(o[`otype]=`LIMIT) and null[o[`price]];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"price not set"]; 'INVALID_ORDER_PRICE)];
     if[not (o[`side] in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
 
-
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:.event.AddFailure[time;`INVALID;""];o[`stopprice]:0f];
     $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:.event.AddFailure[time;`INVALID;""];o[`limitprice]:0f];
