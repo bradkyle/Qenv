@@ -524,6 +524,7 @@ deriveCaseParams    :{[params]
 // TODO no bestQty
 // TODO check return qty
 // TODO check offset on multiple levels
+// TODO self fill vs non self fill
 cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
@@ -572,7 +573,7 @@ cTime:.z.z;
         (1;`SELL;150;0b;1b;1;cTime);
         ();(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;100;1000);cTime)));
-        (0b;0;());0
+        (1b;2;((1;`SELL;1500;0b;0b;1;cTime);(1;`SELL;1500;0b;0b;1;cTime));0
     )]];
 
 / .qt.AddCase[test;

@@ -582,7 +582,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                           )];
 
                                         if[n[`accountId]=accountId;[
-                                                
+                                                // TODO increment self fills and penalize
                                             ]];
 
                                         .account.ApplyFill[
