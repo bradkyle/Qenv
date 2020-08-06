@@ -102,6 +102,9 @@ OrderBook:(
 maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
 minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 
+bestBid:{exec max price from .order.OrderBook where side=`BUY};
+bestAsk:{exec min price from .order.OrderBook where side=`SELL};
+
 AddDepthUpdateEvent :{[depth;time]
     :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
     };
@@ -316,8 +319,8 @@ NewOrder       : {[o;time];
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
     // TODO check position smaller than order
-    bestAsk:minPrice[][`Sell];
-    bestBid:maxPrice[][`BUY];
+    bestAsk:.order.bestAsk[];
+    bestBid:.order.bestBid[];
 
     $[o[`otype]=`LIMIT;
         [
@@ -480,8 +483,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:.event.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
-
-                price:exec min price from .order.OrderBook where side=nside;
+                price:$[nside=`SELL;.order.bestAsk[];.order.bestBid[]];
                 hasAgentOrders:(count select from .order.Order where side=nside)>0;
 
                 $[hasAgentOrders;

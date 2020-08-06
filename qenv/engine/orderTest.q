@@ -541,13 +541,13 @@ cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000-til 10;10#1000);();
         (1;`SELL;100;0b;0b;0N;cTime);();();(1b;1;enlist((`.order.ORDERSIDE$`SELL;100;1000);cTime));(0b;0;());0
     )]];
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000-til 10;10#1000);();
         (1;`SELL;1500;0b;1b;1;cTime);();();
         (1b;1;enlist ((`.order.ORDERSIDE$`SELL;1000;1000);cTime));
         (1b;1;enlist (1000;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1));500
@@ -555,7 +555,7 @@ cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is smaller than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000-til 10;10#1000);();
         (1;`SELL;500;0b;1b;1;cTime);();();
         (1b;1; enlist((`.order.ORDERSIDE$`SELL;500;1000);cTime));
         (1b;1;enlist (500;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1));0
@@ -563,7 +563,7 @@ cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is smaller than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000-til 10;10#1000);();
         (1;`SELL;500;0b;0b;1;cTime);();();
         (1b;1;enlist ((`.order.ORDERSIDE$`SELL;500;1000);cTime));
         (0b;0;(()));0
@@ -572,7 +572,7 @@ cTime:.z.z;
 // TODO check this
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);();
+        ((10#`BUY);1000-til 10;10#1000);();
         (1;`SELL;1500;0b;0b;1;cTime);();();
         (1b;1;enlist ((`.order.ORDERSIDE$`SELL;1500;1000);cTime));
         (0b;0;());0
@@ -581,9 +581,9 @@ cTime:.z.z;
 / `cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty
 .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
+        ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
         (1;`SELL;150;0b;1b;1;cTime);
-        ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
+        ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;50;1000);cTime)));
         (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
     )]];
