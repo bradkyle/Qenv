@@ -581,16 +581,6 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                               `.order.ORDERSTATUS$`PARTIALFILLED
                                           )];
 
-                                        if[n[`accountId]=accountId;[
-                                                // TODO increment self fills and penalize
-                                                ![`.account.Account;
-                                                    enlist (=;`orderId;n[`orderId]);
-                                                    0b;`size`status!(
-                                                        (-;`size;qty);
-                                                        `.order.ORDERSTATUS$`PARTIALFILLED
-                                                    )];
-                                            ]];
-
                                         .account.ApplyFill[
                                             qty;
                                             price;
@@ -607,6 +597,16 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                             // TODO update book
                                             / ![`.order.OrderBook;((=;`price;price)(=;`side;nside));0b;(enlist `qty)!enlist (-;`qty;n[`offset])];
                                             / show 99#"T";
+
+                                            if[n[`accountId]=accountId;[
+                                                    // TODO increment self fills and penalize
+                                                    ![`.account.Account;
+                                                        enlist (=;`accountId;n[`accountId]);
+                                                        0b;`selfFillCount`selfFillVolume!(
+                                                            (-;`size;qty);
+                                                            `.order.ORDERSTATUS$`PARTIALFILLED
+                                                        )];
+                                                ]];
 
                                             .account.ApplyFill[
                                                 qty,

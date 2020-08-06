@@ -57,7 +57,8 @@ Account: (
             activeMakerFee      : `long$();
             activeTakerFee      : `long$();
             totalCommission     : `long$();
-            selfFillCount       : `long$());
+            selfFillCount       : `long$();
+            selfFillVolume      : `long$());
 
 mandCols:();
 defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
