@@ -533,7 +533,7 @@ cTime:.z.z;
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
     deriveCaseParams[(
         ((10#`BUY);1000+til 10;10#1000);();
-        (1;`SELL;100;0b;0b;0N;cTime);();();(1b;1;((`.order.ORDERSIDE$`SELL;100;1000);cTime));(0b;0;());0
+        (1;`SELL;100;0b;0b;0N;cTime);();();(1b;1;enlist((`.order.ORDERSIDE$`SELL;100;1000);cTime));(0b;0;());0
     )]];
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";
