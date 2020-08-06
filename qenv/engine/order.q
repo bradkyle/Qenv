@@ -603,8 +603,8 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                                     ![`.account.Account;
                                                         enlist (=;`accountId;n[`accountId]);
                                                         0b;`selfFillCount`selfFillVolume!(
-                                                            (-;`size;qty);
-                                                            `.order.ORDERSTATUS$`PARTIALFILLED
+                                                            (+;`selfFillCount;1);
+                                                            (+;`selfFillVolume;qty)
                                                         )];
                                                 ]];
 
