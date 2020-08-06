@@ -14,7 +14,7 @@ z:.z.z;
 // Test data generation
 // -------------------------------------------------------------->
 
-makeDepth :{
+makeDepthUpdate :{
     :$[count[x]>0;[ 
         if[count[x]<4;d,:enlist(count[first[x]]#.z.z)];
         // Side, Price, Size
@@ -23,6 +23,12 @@ makeDepth :{
         :flip[x];
         ];()]};
 
+
+makeDepth :{
+    :$[count[x]>0;[  
+        // Side, Price, Size
+          :([price:x[1]] side:(`.order.ORDERSIDE$x[0]); qty:x[2]);
+        ];()]};
 
 makeOrders :{
     :$[count[x]>0;[ 
@@ -104,9 +110,9 @@ deriveCaseParams    :{[params]
     / eOB:update price:`int$price, 
 
     p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
-        makeDepth[params[0]];
+        makeDepthUpdate[params[0]];
         params[1];
-        makeDepth[params[2]];
+        makeDepthUpdate[params[2]];
         params[3];
         params[4];
         params[5]
@@ -323,7 +329,7 @@ test:.qt.Unit[
 deriveCaseParams    :{[params]
     
     p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
-        makeDepth[params[0]];
+        makeDepthUpdate[params[0]];
         params[1];
         params[2];
         params[3];
@@ -476,7 +482,6 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
-        .qt.BAM:p[`eApplyFill][`calledWith];
 
         .qt.MA[
             mck1;
@@ -498,6 +503,12 @@ test:.qt.Unit[
             .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";c];
             ]];
         
+        .qt.BAM:.order.OrderBook;
+
+        / if[count[p[`eOB]]>0;
+            / .qt.A[p[`eOB];~;.order.OrderBook;"orders";c];
+            / ];
+
         
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
@@ -511,10 +522,10 @@ deriveCaseParams    :{[params]
     mCols:`called`numCalls`calledWith;
     
     p:`cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty!(
-        makeDepth[params[0]];
+        makeDepthUpdate[params[0]];
         makeOrders[params[1]];
         t;
-        makeDepth[params[3]];
+        makeDepthUpdate[params[3]];
         makeOrders[params[4]];
         mCols!params[5];
         mCols!params[6];
@@ -574,10 +585,12 @@ cTime:.z.z;
     deriveCaseParams[(
         ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
         (1;`SELL;150;0b;1b;1;cTime);
-        ();(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
+        ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;50;1000);cTime)));
         (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
     )]];
+
+
 
 / .qt.AddCase[test;
 /     deriveCaseParams[]];
