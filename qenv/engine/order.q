@@ -43,6 +43,7 @@ orderMandatoryFields    :`accountId`side`otype`size;
 Order: (
     [price:`long$(); orderId:`long$()]
     instrumentId   : `.instrument.Instrument$();
+    clId            :`long$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
@@ -205,6 +206,8 @@ NewOrder       : {[o;time];
     if[not (o[`timeinforce] in .order.TIMEINFORCE); :.event.AddFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
     if[not (all o[`execInst] in .order.EXECINST); :.event.AddFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
     if[(o[`otype]=`LIMIT) and null[o[`price]];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"price not set"]; 'INVALID_ORDER_PRICE)];
+    if[not (o[`side] in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
+
 
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:.event.AddFailure[time;`INVALID;""];o[`stopprice]:0f];
@@ -245,8 +248,9 @@ NewOrder       : {[o;time];
     o[`leaves]: o[`size];
     o[`filled]: 0;
     o[`time]: time;
+    if[null o[`clId];o[`clId]:0n];
     o[`orderId]:.order.orderCount+1;
-    
+
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
