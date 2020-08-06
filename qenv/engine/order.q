@@ -583,6 +583,12 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
 
                                         if[n[`accountId]=accountId;[
                                                 // TODO increment self fills and penalize
+                                                ![`.account.Account;
+                                                    enlist (=;`orderId;n[`orderId]);
+                                                    0b;`size`status!(
+                                                        (-;`size;qty);
+                                                        `.order.ORDERSTATUS$`PARTIALFILLED
+                                                    )];
                                             ]];
 
                                         .account.ApplyFill[
