@@ -581,8 +581,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                               `.order.ORDERSTATUS$`PARTIALFILLED
                                           )];
 
-                                        if[n[`accountId]=accountId;
-                                            [
+                                        if[n[`accountId]=accountId;[
                                                 
                                             ]];
 
