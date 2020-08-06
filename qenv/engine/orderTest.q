@@ -505,9 +505,9 @@ test:.qt.Unit[
         
         .qt.BAM:.order.OrderBook;
 
-        / if[count[p[`eOB]]>0;
-            / .qt.A[p[`eOB];~;.order.OrderBook;"orders";c];
-            / ];
+        if[count[p[`eOB]]>0;
+            .qt.A[p[`eOB];~;.order.OrderBook;"orders";c];
+            ];
 
         
     };();({};{};defaultBeforeEach;defaultAfterEach);
@@ -525,7 +525,7 @@ deriveCaseParams    :{[params]
         makeDepthUpdate[params[0]];
         makeOrders[params[1]];
         t;
-        makeDepthUpdate[params[3]];
+        makeDepth[params[3]];
         makeOrders[params[4]];
         mCols!params[5];
         mCols!params[6];
