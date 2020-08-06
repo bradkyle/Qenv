@@ -471,7 +471,6 @@ isNextOffset:{:((>;`size;0);
 // TODO compactify!
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
-BAM:();
 
 fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
         if[not (side in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
@@ -526,7 +525,6 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                 .order.AddTradeEvent[(side;n[`offset];price);time]; 
 
                                 // Update the offsets of the current orders
-                                .order.BAM:.order.Order;
                                 ![`.order.Order;.order.isActiveLimit[n[`price]];0b;(enlist `offset)!enlist (-;`offset;n[`offset])];
                                 n:nxt[];
 

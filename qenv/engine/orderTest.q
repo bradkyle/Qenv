@@ -503,8 +503,6 @@ test:.qt.Unit[
             .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";c];
             ]];
         
-        .qt.BAM:.order.OrderBook;
-
         if[count[p[`eOB]]>0;
             .qt.A[p[`eOB];~;.order.OrderBook;"orders";c];
             ];
