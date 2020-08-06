@@ -520,6 +520,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
 
                                 n:nxt[];
                                 // TODO should change leaves to size?
+                                ![`.order.OrderBook;enlist (=;`price;price);0b;(enlist `qty)!enlist (-;`qty;n[`offset])];                                
                                 qty-:n[`offset];
 
                                 // Make a trade event that represents the trade taking up the
@@ -539,15 +540,21 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                         // the local buffer, adding fill to account and creating
                                         // respective trade event. // TODO if order made by agent!
                                         // TODO completely fill limit order
+                                        ![`.order.Order;
+                                          enlist (=;`orderId;n[`orderId]);
+                                          0b;`size`status!(
+                                              0;`.order.ORDERSTATUS$`FILLED
+                                          )];
+                                        //TODO add order update event
+
                                         .account.ApplyFill[
-                                            n[`accountId];
-                                            instrumentId;
+                                            qty;
                                             price;
                                             nside;
-                                            n[`size];
                                             time;
                                             n[`reduceOnly];
-                                            0b];
+                                            1b; // isMaker
+                                            n[`accountId]];
 
                                         if[isAgent;
                                             // If the order was made by an agent the first level of
@@ -565,17 +572,15 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                                 ]];
 
                                             .account.ApplyFill[
-                                                n[`accountId];
-                                                instrumentId;
+                                                n[`size];
                                                 price;
                                                 side;
-                                                n[`size];
                                                 time;
                                                 reduceOnly;
-                                                0b];
+                                                0b;
+                                                accountId];
                                         ];
-
-                                        .order.AddTradeEvent[];
+                                        .order.AddTradeEvent[(side;n[`size];price);time];
                                         qty-:n[`size];
                                     ];
                                     [
@@ -590,6 +595,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                               (-;`size;qty);
                                               `.order.ORDERSTATUS$`PARTIALFILLED
                                           )];
+                                        //TODO add order update event
 
                                         .account.ApplyFill[
                                             qty;

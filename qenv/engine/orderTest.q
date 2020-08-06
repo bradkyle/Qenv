@@ -482,7 +482,6 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
-
         .qt.MA[
             mck1;
             p[`eApplyFill][`called];
@@ -537,6 +536,7 @@ deriveCaseParams    :{[params]
 // TODO check return qty
 // TODO check offset on multiple levels
 // TODO self fill vs non self fill
+// TODO add order update events!
 cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
@@ -583,17 +583,24 @@ cTime:.z.z;
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
         (1;`SELL;150;0b;1b;1;cTime);
-        ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
+        ((10#`BUY);1000-til 10;900,9#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;50;1000);cTime)));
         (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
     )]];
 
-
+.qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is agent";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
+        (1;`SELL;250;0b;1b;1;cTime);
+        ((10#`BUY);1000-til 10;900,9#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 150;0 100;2#1000;2#cTime);
+        (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;50;1000);cTime)));
+        (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
+    )]];
 
 / .qt.AddCase[test;
 /     deriveCaseParams[]];
 
-/ .qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution < agent order offset, fill is agent";
+/ .qt.AddCase[test;;
 /     deriveCaseParams[]];
 
 / .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is not agent";
