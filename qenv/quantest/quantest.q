@@ -463,6 +463,24 @@ AIn  :{[actual;expected;msg;case]
     :{.qt.Assertion@x}.qt.assertId;
     }
 
+// Assert that the relation between expected and actual value holds
+// @param actual An object representing the actual result value
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @param case the case to which this assertion belongs.
+// @return actual object
+AAll  :{[actual;expected;msg;case]
+    $[not null[`$msg];msg:`$msg;msg:`$""];
+    failFlag::($[(count[actual]=count[expected]);
+        not[all[{all[raze[x[0]]=raze[x[1]]]}each flip(actual;expected)]];
+        1b]);
+    state:$[failFlag;`FAIL;`PASS];
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`alleq;expected);
+    `.qt.Assertion upsert ass;
+    :{.qt.Assertion@x}.qt.assertId;
+    }
+
+
 // Runs an assertion on a mock
 // todo make sure mock in mock table
 MA      :{[mId;called;numCalls;calledWith;case]
@@ -473,7 +491,7 @@ MA      :{[mId;called;numCalls;calledWith;case]
         .qt.A[m[`numCalls];=;numCalls;t, " numCalls";case];
 
         if[count[calledWith]>0;[
-            .qt.AIn[exec invokedWith from .qt.Invocation where mockId=mId;calledWith;t," invokedWith";case];
+            .qt.AAll[exec invokedWith from .qt.Invocation where mockId=mId;calledWith;t," invokedWith";case];
         ]];
         
     };
