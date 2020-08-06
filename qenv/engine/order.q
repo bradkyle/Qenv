@@ -581,6 +581,11 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                               `.order.ORDERSTATUS$`PARTIALFILLED
                                           )];
 
+                                        if[n[`accountId]=accountId;
+                                            [
+                                                
+                                            ]];
+
                                         .account.ApplyFill[
                                             qty;
                                             price;
