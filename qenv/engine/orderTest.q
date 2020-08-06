@@ -479,13 +479,7 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
-        mck:.qt.Mock@mck1;
-        .qt.A[mck[`called];=;p[`eApplyFill][`called];"called";c];
-        .qt.A[mck[`numCalls];=;p[`eApplyFill][`numCalls];"numCalls";c];
-        if[mck[`called]; [
-            i:.qt.Invocation@(mck1;1);
-            .qt.A[(i[`invokedWith]);~;(p[`eApplyFill][`calledWith]);"eApplyFill calledWith";c];
-            ]];
+        .qt.MA[mck1;]
 
         / show mck[`called];
         mck:.qt.Mock@mck2;
