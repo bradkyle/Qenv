@@ -56,8 +56,7 @@ Account: (
             unrealizedPnl       : `long$();
             activeMakerFee      : `long$();
             activeTakerFee      : `long$();
-            totalCommission     : `long$()
-        );
+            totalCommission     : `long$());
 
 mandCols:();
 defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};

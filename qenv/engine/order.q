@@ -596,7 +596,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                             // captured.
                                             // TODO update book
                                             / ![`.order.OrderBook;((=;`price;price)(=;`side;nside));0b;(enlist `qty)!enlist (-;`qty;n[`offset])];
-                                            show 99#"T";
+                                            / show 99#"T";
 
                                             .account.ApplyFill[
                                                 qty,

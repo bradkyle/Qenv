@@ -450,15 +450,18 @@ rmFkeys :{cols[x] except key[fkeys x]};
 
 // Runs an assertion on a mock
 // todo make sure mock in mock table
-MA      :{[mockId;called;numCalls;calledWith;case]
-        m:.qt.Mock@mockId;
+MA      :{[mId;called;numCalls;calledWith;case]
+        m:.qt.Mock@mId;
         t:string[m[`targetPath]];
 
         .qt.A[called;=;m[`called];t," was called called";case];
         .qt.A[numCalls;=;m[`numCalls];t, " numCalls";case];
 
-        $[];
+        if[count[calledWith]>0;[
 
+            .qt.AIn[calledWith;exec invokedWith from .qt.Invocation where mockId=mId;t," invokedWith";case];
+        ]];
+        
     };
 
 
@@ -479,16 +482,17 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
-        .qt.MA[mck1;]
+        .orderTest.MA[
+            mck1;
+            p[`eApplyFill][`called];
+            p[`eApplyFill][`numCalls];
+            p[`eApplyFill][`calledWith];c];
 
-        / show mck[`called];
-        mck:.qt.Mock@mck2;
-
-        .qt.A[(mck[`numCalls]);=;(p[`eAddTradeEvent][`numCalls]);"numCalls";c];
-        if[mck[`called]; [
-            i:.qt.Invocation@(mck2;1);
-            .qt.A[(i[`invokedWith]);~;(p[`eAddTradeEvent][`calledWith]);"eAddTradeEvent calledWith";c];
-            ]];
+        .orderTest.MA[
+            mck2;
+            p[`eAddTradeEvent][`called];
+            p[`eAddTradeEvent][`numCalls];
+            p[`eAddTradeEvent][`calledWith];c];
 
         if[count[p[`eOrd]]>0;[
             eOrd:p[`eOrd][;0];

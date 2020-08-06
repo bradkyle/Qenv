@@ -445,6 +445,20 @@ A   :{[actual;relation;expected;msg;case]
     :{.qt.Assertion@x}.qt.assertId;
     }
 
+// Assert that the relation between expected and actual value holds
+// @param actual An object representing the actual result value
+// @param expected An object representing the expected value
+// @param msg Description of this test or related message
+// @param case the case to which this assertion belongs.
+// @return actual object
+AIn  :{[actual;expected;msg;case]
+    $[not null[`$msg];msg:`$msg;msg:`$""];
+    failFlag::not all[actual in expected];
+    state:$[failFlag;`FAIL;`PASS];
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`allin;expected);
+    `.qt.Assertion upsert ass;
+    :{.qt.Assertion@x}.qt.assertId;
+    }
 
 / // Reset
 / // ======================================================================>
