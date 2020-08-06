@@ -50,8 +50,8 @@ testOrders:{[num;oidstart;params]
 // -------------------------------------------------------------->
 
 defaultAfterEach: {
-     delete from `.account.Account;
-     delete from `.account.Inventory;
+    /  delete from `.account.Account;
+    /  delete from `.account.Inventory;
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
@@ -61,8 +61,8 @@ defaultAfterEach: {
     };
 
 defaultBeforeEach: {
-     delete from `.account.Account;
-     delete from `.account.Inventory;
+    /  delete from `.account.Account;
+    /  delete from `.account.Inventory;
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
@@ -445,6 +445,8 @@ deriveCaseParams    :{[params]
 // Fill Trade tests
 // -------------------------------------------------------------->
 
+deRef   :{x[y]:`long$(x[y]);:x};
+rmFkeys :{cols[x] except key[fkeys x]};
 // TODO better (more consice/shorter test)
 test:.qt.Unit[
     ".order.fillTrade";
@@ -452,7 +454,7 @@ test:.qt.Unit[
         p:c[`params];
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
         if[count[p[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each p[`cOrd]];
-
+        
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
@@ -479,6 +481,15 @@ test:.qt.Unit[
             i:.qt.Invocation@(mck2;1);
             .qt.A[(i[`invokedWith]);~;(p[`eAddTradeEvent][`calledWith]);"eAddTradeEvent calledWith";c];
             ]];
+
+        if[count[p[`eOrd]]>0;[
+            eOrd:p[`eOrd][;0];
+            rOrd: select from .order.Order where clId in eOrd[`clId];
+            eOrdCols: rmFkeys[rOrd] inter cols[eOrd];
+            .qt.A[count[p[`eOrd]];=;count[rOrd];"order count";c];
+            .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";c];
+            ]];
+        
         
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
@@ -487,8 +498,8 @@ test:.qt.Unit[
 makeOrders :{
     :$[count[x]>0;[ 
         // Side, Price, Size
-        :{:(`instrumentId`accountId`side`otype`offset`size`price!(
-            x[0];x[1];(`.order.ORDERSIDE$x[2]);(`.order.ORDERTYPE$x[3]);x[4];x[5];x[6]);x[7])} each flip[x];
+        :{:(`clId`instrumentId`accountId`side`otype`offset`size`price!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7]);x[8])} each flip[x];
         ];()]};
 
 deriveCaseParams    :{[params]
@@ -514,6 +525,7 @@ deriveCaseParams    :{[params]
 // TODO no liquidity
 // TODO no bestQty
 // TODO check return qty
+// TODO check offset on multiple levels
 cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";
@@ -557,8 +569,9 @@ cTime:.z.z;
 
 .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
-        (1;`SELL;150;0b;0b;1;cTime);();();
+        ((10#`BUY);1000+til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
+        (1;`SELL;150;0b;1b;1;cTime);
+        ();(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;1;((`.order.ORDERSIDE$`SELL;150;1000);cTime));
         (0b;0;());0
     )]];

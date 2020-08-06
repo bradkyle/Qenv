@@ -42,8 +42,8 @@ orderMandatoryFields    :`accountId`side`otype`size;
 // TODO change price type to int, longs etc.
 Order: (
     [price:`long$(); orderId:`long$()]
-    instrumentId   : `.instrument.Instrument$();
     clId            :`long$();
+    instrumentId    : `.instrument.Instrument$();
     accountId       : `.account.Account$();
     side            : `.order.ORDERSIDE$();
     otype           : `.order.ORDERTYPE$();
@@ -59,6 +59,8 @@ Order: (
     reduceOnly         : `boolean$();
     trigger         : `.order.STOPTRIGGER$();
     execInst        : `.order.EXECINST$());
+
+ClRef :([] orderId: `.order.Order$());
 
 orderCount:0;
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
@@ -214,7 +216,7 @@ NewOrder       : {[o;time];
     $[(o[`otype] =`STOP_LIMIT) and null[o[`limitprice]];:.event.AddFailure[time;`INVALID;""];o[`limitprice]:0f];
 
     // Instrument related validation
-    if[not(o[`instrumentId] in key .account.Account);
+    if[not(o[`instrumentId] in key .instrument.Instrument);
         :.event.AddFailure[time;`INVALID_INSTRUMENTID;"An instrument with the id:",string[o[`instrumentId]]," could not be found"]];
 
     // Instrument related validation
@@ -248,10 +250,16 @@ NewOrder       : {[o;time];
     o[`leaves]: o[`size];
     o[`filled]: 0;
     o[`time]: time;
-    if[null o[`clId];o[`clId]:0n];
-    o[`orderId]:.order.orderCount+1;
+    o[`orderId]:.order.orderCount+:1;
 
+    if[(not null[o[`clId]]) and ((exec count clId from .order.Order where clId=o[`clId])>0);
+     (.event.AddFailure[time;`DUPLICATE_CLID;"duplicated clid"]; 'DUPLICATE_CLID)];
+    if[null[o[`clId]];o[`clId]:`long$0n];
 
+    if[null[o[`offset]];[
+        qty:(.order.OrderBook@o[`price])[`qty];
+        o[`offset]: $[not null[qty];qty;0];
+        ]];
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // calculate initial margin requirements of order
@@ -304,34 +312,35 @@ NewOrder       : {[o;time];
     / Invalid currency
     / Invalid settlCurrency
 
-
+    mPrice::exec min price by side from 0!.order.OrderBook;
     // TODO set offset
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
     // TODO check position smaller than order
+    bestAsk:minPrice[][`Sell];
+    bestBid:maxPrice[][`BUY];
+
     $[o[`otype]=`LIMIT;
         [
-            $[((o[`side]=`SELL) and (o[`price] < (minPrice[][`Sell]))) or 
-              ((o[`side]=`BUY) and (o[`price] > (maxPrice[][`BUY])));
-                [
+            $[((o[`side]=`SELL) and not[null[bestBid]] and (o[`price] < bestBid)) or 
+              ((o[`side]=`BUY) and not[null[bestAsk]] and (o[`price] > bestAsk));
+                [ 
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
                             :.event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
                             o[`otype]: `MARKET;
-                            .o.NewOrder[o;time];
+                            .order.NewOrder[o;time];
                         ]
                     ]
                 ];
                 [
-                    
                     // add orderbook references
                     // TODO update order init margin etc.
                     // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
-                    qty:(.order.OrderBook@o[`price])[`qty];
-                    o[`offset]: $[not null[qty];qty;0];
+                    
                     // Update the account with the respective
                     // order premium etc.
                     // TODO implement order margin here
@@ -437,6 +446,14 @@ AmendOrderBatch      :{[accountId;orders]
 // Market Order and Trade Logic
 // -------------------------------------------------------------->
 
+
+isNextOffset:{:((>;`size;0);
+               (in;`status;enlist[`NEW`PARTIALFILLED]);
+               (in;`price;x);
+               (in;`side;y);
+               (=;`offset;(min;`offset));
+               (=;`otype;`.order.ORDERTYPE$`LIMIT))};
+
 // TODO increment occurance of self execution
 // Executes a given trade an updates the orderbook and accounts/inventory
 // accordingly;
@@ -455,6 +472,8 @@ AmendOrderBatch      :{[accountId;orders]
 // TODO compactify!
 // TODO immediate or cancel, 
 // TODO add randomization. agg trade?
+BAM:();
+
 fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
         if[not (side in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
         nside: .order.NegSide[side];
@@ -469,10 +488,12 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
 
                 $[hasAgentOrders;
                     [
+                        .order.BAM:.order.Order;
+                        nxt::first ?[0!.order.Order;.order.isNextOffset[enlist price;enlist nside];0b;()];
                         // TODO check that the min offset in this instance only pertains to the price+side
-                        nxt:exec from .order.Order where side=nside, price=price, offset=min offset; //TODO derive price 
                         // If the orderbook possesses agent orders
-                        $[qty <= nxt[`offset];
+                        n:nxt;
+                        $[qty <= n[`offset];
                             [
                                 // If the quantity left to trade is less than the 
                                 // smallest agent offset i.e. not agent orders will
@@ -496,14 +517,23 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                 qty:0;
                             ];
                             [
-                                // 
-                                qty-:nxt[`offset];
+
+                                n:nxt[];
+                                // TODO should change leaves to size?
+                                qty-:n[`offset];
 
                                 // Make a trade event that represents the trade taking up the
                                 // offset space;
-                                .order.AddTradeEvent[side;nxt[`offset];price;time]; 
-                                $[qty>=nxt[`size];
+                                .order.AddTradeEvent[(side;n[`offset];price);time]; 
+
+                                // Update the offsets of the current orders
+                                .order.BAM:.order.Order;
+                                ![`.order.Order;.order.isActiveLimit[n[`price]];0b;(enlist `offset)!enlist (-;`offset;n[`offset])];
+                                n:nxt[];
+
+                                $[qty>=n[`size];
                                     [
+
                                         // If the quantity to be traded is greater than or
                                         // equal to the next agent order, fill the agent order
                                         // updating its state and subsequently removing it from
@@ -511,13 +541,13 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                         // respective trade event. // TODO if order made by agent!
                                         // TODO completely fill limit order
                                         .account.ApplyFill[
-                                            nxt[`accountId];
+                                            n[`accountId];
                                             instrumentId;
                                             price;
                                             nside;
-                                            nxt[`size];
+                                            n[`size];
                                             time;
-                                            nxt[`reduceOnly];
+                                            n[`reduceOnly];
                                             0b];
 
                                         if[isAgent;
@@ -526,7 +556,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                             // captured.
                                             / decrementQty[side;price;smallestOffset]; 
                                             .account.ApplyFill[
-                                                nxt[`accountId];
+                                                n[`accountId];
                                                 instrumentId;
                                                 price;
                                                 side;
@@ -537,30 +567,38 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                         ];
 
                                         .order.AddTradeEvent[];
-                                        qty-:nxt[`size];
+                                        qty-:n[`size];
                                     ];
                                     [
+
                                         // If the quantity to be traded is less than the next agent
                                         // order, update it to partially filled and apply fills, 
                                         // make trade events etc.
-                                        nxt[`size]-: qty;
                                         // TODO Update order
-                                        updateOrder[nxt;time];
+                                        ![`.order.Order;
+                                          enlist (=;`orderId;n[`orderId]);
+                                          0b;`size`status!(
+                                              (-;`size;qty);
+                                              `.order.ORDERSTATUS$`PARTIALFILLED
+                                          )];
+
                                         .account.ApplyFill[
                                             qty;
                                             price;
                                             nside;
                                             time;
-                                            nxt[`reduceOnly];
+                                            n[`reduceOnly];
                                             1b; // isMaker
-                                            nxt[`accountId]
-                                        ];
+                                            n[`accountId]];
 
                                         if[isAgent;
                                             // If the order was made by an agent the first level of
                                             // the orderbook should represent the change otherwise not
                                             // captured.
-                                            update qty:qty-nxt[`offset] from `.order.OrderBook where side=nside, price=price;
+                                            // TODO update book
+                                            / ![`.order.OrderBook;((=;`price;price)(=;`side;nside));0b;(enlist `qty)!enlist (-;`qty;n[`offset])];
+                                            show 99#"T";
+
                                             .account.ApplyFill[
                                                 qty,
                                                 price;
@@ -568,10 +606,9 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                                 time;
                                                 reduceOnly;
                                                 0b; // not isMaker
-                                                accountId
-                                            ];
+                                                accountId];
                                         ];
-                                        .order.AddTradeEvent[side;`float$qty;price;time];
+                                        .order.AddTradeEvent[(side;qty;price);time];
                                         qty:0;
                                     ]
                                 ]

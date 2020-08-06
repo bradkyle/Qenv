@@ -14,6 +14,7 @@ ERRORKIND   :   (
             `INVALID_ACCOUNTID;
             `INVALID_ORDER_SIZE;
             `PARTICIPATE_DONT_INITIATE;
+            `DUPLICATE_CLID;
             `NO_LIQUIDITY);
 
 // REQUEST_KIND refers to the type of 
