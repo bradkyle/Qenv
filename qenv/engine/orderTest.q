@@ -558,7 +558,7 @@ cTime:.z.z;
 .qt.AddCase[test;"orderbook has agent orders, trade doesn't fill agent order, trade execution > agent order offset, fill is agent";
     deriveCaseParams[(
         ((10#`BUY);1000+til 10;10#1000);(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
-        (1;`SELL;150;0b;0b;1;cTime);();(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
+        (1;`SELL;150;0b;0b;1;cTime);();();
         (1b;1;((`.order.ORDERSIDE$`SELL;150;1000);cTime));
         (0b;0;());0
     )]];

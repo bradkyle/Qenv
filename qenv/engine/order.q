@@ -245,6 +245,8 @@ NewOrder       : {[o;time];
     o[`leaves]: o[`size];
     o[`filled]: 0;
     o[`time]: time;
+    o[`orderId]:.order.orderCount+1;
+    
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
@@ -299,7 +301,6 @@ NewOrder       : {[o;time];
     / Invalid settlCurrency
 
 
-    o[`orderId]:.order.orderCount+1;
     // TODO set offset
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
