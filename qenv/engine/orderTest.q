@@ -285,7 +285,7 @@ oBeforeAll :{
     };
 
 oAfterAll :{
-    delete from `.instrument.Instrument;
+    / delete from `.instrument.Instrument;
     };
 
 BING:();
@@ -451,6 +451,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
+        if[count[p[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each p[`cOrd]];
 
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
@@ -486,8 +487,8 @@ test:.qt.Unit[
 makeOrders :{
     :$[count[x]>0;[ 
         // Side, Price, Size
-        :{:`instrumentId`accountId`side`otype`offset`size!(
-            x[0];x[1];(`.order.ORDERSIDE$x[2]);(`.order.ORDERTYPE$x[3]);x[4];x[5])} each flip[x];
+        :{:(`instrumentId`accountId`side`otype`offset`size`price!(
+            x[0];x[1];(`.order.ORDERSIDE$x[2]);(`.order.ORDERTYPE$x[3]);x[4];x[5];x[6]);x[7])} each flip[x];
         ];()]};
 
 deriveCaseParams    :{[params]
@@ -548,7 +549,7 @@ cTime:.z.z;
 // TODO check this
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
     deriveCaseParams[(
-        ((10#`BUY);1000+til 10;10#1000);(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100);
+        ((10#`BUY);1000+til 10;10#1000);(2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
         (1;`SELL;1500;0b;0b;1;cTime);();();
         (1b;1;((`.order.ORDERSIDE$`SELL;1500;1000);cTime));
         (0b;0;());0

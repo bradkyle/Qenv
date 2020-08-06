@@ -204,6 +204,7 @@ NewOrder       : {[o;time];
     if[not (o[`otype] in .order.ORDERTYPE); :.event.AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
     if[not (o[`timeinforce] in .order.TIMEINFORCE); :.event.AddFailure[time;`INVALID_TIMEINFORCE;"Invalid timeinforce"]]; // TODO make failure event.
     if[not (all o[`execInst] in .order.EXECINST); :.event.AddFailure[time;`INVALID_EXECINST;"Invalid order type"]]; // TODO make failure event.
+    if[(o[`otype]=`LIMIT) and null[o[`price]];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"price not set"]; 'INVALID_ORDER_PRICE)];
 
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`trigger]];o[`trigger]:`MARK;o[`trigger]:`NIL];
     $[(o[`otype] in `STOP_MARKET`STOP_LIMIT) and null[o[`stopprice]];:.event.AddFailure[time;`INVALID;""];o[`stopprice]:0f];
@@ -215,7 +216,6 @@ NewOrder       : {[o;time];
 
     // Instrument related validation
     ins:.instrument.Instrument@o[`instrumentId];
-
     if[((`float$o[`price]) mod ins[`tickSize])<>0;(.event.AddFailure[time;`INVALID_ORDER_TICK_SIZE;"not right"]; 'INVALID_ORDER_TICK_SIZE)];
     if[o[`price]>ins[`maxPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
     if[o[`price]<ins[`minPrice];(.event.AddFailure[time;`INVALID_ORDER_PRICE;"not right"]; 'INVALID_ORDER_PRICE)];
@@ -243,7 +243,7 @@ NewOrder       : {[o;time];
     o[`status]: (`.order.ORDERSTATUS$`NEW);
 
     o[`leaves]: o[`size];
-    o[`filled]: 0i;
+    o[`filled]: 0;
     o[`time]: time;
 
     / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
@@ -326,13 +326,13 @@ NewOrder       : {[o;time];
                     // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
                     qty:(.order.OrderBook@o[`price])[`qty];
-                    o[`offset]: $[not null[qty];qty;0i];
+                    o[`offset]: $[not null[qty];qty;0];
                     // Update the account with the respective
                     // order premium etc.
                     // TODO implement order margin here
 
                     // TODO make better
-                    `.order.Order insert o;
+                    `.order.Order upsert o;
                     .order.AddNewOrderEvent[o;time];
                 ]
             ];
@@ -348,16 +348,20 @@ NewOrder       : {[o;time];
       o[`otype]=`STOP_MARKET;
         [
             // todo if close 
-            `.order.Order insert order;
+            `.order.Order upsert order;
         ];
       o[`otype]=`STOP_LIMIT;
         [
             // todo if close
-            `.order.Order insert order;
+            `.order.Order upsert order;
         ];
       [:.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]]
     ];
     };
+
+/ CancelOrder    :{[accountId;orderId]
+    
+/     };
 
 NewOrderBatch   :{[accountId;orders]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
