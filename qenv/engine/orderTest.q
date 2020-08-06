@@ -449,7 +449,10 @@ deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
 
 // Runs an assertion on a mock
-MA      :{
+MA      :{[called;numCalls;calledWith;case]
+        
+        
+        .qt.A[called;=;m[`called];"called";c];
 
     };
 
@@ -482,7 +485,6 @@ test:.qt.Unit[
         / show mck[`called];
         mck:.qt.Mock@mck2;
 
-        .qt.A[(mck[`called]);=;(p[`eAddTradeEvent][`called]);"called";c];
         .qt.A[(mck[`numCalls]);=;(p[`eAddTradeEvent][`numCalls]);"numCalls";c];
         if[mck[`called]; [
             i:.qt.Invocation@(mck2;1);
