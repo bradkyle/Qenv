@@ -554,12 +554,22 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
                                             // the orderbook should represent the change otherwise not
                                             // captured.
                                             / decrementQty[side;price;smallestOffset]; 
+                                            if[n[`accountId]=accountId;[
+                                                    // TODO increment self fills and penalize
+                                                    ![`.account.Account;
+                                                        enlist (=;`accountId;n[`accountId]);
+                                                        0b;`selfFillCount`selfFillVolume!(
+                                                            (+;`selfFillCount;1);
+                                                            (+;`selfFillVolume;n[`size])
+                                                        )];
+                                                ]];
+
                                             .account.ApplyFill[
                                                 n[`accountId];
                                                 instrumentId;
                                                 price;
                                                 side;
-                                                qty;
+                                                n[`size];
                                                 time;
                                                 reduceOnly;
                                                 0b];

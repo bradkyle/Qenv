@@ -23,6 +23,14 @@ makeDepth :{
         :flip[x];
         ];()]};
 
+
+makeOrders :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`size`price!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7]);x[8])} each flip[x];
+        ];()]};
+
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / .account.NewAccount[`accountId`other!1 2;.z.z]
@@ -61,8 +69,8 @@ defaultAfterEach: {
     };
 
 defaultBeforeEach: {
-    /  delete from `.account.Account;
-    /  delete from `.account.Inventory;
+     delete from `.account.Account;
+     delete from `.account.Inventory;
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
@@ -468,6 +476,8 @@ test:.qt.Unit[
         
         .qt.A[qty;=;p[`eQty];"qty";c];
 
+        .qt.BAM:p[`eApplyFill][`calledWith];
+
         .qt.MA[
             mck1;
             p[`eApplyFill][`called];
@@ -492,13 +502,6 @@ test:.qt.Unit[
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
 
-
-makeOrders :{
-    :$[count[x]>0;[ 
-        // Side, Price, Size
-        :{:(`clId`instrumentId`accountId`side`otype`offset`size`price!(
-            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7]);x[8])} each flip[x];
-        ];()]};
 
 deriveCaseParams    :{[params]
     
@@ -573,7 +576,7 @@ cTime:.z.z;
         (1;`SELL;150;0b;1b;1;cTime);
         ();(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;100;1000);cTime)));
-        (1b;2;((1;`SELL;1500;0b;0b;1;cTime);(1;`SELL;1500;0b;0b;1;cTime));0
+        (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
     )]];
 
 / .qt.AddCase[test;

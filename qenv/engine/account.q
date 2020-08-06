@@ -61,7 +61,7 @@ Account: (
             selfFillVolume      : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
