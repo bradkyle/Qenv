@@ -449,10 +449,15 @@ deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
 
 // Runs an assertion on a mock
-MA      :{[called;numCalls;calledWith;case]
-        
-        
-        .qt.A[called;=;m[`called];"called";c];
+// todo make sure mock in mock table
+MA      :{[mockId;called;numCalls;calledWith;case]
+        m:.qt.Mock@mockId;
+        t:string[m[`targetPath]];
+
+        .qt.A[called;=;m[`called];t," was called called";case];
+        .qt.A[numCalls;=;m[`numCalls];t, " numCalls";case];
+
+        $[];
 
     };
 
