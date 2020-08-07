@@ -14,19 +14,18 @@
 
     ![`.order.OrderBook;enlist (=;`price;price);0b;(enlist `qty)!enlist (-;`qty;nonAgentSum)];      
 
-    // Update orders set                           
+    // Update orders set offset to min between offset-qty and 0                 
     ![`.order.Order;.order.isActiveLimit[n[`price]];0b;(enlist `offset)!enlist (-;`offset;n[`offset])];
 
 
-    {[qty;isAgent;o]
+    {[qty;t;o]
         amt:$[];
         namt:$[];
 
-
         ![`.order.Order;
             enlist (=;`orderId;n[`orderId]);
-            0b;`size`status!(
-                0;`.order.ORDERSTATUS$`FILLED
+            0b;`offset`size`status!(
+                0;0;`.order.ORDERSTATUS$`FILLED
             )];
 
         .account.ApplyFill[
