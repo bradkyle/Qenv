@@ -11,7 +11,10 @@
     lvls: .order.OrderBook pj select qty:sum leaves by price from .order.Order;
     / l:0!(.qt.FOO pj select qty:sum leaves by price from .qt.BAM)
     / l[`fill]: sums l[`qty];
-    / select fom l where (next[fill]-fill)>(fill - q) = FILLED
+    / select price, qty, fill, tk:((fill-prev[fill])-(fill-q)) from l where (next[fill]-fill)>=(fill - q)
+    / select from l where (next[fill]-fill)>=(fill - q) = FILLED
+    / partial: last l
+    / full:
 
     effected:select from .order.Order where offset<=qty, price=price;
 
