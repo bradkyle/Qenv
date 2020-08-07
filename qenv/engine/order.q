@@ -152,8 +152,8 @@ ProcessDepthUpdate  : {[event]
             maxNl:til maxN;
             nonAgentQtys:(numLvls,(maxN+1))#0;
             nonAgentQtys[;0]: offsets[;0];
-            nonAgentQtys[;-1_(1+maxNl)]: offsets[;] - shft[;];
-            nonAgentQtys[;maxN]: 
+            nonAgentQtys[;-1_(1+maxNl)]: Clip(offsets[;1_maxN] - shft[;-1_maxNl]);
+            nonAgentQtys[;maxN]: Clip(qtys-shft[;maxN])
 
 
             lvlNonAgentQtys: sum'[nonAgentQtys];
