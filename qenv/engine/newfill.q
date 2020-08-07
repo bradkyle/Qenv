@@ -7,10 +7,12 @@
     / select from l where (next[fill]-fill)>=(fill - q) = FILLED
     / partial: select from lt where tk>0;
     / full: exec price from lt where tk<=0;
+    / update tgt:qty-filled from select price, qty, fill, filled:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)))
     / select price, qty, fill, tgt:qty-((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)))
     / 1_sums raze(neg[q],lt[`leaves])
     / get non agent qtys
-    / 
+    / lt:update filled:qty,tgt:0 from lt where null[filled]
+    / shft<=lt[`filled]
 
     effected:select from .order.Order where offset<=qty, price=price;
 
