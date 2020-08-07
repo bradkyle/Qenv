@@ -140,13 +140,21 @@ ProcessDepthUpdate  : {[event]
             odrs:0!(`price xgroup odrs);
             offsets: PadM[odrs[`offset]];
             sizes: PadM[odrs[`leaves]]; 
-            maxNumUpdates: max count'[offsets];
+            maxN: max count'[offsets];
+            numLvls:0;
 
             / Calculate the shifted offsets, which infers
             / the amount of space between each offset
             shft: sizes + offsets;
             lshft: shft[;count shft];
-            lpad: maxNumUpdates+1;
+            lpad: maxN+1;
+
+            maxNl:til maxN;
+            nonAgentQtys:(numLvls,(maxN+1))#0;
+            nonAgentQtys[;0]: offsets[;0];
+            nonAgentQtys[;-1_(1+maxNl)]: offsets[;] - shft[;];
+            nonAgentQtys[;maxN]: 
+
 
             lvlNonAgentQtys: sum'[nonAgentQtys];
 

@@ -232,6 +232,17 @@ hedgedLiquidationPrice  :{[]
 
     / };
 
+
+// @x : unique account id
+// @y : amount that is self filled
+IncSelfFill    :{
+        ![`.account.Account;
+            enlist (=;`accountId;x);
+            0b;`selfFillCount`selfFillVolume!(
+                (+;`selfFillCount;1);
+                (+;`selfFillVolume;y)
+            )];}
+
 // TODO make global enums file
 // TOD
 ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
