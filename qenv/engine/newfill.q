@@ -16,6 +16,10 @@
     / {.order.NewOrder[x[0];x[1]]} each .orderTest.makeOrders[(til[8];8#1;8#1;8#`BUY;8#`LIMIT;100 400 600 100 400 600 800 100;8#100;raze(3#1000; 4#999; 1#998);8#.z.z)]
     / filled:(offsets<=lt[`filled])and(shft<=lt[`filled])
     / partial: `boolean$((offsets<=lt[`filled])-(shft<=lt[`filled]))
+    / raze[shft][where[raze `boolean$((offsets<=ln[`filled])-(shft<=ln[`filled]))]]
+    / raze shft-filled
+    / non agent order fills
+    / agent order partial fills: raze[PadM[ln[`orderId]]] where[raze partial]
 
     effected:select from .order.Order where offset<=qty, price=price;
 
