@@ -12,10 +12,17 @@
 
     // derive non agent qtys from effected
 
-    ![`.order.OrderBook;enlist (=;`price;price);0b;(enlist `qty)!enlist (-;`qty;nonAgentSum)];                                
+    ![`.order.OrderBook;enlist (=;`price;price);0b;(enlist `qty)!enlist (-;`qty;nonAgentSum)];      
+
+    // Update orders set                           
+    ![`.order.Order;.order.isActiveLimit[n[`price]];0b;(enlist `offset)!enlist (-;`offset;n[`offset])];
 
 
     {[qty;isAgent;o]
+        amt:$[];
+        namt:$[];
+
+
         ![`.order.Order;
             enlist (=;`orderId;n[`orderId]);
             0b;`size`status!(
@@ -27,9 +34,9 @@
             price;
             nside;
             time;
-            n[`reduceOnly];
+            o[`reduceOnly];
             1b; // isMaker
-            n[`accountId]];
+            o[`accountId]];
 
         if[isAgent;
             // If the order was made by an agent the first level of
@@ -50,8 +57,5 @@
         .order.AddTradeEvent[(side;n[`size];price);time];
         .order.AddOrderUpdateEvent[];
     }
-
-    filled:select from effected where (offset+leaves)<=qty;
-    partial: select from effected where (offset+leaves)>qty;
 
 ]
