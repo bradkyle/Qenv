@@ -537,6 +537,8 @@ deriveCaseParams    :{[params]
 // TODO check offset on multiple levels
 // TODO self fill vs non self fill
 // TODO add order update events!
+// TODO agent trade fills entire price level
+// TODO trade size larger than orderbook qty
 cTime:.z.z;
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent";

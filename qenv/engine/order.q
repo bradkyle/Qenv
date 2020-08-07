@@ -40,6 +40,7 @@ EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY`NIL;
 orderMandatoryFields    :`accountId`side`otype`size;
 
 // TODO change price type to int, longs etc.
+// TODO allow for data derived i.e. exchange market orders.
 Order: (
     [price:`long$(); orderId:`long$()]
     clId            :`long$();
@@ -480,6 +481,7 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
         nside: .order.NegSide[side];
         // TODO checking price is not more/less than best price
         / minOffset:exec 
+        // TODO what happens when qty is greater than orderbook qty
         $[(exec sum qty from .order.OrderBook where side=nside)=0;
             [:.event.AddFailure[time;`NO_LIQUIDITY;"There are no ",string[nside]," orders to match with the market order"]];
             [
@@ -488,11 +490,11 @@ fillTrade   :{[instrumentId;side;qty;reduceOnly;isAgent;accountId;time]
 
                 $[hasAgentOrders;
                     [
-                        .order.BAM:.order.Order;
                         nxt::first ?[0!.order.Order;.order.isNextOffset[enlist price;enlist nside];0b;()];
                         // TODO check that the min offset in this instance only pertains to the price+side
                         // If the orderbook possesses agent orders
                         n:nxt;
+                        // trade does not fill any agent orders
                         $[qty <= n[`offset];
                             [
                                 // If the quantity left to trade is less than the 
