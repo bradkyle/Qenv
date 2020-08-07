@@ -8,6 +8,11 @@
                         )];}
 
 [
+    lvls: .order.OrderBook pj select qty:sum leaves by price from .order.Order;
+    / l:0!(.qt.FOO pj select qty:sum leaves by price from .qt.BAM)
+    / l[`fill]: sums l[`qty];
+    / select fom l where (next[fill]-fill)>(fill - q) = FILLED
+
     effected:select from .order.Order where offset<=qty, price=price;
 
     // derive non agent qtys from effected

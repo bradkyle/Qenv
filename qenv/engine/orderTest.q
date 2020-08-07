@@ -473,6 +473,9 @@ test:.qt.Unit[
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
         if[count[p[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each p[`cOrd]];
         
+        .qt.BAM:.order.Order;
+        .qt.FOO:.order.OrderBook;
+
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
