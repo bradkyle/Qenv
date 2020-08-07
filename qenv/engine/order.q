@@ -155,7 +155,6 @@ ProcessDepthUpdate  : {[event]
             nonAgentQtys[;-1_(1+maxNl)]: Clip(offsets[;1_maxN] - shft[;-1_maxNl]);
             nonAgentQtys[;maxN]: Clip(qtys-shft[;maxN])
 
-
             lvlNonAgentQtys: sum'[nonAgentQtys];
 
             // Derived deltas represents an equal distribution of 
