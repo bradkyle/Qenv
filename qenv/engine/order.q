@@ -141,19 +141,17 @@ ProcessDepthUpdate  : {[event]
             offsets: PadM[odrs[`offset]];
             sizes: PadM[odrs[`leaves]]; 
             maxN: max count'[offsets];
-            numLvls:0;
+            numLvls:count[offsets]; // TODO check
 
             / Calculate the shifted offsets, which infers
             / the amount of space between each offset
-            shft: sizes + offsets;
-            lshft: shft[;count shft];
-            lpad: maxN+1;
+            shft: sizes + offsets; 
 
             maxNl:til maxN;
             nonAgentQtys:(numLvls,(maxN+1))#0;
             nonAgentQtys[;0]: offsets[;0];
-            nonAgentQtys[;-1_(1+maxNl)]: Clip(offsets[;1_maxN] - shft[;-1_maxNl]);
-            nonAgentQtys[;maxN]: Clip(qtys-shft[;maxN])
+            nonAgentQtys[;-1_(1+maxNl)]: Clip(offsets[;1_maxNl] - shft[;-1_maxNl]);
+            nonAgentQtys[;maxN]: Clip(qtys-max'[shft]);
 
             lvlNonAgentQtys: sum'[nonAgentQtys];
 
