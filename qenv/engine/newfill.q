@@ -45,7 +45,10 @@
     / od:til[(maxN+1)*2] except od
     / d[;-1_til[(maxN+1)*2] except od]:n
     / d[;od]:sizes
-    
+    / (d>sums'[d]) and (d>0)
+    / d-sums'[d]
+    / d[;0]:d[;0]-lt[`rp]
+
     / dst:flip[(maxN*2) numLvls#raze[flip[n,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
     / sums'[shft] - lt[]
@@ -57,6 +60,7 @@
     / new trades
     / new qty (orderbook)
     / new filled, new partial
+    / 
 
     effected:select from .order.Order where offset<=qty, price=price;
 
