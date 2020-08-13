@@ -40,11 +40,19 @@
     / raze[shft-ln[`filled]] where[raze partial]
     / -1_'n
     / nes:shft-lt[`rp]
-    / 
+
+    / d:(numLvls,((maxN*2)+1))#0;
+    / od:til[(maxN+1)*2] except od
+    / d[;-1_til[(maxN+1)*2] except od]:n
+    / d[;od]:sizes
+    
     / dst:flip[(maxN*2) numLvls#raze[flip[n,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
     / sums'[shft] - lt[]
 
+    / new filled/partial orders
+    / new trades
+    / 
     / new offsets:Clip[offsets-delta] 
     / new trades
     / new qty (orderbook)

@@ -148,16 +148,19 @@ ProcessDepthUpdate  : {[event]
             shft: sizes + offsets; 
 
             maxNl:til maxN;
-            nonAgentQtys:(numLvls,(maxN+1))#0;
-            nonAgentQtys[;0]: offsets[;0];
-            nonAgentQtys[;-1_(1+maxNl)]: Clip(offsets[;1_maxNl] - shft[;-1_maxNl]);
-            nonAgentQtys[;maxN]: Clip(qtys-max'[shft]);
 
-            lvlNonAgentQtys: sum'[nonAgentQtys];
+            // Non Agent Qtys
+            n:(numLvls,(maxN+1))#0;
+            n[;0]: offsets[;0];
+            n[;-1_(1+maxNl)]: Clip(offsets[;1_maxNl] - shft[;-1_maxNl]);
+            n[;maxN]: Clip(qtys-max'[shft]);
+
+            // SUm non agent qtys by lvl
+            nl: sum'[n];
 
             // Derived deltas represents an equal distribution of 
             // orders throughout the book.
-            derivedDeltas: floor[(nonAgentQtys%lvlNonAgentQtys)*dlt][::;-1];
+            derivedDeltas: floor[(n%nl)*dlt][::;-1];
 
             // Update the new offsets to equal the last
             // offsets + the derived deltas
