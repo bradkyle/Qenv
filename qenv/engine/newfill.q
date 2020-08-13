@@ -41,7 +41,7 @@
     / -1_'n
     / nes:shft-lt[`rp]
     / 
-    / dst:flip[8 3#raze[flip[offsets,sizes]]] // for finding distribution of qty to be filled for trades?
+    / dst:flip[(maxN*2) numLvls#raze[flip[n,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
     / sums'[shft] - lt[]
 
