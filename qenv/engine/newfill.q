@@ -47,7 +47,12 @@
     / d[;od]:sizes
     / (d>sums'[d]) and (d>0)
     / d-sums'[d]
-    / d[;0]:d[;0]-lt[`rp]
+    / nd:d
+    / nd[;0]:d[;0]-lt[`rp]
+    / sd:d-Clip[sums'[nd]]
+    / 
+/    flip raze'[((sd*(sd>0) and (d>0));({9#x}'[lt[`price]]))]
+
 
     / dst:flip[(maxN*2) numLvls#raze[flip[n,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
