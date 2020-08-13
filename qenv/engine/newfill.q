@@ -30,6 +30,7 @@
     / qtys:exec qty from l where price in odrs[`price]
     / filled:(offsets<=lt[`rp])and(shft<=lt[`rp])
     / partial:`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp])) // TODO test
+    / (raze[PadM[ids]]) where[raze filled]
     / raze[shft][where[raze `boolean$((offsets<=ln[`filled])-(shft<=ln[`filled]))]]
     / raze shft-filled
     / non agent order fills
@@ -38,13 +39,13 @@
     / raze[shft-ln[`filled]] where[raze partial]
     / raze[shft-ln[`filled]] where[raze partial]
     / -1_'n
+    / nes:shft-lt[`rp]
     / 
     / dst:flip[8 3#raze[flip[offsets,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
     / sums'[shft] - lt[]
 
-    / new offsets:Clip[offsets-delta]
-    / new sizes
+    / new offsets:Clip[offsets-delta] 
     / new trades
     / new qty (orderbook)
     / new filled, new partial
