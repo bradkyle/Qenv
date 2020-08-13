@@ -5,6 +5,8 @@
     / l:update fill:sums qty from 0!(.qt.FOO pj select qty:sum leaves, oqty:sum leaves, leaves, offset, orderId by price from .qt.BAM)
     / lt:select price, qty, fill, tk:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where (next[fill]-fill)>=(fill - q)
     / select from l where (next[fill]-fill)>=(fill - q) = FILLED
+    / q:1450
+    / lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)))
     / partial: select from lt where tk>0;
     / full: exec price from lt where tk<=0;
     / update tgt:qty-filled from select price, qty, fill, filled:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)))
@@ -14,12 +16,38 @@
     / lt:update filled:qty,tgt:0 from lt where null[filled]
     / shft<=lt[`filled]
     / {.order.NewOrder[x[0];x[1]]} each .orderTest.makeOrders[(til[8];8#1;8#1;8#`BUY;8#`LIMIT;100 400 600 100 400 600 800 100;8#100;raze(3#1000; 4#999; 1#998);8#.z.z)]
-    / filled:(offsets<=lt[`filled])and(shft<=lt[`filled])
-    / partial: `boolean$((offsets<=lt[`filled])-(shft<=lt[`filled]))
+    / odrs:0!(`price xgroup odrs);
+    / odrs:0!(`price xgroup odrs);
+    / offsets: PadM[lt[`offset]];
+    / sizes: PadM[lt[`leaves]]; 
+    / maxN: max count'[offsets];
+    / numLvls:count[offsets]; // TODO check
+
+    / / Calculate the shifted offsets, which infers
+    / / the amount of space between each offset
+    / shft: sizes + offsets; 
+
+    / qtys:exec qty from l where price in odrs[`price]
+    / filled:(offsets<=lt[`rp])and(shft<=lt[`rp])
+    / partial:`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp])) // TODO test
     / raze[shft][where[raze `boolean$((offsets<=ln[`filled])-(shft<=ln[`filled]))]]
     / raze shft-filled
     / non agent order fills
+    / (raze[nes];raze[PadM[ids]];raze[noffsets])[;where[raze partial]]
     / agent order partial fills: raze[PadM[ln[`orderId]]] where[raze partial]
+    / raze[shft-ln[`filled]] where[raze partial]
+    / raze[shft-ln[`filled]] where[raze partial]
+    / -1_'n
+    / 
+    / dst:flip[8 3#raze[flip[offsets,sizes]]] // for finding distribution of qty to be filled for trades?
+    / shft[;0]:shft[;0]-lt[`rp]
+    / sums'[shft] - lt[]
+
+    / new offsets:Clip[offsets-delta]
+    / new sizes
+    / new trades
+    / new qty (orderbook)
+    / new filled, new partial
 
     effected:select from .order.Order where offset<=qty, price=price;
 

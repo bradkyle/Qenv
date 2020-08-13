@@ -302,7 +302,7 @@ oAfterAll :{
     / delete from `.instrument.Instrument;
     };
 
-BING:();
+BAM:();
 
 test:.qt.Unit[
     ".order.NewOrder";
@@ -315,9 +315,9 @@ test:.qt.Unit[
         mck: .qt.M[`.order.processCross;p[`mFn];c];
 
         o:p[`order];
+
         / show .instrument.Instrument;
         res:.order.NewOrder[o;.z.z];
-
         // Assertions
         k:key p[`eOrd]; 
         o1:first (0!select from .order.Order where orderId=1);
