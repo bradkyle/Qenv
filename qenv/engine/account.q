@@ -373,6 +373,10 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
               ((i[`amt]*namt)<0); // TODO check sign
                 [ 
                     // Cross position
+                    i[`totalEntry]+: abs[namt];
+                    i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
+
+
 
                 ];
                 [
