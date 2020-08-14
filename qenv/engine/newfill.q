@@ -50,9 +50,12 @@
     / nd:d
     / nd[;0]:d[;0]-lt[`rp]
     / sd:d-Clip[sums'[nd]]
-    / 
+    / create trades
 /    flip raze'[((sd*(sd>0) and (d>0));({9#x}'[lt[`price]]))]
-
+/ flip raze (enlist[(18#`BUY)];raze'[(tqty;({9#x}'[lt[`price]]))])
+/ `side`qty`price!(raze[(enlist[(18#`BUY)];raze'[(tqty;({9#x}'[lt[`price]]))])])
+/ (raze'[(tqty;({9#x}'[lt[`price]]))])[;where[raze[tqty]>0]]
+/ {show x}flip[tds]
 
     / dst:flip[(maxN*2) numLvls#raze[flip[n,sizes]]] // for finding distribution of qty to be filled for trades?
     / shft[;0]:shft[;0]-lt[`rp]
