@@ -122,11 +122,12 @@ AddTradeEvent  :{[trade;time]
 // -------------------------------------------------------------->
 
 // TODO partial vs full book update.
-ProcessDepthUpdate  : {[event]
+ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
     // Derive the deltas for each level given the new update
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
     event:flip event;
+    show event;
     nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
     $[(count[odrs]>0);
@@ -192,12 +193,14 @@ ProcessDepthUpdate  : {[event]
       [
          `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
       ]];
+    lasttime:exec last time from nxt;
+    show lasttime;
     / `price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2] from (e@2)
     / asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];
-    .order.DeriveThenAddDepthUpdateEvent[time]; 
+    .order.DeriveThenAddDepthUpdateEvent[lasttime]; 
 
     };
 
@@ -315,6 +318,8 @@ ProcessTrade    :{[trade;time]
     .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
+ProcessTradeEvent   :{[]};
+
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
 
@@ -386,8 +391,7 @@ NewOrder       : {[o;time];
 
     if[null[o[`offset]];[
         qty:(.order.OrderBook@o[`price])[`qty];
-        o[`offset]: $[not null[qty];qty;0];
-        ]];
+        o[`offset]: $[not null[qty];qty;0]]];
 
     // TODO only if Limit order or market order
     if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
@@ -500,13 +504,12 @@ NewOrder       : {[o;time];
             // TODO checks etc.
             `.order.Order upsert order;
         ];
-      [:.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]]
-    ];
+      [:.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]]];
     };
 
 // TODO define granularity of update events.
 // TODO
-CancelOrder    :{[order]
+CancelOrder    :{[order;time]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
     if[not(accountId in key .account.Account);
@@ -519,35 +522,35 @@ CancelOrder    :{[order]
     // Replace order with order from store
     corder:exec from .order.Order where orderId=order[`orderId];
 
-    // If the order does not belong to the account
-    if[not()];
-
-    if[not[.account.ValidateOrderStateDelta[neg[corder[`leaves]];corder[`price];acc;ins];
-        :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+    // If the order does not belong to the account    
 
     // other validations
+
+    / if[not[.account.UpdateOpenOrderState[neg[corder[`leaves]];corder[`side];corder[`price];acc;ins];
+        / :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     update status:`.order.ORDERSTATUS$`CANCELLED, leaves:0 from `.order.Order where orderId=order[`orderId];
 
     // Update agent order offsets to represent the change
     update offset:offset-order[`leaves] from `.order.Order where price=order[`price] and offset<=order[`offset];
 
+
     .order.AddUpdateOrderEvent[o;time];
-    .account.UpdateOpenOrderState[];
+    / .account.UpdateOpenOrderState[];
     .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
-CancelAllOrders :{[accountId]
+CancelAllOrders :{[accountId;time]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
-    CancelOrder (select from .order.Order where accountId=accountId)
+    CancelOrder (select from .order.Order where accountId=accountId);
     };
 
 // TODO
-AmendOrder      :{[order]
+AmendOrder      :{[order;time]
 
     order:ordSubmitFields!order[ordSubmitFields];
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
@@ -560,34 +563,34 @@ AmendOrder      :{[order]
     corder:exec from .order.Order where orderId=order[`orderId];
     delta: order[`leaves]-corder[`leaves];
 
-    if[not[.account.ValidateOrderStateDelta[delta;order[`price];acc;ins];
-            :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+    / if[not[.account.ValidateOrderStateDelta[delta;order[`price];acc;ins];
+            / :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     $[((order[`size]=0)or(order[`leaves]=0));
         .order.CancelOrder[order;time];
         $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`leaves]<=corder[`leaves])); // TODO check equality
-        [
-            update offset:offset-delta from `.order.Order where price=order[`price] and offset<=order[`offset];
+            [
+                update offset:offset-delta from `.order.Order where price=order[`price] and offset<=order[`offset];
 
-            `.order.Order upsert order;
-            .order.AddUpdateOrderEvent[order;time];
+                `.order.Order upsert order;
+                .order.AddUpdateOrderEvent[order;time];
 
-            .account.UpdateOpenOrderState[];
-            .order.DeriveThenAddDepthUpdateEvent[time];
-        ];
-        [
-            // assumes that this order is the last order in the offset
-            // and as such does not update other offsets.
-            if[null[order[`offset]];[
-                qty:(.order.OrderBook@order[`price])[`qty];
-                order[`offset]: $[not null[qty];qty;0]]];
-            
-            `.order.Order upsert order;
-            .order.AddUpdateOrderEvent[order;time];
+                .account.UpdateOpenOrderState[];
+                .order.DeriveThenAddDepthUpdateEvent[time];
+            ];
+            [
+                // assumes that this order is the last order in the offset
+                // and as such does not update other offsets.
+                if[null[order[`offset]];[
+                    qty:(.order.OrderBook@order[`price])[`qty];
+                    order[`offset]: $[not null[qty];qty;0]]];
+                
+                `.order.Order upsert order;
+                .order.AddUpdateOrderEvent[order;time];
 
-            .account.UpdateOpenOrderState[];
-            .order.DeriveThenAddDepthUpdateEvent[time];
-        ]]];
+                .account.UpdateOpenOrderState[];
+                .order.DeriveThenAddDepthUpdateEvent[time];
+            ]]];
     };
 
 
@@ -604,7 +607,8 @@ triggerStop    :{[stop]
         [
             // TODO update stop to triggered
             :ordSubmitFields!();
-        ]
+        ];
+        [On]
     ];
     };
 

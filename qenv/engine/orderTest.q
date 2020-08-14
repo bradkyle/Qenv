@@ -16,7 +16,6 @@ z:.z.z;
 
 makeDepthUpdate :{
     :$[count[x]>0;[ 
-        if[count[x]<4;d,:enlist(count[first[x]]#.z.z)];
         // Side, Price, Size
         x:{:`time`intime`kind`cmd`datum!(x[3];x[3];`DEPTH;`UPDATE;
         ((`.order.ORDERSIDE$x[0]);x[1];x[2]))} each flip[x];
