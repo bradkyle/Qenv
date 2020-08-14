@@ -216,12 +216,6 @@ NewInventory : {[inventory;time]
 
     };
 
-
-hedgedLiquidationPrice  :{[]
-
-    };
-
-
 // ORDER Margin
 // -------------------------------------------------------------->
 
