@@ -228,7 +228,7 @@ NewInventory : {[inventory;time]
 // @account    : dict representation of the account to be validated
 // @instrument : dict representation of the orders instrument 
 ValidateOrderStateDelta :{[delta;side;price;account;instrument]
-    premium:.instrument.DerivePremium[];
+    margin:.instrument.DeriveRequiredMargin[];
 
     };
 
@@ -241,7 +241,7 @@ ValidateOrderStateDelta :{[delta;side;price;account;instrument]
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
 UpdateOpenOrderState    :{[delta;side;price;account;instrument]
-    premium:.instrument.DerivePremium[];
+    margin:.instrument.DeriveRequiredMargin[];
 
     };
 
@@ -286,6 +286,7 @@ crossFill   :{
 // TODO make global enums file
 // TOD7,776e+6/1000
 // TODO make simpler
+// TODO update applicable fee when neccessary
 ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
     qty:abs[qty];
     if[qty=0;:.event.AddFailure[]];
