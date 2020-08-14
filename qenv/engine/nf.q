@@ -3,7 +3,7 @@
 // TODO check has orders
 // TODO delete filled orderbook 
 // TODO clean up
-ProcessTrade    :{[instrumentId]
+ProcessTrade    :{[trade]
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId, reduceOnly by price from .order.Order);
     lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,size,offset,orderId, accountId, reduceOnly from l where qty>(qty-((fill-prev[fill])-(fill-q)));
@@ -108,7 +108,7 @@ ProcessTrade    :{[instrumentId]
             accountId];
         ]];
 
-    delete from .order.OrderBook where price in (exec price from lt where tgt<=0);
+    delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
     // TODO orderbook update event.
     };
 
