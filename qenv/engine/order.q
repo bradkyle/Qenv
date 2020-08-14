@@ -492,11 +492,13 @@ NewOrder       : {[o;time];
       o[`otype]=`STOP_MARKET;
         [
             // todo if close 
+            // TODO checks etc.
             `.order.Order upsert order;
         ];
       o[`otype]=`STOP_LIMIT;
         [
             // todo if close
+            // TODO checks etc.
             `.order.Order upsert order;
         ];
       [:.event.AddFailure[time;`INVALID_ORDTYPE;"The order had an invalid otype"]]
