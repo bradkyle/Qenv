@@ -23,14 +23,15 @@ ProcessTrade    :{[]
 
     // Calculate trade qtys
     dc:(maxN*2)+1;
+    tdc:til dc;
     d:(numLvls,dc)#0; // empty matrix
-    idx:(1+til dc) mod 2;
+    idx:(1+tdc) mod 2;
     aidx:-1_where[idx]; / idxs for agent sizes
     oidx:where[not[idx]]; / idxs for offsets
     d[;aidx]: sizes;
     d[;oidx]: offsets;
     d[;dc-1]: Clip(lt[`qty]-max'[shft]); / set last value equal to last (non agent qty)
-    sd:0;
+    sd:d-Clip[sums'[flip raze (enlist(d[;0]-lt[`rp]);flip d[;1_tdc])]];
 
     // Derive trades from size/offset distribution.
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
