@@ -299,8 +299,7 @@ ProcessTrade    :{[trade;time]
         if[accountId in flls[`accountId];.account.IncSelfFill[
             accountId;
             (count'[select by accountId from f where qty>0]@1);
-            (exec sum qty from f where qty>0 and accountId=1)
-        ]];
+            (exec sum qty from f where qty>0 and accountId=1)]];
 
         .account.ApplyFill[
             qty;
