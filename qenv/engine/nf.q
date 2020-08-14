@@ -2,8 +2,8 @@
 // TODO config delete cancelled orders.
 ProcessTrade    :{[]
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
-    l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, offset, orderId by price from .order.Order);
-    lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)));
+    l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId by price from .order.Order);
+    lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,size,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)));
 
     offsets: PadM[lt[`offset]];
     sizes: PadM[lt[`size]]; 
@@ -18,19 +18,24 @@ ProcessTrade    :{[]
     // Calculate new offsets and leaves.
     noffsets: raze[Clip[offsets-lt[`rp]]];
     nleaves: raze[Clip[shft-lt[`rp]]];
+    nfilled: (raze[sizes]-nleaves)
 
     // Derive order updates
     partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
     filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
     oids:raze[PadM[lt[`orderId]]];
+    coids:count[oids];
 
-    // orderId, status, offset, leaves, filled 
-    ords:(5,count[oids])#0;
-    ords[1;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
-    ords[1;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
-    ords[2]:noffsets;
-    ords[3]:nleaves;
-    ords[4]:(raze[sizes]-nleaves)
+    // price, orderId, status, offset, leaves, filled 
+    ords:(5,coids)#0;
+    ords[0]:0;
+    ords[]
+    ords[2;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
+    ords[2;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
+    ords[3]:noffsets;
+    ords[4]:nleaves;
+    ords[5]:;
+    ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]];
 
     // derive account updates
 
