@@ -468,13 +468,12 @@ NewOrder       : {[o;time];
                     // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
                     
-                    // Update the account with the respective
-                    // order premium etc.
-                    // TODO implement order margin here
-
                     // TODO make better
                     `.order.Order upsert o;
                     .order.AddNewOrderEvent[o;time];
+                    .account.UpdateOpenOrderState[];
+                    .order.DeriveThenAddDepthUpdateEvent[time]; 
+
                 ]
             ];
         ];
