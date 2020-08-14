@@ -147,8 +147,4 @@ AddFailure   : {[time;kind;msg]
 // Retrieves all events from the Events table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the events (As a table?)
-PopEvents     :{[]
-        e: .event.Event;
-        delete from `.event.Events;
-        :e
-        };
+PopEvents     :{e: .event.Event;delete from `.event.Events;:e};

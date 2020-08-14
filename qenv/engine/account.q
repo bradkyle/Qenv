@@ -380,8 +380,8 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
 
                 i[`maintMargin]:maintainenceMargin[i[`amt];ins];
 
-                lp:0;
-                bp:0;
+                lp:0; // TODO liquidation price
+                bp:0; // TODO bankruptcy price
  
                 acc[`balance]+:(rpl-cost); 
                 acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];

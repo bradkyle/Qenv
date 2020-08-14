@@ -396,7 +396,6 @@ NewOrder       : {[o;time];
 
     // calculate initial margin requirements of order
 
-
     // TODO 
     / Duplicate clOrdID
     / Invalid orderID
