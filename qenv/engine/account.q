@@ -363,13 +363,14 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
         ];
         [
             i:.account.Inventory@(accountId;`BOTH);
-            $[(reduceOnly or (acc[`net])); // Close position
+            namt:i[`amt]+qty;
+            $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position
                 [
                     // Close positionType BOTH
                     // TODO account netShortPosition, netLongPosition
 
                 ];
-            ();
+              ((i[`amt]*namt)<0); // TODO check sign
                 [ 
                     // Cross position
 
