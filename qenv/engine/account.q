@@ -228,6 +228,10 @@ hedgedLiquidationPrice  :{[]
 
     };
 
+ValidateOrderStateDelta :{
+
+    };
+
 UpdateOpenOrderState    :{
 
     };

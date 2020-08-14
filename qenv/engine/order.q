@@ -106,8 +106,8 @@ minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 bestBid:{exec max price from .order.OrderBook where side=`BUY};
 bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 
-DeriveThenAddDepthUpdateEvent :{[time]
-    :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
+DeriveThenAddDepthUpdateEvent :{[time] // TODO check
+    :.event.AddEvent[time;`UPDATE;`DEPTH;(.order.OrderBook pj (select sum leaves by side,price from .order.Order))];
     };
 
 AddDepthUpdateEvent :{[depth;time]
@@ -199,13 +199,17 @@ ProcessDepthUpdate  : {[event]
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];
+    .order.DeriveThenAddDepthUpdateEvent[time]; 
+
     };
 
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
 
-ProcessTrade    :{[qty;time]
+ProcessTrade    :{[trade;time]
+    // TODO validate trade
+    
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId, reduceOnly by price from .order.Order);
     lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,size,offset,orderId, accountId, reduceOnly from l where qty>(qty-((fill-prev[fill])-(fill-q)));
@@ -286,7 +290,7 @@ ProcessTrade    :{[qty;time]
     // Derive trades from size/offset distribution.
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
     tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
-    t:flip `size`price`side`time!tds
+    t:flip `size`price`side`time!tds;
 
     {.order.AddTradeEvent[
         x[`time];
@@ -298,7 +302,7 @@ ProcessTrade    :{[qty;time]
             accountId;
             (count'[select by accountId from f where qty>0]@1);
             (exec sum qty from f where qty>0 and accountId=1)
-        ]]];
+        ]];
 
         .account.ApplyFill[
             qty;
@@ -311,7 +315,7 @@ ProcessTrade    :{[qty;time]
         ]];
 
     delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
-    // TODO orderbook update event.
+    .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
 // Limit Order Manipulation CRUD Logic
@@ -387,7 +391,8 @@ NewOrder       : {[o;time];
         qty:(.order.OrderBook@o[`price])[`qty];
         o[`offset]: $[not null[qty];qty;0];
         ]];
-    / if[(acc[`currentQty] >);:.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+
+    .account.ValidateOrderStateDelta[];
 
     // calculate initial margin requirements of order
 
@@ -517,6 +522,8 @@ CancelOrder    :{[order]
     // If the order does not belong to the account
     if[not()];
 
+    .account.ValidateOrderStateDelta[];
+
     // other validations
 
     update status:`.order.ORDERSTATUS$`CANCELLED, leaves:0 from `.order.Order where orderId=order[`orderId];
@@ -550,6 +557,9 @@ AmendOrder      :{[order]
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     corder:exec from .order.Order where orderId=order[`orderId];
+
+
+    .account.ValidateOrderStateDelta[];
 
     $[((order[`size]=0)or(order[`leaves]=0));
         .order.CancelOrder[order;time];
@@ -588,12 +598,12 @@ AmendOrder      :{[order]
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;instrumentId;time]
 
-    / activatedStops:select from .order.Order 
-    /     where otype in (`STOP_LIMIT`STOPMARKET), 
-    /     (side=`SELL and price>stopprice),
-    /     (sid`BUY and price<stopprice);
+    activatedStops:select from .order.Order 
+        where otype in (`STOP_LIMIT`STOPMARKET), 
+        (side=`SELL and price>stopprice),
+        (sid`BUY and price<stopprice);
     
     / update otype:{}
-    / .order.NewOrder each {}activatedStops;
+    .order.NewOrder {}activatedStops;
 
     };
