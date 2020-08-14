@@ -76,8 +76,11 @@ ProcessTrade    :{[instrumentId]
     .order.AddTradeEvent[];
 
     if[isAgent;[
+        // TODO reduce to one query
         if[accountId in flls[`accountId];.account.IncSelfFill[
-            accountId;(count'[select by accountId from f where qty>0]@1);()
+            accountId;
+            (count'[select by accountId from f where qty>0]@1);
+            (exec sum qty from f where qty>0 and accountId=1)
         ]]];
 
         .account.ApplyFill[
