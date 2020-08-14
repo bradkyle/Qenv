@@ -2,8 +2,8 @@
 // TODO config delete cancelled orders.
 ProcessTrade    :{[]
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
-    l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId by price from .order.Order);
-    lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,size,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)));
+    l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId by price from .order.Order);
+    lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,size,offset,orderId, accountId from l where qty>(qty-((fill-prev[fill])-(fill-q)));
 
     offsets: PadM[lt[`offset]];
     sizes: PadM[lt[`size]]; 
@@ -33,13 +33,14 @@ ProcessTrade    :{[]
     ords[2;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
     ords[3]:noffsets;
     ords[4]:nleaves;
-    ords[5]:;
+    ords[5]:; // TODO
     `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
 
     // derive account updates
-
+    aids: raze[PadM[lt[`accountId]]]; 
 
     // Calculate trade qtys
+    // calculated seperately from orders on account of non agent trades.
     dc:(maxN*2)+1;
     tdc:til dc;
     d:(numLvls,dc)#0; // empty matrix

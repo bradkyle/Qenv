@@ -42,6 +42,8 @@
     / nes:shft-lt[`rp]
     / til'[count'[lt[`orderId]]]
     / oids in raze[lt[`orderId]]
+    / aids: raze[PadM[lt[`accountId]]]; 
+    / sum'[raze[leaves][[group aids]]]
 
     / d:(numLvls,((maxN*2)+1))#0;
     / od:til[(maxN+1)*2] except od
