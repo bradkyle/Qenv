@@ -56,7 +56,7 @@ ProcessTrade    :{[instrumentId]
     flls[5]:raze[PadM[lt[`reduceOnly]]];
     flls[6]:coids#1b;
     f:fllcols!flls;
-    fm:0!select sum qty,last time by accountId,instrumentId,side,price,reduceOnly,isMaker from f where accountId in daids;
+    fm:0!select sum qty,last time by accountId,instrumentId,`.order.ORDERSIDE@side,price,`boolean$reduceOnly,`boolean$isMaker from f where accountId in daids;
     {.account.ApplyFill[
         x[`accountId];
         x[`instrumentId];
