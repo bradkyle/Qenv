@@ -108,7 +108,7 @@ UpdateInstrument      :{[instrument;time]
 
 
 NewRiskTier             :{[]
-
+    `mxamt`mmr`imr`maxlev!flip[tier];
 
     };
 
