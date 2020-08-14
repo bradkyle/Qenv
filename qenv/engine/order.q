@@ -238,8 +238,8 @@ ProcessTrade    :{[trade;time]
     ords:(6,coids)#0;
     ords[0]:prices; // order prices
     ords[1]:oids;
-    ords[2;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
-    ords[2;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
+    ords[2;partial]:count[partial]#`long$(`.order.ORDERSTATUS$`PARTIALFILLED); 
+    ords[2;filled]:count[filled]#`long$(`.order.ORDERSTATUS$`FILLED);
     ords[3]:noffsets;
     ords[4]:nleaves;
     ords[5]:raze[sizes]-nleaves;

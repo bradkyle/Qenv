@@ -128,7 +128,7 @@ Deposit  :{[deposited;time;accountId]
         depositCount:depositCount+1
         from `.account.Account 
         where accountId=accountId;
-    :AddAccountUpdateEvent[accountId;time];
+    :.account.AddAccountUpdateEvent[accountId;time];
     };
 
 
@@ -147,7 +147,7 @@ Withdraw       :{[withdrawn;time;accountId]
             withdrawCount:withdrawCount+1
             from `.account.Account 
             where accountId=accountId;
-        :AddAccountUpdateEvent[accountId;time];
+        :.account.AddAccountUpdateEvent[accountId;time];
         ];
         [
             0N; //TODO create failure
@@ -217,29 +217,33 @@ NewInventory : {[inventory;time]
     };
 
 
-// Fill
-// -------------------------------------------------------------->
-
-// Gets the position side that an order fills
-HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
-HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
-
 hedgedLiquidationPrice  :{[]
 
     };
 
+
+// ORDER Margin
+// -------------------------------------------------------------->
+
 // Validates that an accoun has enough margin to allow for given order
 // delta without liquidation.
-ValidateOrderStateDelta :{[delta;price;account;instrument]
+ValidateOrderStateDelta :{[delta;side;price;account;instrument]
 
     };
 
 // Updates the open order state of an account
 // Updates an accounts order margin, open order amount, order premium 
 // netLongPosition/netShortPosition
-UpdateOpenOrderState    :{
+UpdateOpenOrderState    :{[delta;side;price;account;instrument]
 
     };
+
+// Fill
+// -------------------------------------------------------------->
+
+// Gets the position side that an order fills
+HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
+HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
 
 // Increments the occurance of an agent's self fill.
 // @x : unique account id
