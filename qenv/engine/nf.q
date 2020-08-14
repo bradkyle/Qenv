@@ -37,16 +37,13 @@ ProcessTrade    :{[]
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
     tds:(raze'[(tqty;({9#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
 
-    if[isAgent;
-    
-        .account.ApplyFill[
+    if[isAgent;.account.ApplyFill[
             qty;
             price;
             side;
             time;
             reduceOnly;
             0b;
-            accountId];
-    ];
+            accountId]];
 
     };
