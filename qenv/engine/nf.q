@@ -24,9 +24,10 @@ ProcessTrade    :{[]
     partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
     filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
     oids:raze[PadM[lt[`orderId]]];
+    coids:count[oids];
 
     // price, orderId, status, offset, leaves, filled 
-    ords:(6,count[oids])#0;
+    ords:(6,coids)#0;
     ords[0]:raze[{x#y}'[count'[lt[`orderId]];lt[`price]]];
     ords[1]:oids;
     ords[2;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
@@ -36,8 +37,16 @@ ProcessTrade    :{[]
     ords[5]:; // TODO
     `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
 
-    // derive account updates
-    aids: raze[PadM[lt[`accountId]]]; 
+    // accountId, instrumentId, price, side, qty, time reduceOnly, isMaker
+    aids: raze[PadM[lt[`accountId]]];
+    flls:(8,count[oids])#0;
+    flls[0]:aids;
+    flls[1]:
+
+    gaids: group aids where[aids in distinct[raze[lt[`accountId]]]]; 
+    flls:Clip[raze[leaves]-nleaves];
+    cflls:count'[gaids];
+    sum'[flls[gaids]]
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
