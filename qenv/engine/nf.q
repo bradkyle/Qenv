@@ -82,7 +82,8 @@ ProcessTrade    :{[instrumentId]
 
     // Derive trades from size/offset distribution.
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
-    tds:(raze'[(tqty;({dc#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
+    tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
+    t:flip `size`price`side`time!tds
 
     .order.AddTradeEvent[];
 
