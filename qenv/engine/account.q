@@ -399,6 +399,39 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
                 [
                     // Close positionType BOTH
                     // TODO account netShortPosition, netLongPosition
+                    // CLOSE given side for position
+                    i:.account.Inventory@(accountId;HedgedNegSide[side]);
+
+                    if[size>i[`amt];:.event.AddFailure[]];
+
+                    cost:qty*fee;
+                    rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
+                    i[`totalCommission]+:cost;
+                    i[`realizedGrossPnl]+:(rpl-cost);
+                    i[`realizedPnl]+:rpl;
+                    i[`amt]-:qty;
+                    i[`fillCount]+:1;
+                    i[`tradeVolume]+:qty;
+
+                    // TODO make instrument agnostic
+                    i[`totalCloseVolume]+:abs[fillQty]; 
+                    i[`totalCloseAmt]+:abs[fillQty%price];
+                    i[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
+                    i[`totalLossRpnl]+:min[realizedPnlDelta,0];
+                    i[`totalGainRpnl]+:max[realizedPnlDelta,0]; 
+
+                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+
+                    i[`initMargin]:i[`entryValue]%acc[`leverage];
+                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                    if[isMaker;i[`orderMargin]];
+                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+
+                    acc[`balance]+:(rpl-cost); 
+                    acc[`unrealizedPnl]: i[`unrealizedPnl];
+                    acc[`orderMargin]: i[`orderMargin];
+                    acc[`posMargin]: i[`posMargin];
+                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
 
                 ];
               ((i[`amt]*namt)<0); // TODO check sign
