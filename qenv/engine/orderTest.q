@@ -288,180 +288,11 @@ deriveCaseParams    :{[params]
 /     )]];
 
 
-// New Order Tests
-// -------------------------------------------------------------->
-
-oBeforeAll :{
-    .instrument.NewInstrument[
-        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
-        (1;0.5;1e5f;0f;1e7f;0f;1);
-        1b;.z.z];
-    };
-
-oAfterAll :{
-    / delete from `.instrument.Instrument;
-    };
-
-BAM:();
-
-test:.qt.Unit[
-    ".order.NewOrder";
-    {[c]
-        p:c[`params]; 
-        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
-  
-        // instantiate mock for processCross
-        mck: .qt.M[`.order.processCross;p[`mFn];c];
-
-        o:p[`order];
-
-        / show .instrument.Instrument;
-        res:.order.NewOrder[o;.z.z];
-        // Assertions
-        k:key p[`eOrd]; 
-        o1:first (0!select from .order.Order where orderId=1);
-        .qt.A[o1[k];~;p[`eOrd][k];"order";c];
-
-    };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-deriveCaseParams    :{[params]
-    
-    p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
-        makeDepthUpdate[params[0]];
-        params[1];
-        params[2];
-        params[3];
-        params[4];
-        params[5]
-        );
-    :p;
-    };
-
-.qt.AddCase[test;"New limit order no previous depth or orders should update";
-    deriveCaseParams[(
-    ((10#`SELL);1000+til 10;10#1000);();
-    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
-    (`price`offset!(1000;1000));
-    ()
-    )]];
-
-.qt.AddCase[test;"New limit order participate don't initiate not triggered, calls processCross";
-    deriveCaseParams[(
-    ((10#`SELL);1000+til 10;10#1000);();
-    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
-    (`price`offset!(1000;1000));
-    ()
-    )]];
-
-
-/ .qt.AddCase[test;"New simple market order";
-/     deriveCaseParams[ ]];
-
-/ .qt.AddCase[test;"New simple stop market order";
-/     deriveCaseParams[ ]];
-
-/ .qt.AddCase[test;"New simple stop limit order";
-/     deriveCaseParams[ ]];
-
-/ .qt.AddCase[test;"Trash fields present";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid Account Id (form)";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid Order side";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid Order type";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid time in force";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid Exec inst";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid price tick size";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"order price>max price";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"order price<min price";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"order size>max order size";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"order price<min order size";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Account id not found";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Duplicate clOrdId";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Duplicate orderId";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Not enough margin to execute order";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Accounts do not match";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid stopPrice for order type";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid order type for exec inst";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Account id not found";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Order placed in book offset = offset at depth price";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Order placed in book offset when no depth orders exist";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Participate dont initiate cross throws error";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Dont participate dont initiate cross calls/places market order";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Order placed in book";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Incorrect time format for event";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Close order larger than inventory";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Close order with no inventory";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"multiple close orders (of STOP_LIMIT, STOP_MARKET, LIMIT), collectively than inventory";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Invalid stop order price for trigger";
-/     deriveCaseParams[]];
-
-
-
-// Fill Trade tests
+// Process Trade tests
 // -------------------------------------------------------------->
 
 deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
-
-
 
 // TODO
 // TODO better (more consice/shorter test)
@@ -630,6 +461,181 @@ cTime:.z.z;
 
 / / .qt.AddCase[test;"should update open interest, open value etc.";
 /     / deriveCaseParams[]];
+
+// New Order Tests
+// -------------------------------------------------------------->
+
+oBeforeAll :{
+    .instrument.NewInstrument[
+        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
+        (1;0.5;1e5f;0f;1e7f;0f;1);
+        1b;.z.z];
+    };
+
+oAfterAll :{
+    / delete from `.instrument.Instrument;
+    };
+
+BAM:();
+
+test:.qt.Unit[
+    ".order.NewOrder";
+    {[c]
+        p:c[`params]; 
+        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
+  
+        // instantiate mock for processCross
+        mck: .qt.M[`.order.processCross;p[`mFn];c];
+
+        o:p[`order];
+
+        / show .instrument.Instrument;
+        res:.order.NewOrder[o;.z.z];
+        // Assertions
+        k:key p[`eOrd]; 
+        o1:first (0!select from .order.Order where orderId=1);
+        .qt.A[o1[k];~;p[`eOrd][k];"order";c];
+
+    };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
+
+deriveCaseParams    :{[params]
+    
+    p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
+        makeDepthUpdate[params[0]];
+        params[1];
+        params[2];
+        params[3];
+        params[4];
+        params[5]
+        );
+    :p;
+    };
+
+.qt.AddCase[test;"New limit order no previous depth or orders should update";
+    deriveCaseParams[(
+    ((10#`SELL);1000+til 10;10#1000);();
+    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
+    (`price`offset!(1000;1000));
+    ()
+    )]];
+
+.qt.AddCase[test;"New limit order participate don't initiate not triggered, calls processCross";
+    deriveCaseParams[(
+    ((10#`SELL);1000+til 10;10#1000);();
+    `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
+    ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
+    (`price`offset!(1000;1000));
+    ()
+    )]];
+
+
+/ .qt.AddCase[test;"New simple market order";
+/     deriveCaseParams[ ]];
+
+/ .qt.AddCase[test;"New simple stop market order";
+/     deriveCaseParams[ ]];
+
+/ .qt.AddCase[test;"New simple stop limit order";
+/     deriveCaseParams[ ]];
+
+/ .qt.AddCase[test;"Trash fields present";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid Account Id (form)";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid Order side";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid Order type";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid time in force";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid Exec inst";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid price tick size";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"order price>max price";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"order price<min price";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"order size>max order size";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"order price<min order size";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Account id not found";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Duplicate clOrdId";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Duplicate orderId";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Not enough margin to execute order";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Accounts do not match";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid stopPrice for order type";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid order type for exec inst";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Account id not found";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Order placed in book offset = offset at depth price";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Order placed in book offset when no depth orders exist";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Participate dont initiate cross throws error";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Dont participate dont initiate cross calls/places market order";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Order placed in book";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Incorrect time format for event";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Close order larger than inventory";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Close order with no inventory";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"multiple close orders (of STOP_LIMIT, STOP_MARKET, LIMIT), collectively than inventory";
+/     deriveCaseParams[]];
+
+/ .qt.AddCase[test;"Invalid stop order price for trigger";
+/     deriveCaseParams[]];
+
+
+// Cancel Order Tests
+// -------------------------------------------------------------->
+
+
+// Amend Order Tests
+// -------------------------------------------------------------->
+
+
 
 // Update Mark Price
 // -------------------------------------------------------------->
