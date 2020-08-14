@@ -1,33 +1,39 @@
 
-
+// TODO config delete cancelled orders.
 ProcessTrade    :{[]
-    nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement
+    nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, offset, orderId by price from .order.Order);
     lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-q)),oqty,leaves,offset,orderId from l where qty>(qty-((fill-prev[fill])-(fill-q)));
 
     offsets: PadM[lt[`offset]];
-    sizes: PadM[lt[`leaves]]; 
+    sizes: PadM[lt[`size]]; 
+    leaves: PadM[lt[`leaves]]; 
     maxN: max count'[offsets];
     numLvls:count[offsets];
 
     / Calculate the shifted offsets, which infers
     / the amount of space between each offset
-    shft: sizes + offsets; 
+    shft: leaves + offsets; 
 
-    // Calculate new offsets and sizes.
-    noffsets: Clip[offsets-lt[`rp]];
-    nsizes: Clip[shft-lt[`rp]];
+    // Calculate new offsets and leaves.
+    noffsets: raze[Clip[offsets-lt[`rp]]];
+    nleaves: raze[Clip[shft-lt[`rp]]];
 
     // Derive order updates
-    partial:raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]; // partial filled
-    filled:raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]; // totally filled
+    partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
+    filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
     oids:raze[PadM[lt[`orderId]]];
 
     // orderId, status, offset, leaves, filled 
-    ords:0;
+    ords:(5,count[oids])#0;
+    ords[1;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
+    ords[1;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
+    ords[2]:noffsets;
+    ords[3]:nleaves;
+    ords[4]:(raze[sizes]-nleaves)
 
     // derive account updates
-    
+
 
     // Calculate trade qtys
     dc:(maxN*2)+1;
@@ -36,7 +42,7 @@ ProcessTrade    :{[]
     idx:(1+tdc) mod 2;
     aidx:-1_where[idx]; / idxs for agent sizes
     oidx:where[not[idx]]; / idxs for offsets
-    d[;aidx]: sizes;
+    d[;aidx]: leaves;
     d[;oidx]: offsets;
     d[;dc-1]: Clip(lt[`qty]-max'[shft]); / set last value equal to last (non agent qty)
     sd:d-Clip[sums'[flip raze (enlist(d[;0]-lt[`rp]);flip d[;1_tdc])]];
