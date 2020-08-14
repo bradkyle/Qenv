@@ -106,6 +106,10 @@ minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 bestBid:{exec max price from .order.OrderBook where side=`BUY};
 bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 
+DeriveThenAddDepthUpdateEvent :{[time]
+    :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
+    };
+
 AddDepthUpdateEvent :{[depth;time]
     :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`size`price!depth)];
     };
@@ -570,9 +574,9 @@ AmendOrder      :{[order]
             `.order.Order upsert order;
             .order.AddUpdateOrderEvent[order;time];
         ]]];
-    //TODO emit order update event
     //TODO emit account/inventory update event
     //TODO emit orderbook event
+    .order.DeriveThenAddDepthUpdateEvent[time];
     };
 
 
