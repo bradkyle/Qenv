@@ -81,6 +81,7 @@ allCols:cols Instrument;
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
+// TODO instrument udpate event
 // TODO reference to dict
 // Generates a new instrument with default 
 // values and inserts it into the instrument 
@@ -128,3 +129,4 @@ NewFlatFee              :{[]
 UpdateMarkPrice : {[markPrice;instrumentId;time]
     update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
     };
+
