@@ -18,8 +18,16 @@ ProcessTrade    :{[]
     noffsets: Clip[offsets-lt[`rp]];
     nsizes: Clip[shft-lt[`rp]];
 
-    // Derive partial fills TODO test
-    partial:`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]));
+    // Derive order updates
+    partial:raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]; // partial filled
+    filled:raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]; // totally filled
+    oids:raze[PadM[lt[`orderId]]];
+
+    // orderId, status, offset, leaves, filled 
+    ords:0;
+
+    // derive account updates
+    
 
     // Calculate trade qtys
     dc:(maxN*2)+1;
@@ -35,7 +43,7 @@ ProcessTrade    :{[]
 
     // Derive trades from size/offset distribution.
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
-    tds:(raze'[(tqty;({9#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
+    tds:(raze'[(tqty;({dc#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
 
     .order.AddTradeEvent[];
 

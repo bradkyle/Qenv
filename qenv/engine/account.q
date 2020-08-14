@@ -239,8 +239,8 @@ IncSelfFill    :{
         ![`.account.Account;
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
-                (+;`selfFillCount;1);
-                (+;`selfFillVolume;y)
+                (+;`selfFillCount;y);
+                (+;`selfFillVolume;z)
             )];}
 
 // TODO make global enums file
