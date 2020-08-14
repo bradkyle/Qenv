@@ -472,9 +472,23 @@ AIn  :{[actual;expected;msg;case]
 // @return actual object
 AAll  :{[actual;expected;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
-    failFlag::($[(count[actual]=count[expected]);
-        not[all[{all[raze[x[0]]=raze[x[1]]]}each flip(actual;expected)]];
-        1b]);
+
+    failFlag::($[
+        (type[actual]<>type[expected]);
+            [:1b];        
+        (count[actual]<>count[expected]);
+            [:1b];
+        [
+            $[count[expected]>1;
+                [
+                    :not[all[{all[raze[x[0]]=raze[x[1]]]}each flip(actual;expected)]];
+                ];
+                [
+                    :actual~expected;
+                ]
+            ];
+        ]]);
+
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`alleq;expected);
     `.qt.Assertion upsert ass;

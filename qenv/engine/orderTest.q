@@ -323,7 +323,6 @@ test:.qt.Unit[
             p[`eAddTradeEvent][`called];
             p[`eAddTradeEvent][`numCalls];
             p[`eAddTradeEvent][`calledWith];c];
-        show 99#"F";
 
         if[count[p[`eOrd]]>0;[
             eOrd:p[`eOrd][;0];
