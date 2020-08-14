@@ -78,7 +78,7 @@ AddNewOrderEvent   :{[order;time]
     :.event.AddEvent[time;`NEW;`ORDER;order];
     }
 
-AddOrderUpdateEvent :{[order;time]
+AddUpdateOrderEvent :{[order;time]
     :.event.AddEvent[time;`UPDATE;`ORDER;order];
     }
  
@@ -476,7 +476,7 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`MARKET;
         [
-            .order.processCross[
+            .order.ProcessTrade[
                 o[`side];
                 o[`size];
                 1b;
@@ -509,7 +509,7 @@ CancelOrder    :{[order]
         :.event.AddFailure[time;`INVALID_ORDERID;"An order with the id:",string[orderId]," could not be found"]];
 
     // Replace order with order from store
-    order:exec from .order.Order where orderId=order[`orderId];
+    corder:exec from .order.Order where orderId=order[`orderId];
 
     // If the order does not belong to the account
     if[not()];
@@ -519,7 +519,9 @@ CancelOrder    :{[order]
     update status:`.order.ORDERSTATUS$`CANCELLED, leaves:0 from `.order.Order where orderId=order[`orderId];
 
     // Update agent order offsets to represent the change
-    update offset:offset-order[`leaves] from `.order.Order where price=order[`price] and offset>order[`offset];
+    update offset:offset-order[`leaves] from `.order.Order where price=order[`price] and offset<=order[`offset];
+
+    .order.AddUpdateOrderEvent[o;time];
 
     //TODO emit order update event
     //TODO emit account/inventory update event
@@ -541,6 +543,7 @@ AmendOrder      :{[order]
     order:ordSubmitFields!order[ordSubmitFields];
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     
+    // TODO leaves cannot be larger than qty.
     // Account related validation
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
@@ -549,18 +552,23 @@ AmendOrder      :{[order]
 
     $[((order[`size]=0)or(order[`leaves]=0));
         .order.CancelOrder[order;time];
-        $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`size]<=corder[`size])); // TODO check equality
+        $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`leaves]<=corder[`leaves])); // TODO check equality
         [
-            
+            delta: corder[`leaves]-order[`leaves];
+            update offset:offset-delta from `.order.Order where price=order[`price] and offset<=order[`offset];
+
+            `.order.Order upsert order;
+            .order.AddUpdateOrderEvent[order;time];
         ];
         [
+            // assumes that this order is the last order in the offset
+            // and as such does not update other offsets.
             if[null[order[`offset]];[
-                qty:(.order.OrderBook@o[`price])[`qty];
-                order[`offset]: $[not null[qty];qty;0];
-            ]];
-
-            `.order.Order upsert o;
-            .order.AddNewOrderEvent[o;time];
+                qty:(.order.OrderBook@order[`price])[`qty];
+                order[`offset]: $[not null[qty];qty;0]]];
+            
+            `.order.Order upsert order;
+            .order.AddUpdateOrderEvent[order;time];
         ]]];
     //TODO emit order update event
     //TODO emit account/inventory update event
