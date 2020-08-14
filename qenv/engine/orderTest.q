@@ -310,10 +310,8 @@ test:.qt.Unit[
         mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
 
         t:p[`trade];
-        qty:.order.fillTrade[t[`iId];t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
+        .order.ProcessTrade[t[`iId];t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
         
-        .qt.A[qty;=;p[`eQty];"qty";c];
-
         .qt.MA[
             mck1;
             p[`eApplyFill][`called];
@@ -325,6 +323,7 @@ test:.qt.Unit[
             p[`eAddTradeEvent][`called];
             p[`eAddTradeEvent][`numCalls];
             p[`eAddTradeEvent][`calledWith];c];
+        show 99#"F";
 
         if[count[p[`eOrd]]>0;[
             eOrd:p[`eOrd][;0];
@@ -483,8 +482,8 @@ test:.qt.Unit[
         p:c[`params]; 
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
   
-        // instantiate mock for processCross
-        mck: .qt.M[`.order.processCross;p[`mFn];c];
+        // instantiate mock for ProcessTrade
+        mck: .qt.M[`.order.ProcessTrade;p[`mFn];c];
 
         o:p[`order];
 
