@@ -557,7 +557,7 @@ AmendOrder      :{[order]
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     corder:exec from .order.Order where orderId=order[`orderId];
-
+    delta: order[`leaves]-corder[`leaves];
 
     .account.ValidateOrderStateDelta[];
 
@@ -565,7 +565,6 @@ AmendOrder      :{[order]
         .order.CancelOrder[order;time];
         $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`leaves]<=corder[`leaves])); // TODO check equality
         [
-            delta: corder[`leaves]-order[`leaves];
             update offset:offset-delta from `.order.Order where price=order[`price] and offset<=order[`offset];
 
             `.order.Order upsert order;
@@ -597,6 +596,7 @@ AmendOrder      :{[order]
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
 UpdateMarkPrice : {[markPrice;instrumentId;time]
+    ins:.instrument.Instrument@instrumentId;
 
     activatedStops:select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 

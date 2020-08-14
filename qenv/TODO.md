@@ -44,3 +44,7 @@ shuffeling accounts for larger simulations i.e. create 1000 accounts and shuffle
 
 
 run engine in seperate process, communicate via rpc?
+
+
+reduceOnly on both position closes order amount fully or rejects order?
+is the order margin updated?

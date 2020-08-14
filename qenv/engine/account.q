@@ -228,10 +228,15 @@ hedgedLiquidationPrice  :{[]
 
     };
 
+// Validates that an accoun has enough margin to allow for given order
+// delta without liquidation.
 ValidateOrderStateDelta :{
 
     };
 
+// Updates the open order state of an account
+// Updates an accounts order margin, open order amount, order premium 
+// netLongPosition/netShortPosition
 UpdateOpenOrderState    :{
 
     };
@@ -356,21 +361,27 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
 
             ]
         ];
-        $[reduceOnly or (acc[`net]);
-            [
-                // Close positionType BOTH
-                i:.account.Inventory@(accountId;`BOTH);
-                // TODO account netShortPosition, netLongPosition
+        [
+            i:.account.Inventory@(accountId;`BOTH);
+            $[(reduceOnly or (acc[`net])); // Close position
+                [
+                    // Close positionType BOTH
+                    // TODO account netShortPosition, netLongPosition
 
+                ];
+            ();
+                [ 
+                    // Cross position
+
+                ];
+                [
+                    // Open positionType BOTH
+
+                    // TODO cross position.
+                    // TODO account netShortPosition, netLongPosition
+
+                ]
             ];
-            [
-                // Open positionType BOTH
-                i:.account.Inventory@(accountId;`BOTH);
-
-                // TODO cross position.
-                // TODO account netShortPosition, netLongPosition
-
-            ]
         ]
     ];
     };
