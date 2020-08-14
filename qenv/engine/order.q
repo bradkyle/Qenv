@@ -423,7 +423,7 @@ CancelOrderBatch :{[accountId;orderIds]
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
-    CancelOrder each orders;
+    CancelOrder[accountId] orderIds;
     };
 
 CancelAllOrders :{[accountId]
@@ -432,7 +432,7 @@ CancelAllOrders :{[accountId]
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
-    update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;
+    CancelOrder (select from .order.Order where accountId=accountId)
     };
 
 // TODO
@@ -443,7 +443,7 @@ AmendOrder      :{[accountId;order]
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
-    update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;    
+    // TOOD
     };
 
 
