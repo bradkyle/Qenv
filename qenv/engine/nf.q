@@ -37,6 +37,8 @@ ProcessTrade    :{[]
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
     tds:(raze'[(tqty;({9#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
 
+    .order.AddTradeEvent[];
+
     if[isAgent;.account.ApplyFill[
             qty;
             price;
