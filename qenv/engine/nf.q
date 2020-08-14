@@ -1,5 +1,7 @@
 
 // TODO config delete cancelled orders.
+// TODO check has orders
+// TODO delete filled orderbook 
 ProcessTrade    :{[instrumentId]
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId, reduceOnly by price from .order.Order);
@@ -54,8 +56,16 @@ ProcessTrade    :{[instrumentId]
     flls[5]:raze[PadM[lt[`reduceOnly]]];
     flls[6]:coids#1b;
     f:fllcols!flls;
-    {.account.ApplyFill[]} 0!select sum qty,last time by accountId,instrumentId,side,price,reduceOnly,isMaker from f where accountId in daids;
-
+    fm:0!select sum qty,last time by accountId,instrumentId,side,price,reduceOnly,isMaker from f where accountId in daids;
+    {.account.ApplyFill[
+        x[`accountId];
+        x[`instrumentId];
+        x[`price];
+        x[`side];
+        x[`qty];
+        x[`time];
+        x[`reduceOnly];
+        x[`isMaker]]} fm;
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
@@ -93,5 +103,7 @@ ProcessTrade    :{[instrumentId]
             0b;
             accountId];
         ]];
+
+    delete from `.order.OrderBook where [];
 
     };
