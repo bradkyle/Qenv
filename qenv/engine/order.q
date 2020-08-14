@@ -537,6 +537,8 @@ CancelAllOrders :{[accountId]
 
 // TODO
 AmendOrder      :{[order]
+
+    order:ordSubmitFields!order[ordSubmitFields];
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     
     // Account related validation
@@ -552,7 +554,13 @@ AmendOrder      :{[order]
             
         ];
         [
+            if[null[order[`offset]];[
+                qty:(.order.OrderBook@o[`price])[`qty];
+                order[`offset]: $[not null[qty];qty;0];
+            ]];
 
+            `.order.Order upsert o;
+            .order.AddNewOrderEvent[o;time];
         ]]];
     //TODO emit order update event
     //TODO emit account/inventory update event
