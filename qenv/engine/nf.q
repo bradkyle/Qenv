@@ -24,18 +24,17 @@ ProcessTrade    :{[]
     partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
     filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
     oids:raze[PadM[lt[`orderId]]];
-    coids:count[oids];
 
     // price, orderId, status, offset, leaves, filled 
-    ords:(5,coids)#0;
-    ords[0]:0;
-    ords[]
+    ords:(6,count[oids])#0;
+    ords[0]:raze[{x#y}'[count'[lt[`orderId]];lt[`price]]];
+    ords[1]:oids;
     ords[2;partial]:count[partial]#1; // ORDERSTATUS$`PARTIALFILLED
     ords[2;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
     ords[3]:noffsets;
     ords[4]:nleaves;
     ords[5]:;
-    ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]];
+    `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
 
     // derive account updates
 
