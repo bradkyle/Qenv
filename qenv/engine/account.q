@@ -244,7 +244,7 @@ IncSelfFill    :{
             )];}
 
 // TODO make global enums file
-// TOD
+// TOD7,776e+6/1000
 ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
     qty:abs[qty];
     if[qty=0;:.event.AddFailure[]];
