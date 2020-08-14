@@ -53,13 +53,8 @@ ProcessTrade    :{[instrumentId]
     flls[5]:coids#time; // TODO doesnt work
     flls[5]:raze[PadM[lt[`reduceOnly]]];
     flls[6]:coids#1b;
-    0!select sum qty,last time by accountId,instrumentId,side,price,reduceOnly,isMaker from f where accountId in daids
+    {.account.ApplyFill[]} 0!select sum qty,last time by accountId,instrumentId,side,price,reduceOnly,isMaker from f where accountId in daids;
 
-    fllcols!fll;
-    gaids: group aids where[aids in distinct[raze[lt[`accountId]]]]; 
-    flls:
-    cflls:count'[gaids];
-    sum'[flls[gaids]]
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
@@ -80,13 +75,19 @@ ProcessTrade    :{[instrumentId]
 
     .order.AddTradeEvent[];
 
-    if[isAgent;.account.ApplyFill[
+    if[isAgent;[
+        if[accountId in flls[`accountId];.account.IncSelfFill[
+            accountId;(count'[select by accountId from f where qty>0]@1);()
+        ]]];
+
+        .account.ApplyFill[
             qty;
             price;
             side;
             time;
             reduceOnly;
             0b;
-            accountId]];
+            accountId];
+        ]];
 
     };
