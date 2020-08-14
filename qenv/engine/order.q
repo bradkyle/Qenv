@@ -275,44 +275,18 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
                                             by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
                     ) where qty>drft; // ~0.00042 ms
 
-            offsets: PadM[lt[`offset]];
-            sizes: PadM[lt[`size]]; 
-            leaves: PadM[lt[`leaves]]; 
-            maxN: max count'[offsets];
-            numLvls:count[offsets];
-
-            / Calculate the shifted offsets, which infers
-            / the amount of space between each offset
-            shft: leaves + offsets; 
-
-            // Calculate new offsets and leaves.
-            noffsets: raze[Clip[offsets-lt[`rp]]];
-            nleaves: raze[Clip[shft-lt[`rp]]];
-            nfilled: (raze[sizes]-nleaves)
-
             // Derive order updates
             partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
             filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
-            oids:raze[PadM[lt[`orderId]]];
-            coids:count[oids];
-            prices:raze[{x#y}'[maxN;lt[`price]]];
 
-            // price, orderId, status, offset, leaves, filled 
-            ords:(6,coids)#0;
-            ords[0]:prices; // order prices
-            ords[1]:oids;
             ords[2;partial]:count[partial]#`long$(`.order.ORDERSTATUS$`PARTIALFILLED); 
             ords[2;filled]:count[filled]#`long$(`.order.ORDERSTATUS$`FILLED);
-            ords[3]:noffsets;
-            ords[4]:nleaves;
-            ords[5]:raze[sizes]-nleaves;
+
             `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
             // todo order update events.
 
             // accountId, instrumentId, price, side, qty, time reduceOnly, isMaker
             fllcols:`accountId`instrumentId`price`side`qty`time`reduceOnly`isMaker;
-            aids: raze[PadM[lt[`accountId]]];
-            daids: distinct raze[lt[`accountId]];
 
             flls:(8,coids)#0; 
             flls[0]:aids; 
@@ -379,10 +353,6 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
 
             delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
             .order.DeriveThenAddDepthUpdateEvent[time]; 
-        ];
-        isAgent;
-        [
-
         ];
         [
             .order.AddTradeEvent[
