@@ -390,6 +390,7 @@ NewOrder       : {[o;time];
         o[`offset]: $[not null[qty];qty;0];
         ]];
 
+    // TODO only if Limit order or market order
     if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
         :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 

@@ -218,17 +218,30 @@ NewInventory : {[inventory;time]
 
 // ORDER Margin
 // -------------------------------------------------------------->
+// Does premium change with changing mark price?
 
 // Validates that an accoun has enough margin to allow for given order
 // delta without liquidation.
+// @delta : the amount by which the order quantity is to be changed.
+// @side : the side that is to be updated by the order.
+// @price      : the price of the given order.
+// @account    : dict representation of the account to be validated
+// @instrument : dict representation of the orders instrument 
 ValidateOrderStateDelta :{[delta;side;price;account;instrument]
+    premium:.instrument.DerivePremium[];
 
     };
 
 // Updates the open order state of an account
 // Updates an accounts order margin, open order amount, order premium 
 // netLongPosition/netShortPosition
+// @delta      : the amount by which the order quantity is to be changed.
+// @side       : the side that is to be updated by the order.
+// @price      : the price of the given order.
+// @account    : dict representation of the account to be updated
+// @instrument : dict representation of the orders instrument 
 UpdateOpenOrderState    :{[delta;side;price;account;instrument]
+    premium:.instrument.DerivePremium[];
 
     };
 
@@ -250,6 +263,25 @@ IncSelfFill    :{
                 (+;`selfFillCount;y);
                 (+;`selfFillVolume;z)
             )];}
+
+// Executes a close fill i.e. when the absolute target position
+// is smaller than its respective absolute current position
+closeFill   :{
+
+    };
+
+// Executes a open fill i.e. when the absolute target position
+// is larger than its respective absolute current position
+openFill    :{
+
+    };
+
+// Specifically used for BOTH (combined) positions for simplicity
+// closes the current position and transitions the position to 
+// a given magnitude of the opposite sign.
+crossFill   :{
+
+    };
 
 // TODO make global enums file
 // TOD7,776e+6/1000
