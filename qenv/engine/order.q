@@ -129,6 +129,9 @@ ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
     // return a depth event for each. (add randomizeation)
     event:flip event;
     nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+
+    // TODO do validation on nxt;
+
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
     $[(count[odrs]>0);
       [
@@ -211,9 +214,38 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     // TODO check if can be faster
-    $[(count select from .order.Order where side=nside)>0;[
-            l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId, reduceOnly by price from .order.Order);
-            lt:update tgt:qty-(qty^rp), rp:qty^rp from select price, qty, thresh:fill, rp:((fill-prev[fill])-(fill-fillQty)),oqty,leaves,size,offset,orderId, accountId, reduceOnly from l where qty>(qty-((fill-prev[fill])-(fill-fillQty)));
+    $[((count select from .order.Order where side=nside)>0);[
+            lt:update tgt:qty-rp from select 
+                price, 
+                qty, 
+                thresh:fill, // The amount that a trade has to fill before repletion of price level
+                rp,
+                tgt:qty-rp, // the resultant quantity that the orderbook will have after execution
+                oqty,
+                leaves,
+                size,
+                offset,
+                orderId, 
+                accountId,
+                reduceOnly from (
+                    update 
+                        rp:qty^rp,  // fill empty levels with quantity
+                        drft:qty-rp // the amount that is left over after fill
+                            from update 
+                                rp: (fill-prev[fill])-(fill-fillQty) // The amount that is filled at the given level
+                                from update
+                                    fill:sums qty
+                                    from 0!((select from .order.OrderBook where side=nside) pj (select 
+                                        qty:sum leaves, 
+                                        oqty:sum leaves, 
+                                        leaves, 
+                                        size, 
+                                        offset, 
+                                        orderId, 
+                                        accountId, 
+                                        reduceOnly 
+                                        by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
+                ) where qty>drft; // ~0.00042 ms
 
             offsets: PadM[lt[`offset]];
             sizes: PadM[lt[`size]]; 
@@ -263,7 +295,8 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
             flls[5]:coids#time; // TODO doesnt work
             flls[5]:raze[PadM[lt[`reduceOnly]]];
             flls[6]:coids#1b;
-            f:fllcols!flls;
+            f:flip[fllcols!flls];
+            show f;
             fm:0!select sum qty,last time by accountId,instrumentId,`.order.ORDERSIDE@side,price,`boolean$reduceOnly,`boolean$isMaker from f where accountId in daids;
             {.account.ApplyFill[
                 x[`accountId];
@@ -277,7 +310,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
 
             // Calculate trade qtys
             // calculated seperately from orders on account of non agent trades.
-            dc:(maxN*2)+1;
+            dc:(maxN*2)+1; 
             tdc:til dc;
             d:(numLvls,dc)#0; // empty matrix
             idx:(1+tdc) mod 2;
@@ -289,7 +322,9 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
             sd:d-Clip[sums'[flip raze (enlist(d[;0]-lt[`rp]);flip d[;1_tdc])]];
 
             // Derive trades from size/offset distribution.
+            show dc;
             tqty:flip raze'[(sd*(sd>0) and (d>0))];
+
             tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
             t:flip `size`price`side`time!tds;
 
@@ -316,7 +351,12 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
 
             delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
             .order.DeriveThenAddDepthUpdateEvent[time]; 
-        ];[
+        ];
+        isAgent;
+        [
+
+        ];
+        [
             .order.AddTradeEvent[
                 time;
                 (`.order.ORDERSIDE@side;fillQty;bestSidePrice[side])] // CHECK IS CORRECT
@@ -399,8 +439,8 @@ NewOrder       : {[o;time];
         o[`offset]: $[not null[qty];qty;0]]];
 
     // TODO only if Limit order or market order
-    if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
-        :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
+    / if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
+        / :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // calculate initial margin requirements of order
 
