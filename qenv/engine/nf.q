@@ -18,8 +18,8 @@ ProcessTrade    :{[]
     noffsets: Clip[offsets-lt[`rp]];
     nsizes: Clip[shft-lt[`rp]];
 
-    // Derive partial fills
-    partial:`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))
+    // Derive partial fills TODO test
+    partial:`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]));
 
     // Calculate trade qtys
     dc:(maxN*2)+1;
@@ -36,5 +36,17 @@ ProcessTrade    :{[]
     // Derive trades from size/offset distribution.
     tqty:flip raze'[(sd*(sd>0) and (d>0))];
     tds:(raze'[(tqty;({9#x}'[lt[`price]]))])[;where[raze[tqty]>0]];
+
+    if[isAgent;
+    
+        .account.ApplyFill[
+            qty;
+            price;
+            side;
+            time;
+            reduceOnly;
+            0b;
+            accountId];
+    ];
 
     };
