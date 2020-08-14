@@ -68,7 +68,7 @@
     / new trades
     / new qty (orderbook)
     / new filled, new partial
-    / 
+    / agent fills, non agent fills
 
     effected:select from .order.Order where offset<=qty, price=price;
 
