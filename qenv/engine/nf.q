@@ -109,7 +109,7 @@ ProcessTrade    :{[instrumentId]
         ]];
 
     delete from .order.OrderBook where price in (exec price from lt where tgt<=0);
-
+    // TODO orderbook update event.
     };
 
 ProcessTradeBatch   :{};
