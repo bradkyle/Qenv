@@ -545,14 +545,14 @@ AmendOrder      :{[order]
 
     corder:exec from .order.Order where orderId=order[`orderId];
 
-    $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`size]<=corder[`size])); // TODO check equality
-      [
+    $[((order[`size]=0)or(order[`leaves]=0));
+        $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`size]<=corder[`size])); // TODO check equality
+        [
 
-      ];
-      [
+        ];
+        [
 
-      ]];
-    // TOOD
+        ]]];
     };
 
 
