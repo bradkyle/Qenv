@@ -108,7 +108,7 @@ ProcessTrade    :{[instrumentId]
             accountId];
         ]];
 
-    delete from `.order.OrderBook where [];
+    delete from .order.OrderBook where price in (exec price from lt where tgt<=0);
 
     };
 
