@@ -237,56 +237,53 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
                     paccountId:PadM[accountId],
                     pinstrumentId:PadM[instrumentId],
                     pprice:PadM[oprice],
+                    pstatus:PadM[status],
                     maxN:max count'[offset],
-                    numLvls:count[offset]
-                from update tgt:qty-rp from select 
-                    price, 
-                    qty, 
-                    thresh:fill, // The amount that a trade has to fill before repletion of price level
-                    rp,
-                    tgt:qty-rp, // the resultant quantity that the orderbook will have after execution
-                    oqty,
-                    leaves,
-                    size,
-                    offset,
-                    orderId, 
-                    accountId,
-                    instrumentId,
-                    oprice,
-                    reduceOnly from (
+                    numLvls:count[offset] 
+                from (select from (
                         update 
-                            rp:qty^rp,  // fill empty levels with quantity
-                            drft:qty-rp // the amount that is left over after fill
+                            rp:qty^rp,
+                            tgt:qty-rp // the amount that is left over after fill
                                 from update 
-                                    rp: (fill-prev[fill])-(fill-fillQty) // The amount that is filled at the given level
+                                    rp: (thresh-prev[thresh])-(thresh-fillQty) // The amount that is filled at the given level
                                     from update
-                                        fill:sums qty
-                                        from 0!((select from .order.OrderBook where side=nside) pj (select 
-                                            qty:sum leaves, 
-                                            oqty:sum leaves, 
-                                            oprice: price,
-                                            leaves, 
-                                            size, 
-                                            offset, 
-                                            orderId, 
-                                            accountId, 
-                                            instrumentId,
-                                            reduceOnly 
-                                            by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
-                    ) where qty>drft; // ~0.00042 ms
+                                        thresh:sums qty
+                                        from update 
+                                            qty: qty+(0^oqty)
+                                            from 0!((select from .order.OrderBook where side=nside) uj (select 
+                                                oqty:sum leaves, 
+                                                oprice: price,
+                                                leaves, 
+                                                size, 
+                                                offset, 
+                                                orderId, 
+                                                accountId, 
+                                                instrumentId,
+                                                status,
+                                                reduceOnly 
+                                                by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
+                    ) where qty>tgt); // ~0.00042 ms
 
-            // Derive order updates
-            partial:where[raze[`boolean$((sums'[offsets]<=lt[`rp])-(shft<=lt[`rp]))]]; // partial filled
-            filled:where[raze[(offsets<=lt[`rp])and(shft<=lt[`rp])]]; // totally filled
-
-            ords[2;partial]:count[partial]#`long$(`.order.ORDERSTATUS$`PARTIALFILLED); 
-            ords[2;filled]:count[filled]#`long$(`.order.ORDERSTATUS$`FILLED);
-
-            `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
-            // todo order update events.
+            // Update orders
+            oupd:(select price,orderId,offset,leaves,status from 
+                        (update
+                            status:`.order.ORDERSTATUS$`FILLED
+                        from (update 
+                            status:`.order.ORDERSTATUS$`PARTIALFILLED
+                            from (select 
+                            price:raze[pprice], 
+                            orderId:raze[porderId], 
+                            offset:raze[noffset], 
+                            leaves:raze[nleaves], 
+                            partial:`boolean$(raze[(sums'[poffset]<=rp)-(shft<=rp)]), 
+                            filled:`boolean$(raze[(poffset<=rp)and(shft<=rp)]),
+                            status:raze[pstatus] from lt) where partial)where filled) where partial or filled and orderId in raze[lt[`orderId]]); 
+            `.order.Order upsert oupd;
 
             // accountId, instrumentId, price, side, qty, time reduceOnly, isMaker
             fllcols:`accountId`instrumentId`price`side`qty`time`reduceOnly`isMaker;
+            aids: raze[PadM[lt[`accountId]]];
+            daids: distinct raze[lt[`accountId]];
 
             flls:(8,coids)#0; 
             flls[0]:aids; 
@@ -353,6 +350,10 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
 
             delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
             .order.DeriveThenAddDepthUpdateEvent[time]; 
+        ];
+        isAgent;
+        [
+
         ];
         [
             .order.AddTradeEvent[
