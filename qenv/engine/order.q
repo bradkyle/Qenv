@@ -398,6 +398,7 @@ NewOrderBatch   :{[accountId;orders]
     NewOrder each orders;
     };
 
+// TODO
 CancelOrder    :{[accountId;orderId]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
@@ -432,6 +433,7 @@ CancelAllOrders :{[accountId]
     update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where accountId=accountId;
     };
 
+// TODO
 AmendOrder      :{[accountId;order]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     
