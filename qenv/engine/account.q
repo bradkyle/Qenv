@@ -253,14 +253,21 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
+// Executes a close fill i.e. when the absolute target position
+// is smaller than its respective absolute current position
 closeFill   :{
 
     };
 
+// Executes a open fill i.e. when the absolute target position
+// is larger than its respective absolute current position
 openFill    :{
 
     };
 
+// Specifically used for BOTH (combined) positions for simplicity
+// closes the current position and transitions the position to 
+// a given magnitude of the opposite sign.
 crossFill   :{
 
     };

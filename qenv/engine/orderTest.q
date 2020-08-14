@@ -310,7 +310,6 @@ test:.qt.Unit[
         p:c[`params]; 
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
   
-
         // instantiate mock for processCross
         mck: .qt.M[`.order.processCross;p[`mFn];c];
 
@@ -464,10 +463,10 @@ rmFkeys :{cols[x] except key[fkeys x]};
 
 
 
-
+// TODO
 // TODO better (more consice/shorter test)
 test:.qt.Unit[
-    ".order.fillTrade";
+    ".order.ProcessTrade";
     {[c]
         p:c[`params];
         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
@@ -632,65 +631,19 @@ cTime:.z.z;
 / / .qt.AddCase[test;"should update open interest, open value etc.";
 /     / deriveCaseParams[]];
 
-/ test:.qt.Unit[
-/     ".order.processCross";
-/     {[c]
-/         p:c[`params];
-/         time:.z.z;
-/         eacc:p[`eaccount];
-/         einv:p[`einventory];
-/         ecols:p[`ecols];
-
-/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
-
-/         // Execute tested function
-/         x:p[`params];
-/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-/         // 
-/         acc:exec from .account.Account where accountId=account[`accountId];
-/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
-
-/         // Assertions
-/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
-
-
-/ test:.qt.Unit[
-/     ".order.ProcessTrade";
-/     {[c]
-/         p:c[`params];
-/         time:.z.z;
-/         eacc:p[`eaccount];
-/         einv:p[`einventory];
-/         ecols:p[`ecols];
-
-/         account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-/         inventory:Sanitize[p[`inventory];.account.defaults[];.account.allCols];
-
-/         // Execute tested function
-/         x:p[`params];
-/         .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-/         // 
-/         acc:exec from .account.Account where accountId=account[`accountId];
-/         invn:exec from .account.Inventory where accountId=inventory[`accountId], side=inventory[`side];
-
-/         // Assertions
-/         .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-/         .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
-
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
-
-
 // Update Mark Price
 // -------------------------------------------------------------->
 
+/ test:.qt.Unit[
+/     ".order.triggerStop";
+/     {[c]
+/         p:c[`params];
+        
+/         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
+
+/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Private function for advancing stop orders once triggered"];
+ 
 / test:.qt.Unit[
 /     ".order.UpdateMarkPrice";
 /     {[c]
@@ -699,7 +652,7 @@ cTime:.z.z;
 /         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
 /     };();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
+/     "Global function for processing mark price updates specifically for orders"];
 
 / .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
 /     deriveCaseParams[(

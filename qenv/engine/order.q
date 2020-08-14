@@ -593,10 +593,17 @@ AmendOrder      :{[order]
 // Update Mark Price
 // -------------------------------------------------------------->
 
-genOrderFromStop    :{[stop]
+triggerStop    :{[stop]
     $[stop[`otype]=`STOP_LIMIT;
-    
-      stop[`otype]=
+        [
+            // TODO update stop to triggered
+            :ordSubmitFields!();
+        ];
+      stop[`otype]=`STOP_MARKET;
+        [
+            // TODO update stop to triggered
+            :ordSubmitFields!();
+        ]
     ];
     };
 
@@ -606,7 +613,7 @@ genOrderFromStop    :{[stop]
 UpdateMarkPrice : {[markPrice;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
 
-    orders:genOrderFromStop select from .order.Order 
+    orders:triggerStop select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 
         (side=`SELL and price>stopprice),
         (sid`BUY and price<stopprice);
