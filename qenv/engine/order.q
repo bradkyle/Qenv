@@ -209,43 +209,71 @@ ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
 
+deriveObState   :{
+
+    };
+
 ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     // TODO validate trade
     
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     // TODO check if can be faster
     $[((count select from .order.Order where side=nside)>0);[
-            lt:update tgt:qty-rp from select 
-                price, 
-                qty, 
-                thresh:fill, // The amount that a trade has to fill before repletion of price level
-                rp,
-                tgt:qty-rp, // the resultant quantity that the orderbook will have after execution
-                oqty,
-                leaves,
-                size,
-                offset,
-                orderId, 
-                accountId,
-                reduceOnly from (
-                    update 
-                        rp:qty^rp,  // fill empty levels with quantity
-                        drft:qty-rp // the amount that is left over after fill
-                            from update 
-                                rp: (fill-prev[fill])-(fill-fillQty) // The amount that is filled at the given level
-                                from update
-                                    fill:sums qty
-                                    from 0!((select from .order.OrderBook where side=nside) pj (select 
-                                        qty:sum leaves, 
-                                        oqty:sum leaves, 
-                                        leaves, 
-                                        size, 
-                                        offset, 
-                                        orderId, 
-                                        accountId, 
-                                        reduceOnly 
-                                        by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
-                ) where qty>drft; // ~0.00042 ms
+                
+            lt: update
+                    nfilled: psize - nleaves,
+                    accdlts: pleaves - nleaves
+                from update
+                    noffset: Clip[poffset-rp],
+                    nleaves: Clip[shft-rp]
+                from update
+                    shft:pleaves+poffset
+                from update 
+                    poffset:PadM[offset],
+                    psize:PadM[size],
+                    pleaves:PadM[leaves],
+                    preduceOnly:PadM[reduceOnly],
+                    porderId:PadM[orderId],
+                    paccountId:PadM[accountId],
+                    pinstrumentId:PadM[instrumentId],
+                    pprice:PadM[oprice],
+                    maxN:max count'[offset],
+                    numLvls:count[offset]
+                from update tgt:qty-rp from select 
+                    price, 
+                    qty, 
+                    thresh:fill, // The amount that a trade has to fill before repletion of price level
+                    rp,
+                    tgt:qty-rp, // the resultant quantity that the orderbook will have after execution
+                    oqty,
+                    leaves,
+                    size,
+                    offset,
+                    orderId, 
+                    accountId,
+                    instrumentId,
+                    oprice,
+                    reduceOnly from (
+                        update 
+                            rp:qty^rp,  // fill empty levels with quantity
+                            drft:qty-rp // the amount that is left over after fill
+                                from update 
+                                    rp: (fill-prev[fill])-(fill-fillQty) // The amount that is filled at the given level
+                                    from update
+                                        fill:sums qty
+                                        from 0!((select from .order.OrderBook where side=nside) pj (select 
+                                            qty:sum leaves, 
+                                            oqty:sum leaves, 
+                                            oprice: price,
+                                            leaves, 
+                                            size, 
+                                            offset, 
+                                            orderId, 
+                                            accountId, 
+                                            instrumentId,
+                                            reduceOnly 
+                                            by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
+                    ) where qty>drft; // ~0.00042 ms
 
             offsets: PadM[lt[`offset]];
             sizes: PadM[lt[`size]]; 
