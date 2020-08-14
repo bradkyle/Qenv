@@ -230,7 +230,7 @@ hedgedLiquidationPrice  :{[]
 
 // Validates that an accoun has enough margin to allow for given order
 // delta without liquidation.
-ValidateOrderStateDelta :{
+ValidateOrderStateDelta :{[delta;price;account;instrument]
 
     };
 
@@ -253,12 +253,21 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-closeFill   :{};
-crossFill   :{};
-openFill    :{};
+closeFill   :{
+
+    };
+
+openFill    :{
+
+    };
+
+crossFill   :{
+
+    };
 
 // TODO make global enums file
 // TOD7,776e+6/1000
+// TODO make simpler
 ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
     qty:abs[qty];
     if[qty=0;:.event.AddFailure[]];

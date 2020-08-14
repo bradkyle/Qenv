@@ -390,7 +390,8 @@ NewOrder       : {[o;time];
         o[`offset]: $[not null[qty];qty;0];
         ]];
 
-    .account.ValidateOrderStateDelta[];
+    if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
+        :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // calculate initial margin requirements of order
 
@@ -520,7 +521,8 @@ CancelOrder    :{[order]
     // If the order does not belong to the account
     if[not()];
 
-    .account.ValidateOrderStateDelta[];
+    if[not[.account.ValidateOrderStateDelta[neg[corder[`leaves]];corder[`price];acc;ins];
+        :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     // other validations
 
@@ -557,7 +559,8 @@ AmendOrder      :{[order]
     corder:exec from .order.Order where orderId=order[`orderId];
     delta: order[`leaves]-corder[`leaves];
 
-    .account.ValidateOrderStateDelta[];
+    if[not[.account.ValidateOrderStateDelta[delta;order[`price];acc;ins];
+            :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
 
     $[((order[`size]=0)or(order[`leaves]=0));
         .order.CancelOrder[order;time];
