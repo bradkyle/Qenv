@@ -38,7 +38,7 @@ ProcessTrade    :{[instrumentId]
     ords[2;filled]:count[filled]#2; // ORDERSTATUS$`FILLED
     ords[3]:noffsets;
     ords[4]:nleaves;
-    ords[5]:; // TODO
+    ords[5]:raze[sizes]-nleaves;
     `.order.Order upsert (flip update status:`.order.ORDERSTATUS@status from `price`orderId`status`offset`leaves`filled!ords[;where[((oids in filled)or(oids in partial)) and (oids in raze[lt[`orderId]])]]);
     // todo order update events.
 

@@ -387,11 +387,8 @@ NewOrder       : {[o;time];
     ];
     };
 
-/ CancelOrder    :{[accountId;orderId]
-    
-/     };
 
-NewOrderBatch   :{[accountId;orders]
+NewOrderBatch   :{[orders]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
     if[not(accountId in key .account.Account);
@@ -401,29 +398,20 @@ NewOrderBatch   :{[accountId;orders]
     };
 
 // TODO
-CancelOrder    :{[accountId;orderId]
-    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
+CancelOrders    :{[orders]
+    if[any[null orders[`accountId]]; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
-    if[not(accountId in key .account.Account);
+    if[any[not(orders[`accountId] in key .account.Account)];
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     // TODO fix
-    if[not(orderId in key .order.Order);
+    if[any[not(orders[`orderId] in key[.order.Order][`orderId])];
         :.event.AddFailure[time;`INVALID_ORDERID;"An order with the id:",string[orderId]," could not be found"]];
 
     // If the order does not belong to the account
     if[not()];
 
     update status:`.order.ORDERSTATUS$`CANCELLED from `.order.Order where id=orderId;
-    };
-
-CancelOrderBatch :{[accountId;orderIds]
-    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    // Account related validation
-    if[not(accountId in key .account.Account);
-        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
-
-    CancelOrder[accountId] orderIds;
     };
 
 CancelAllOrders :{[accountId]
@@ -436,7 +424,7 @@ CancelAllOrders :{[accountId]
     };
 
 // TODO
-AmendOrder      :{[accountId;order]
+AmendOrders      :{[order]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     
     // Account related validation
@@ -444,16 +432,6 @@ AmendOrder      :{[accountId;order]
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     // TOOD
-    };
-
-
-AmendOrderBatch      :{[accountId;orders]
-    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    // Account related validation
-    if[not(accountId in key .account.Account);
-        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
-
-    AmendOrder each orders;
     };
 
 
