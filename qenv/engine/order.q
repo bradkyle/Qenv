@@ -521,9 +521,9 @@ CancelOrder    :{[order]
     // Update agent order offsets to represent the change
     update offset:offset-order[`leaves] from `.order.Order where price=order[`price] and offset>order[`offset];
 
-    // todo emit order events
-    // todo emit depth update events
-
+    //TODO emit order update event
+    //TODO emit account/inventory update event
+    //TODO emit orderbook event
     };
 
 CancelAllOrders :{[accountId]
@@ -546,13 +546,17 @@ AmendOrder      :{[order]
     corder:exec from .order.Order where orderId=order[`orderId];
 
     $[((order[`size]=0)or(order[`leaves]=0));
+        .order.CancelOrder[order;time];
         $[((order[`price]=corder[`price])and(order[`side]=corder[`side])and(order[`size]<=corder[`size])); // TODO check equality
         [
-
+            
         ];
         [
 
         ]]];
+    //TODO emit order update event
+    //TODO emit account/inventory update event
+    //TODO emit orderbook event
     };
 
 

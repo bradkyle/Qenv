@@ -359,7 +359,7 @@ ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; is
 
             ];
             [
-                // Open position
+                // Open positionType BOTH
                 i:.account.Inventory@(accountId;`BOTH);
 
                 // TODO cross position.
