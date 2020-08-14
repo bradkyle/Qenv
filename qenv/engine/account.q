@@ -228,13 +228,14 @@ hedgedLiquidationPrice  :{[]
 
     };
 
-/ AddOrder    :{[order]
+UpdateOpenOrderState    :{
 
-    / };
+    };
 
-
+// Increments the occurance of an agent's self fill.
 // @x : unique account id
-// @y : amount that is self filled
+// @y : self filled count
+// @z : amount that is self filled
 IncSelfFill    :{
         ![`.account.Account;
             enlist (=;`accountId;x);

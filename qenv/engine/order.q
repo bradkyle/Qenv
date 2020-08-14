@@ -500,7 +500,7 @@ NewOrder       : {[o;time];
     ];
     };
 
-
+// TODO define granularity of update events.
 // TODO
 CancelOrder    :{[order]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
@@ -526,10 +526,8 @@ CancelOrder    :{[order]
     update offset:offset-order[`leaves] from `.order.Order where price=order[`price] and offset<=order[`offset];
 
     .order.AddUpdateOrderEvent[o;time];
-
-    //TODO emit order update event
-    //TODO emit account/inventory update event
-    //TODO emit orderbook event
+    .account.UpdateOpenOrderState[];
+    .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
 CancelAllOrders :{[accountId]
@@ -563,6 +561,9 @@ AmendOrder      :{[order]
 
             `.order.Order upsert order;
             .order.AddUpdateOrderEvent[order;time];
+
+            .account.UpdateOpenOrderState[];
+            .order.DeriveThenAddDepthUpdateEvent[time];
         ];
         [
             // assumes that this order is the last order in the offset
@@ -573,10 +574,10 @@ AmendOrder      :{[order]
             
             `.order.Order upsert order;
             .order.AddUpdateOrderEvent[order;time];
+
+            .account.UpdateOpenOrderState[];
+            .order.DeriveThenAddDepthUpdateEvent[time];
         ]]];
-    //TODO emit account/inventory update event
-    //TODO emit orderbook event
-    .order.DeriveThenAddDepthUpdateEvent[time];
     };
 
 
