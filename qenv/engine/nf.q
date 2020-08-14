@@ -2,6 +2,7 @@
 // TODO config delete cancelled orders.
 // TODO check has orders
 // TODO delete filled orderbook 
+// TODO clean up
 ProcessTrade    :{[instrumentId]
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     l:update fill:sums qty from 0!(.order.OrderBook pj select qty:sum leaves, oqty:sum leaves, leaves, size, offset, orderId, accountId, reduceOnly by price from .order.Order);
@@ -85,7 +86,9 @@ ProcessTrade    :{[instrumentId]
     tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
     t:flip `size`price`side`time!tds
 
-    .order.AddTradeEvent[];
+    {.order.AddTradeEvent[
+        x[`time];
+        (`.order.ORDERSIDE@x[`side];x[`size];x[`price])]} t;
 
     if[isAgent;[
         // TODO reduce to one query
@@ -108,3 +111,5 @@ ProcessTrade    :{[instrumentId]
     delete from `.order.OrderBook where [];
 
     };
+
+ProcessTradeBatch   :{};
