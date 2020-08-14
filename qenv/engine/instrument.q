@@ -107,23 +107,23 @@ UpdateInstrument      :{[instrument;time]
     };
 
 
-NewRiskTier             :{[]
+NewRiskTier             :{[tier]
     `mxamt`mmr`imr`maxlev!flip[tier];
 
     };
 
 NewRiskProcedural       :{[]
 
-
     };
 
 NewFeeTier              :{[]
+    `vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier];
 
     };
 
 
 NewFlatFee              :{[]
-
+    
     };
 
 UpdateMarkPrice : {[markPrice;instrumentId;time]
