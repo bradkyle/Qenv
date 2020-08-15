@@ -138,9 +138,8 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
 // vector target distribution and/or adapter
 // that conforms to a generaliseable dictionary 
 AddFailure   : {[time;kind;msg]
-        if[not (type time)=-15h; :0b]; //TODO fix
-        if[not (kind in .event.ERRORKIND); :0b];
-        if[not (kind in .event.ERRORKIND); :0b]; // TODO update msg 
+        if[not (type time)~15h; 'INVALID_TIME]; //TODO fix
+        if[not (kind in .event.ERRORKIND); 'INVALID_ERRORKIND];
         `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg);
         };
 

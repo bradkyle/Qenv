@@ -123,13 +123,17 @@ AddTradeEvent  :{[trade;time]
 // -------------------------------------------------------------->
 
 // TODO partial vs full book update.
-ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
+ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
+
     // Derive the deltas for each level given the new update
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
     event:flip event;
-    nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+    $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
+    $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
+    nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+        
     // TODO do validation on nxt;
 
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
@@ -409,9 +413,9 @@ NewOrder       : {[o;time];
                     
                     // TODO make better
                     `.order.Order upsert o;
-                    .order.AddNewOrderEvent[o;time];
-                    .account.UpdateOpenOrderState[];
-                    .order.DeriveThenAddDepthUpdateEvent[time]; 
+                    / .order.AddNewOrderEvent[o;time];
+                    / .account.UpdateOpenOrderState[];
+                    / .order.DeriveThenAddDepthUpdateEvent[time]; 
 
                 ]
             ];

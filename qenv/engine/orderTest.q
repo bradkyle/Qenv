@@ -14,6 +14,7 @@ z:.z.z;
 // Test data generation
 // -------------------------------------------------------------->
 
+
 makeDepthUpdate :{
     :$[count[x]>0;[ 
         // Side, Price, Size
@@ -68,8 +69,10 @@ defaultAfterEach: {
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
+     delete from  `.instrument.Instrument;
      .account.accountCount:0;
      .order.orderCount:0;
+    .instrument.instrumentCount:0;
      .qt.RestoreMocks[];
     };
 
@@ -81,6 +84,11 @@ defaultBeforeEach: {
      delete from `.order.OrderBook;
      .account.NewAccount[`accountId`other!1 2;.z.z];
      .account.NewAccount[`accountId`other!2 2;.z.z];
+
+     .instrument.NewInstrument[
+        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
+        (1;0.5;1e5f;0f;1e7f;0f;1);
+        1b;.z.z];
     };
 
 
@@ -88,59 +96,61 @@ defaultBeforeEach: {
 // -------------------------------------------------------------->
 
 test:.qt.Unit[
-    ".order.ProcessDepthUpdate";
+    ".order.ProcessDepthUpdateEvent";
     {[c]
         p:c[`params];
-        / show p[`event];
+        / show p[`event];/         
+        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]]; // TODO simple set instead of update events
+        if[count[p[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each p[`cOrd]]; // TODO simple set instead of update events
 
-        .order.ProcessDepthUpdate[p[`event]];
+        .order.ProcessDepthUpdateEvent[p[`event]];
         // Assertions
         .qt.A[.order.OrderBook;~;p[`eOB];"orderbook";c];
         / .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+
+        if[count[p[`eOrd]]>0;[
+            eOrd:p[`eOrd][;0];
+            rOrd: select from .order.Order where clId in eOrd[`clId];
+            eOrdCols: rmFkeys[rOrd] inter cols[eOrd];
+            .qt.A[count[p[`eOrd]];=;count[rOrd];"order count";c];
+            .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";c];
+            ]];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
 deriveCaseParams    :{[params]
-    e:();
-    
-    / eOB:params[3];
-    / eOB:update price:`int$price, 
-
-    p:`cOB`cOrd`event`eOB`eOrd`eEvents!(
+    :`cOB`cOrd`event`eOB`eOrd`eEvents!(
         makeDepthUpdate[params[0]];
-        params[1];
+        makeOrders[params[1]];
         makeDepthUpdate[params[2]];
         params[3];
-        params[4];
+        makeOrders[params[4]];
         params[5]
         );
-    :p;
     };
 
 // TODO test removes OB level when zero
-// 
-
-// Add time to allow for multiple simultaneous updates.
-//TODO make into array and addCases
+/ Add time to allow for multiple simultaneous updates.
+/TODO make into array and addCases
 .qt.AddCase[test;"simple update no agent orders or previous depth one side";deriveCaseParams[(
     ();();
-    ((10#`SELL);1000+til 10;10#1000);
+    ((10#`SELL);1000+til 10;10#1000;10#z);
     ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
     ();()
     )]];
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both";deriveCaseParams[(
     ();();
-    (((10#`SELL),(10#`BUY));((1000+til 10),(999-til 10));20#1000);
+    (((10#`SELL),(10#`BUY));((1000+til 10),(999-til 10));20#1000;20#z);
     ([price:(((1000+til 10),(999-til 10)))] side:(`.order.ORDERSIDE$((10#`SELL),(10#`BUY)));qty:(20#1000));
     ();()
     )]];
 
 .qt.AddCase[test;"simple update no agent orders or previous depth both (crossing)";deriveCaseParams[(
     ();();
-    ((10#`SELL);1000+til 10;10#1000);
+    ((10#`SELL);1000+til 10;10#1000;10#z);
     ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
     ();()
     )]];
@@ -152,12 +162,13 @@ deriveCaseParams    :{[params]
     ();()
     )]];
 
-/ .qt.AddCase[test;"1 order at 1 level, previous depth";deriveCaseParams[(
-/     ();();
-/     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5)));
-/     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000));
-/     ();()
-/     )]];
+.qt.AddCase[test;"1 buy order at best level, previous depth equal to update";deriveCaseParams[(
+    ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Previous depth
+    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
+    ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Depth update
+    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
+    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z);()
+    )]];
 
 / .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
 /     (); // currentOB
