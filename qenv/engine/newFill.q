@@ -19,7 +19,6 @@ deriveTrades  :{[maxN;numLvls;leaves;offset;shft;qty;rp]
         };
 
 deriveFills :{
-
         flls:0!select 
             side:nside,
             fillQty:sum nfilled,

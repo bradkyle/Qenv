@@ -132,95 +132,64 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
     $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
-    nxt:0!(`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+    .order.E:event;
+
+    nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
         
     // TODO do validation on nxt;
 
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
+    .order.ORD:odrs;
+    .order.B:.order.OrderBook;
     $[(count[odrs]>0);
       [
           // SHOULD COMBINE INTERNAL REPRESENTATION OF DEPTH AND AGENT ORDER AMOUNTS.
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
-          // agent order volume at that level.
-          ob:0!
-          update
-            noffset: Clip[poffset+dneg],
+          // agent order volume at that level. 
+          // TODO make functional for multi side updates
+          // TODO make sure queue logic is correct
+          state:0!update
+            mxshft:max'[nshft]
           from update
-            dneg:sum'[{x where[x<0]}'[dlt]],
+            tgt: last'[size],
+            nshft: pleaves+noffset
+          from update
+            noffset: Clip[poffset + offsetdlts]
+          from update
+            offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg])
+          from update
+            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])])
+          from update
+            dneg:sum'[{x where[x<0]}'[dlts]],
             shft:pleaves+poffset
           from update
             dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]),
-            poffset: PadM[offset],
+            nqty: last'[size],
+            poffset:PadM[offset],
             pleaves:PadM[leaves],
             porderId:PadM[orderId],
             paccountId:PadM[accountId],
             pprice:PadM[oprice],
             maxN:max count'[offset],
             numLvls:count[offset] 
-          from (((select by price from nxt) lj .order.OrderBook) uj (select 
+          from  (((`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event) lj (`side`price xgroup .order.OrderBook)) uj (select 
             oqty:sum leaves, 
             oprice: price,
+            oside: side,
             leaves, 
             offset, 
             orderId, 
-            accountId, 
-            by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)
+            accountId
+            by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
+ 
+          `.order.OrderBook upsert (select price, side, qty:?[tgt>mxshft;tgt;mxshft] from state);
 
-          .order.NXT:nxt;
-          .order.ODRS:odrs;
-          .order.OB:.order.OrderBook;
-          // If the number of negative deltas and order
-          // count is greater than 0, update the offsets.
-          if[(count[dneg]>0);[
-            odrs:0!(`price xgroup odrs);
-            qtys:ob[`qty];
-            offsets: PadM[odrs[`offset]];
-            sizes: PadM[odrs[`leaves]]; 
-            maxN: max count'[offsets];
-            numLvls:count[offsets]; // TODO check
+          `.order.Order upsert (select from (select 
+            price:raze[pprice], 
+            orderId:raze[porderId], 
+            offset:raze[noffset] from state) where orderId in raze[state[`orderId]])
 
-            / Calculate the shifted offsets, which infers
-            / the amount of space between each offset
-            shft: sizes + offsets; 
-
-            maxNl:til maxN;
-
-            // Non Agent Qtys
-            n:(numLvls,(maxN+1))#0;
-            n[;0]: offsets[;0];
-            n[;-1_(1+maxNl)]: Clip(offsets[;1_maxNl] - shft[;-1_maxNl]);
-            n[;maxN]: Clip(qtys-max'[shft]);
-
-            // SUm non agent qtys by lvl
-            nl: sum'[n];
-
-            // Derived deltas represents an equal distribution of 
-            // orders throughout the book.
-            derivedDeltas: floor[(n%nl)*dlt][::;-1];
-
-            // Update the new offsets to equal the last
-            // offsets + the derived deltas
-            newOffsets: Clip[offsets + derivedDeltas];
-            // Combine the new offsets with the respective offset ids in an 
-            // update statement that will update the respective offsets.
-            update offset:newOffsets from `.order.Order where orderId in ordrs[`orderId]; // TODO update
-            
-            // considering no changes have been made to the sizes of the given orders
-            // the new shft would be the new offsets + the previous sizes
-            newShft:sizes + newOffsets;
-
-            // Update the orderbook lvl qtys to represent the change                
-            // Replace all instances of the update with the maximum shft (offset + size)
-            // for each price whereby the update is smaller than the given shft (offset+size)
-            // ensures that an accurate representation is kept. 
-            nxtQty:value[nxt];
-            maxShft:max'[newShft];
-            update qty:?[nxtQty>maxShft;nxtQty;maxShft] from `.order.OrderBook where price in key[nxt];
-          ]];
-
-          // TODO update orderbook
-          // TODO emit orderbook snapshot
       ];
       [
          `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
