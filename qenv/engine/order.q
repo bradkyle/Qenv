@@ -128,19 +128,16 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     // Derive the deltas for each level given the new update
     // If has bids and asks and orders update orderbook else simply insert last events
     // return a depth event for each. (add randomizeation)
+    lt:exec last time from event;
     event:flip event;
     $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
     $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
-
-    .order.E:event;
 
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
         
     // TODO do validation on nxt;
 
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
-    .order.ORD:odrs;
-    .order.B:.order.OrderBook;
     $[(count[odrs]>0);
       [
           // SHOULD COMBINE INTERNAL REPRESENTATION OF DEPTH AND AGENT ORDER AMOUNTS.
@@ -152,15 +149,15 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           state:0!update
             mxshft:max'[nshft]
           from update
-            tgt: last'[size],
             nshft: pleaves+noffset
           from update
             noffset: Clip[poffset + offsetdlts]
           from update
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg])
           from update
-            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])])
+            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]) // TODO what qty is this referring to
           from update
+            tgt: last'[size],
             dneg:sum'[{x where[x<0]}'[dlts]],
             shft:pleaves+poffset
           from update
@@ -188,7 +185,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           `.order.Order upsert (select from (select 
             price:raze[pprice], 
             orderId:raze[porderId], 
-            offset:raze[noffset] from state) where orderId in raze[state[`orderId]])
+            offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
 
       ];
       [
@@ -199,7 +196,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
     / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
     / AddDepthEvent[nextAsks;nextBids];
-    .order.DeriveThenAddDepthUpdateEvent[(exec last time from nxt)]; 
+    .order.DeriveThenAddDepthUpdateEvent[lt]; 
 
     };
 
