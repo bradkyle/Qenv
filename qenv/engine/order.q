@@ -152,12 +152,15 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             nshft: pleaves+noffset
           from update
+            noffset: (noffset<mnoffset)*mnoffset
+          from update
             noffset: Clip[poffset + offsetdlts]
           from update
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
             nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]], // TODO what qty is this referring to
-            visQty: sum'[raze'[flip[raze[enlist(qty;pleaves)]]]]
+            visQty: sum'[raze'[flip[raze[enlist(qty;pleaves)]]]],
+            mnoffset: (0,'-1_'(shft))
           from update
             tgt: last'[size],
             dneg:sum'[{x where[x<0]}'[dlts]],
