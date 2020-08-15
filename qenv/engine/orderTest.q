@@ -217,12 +217,12 @@ deriveCaseParams    :{[params]
     () // Expected Events TODO
     )]];
 
-.qt.AddCase[test;"Check that depth update where ";deriveCaseParams[(
+.qt.AddCase[test;"check that depth update where zero is removed and only one update is processed per side";deriveCaseParams[(
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Previous depth
-    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#999),(2#1000);4#z); // previous orders
-    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));(20#1000 1100);(20#z,(z+`second$5))); // Depth update
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1100)); // Expected depth
-    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#77 333);4#100;(2#999),(2#1000);4#z); // Expected orders
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
+    (`SELL`BUY;1000 999;0 0;(z,z)); // Depth update
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1100)); // Expected depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
 
