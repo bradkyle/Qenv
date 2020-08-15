@@ -264,48 +264,43 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
                                                 by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
                     ) where qty>tgt); // ~0.00042 ms
 
-            // Update orders
-            oupd:(select price,orderId,offset,leaves,status from 
-                        (update
-                            status:`.order.ORDERSTATUS$`FILLED
-                        from (update 
-                            status:`.order.ORDERSTATUS$`PARTIALFILLED
-                            from (select 
-                            price:raze[pprice], 
-                            orderId:raze[porderId], 
-                            offset:raze[noffset], 
-                            leaves:raze[nleaves], 
-                            partial:`boolean$(raze[(sums'[poffset]<=rp)-(shft<=rp)]), 
-                            filled:`boolean$(raze[(poffset<=rp)and(shft<=rp)]),
-                            status:raze[pstatus] from lt) where partial)where filled) where partial or filled and orderId in raze[lt[`orderId]]); 
-            `.order.Order upsert oupd;
+            // If any agent orders have been updated
+            // update agent orders and apply fills respectively.
+            if [();[
+                // Update agent orders ? SHould be after?
+                oupd:(select price,orderId,offset,leaves,status from 
+                            (update
+                                status:`.order.ORDERSTATUS$`FILLED
+                            from (update 
+                                status:`.order.ORDERSTATUS$`PARTIALFILLED
+                                from (select 
+                                price:raze[pprice], 
+                                orderId:raze[porderId], 
+                                offset:raze[noffset], 
+                                leaves:raze[nleaves], 
+                                partial:`boolean$(raze[(sums'[poffset]<=rp)-(shft<=rp)]), 
+                                filled:`boolean$(raze[(poffset<=rp)and(shft<=rp)]),
+                                status:raze[pstatus] from lt) where partial)where filled) where partial or filled and orderId in raze[lt[`orderId]]); 
+                `.order.Order upsert oupd;
 
-            // accountId, instrumentId, price, side, qty, time reduceOnly, isMaker
-            fllcols:`accountId`instrumentId`price`side`qty`time`reduceOnly`isMaker;
-            aids: raze[PadM[lt[`accountId]]];
-            daids: distinct raze[lt[`accountId]];
+                // Apply account fills
+                flls:0!select 
+                        side:nside,
+                        fillQty:sum nfilled,
+                        time:.z.z, // TODO update time.
+                        isMaker:1b 
+                        by paccountId,pinstrumentId,pprice,preduceOnly 
+                        from (select 
+                            raze[porderId],
+                            raze[paccountId],
+                            raze[pinstrumentId],
+                            raze[pprice],
+                            raze[nfilled],
+                            raze[preduceOnly] from lt) 
+                        where porderId in raze lt[`orderId]
 
-            flls:(8,coids)#0; 
-            flls[0]:aids; 
-            flls[1]:coids#instrumentId;
-            flls[2]:prices; // order prices
-            flls[3]:coids#`long$(nside); // limit order sides
-            flls[4]:Clip[raze[leaves]-nleaves];
-            flls[5]:coids#time; // TODO doesnt work
-            flls[5]:raze[PadM[lt[`reduceOnly]]];
-            flls[6]:coids#1b;
-            f:flip[fllcols!flls];
-            show f;
-            fm:0!select sum qty,last time by accountId,instrumentId,`.order.ORDERSIDE@side,price,`boolean$reduceOnly,`boolean$isMaker from f where accountId in daids;
-            {.account.ApplyFill[
-                x[`accountId];
-                x[`instrumentId];
-                x[`price];
-                x[`side];
-                x[`qty];
-                x[`time];
-                x[`reduceOnly];
-                x[`isMaker]]} fm;
+                .account.ApplyFill flls;
+                ]];
 
             // Calculate trade qtys
             // calculated seperately from orders on account of non agent trades.
@@ -322,7 +317,6 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
 
             // Derive trades from size/offset distribution.
             show dc;
-            tqty:flip raze'[(sd*(sd>0) and (d>0))];
 
             tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
             t:flip `size`price`side`time!tds;

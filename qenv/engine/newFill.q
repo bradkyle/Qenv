@@ -1,15 +1,17 @@
 
 
-
-ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
-
-// update noffsets:Clip[offset-rp] from select rp, PadM[offset] from lt
-   
-// select from (select raze[pprice], raze[porderId], raze[noffset], raze[nleaves] from lt) where porderId in (exec raze[orderId] from lt)
-// select a:(sums'[poffset]<=rp)-(shft<=rp), b:(poffset<=rp)and(shft<=rp) from lt
- 
-    nonAgentQtys:   :{
+// select dst:qtyDist[last maxN;last numLvls;pleaves;poffset;shft;qty;rp] from lt
+deriveTrades  :{[maxN;numLvls;leaves;offset;shft;qty;rp]
+            dc:(maxN*2)+1; 
+            tdc:til[dc];
+            d:(numLvls,dc)#0; // empty matrix
+            idx:(1+tdc) mod 2;
+            aidx:-1_where[idx]; / idxs for agent sizes
+            oidx:where[not[idx]]; / idxs for offsets
+            d[;aidx]: leaves;
+            d[;oidx]: offset;
+            d[;dc-1]: Clip(qty-max'[shft]);
+            sd:(d-Clip[sums'[flip raze (enlist(d[;0]-rp);flip d[;1_tdc])]])
+            tqty:flip raze'[(sd*(sd>0) and (d>0))];
 
         };
-    
-    };
