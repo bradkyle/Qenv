@@ -10,6 +10,7 @@ system "d .orderTest";
 
 z:.z.z;
 
+sc: {x+(`second$y)};
 
 // Test data generation
 // -------------------------------------------------------------->
@@ -131,7 +132,7 @@ deriveCaseParams    :{[params]
         );
     };
 
-// TODO test removes OB level when zero
+// TODO check orders event by time
 // TODO depth update does not match order update
 // TODO depth update crosses
 // TODO add test for differing within one update
@@ -143,6 +144,9 @@ deriveCaseParams    :{[params]
 // TODO depth update contains depth for which the next value is zero (removes level)
 // TODO check that best ask, best bid, is liquid variables are updated (single update)
 // TODO depth update overlaps with current depth of opposing side (single update)
+// TODO check that non congruent price/levels still process and produce correct events
+// TODO test skips price level in update (temporal)
+// TODO differing number of buys and sells etc.
 
 / Add time to allow for multiple simultaneous updates.
 /TODO make into array and addCases
@@ -226,6 +230,20 @@ deriveCaseParams    :{[params]
     () // Expected Events TODO
     )]];
 
+    
+.qt.AddCase[test;"differing update prices by time doesn't cross spread (best price decreases during update)";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
+    (
+        ((4#`BUY),(2#`SELL));
+        ((999 998 998 999),(999 999));
+        ((0 0 1000 1000),(1000 0));
+        (sc[z] 0 0 1 1 0 1)
+    ); // Previous depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#77 333);4#100;(2#998),(2#1001);4#z); // Expected orders
+    () // Expected Events TODO
+    )]];
 
 // Process Trade tests
 // -------------------------------------------------------------->

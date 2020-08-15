@@ -134,9 +134,9 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
     // TODO check prices don't cross
-
+    .order.E:event;
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
-        
+    .order.N:nxt;
     // TODO do validation on nxt;
 
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
@@ -156,7 +156,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
-            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]), // TODO what qty is this referring to
+            nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]], // TODO what qty is this referring to
             visQty: sum'[raze'[flip[raze[enlist(qty;pleaves)]]]]
           from update
             tgt: last'[size],
@@ -172,7 +172,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             pprice:PadM[oprice],
             maxN:max count'[offset],
             numLvls:count[offset] 
-          from  (((`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event) lj (`side`price xgroup .order.OrderBook)) uj (select 
+          from  (((`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event) lj (`side`price xgroup .order.OrderBook)) lj (select 
             oqty:sum leaves, 
             oprice: price,
             oside: side,
@@ -182,9 +182,9 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             accountId
             by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
 
-        /   .order.O:state;
+          .order.O:state;
  
-          `.order.OrderBook upsert (select price, side, qty:?[tgt>mxshft;tgt;mxshft] from state);
+          `.order.OrderBook upsert (select price, side, qty:tgt from state where tgt>0);
 
           `.order.Order upsert (select from (select 
                 price:raze[pprice], 
