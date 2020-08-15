@@ -162,7 +162,7 @@ deriveCaseParams    :{[params]
     ();()
     )]];
 
-.qt.AddCase[test;"1 buy order at best level, previous depth equal to update";deriveCaseParams[(
+.qt.AddCase[test;"1 buy order at best level, previous depth equal to update (multiple times)";deriveCaseParams[(
     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Previous depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Depth update
