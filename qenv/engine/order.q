@@ -209,7 +209,8 @@ ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
  
-
+// Updates the state of the orderbook, orders, accounts, inventory etc. when a
+// trade occurs
 ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     // TODO validate trade
     
@@ -248,7 +249,8 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
-/ ProcessTradeEvent   :{[event] ProcessTradeEvent[]};
+// Invokes ProcessTrade with an event i.e. from historical data
+ProcessTradeEvent   :{[event] ProcessTrade[]};
 
 // Limit Order Manipulation CRUD Logic
 // -------------------------------------------------------------->
