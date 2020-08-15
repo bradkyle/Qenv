@@ -145,7 +145,10 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // agent order volume at that level.
           ob:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each nxt;
           dneg:ob where[ob[`d]<0];           
-          
+
+          .order.NXT:nxt;
+          .order.ODRS:odrs;
+          .order.OB:ob;
           // If the number of negative deltas and order
           // count is greater than 0, update the offsets.
           if[(count[dneg]>0);[

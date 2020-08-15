@@ -167,10 +167,20 @@ deriveCaseParams    :{[params]
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Depth update
     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
-    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z);()
+    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // Expected orders
+    () // Expected Events
     )]];
 
 / .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
+/     ((5#`SELL);1000+til 5;5#1000;5#z); // Previous depth
+/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;200 500;2#100;2#1000;2#(z+`second$1)); // previous orders
+/     ((5#`SELL);1000+til 5;(900,4#1000);5#(z+`second$3)); // Depth update
+/     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
+/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // Expected orders
+/     () // Expected Events
+/     )]];
+
+/ .qt.AddCase[test;"";deriveCaseParams[(
 /     (); // currentOB
 /     genTestOrders[]; // current Orders
 /     `price`qty!(`s#993150 993250i;2689711 2689711i);
