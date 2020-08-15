@@ -148,11 +148,12 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
           .order.NXT:nxt;
           .order.ODRS:odrs;
-          .order.OB:ob;
+          .order.OB:.order.OrderBook;
           // If the number of negative deltas and order
           // count is greater than 0, update the offsets.
           if[(count[dneg]>0);[
             odrs:0!(`price xgroup odrs);
+            qtys:0;
             offsets: PadM[odrs[`offset]];
             sizes: PadM[odrs[`leaves]]; 
             maxN: max count'[offsets];
