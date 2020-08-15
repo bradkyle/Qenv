@@ -122,7 +122,7 @@ AddTradeEvent  :{[trade;time]
 // Orderbook Utilities
 // -------------------------------------------------------------->
 
-// TODO partial vs full book update.
+// TODO simplify into update statement like ProcessTrade
 ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
     // Derive the deltas for each level given the new update
@@ -143,8 +143,29 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level.
-          ob:{select price, last size, last side, d:sum{x where[x<0]}deltas size by side, price from x} each nxt;
-          dneg:ob where[ob[`d]<0];           
+          ob:0!
+          update
+            noffset: Clip[poffset+dneg],
+          from update
+            dneg:sum'[{x where[x<0]}'[dlt]],
+            shft:pleaves+poffset
+          from update
+            dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]),
+            poffset: PadM[offset],
+            pleaves:PadM[leaves],
+            porderId:PadM[orderId],
+            paccountId:PadM[accountId],
+            pprice:PadM[oprice],
+            maxN:max count'[offset],
+            numLvls:count[offset] 
+          from (((select by price from nxt) lj .order.OrderBook) uj (select 
+            oqty:sum leaves, 
+            oprice: price,
+            leaves, 
+            offset, 
+            orderId, 
+            accountId, 
+            by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)
 
           .order.NXT:nxt;
           .order.ODRS:odrs;
@@ -153,7 +174,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // count is greater than 0, update the offsets.
           if[(count[dneg]>0);[
             odrs:0!(`price xgroup odrs);
-            qtys:0;
+            qtys:ob[`qty];
             offsets: PadM[odrs[`offset]];
             sizes: PadM[odrs[`leaves]]; 
             maxN: max count'[offsets];

@@ -53,7 +53,8 @@ deriveOrderUpdates :{
         status:raze[pstatus] from lt) where partial)where filled) where partial or filled and orderId in raze[lt[`orderId]]);
     };
 
-deriveNextState :{
+// Derives transitionary state from 
+deriveNextStateFromTrade :{
     lt: update
                     nfilled: psize - nleaves,
                     accdlts: pleaves - nleaves
@@ -99,3 +100,19 @@ deriveNextState :{
                     ) where qty>tgt);
 
     }
+
+
+nonAgentQtys:{[maxN;poffset;shft;qtys]
+    maxNl:til maxN;
+    numLvls:count[poffset]; 
+    n:(numLvls,(maxN+1))#0;
+    n[;0]: poffset[;0];
+    n[;-1_(1+maxNl)]: Clip(poffset[;1_maxNl] - shft[;-1_maxNl]);
+    n[;maxN]: Clip(qtys-max'[shft]);
+    :n;
+    };
+
+deriveNextStateFromDepthUpdate  :{
+
+
+    };

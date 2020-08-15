@@ -162,14 +162,16 @@ deriveCaseParams    :{[params]
     ();()
     )]];
 
-.qt.AddCase[test;"1 buy order at best level, previous depth equal to update (multiple times)";deriveCaseParams[(
-    ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Previous depth
-    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
-    ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Depth update
-    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
-    (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // Expected orders
-    () // Expected Events
-    )]];
+/ .qt.AddCase[test;"1 buy order at best level, previous depth equal to updates i.e. no change (multiple times)";deriveCaseParams[(
+/     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Previous depth
+/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
+/     ((10#`SELL);(raze flip 2#{(1000+x;1000+x)}til 5);10#1000;(10#z,(z+`second$5))); // Depth update
+/     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
+/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // Expected orders
+/     () // Expected Events
+/     )]];
+
+// TODO add test for differing within one update
 
 / .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
 /     ((5#`SELL);1000+til 5;5#1000;5#z); // Previous depth
