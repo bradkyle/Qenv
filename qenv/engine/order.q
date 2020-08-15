@@ -133,6 +133,8 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
     $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
+    // TODO check prices don't cross
+
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
         
     // TODO do validation on nxt;
@@ -146,6 +148,31 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // agent order volume at that level. 
           // TODO make functional for multi side updates
           // TODO make sure queue logic is correct
+
+          .order.O:update
+            tgt: last'[size],
+            dneg:sum'[{x where[x<0]}'[dlts]],
+            shft:pleaves+poffset
+          from update
+            dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]),
+            nqty: last'[size],
+            poffset:PadM[offset],
+            pleaves:PadM[leaves],
+            porderId:PadM[orderId],
+            paccountId:PadM[accountId],
+            pprice:PadM[oprice],
+            maxN:max count'[offset],
+            numLvls:count[offset] 
+          from  (((`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event) lj (`side`price xgroup .order.OrderBook)) uj (select 
+            oqty:sum leaves, 
+            oprice: price,
+            oside: side,
+            leaves, 
+            offset, 
+            orderId, 
+            accountId
+            by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
+
           state:0!update
             mxshft:max'[nshft]
           from update
@@ -153,7 +180,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             noffset: Clip[poffset + offsetdlts]
           from update
-            offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg])
+            offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
             nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]) // TODO what qty is this referring to
           from update
@@ -183,10 +210,11 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           `.order.OrderBook upsert (select price, side, qty:?[tgt>mxshft;tgt;mxshft] from state);
 
           `.order.Order upsert (select from (select 
-            price:raze[pprice], 
-            orderId:raze[porderId], 
-            offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
+                price:raze[pprice], 
+                orderId:raze[porderId], 
+                offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
 
+            / delete from `.order.OrderBook where // TODO
       ];
       [
          `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
