@@ -208,152 +208,44 @@ ProcessDepthUpdate  : {[event] // TODO validate time, kind, cmd, etc.
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
-
-deriveObState   :{
-
-    };
+ 
 
 ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     // TODO validate trade
     
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
-    // TODO check if can be faster
-    $[((count select from .order.Order where side=nside)>0);[
-                
-            lt: update
-                    nfilled: psize - nleaves,
-                    accdlts: pleaves - nleaves
-                from update
-                    noffset: Clip[poffset-rp],
-                    nleaves: Clip[shft-rp]
-                from update
-                    shft:pleaves+poffset
-                from update 
-                    poffset:PadM[offset],
-                    psize:PadM[size],
-                    pleaves:PadM[leaves],
-                    preduceOnly:PadM[reduceOnly],
-                    porderId:PadM[orderId],
-                    paccountId:PadM[accountId],
-                    pinstrumentId:PadM[instrumentId],
-                    pprice:PadM[oprice],
-                    pstatus:PadM[status],
-                    maxN:max count'[offset],
-                    numLvls:count[offset] 
-                from (select from (
-                        update 
-                            rp:qty^rp,
-                            tgt:qty-rp // the amount that is left over after fill
-                                from update 
-                                    rp: (thresh-prev[thresh])-(thresh-fillQty) // The amount that is filled at the given level
-                                    from update
-                                        thresh:sums qty
-                                        from update 
-                                            qty: qty+(0^oqty)
-                                            from 0!((select from .order.OrderBook where side=nside) uj (select 
-                                                oqty:sum leaves, 
-                                                oprice: price,
-                                                leaves, 
-                                                size, 
-                                                offset, 
-                                                orderId, 
-                                                accountId, 
-                                                instrumentId,
-                                                status,
-                                                reduceOnly 
-                                                by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
-                    ) where qty>tgt); // ~0.00042 ms
+    ns:deriveNextState[];
 
-            // If any agent orders have been updated
-            // update agent orders and apply fills respectively.
-            if [();[
-                // Update agent orders ? SHould be after?
-                oupd:(select price,orderId,offset,leaves,status from 
-                            (update
-                                status:`.order.ORDERSTATUS$`FILLED
-                            from (update 
-                                status:`.order.ORDERSTATUS$`PARTIALFILLED
-                                from (select 
-                                price:raze[pprice], 
-                                orderId:raze[porderId], 
-                                offset:raze[noffset], 
-                                leaves:raze[nleaves], 
-                                partial:`boolean$(raze[(sums'[poffset]<=rp)-(shft<=rp)]), 
-                                filled:`boolean$(raze[(poffset<=rp)and(shft<=rp)]),
-                                status:raze[pstatus] from lt) where partial)where filled) where partial or filled and orderId in raze[lt[`orderId]]); 
-                `.order.Order upsert oupd;
-
-                // Apply account fills
-                flls:0!select 
-                        side:nside,
-                        fillQty:sum nfilled,
-                        time:.z.z, // TODO update time.
-                        isMaker:1b 
-                        by paccountId,pinstrumentId,pprice,preduceOnly 
-                        from (select 
-                            raze[porderId],
-                            raze[paccountId],
-                            raze[pinstrumentId],
-                            raze[pprice],
-                            raze[nfilled],
-                            raze[preduceOnly] from lt) 
-                        where porderId in raze lt[`orderId]
-
-                .account.ApplyFill flls;
-                ]];
-
-            // Calculate trade qtys
-            // calculated seperately from orders on account of non agent trades.
-            dc:(maxN*2)+1; 
-            tdc:til dc;
-            d:(numLvls,dc)#0; // empty matrix
-            idx:(1+tdc) mod 2;
-            aidx:-1_where[idx]; / idxs for agent sizes
-            oidx:where[not[idx]]; / idxs for offsets
-            d[;aidx]: leaves;
-            d[;oidx]: offsets;
-            d[;dc-1]: Clip(lt[`qty]-max'[shft]); / set last value equal to last (non agent qty)
-            sd:d-Clip[sums'[flip raze (enlist(d[;0]-lt[`rp]);flip d[;1_tdc])]];
-
-            // Derive trades from size/offset distribution.
-            show dc;
-
-            tds:(raze'[(tqty;({dc#x}'[lt[`price]]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
-            t:flip `size`price`side`time!tds;
-
-            {.order.AddTradeEvent[
-                x[`time];
-                (`.order.ORDERSIDE@x[`side];x[`size];x[`price])]} t;
-
-            if[isAgent;[
-                // TODO reduce to one query
-                if[accountId in flls[`accountId];.account.IncSelfFill[
-                    accountId;
-                    (count'[select by accountId from f where qty>0]@1);
-                    (exec sum qty from f where qty>0 and accountId=1)]];
-
-                .account.ApplyFill[
-                    qty;
-                    price;
-                    side;
-                    time;
-                    reduceOnly;
-                    0b;
-                    accountId];
-                ]];
-
-            delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
-            .order.DeriveThenAddDepthUpdateEvent[time]; 
-        ];
-        isAgent;
-        [
-
-        ];
-        [
-            .order.AddTradeEvent[
-                time;
-                (`.order.ORDERSIDE@side;fillQty;bestSidePrice[side])] // CHECK IS CORRECT
+    // If any agent orders have been updated
+    // update agent orders and apply fills respectively.
+    if [(count[raze[ns[`orderIds]]]>0);[
+        `.order.Order upsert deriveOrderUpdates[];
+        .account.ApplyFill deriveAccountFills[]
         ]];
+
+    // Calculate trade qtys
+    // calculated seperately from orders on account of non agent trades.
+    .order.AddTradeEvent deriveTrades[lt]
+
+    if[isAgent;[
+        // TODO reduce to one query
+        if[accountId in flls[`accountId];.account.IncSelfFill[
+            accountId;
+            (count'[select by accountId from f where qty>0]@1);
+            (exec sum qty from f where qty>0 and accountId=1)]];
+
+        .account.ApplyFill[
+            qty;
+            price;
+            side;
+            time;
+            reduceOnly;
+            0b;
+            accountId];
+        ]];
+
+    delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
+    .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
 / ProcessTradeEvent   :{[event] ProcessTradeEvent[]};
