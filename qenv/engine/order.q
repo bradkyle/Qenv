@@ -191,7 +191,8 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
                 orderId:raze[porderId], 
                 offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
 
-            delete from `.order.OrderBook where price in (exec price from state where visQty<=0);
+            dllvl:(select price,side from state where visQty<=0);
+            if[count[dllvl]>0;{delete from `.order.OrderBook where price=x[`price], side=x[`side]}'[dllvl]];
 
             / dupd:select visQty,side by price from state;
       ];
