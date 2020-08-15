@@ -156,7 +156,8 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
-            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]) // TODO what qty is this referring to
+            nagentQty: 0^(flip raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]), // TODO what qty is this referring to
+            visQty: sum'[raze'[flip[raze[enlist(qty;pleaves)]]]]
           from update
             tgt: last'[size],
             dneg:sum'[{x where[x<0]}'[dlts]],
@@ -181,7 +182,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             accountId
             by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
 
-          .order.O:state;
+        /   .order.O:state;
  
           `.order.OrderBook upsert (select price, side, qty:?[tgt>mxshft;tgt;mxshft] from state);
 
@@ -190,17 +191,14 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
                 orderId:raze[porderId], 
                 offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
 
-            / delete from `.order.OrderBook where // TODO
+            delete from `.order.OrderBook where price in (exec price from state where visQty<=0);
+
+            / dupd:select visQty,side by price from state;
       ];
       [
          `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
+         delete from `.order.OrderBook where qty<=0;
       ]];
-    / `price xgroup flip select time, price:datum[;0][;1], size:datum[;0][;2] from (e@2)
-    / asks:`price xgroup select time, price:datum[;0][;1], size:datum[;0][;2] from event where[(d[`datum][;0][;0])=`SELL]
-    / processSideUpdate[`SELL;event[`datum][`asks]]; d where[(d[`datum][;0][;0])=`SELL]
-    / processSideUpdate[`BUY;event[`datum][`bids]]; d where[(d[`datum][;0][;0])=`BUY]
-    / AddDepthEvent[nextAsks;nextBids];
-    .order.DeriveThenAddDepthUpdateEvent[lt]; 
 
     };
 
