@@ -146,32 +146,6 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // get all negative deltas then update the offsets of each order 
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level. 
-          // TODO make functional for multi side updates
-          // TODO make sure queue logic is correct
-
-          .order.O:update
-            tgt: last'[size],
-            dneg:sum'[{x where[x<0]}'[dlts]],
-            shft:pleaves+poffset
-          from update
-            dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]),
-            nqty: last'[size],
-            poffset:PadM[offset],
-            pleaves:PadM[leaves],
-            porderId:PadM[orderId],
-            paccountId:PadM[accountId],
-            pprice:PadM[oprice],
-            maxN:max count'[offset],
-            numLvls:count[offset] 
-          from  (((`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event) lj (`side`price xgroup .order.OrderBook)) uj (select 
-            oqty:sum leaves, 
-            oprice: price,
-            oside: side,
-            leaves, 
-            offset, 
-            orderId, 
-            accountId
-            by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
 
           state:0!update
             mxshft:max'[nshft]
@@ -206,6 +180,8 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             orderId, 
             accountId
             by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
+
+          .order.O:state;
  
           `.order.OrderBook upsert (select price, side, qty:?[tgt>mxshft;tgt;mxshft] from state);
 

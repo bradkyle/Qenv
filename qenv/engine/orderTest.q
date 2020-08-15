@@ -136,6 +136,13 @@ deriveCaseParams    :{[params]
 // TODO depth update crosses
 // TODO add test for differing within one update
 // TODO multiple order sides, and depth sides
+// TODO best price level changes during update (inc/dec)
+// TODO depth update does not conform to instrument lot size/tick size
+// TODO orders not filled yet and cross event
+// TODO agent offsets are zero and update is less than agent order size (single update)
+// TODO depth update contains depth for which the next value is zero (removes level)
+// TODO check that best ask, best bid, is liquid variables are updated (single update)
+// TODO depth update overlaps with current depth of opposing side (single update)
 
 / Add time to allow for multiple simultaneous updates.
 /TODO make into array and addCases
@@ -197,147 +204,11 @@ deriveCaseParams    :{[params]
 .qt.AddCase[test;"buy and sell orders at best level, previous depth greater than differing updates (3 updates) 2 dec 1 inc";deriveCaseParams[(
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Previous depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#999),(2#1000);4#z); // previous orders
-    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));(20#1050 1100);(20#z,(z+`second$5))); // Depth update
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));(20#1000 1100);(20#z,(z+`second$5))); // Depth update
     ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1100)); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#77 333);4#100;(2#999),(2#1000);4#z); // Expected orders
     () // Expected Events TODO
     )]];
-
-/ .qt.AddCase[test;"single agent ask decreasing (delta less than offset) (single update)";deriveCaseParams[(
-/     ((5#`SELL);1000+til 5;5#1000;5#z); // Previous depth
-/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;200 500;2#100;2#1000;2#(z+`second$1)); // previous orders
-/     ((5#`SELL);1000+til 5;(900,4#1000);5#(z+`second$3)); // Depth update
-/     ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
-/     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // Expected orders
-/     () // Expected Events
-/     )]];
-
-/ .qt.AddCase[test;"";deriveCaseParams[(
-/     (); // currentOB
-/     genTestOrders[]; // current Orders
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"1 order at 1 level (single update)";deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"3 orders at 1 level (single update)";deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"1 order at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"3 orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets (single update)";deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"mixed orders of different quantities at 3 different levels and differing offsets: There are no non agent orders left (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-
-/ .qt.AddCase[test;"depth update overlaps with current depth of opposing side (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-
-/ .qt.AddCase[test;"depth update does not conform to tick size (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"depth update does not conform to lot size (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-
-/ .qt.AddCase[test;"agent offsets are zero and update is less than agent order size (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-
-/ .qt.AddCase[test;"depth update contains depth for which the next value is zero (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
-
-/ .qt.AddCase[test;"check that best ask, best bid, is liquid variables are updated (single update)";
-/     deriveCaseParams[(
-/     ();
-/     genTestOrders[];
-/     `SELL;
-/     `price`qty!(`s#993150 993250i;2689711 2689711i);
-/     `price`qty`side!(`s#993150 993250i;2689711 2689711i;`.order.ORDERSIDE$`SELL`SELL);
-/     ()
-/     )]];
 
 
 // Process Trade tests
