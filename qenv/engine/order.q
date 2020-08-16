@@ -152,9 +152,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             nshft: pleaves+noffset
           from update
-            noffset: (noffset<mnoffset)*mnoffset
-          from update
-            noffset: Clip[poffset + offsetdlts]
+            noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts]
           from update
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
