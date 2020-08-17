@@ -124,6 +124,7 @@ AddTradeEvent  :{[trade;time]
 // -------------------------------------------------------------->
 
 // TODO simplify into update statement like ProcessTrade
+// Processes a set of updates to the orderbook, (does not infer updates from levels, merely prices)
 ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
     // Derive the deltas for each level given the new update
@@ -149,6 +150,10 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // down to a magnitude that is directly proportional to the non
           // agent order volume at that level. 
 
+        .order.O:.order.Order;
+        .order.B:.order.OrderBook;
+        .order.E:event;
+
           state:0!update
             vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
           from update
@@ -159,7 +164,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           from update
             noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts]
           from update
-            offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
+            offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
             nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]], // TODO what qty is this referring to
             mnoffset: (0,'-1_'(shft))
@@ -187,8 +192,8 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             accountId
             by side, price from .order.Order where otype=`LIMIT, status in `PARTIALFILLED`NEW, size>0));
 
-          .order.O:state;
- 
+          .order.AS:state;
+    
           `.order.OrderBook upsert (select price, side, qty:tgt, vqty from state where vqty>0);
 
           `.order.Order upsert (select from (select 
@@ -211,6 +216,26 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
+
+// Derives a set of trades from 
+// TODO move to upd statement
+deriveTrades  :{[maxN;numLvls;prices;leaves;offset;shft;qty;rp]
+            dc:(maxN*2)+1; 
+            tdc:til[dc];
+            d:(numLvls,dc)#0; // empty matrix
+            idx:(1+tdc) mod 2;
+            aidx:-1_where[idx]; / idxs for agent sizes
+            oidx:where[not[idx]]; / idxs for offsets
+            d[;aidx]: leaves;
+            d[;oidx]: offset;
+            d[;dc-1]: Clip(qty-max'[shft]);
+            sd:(d-Clip[sums'[flip raze (enlist(d[;0]-rp);flip d[;1_tdc])]]);
+            tqty:flip raze'[(sd*(sd>0) and (d>0))];
+
+            tds:(raze'[(tqty;({dc#x}'[prices]);((dc*2)#0);((dc*2)#time))])[;where[raze[tqty]>0]];
+            t:flip `size`price`side`time!tds;
+            :t;
+        };
  
 // Updates the state of the orderbook, orders, accounts, inventory etc. when a
 // trade occurs
@@ -218,18 +243,96 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
     // TODO validate trade
     
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
-    ns:deriveNextState[];
+    state:0!update
+                nfilled: psize - nleaves,
+                accdlts: pleaves - nleaves
+            from update
+                noffset: Clip[poffset-rp],
+                nleaves: Clip[shft-rp]
+            from update
+                shft:pleaves+poffset
+            from update 
+                poffset:PadM[offset],
+                psize:PadM[size],
+                pleaves:PadM[leaves],
+                preduceOnly:PadM[reduceOnly],
+                porderId:PadM[orderId],
+                paccountId:PadM[accountId],
+                pinstrumentId:PadM[instrumentId],
+                pprice:PadM[oprice],
+                pstatus:PadM[status],
+                maxN:max count'[offset],
+                numLvls:count[offset] 
+            from (select from (
+                    update 
+                        rp:qty^rp,
+                        tgt:qty-rp // the amount that is left over after fill
+                            from update 
+                                rp: (thresh-prev[thresh])-(thresh-fillQty) // The amount that is filled at the given level
+                                from update
+                                    thresh:sums qty
+                                    from update 
+                                        qty: qty+(0^oqty)
+                                        from 0!((select from .order.OrderBook where side=nside) uj (select 
+                                            oqty:sum leaves, 
+                                            oprice: price,
+                                            leaves, 
+                                            size, 
+                                            offset, 
+                                            orderId, 
+                                            accountId, 
+                                            instrumentId,
+                                            status,
+                                            reduceOnly 
+                                            by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
+                    ) where qty>tgt);
 
     // If any agent orders have been updated
     // update agent orders and apply fills respectively.
-    if [(count[raze[ns[`orderIds]]]>0);[
-        `.order.Order upsert deriveOrderUpdates[];
-        .account.ApplyFill deriveAccountFills[]
+    if [(count[raze[state[`orderIds]]]>0);[
+        
+        // Derive updates to orders and upsert them
+        // TODO testing, move to unit and make simpler
+        ordUpd: select price,orderId,offset,leaves,status from 
+        (update
+            status:`.order.ORDERSTATUS$`FILLED
+            from (update 
+                status:`.order.ORDERSTATUS$`PARTIALFILLED
+                from (select 
+                price:raze[pprice], 
+                orderId:raze[porderId], 
+                offset:raze[noffset], 
+                leaves:raze[nleaves], 
+                partial:`boolean$(raze[(sums'[poffset]<=rp)-(shft<=rp)]), 
+                filled:`boolean$(raze[(poffset<=rp)and(shft<=rp)]),
+                status:raze[pstatus] from state) where partial)where filled) where partial or filled and orderId in raze[state[`orderId]];
+        
+        `.order.Order upsert ordUpd;
+
+        // Derive account fills from state and call .acount Apply fill for each.
+        accFlls:0!select 
+            side:nside,
+            fillQty:sum nfilled,
+            time:.z.z, // TODO update time.
+            isMaker:1b 
+            by paccountId,pinstrumentId,pprice,preduceOnly 
+            from (select 
+                raze[porderId],
+                raze[paccountId],
+                raze[pinstrumentId],
+                raze[pprice],
+                raze[nfilled],
+                raze[preduceOnly] from state) 
+            where porderId in raze state[`orderId]
+        
+        .account.ApplyFill accFlls;
         ]];
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
-    .order.AddTradeEvent deriveTrades[lt]
+    trades: deriveTrades select last maxN, last numLvls, price, leaves, offset, shft, qty, rp from state;
+
+    .order.AddTradeEvent trades;
 
     if[isAgent;[
         // TODO reduce to one query
@@ -248,7 +351,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;time]
             accountId];
         ]];
 
-    delete from `.order.OrderBook where price in (exec price from lt where tgt<=0);
+    delete from `.order.OrderBook where price in (exec price from state where tgt<=0);
     .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 

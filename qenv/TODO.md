@@ -48,3 +48,4 @@ run engine in seperate process, communicate via rpc?
 
 reduceOnly on both position closes order amount fully or rejects order?
 is the order margin updated?
+derive updates from 20 levels* full update
