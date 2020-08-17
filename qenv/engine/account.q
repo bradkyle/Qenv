@@ -92,7 +92,6 @@ NewAccount :{[account;time]
     / show value type each .account.Account@0;
     `.account.Account upsert account;
 
-    accountId:account[`accountId];
     / AddAccountUpdateEvent[accountId;time];
     };
 
@@ -204,16 +203,14 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,100,0,1,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  
 NewInventory : {[inventory;time] 
-    if[any null inventory[mandCols]; :0b];
-    inventory:Sanitize[inventory;defaults[];cols Inventory];
+    if[any null inventory[`accountId`side]; :0b];
+    inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
-
     `.account.Inventory upsert inventory; // TODO check if successful
-
     };
 
 // ORDER Margin

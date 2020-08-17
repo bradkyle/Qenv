@@ -19,28 +19,35 @@ l: `long$
 // Test Utilities
 // -------------------------------------------------------------->
 
-setupAccount      : {if[count[x[`cAcc]]>0;.account.NewAccount[x[`cAcc]]]}
-setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x[0];x[1]]} each x[`cInv]]}
+deRef   :{x[y]:`long$(x[y]);:x};
+rmFkeys :{cols[x] except key[fkeys x]};
+setupAccount      : {if[count[x[`cAcc]]>0;.account.NewAccount[x[`cAcc];.z.z]]}
+setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x;.z.z]} each x[`cInv]]}
 
 // @x : params
 // @y : case
 checkInventory     :{
     einv:x[`eInv];
     cx:count[einv];
-    $[cx=3;[
-        
-    ];
-    cx=2;[
-
-    ];
-    cx=1;[
-
-    ];'NO_INVENTORY_PARAMS];
+    if[cx;[
+            {
+                y:enlist y;
+                s:string[first[y][`side]];
+                rinv:enlist .account.Inventory@(first[y][`accountId`side]);
+                eInvCols: rmFkeys[rinv] inter cols[y];
+                .qt.A[count[rinv];>;0;s," inventory exists";x];
+                .qt.A[(eInvCols#0!rinv);~;(eInvCols#0!y);s," inventory";x];
+            }[y] each einv;
+            ]];
     };
 
 checkAccount      :{
-    if[count[x[`eAcc]]>0;
-            .qt.A[.order.OrderBook;~;x[`eOB];"orderbook";y];
+    eacc:enlist x[`eAcc];
+    cx:count[eacc];
+    if[count[eacc]>0;
+            racc:enlist .account.Account@eacc[`accountId];
+            eAccCols: rmFkeys[racc] inter cols[eacc];
+            .qt.A[(eAccCols#0!racc);~;(eAccCols#0!eacc);"account";y];
             ];
     };
 
@@ -97,10 +104,10 @@ test:.qt.Unit[
             f[`isMaker];
             f[`price];
             f[`qty]];
-         
+        
         // Assertions
-        checkAccount[p[`eAcc]];
-        checkInventory[p[`eInv]];
+        checkAccount[p;c];
+        checkInventory[p;c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
@@ -108,10 +115,10 @@ deriveCaseParams :{[p]
 
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
-    `orderMargin`posMargin`activeMakerFee`activeTakerFee`realizedPnl)!p[0];
+    `orderMargin`posMargin`activeFeeId`realizedPnl)!p[0];
     
     // Construct Current Inventory
-    cInv:(`accountId`side`amt`totalEntry`execCost`realizedPnl)!p[1];
+    cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[1]]];
 
     // Construct Fill
     f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
@@ -125,8 +132,8 @@ deriveCaseParams :{[p]
     `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
 
     // Construct Expected Inventory
-    cInv:(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!p[5];
-    
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
+
     :`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
         cAcc;
         cInv;
@@ -141,7 +148,7 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[(
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`COMBINED;1;1;0;0;0;-0.00025;0.00075;0); // Current Account
+    (0;`COMBINED;1;1;0;0;0;1;0); // Current Account
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);
@@ -153,11 +160,13 @@ deriveCaseParams :{[p]
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
-    (0;`COMBINED;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
-        (0;`BOTH;100;100;l 1e9; 1000; 1000; 1000);
-        (0;`LONG;100;100;l 1e9; 1000; 1000; 1000);
-        (0;`SHORT;100;100;l 1e9; 1000; 1000; 1000)
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
     () // Expected events
     )]];
+
+.qt.RunTests[];
