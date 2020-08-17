@@ -287,7 +287,8 @@ crossFill   :{
 // TOD7,776e+6/1000
 // TODO make simpler
 // TODO update applicable fee when neccessary
-ApplyFill     :{[accountId; instrumentId; price; side; qty; time; reduceOnly; isMaker]
+ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
+    :(price;9#"=";qty;9#"=");
     qty:abs[qty];
     if[qty=0;:.event.AddFailure[]];
     if[not(side in );];

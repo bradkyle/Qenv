@@ -18,6 +18,8 @@ deriveNextStateFromTrade :{
 
     }
 
+// DERIVE Trades
+update b:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt] from select price, rp, splt:1_'{raze raze'[0,x;y]}'[pleaves;nagentQty] from .order.S
 
 nonAgentQtys:{[maxN;poffset;shft;qtys]
     maxNl:til maxN;

@@ -470,14 +470,18 @@ AIn  :{[actual;expected;msg;case]
 // @param msg Description of this test or related message
 // @param case the case to which this assertion belongs.
 // @return actual object
-AAll  :{[actual;expected;msg;case]
+AAll  :{[actual;expected;msg;case] // TODO add reasons
     $[not null[`$msg];msg:`$msg;msg:`$""];
 
     failFlag::($[
         (type[actual]<>type[expected]);
-            [:1b];        
+            1b;        
         (count[actual]<>count[expected]);
-            [:1b];
+            1b;
+        (all[count'[actual]<>count'[expected]]);
+            1b;
+        (type[actual]=0h and type[expected]=0h);
+            not[all[actual in expected]];
         [
             $[count[expected]>1;
                 [
@@ -488,7 +492,7 @@ AAll  :{[actual;expected;msg;case]
                 ]
             ];
         ]]);
-
+    
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`alleq;expected);
     `.qt.Assertion upsert ass;
