@@ -16,12 +16,35 @@ sc: {x+(`second$y)};
 // -------------------------------------------------------------->
 
 makeAccount :{
+    `accountId`balance`marginType`positionType!(
 
+        );
+    };
+
+makeEAccount :{
+    `accountId`balance`marginType`positionType!(
+
+        );
     };
 
 makeInventory   :{
+    icols:`accountId`side`amt`avgPrice`totalEntry`execCost`avgPrice;
+    einv:x[`eInv];
+    cx:count[einv];
+    $[cx=3;[
+        :(x[;0];`.account.POSITIONSIDE$`BOTH`LONG`SHORT;x[])
+    ];
+    cx=2;[
+        :(x[;0];`.account.POSITIONSIDE$`LONG`SHORT;x[])
+    ];
+    cx=1;[
+        :(x[;0];`.account.POSITIONSIDE$`BOTH;x[])
+    ];'NO_INVENTORY_PARAMS]
+    };
 
-    }
+makeInventory   :{
+    `accountId`side`amt`avgPrice`totalEntry`execCost`avgPrice
+    };
 
 // Test Utilities
 // -------------------------------------------------------------->
@@ -32,17 +55,21 @@ setupInventory    : {if[count[x[`cInv]]>0;{.order.NewOrder[x[0];x[1]]} each x[`c
 // @x : params
 // @y : case
 checkInventory     :{
-    if[count[x[`eOrd]]>0;[
-            eOrd:x[`eOrd][;0];
-            rOrd: select from .order.Order where clId in eOrd[`clId];
-            eOrdCols: rmFkeys[rOrd] inter cols[eOrd];
-            .qt.A[count[x[`eOrd]];=;count[rOrd];"order count";y];
-            .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";y];
-            ]];
+    einv:x[`eInv];
+    cx:count[einv];
+    $[cx=3;[
+        
+    ];
+    cx=2;[
+
+    ];
+    cx=1;[
+
+    ];'NO_INVENTORY_PARAMS];
     };
 
 checkAccount      :{
-    if[count[x[`eOB]]>0;
+    if[count[x[`eAcc]]>0;
             .qt.A[.order.OrderBook;~;x[`eOB];"orderbook";y];
             ];
     };
@@ -87,18 +114,32 @@ test:.qt.Unit[
     ".account.ApplyFill";
     {[c]
         p:c[`params];
+        setupAccount[p];
+        setupInventory[p];
 
-        // Execute tested function
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
          
         // Assertions
+        checkAccount[p[`eAcc]];
+        checkInventory[p[`eInv]];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 deriveCaseParams :{[p]
-    `cAcc`cInv`params`eAcc`eInv`eEvents!(
+    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
+    `cAcc`cInv`fill`eAcc`eInv`eEvents!(
         makeAccount[p[0]];
         makeInventory[p[1]];
-        p[2];
+        f;
         makeAccount[p[3]];
         makeInventory[p[4]];
         p[5]
@@ -112,4 +153,4 @@ deriveCaseParams :{[p]
     (1); // Expected Account
     (();();()); // Expected Inventory
     () // Expected events
-    ]]
+    ]];
