@@ -98,7 +98,8 @@ AddCancelOrderEvent :{[order;time]
 OrderBook:(
     [price      :`long$()]
     side        :`.order.ORDERSIDE$(); 
-    qty         :`long$());
+    qty         :`long$();
+    vqty      :`long$());
 
 maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
 minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
@@ -108,7 +109,7 @@ bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 bestSidePrice:{$[x=`SELL;:bestAsk[];bestBid[]]};
 
 DeriveThenAddDepthUpdateEvent :{[time] // TODO check
-    :.event.AddEvent[time;`UPDATE;`DEPTH;(.order.OrderBook pj (select sum leaves by side,price from .order.Order))];
+    :.event.AddEvent[time;`UPDATE;`DEPTH;select price,side,vqty from .order.OrderBook)];
     };
 
 AddDepthUpdateEvent :{[depth;time]
@@ -148,7 +149,10 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // agent order volume at that level. 
 
           state:0!update
-            mxshft:max'[nshft]
+            vqty: {?[x>y;x;y]}'[mxshft;nvqty] sum'[raze'[flip[raze[enlist(tgt;?[mxshft>tgt;;])]]]] // todo take into account mxnshift
+          from update
+            mxshft:max'[nshft],
+            nvqty:tgt+pleaves
           from update
             nshft: pleaves+noffset
           from update
@@ -157,7 +161,6 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
             offsetdlts: 1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]) // Simulates even distribution of cancellations
           from update
             nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]], // TODO what qty is this referring to
-            visQty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]],
             mnoffset: (0,'-1_'(shft))
           from update
             tgt: last'[size],
@@ -185,20 +188,20 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
           .order.O:state;
  
-          `.order.OrderBook upsert (select price, side, qty:tgt from state where tgt>0);
+          `.order.OrderBook upsert (select price, side, qty:tgt, vqty from state where vqty>0);
 
           `.order.Order upsert (select from (select 
                 price:raze[pprice], 
                 orderId:raze[porderId], 
                 offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
 
-            dllvl:(select price,side from state where visQty<=0);
+            dllvl:(select price,side from state where vqty<=0);
             if[count[dllvl]>0;{delete from `.order.OrderBook where price=x[`price], side=x[`side]}'[dllvl]];
 
             / dupd:select visQty,side by price from state;
       ];
       [
-         `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]); 
+         `.order.OrderBook upsert ([price:nxt[`price]] side:last'[nxt[`side]]; qty:last'[nxt[`size]]; vqty:last'[nxt[`size]]); 
          delete from `.order.OrderBook where qty<=0;
       ]];
 
