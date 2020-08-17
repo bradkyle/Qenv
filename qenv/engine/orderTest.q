@@ -41,26 +41,6 @@ makeOrders :{
             x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7]);x[8])} each flip[x];
         ];()]};
 
-setupDepth      : {if[count[x[`cOB]]>0;.order.ProcessDepthUpdateEvent[x[`cOB]]]}
-setupOrders     : {if[count[x[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each x[`cOrd]]}
-
-// @x : params
-// @y : case
-checkOrders     :{
-    if[count[x[`eOrd]]>0;[
-            eOrd:x[`eOrd][;0];
-            rOrd: select from .order.Order where clId in eOrd[`clId];
-            eOrdCols: rmFkeys[rOrd] inter cols[eOrd];
-            .qt.A[count[x[`eOrd]];=;count[rOrd];"order count";y];
-            .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";y];
-            ]];
-    };
-
-checkDepth      :{
-    if[count[x[`eOB]]>0;
-            .qt.A[.order.OrderBook;~;x[`eOB];"orderbook";y];
-            ];
-    };
 
 / nxt:update qty:qty+(first 1?til 100) from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
 / nxt:exec qty by price from update qty:rand qty from select qty:last (datum[;0][;2]) by price:datum[;0][;1] from d where[(d[`datum][;0][;0])=`BUY]
@@ -85,6 +65,31 @@ testOrders:{[num;oidstart;params]
         execInst        : num#`.order.EXECINST$`NIL)
     };
 
+// Test Utilities
+// -------------------------------------------------------------->
+
+setupDepth      : {if[count[x[`cOB]]>0;.order.ProcessDepthUpdateEvent[x[`cOB]]]}
+setupOrders     : {if[count[x[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each x[`cOrd]]}
+
+// @x : params
+// @y : case
+checkOrders     :{
+    if[count[x[`eOrd]]>0;[
+            eOrd:x[`eOrd][;0];
+            rOrd: select from .order.Order where clId in eOrd[`clId];
+            eOrdCols: rmFkeys[rOrd] inter cols[eOrd];
+            .qt.A[count[x[`eOrd]];=;count[rOrd];"order count";y];
+            .qt.A[(eOrdCols#0!rOrd);~;(eOrdCols#0!eOrd);"orders";y];
+            ]];
+    };
+
+checkDepth      :{
+    if[count[x[`eOB]]>0;
+            .qt.A[.order.OrderBook;~;x[`eOB];"orderbook";y];
+            ];
+    };
+
+
 // Before and after defaults
 // -------------------------------------------------------------->
 
@@ -94,7 +99,7 @@ defaultAfterEach: {
      delete from `.event.Events;
      delete from `.order.Order;
      delete from `.order.OrderBook;
-     delete from  `.instrument.Instrument;
+    /  delete from  `.instrument.Instrument;
      .account.accountCount:0;
      .order.orderCount:0;
     .instrument.instrumentCount:0;
@@ -471,7 +476,7 @@ test:.qt.Unit[
 
         t:p[`trade];
         .order.ProcessTrade[t[`iId];t[`side];t[`qty];t[`isClose];t[`isAgent];t[`accountId];t[`time]];
-        
+
         p1:p[`eApplyFill];        
         .qt.MA[
             mck1;
@@ -650,9 +655,9 @@ deriveCaseParams    :{[params]
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // CUrrent orders
-        (1;`SELL;1450;0b;1b;1;z); // Trade execution
+        (`.instrument.Instrument!0;`SELL;1450;0b;1b;`.account.Account!0;z); // Trade execution
         ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(10#1000)); // expected order book
-        (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((3#0),500);4#0;4#1000 999;(3#`FILLED),`PARTIALFILLED;4#z); // expected orders
+        (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((3#0),150);((3#0),250);4#1000 999;(3#`FILLED),`NEW;4#z); // expected orders
         (1b;8;( // AddTradeEvent: side size price
             ((`.order.ORDERSIDE$`SELL;1000;100);z);
             ((`.order.ORDERSIDE$`SELL;1000;100);z);
@@ -663,9 +668,11 @@ deriveCaseParams    :{[params]
             ((`.order.ORDERSIDE$`SELL;999;100);z);
             ((`.order.ORDERSIDE$`SELL;999;50);z)
         ));
-        (1b;2;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
-            (1;1;`.order.ORDERSIDE$`BUY;z;0b;1b;999;250);
-            (1;1;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1200)
+        (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+            (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;999;-150);
+            (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;1b;1000;1200);
+            (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1200);
+            (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1200)
         ));
         (0b;0;()) // IncSelfFill mock
     )]];
