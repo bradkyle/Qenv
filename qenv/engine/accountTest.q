@@ -21,8 +21,9 @@ l: `long$
 
 deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
-setupAccount      : {if[count[x[`cAcc]]>0;.account.NewAccount[x[`cAcc];.z.z]]}
-setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x;.z.z]} each x[`cInv]]}
+setupAccount      : {if[count[x[`cAcc]]>0;.account.NewAccount[x[`cAcc];.z.z]]};
+setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x;.z.z]} each x[`cInv]]};
+setupInstrument   : {if[count[x[`cIns]]>0;.instrument.NewInstrument[x[`cIns];.z.z]]};
 
 // @x : params
 // @y : case
@@ -70,12 +71,8 @@ defaultAfterEach: {
 defaultBeforeEach: {
      delete from `.account.Account;
      delete from `.account.Inventory;
+     delete from `.instrument.Instrument;
      delete from `.event.Events;
-
-     .instrument.NewInstrument[
-        `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
-        (1;0.5;1e5f;0f;1e7f;0f;1);
-        1b;.z.z];
     };
 
 // ApplyFill
@@ -85,6 +82,7 @@ test:.qt.Unit[
     ".account.ApplyFill";
     {[c]
         p:c[`params];
+        setupInstrument[p];
         setupAccount[p];
         setupInventory[p];
 
@@ -107,15 +105,17 @@ test:.qt.Unit[
 
 deriveCaseParams :{[p]
 
+    cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier)!p[0];
+
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
-    `orderMargin`posMargin`activeFeeId`realizedPnl)!p[0];
+    `orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
     
     // Construct Current Inventory
-    cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[1]]];
+    cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
     // Construct Fill
-    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
+    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
     f[`accountId]: `.account.Account!f[`accountId];
     f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
     f[`side]: `.order.ORDERSIDE$f[`side]; 
@@ -123,24 +123,27 @@ deriveCaseParams :{[p]
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
+    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[5];
 
     // Construct Expected Inventory
-    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
-    :`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+    :`cIns`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+        cIns;
         cAcc;
         cInv;
         f;
-        p[3];
+        p[4];
         eAcc;
         eInv;
-        p[6]
+        p[7]
         );
     };
 
 
 .qt.AddCase[test;"hedged:long_to_longer ";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`HEDGED;1;1;0;0;0;1;0); // Current Account

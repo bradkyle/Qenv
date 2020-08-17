@@ -286,6 +286,8 @@ avgPrice :{`long$($[y=`LONG;
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
 
+unrealizedPnl :{}
+
 // TODO make global enums file
 // TOD7,776e+6/1000
 // TODO make simpler

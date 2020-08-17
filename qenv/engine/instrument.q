@@ -88,24 +88,12 @@ allCols:cols Instrument;
 // table, it also returns the reference to
 // the singleton class representation therin.
 // TODO deal with columns without values specified etc.
-NewInstrument            :{[instrument; isActive; time]
+NewInstrument            :{[instrument; time]
     if[any null instrument[mandCols]; :0b];      
     instrument:Sanitize[instrument;defaults[];allCols];
-    `.instrument.Instrument upsert instrument;
-    if[isActive; .instrument.activeInstrumentId:instrument[`instrumentId]];
-    };
-
-// Returns the current state of the instrument denoted by the provided
-// instrument Id,
-GetInstrument             :{[instrumentId]
-    if[instrumentId in key .instrument.Instrument;:.instrument.Instrument[instrumentId];]
-    };
- 
-UpdateInstrument      :{[instrument;time]
-    instrument:Sanitize[instrument;GetInstrument[instrumentId];allCols];
+    .instrument.I:instrument;
     `.instrument.Instrument upsert instrument;
     };
-
 
 NewRiskTier             :{[tier]
     `mxamt`mmr`imr`maxlev!flip[tier];
