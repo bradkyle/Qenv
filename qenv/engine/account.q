@@ -285,10 +285,7 @@ crossFill   :{
 // TODO make simpler
 // TODO update applicable fee when neccessary
 ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
-    :(price;9#"=";qty;9#"=");
     qty:abs[qty];
-    if[qty=0;:.event.AddFailure[]];
-    if[not(side in );];
 
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not(accountId in key .account.Account);

@@ -57,11 +57,9 @@ checkAccount      :{
 // -------------------------------------------------------------->
 
 defaultAfterEach: {
-    /  delete from `.account.Account;
-    /  delete from `.account.Inventory;
+     delete from `.account.Account;
+     delete from `.account.Inventory;
      delete from `.event.Events;
-     delete from `.order.Order;
-     delete from `.order.OrderBook;
     /  delete from  `.instrument.Instrument;
      .account.accountCount:0;
      .order.orderCount:0;
@@ -73,10 +71,6 @@ defaultBeforeEach: {
      delete from `.account.Account;
      delete from `.account.Inventory;
      delete from `.event.Events;
-     delete from `.order.Order;
-     delete from `.order.OrderBook;
-     .account.NewAccount[`accountId`other!1 2;.z.z];
-     .account.NewAccount[`accountId`other!2 2;.z.z];
 
      .instrument.NewInstrument[
         `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
@@ -145,7 +139,7 @@ deriveCaseParams :{[p]
         );
     };
 
-.qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[(
+.qt.AddCase[test;"combined:no changes";deriveCaseParams[(
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`COMBINED;1;1;0;0;0;1;0); // Current Account
@@ -155,7 +149,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0;0;`BUY;z;0b;0b;100;1000); // Parameters
+    (0;0;`BUY;z;0b;0b;1000;1000); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -168,5 +162,31 @@ deriveCaseParams :{[p]
     );
     () // Expected events
     )]];
+
+.qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[(
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
 
 .qt.RunTests[];
