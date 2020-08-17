@@ -106,34 +106,34 @@ test:.qt.Unit[
 
 deriveCaseParams :{[p]
 
-    // Construct Fill
-    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
-    f[`accountId]: `.account.Account!f[`accountId];
-    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
-    f[`side]: `.order.ORDERSIDE$f[`side];
-    
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
     `orderMargin`posMargin`activeMakerFee`activeTakerFee`realizedPnl)!p[0];
     
     // Construct Current Inventory
-    cInv:(`accountId`positionType`balance`available`frozen,
-    `orderMargin`posMargin`activeMakerFee`activeTakerFee`realizedPnl)!p[0];
+    cInv:(`accountId`side`amt`totalEntry`execCost`realizedPnl)!p[1];
+
+    // Construct Fill
+    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
+    f[`accountId]: `.account.Account!f[`accountId];
+    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
+    f[`side]: `.order.ORDERSIDE$f[`side]; 
 
     // Construct Expected Account
-    eAcc(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
 
     // Construct Expected Inventory
+    cInv:(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!p[5];
     
-    `cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
-        makeAccount[p[0]];
-        makeInventory[p[1]];
+    :`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+        cAcc;
+        cInv;
         f;
         p[3];
-        makeAccount[p[4]];
-        makeInventory[p[5]];
+        eAcc;
+        eInv;
         p[6]
         );
     };
@@ -141,7 +141,7 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[(
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`COMBINED;1;1;0;0;0;-0.00025;0.00075;0;0); // Current Account
+    (0;`COMBINED;1;1;0;0;0;-0.00025;0.00075;0); // Current Account
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);
@@ -153,7 +153,7 @@ deriveCaseParams :{[p]
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
-    (0;`COMBINED;1); // Expected Account
+    (0;`COMBINED;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
         (0;`BOTH;100;100;l 1e9; 1000; 1000; 1000);
         (0;`LONG;100;100;l 1e9; 1000; 1000; 1000);
