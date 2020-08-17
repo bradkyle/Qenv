@@ -286,7 +286,32 @@ avgPrice :{`long$($[y=`LONG;
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
 
-unrealizedPnl :{}
+unrealizedPnl :{[avgprice;markprice;amt;instrument]
+    :$[instrument[`settleType]=`INVERSE;
+        (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];markprice])*amt;
+      instrument[`settleType]=`VANILLA;
+        ();
+      instrument[`settleType]=`QUANTO;
+        () 
+    ];
+    };
+
+realizedPnl :{[avgprice;fillprice;fillqty;instrument]
+    :$[instrument[`settleType]=`INVERSE;
+        (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];fillprice])*fillqty;
+      instrument[`settleType]=`VANILLA;
+        ();
+      instrument[`settleType]=`QUANTO;
+        () 
+    ];
+    };
+
+// TODO
+// maint margin
+// liquidation price
+// initial margin
+// bankruptcy price
+
 
 // TODO make global enums file
 // TOD7,776e+6/1000
@@ -317,7 +342,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 if[size>i[`amt];:.event.AddFailure[]];
 
                 cost:qty*fee;
-                rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
+                rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
                 i[`totalCommission]+:cost;
                 i[`realizedGrossPnl]+:(rpl-cost);
                 i[`realizedPnl]+:rpl;
@@ -325,12 +350,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 i[`fillCount]+:1;
                 i[`tradeVolume]+:qty;
 
-                i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+                i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
 
                 i[`initMargin]:i[`entryValue]%acc[`leverage];
                 i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
                 if[isMaker;i[`orderMargin]];
-                i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+                i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
 
                 acc[`balance]+:(rpl-cost); 
                 acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
