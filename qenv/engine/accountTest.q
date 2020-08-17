@@ -11,6 +11,7 @@ system "d .orderTest";
 z:.z.z;
 
 sc: {x+(`second$y)};
+l: `long$
 
 // Test data generation
 // -------------------------------------------------------------->
@@ -32,13 +33,13 @@ makeInventory   :{
     einv:x[`eInv];
     cx:count[einv];
     $[cx=3;[
-        :(x[;0];`.account.POSITIONSIDE$`BOTH`LONG`SHORT;x[])
+        :(x[;0];`.account.POSITIONSIDE$`BOTH`LONG`SHORT;x[;1_til 5])
     ];
     cx=2;[
-        :(x[;0];`.account.POSITIONSIDE$`LONG`SHORT;x[])
+        :(x[;0];`.account.POSITIONSIDE$`LONG`SHORT;x[;1_til 5])
     ];
     cx=1;[
-        :(x[;0];`.account.POSITIONSIDE$`BOTH;x[])
+        :(x[;0];`.account.POSITIONSIDE$`BOTH;x[;1_til 5])
     ];'NO_INVENTORY_PARAMS]
     };
 
@@ -135,22 +136,36 @@ test:.qt.Unit[
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 deriveCaseParams :{[p]
-    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[2];
+    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
+    f[`accountId]: `.account.Account!f[`accountId];
+    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
+    f[`side]: `.order.ORDERSIDE$f[`side];
     `cAcc`cInv`fill`eAcc`eInv`eEvents!(
         makeAccount[p[0]];
         makeInventory[p[1]];
+        `markPrice!p[2];
         f;
-        makeAccount[p[3]];
-        makeInventory[p[4]];
-        p[5]
+        makeAccount[p[4]];
+        makeInventory[p[5]];
+        p[6]
         );
     };
 
-.qt.AddCase[test;"";deriveCaseParams[
-    (1;`COMBINED;1); // Current Account
-    (();();()); // Current Inventory
+.qt.AddCase[test;"hedged:long_to_longer";deriveCaseParams[
+    (0;`COMBINED;1); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    1000;
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
     (0;0;`BUY;z;0b;0b;100;1000); // Parameters
-    (1); // Expected Account
-    (();();()); // Expected Inventory
+    (0;`COMBINED;1); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 1000; 1000);
+        (0;`LONG;100;100;l 1e9; 1000; 1000; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000; 1000; 1000)
+    );
     () // Expected events
     ]];
