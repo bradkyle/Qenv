@@ -280,6 +280,12 @@ crossFill   :{
 
     };
 
+
+avgPrice :{`long$($[y=`LONG;
+                    1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
+                    1e8%ceiling[x[`execCost]%x[`totalEntry]]
+                    ])};
+
 // TODO make global enums file
 // TOD7,776e+6/1000
 // TODO make simpler
@@ -317,13 +323,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 i[`fillCount]+:1;
                 i[`tradeVolume]+:qty;
 
-                // TODO make instrument agnostic
-                i[`totalCloseVolume]+:abs[fillQty]; 
-                i[`totalCloseAmt]+:abs[fillQty%price];
-                i[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
-                i[`totalLossRpnl]+:min[realizedPnlDelta,0];
-                i[`totalGainRpnl]+:max[realizedPnlDelta,0]; 
-
                 i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
 
                 i[`initMargin]:i[`entryValue]%acc[`leverage];
@@ -341,7 +340,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             ];
             [
                 // OPEN given side for position
-                i:.account.Inventory@(accountId;HedgedNegSide[side]);
+                side:HedgedNegSide[side];
+                i:.account.Inventory@(accountId;side);
                 oi:.account.Inventory@(accountId;HedgedSide[side]);
 
                 i[`currentQty]+:qty;
@@ -357,27 +357,19 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 / price. 
                 i[`totalEntry]+: abs[qty];
                 i[`execCost]+: floor[1e8%price] * abs[qty]; // TODO make unilaterally applicable.
-                i[`totalOpenVolume]+:abs[qty];
-                i[`totalOpenAmt]+:abs[qty%price];
-                i[`totalOpenMarketValue]+:abs[qty%price]%leverage;
 
                 / Calculates the average price of entry for the current postion, used in calculating 
                 / realized and unrealized pnl.
-                i[`avgPrice]: {$[x[`side]=`LONG;
-                    1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-                    1e8%ceiling[x[`execCost]%x[`totalEntry]]
-                    ]}[i];
-
-                i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+                i[`avgPrice]: .account.avgPrice[i;side];
+                i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
 
                 i[`entryValue]:i[`amt]%i[`avgPrice];
                 i[`initMargin]:i[`entryValue]%acc[`leverage];
                 i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                i[`maintMargin]:.account.maintainenceMargin[i;ins];
 
-                i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-
-                lp:0; // TODO liquidation price
-                bp:0; // TODO bankruptcy price
+                lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+                bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
  
                 acc[`balance]+:(rpl-cost); 
                 acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
@@ -409,13 +401,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`fillCount]+:1;
                     i[`tradeVolume]+:qty;
 
-                    // TODO make instrument agnostic
-                    i[`totalCloseVolume]+:abs[fillQty]; 
-                    i[`totalCloseAmt]+:abs[fillQty%price];
-                    i[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
-                    i[`totalLossRpnl]+:min[realizedPnlDelta,0];
-                    i[`totalGainRpnl]+:max[realizedPnlDelta,0]; 
-
                     i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
 
                     i[`initMargin]:i[`entryValue]%acc[`leverage];
@@ -435,13 +420,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // Cross position
                     i[`totalEntry]+: abs[namt];
                     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
-                    
-                    i[`totalOpenVolume]+:abs[namt];
-                    i[`totalOpenAmt]+:abs[namt%price];
-                    i[`totalOpenMarketValue]+:abs[namt%price]%leverage;
-                    i[`totalCloseVolume]+:abs[fillQty]; 
-                    i[`totalCloseAmt]+:abs[fillQty%price];
-                    i[`totalCloseMarketValue]+:abs[fillQty%price]%leverage;
 
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
@@ -469,13 +447,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`totalEntry]+: abs[namt];
                     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
                     
-                    i[`totalOpenVolume]+:abs[namt];
-                    i[`totalOpenAmt]+:abs[namt%price];
-                    i[`totalOpenMarketValue]+:abs[namt%price]%leverage;
-
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
-                    i[`avgPrice]: {$[x[`side]=`LONG;
+                    i[`avgPrice]: {$[(x[`amt]>0);
                         1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                         1e8%ceiling[x[`execCost]%x[`totalEntry]]
                         ]}[i];
