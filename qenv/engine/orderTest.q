@@ -15,6 +15,9 @@ sc: {x+(`second$y)};
 // Test data generation
 // -------------------------------------------------------------->
 
+deRef   :{x[y]:`long$(x[y]);:x};
+rmFkeys :{cols[x] except key[fkeys x]};
+
 
 makeDepthUpdate :{
     :$[count[x]>0;[ 
@@ -101,7 +104,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         / show p[`event];/         
-        if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]]; // TODO simple set instead of update events
+        if[count[p[`cOB]]>0;.order.ProcessDepthUpdateEvent[p[`cOB]]]; // TODO simple set instead of update events
         if[count[p[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each p[`cOrd]]; // TODO simple set instead of update events
 
         .order.ProcessDepthUpdateEvent[p[`event]];
@@ -136,18 +139,14 @@ deriveCaseParams    :{[params]
 // TODO depth update does not match order update
 // TODO depth update crosses
 // TODO add test for differing within one update
-// TODO multiple order sides, and depth sides
-// TODO best price level changes during update (inc/dec)
 // TODO depth update does not conform to instrument lot size/tick size
 // TODO orders not filled yet and cross event
 // TODO agent offsets are zero and update is less than agent order size (single update)
 // TODO depth update contains depth for which the next value is zero (removes level)
-// TODO check that best ask, best bid, is liquid variables are updated (single update)
-// TODO depth update overlaps with current depth of opposing side (single update)
 // TODO check that non congruent price/levels still process and produce correct events
 // TODO test skips price level in update (temporal)
 // TODO differing number of buys and sells etc.
-// TODO when reducing offset to zero cannot be less than prior agent order qty
+// TODO profile and benchmark function?
 
 / Add time to allow for multiple simultaneous updates.
 /TODO make into array and addCases
@@ -302,25 +301,22 @@ deriveCaseParams    :{[params]
     () // Expected Events TODO
     )]];
 
-/ .qt.AddCase[test;"differing update prices by time, crosses order spread during update (best price decreases during update) finishes at original";deriveCaseParams[(
-/     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
-/     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
-/     (
-/         ((6#`BUY),(4#`SELL));
-/         ((999 998 997 997 998 999),(999 998 999 998));
-/         ((0 0 0 1000 1000 1000),(1000 1000 0 0));
-/         (sc[z] 0 0 0 1 1 1 0 0 1 1)
-/     ); // Previous depth
-/     ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
-/     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
-/     () // Expected Events TODO
-/     )]];
+.qt.AddCase[test;"differing update prices by time, crosses order spread during update (best price decreases during update) finishes at order level";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
+    (
+        ((5#`BUY),(4#`SELL));
+        ((999 998 997 997 998),(999 998 999 998));
+        ((0 0 0 1000 1000),(1000 1000 0 0));
+        (sc[z] 0 0 0 1 1 0 0 1 1)
+    ); // Previous depth
+    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(9#1000)); // Expected depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
+    () // Expected Events TODO
+    )]];
 
 // Process Trade tests
 // -------------------------------------------------------------->
-
-/ deRef   :{x[y]:`long$(x[y]);:x};
-/ rmFkeys :{cols[x] except key[fkeys x]};
 
 / // TODO
 / // TODO better (more consice/shorter test)
