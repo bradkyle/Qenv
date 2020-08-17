@@ -138,7 +138,6 @@ deriveCaseParams    :{[params]
 // TODO check orders event by time
 // TODO depth update does not match order update
 // TODO depth update crosses
-// TODO add test for differing within one update
 // TODO depth update does not conform to instrument lot size/tick size
 // TODO orders not filled yet and cross event
 // TODO agent offsets are zero and update is less than agent order size (single update)
@@ -147,6 +146,9 @@ deriveCaseParams    :{[params]
 // TODO test skips price level in update (temporal)
 // TODO differing number of buys and sells etc.
 // TODO profile and benchmark function?
+// TODO last event update with no agent crosses?
+// TODO test differing accounts, orderId with zeros, accountIds with zeros etc.
+// 
 
 / Add time to allow for multiple simultaneous updates.
 /TODO make into array and addCases
@@ -189,7 +191,7 @@ deriveCaseParams    :{[params]
     ((10#`SELL);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Previous depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
     ((10#`SELL);(raze flip 2 5#(1000+til 5));10#1000;(10#z,(z+`second$5))); // Depth update
-    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000);vqty:(5#1000)); // Expected depth
+    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000);vqty:(1200,4#1000)); // Expected depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;77 333;2#100;2#1000;2#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -198,7 +200,7 @@ deriveCaseParams    :{[params]
     ((10#`SELL);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Previous depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
     ((10#`SELL);(raze flip 2 5#(1000+til 5));(10#1050 1000);(10#z,(z+`second$5))); // Depth update
-    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000)); // Expected depth
+    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1000);vqty:(1200,4#1000)); // Expected depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;77 333;2#100;2#1000;2#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -207,7 +209,7 @@ deriveCaseParams    :{[params]
     ((10#`SELL);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Previous depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;100 400;2#100;2#1000;2#z); // previous orders
     ((9#`SELL);(raze flip 3#{(1000+x;1000+x;1000+x)}til 3);(9#1050 1000 1100);(9#z,(z+`second$5))); // Depth update
-    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1100)); // Expected depth
+    ([price:((1000+til 5))] side:(5#`.order.ORDERSIDE$`SELL);qty:(5#1100);vqty:(1300,4#1100)); // Expected depth
     (til[2];2#1;2#1;2#`SELL;2#`LIMIT;77 333;2#100;2#1000;2#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -216,16 +218,17 @@ deriveCaseParams    :{[params]
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Previous depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#999),(2#1000);4#z); // previous orders
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));(20#1000 1100);(20#z,(z+`second$5))); // Depth update
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1100)); // Expected depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1100);vqty:10#(1300,4#1100)); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#77 333);4#100;(2#999),(2#1000);4#z); // Expected orders
     () // Expected Events TODO
     )]];
 
+// Because vqty is set when orders are placed, no delta occurs in visqty apart from the deletion of certain price levels.
 .qt.AddCase[test;"check that depth update where zero is removed and only one update is processed per side";deriveCaseParams[(
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Previous depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
     (`SELL`BUY;1000 999;0 0;(z,z)); // Depth update
-    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1100)); // Expected depth
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1100);vqty:(8#1100)); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -239,21 +242,7 @@ deriveCaseParams    :{[params]
         ((0 0 1000 1000),(1000 0));
         (sc[z] 0 0 1 1 0 1)
     ); // Previous depth
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
-    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
-    () // Expected Events TODO
-    )]];
-
-.qt.AddCase[test;"differing update prices by time doesn't cross spread (best price decreases during update)";deriveCaseParams[(
-    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
-    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
-    (
-        ((4#`BUY),(2#`SELL));
-        ((999 998 998 999),(999 999));
-        ((0 0 1000 1000),(1000 0));
-        (sc[z] 0 0 1 1 0 1)
-    ); // Previous depth
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:(1000,1200,(8#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -267,7 +256,7 @@ deriveCaseParams    :{[params]
         ((0 0 1000 1000),(1000 0));
         (sc[z] 0 0 1 1 0 1)
     ); // Previous depth
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:((6#1000),1200,(3#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -282,7 +271,7 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000 1000 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 1 1 0 0 1 1)
     ); // Previous depth
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:(1000,1200,(8#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -296,7 +285,7 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000 1000 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 1 1 0 0 1 1)
     ); // Previous depth
-    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000)); // Expected depth
+    ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:((6#1000),1200,(3#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -310,7 +299,7 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 1 0 0 1 1)
     ); // Previous depth
-    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(9#1000)); // Expected depth
+    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(9#1000);vqty:(1200,(8#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -324,8 +313,22 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 1 0 0 1 1)
     ); // Previous depth
-    ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(9#1000)); // Expected depth
+    ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(9#1000);vqty:((5#1000),1200,(3#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
+.qt.AddCase[test;"differing update prices by time, repletes order spread during update, finishes at both order levels";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#100 400);4#100;(2#1001),(2#998);4#z); // previous orders
+    (
+        ((5#`SELL),(5#`BUY));
+        ((1000 1001 10002 1001 1002),(999 998 997 997 998));
+        ((0 0 0 1000 1000),(0 0 0 1000 1000));
+        (sc[z] 0 0 0 1 1 0 0 0 1 1)
+    ); // Previous depth
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1000);vqty:(8#(1200,(3#1000)))); // Expected depth
+    (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#(0 200));4#100;(2#1001),(2#998);4#z); // Expected orders
     () // Expected Events TODO
     )]];
 
@@ -338,7 +341,7 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 0 0 1 1)
     ); // Previous depth
-    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(4#1000),400,(4#1000)); // Expected depth
+    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:0,(8#1000);vqty:(300,(8#1000))); // Expected depth
     (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
     () // Expected Events TODO
     )]];
@@ -352,10 +355,84 @@ deriveCaseParams    :{[params]
         ((0 0 0 1000),(1000 1000 0 0));
         (sc[z] 0 0 0 1 0 0 1 1)
     ); // Previous depth
-    ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(4#1000),400,(4#1000)); // Expected depth
+    ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:9#((5#1000),0);vqty:9#((5#1000),300)); // Expected depth
     (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected orders
     () // Expected Events TODO
     )]];
+
+// TODO think about this, Should orders be cancelled?
+.qt.AddCase[test;"differing update prices by time, crosses order spread during update (best price decreases during update) finishes past order level (past final spread)";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // previous orders
+    (
+        ((4#`BUY),(2#`SELL));
+        ((999 998 997 997),(999 998));
+        ((0 0 0 1000),(1000 1000));
+        (sc[z] 0 0 0 1 0 0)
+    ); // Previous depth
+    ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:0,(8#1000);vqty:(300,(8#1000))); // Expected depth
+    (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
+// TODO think about this, Should orders be cancelled?
+.qt.AddCase[test;"differing update prices by time, crosses order spread during update (best price increases during update) finishes past order level (past final spread)";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#100 400);4#100;(2#1001),(2#998);4#z); // previous orders
+    (
+        ((4#`SELL),(2#`BUY));
+        ((1000 1001 1002 1002),(1000 1001));
+        ((0 0 0 1000),(1000 1000));
+        (sc[z] 0 0 0 1 0 0)
+    ); // Previous depth
+    ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:9#((5#1000),0);vqty:9#((5#1000),300)); // Expected depth
+    (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
+// TODO not working
+.qt.AddCase[test;"differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;(8#100 400);8#100;((4#1001 1002),(4#998 997));8#z); // previous orders
+    (
+        ((5#`SELL),(5#`BUY));
+        ((1000 1001 10002 1001 1002),(999 998 997 997 998));
+        ((0 0 0 1000 1000),(0 0 0 1000 1000));
+        (sc[z] 0 0 0 1 1 0 0 0 1 1)
+    ); // Previous depth
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1000);vqty:(8#(1200,(3#1000)))); // Expected depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;((8#0 200 100 400));8#100;((4#1001 1002),(4#998 997));8#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
+.qt.AddCase[test;"many levels with many orders at same offset interval, price is removed across all levels partially (500)";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;(8#100 400);8#100;((4#1001 1002),(4#998 997));8#z); // previous orders
+    (
+        ((5#`SELL),(5#`BUY));
+        ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
+        (40#500 1000);
+        (sc[z] (40#0 1))
+    ); // Previous depth
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1000);vqty:(8#(1200,(3#1000)))); // Expected depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;((8#0 200 100 400));8#100;((4#1001 1002),(4#998 997));8#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
+.qt.AddCase[test;"many levels with many orders at same offset interval, price is removed across all levels completely ";deriveCaseParams[(
+    (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;(8#100 400);8#100;((4#1001 1002),(4#998 997));8#z); // previous orders
+    (
+        ((5#`SELL),(5#`BUY));
+        ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
+        (40#0 1000);
+        (sc[z] (40#0 1))
+    ); // Previous depth
+    ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1000);vqty:(8#(1200,(3#1000)))); // Expected depth
+    (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;((8#0 200 100 400));8#100;((4#1001 1002),(4#998 997));8#z); // Expected orders
+    () // Expected Events TODO
+    )]];
+
 
 // Process Trade tests
 // -------------------------------------------------------------->

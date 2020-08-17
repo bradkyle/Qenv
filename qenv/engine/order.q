@@ -109,7 +109,7 @@ bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 bestSidePrice:{$[x=`SELL;:bestAsk[];bestBid[]]};
 
 DeriveThenAddDepthUpdateEvent :{[time] // TODO check
-    :.event.AddEvent[time;`UPDATE;`DEPTH;select price,side,vqty from .order.OrderBook)];
+    :.event.AddEvent[time;`UPDATE;`DEPTH;(select price,side,vqty from .order.OrderBook)];
     };
 
 AddDepthUpdateEvent :{[depth;time]
@@ -140,6 +140,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     .order.N:nxt;
     // TODO do validation on nxt;
 
+    // TODO remove reduncancy
     odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
     $[(count[odrs]>0);
       [
@@ -149,10 +150,10 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
           // agent order volume at that level. 
 
           state:0!update
-            vqty: {?[x>y;x;y]}'[mxshft;nvqty] sum'[raze'[flip[raze[enlist(tgt;?[mxshft>tgt;;])]]]] // todo take into account mxnshift
+            vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
           from update
             mxshft:max'[nshft],
-            nvqty:tgt+pleaves
+            nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
           from update
             nshft: pleaves+noffset
           from update
