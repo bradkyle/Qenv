@@ -232,7 +232,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
             from update
                 nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]], // TODO make simpler
-                nagentQty: flip PadM[raze'[(0^poffset[;0];{$[x>0;Clip[z[;1_(x)] - y[;-1_(til x)]];0]}'[first maxN;poffset;nshft];Clip[qty-mxshft])]],
+                nagentQty: flip PadM[raze'[(0^poffset[;0];Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]];Clip[qty-mxshft])]],
                 nfilled: psize - nleaves,
                 accdlts: pleaves - nleaves
             from update
@@ -294,7 +294,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 price:raze[pprice], 
                 orderId:raze[porderId], 
                 offset:raze[noffset], 
-                leaves:raze[nleaves], 
+                leaves:Clip[raze[nleaves]], 
                 partial:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]), 
                 filled:`boolean$(raze[(poffset<=rp)and(nshft<=rp)]),
                 status:raze[pstatus] from state) where partial)where filled) where orderId in raze[state[`orderId]];
@@ -556,6 +556,7 @@ NewOrder       : {[o;time];
                     
                     // TODO make better
                     `.order.Order upsert o;
+                    update vqty:vqty+o[`leaves] from `.order.OrderBook where price=o[`price];
                     / .order.AddNewOrderEvent[o;time];
                     / .account.UpdateOpenOrderState[];
                     / .order.DeriveThenAddDepthUpdateEvent[time]; 
