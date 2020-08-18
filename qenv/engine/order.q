@@ -223,10 +223,6 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
     // TODO validate trade
 
-    .order.O:.order.Order;
-    .order.B:.order.OrderBook;
-    / .order.E:event;
-
     nside: .order.NegSide[side]; // TODO check if has agent orders on side, move into one select/update statement // TODO filtering on orders
     state:0!update
                 vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
@@ -277,7 +273,6 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                                             reduceOnly 
                                             by price from .order.Order where otype=`LIMIT, side=nside, status in `PARTIALFILLED`NEW, size>0)) // TODO add instrument id
                     ) where qty>=tgt];
-    .order.S:state;
 
     // If any agent orders have been updated
     // update agent orders and apply fills respectively.
@@ -357,9 +352,6 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
-    .order.T:trades;
-    .order.OA:.order.Order;
-
     {.order.AddTradeEvent[(
         y[`side]; 
         y[`price]; 
@@ -532,14 +524,20 @@ NewOrder       : {[o;time];
         [
             $[((o[`side]=`SELL) and not[null[bestBid]] and (o[`price] < bestBid)) or 
               ((o[`side]=`BUY) and not[null[bestAsk]] and (o[`price] > bestAsk));
-                [ 
+                [
                     $[`PARTICIPATEDONTINITIATE in o[`execInst];
                         [
                             :.event.AddFailure[time;`PARTICIPATE_DONT_INITIATE;"Order had execInst of participate dont initiate"];
                         ];
                         [
-                            o[`otype]: `MARKET;
-                            .order.NewOrder[o;time];
+                            .order.ProcessTrade[
+                                o[`instrumentId];
+                                o[`side];
+                                o[`size];
+                                o[`reduceOnly];
+                                1b;
+                                event[`accountId];
+                                time];
                         ]
                     ]
                 ];
@@ -559,7 +557,7 @@ NewOrder       : {[o;time];
                     update vqty:vqty+o[`leaves] from `.order.OrderBook where price=o[`price], side=o[`side];
                     .order.AddNewOrderEvent[o;time];
                     .order.DeriveThenAddDepthUpdateEvent[time]; 
-
+                    .order.O:.order.OrderBook;
                 ]
             ];
         ];

@@ -169,4 +169,60 @@ deriveCaseParams :{[p]
 
 
 
+
+
+// Update Mark Price
+// -------------------------------------------------------------->
+ 
+test:.qt.Unit[
+    ".account.UpdateMarkPrice";
+    {[c]
+        p:c[`params];  
+        setupOrders[p];
+
+        p1:p[`eNewOrder];  
+
+        // instantiate mock for ApplyFill
+        mck1: .qt.M[`.order.CancelAllOrders;{[a;b]};c];
+
+        res:.account.UpdateMarkPrice[
+            p[`markPrice];
+            p[`instrumentId];
+            .z.z]; // TODO assert throws?
+
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
+
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for updating the mark price with respect to the account namespace"];
+
+
+deriveCaseParams    :{[params] 
+    mCols:`called`numCalls`calledWith; // Mock specific
+    pCols:`markPrice`instrumentId`time;
+
+    makeOrdersEx :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
+        ];()]};
+
+    nom:(`fn,mCols)!params[6];
+
+    p:`cOB`cOrd`params`eNewOrder!(
+        makeDepthUpdate[params[0]]; 
+        makeOrders[params[1]];
+        pCols!params[2];
+        nom  
+        );
+    :p;
+    };
+
+
+
 .qt.RunTests[];

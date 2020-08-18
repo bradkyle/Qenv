@@ -507,20 +507,21 @@ UpdateMarkPrice : {[markPrice;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
 
     // TODO check for liquidations
-    / update unrealizedPnl:unrealizedPnl[avgPrice;amt;ins] from `.account.Inventory;
-    / update 
-    /     unrealizedPnl:0, 
-    /     posMargin:0, 
-    /     available:0, 
-    /     leverage:0 from `.account.Inventory;
+    update unrealizedPnl:unrealizedPnl[avgPrice;amt;ins] from `.account.Inventory;
+    update 
+        unrealizedPnl:0, 
+        posMargin:0, 
+        available:0, 
+        leverage:0 from `.account.Inventory;
   
 
     // do liquidation protocol
-    / {
-    /     .order.CancelAllOrders[x];
-    /     acc:.account.Account@x;
-    /     if[acc[`initMargin];[
+    {
+        .order.CancelAllOrders[x];
+        acc:.account.Account@x;
+        if[acc[`initMargin];[
             
-    /     ]]; 
-    / } select accountId from .account.Account where (initMargin+realizedPnl+unrealizedPnl)<maintMargin;
+        ]]; 
+    } select accountId from .account.Account where (initMargin+realizedPnl+unrealizedPnl)<maintMargin;
+    
     };
