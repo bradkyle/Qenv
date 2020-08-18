@@ -546,13 +546,19 @@ NewOrder       : {[o;time];
                 [
                     // add orderbook references
                     // todo if there is a row at price and qty is greater than zero
-                    .account.UpdateOrderMargin[];
+                    // TODO 
+                    .account.UpdateOrderMargin[
+                        o[`side];
+                        o[`price];
+                        o[`size];
+                        o[`reduceOnly];
+                        o[`accountId]];
                     
                     // TODO make better
                     `.order.Order upsert o;
-                    update vqty:vqty+o[`leaves] from `.order.OrderBook where price=o[`price];
-                    / .order.AddNewOrderEvent[o;time];
-                    / .order.DeriveThenAddDepthUpdateEvent[time]; 
+                    update vqty:vqty+o[`leaves] from `.order.OrderBook where price=o[`price], side=o[`side];
+                    .order.AddNewOrderEvent[o;time];
+                    .order.DeriveThenAddDepthUpdateEvent[time]; 
 
                 ]
             ];

@@ -237,8 +237,7 @@ CanPlaceOrder :{[delta;side;price;account;instrument]
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-UpdateOrderMargin    :{[delta;side;price;account;instrument]
-    margin:.instrument.DeriveRequiredMargin[];
+UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
 
     };
 

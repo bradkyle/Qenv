@@ -133,6 +133,7 @@ test:.qt.Unit[
     ".order.ProcessDepthUpdateEvent";
     {[c]
         p:c[`params];
+        .qt.M[`.account.UpdateOrderMargin;{[a;b;c;d;e]};c];
         / show p[`event];/         
         setupDepth[p];
         setupOrders[p];
@@ -469,6 +470,8 @@ test:.qt.Unit[
     ".order.ProcessTrade";
     {[c]
         p:c[`params];  
+        .qt.M[`.account.UpdateOrderMargin;{[a;b;c;d;e]};c];
+
         setupDepth[p];
         setupOrders[p];
 
@@ -937,17 +940,20 @@ deriveCaseParams    :{[params]
     :p;
     };
 
+// TODO test participate not initiate
+// TODO test unsuccessful update order margin
+
 .qt.AddCase[test;"Place new limit order, no previous depth should update depth";
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (); // CUrrent orders
-        `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000); // TODO 
+        `accountId`instrumentId`side`otype`price`size!(1;1;`BUY;`LIMIT;1000;1000); // TODO 
         ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
         (); // expected orders
         ();
-        ({};1b;1;());
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
         (0b;0;());
-        (0b;0;())
+        (1b;1;())
     )]];
 
 / .qt.AddCase[test;"New limit order no previous depth or orders should update";
