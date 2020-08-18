@@ -149,8 +149,11 @@ runNxtFail  :{
     .qt.runCaseOnly[c];
     }
 
+beforeHooks:{[x;y]}; // TODO convert to lambda
+
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
+    .qt.beforeHooks[""];
     test[`beforeAll][];
     test[`start]:.z.z;
     {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)]; // TODO fix messy
@@ -226,7 +229,7 @@ Skp    :{[case]
     };
 
 SkpAft    :{[case] 
-    update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>case[`caseId];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>x[`caseId];show y}[case];
     };
 
 // Mock

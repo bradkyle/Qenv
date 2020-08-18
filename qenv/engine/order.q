@@ -231,12 +231,12 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
     state:0!update
                 vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
             from update
-                nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]],
-                nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - nshft[;-1_(til first maxN)]];Clip[qty-mxshft])]],
+                nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]], // TODO make simpler
+                nagentQty: flip PadM[raze'[(0^poffset[;0];{$[x>0;Clip[z[;1_(x)] - y[;-1_(til x)]];0]}'[first maxN;poffset;nshft];Clip[qty-mxshft])]],
                 nfilled: psize - nleaves,
                 accdlts: pleaves - nleaves
             from update
-                mxshft:max'[nshft],
+                mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft],
                 noffset: Clip[poffset-rp],
                 nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset]
             from update
@@ -254,15 +254,16 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 maxN:max count'[offset],
                 numLvls:count[offset] 
             from {$[x=`BUY;`price xasc y;`price xdesc y]}[nside;select from (
-                    update 
-                        rp:?[qty<fillQty;qty;fillQty]^rp, // TODO max fillqty lvl qty
-                        tgt:qty-(0^rp) // the amount that is left over after fill
+                    update
+                        tgt:qty-rp
+                    from update 
+                        rp:?[pqty<fillQty;pqty;fillQty]^rp // TODO max fillqty lvl qty
                             from update 
                                 rp: (thresh-prev[thresh])-(thresh-fillQty) // The amount that is filled at the given level
                                 from update
                                     thresh:sums qty
                                     from update 
-                                        qty: qty+(0^oqty)
+                                        pqty: qty+(0^oqty)
                                         from 0!((select from .order.OrderBook where side=nside) uj (select 
                                             oqty:sum leaves, 
                                             oprice: price,
@@ -313,7 +314,6 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 raze[pprice],
                 raze[nfilled],
                 raze[preduceOnly] from state)) where (nfilled>0), (paccountId in raze[state[`accountId]]);
-        .order.AF:accFlls;
 
         if[count[accFlls]>0;[ 
             if [isAgent;[
@@ -332,7 +332,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 side,
                 isMaker, 
                 preduceOnly from accFlls;
-            .order.FLL:accFlls;
+
             {.account.ApplyFill[
                 x[`paccountId];
                 x[`insId];
@@ -353,7 +353,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
         from update 
             qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt] 
             from select side, price, rp,  
-            splt:{$[count[x];1_(raze raze'[0,(0^x);y]);0]}'[pleaves;nagentQty] from state;
+            splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty] from state;
 
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
@@ -391,6 +391,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
         
         ]];
 
+    `.order.OrderBook upsert (select price, side, qty:tgt, vqty from state);
     delete from `.order.OrderBook where price in (exec price from state where tgt<=0);
     .order.DeriveThenAddDepthUpdateEvent[tim]; 
     };

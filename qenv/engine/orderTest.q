@@ -601,7 +601,7 @@ deriveCaseParams    :{[params]
 /     )]];
 
 / // TODO check this
-/ .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
+/ .qt.AddCase[test;"";
 /     deriveCaseParams[(
 /         ((10#`BUY);1000-til 10;10#1000);();
 /         (1;`SELL;1500;0b;0b;1;cTime);();();
@@ -609,22 +609,27 @@ deriveCaseParams    :{[params]
 /         (0b;0;());0
 /     )]];
 
-/ / `cOB`cOrd`trade`eOB`eOrd`eAddTradeEvent`eApplyFill`eQty
-/ .qt.AddCase[test;"";
-/     deriveCaseParams[(
-/         ((10#`BUY);1000-til 10;10#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;100 400;2#100;2#1000;2#cTime);
-/         (1;`SELL;150;0b;1b;1;cTime);
-/         ((10#`BUY);1000-til 10;900,9#1000);(til[2];2#1;2#1;2#`BUY;2#`LIMIT;0 300;50 100;2#1000;2#cTime);
-/         (1b;2;(((`.order.ORDERSIDE$`SELL;100;1000);cTime);((`.order.ORDERSIDE$`SELL;50;1000);cTime)));
-/         (1b;2;((50;1000;`.order.ORDERSIDE$`BUY;cTime;0b;1b;1);(50;1000;`.order.ORDERSIDE$`SELL;cTime;0b;0b;1)));0
-/     )]];
+.qt.SkpAft[.qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        (`.instrument.Instrument!0;`SELL;1200;0b;0b;0N;z); // Trade execution: 
+        ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(800,8#1000)); // expected order book
+        (); // expected orders
+        (1b;2;( // AddTradeEvent: side size price
+            ((`.order.ORDERSIDE$`SELL;999;200);z);
+            ((`.order.ORDERSIDE$`SELL;1000;1000);z)
+        ));
+        (0b;0;());
+        (0b;0;()) // IncSelfFill mock
+    )]]];
 
 .qt.AddCase[test;"orderbook has agent orders, lvl1 size > qty, trade doesn't fill agent order, trade execution < agent order offset, fill is agent";
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // CUrrent orders
         (`.instrument.Instrument!0;`SELL;200;0b;1b;`.account.Account!0;z); // Trade execution: 
-        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(10#1000)); // expected order book
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(800,9#1000);vqty:(10#1000)); // expected order book
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#1000 999;4#`NEW;4#z); // expected orders
         (1b;1; // AddTradeEvent: side size price
             enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
@@ -640,7 +645,7 @@ deriveCaseParams    :{[params]
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#999 998;4#z); // CUrrent orders
         (`.instrument.Instrument!0;`SELL;1200;0b;1b;`.account.Account!0;z); // Trade execution: 
-        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(10#1000)); // expected order book
+        ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(9#1000)); // expected order book
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#999 998;4#`NEW;4#z); // expected orders
         (1b;2;( // AddTradeEvent: side size price
             ((`.order.ORDERSIDE$`SELL;999;200);z);
@@ -653,7 +658,7 @@ deriveCaseParams    :{[params]
         (0b;0;()) // IncSelfFill mock
     )]];
 
-.qt.Skp[.qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution > agent order offset, fill is agent";
+.qt.AddCase[test;"orderbook has agent orders, trade fills agent order, trade execution > agent order offset, fill is agent";
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // CUrrent orders
@@ -677,7 +682,7 @@ deriveCaseParams    :{[params]
             (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1200)
         ));
         (1b;1;enlist(`.account.Account!0;4;450)) // IncSelfFill mock
-    )]]];
+    )]];
 
 
 / .qt.AddCase[test;"";
