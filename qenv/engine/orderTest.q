@@ -425,7 +425,6 @@ deriveCaseParams    :{[params]
     () // Expected Events TODO
     )]];
 
-
 .qt.AddCase[test;"many levels with many orders at same offset interval, price is removed across all levels partially (900)";deriveCaseParams[(
     (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Previous depth
     (til[20];20#1;20#1;((10#`SELL),(10#`BUY));20#`LIMIT;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // previous orders
@@ -544,6 +543,8 @@ deriveCaseParams    :{[params]
 // TODO reduce only
 // TODO test other side
 // TODO benchmarking
+// TOOD test instrument/account doesn't exist
+// TODO test erroring
 
 .qt.AddCase[test;"orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";
     deriveCaseParams[(
@@ -862,40 +863,49 @@ deriveCaseParams    :{[params]
 
 // New Order Tests
 // -------------------------------------------------------------->
+// TODO response
+test:.qt.Unit[
+    ".order.NewOrder";
+    {[c]
+        p:c[`params];  
+        setupDepth[p];
+        setupOrders[p];
 
-/ oBeforeAll :{
-/     .instrument.NewInstrument[
-/         `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier!
-/         (1;0.5;1e5f;0f;1e7f;0f;1);
-/         1b;.z.z];
-/     };
+        p1:p[`eAddTradeEvent];
+        p2:p[`eIncSelfFill];
+        p3:p[`eApplyFill];   
 
-/ oAfterAll :{
-/     / delete from `.instrument.Instrument;
-/     };
+        // instantiate mock for ApplyFill
+        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f;g;h]};c];
+        mck2: .qt.M[`.order.AddNewOrderEvent;{[a;b]};c];
+        mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
 
-/ BAM:();
+        o:p[`order];
+        res:.order.NewOrder[o;.z.z];
 
-/ test:.qt.Unit[
-/     ".order.NewOrder";
-/     {[c]
-/         p:c[`params]; 
-/         if[count[p[`cOB]]>0;.order.ProcessDepthUpdate[p[`cOB]]];
-  
-/         // instantiate mock for ProcessTrade
-/         mck: .qt.M[`.order.ProcessTrade;p[`mFn];c];
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
 
-/         o:p[`order];
+        .qt.MA[
+            mck2;
+            p2[`called];
+            p2[`numCalls];
+            p2[`calledWith];c];
 
-/         / show .instrument.Instrument;
-/         res:.order.NewOrder[o;.z.z];
-/         // Assertions
-/         k:key p[`eOrd]; 
-/         o1:first (0!select from .order.Order where orderId=1);
-/         .qt.A[o1[k];~;p[`eOrd][k];"order";c];
+        .qt.MA[
+            mck3;
+            p3[`called];
+            p3[`numCalls];
+            p3[`calledWith];c];
 
-/     };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing new orders"];
+        checkOrders[p;c];
+        checkDepth[p;c];
+
+    };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
 
 / deriveCaseParams    :{[params]
     

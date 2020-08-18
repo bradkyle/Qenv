@@ -525,7 +525,6 @@ NewOrder       : {[o;time];
     / Invalid currency
     / Invalid settlCurrency
 
-    mPrice::exec min price by side from 0!.order.OrderBook;
     // TODO set offset
     // TODO check orderbook has liquidity
     // TODO add initial margin order margin logic etc.
