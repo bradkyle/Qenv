@@ -945,6 +945,19 @@ deriveCaseParams    :{[params]
 
 .qt.AddCase[test;"Place new limit order, no previous depth should update depth";
     deriveCaseParams[(
+        ();
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`price`size!(1;1;`BUY;`LIMIT;1000;1000); // TODO 
+        ([price:enlist[1000]] side:enlist[`.order.ORDERSIDE$`BUY]; qty:enlist[1000];vqty:enlist[1000]); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
+
+.qt.AddCase[test;"Place new limit order, previous depth should update depth";
+    deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (); // CUrrent orders
         `accountId`instrumentId`side`otype`price`size!(1;1;`BUY;`LIMIT;1000;1000); // TODO 
@@ -1074,14 +1087,192 @@ deriveCaseParams    :{[params]
 // Cancel Order Tests
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".order.CancelOrder";
+    {[c]
+        p:c[`params];  
+        setupDepth[p];
+        setupOrders[p];
+
+        p1:p[`eProcessTrade];
+        p2:p[`eAddCancelOrderEvent];
+        p3:p[`eUpdateOrderMargin];   
+
+        // instantiate mock for ApplyFill
+        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f;g;h]};c];
+        mck2: .qt.M[`.order.AddNewOrderEvent;{[a;b]};c];
+        mck3: .qt.M[`.account.UpdateOrderMargin;p3[`fn];c];
+
+        o:p[`order];
+        res:.order.CancelOrder[o;.z.z]; // TODO assert throws?
+
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
+
+        .qt.MA[
+            mck2;
+            p2[`called];
+            p2[`numCalls];
+            p2[`calledWith];c];
+
+        .qt.MA[
+            mck3;
+            p3[`called];
+            p3[`numCalls];
+            p3[`calledWith];c];
+
+        checkOrders[p;c];
+        checkDepth[p;c];
+        checkEvents[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
+
+deriveCaseParams    :{[params] 
+    mCols:`called`numCalls`calledWith; // Mock specific
+
+    makeOrdersEx :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
+        ];()]};
+
+    p:`cOB`cOrd`order`eOB`eOrd`eEv`eUpdateOrderMargin`eProcessTrade`eAddNewOrderEvent!(
+        makeDepthUpdate[params[0]]; 
+        makeOrders[params[1]];
+        params[2];
+        params[3];
+        makeOrdersEx[params[4]];
+        params[5];
+        (`fn,mCols)!params[6];
+        mCols!params[7];
+        mCols!params[8]
+        );
+    :p;
+    };
 
 // Amend Order Tests
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".order.AmendOrder";
+    {[c]
+        p:c[`params];  
+        setupDepth[p];
+        setupOrders[p];
 
+        p1:p[`eProcessTrade];
+        p2:p[`eAddCancelOrderEvent];
+        p3:p[`eUpdateOrderMargin];   
+
+        // instantiate mock for ApplyFill
+        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f;g;h]};c];
+        mck2: .qt.M[`.order.AddNewOrderEvent;{[a;b]};c];
+        mck3: .qt.M[`.account.UpdateOrderMargin;p3[`fn];c];
+
+        o:p[`order];
+        res:.order.CancelOrder[o;.z.z]; // TODO assert throws?
+
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
+
+        .qt.MA[
+            mck2;
+            p2[`called];
+            p2[`numCalls];
+            p2[`calledWith];c];
+
+        .qt.MA[
+            mck3;
+            p3[`called];
+            p3[`numCalls];
+            p3[`calledWith];c];
+
+        checkOrders[p;c];
+        checkDepth[p;c];
+        checkEvents[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for processing new orders"];
+
+deriveCaseParams    :{[params] 
+    mCols:`called`numCalls`calledWith; // Mock specific
+
+    makeOrdersEx :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
+        ];()]};
+
+    p:`cOB`cOrd`order`eOB`eOrd`eEv`eUpdateOrderMargin`eProcessTrade`eAddNewOrderEvent!(
+        makeDepthUpdate[params[0]]; 
+        makeOrders[params[1]];
+        params[2];
+        params[3];
+        makeOrdersEx[params[4]];
+        params[5];
+        (`fn,mCols)!params[6];
+        mCols!params[7];
+        mCols!params[8]
+        );
+    :p;
+    };
 
 // Update Mark Price
 // -------------------------------------------------------------->
+ 
+test:.qt.Unit[
+    ".order.UpdateMarkPrice";
+    {[c]
+        p:c[`params];  
+        setupOrders[p];
+
+        p1:p[`eNewOrder];  
+
+        // instantiate mock for ApplyFill
+        mck1: .qt.M[`.order.NewOrder;{[a;b]};c];
+
+        res:.order.UpdateMarkPrice[p[`markPrice];p[`instrumentId];.z.z]; // TODO assert throws?
+
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
+
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for updating the mark price with respect to the order namespace"];
+
+deriveCaseParams    :{[params] 
+    mCols:`called`numCalls`calledWith; // Mock specific
+    pCols:`markPrice`instrumentId`time;
+
+    makeOrdersEx :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
+        ];()]};
+
+    nom:(`fn,mCols)!params[6];
+
+    p:`cOB`cOrd`params`eNewOrder!(
+        makeDepthUpdate[params[0]]; 
+        makeOrders[params[1]];
+        pCols!params[2];
+        nom  
+        );
+    :p;
+    };
 
 / test:.qt.Unit[
 /     ".order.triggerStop";
