@@ -24,6 +24,7 @@ formatTable     :{
 
 / BAM:();
 / FOO:();
+// TODO mark skip
 
 // Test
 // ======================================================================>
@@ -220,7 +221,13 @@ AddCase     :{[test;dscr;params]
     };
 
 
-/ SkipCase    :{[tid] update state:`SKIP from `.test.Test where testId=tid;};
+Skp    :{[case] 
+    update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId=case[`caseId];
+    };
+
+SkpAft    :{[case] 
+    update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>case[`caseId];
+    };
 
 // Mock
 // ======================================================================>

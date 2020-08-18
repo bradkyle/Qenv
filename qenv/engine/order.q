@@ -238,7 +238,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
             from update
                 mxshft:max'[nshft],
                 noffset: Clip[poffset-rp],
-                nleaves: Clip[nshft-rp]
+                nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset]
             from update
                 nshft:pleaves+poffset
             from update 
@@ -255,7 +255,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 numLvls:count[offset] 
             from {$[x=`BUY;`price xasc y;`price xdesc y]}[nside;select from (
                     update 
-                        rp:qty^rp,
+                        rp:?[qty<fillQty;qty;fillQty]^rp, // TODO max fillqty lvl qty
                         tgt:qty-(0^rp) // the amount that is left over after fill
                             from update 
                                 rp: (thresh-prev[thresh])-(thresh-fillQty) // The amount that is filled at the given level
@@ -302,7 +302,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
 
         // Derive account fills from state and call .acount Apply fill for each.
         // order in the order book.
-        accFlls:update
+        accFlls:select from (update
             side:nside,
             time:tim, // TODO update time.
             isMaker:1b,
@@ -312,15 +312,18 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 raze[paccountId],
                 raze[pprice],
                 raze[nfilled],
-                raze[preduceOnly] from state);
-        .order.ACFLL:accFlls;
+                raze[preduceOnly] from state)) where (nfilled>0), (paccountId in raze[state[`accountId]]);
+        .order.AF:accFlls;
 
-        if[count[accFlls]>0;[
+        if[count[accFlls]>0;[ 
             if [isAgent;[
-                if[accountId in accFlls[`accountId];.account.IncSelfFill[
-                    accountId;
-                    (count'[select by accountId from f where qty>0]@1);
-                    (exec sum qty from f where qty>0 and accountId=1)]];
+                if[accountId in accFlls[`paccountId];[
+                    sflls:exec n:count i, qty:sum[abs[nfilled]] from accFlls where paccountId=accountId;
+                    .account.IncSelfFill[
+                        accountId;
+                        sflls[`n];
+                        sflls[`qty]]];
+                    ];
                 ]];
 
             flls:0!select by 
@@ -355,7 +358,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
     // Calculate trade qtys
     // calculated seperately from orders on account of non agent trades.
     .order.T:trades;
-    .order.O:.order.Order;
+    .order.OA:.order.Order;
 
     {.order.AddTradeEvent[(
         y[`side]; 

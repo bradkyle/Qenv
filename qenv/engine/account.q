@@ -292,7 +292,8 @@ unrealizedPnl :{[avgprice;markprice;amt;instrument]
       instrument[`settleType]=`VANILLA;
         ();
       instrument[`settleType]=`QUANTO;
-        () 
+        ();
+      () 
     ];
     };
 
@@ -302,7 +303,8 @@ realizedPnl :{[avgprice;fillprice;fillqty;instrument]
       instrument[`settleType]=`VANILLA;
         ();
       instrument[`settleType]=`QUANTO;
-        () 
+        ();
+      ()
     ];
     };
 
