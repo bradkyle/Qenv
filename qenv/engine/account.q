@@ -224,7 +224,7 @@ NewInventory : {[inventory;time]
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be validated
 // @instrument : dict representation of the orders instrument 
-ValidateOrderStateDelta :{[delta;side;price;account;instrument]
+CanPlaceOrder :{[delta;side;price;account;instrument]
     margin:.instrument.DeriveRequiredMargin[];
 
     };
@@ -237,7 +237,7 @@ ValidateOrderStateDelta :{[delta;side;price;account;instrument]
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-UpdateOpenOrderState    :{[delta;side;price;account;instrument]
+UpdateOrderState    :{[delta;side;price;account;instrument]
     margin:.instrument.DeriveRequiredMargin[];
 
     };

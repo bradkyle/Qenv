@@ -89,6 +89,11 @@ checkDepth      :{
             ];
     };
 
+checkEvents     :{
+    if[count[x[`eEv]]>0;
+            .qt.A[.event.Events;~;x[`eEv];"orderbook";y];
+            ];
+    };
 
 // Before and after defaults
 // -------------------------------------------------------------->
@@ -871,17 +876,19 @@ test:.qt.Unit[
         setupDepth[p];
         setupOrders[p];
 
-        p1:p[`eAddTradeEvent];
-        p2:p[`eIncSelfFill];
-        p3:p[`eApplyFill];   
+        p1:p[`eProcessTrade];
+        p2:p[`eAddNewOrderEvent];
+        p3:p[`eUpdateOrderState];   
+        p4:p[`eCanPlaceOrder];   
 
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.order.AddNewOrderEvent;{[a;b]};c];
-        mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+        mck3: .qt.M[`.account.UpdateOrderState;{[a;b;c]};c];
+        mck4: .qt.M[`.account.CanPlaceOrder;{[a;b;c]};c];
 
         o:p[`order];
-        res:.order.NewOrder[o;.z.z];
+        res:.order.NewOrder[o;.z.z]; // TODO assert throws?
 
         .qt.MA[
             mck1;
@@ -903,29 +910,55 @@ test:.qt.Unit[
 
         checkOrders[p;c];
         checkDepth[p;c];
+        checkEvents[p;c];
 
-    };();(oBeforeAll;oAfterAll;defaultBeforeEach;defaultAfterEach);
+    };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
-/ deriveCaseParams    :{[params]
-    
-/     p:`cOB`cOrd`order`eOB`eOrd`eEvents!(
-/         makeDepthUpdate[params[0]];
-/         params[1];
-/         params[2];
-/         params[3];
-/         params[4];
-/         params[5]
-/         );
-/     :p;
-/     };
+deriveCaseParams    :{[params] 
+    mCols:`called`numCalls`calledWith; // Mock specific
+
+    makeOrdersEx :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
+        ];()]};
+
+    p:`cOB`cOrd`order`eOB`eOrd`eEv`CanPlaceOrder`eProcessTrade`eAddNewOrderEvent`eUpdateOrderState!(
+        makeDepthUpdate[params[0]]; 
+        makeOrders[params[1]];
+        params[2];
+        params[3];
+        makeOrdersEx[params[4]];
+        params[5];
+        (`fn,mCols)!params[5];
+        mCols!params[6];
+        mCols!params[7];
+        mCols!params[8]
+        );
+    :p;
+    };
+
+.qt.AddCase[test;"Place new limit order, no previous depth should update depth";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({};0b;0;());
+        (0b;0;());
+        (0b;0;());
+        (0b;0;()) // IncSelfFill mock
+    )]];
 
 / .qt.AddCase[test;"New limit order no previous depth or orders should update";
 /     deriveCaseParams[(
 /     ((10#`SELL);1000+til 10;10#1000);();
 /     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
 /     ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
-/     (`price`offset!(1000;1000));
 /     ()
 /     )]];
 

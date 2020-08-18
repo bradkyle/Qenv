@@ -409,12 +409,12 @@ NewOrder       : {[o;time];
     // TODO append failures to events and return.
     // TODO if account is hedged and order is close the order cannot be larger than the position
     o:ordSubmitFields!o[ordSubmitFields];
-    if[null o[`timeinforce];o[`timeinforce]:`NIL];
-    if[null o[`reduceOnly];o[`reduceOnly]:0b];
-    if[null o[`execInst];o[`execInst]:`NIL];
-    if[null o[`trigger];o[`trigger]:`NIL];
-    if[null o[`instrumentId]; (.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]; 'INVALID_INSTRUMENTID)];
-    if[null o[`accountId]; (.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]; 'INVALID_ACCOUNTID)];
+    if[null[o[`timeinforce]];o[`timeinforce]:`NIL];
+    if[null[o[`reduceOnly]];o[`reduceOnly]:0b];
+    if[null[o[`execInst]];o[`execInst]:`NIL];
+    if[null[o[`trigger]];o[`trigger]:`NIL];
+    if[null[o[`instrumentId]]; (.event.AddFailure[time;`INVALID_INSTRUMENTID;"isntrumentId is null"]; 'INVALID_INSTRUMENTID)];
+    if[null[o[`accountId]]; (.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]; 'INVALID_ACCOUNTID)];
 
     if[not (o[`side] in .order.ORDERSIDE); :.event.AddFailure[time;`INVALID_ORDER_SIDE;"Invalid side"]]; // TODO make failure event.
     if[not (o[`otype] in .order.ORDERTYPE); :.event.AddFailure[time;`INVALID_ORDER_TYPE;"Invalid order type"]]; // TODO make failure event.
