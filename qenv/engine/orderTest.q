@@ -917,6 +917,8 @@ test:.qt.Unit[
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
+// TODO test throws errors
+// TODO add account
 deriveCaseParams    :{[params] 
     mCols:`called`numCalls`calledWith; // Mock specific
 
@@ -944,7 +946,7 @@ deriveCaseParams    :{[params]
 // TODO test participate not initiate
 // TODO test unsuccessful update order margin
 
-.qt.SkpAft[.qt.AddCase[test;"Place new limit order, no previous depth should update depth";
+.qt.AddCase[test;"Place new limit order, no previous depth should update depth";
     deriveCaseParams[(
         ();
         (); // CUrrent orders
@@ -955,7 +957,7 @@ deriveCaseParams    :{[params]
         ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
         (0b;0;());
         (1b;1;())
-    )]]];
+    )]];
 
 .qt.AddCase[test;"Place new limit order, previous depth should update depth";
     deriveCaseParams[(
@@ -983,35 +985,123 @@ deriveCaseParams    :{[params]
         (1b;1;())
     )]];
 
-/ .qt.AddCase[test;"New limit order no previous depth or orders should update";
-/     deriveCaseParams[(
-/     ((10#`SELL);1000+til 10;10#1000);();
-/     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-/     ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
-/     ()
-/     )]];
+.qt.AddCase[test;"Place new limit order with participate dont initiate crosses spread";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`price`size`execInst!(1;1;`SELL;`LIMIT;1001;1000;(`PARTICIPATEDONTINITIATE)); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
-/ .qt.AddCase[test;"New limit order participate don't initiate not triggered, calls processCross";
-/     deriveCaseParams[(
-/     ((10#`SELL);1000+til 10;10#1000);();
-/     `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1000;1000);
-/     ([price:(1000+til 10)] side:(10#`.order.ORDERSIDE$`SELL);qty:(10#1000));
-/     (`price`offset!(1000;1000));
-/     ()
-/     )]];
+.qt.AddCase[test;"Place new limit order without participate dont initiate crosses spread";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`price`size!(1;1;`SELL;`LIMIT;1001;1000); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
+
+.qt.AddCase[test;"Place new market order";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size!(1;1;`SELL;`MARKET;1000); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
+
+.qt.AddCase[test;"Place new market order with price, should ignore price";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
+
+.qt.AddCase[test;"Place new limit order reduceOnly larger than short position";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
+
+.qt.AddCase[test;"Place new limit order reduceOnly larger than long position";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
 
-/ .qt.AddCase[test;"New simple market order";
-/     deriveCaseParams[ ]];
+.qt.AddCase[test;"Place new market order reduceOnly larger than short position";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
-/ .qt.AddCase[test;"New simple stop market order";
-/     deriveCaseParams[ ]];
+.qt.AddCase[test;"Place new market order reduceOnly larger than long position";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
-/ .qt.AddCase[test;"New simple stop limit order";
-/     deriveCaseParams[ ]];
-
-/ .qt.AddCase[test;"Trash fields present";
-/     deriveCaseParams[]];
+.qt.AddCase[test;"Place new market order reduceOnly larger than long position";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
 / .qt.AddCase[test;"Invalid Account Id (form)";
 /     deriveCaseParams[]];

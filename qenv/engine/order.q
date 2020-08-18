@@ -539,7 +539,7 @@ NewOrder       : {[o;time];
                                 event[`accountId];
                                 time];
                         ]
-                    ]
+                    ];
                 ];
                 [
                     // add orderbook references
@@ -574,12 +574,14 @@ NewOrder       : {[o;time];
         ];
       o[`otype]=`STOP_MARKET;
         [
+            // Stop orders are a brokerage function
             // todo if close 
             // TODO checks etc.
             `.order.Order upsert order;
         ];
       o[`otype]=`STOP_LIMIT;
         [
+            // Stop orders are a brokerage function
             // todo if close
             // TODO checks etc.
             `.order.Order upsert order;
