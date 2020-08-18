@@ -472,10 +472,6 @@ NewOrder       : {[o;time];
         qty:(.order.OrderBook@o[`price])[`qty];
         o[`offset]: $[not null[qty];qty;0]]];
 
-    // TODO only if Limit order or market order
-    / if[not[.account.ValidateOrderStateDelta[o[`leaves];o[`price];acc;ins]]; 
-        / :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
-
     // calculate initial margin requirements of order
 
     // TODO 
@@ -549,15 +545,13 @@ NewOrder       : {[o;time];
                 ];
                 [
                     // add orderbook references
-                    // TODO update order init margin etc.
-                    // TODO update order margin etc.
                     // todo if there is a row at price and qty is greater than zero
+                    .account.UpdateOrderMargin[];
                     
                     // TODO make better
                     `.order.Order upsert o;
                     update vqty:vqty+o[`leaves] from `.order.OrderBook where price=o[`price];
                     / .order.AddNewOrderEvent[o;time];
-                    / .account.UpdateOpenOrderState[];
                     / .order.DeriveThenAddDepthUpdateEvent[time]; 
 
                 ]
@@ -566,10 +560,13 @@ NewOrder       : {[o;time];
       o[`otype]=`MARKET;
         [
             .order.ProcessTrade[
+                o[`instrumentId];
                 o[`side];
                 o[`size];
+                o[`reduceOnly];
                 1b;
-                event[`accountId]];
+                event[`accountId];
+                time];
         ];
       o[`otype]=`STOP_MARKET;
         [
