@@ -249,12 +249,12 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-avgPrice :{`long$($[y=`LONG;
+avgPrice            :{`long$($[y=`LONG;
                     1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
 
-unrealizedPnl :{[avgprice;markprice;amt;instrument]
+unrealizedPnl       :{[avgprice;markprice;amt;instrument]
     :$[instrument[`settleType]=`INVERSE;
         (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];markprice])*amt;
       instrument[`settleType]=`VANILLA;
@@ -265,7 +265,7 @@ unrealizedPnl :{[avgprice;markprice;amt;instrument]
     ];
     };
 
-realizedPnl :{[avgprice;fillprice;fillqty;instrument]
+realizedPnl         :{[avgprice;fillprice;fillqty;instrument]
     :$[instrument[`settleType]=`INVERSE;
         (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];fillprice])*fillqty;
       instrument[`settleType]=`VANILLA;
@@ -276,8 +276,8 @@ realizedPnl :{[avgprice;fillprice;fillqty;instrument]
     ];
     };
 
-initMargin   :{}; 
-maintMargin  :{};
+initMargin          :{}; 
+maintMargin         :{};
 
 liquidationPrice    :{};
 bankruptcyPrice     :{};
