@@ -133,29 +133,103 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        res:.account.liquidationPrice[];
+        res:.account.liquidationPrice[
+            p[`account];
+            p[`inventoryB];
+            p[`inventoryL];
+            p[`inventoryS];
+            p[`instrument]];
+
+        .qt.A[res;=;p[`eRes];"liquidationPrice";c];
 
     };();setupB;""];
 
 deriveCaseParams    :{[p]
-    aCols:`balance`available`positionType;
-    invCols:`amt`isignum`execCost`totalEntry;
-    insCols:`contractType`riskTiers`
+    aCols:`balance`available`positionType`leverage;
+    invCols:`side`amt`isignum`execCost`totalEntry;
+    insCols:`contractType`riskTiers`riskBuffer;
 
-    :`account`inventoryB`inventoryL`inventoryS`instrument!(
-        acols!p[0];
-        invCols!p[1];
+    :`account`inventoryB`inventoryL`inventoryS`instrument`eRes!(
+        aCols!p[0];
+        invCols!p[1]; // BOTH position
         invCols!p[2];
         invCols!p[3];
-        insCols!p[4]);
+        insCols!p[4];
+        p[5]);
     };
 
-.qt.AddCase[test;"";deriveCaseParams[(
-    (); // Account
-    (); // Both Position
-    (); // Long Position
-    (); // Short Position
-    () // Instrument
+// Simulation of vanilla contracts
+// vanilla uses
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
+    )]];
+
+.qt.AddCase[test;"Inverse (Bitmex) Combined Full Long";deriveCaseParams[(
+    (1e3;1;`COMBINED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;0;0;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
+    )]];
+
+.qt.AddCase[test;"Inverse (Okex) Hedged Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
+    )]];
+
+.qt.AddCase[test;"Inverse (Okex) Combined Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
+    )]];
+
+.qt.AddCase[test;"Vanilla Hedged Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0); // Instrument
+    821.47
     )]];
 
 // BankruptcyPrice

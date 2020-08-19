@@ -286,7 +286,7 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
     };
 
 // TODO inverse vs quanto vs vanilla
-liquidationPrice    :{[account;inventoryL;inventoryS;inventoryB;instrument]
+liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance];
         tmm:0; 
 
@@ -310,6 +310,10 @@ liquidationPrice    :{[account;inventoryL;inventoryS;inventoryB;instrument]
         cumL: amtL*(mmL+instrument[`riskBuffer]);
         cumS: amtS*(mmS+instrument[`riskBuffer]);
 
+        show cumL;
+        show cumS;
+        show amtS;
+
         // Derive Average price
         sB:inventoryB[`isignum];
         epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
@@ -325,9 +329,9 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
         tmm:0; 
 
         // Derive risk limits
-        lmB:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryB[`amt]); 0b; ()];
-        lmL:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryL[`amt]); 0b; ()];
-        lmS:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryS[`amt]); 0b; ()];
+        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryB[`amt]); 0b; ()]; // TODO move to instrument
+        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryL[`amt]); 0b; ()];
+        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryS[`amt]); 0b; ()];
         
         // Current Position
         amtB:inventoryB[`amt];
