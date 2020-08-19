@@ -85,15 +85,11 @@ test:.qt.Unit[
     ".account.avgPrice";
     {[c]
         p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
 
-        a:p[`args];
         res: .account.avgPrice[
-            a[`side];
-            a[`inventory];
-            a[`instrument]];
+            p[`side];
+            p[`inventory];
+            p[`instrument]];
         
         .qt.A[res;=;p[`eRes];c];
 
@@ -108,16 +104,14 @@ test:.qt.Unit[
     ".account.unrealizedPnl";
     {[c]
         p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
 
-        a:p[`args];
-        res: .account.avgPrice[
-            a[`side];
-            a[`inventory];
-            a[`instrument]];
-        res:.account.unrealizedPnl[];
+        res: .account.unrealizedPnl[
+            p[`avgPrice];
+            p[`markPrice];
+            p[`amt];
+            p[`instrument]];
+
+        .qt.A[res;=;p[`eRes];c];        
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
@@ -127,12 +121,13 @@ test:.qt.Unit[
 test:.qt.Unit[
     ".account.realizedPnl";
     {[c]
-        p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
-
-        res:.account.realizedPnl[];
+        p:c[`params]; 
+        
+        res:.account.realizedPnl[
+            p[`avgPrice];
+            p[`fillPrice];
+            p[`fillQty];
+            p[`instrument]];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
