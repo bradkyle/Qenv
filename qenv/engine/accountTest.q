@@ -132,26 +132,30 @@ test:.qt.Unit[
     ".account.liquidationPrice";
     {[c]
         p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
 
         res:.account.liquidationPrice[];
 
     };();setupB;""];
 
 deriveCaseParams    :{[p]
-    aCols:`balance;
-    iCols:`amt`isignum`execCost`totalEntry;
+    aCols:`balance`available`positionType;
+    invCols:`amt`isignum`execCost`totalEntry;
+    insCols:`contractType`riskTiers`
 
+    :`account`inventoryB`inventoryL`inventoryS`instrument!(
+        acols!p[0];
+        invCols!p[1];
+        invCols!p[2];
+        invCols!p[3];
+        insCols!p[4]);
     };
 
 .qt.AddCase[test;"";deriveCaseParams[(
-    `BUY;
+    ();
     ();
     ();
     (); 
-    `contractType`riskTiers!(); // Instrument
+    (); // Instrument
     )]];
 
 // BankruptcyPrice
