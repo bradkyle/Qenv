@@ -95,7 +95,7 @@ test:.qt.Unit[
             a[`inventory];
             a[`instrument]];
         
-        // Assertions
+        .qt.A[res;=;p[`eRes];c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
@@ -112,6 +112,11 @@ test:.qt.Unit[
         setupAccount[p];
         setupInventory[p];
 
+        a:p[`args];
+        res: .account.avgPrice[
+            a[`side];
+            a[`inventory];
+            a[`instrument]];
         res:.account.unrealizedPnl[];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
