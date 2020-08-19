@@ -1104,11 +1104,33 @@ deriveCaseParams    :{[params]
     )]];
 
 
-deriveErrorCaseParams      :{[]
+.qt.AddCase[test;"invalid account Id";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
-    };
+.qt.AddCase[test;"invalid order side";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
-.qt.AddCase[test;"Place new order invalid account Id";
+.qt.AddCase[test;"invalid account Id";
     deriveCaseParams[(
         ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
         (); // CUrrent orders
@@ -1276,6 +1298,20 @@ deriveCaseParams    :{[params]
         );
     :p;
     };
+
+
+.qt.AddCase[test;"should cancel given order";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
 // Amend Order Tests
 // -------------------------------------------------------------->
