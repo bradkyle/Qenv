@@ -220,7 +220,7 @@ deriveCaseParams    :{[p]
     821.47
     )]];
 
-.qt.AddCase[test;"Inverse Hedged Full Long";deriveCaseParams[(
+.qt.AddCase[test;"Inverse (Huobi) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;55000;1;55e8;55000); // Long Position 
