@@ -374,11 +374,15 @@ test:.qt.Unit[
     ".account.bankruptcyPrice";
     {[c]
         p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
 
-        res:.account.bankruptcyPrice[];
+        res:.account.bankruptcyPrice[
+            p[`account];
+            p[`inventoryB];
+            p[`inventoryL];
+            p[`inventoryS];
+            p[`instrument]];
+
+        .qt.A[res;=;p[`eRes];"bankruptcyPrice";c];
 
     };();setupB;
     "The price at which the account will be bankrupt"];
