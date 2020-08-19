@@ -148,7 +148,7 @@ test:.qt.Unit[
 deriveCaseParams    :{[p]
     aCols:`balance`available`positionType`leverage;
     invCols:`side`amt`isignum`execCost`totalEntry;
-    insCols:`contractType`riskTiers`riskBuffer`faceValue;
+    insCols:`contractType`riskTiers`riskBuffer`faceValue`tickSize;
 
     :`account`inventoryB`inventoryL`inventoryS`instrument`eRes!(
         aCols!p[0];
