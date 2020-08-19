@@ -251,11 +251,21 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-avgPrice        :{`long$($[y=`LONG;
+avgPrice        :{[]
+        :$[kind=`INVERSE;
+            $[side=`LONG;]
+          kind=`VANILLA;
+            $[];
+          kind=`QUANTO;
+            $
+        ];
+        `long$($[y=`LONG;
                     1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
 
+// Returns the unrealized profit for the current position considering the current
+// mark price and the average entry price (uses mark price to prevent liquidation).
 unrealizedPnl       :{[avgprice;markprice;amt;faceValue;kind]
     :$[kind=`INVERSE;
         (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;markprice])*amt;
@@ -267,6 +277,10 @@ unrealizedPnl       :{[avgprice;markprice;amt;faceValue;kind]
     ];
     };
 
+// Calculates the realized profit and losses for a given position, size is a positive
+// or negative number that represents the portion of the current position that has been
+// closed and thus should be of the same side as the position i.e. negative for short and 
+// positive for long.
 realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
     :$[kind=`INVERSE;
         (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;fillprice])*fillqty;
