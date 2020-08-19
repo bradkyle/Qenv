@@ -35,3 +35,7 @@ liquidationPrice    :{[account;inventoryL;inventoryS;inventoryB;instrument]
         denominator:amtB*mmb+amtL*mmL+amtS*mmS-sB*amtB-amtL+amtS;
         :numerator%denominator;
     };
+
+bankruptcyPrice     :{[]
+
+    };
