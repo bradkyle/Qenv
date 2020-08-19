@@ -118,8 +118,8 @@ nxtFailCase :{[]
     };
 
 pntTest      :{[test]
-    show 99#"-";
-    show ("" sv string[test[`name], " (",test[`kind],") :", test[`state]]);
+    show 99#"=";
+    show ("" sv string[test[`testId], ") ",test[`name], " (",test[`kind],") :", test[`state]]);
     show test[`dscr];
     show 99#"-";
     show select caseId,state,dscr from .qt.Case where testId=test[`testId];
@@ -168,7 +168,7 @@ showFailedTests :{[]
 
 RunTests :{
     runTest each select from 0!.qt.Test where state=`READY;
-    show 99#"=";show (45#" "),"TEST";show 99#"=";
+    show 99#"#";show (45#" "),"TEST";show 99#"#";
     .qt.pntTest each 0!.qt.Test;
     };
 

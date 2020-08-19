@@ -120,30 +120,30 @@ test:.qt.Unit[
 // Simulation of vanilla contracts
 // vanilla uses
 
-.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";(1000;)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl short gain";(1000;)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl long loss";(1000;)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl long gain";(1000;)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Inverse (Bitmex) realized pnl short loss";(1000;)];
-.qt.AddCase[test;"Inverse (Bitmex) realized pnl short gain";(1000;)];
-.qt.AddCase[test;"Inverse (Bitmex) realized pnl long loss";(1000;)];
-.qt.AddCase[test;"Inverse (Bitmex) realized pnl long gain";(1000;)];
+.qt.AddCase[test;"Inverse (Bitmex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Vanilla (Okex) realized pnl short loss";(1000;)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl short gain";(1000;)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl long loss";(1000;)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl long gain";(1000;)];
+.qt.AddCase[test;"Vanilla (Okex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Inverse (Okex) realized pnl short loss";(1000;)];
-.qt.AddCase[test;"Inverse (Okex) realized pnl short gain";(1000;)];
-.qt.AddCase[test;"Inverse (Okex) realized pnl long loss";(1000;)];
-.qt.AddCase[test;"Inverse (Okex) realized pnl long gain";(1000;)];
+.qt.AddCase[test;"Inverse (Okex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Inverse (Huobi) realized pnl short loss";(1000;)];
-.qt.AddCase[test;"Inverse (Huobi) realized pnl short gain";(1000;)];
-.qt.AddCase[test;"Inverse (Huobi) realized pnl long loss";(1000;)];
-.qt.AddCase[test;"Inverse (Huobi) realized pnl long gain";(1000;)];
+.qt.AddCase[test;"Inverse (Huobi) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 // LiquidationPrice
 // -------------------------------------------------------------->
@@ -377,6 +377,7 @@ test:.qt.Unit[
         res:.account.bankruptcyPrice[];
 
     };();setupB;""];
+
 
 
 // ApplyFill
