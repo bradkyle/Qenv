@@ -269,7 +269,7 @@ unrealizedPnl       :{[avgprice;markprice;amt;instrument]
 
 realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
     :$[(kind=`INVERSE);
-        (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];fillprice])*fillqty;
+        (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;fillprice])*fillqty;
       (kind=`VANILLA);
         ();
       (kind=`QUANTO);
