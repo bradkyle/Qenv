@@ -236,6 +236,8 @@ UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
 // Gets the position side that an order fills
 HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
 HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
+pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
+
 
 // Increments the occurance of an agent's self fill.
 // @x : unique account id

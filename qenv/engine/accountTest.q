@@ -86,11 +86,15 @@ test:.qt.Unit[
         p:c[`params];
         res: .account.avgPrice[p[0];p[1];p[2]];
         .qt.A[res;=;p[3];c];
-        
+
     };();setupB;""];
 
-.qt.AddCase[test;"Place new limit order, no previous depth should update depth";
-    (`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
 
 
 // UnrealizedPnl
@@ -100,17 +104,19 @@ test:.qt.Unit[
 test:.qt.Unit[
     ".account.unrealizedPnl";
     {[c]
+
         p:c[`params];
-
-        res: .account.unrealizedPnl[
-            p[`avgPrice];
-            p[`markPrice];
-            p[`amt];
-            p[`instrument]];
-
-        .qt.A[res;=;p[`eRes];c];        
+        res: .account.unrealizedPnl[p[0];p[1];p[2];p[3]];
+        .qt.A[res;=;p[4];c];
 
     };();setupB;""];
+
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
 
 // RealizedPnl
 // -------------------------------------------------------------->
@@ -119,16 +125,17 @@ test:.qt.Unit[
     ".account.realizedPnl";
     {[c]
         p:c[`params]; 
-        
-        res:.account.realizedPnl[
-            p[`avgPrice];
-            p[`fillPrice];
-            p[`fillQty];
-            p[`instrument]];
-
-        .qt.A[res;=;p[`eRes];c];                
+        res: .account.realizedPnl[p[0];p[1];p[2];p[3]];
+        .qt.A[res;=;p[4];c];   
 
     };();setupB;""];
+
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
 
 // InitMargin
 // -------------------------------------------------------------->
