@@ -84,32 +84,13 @@ test:.qt.Unit[
     ".account.avgPrice";
     {[c]
         p:c[`params];
-
-        res: .account.avgPrice[
-            p[`side];
-            p[`inventory];
-            p[`instrument]];
+        res: .account.avgPrice[p[0];p[1];p[2]];
+        .qt.A[res;=;p[3];c];
         
-        .qt.A[res;=;p[`eRes];c];
-
     };();setupB;""];
 
-deriveCaseParams:   {[]
-
-    };
-
 .qt.AddCase[test;"Place new limit order, no previous depth should update depth";
-    deriveCaseParams[(
-        ();
-        (); // CUrrent orders
-        `accountId`instrumentId`side`otype`price`size!(1;1;`BUY;`LIMIT;1000;1000); // TODO 
-        ([price:enlist[1000]] side:enlist[`.order.ORDERSIDE$`BUY]; qty:enlist[1000];vqty:enlist[1000]); // expected order book
-        (); // expected orders
-        ();
-        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
-        (0b;0;());
-        (1b;1;())
-    )]];
+    (`BUY;`totalEntry`execCost!();())];
 
 
 // UnrealizedPnl
