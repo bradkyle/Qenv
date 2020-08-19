@@ -253,7 +253,6 @@ test:.qt.Unit[
 // BankruptcyPrice
 // -------------------------------------------------------------->
 
-
 test:.qt.Unit[
     ".account.bankruptcyPrice";
     {[c]

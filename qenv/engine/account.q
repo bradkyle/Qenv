@@ -276,11 +276,21 @@ realizedPnl         :{[avgprice;fillprice;fillqty;instrument]
     ];
     };
 
-initMargin          :{}; 
-maintMargin         :{};
+initMargin          :{
 
-liquidationPrice    :{};
-bankruptcyPrice     :{};
+    };
+
+maintMargin         :{
+
+    };
+
+liquidationPrice    :{
+
+    };
+
+bankruptcyPrice     :{
+
+    };
 
 
 
