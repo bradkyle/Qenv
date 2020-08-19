@@ -129,6 +129,8 @@ test:.qt.Unit[
             p[`fillQty];
             p[`instrument]];
 
+        .qt.A[res;=;p[`eRes];c];                
+
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // InitMargin
@@ -137,11 +139,8 @@ test:.qt.Unit[
 test:.qt.Unit[
     ".account.initMargin";
     {[c]
-        p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
-
+        p:c[`params]; 
+        
         res:.account.initMargin[];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);""];
