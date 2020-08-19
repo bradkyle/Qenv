@@ -95,13 +95,13 @@ NewInstrument            :{[instrument; time]
     `.instrument.Instrument upsert instrument;
     };
 
-NewRiskTier             :{[tier]
-    `mxamt`mmr`imr`maxlev!flip[tier];
+NewRiskTier             :{[tier]:flip[`mxamt`mmr`imr`maxlev!flip[tier]]};
 
-    };
-
-NewRiskProcedural       :{[]
-    // TODO
+NewRiskProcedural       :{[baseRL;step;maintM;initM;maxLev;numTier]
+    :flip[`mxamt`mmr`imr`maxlev!(baseRL+(step*til numTier);
+    maintM+(maintM*til numTier);
+    initM+(maintM*til numTier);
+    numTier#maxLev)];
     };
 
 NewFeeTier              :{[]

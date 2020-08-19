@@ -252,17 +252,6 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-avgPrice        :{[]
-        :$[kind=`INVERSE;
-            $[side=`LONG;[];[]]
-          kind=`VANILLA;
-            $[];
-          kind=`QUANTO;
-            $[]];
-        `long$($[y=`LONG;
-                    1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-                    1e8%ceiling[x[`execCost]%x[`totalEntry]]
-                    ])};
 
 // Returns the unrealized profit for the current position considering the current
 // mark price and the average entry price (uses mark price to prevent liquidation).
