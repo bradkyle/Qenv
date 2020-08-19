@@ -25,15 +25,15 @@ liquidationPrice    :{[account;inventoryL;inventoryS;inventoryB;instrument]
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
 
-        mmB:0;
-        mmL:0;
-        mmS:0;
+        mmB:50;
+        mmL:50;
+        mmS:50;
 
-        sB:0;
+        sB:1;
+        tmm:0;
 
-        nemerator:bal+cumB+cumL+cumS-sB*amtB*epB-amtL*epL+amtS*epS;
-        denominator:amtB*mmb+amtL*mmL+amtS*mmS-sB*amtB-amtL+amtS;
-        :numerator%denominator;
+        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
+            %(amtB*mmb)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS));
     };
 
 bankruptcyPrice     :{[]
