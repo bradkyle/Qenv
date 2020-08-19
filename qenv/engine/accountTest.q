@@ -75,8 +75,7 @@ defaultBeforeEach: {
      delete from `.event.Events;
     };
 
-
-
+setupB:({};{};{};{});
 
 // AvgPrice
 // -------------------------------------------------------------->
@@ -93,7 +92,24 @@ test:.qt.Unit[
         
         .qt.A[res;=;p[`eRes];c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
+
+deriveCaseParams:   {[]
+
+    };
+
+.qt.AddCase[test;"Place new limit order, no previous depth should update depth";
+    deriveCaseParams[(
+        ();
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`price`size!(1;1;`BUY;`LIMIT;1000;1000); // TODO 
+        ([price:enlist[1000]] side:enlist[`.order.ORDERSIDE$`BUY]; qty:enlist[1000];vqty:enlist[1000]); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
 
 // UnrealizedPnl
@@ -113,7 +129,7 @@ test:.qt.Unit[
 
         .qt.A[res;=;p[`eRes];c];        
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // RealizedPnl
 // -------------------------------------------------------------->
@@ -131,7 +147,7 @@ test:.qt.Unit[
 
         .qt.A[res;=;p[`eRes];c];                
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // InitMargin
 // -------------------------------------------------------------->
@@ -143,7 +159,7 @@ test:.qt.Unit[
         
         res:.account.initMargin[];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // MaintMargin
 // -------------------------------------------------------------->
@@ -158,7 +174,7 @@ test:.qt.Unit[
 
         res:.account.maintMargin[];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // LiquidationPrice
 // -------------------------------------------------------------->
@@ -173,7 +189,7 @@ test:.qt.Unit[
 
         res:.account.liquidationPrice[];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // BankruptcyPrice
 // -------------------------------------------------------------->
@@ -188,7 +204,7 @@ test:.qt.Unit[
 
         res:.account.bankruptcyPrice[];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();setupB;""];
 
 // ApplyFill
 // -------------------------------------------------------------->
