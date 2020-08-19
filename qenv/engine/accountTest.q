@@ -616,7 +616,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters 
+    (`BUY;z;0b;1b;1000;1000); // Parameters 
     () // Expected response
     )]];
 
