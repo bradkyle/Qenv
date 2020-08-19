@@ -95,7 +95,6 @@ test:.qt.Unit[
 // UnrealizedPnl
 // -------------------------------------------------------------->
 
-
 test:.qt.Unit[
     ".account.unrealizedPnl";
     {[c]
@@ -159,12 +158,16 @@ deriveCaseParams    :{[p]
         p[5]);
     };
 
+
+// Binance
+// ------------------------------------------------------------------------->
+
 // Simulation of vanilla contracts
 // vanilla uses
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;1;55e8;55000); // Both Position
-    (`LONG;0;1;0;0); // Long Position 
+    (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
@@ -174,6 +177,30 @@ deriveCaseParams    :{[p]
     )]];
 
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;55000;-1;55e8;55000); // Both Position
+    (`LONG;0;1;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;1;0.01;0.001); // Instrument
+    985.84
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`LONG;0;0;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;1;0.01;0.001); // Instrument
+    985.84
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;-1;55e8;55000); // Both Position
     (`LONG;0;1;0;0); // Long Position 
@@ -209,6 +236,11 @@ deriveCaseParams    :{[p]
     985.84
     )]];
 
+// TODO half short etc.
+
+// Bitmex
+// ------------------------------------------------------------------------->
+
 .qt.AddCase[test;"Inverse (Bitmex) Combined Full Long: 1000 USD balance";deriveCaseParams[(
     (1;1;`COMBINED;100); // Account
     (`BOTH;55000;1;55e8;55000); // Both Position
@@ -217,6 +249,19 @@ deriveCaseParams    :{[p]
     (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1;0.5;1); // Instrument
     998.0
     )]];
+
+.qt.AddCase[test;"Inverse (Bitmex) Combined Full Short: 1000 USD balance";deriveCaseParams[(
+    (1;1;`COMBINED;100); // Account
+    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`LONG;0;1;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1;0.5;1); // Instrument
+    998.0
+    )]];
+
+
+// Okex
+// ------------------------------------------------------------------------->
 
 .qt.AddCase[test;"Inverse (Okex) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
@@ -266,6 +311,10 @@ deriveCaseParams    :{[p]
     )];0;0.01;0.1;1); // Instrument TODO check
     987.6
     )]];
+
+
+// Huobi
+// ------------------------------------------------------------------------->
 
 .qt.AddCase[test;"Inverse (Huobi) Combined Full Long";deriveCaseParams[(
     (1;1;`COMBINED;10); // Account
