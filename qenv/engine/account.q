@@ -217,18 +217,7 @@ NewInventory : {[inventory;time]
 // -------------------------------------------------------------->
 // Does premium change with changing mark price?
 
-// Validates that an accoun has enough margin to allow for given order
-// delta without liquidation.
-// @delta : the amount by which the order quantity is to be changed.
-// @side : the side that is to be updated by the order.
-// @price      : the price of the given order.
-// @account    : dict representation of the account to be validated
-// @instrument : dict representation of the orders instrument 
-CanPlaceOrder :{[delta;side;price;account;instrument]
-    margin:.instrument.DeriveRequiredMargin[];
-
-    };
-
+// Validates that the account can open the order.
 // Updates the open order state of an account
 // Updates an accounts order margin, open order amount, order premium 
 // netLongPosition/netShortPosition
@@ -260,26 +249,6 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-// Executes a close fill i.e. when the absolute target position
-// is smaller than its respective absolute current position
-closeFill   :{
-
-    };
-
-// Executes a open fill i.e. when the absolute target position
-// is larger than its respective absolute current position
-openFill    :{
-
-    };
-
-// Specifically used for BOTH (combined) positions for simplicity
-// closes the current position and transitions the position to 
-// a given magnitude of the opposite sign.
-crossFill   :{
-
-    };
-
-
 avgPrice :{`long$($[y=`LONG;
                     1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
@@ -307,7 +276,8 @@ realizedPnl :{[avgprice;fillprice;fillqty;instrument]
     ];
     };
 
-maintainenceMargin  :{};
+initMargin   :{}; 
+maintMargin  :{};
 
 liquidationPrice    :{};
 bankruptcyPrice     :{};
