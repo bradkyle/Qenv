@@ -151,11 +151,11 @@ deriveCaseParams    :{[p]
     };
 
 .qt.AddCase[test;"";deriveCaseParams[(
-    ();
-    ();
-    ();
-    (); 
-    (); // Instrument
+    (); // Account
+    (); // Both Position
+    (); // Long Position
+    (); // Short Position
+    () // Instrument
     )]];
 
 // BankruptcyPrice
