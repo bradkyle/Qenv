@@ -253,12 +253,11 @@ IncSelfFill    :{
 
 avgPrice        :{[]
         :$[kind=`INVERSE;
-            $[side=`LONG;]
+            $[side=`LONG;[];[]]
           kind=`VANILLA;
             $[];
           kind=`QUANTO;
-            $
-        ];
+            $[]];
         `long$($[y=`LONG;
                     1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
