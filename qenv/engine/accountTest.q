@@ -113,31 +113,171 @@ test:.qt.Unit[
 // -------------------------------------------------------------->
 
 
+test:.qt.Unit[
+    ".account.unrealizedPnl";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
 
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // RealizedPnl
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".account.realizedPnl";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
 
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // InitMargin
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".account.initMargin";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
 
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // MaintMargin
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".account.maintMargin";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
 
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // LiquidationPrice
 // -------------------------------------------------------------->
 
+test:.qt.Unit[
+    ".account.liquidationPrice";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
+
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // BankruptcyPrice
 // -------------------------------------------------------------->
 
 
+test:.qt.Unit[
+    ".account.bankruptcyPrice";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
+
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
 
 // ApplyFill
 // -------------------------------------------------------------->
