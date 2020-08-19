@@ -141,12 +141,16 @@ test:.qt.Unit[
     };();setupB;""];
 
 deriveCaseParams    :{[p]
-    
+    aCols:`balance;
+    iCols:`amt`isignum`execCost`totalEntry;
+
     };
 
 .qt.AddCase[test;"";deriveCaseParams[(
     `BUY;
-    `amt`isignum`execCost`totalEntry!(); 
+    ();
+    ();
+    (); 
     `contractType`riskTiers!(); // Instrument
     )]];
 
