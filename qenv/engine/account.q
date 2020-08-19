@@ -256,23 +256,23 @@ avgPrice        :{`long$($[y=`LONG;
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
 
-unrealizedPnl       :{[avgprice;markprice;amt;instrument]
-    :$[instrument[`settleType]=`INVERSE;
-        (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];markprice])*amt;
-      instrument[`settleType]=`VANILLA;
+unrealizedPnl       :{[avgprice;markprice;amt;faceValue;kind]
+    :$[kind=`INVERSE;
+        (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;markprice])*amt;
+      kind=`VANILLA;
         ();
-      instrument[`settleType]=`QUANTO;
+      kind=`QUANTO;
         ();
       () 
     ];
     };
 
 realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
-    :$[(kind=`INVERSE);
+    :$[kind=`INVERSE;
         (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;fillprice])*fillqty;
-      (kind=`VANILLA);
+      kind=`VANILLA;
         ();
-      (kind=`QUANTO);
+      kind=`QUANTO;
         ();
       ()
     ];
