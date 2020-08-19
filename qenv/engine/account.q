@@ -267,12 +267,12 @@ unrealizedPnl       :{[avgprice;markprice;amt;instrument]
     ];
     };
 
-realizedPnl         :{[avgprice;fillprice;fillqty;instrument]
-    :$[instrument[`settleType]=`INVERSE;
+realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
+    :$[(kind=`INVERSE);
         (pricePerContract[instrument[`faceValue];avgprice] - pricePerContract[instrument[`faceValue];fillprice])*fillqty;
-      instrument[`settleType]=`VANILLA;
+      (kind=`VANILLA);
         ();
-      instrument[`settleType]=`QUANTO;
+      (kind=`QUANTO);
         ();
       ()
     ];
