@@ -89,8 +89,11 @@ test:.qt.Unit[
         setupAccount[p];
         setupInventory[p];
 
-        f:p[`fill];
-        res: .account.avgPrice[];
+        a:p[`args];
+        res: .account.avgPrice[
+            a[`side];
+            a[`inventory];
+            a[`instrument]];
         
         // Assertions
 
