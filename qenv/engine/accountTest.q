@@ -148,7 +148,7 @@ test:.qt.Unit[
 deriveCaseParams    :{[p]
     aCols:`balance`available`positionType`leverage;
     invCols:`side`amt`isignum`execCost`totalEntry;
-    insCols:`contractType`riskTiers`riskBuffer`faceValue`tickSize;
+    insCols:`contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize;
 
     :`account`inventoryB`inventoryL`inventoryS`instrument`eRes!(
         aCols!p[0];
@@ -169,11 +169,35 @@ deriveCaseParams    :{[p]
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
-    )];0;1); // Instrument
+    )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`LONG;0;1;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;1;0.01;0.001); // Instrument
+    985.84
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;55000;-1;55e8;55000); // Both Position
+    (`LONG;0;1;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;1;0.01;0.001); // Instrument
+    985.84
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;55000;1;55e8;55000); // Long Position 
@@ -181,16 +205,28 @@ deriveCaseParams    :{[p]
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
-    )];0;1); // Instrument
+    )];0;1;0.01;0.001); // Instrument
+    985.84
+    )]];
+
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;0;0;0;0); // Long Position 
+    (`SHORT;55000;1;55e8;55000); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
 .qt.AddCase[test;"Inverse (Bitmex) Combined Full Long: 1000 USD balance";deriveCaseParams[(
     (1;1;`COMBINED;100); // Account
-    (`BOTH;0;0;0;0); // Both Position
-    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1); // Instrument
+    (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1;0.5;1); // Instrument
     998.0
     )]];
 
@@ -202,7 +238,7 @@ deriveCaseParams    :{[p]
     (`INVERSE;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
-    )];0;100); // Instrument
+    )];0;100;0.1;1); // Instrument
     987.6
     )]];
 
@@ -214,7 +250,32 @@ deriveCaseParams    :{[p]
     (`INVERSE;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
-    )];0;100); // Instrument
+    )];0;100;0.1;1); // Instrument
+    987.6
+    )]];
+
+.qt.AddCase[test;"Vanilla (Okex) Hedged Full Long";deriveCaseParams[(
+    (1e3;1;`HEDGED;25); // Account
+    (`BOTH;0;0;0;0); // Both Position
+    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000     0.005    0.01    100f;
+        300000    0.01     0.015   66.66f
+    )];0;0.01;0.1;1); // Instrument
+    987.6
+    )]];
+
+// `contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize
+.qt.AddCase[test;"Vanilla (Okex) Combined Full Long";deriveCaseParams[(
+    (1;1;`COMBINED;25); // Account
+    (`BOTH;550;1;55e8;550); // Both Position
+    (`LONG;0;0;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`VANILLA;.instrument.NewRiskTier[(
+        50000     0.005    0.01    100f;
+        300000    0.01     0.015   66.66f
+    )];0;0.01;0.1;1); // Instrument TODO check
     987.6
     )]];
 
@@ -227,7 +288,7 @@ deriveCaseParams    :{[p]
     (`INVERSE;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
-    )];0;1); // Instrument
+    )];0;0.01;0.1;1); // Instrument
     1024.8
     )]];
 

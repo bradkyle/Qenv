@@ -554,3 +554,29 @@ Revert  :{
     delete from `.qt.Invocation;
     delete from `.qt.Mock;
     };
+
+\d .
+
+NxtTestFail :{
+    :last select from .qt.Assertion where state=`FAIL, testId=x;
+    };
+
+NxtCaseFail :{
+    :last select from .qt.Assertion where state=`FAIL, caseId=x;
+    };
+
+NxtFail :{
+    :last select from .qt.Assertion where state=`FAIL;
+    };
+
+NxtExp  :{
+    :exec last expected from .qt.Assertion where state=`FAIL;
+    };
+
+NxtAct  :{
+    :exec last actual from .qt.Assertion where state=`FAIL;
+    };
+
+NxtCA :{
+    :select dscr,state,actual,relation,expected from ej[`caseId;.qt.Case;select caseId,actual,relation,expected from .qt.Assertion where state=`FAIL];
+    };
