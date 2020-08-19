@@ -116,13 +116,15 @@ test:.qt.Unit[
         .qt.A[res;=;p[4];c];   
 
     };();setupB;""];
-    
 
-.qt.AddCase[test;"";(
-    `BUY;
-    `totalEntry`execCost!();
-    `()
-    )];
+// Simulation of vanilla contracts
+// vanilla uses
+
+.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";(1000;)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl short gain";(1000;)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl long loss";(1000;)];
+.qt.AddCase[test;"Vanilla (Binance) realized pnl long gain";(1000;)];
+
 
 // LiquidationPrice
 // -------------------------------------------------------------->
@@ -252,7 +254,7 @@ deriveCaseParams    :{[p]
 
 .qt.AddCase[test;"Inverse (Bitmex) Combined Full Short: 1000 USD balance";deriveCaseParams[(
     (1;1;`COMBINED;100); // Account
-    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`BOTH;55000;-1;55e8;55000); // Both Position
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
     (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1;0.5;1); // Instrument
@@ -329,6 +331,19 @@ deriveCaseParams    :{[p]
     1024.8
     )]];
 
+.qt.AddCase[test;"Inverse (Huobi) Combined Full Short";deriveCaseParams[(
+    (1;1;`COMBINED;10); // Account
+    // side;amt;isignum;execCost;totalEntry
+    (`BOTH;55000;-1;55e8;55000); // Both Position
+    (`LONG;0;0;0;0); // Long Position 
+    (`SHORT;0;0;0;0); // Short Position
+    (`INVERSE;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];0;0.01;0.1;1); // Instrument
+    1024.8
+    )]];
+
 // BankruptcyPrice
 // -------------------------------------------------------------->
 
@@ -344,11 +359,6 @@ test:.qt.Unit[
 
     };();setupB;""];
 
-.qt.AddCase[test;"";(
-    `BUY;
-    `totalEntry`execCost!();
-    `()
-    )];
 
 // ApplyFill
 // -------------------------------------------------------------->

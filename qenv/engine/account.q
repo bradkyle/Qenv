@@ -274,15 +274,8 @@ unrealizedPnl       :{[avgprice;markprice;amt;faceValue;kind]
 // or negative number that represents the portion of the current position that has been
 // closed and thus should be of the same side as the position i.e. negative for short and 
 // positive for long.
-realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
-    :$[kind=`INVERSE;
-        (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;fillprice])*fillqty;
-      kind=`VANILLA;
-        ();
-      kind=`QUANTO;
-        ();
-      ()
-    ];
+realizedPnl         :{[avgprice;fillprice;fillqty;isignum]
+    :($[isignum>0;(fillprice-avgprice)*fillqty;(avgprice-fillprice)*fillqty]*isignum);
     };
 
 // TODO inverse vs quanto vs vanilla
