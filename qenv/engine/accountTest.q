@@ -89,12 +89,7 @@ test:.qt.Unit[
 
     };();setupB;""];
 
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
+.qt.AddCase[test;"";(1;100;100;100)];
 
 
 // UnrealizedPnl
@@ -111,13 +106,6 @@ test:.qt.Unit[
 
     };();setupB;""];
 
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-
 // RealizedPnl
 // -------------------------------------------------------------->
 
@@ -129,40 +117,13 @@ test:.qt.Unit[
         .qt.A[res;=;p[4];c];   
 
     };();setupB;""];
+    
 
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-.qt.AddCase[test;"";(`BUY;`totalEntry`execCost!();())];
-
-// InitMargin
-// -------------------------------------------------------------->
-
-test:.qt.Unit[
-    ".account.initMargin";
-    {[c]
-        p:c[`params]; 
-        
-        res:.account.initMargin[];
-
-    };();setupB;""];
-
-// MaintMargin
-// -------------------------------------------------------------->
-
-test:.qt.Unit[
-    ".account.maintMargin";
-    {[c]
-        p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
-
-        res:.account.maintMargin[];
-
-    };();setupB;""];
+.qt.AddCase[test;"";(
+    `BUY;
+    `totalEntry`execCost!();
+    `()
+    )];
 
 // LiquidationPrice
 // -------------------------------------------------------------->
@@ -179,6 +140,16 @@ test:.qt.Unit[
 
     };();setupB;""];
 
+deriveCaseParams    :{[p]
+    
+    };
+
+.qt.AddCase[test;"";deriveCaseParams[(
+    `BUY;
+    `amt`isignum`execCost`totalEntry!(); 
+    `contractType`riskTiers!(); // Instrument
+    )]];
+
 // BankruptcyPrice
 // -------------------------------------------------------------->
 
@@ -193,6 +164,12 @@ test:.qt.Unit[
         res:.account.bankruptcyPrice[];
 
     };();setupB;""];
+
+.qt.AddCase[test;"";(
+    `BUY;
+    `totalEntry`execCost!();
+    `()
+    )];
 
 // ApplyFill
 // -------------------------------------------------------------->

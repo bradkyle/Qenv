@@ -6,12 +6,9 @@ instrumentCount:0;
 // https://blog.bitmex.com/xbt-vs-xbu-chain/
 /*******************************************************
 / instrument enumerations
-MAINTTYPE           :   `TIERED`FLAT;
-FEETYPE             :   `TIERED`FLAT;
-INITMARGINTYPE      :   `TIERED`FLAT;
 INSTRUMENTTYPE      :   `PERPETUAL`ADAPTIVE;
 LIQUIDATIONSTRAT    :   `COMPLETE`PARTIAL; 
-SETTLETYPE          :   `VANILLA`QUANTO`INVERSE;
+CONTRACTTYPE        :   `VANILLA`QUANTO`INVERSE;
 LIQUIDATEFEETYPE    :   `TOTAL`COMMISSION;
 RISKTIERTYPE        :   `PROCEDURAL`FLAT;
 INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
@@ -28,14 +25,11 @@ Instrument: (
     faceValue               : `long$();
     maxLeverage             : `long$();
     minLeverage             : `long$();
-    maintType               : `.instrument.MAINTTYPE$();
-    feeType                 : `.instrument.FEETYPE$();
     flatMakerFee            : `float$();
     flatTakerFee            : `float$();
     tickSize                : `float$();
     priceMultiplier         : `long$();
     sizeMultiplier          : `long$();
-    riskTierType            : `.instrument.RISKTIERTYPE$();
     flatRiskLimit           : `float$();
     flatRiskStep            : `float$();
     markPrice               : `float$();
@@ -60,20 +54,22 @@ Instrument: (
     minOrderSize            : `float$();
     junkOrderSize           : `float$();
     liquidationStrat        : `.instrument.LIQUIDATIONSTRAT$();
-    settleType              : `.instrument.SETTLETYPE$();
+    contractType            : `.instrument.CONTRACTTYPE$();
     insuranceFee            :  `float$();
     maxOpenOrders           : `int$(); // The default maximum number of orders that an agent can have open.
     numLiquidations         : `long$();
     numAccountLiquidations  : `long$();
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
-    numForcedCancellations  : `long$());
+    numForcedCancellations  : `long$();
+    feeTiers                : ();
+    riskTiers               : ());
 
 mandCols:();
 // Defaults approximate the values seen with bitmex XBTUSD
 defaults:{:(
-    (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,
-    `FLAT,`FLAT,-0.00025,0.00025,0.5,10,1,`PROCEDURAL,200f,100f,0f,0f,
+    (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,-0.00025,
+    0.00025,0.5,10,1,200f,100f,0f,0f,
     (`timespan$(`minute$480)),0,0,0f,1e6f,0f,0,0f,0b,1b,0b,0b,0b,1e6f,0f,1f,1e5f,0f,
     25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0)};
 allCols:cols Instrument;

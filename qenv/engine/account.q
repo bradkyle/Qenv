@@ -290,23 +290,15 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;kind]
     ];
     };
 
-initMargin          :{
-
-    };
-
-maintMargin         :{
-
-    };
-
 // TODO inverse vs quanto vs vanilla
 liquidationPrice    :{[account;inventoryL;inventoryS;inventoryB;instrument]
         bal:account[`balance];
         tmm:0; 
 
         // Derive risk limits
-        lmB:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryB[`amt]); 0b; ()];
-        lmL:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryL[`amt]); 0b; ()];
-        lmS:first ?[instrument[`riskTier];enlist(>;`mxamt;inventoryS[`amt]); 0b; ()];
+        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryB[`amt]); 0b; ()];
+        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryL[`amt]); 0b; ()];
+        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryS[`amt]); 0b; ()];
         
         // Current Position
         amtB:inventoryB[`amt];
