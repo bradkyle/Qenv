@@ -87,7 +87,8 @@ test:.qt.Unit[
         res: .account.avgPrice[p[0];p[1];p[2]];
         .qt.A[res;=;p[3];c];
 
-    };();setupB;""];
+    };();setupB;
+    "The average entry price of a given inventory"];
 
 .qt.AddCase[test;"";(1;100;100;100)];
 
@@ -103,7 +104,8 @@ test:.qt.Unit[
         res: .account.unrealizedPnl[p[0];p[1];p[2];p[3]];
         .qt.A[res;=;p[4];c];
 
-    };();setupB;""];
+    };();setupB;
+    "The unrealized profit of a given inventory"];
 
 // RealizedPnl
 // -------------------------------------------------------------->
@@ -115,7 +117,8 @@ test:.qt.Unit[
         res: .account.realizedPnl[p[0];p[1];p[2];p[3]];
         .qt.A[res;=;p[4];c];   
 
-    };();setupB;""];
+    };();setupB;
+    "The realized profit incurred by placing an order"];
 
 // Simulation of vanilla contracts
 // vanilla uses
@@ -163,7 +166,8 @@ test:.qt.Unit[
 
         .qt.A[res;=;p[`eRes];"liquidationPrice";c];
 
-    };();setupB;""];
+    };();setupB;
+    "The price above the bankruptcy price at which liquidation will occur"];
 
 deriveCaseParams    :{[p]
     aCols:`balance`available`positionType`leverage;
@@ -376,7 +380,8 @@ test:.qt.Unit[
 
         res:.account.bankruptcyPrice[];
 
-    };();setupB;""];
+    };();setupB;
+    "The price at which the account will be bankrupt"];
 
 
 
@@ -406,7 +411,8 @@ test:.qt.Unit[
         checkAccount[p;c];
         checkInventory[p;c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Adds a given fill amount to the account's respective inventory depending on configuration"];
 
 deriveCaseParams :{[p]
 
