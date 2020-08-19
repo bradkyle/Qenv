@@ -290,15 +290,15 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance];
         tmm:0; 
 
-        // Derive risk limits
-        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryB[`amt]); 0b; ()];
-        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryL[`amt]); 0b; ()];
-        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;inventoryS[`amt]); 0b; ()];
-        
         // Current Position
         amtB:inventoryB[`amt];
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
+
+        // Derive risk limits
+        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
+        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];
 
         // Maintenence margin rate
         mmB:lmB[`mmr];
@@ -309,11 +309,7 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         cumB: amtB*(mmB+instrument[`riskBuffer]);
         cumL: amtL*(mmL+instrument[`riskBuffer]);
         cumS: amtS*(mmS+instrument[`riskBuffer]);
-
-        show cumL;
-        show cumS;
-        show amtS;
-
+ 
         // Derive Average price
         sB:inventoryB[`isignum];
         epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];

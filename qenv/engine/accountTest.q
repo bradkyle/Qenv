@@ -170,7 +170,7 @@ deriveCaseParams    :{[p]
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1); // Instrument
-    821.47
+    985.84
     )]];
 
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
@@ -182,43 +182,40 @@ deriveCaseParams    :{[p]
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1); // Instrument
-    821.47
+    985.84
     )]];
 
-.qt.AddCase[test;"Inverse (Bitmex) Combined Full Long";deriveCaseParams[(
-    (1e3;1;`COMBINED;25); // Account
+.qt.AddCase[test;"Inverse (Bitmex) Combined Full Long: 1000 USD balance";deriveCaseParams[(
+    (1;1;`COMBINED;100); // Account
     (`BOTH;0;0;0;0); // Both Position
-    (`LONG;0;0;0;0); // Long Position 
+    (`LONG;55000;1;55e8;55000); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
-    )];0;1); // Instrument
-    821.47
+    (`INVERSE;.instrument.NewRiskProcedural[200;100;0.0035;0.01;100;40];0;1); // Instrument
+    998.0
     )]];
 
 .qt.AddCase[test;"Inverse (Okex) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
-    (`LONG;550;1;55e8;550); // Long Position 
+    (`LONG;55000;1;55e8;55000); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
+    (`INVERSE;.instrument.NewRiskTier[(
+        50000     0.005    0.01    100f;
+        300000    0.01     0.015   66.66f
     )];0;100); // Instrument
     987.6
     )]];
 
 .qt.AddCase[test;"Inverse (Okex) Combined Full Long";deriveCaseParams[(
-    (1;1;`HEDGED;25); // Account
+    (1;1;`COMBINED;25); // Account
     (`BOTH;550;1;55e8;550); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`INVERSE;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
     )];0;100); // Instrument
-    821.47
+    987.6
     )]];
 
 .qt.AddCase[test;"Inverse (Huobi) Combined Full Long";deriveCaseParams[(
@@ -227,7 +224,7 @@ deriveCaseParams    :{[p]
     (`BOTH;55000;1;55e8;55000); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`INVERSE;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1); // Instrument

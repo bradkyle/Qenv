@@ -236,6 +236,10 @@ SkpBef    :{[case]
     .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<x[`caseId];show y}[case];
     };
 
+SkpBes     :{[case]
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<>x[`caseId];show y}[case];
+    };
+
 // Mock
 // ======================================================================>
 // Mocks serve to replace a given function or variable (entity) with
