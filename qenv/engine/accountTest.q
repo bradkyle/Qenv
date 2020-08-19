@@ -586,26 +586,40 @@ test:.qt.Unit[
         setupInventory[p];
 
         f:p[`fill];
-        .account.ApplyFill[
-            f[`accountId];
-            f[`instrumentId];
+        .account.UpdateOrderMargin[
             f[`side];
-            f[`time];
-            f[`reduceOnly];
-            f[`isMaker];
             f[`price];
-            f[`qty]];
+            f[`size];
+            f[`reduceOnly];
+            f[`accountId]];
         
         // Assertions
         checkAccount[p;c];
         checkInventory[p;c];
 
     };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Updates a given accounts order margin, "];
+    "Updates a given accounts order margin when it has enough margin etc. else returns error/failure"];
 
 deriveCaseParams :{[p]
 
     };
+
+.qt.AddCase[test;"hedged:long_to_longer ";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters 
+    () // Expected response
+    )]];
+
 
 // ApplyFill
 // ==================================================================================>
