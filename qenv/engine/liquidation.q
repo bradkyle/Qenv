@@ -8,9 +8,13 @@ deriveMaintainenceMargin    :{[currentQty;takerFee;markPrice;faceValue]
         pricePerContract[faceValue;markPrice];
     };
 
+// used to derive the average entry price for a given inventory
 avgPrice        :{[isignum;execCost;totalEntry]
     :0^$[isignum>0;1e8%floor[execCost%totalEntry];1e8%ceiling[execCost%totalEntry]];
     };
+
+// Used for inverse contracts
+pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
 
 // TODO inverse vs quanto vs vanilla
 
@@ -80,5 +84,4 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 
         :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
             %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
-
     };
