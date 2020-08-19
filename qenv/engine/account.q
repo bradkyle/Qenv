@@ -209,23 +209,6 @@ NewInventory : {[inventory;time]
     `.account.Inventory upsert inventory; // TODO check if successful
     };
 
-// ORDER Margin
-// -------------------------------------------------------------->
-// Does premium change with changing mark price?
-
-// Validates that the account can open the order.
-// Updates the open order state of an account
-// Updates an accounts order margin, open order amount, order premium 
-// netLongPosition/netShortPosition
-// @delta      : the amount by which the order quantity is to be changed.
-// @side       : the side that is to be updated by the order.
-// @price      : the price of the given order.
-// @account    : dict representation of the account to be updated
-// @instrument : dict representation of the orders instrument 
-UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
-
-    };
-
 // Fill
 // -------------------------------------------------------------->
 
@@ -345,6 +328,24 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 
         :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
             %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
+    };
+
+
+// ORDER Margin
+// -------------------------------------------------------------->
+// Does premium change with changing mark price?
+
+// Validates that the account can open the order.
+// Updates the open order state of an account
+// Updates an accounts order margin, open order amount, order premium 
+// netLongPosition/netShortPosition
+// @delta      : the amount by which the order quantity is to be changed.
+// @side       : the side that is to be updated by the order.
+// @price      : the price of the given order.
+// @account    : dict representation of the account to be updated
+// @instrument : dict representation of the orders instrument 
+UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
+
     };
 
 

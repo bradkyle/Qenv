@@ -107,6 +107,9 @@ test:.qt.Unit[
     };();setupB;
     "The unrealized profit of a given inventory"];
 
+.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+
+
 // RealizedPnl
 // ==================================================================================>
 
@@ -571,6 +574,38 @@ test:.qt.Unit[
     1024.8
     )]];
 
+// UpdateOrderMargin
+// ==================================================================================>
+
+test:.qt.Unit[
+    ".account.UpdateOrderMargin";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
+
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);
+    "Updates a given accounts order margin, "];
+
+deriveCaseParams :{[p]
+
+    };
 
 // ApplyFill
 // ==================================================================================>
@@ -664,6 +699,7 @@ deriveCaseParams :{[p]
     );
     () // Expected events
     )]];
+
 
 
 // UpdateMarkPrice
