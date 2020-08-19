@@ -75,6 +75,70 @@ defaultBeforeEach: {
      delete from `.event.Events;
     };
 
+
+
+
+// AvgPrice
+// -------------------------------------------------------------->
+
+test:.qt.Unit[
+    ".account.avgPrice";
+    {[c]
+        p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
+
+        f:p[`fill];
+        .account.ApplyFill[
+            f[`accountId];
+            f[`instrumentId];
+            f[`side];
+            f[`time];
+            f[`reduceOnly];
+            f[`isMaker];
+            f[`price];
+            f[`qty]];
+        
+        // Assertions
+        checkAccount[p;c];
+        checkInventory[p;c];
+
+    };();({};{};defaultBeforeEach;defaultAfterEach);""];
+
+
+
+
+// UnrealizedPnl
+// -------------------------------------------------------------->
+
+
+
+
+// RealizedPnl
+// -------------------------------------------------------------->
+
+
+
+// InitMargin
+// -------------------------------------------------------------->
+
+
+
+// MaintMargin
+// -------------------------------------------------------------->
+
+
+
+// LiquidationPrice
+// -------------------------------------------------------------->
+
+
+// BankruptcyPrice
+// -------------------------------------------------------------->
+
+
+
 // ApplyFill
 // -------------------------------------------------------------->
 

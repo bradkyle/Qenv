@@ -249,7 +249,7 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];}
 
-avgPrice            :{`long$($[y=`LONG;
+avgPrice        :{`long$($[y=`LONG;
                     1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
                     1e8%ceiling[x[`execCost]%x[`totalEntry]]
                     ])};
