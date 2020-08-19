@@ -307,6 +307,13 @@ realizedPnl :{[avgprice;fillprice;fillqty;instrument]
     ];
     };
 
+maintainenceMargin  :{};
+
+liquidationPrice    :{};
+bankruptcyPrice     :{};
+
+
+
 // TODO
 // maint margin
 // liquidation price
