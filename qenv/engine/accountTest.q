@@ -601,7 +601,7 @@ test:.qt.Unit[
     "Updates a given accounts order margin when it has enough margin etc. else returns error/failure"];
 
 deriveCaseParams :{[p]
-
+    
     };
 
 .qt.AddCase[test;"hedged:long_to_longer ";deriveCaseParams[(
@@ -616,8 +616,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (`BUY;z;0b;1b;1000;1000); // Parameters 
-    () // Expected response
+    (`BUY;1000;0b;1b;1000;1000) // Parameters 
     )]];
 
 
@@ -769,5 +768,83 @@ deriveCaseParams    :{[params]
     };
 
 
+.qt.AddCase[test;"Mark price increases, no liquidations should occur, accounts should be updated";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"Mark price increases, order cancellations, no liquidations";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+.qt.AddCase[test;"Mark price increases, liquidations should occur, accounts should be updated";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
 
 .qt.RunTests[];
