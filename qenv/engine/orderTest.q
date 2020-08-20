@@ -143,7 +143,7 @@ test:.qt.Unit[
         checkDepth[p;c];
         checkOrders[p;c];        
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Given a side update which consists of a table of price, time,",
     "size update the orderbook and the individual order offsets"];
 
@@ -507,7 +507,7 @@ test:.qt.Unit[
         checkOrders[p;c];
         checkDepth[p;c];
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "process trades from the historical data or agent orders"];
 
 
@@ -914,7 +914,7 @@ test:.qt.Unit[
         checkDepth[p;c];
         checkEvents[p;c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 // TODO test throws errors
@@ -1272,7 +1272,7 @@ test:.qt.Unit[
         checkDepth[p;c];
         checkEvents[p;c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params] 
@@ -1357,7 +1357,7 @@ test:.qt.Unit[
         checkDepth[p;c];
         checkEvents[p;c];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 deriveCaseParams    :{[params] 
@@ -1407,7 +1407,7 @@ test:.qt.Unit[
             p1[`calledWith];c];
 
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for updating the mark price with respect to the order namespace"];
 
 deriveCaseParams    :{[params] 
@@ -1439,7 +1439,7 @@ deriveCaseParams    :{[params]
         
 /         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     };();();({};{};defaultBeforeEach;defaultAfterEach);
 /     "Private function for advancing stop orders once triggered"];
  
 / test:.qt.Unit[
@@ -1449,7 +1449,7 @@ deriveCaseParams    :{[params]
         
 /         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
-/     };();({};{};defaultBeforeEach;defaultAfterEach);
+/     };();();({};{};defaultBeforeEach;defaultAfterEach);
 /     "Global function for processing mark price updates specifically for orders"];
 
 / .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";

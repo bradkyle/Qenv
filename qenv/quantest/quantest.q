@@ -63,7 +63,7 @@ fnhooknames: `beforeTest`afterTest`beforeEach`afterEach
 allhooknames: `beforeNamespaces`afterNamespaces`beforeNamespace`afterNamespace,fnhooknames;
 
 // todo Unit, Integration, Benchmark, Profile, T
-Unit        :{[name;testFn;cases;hooks;dscr]
+Unit        :{[name;testFn;formFn;cases;hooks;dscr]
     $[not null[`$name];name:`$name;name:`$""];
     $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
     / validHook:{:$[100h~type vFn:value x; $[1~count (value vFn) 1; 1b; 0b]; 0b];};

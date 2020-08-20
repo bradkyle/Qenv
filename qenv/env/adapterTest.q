@@ -3,7 +3,7 @@
 system "d .adapterTest";
 \cd ../quantest/
 \l quantest.q 
-\cd ../engine/
+\cd ../env/
 
 
 defaultAfterEach: {
@@ -20,8 +20,9 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
+
 
 
 test:.qt.Unit[
@@ -29,7 +30,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -38,7 +39,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -47,7 +48,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -56,7 +57,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -65,7 +66,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -74,7 +75,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -84,7 +85,7 @@ test:.qt.Unit[
         p:c[`params];
         time:.z.z;
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -92,7 +93,7 @@ test:.qt.Unit[
     ".adapter.createDepositEvent";
     {[c]
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -100,7 +101,7 @@ test:.qt.Unit[
     ".adapter.createOrderEventsByTargetDist";
     {[c]
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
@@ -108,28 +109,28 @@ test:.qt.Unit[
     ".adapter.createNaiveStopEvents";
     {[c]
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 test:.qt.Unit[
     ".adapter.ADAPTERTYPE$`DISCRETE adapter";
     {[c]
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 test:.qt.Unit[
     ".adapter.ADAPTERTYPE$`MARKETMAKER adapter";
     {[c]
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 test:.qt.Unit[
     ".adapter.Adapt";
     {[c]
         
-    };();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
 
 
