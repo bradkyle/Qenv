@@ -57,12 +57,8 @@ test:.qt.Unit[
         e:({`time`kind`cmd`datum!x} each p[0]);
         :`events`eState!(e;p[1]);};
     (
-        ("Should correctly insert account events from different accounts, different times";(
-            ();
-            ()));
-        ("Should correctly insert inventory events";(
-            ( );
-            ( )))
+        ("Should correctly insert account events from different accounts, different times";( ));
+        ("Should correctly insert inventory events";( ))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
