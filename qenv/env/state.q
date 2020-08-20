@@ -106,7 +106,7 @@ OrderEventHistory: (
     isClose         :   `boolean$();
     trigger         :   `symbol$();
     execInst        :   `symbol$());
-accountCols:cols .state.OrderEventHistory;
+orderCols:cols .state.OrderEventHistory;
 
 // Get the current qtys at each order level
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
@@ -203,7 +203,7 @@ liquidationCols:`size`price`side`time;
 // TODO batching + 
 
 // Recieves a table of events from the engine 
-// and proceeds to insert them into the local historic buffer
+// and proceeds to insert them into the local historic buffer // TODO validation on 
 InsertResultantEvents   :{[events]
     {[event]
         k:event[`kind];
@@ -213,7 +213,9 @@ InsertResultantEvents   :{[events]
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
-          [`.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))];
+          [
+              `.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))
+          ];
           k=`INVENTORY;
           [`.state.InventoryEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
           k=`ORDER;
