@@ -39,9 +39,7 @@ AccountEventHistory: (
 // subsequently provides agent specific details
 // therin
 InventoryEventHistory: (
-    [inventoryId : `long$();time : `datetime$()]
-    accountId           :  `long$();
-    side                :  `symbol$();
+    [accountId:  `long$();side: `symbol$();time : `datetime$()]
     currentQty          :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have

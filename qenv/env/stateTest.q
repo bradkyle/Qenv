@@ -1,6 +1,10 @@
+\l state.q
+system "d .stateTest";
+\cd ../quantest/
+\l quantest.q 
+\cd ../env/
 
-
-
+z:.z.z;
 
 checkState  :{[]
 
@@ -16,33 +20,26 @@ test:.qt.Unit[
         // Assertions
         checkState[];
     };
-    {[p]:`events`eState!(p[0];p[1])};
+    {[p]
+        e:({`time`kind`cmd`datum!x} each p[0]);
+
+        
+
+
+        :`events`eState!(e;p[1]);};
     (
         ("Should correctly insert account events";(
-            ();
+            (
+                (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
+                (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+            );
             ()));
         ("Should correctly insert inventory events";(
-            (til 4);
-            ());
-        ("Should correctly insert order events";(
-            (til 4);
-            ()); 
-        ("Should correctly insert depth events";(
-            (til 4);
-            ());
-        ("Should correctly insert trade events";(
-            (til 4);
-            ());
-        ("Should correctly insert markprice events";(
-            (til 4);
-            ());
-        ("Should correctly insert funding events";(
-            (til 4);
-            ());
-        ("Should correctly insert liquidation events";(
-            (til 4);
-            ());
-        )
+            (
+                (z;`INVENTORY;`UPDATE;`accountId`side`realizedPnl`avgPrice`unrealizedPnl!(0;0;0;0;0));
+                (z;`INVENTORY;`UPDATE;`accountId`side`realizedPnl`avgPrice`unrealizedPnl!(1;0;0;0;0))
+            );
+            ()))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
