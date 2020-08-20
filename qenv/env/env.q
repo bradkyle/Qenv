@@ -121,9 +121,9 @@ Advance :{[step;actions]
             // TODO offset
             // TODO 
             aevents:.adapter.Adapt[.env.Adapter][time]'[actions]; 
-            newEvents: .engine.ProcessEvents[(nevents,aevents)];
+            xevents: .engine.ProcessEvents[(nevents,aevents)];
 
-            .env.InsertResultantEvents[newEvents];
+            .env.InsertResultantEvents[xevents];
         ];
         // If the current step is within the bounds
         // of the first and last events.
