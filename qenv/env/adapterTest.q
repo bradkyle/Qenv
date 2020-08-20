@@ -26,14 +26,14 @@ test:.qt.Unit[
 
     };
     {[p]
-    
+
     
     };
     (
-        ("";());
-        ("";());
-        ("";());
-        ("";())
+        ("";(();()));
+        ("";(();()));
+        ("";(();()));
+        ("";(();()))
     );
     ({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
