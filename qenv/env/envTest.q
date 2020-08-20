@@ -53,12 +53,11 @@ test:.qt.Unit[
         .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
 
         // Assertions
-        {.qt.A[get[y];~;z;string[y];x]}[c] each p[`eState]; 
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
         :`args`eAdapt`eProcessEvents``eInsertResultantEvents`eloadEvents!(
-            e;
+            `step`actions!p[0];
             p[1];
             p[2];
             p[3];
@@ -66,7 +65,8 @@ test:.qt.Unit[
         )};
     (
         ("First";(
-            1;2;3;4;5
+            (1;((1;0); (1;1); (1;2)));
+            ();3;4;5
         ));
         ("Second";(
             1;2;3;4;5

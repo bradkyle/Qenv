@@ -103,7 +103,7 @@ loadEvents  :{
     // .Q.ind[]
     :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
     };
-    
+
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
 // batching/episodes and episode randomization/replay buffer.
@@ -111,6 +111,7 @@ loadEvents  :{
 // moving this to a seperate process will increase the speed even further. 
 
 // SIMPLE DERIVE STEP RATE
+// Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
     $[
         // If the current step is not the first or the last
