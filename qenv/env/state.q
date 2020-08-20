@@ -10,7 +10,7 @@
 maxLvls:20;
 DefaultInstrumentId:0;
 
-filt: { enlist[x!y[x]]}
+filt: {raze[x!y[x]]}
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -211,13 +211,15 @@ InsertResultantEvents   :{[events]
         k:event[`kind];
         t:event[`time];
         d:enlist[event[`datum]];
+        d[`time]:t;
         $[k=`DEPTH;
           [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols]))];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
           [
-              `.state.AccountEventHistory upsert (.state.accountCols!([.state.accountCols]))
+              .state.BAM:filt[.state.accountCols;d];
+              `.state.AccountEventHistory upsert enlist[filt[.state.accountCols;d]];
           ];
           k=`INVENTORY;
           [`.state.InventoryEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
