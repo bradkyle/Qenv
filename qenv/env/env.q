@@ -88,6 +88,10 @@ Reset       :{[aIds] // TODO make into accountConfigs
 / Advancing System
 // =====================================================================================>
 
+loadEvents  :{
+    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
+    };
+
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
 // batching/episodes and episode randomization/replay buffer.
@@ -126,7 +130,7 @@ Advance :{[step;actions]
         // of the first and last events.
         [
             //
-            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
+            .env.EventBatch:.env.loadEvents[];
             .env.StepIndex:key .env.EventBatch;
             / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
         ]

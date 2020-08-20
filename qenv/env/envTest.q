@@ -37,6 +37,7 @@ test:.qt.Unit[
         mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
         mck1: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck1: .qt.M[`.state.InsertResultantEvents;{[e]};c];
+        mck1: .qt.M[`.env.loadEvents;{[e]};c];
 
         .env.InsertResultantEvents[p[`events]];
         
