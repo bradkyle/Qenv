@@ -90,10 +90,6 @@ Reset       :{[aIds] // TODO make into accountConfigs
 
 firstDay:{`datetime$((select first date from events)[`date])};
 
-loadEvents  :{
-    // .Q.ind[]
-    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
-    };
 
 / date       time                    intime                  kind  cmd datum
 / ---------------------------------------------------------------------------------------
@@ -103,6 +99,11 @@ loadEvents  :{
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
+loadEvents  :{
+    // .Q.ind[]
+    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
+    };
+    
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
 // batching/episodes and episode randomization/replay buffer.
