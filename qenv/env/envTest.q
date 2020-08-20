@@ -1,8 +1,11 @@
 \l state.q
-system "d .stateTest";
+system "d .envTest";
+\cd ../engine/
+\l engine.q 
 \cd ../quantest/
 \l quantest.q 
 \cd ../env/
+\l env.q
 
 z:.z.z;
 sc:{x+(`second$y)};
@@ -57,6 +60,7 @@ test:.qt.Unit[
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
+        show p[0];
         :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
             `step`actions!p[0];
             p[1];
@@ -80,12 +84,23 @@ test:.qt.Unit[
             enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
             enlist(1b;1;());
             enlist(1b;1;());
-            enlist(0b;0;());
+            enlist(0b;0;())
         ));
-        ("First step multiple action account pair";(
-            (1;((1;0); (1;1); (1;2)));
-            ();3;4;5
-        ));
+        ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
+            (1;((1;0)));
+            (sz 5*til[5]);
+            (
+                (sz 1;());
+                (sz 2;());
+                (sz 3;());
+                (sz 4;());
+                (sz 5;())
+            );
+            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
+            enlist(1b;1;());
+            enlist(1b;1;());
+            enlist(0b;0;())
+        ))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",

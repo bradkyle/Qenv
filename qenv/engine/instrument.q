@@ -3,6 +3,30 @@
 
 instrumentCount:0;
 
+
+// Inventory CRUD Logic
+// -------------------------------------------------------------->
+
+NewRiskTier             :{[tier]
+    :flip[`mxamt`mmr`imr`maxlev!flip[tier]]
+    };
+
+NewRiskProcedural       :{[baseRL;step;maintM;initM;maxLev;numTier]
+    :flip[`mxamt`mmr`imr`maxlev!(baseRL+(step*til numTier);
+    maintM+(maintM*til numTier);
+    initM+(maintM*til numTier);
+    numTier#maxLev)];
+    };
+
+NewFeeTier              :{[tier]
+    :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
+    };
+
+
+NewFlatFee              :{[]
+    // TODO
+    };
+
 // https://blog.bitmex.com/xbt-vs-xbu-chain/
 /*******************************************************
 / instrument enumerations
@@ -118,25 +142,6 @@ NewInstrument            :{[instrument; time]
     `.instrument.Instrument upsert instrument;
     };
 
-NewRiskTier             :{[tier]
-    :flip[`mxamt`mmr`imr`maxlev!flip[tier]]
-    };
-
-NewRiskProcedural       :{[baseRL;step;maintM;initM;maxLev;numTier]
-    :flip[`mxamt`mmr`imr`maxlev!(baseRL+(step*til numTier);
-    maintM+(maintM*til numTier);
-    initM+(maintM*til numTier);
-    numTier#maxLev)];
-    };
-
-NewFeeTier              :{[tier]
-    :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
-    };
-
-
-NewFlatFee              :{[]
-    // TODO
-    };
 
 UpdateMarkPrice : {[markPrice;instrumentId;time]
     update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;

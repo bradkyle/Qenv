@@ -31,13 +31,13 @@ Env  :(
         numAgentSteps       : `long$()
     );
 
-Agent :(
-    [agentId        :`long$()]
-    accountId       :`long$();
-    rewardKind          : `.reward.REWARDKIND$();
-    lookBackSize        : `long$();
-    encouragement       : `float$();
-    );
+/ Agent :(
+/     [agentId        :`long$()]
+/     accountId       :`long$();
+/     rewardKind          : `.reward.REWARDKIND$();
+/     lookBackSize        : `long$();
+/     encouragement       : `float$()
+/     );
 
 
 
@@ -103,7 +103,7 @@ firstDay:{`datetime$((select first date from events)[`date])};
 
 loadEvents  :{
     // .Q.ind[]
-    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
+    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
     };
 
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
