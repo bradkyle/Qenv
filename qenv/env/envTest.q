@@ -60,7 +60,19 @@ test:.qt.Unit[
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
-        show p[0];
+        / show p[0];
+
+
+        makeEvents      :{
+
+            };
+
+        
+
+
+
+
+
         :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
             `step`actions!p[0];
             p[1];
@@ -75,16 +87,16 @@ test:.qt.Unit[
             (1;((1;0)));
             (sz 5*til[5]);
             (
-                (sz 1;());
-                (sz 2;());
-                (sz 3;());
-                (sz 4;());
-                (sz 5;())
+                (sz 1;(0 0 0 1 1 1 2 2 2));
+                (sz 2;(0 0 0 1 1 1 2 2 2));
+                (sz 3;(0 0 0 1 1 1 2 2 2));
+                (sz 4;(0 0 0 1 1 1 2 2 2));
+                (sz 5;(0 0 0 1 1 1 2 2 2))
             );
-            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
-            enlist(1b;1;());
-            enlist(1b;1;());
-            enlist(0b;0;())
+            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]}); // Adapt
+            enlist(1b;1;()); // ProcessEvents
+            enlist(1b;1;()); // InsertResultantEvents
+            enlist(0b;0;()) // loadEvents
         ));
         ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
             (1;((1;0)));

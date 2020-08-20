@@ -42,7 +42,8 @@ Env  :(
 
 
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-BatchSize:`minute$5;
+BatchInterval:`minute$5;
+BatchSize: 50;
 StepIndex:();
 EventBatch:();
 FeatureBatch:();
@@ -115,10 +116,11 @@ loadEvents  :{
 // SIMPLE DERIVE STEP RATE
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
+    show step;
     $[
         // If the current step is not the first or the last
         // step in the in the event batch
-        ((step<>0) and (step<(count[.env.StepIndex]-1)));
+        ((step<>0) and (step<(count[.env.BatchSize]-1)));
         [
             idx:.env.StepIndex@step;
             nevents:flip[.env.EventBatch@idx];
