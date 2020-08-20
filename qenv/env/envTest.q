@@ -1,4 +1,10 @@
+\l state.q
+system "d .stateTest";
+\cd ../quantest/
+\l quantest.q 
+\cd ../env/
 
+z:.z.z;
  
 test:.qt.Unit[
     ".env.Advance";
