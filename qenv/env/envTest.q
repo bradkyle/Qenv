@@ -64,11 +64,12 @@ test:.qt.Unit[
             p[4]
         )};
     (
-        ("First";(
+        ("First step single action account pair";(
             (1;((1;0)));
+            ()
             ();3;4;5
         ));
-        ("First";(
+        ("First step multiple action account pair";(
             (1;((1;0); (1;1); (1;2)));
             ();3;4;5
         ));
