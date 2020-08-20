@@ -6,7 +6,7 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 maxLvls:20;
-
+DefaultInstrumentId:0;
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -116,6 +116,9 @@ getOrders   :{
         where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;    
     };
 
+genNextClOrdId  :{
+
+    };
 
 // DEPTH
 // ----------------------------------------------------------------------------------------------->

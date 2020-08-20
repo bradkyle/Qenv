@@ -31,10 +31,9 @@ test:.qt.Unit[
             p[1];
             p[2]
         )
-    
     };
     (
-        ("";(();();());
+        ("Given correct params should return correct";(();();());
         ("";(();();()));
         ("";(();();()));
         ("";(();();()))

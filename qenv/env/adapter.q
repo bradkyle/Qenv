@@ -31,13 +31,27 @@ MakeActionEvent :{[kind;time;datum]
     };
 
 
+MakeActionEventC :{[kind;cmd;time;datum]
+    :`time`intime`kind`cmd`datum!(time;time;kind;cmd;datum);
+    };
+
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
-createOrderAtLevel     :{[level;side;size;accountId]
+createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
     
     price: .state.getPriceAtLevel[level;side];
-    / :MakeActionEvent[`];
+    o:`price`clId`instrumentId`accountId`side`otype`size`reduceOnly!(
+        price;
+        .state.genNextClOrdId[];
+        .state.DefaultInstrumentId;
+        accountId;
+        side;
+        `LIMIT;
+        size;
+        reduceOnly
+    );
+    :MakeActionEvent[`ORDER;time;o];
     };
 
 // Generates a set of events that represent
