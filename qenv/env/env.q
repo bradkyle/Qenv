@@ -119,8 +119,6 @@ Advance :{[step;actions]
             / feature:FeatureBatch@thresh;
             // should add a common offset to actions before inserting them into
             // the events.
-            // TODO offset
-            // TODO 
             aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
             xevents: .engine.ProcessEvents[(nevents,aevents)];
 
