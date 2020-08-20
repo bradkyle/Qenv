@@ -230,7 +230,77 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "Creates the set of market order events that conforms to provided dist"];
+    "Creates the set of stop market orders that serve to stop loss at a given loss fraction"];
+
+
+// TODO testing Adapter FN;
+
+
+
+test:.qt.Unit[
+    ".adapter.Adapt[`DISCRETE]";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
+        
+        a:p[`args];
+        / res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        / .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "Creates the set of stop market orders that serve to stop loss at a given loss fraction"];
+
+
+
+
+test:.qt.Unit[
+    ".adapter.Adapt[`MARKETMAKER]";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
+        
+        a:p[`args];
+        / res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        / .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "Creates the set of stop market orders that serve to stop loss at a given loss fraction"];
+
+
 
 
 .qt.RunTests[];

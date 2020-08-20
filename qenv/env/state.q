@@ -47,7 +47,7 @@ InventoryEventHistory: (
 
 
 // Return all open positions for an account
-getOpenPositions              :{[accountId]
+getOpenPositions              :{[aId]
     :(select from .state.InventoryEventHistory where accountId=accountId);
     };
 

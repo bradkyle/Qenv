@@ -1,4 +1,6 @@
+\d .observation
 
+FeatureBuffer   :();
 
 // Agent specific observation functions
 // --------------------------------------------------->
@@ -11,7 +13,7 @@ getFeatureVectors    :{[accountIds]
         // TODO add long term prediction features.
 
         // TODO add account id to feature vector
-        `.schema.FeatureBuffer upsert raze(
+        obs: raze(
             value 1_last depth;
             last mark.mark_price;
             last funding.funding_rate;
@@ -26,6 +28,9 @@ getFeatureVectors    :{[accountIds]
             value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`long;
             value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`short
         );
+
+        `.observation.FeatureBuffer upsert obs;
+
         // TODO count by account id
         / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
         // TODO fill forward + normalize
