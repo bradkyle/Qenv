@@ -53,6 +53,45 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
     :MakeActionEvent[`ORDER;time;o];
     };
 
+
+// TODO change to fraction
+/ first `price xgroup select orderId,leaves by price, side, time from .state.OrderEventHistory
+/ ej[`price;bdlt;`price xgroup select orderId,leaves by price, asc time from .state.OrderEventHistory where side=`BUY]
+/ ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
+
+// TODO add logic for reducing order count when neccessary
+// TODO testing
+makerSide   :{[aId;lvls;sizes;s;time]
+    p:.adapter.getPriceAtLevel[lvls;s];
+    c:select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
+    dlt: neg[c] + (1!([]price:p;dlt:sizes));
+    j:ej[`price;dlt;`price xgroup `time xdesc (select orderId,leaves by price, time from .state.OrderEventHistory where side=s)];
+    
+    amd:flip `orderId`size!flip raze[{flip (raze[x[`orderId]]; 1_Clip[(+\) raze[x[`dlt]],raze[x[`leaves]]])}each j where j[`dlt]<0];
+    nord: select price,dlt,side from j where dlt>0;    
+    :(amd;nord);
+    };
+
+// TODO test for 1, 0 count lvl etc
+makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
+    
+    a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
+    b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
+
+    // Group amend [ask,bid;max count per req]
+    // assumes amend to 0 cancels order
+    // TODO add participate don't initiate
+    amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);10];
+    nord:{x[`i]:{floor[x%y]}[til count[x];y];x[`otype]:`LIMIT;:`i xgroup x}[(a[1],b[1]);10];
+
+    // Create batched requests
+    reqs:();
+    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;flip[y]]}[time] each amd;
+    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;flip[y]]}[time] each nord;
+    :reqs;
+    };
+
+
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
@@ -170,43 +209,6 @@ adapters[`DISCRETE]     :{[action;accountId]
 / adapters[`LVLDELTAS]    :{[action;accountId]
     // TODO
     / };
-
-// TODO change to fraction
-/ first `price xgroup select orderId,leaves by price, side, time from .state.OrderEventHistory
-/ ej[`price;bdlt;`price xgroup select orderId,leaves by price, asc time from .state.OrderEventHistory where side=`BUY]
-/ ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
-
-// TODO add logic for reducing order count when neccessary
-// TODO testing
-makerSide   :{[aId;lvls;sizes;s;time]
-    p:.adapter.getPriceAtLevel[lvls;s];
-    c:select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
-    dlt: neg[c] + (1!([]price:p;dlt:sizes));
-    j:ej[`price;dlt;`price xgroup `time xdesc (select orderId,leaves by price, time from .state.OrderEventHistory where side=s)];
-    
-    amd:flip `orderId`size!flip raze[{flip (raze[x[`orderId]]; 1_Clip[(+\) raze[x[`dlt]],raze[x[`leaves]]])}each j where j[`dlt]<0];
-    nord: select price,dlt,side from j where dlt>0;    
-    :(amd;nord);
-    };
-
-// TODO test for 1, 0 count lvl etc
-makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
-    
-    a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
-    b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
-
-    // Group amend [ask,bid;max count per req]
-    // assumes amend to 0 cancels order
-    // TODO add participate don't initiate
-    amd:{x[`i]:{floor[x%y]}[til count[x];y];:`i xgroup x}[(a[0],b[0]);10];
-    nord:{x[`i]:{floor[x%y]}[til count[x];y];x[`otype]:`LIMIT;:`i xgroup x}[(a[1],b[1]);10];
-
-    // Create batched requests
-    reqs:();
-    reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;flip[y]]}[time] each amd;
-    reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;flip[y]]}[time] each nord;
-    :reqs;
-    };
 
 
 // TODO remove redundancy
