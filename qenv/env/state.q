@@ -6,16 +6,16 @@
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
 maxLvls:20;
-/`.state.CurrentDepth upsert ([]price:(1000+til 20),(1000-til 20);side:(20#`SELL),(20#`BUY);size:40#1000)
-CurrentDepth:(
-    [price:`long$()]
-    side:`symbol$();
-    size:`long$());
+
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
 // agent will percieve in a real exchange.
+
+
+// ACCOUNT
+// ----------------------------------------------------------------------------------------------->
 
 // The following tables maintain a local state buffer 
 // representative of what the agent will see when
@@ -27,6 +27,10 @@ AccountEventHistory: (
     frozen              : `float$();
     maintMargin         : `float$()
     );
+
+
+// INVENTORY
+// ----------------------------------------------------------------------------------------------->
 
 // Maintains a historic and current record of the 
 // positions (Inventory) each agent has held and
@@ -40,6 +44,16 @@ InventoryEventHistory: (
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
+
+
+// Return all open positions for an account
+getOpenPositions              :{[accountId]
+    :(select from .state.InventoryEventHistory where accountId=accountId);
+    };
+
+
+// ORDERS
+// ----------------------------------------------------------------------------------------------->
 
 // Maintains a historic and current record of orders
 // that the engine has produced.
@@ -89,6 +103,29 @@ OrderEventHistory: (
     trigger         :   `symbol$();
     execInst        :   `symbol$());
 
+
+// Get the current qtys at each order level
+getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
+    :exec sum leaves by price from .state.OrderEventHisory 
+        where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
+    };
+
+
+getOrders   :{
+    select qty:sum leaves by price from .state.OrderEventHistory 
+        where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;    
+    };
+
+
+// DEPTH
+// ----------------------------------------------------------------------------------------------->
+
+/`.state.CurrentDepth upsert ([]price:(1000+til 20),(1000-til 20);side:(20#`SELL),(20#`BUY);size:40#1000)
+CurrentDepth:(
+    [price:`long$()]
+    side:`symbol$();
+    size:`long$());
+
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
 // the config for the specified from the engine 
@@ -100,6 +137,20 @@ DepthEventHistory: (
     side:`symbol$();
     price:`int$();
     size:`int$());
+
+
+getLevelPrices          :{[s]
+    :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
+    };
+
+// TODO add error handling
+getPriceAtLevel         :{[level;s]
+    :getLevelPrices[s][level];
+    };
+
+
+// Non-Essential Datums
+// ----------------------------------------------------------------------------------------------->
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features

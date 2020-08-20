@@ -30,25 +30,6 @@ MakeActionEvent :{[kind;time;datum]
     :`time`intime`kind`cmd`datum!(time;time;kind;`NEW;datum);
     };
 
-getLevelPrices          :{[s]
-    :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
-    };
-
-// TODO add error handling
-getPriceAtLevel         :{[level;s]
-    :getLevelPrices[s][level];
-    };
-
-// Return all open positions for an account
-getOpenPositions              :{[accountId]
-    :(select from .state.InventoryEventHistory where accountId=accountId);
-    };
-
-// Get the current qtys at each order level
-getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
-    :exec sum leaves by price from .state.OrderEventHisory 
-        where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
-    };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
@@ -181,8 +162,6 @@ adapters[`DISCRETE]     :{[action;accountId]
 / first `price xgroup select orderId,leaves by price, side, time from .state.OrderEventHistory
 / ej[`price;bdlt;`price xgroup select orderId,leaves by price, asc time from .state.OrderEventHistory where side=`BUY]
 / ej[`price;bdlt;`price xgroup `time xdesc select orderId,leaves by price, time from .state.OrderEventHistory where side=`BUY]
-
-getOrders   :{select qty:sum leaves by price from .state.OrderEventHistory where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0}
 
 // TODO add logic for reducing order count when neccessary
 // TODO testing

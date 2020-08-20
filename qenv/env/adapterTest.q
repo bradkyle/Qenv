@@ -10,6 +10,8 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 
+.qt.AddCase[test;"hedged:long_to_longer";()];
+
 test:.qt.Unit[
     ".adapter.getOpenPositions";
     {[c]
