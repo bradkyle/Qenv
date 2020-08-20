@@ -91,10 +91,8 @@ Reset       :{[aIds] // TODO make into accountConfigs
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
 // batching/episodes and episode randomization/replay buffer.
-
-// get daily 
-
-
+// Loads events into memory such that they can be more rapidly stepped over
+// moving this to a seperate process will increase the speed even further.
 SetBatch: {[]
     EventBatch:0; 
     };
@@ -104,10 +102,14 @@ firstDay:{`datetime$((select first date from events)[`date])}
 // SIMPLE DERIVE STEP RATE
 Advance :{[step;actions]
     $[
+        // If the current step is the first
+        // set the index
         (step=0);
         [
             idx:.env.StepIndex@step;
         ];
+        // If the current step is the last step
+        // for the current set of step indicies
         (step<(count[.env.StepIndex]-1));
         [
             idx:.env.StepIndex@step;
@@ -118,12 +120,15 @@ Advance :{[step;actions]
             // the events.
             // TODO offset
             // TODO 
-            aevents:.adapter.Adapt[.env.Adapter][time] each actions; 
+            aevents:.adapter.Adapt[.env.Adapter][time]'[actions]; 
             newEvents: .engine.ProcessEvents[(nevents,aevents)];
 
             .env.InsertResultantEvents[newEvents];
         ];
+        // If the current step is within the bounds
+        // of the first and last events.
         [
+            //
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
             .env.StepIndex:key .env.EventBatch;
             / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
