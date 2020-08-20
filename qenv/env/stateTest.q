@@ -10,24 +10,39 @@ test:.qt.Unit[
     ".state.InsertResultantEvents";
     {[c]
         p:c[`params];
-        setupState[p];
 
         .state.InsertResultantEvents[p[`events]];
         
         // Assertions
         checkState[];
     };
-    {[p]:`events`eFea`eRes!(p[0];p[1];p[2];p[3])};
+    {[p]:`events`eState!(p[0];p[1])};
     (
-        ("Should return normalized feature buffer for 1 account";(
+        ("Should correctly insert account events";(
             (til 3);
-            ();
             ()));
-        ("Should fill in resultant nulls with 0 and upsert where neccessary";(
+        ("Should correctly insert inventory events";(
             (til 4);
-            ();
-            ();
-            ()))
+            ());
+        ("Should correctly insert order events";(
+            (til 4);
+            ()); 
+        ("Should correctly insert depth events";(
+            (til 4);
+            ());
+        ("Should correctly insert trade events";(
+            (til 4);
+            ());
+        ("Should correctly insert markprice events";(
+            (til 4);
+            ());
+        ("Should correctly insert funding events";(
+            (til 4);
+            ());
+        ("Should correctly insert liquidation events";(
+            (til 4);
+            ());
+        )
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
