@@ -108,7 +108,37 @@ test:.qt.Unit[
     );
     .qt.sBlk;
     "derives the set of events that ameliarate the delta between the current and target dist"];
- 
+
+
+test:.qt.Unit[
+    ".adapter.createFlattenEvents";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.adapter.makerSide;p[`MmakerSide];c];
+        .qt.M[`.adapter.MakeActionEvent;p[`MMakeActionEvent];c];
+        
+        a:p[`args];
+        res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MMmakerSide`MMakeActionEvent`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "creates the set of events that serve to flatten the inventory for the account"];
 
 
 

@@ -118,9 +118,9 @@ makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
 // market orders for a specific agent
-createFlattenEvents          :{[accountId; time]
-    openQty:select sum currentQty by side from .state.InventoryEventHistory where accountId=accountId;
-    {createMarketOrderEvent[
+createFlattenEvents          :{[aId; time]
+    openQty:.state.getPositionAmtBySIde[aId];
+    {.adapter.createMarketOrderEvent[
         x;y;z[`currentQty]
         ]}[accountId;time] each (openQty where[openQty[`currentQty]>0]);
     };  
