@@ -2,6 +2,8 @@
 \l util.q
 \d .state
 
+// State specifically represents a set of events that are derived from the engine
+
 
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
