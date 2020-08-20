@@ -49,3 +49,15 @@ run engine in seperate process, communicate via rpc?
 reduceOnly on both position closes order amount fully or rejects order?
 is the order margin updated?
 derive updates from 20 levels* full update
+
+
+Worker Types
+    - Websocket
+    - Headless Chrome
+    - Scraper
+    - Crawling
+    - Rest 
+    - Image/Video Compression
+
+
+Distributed Crawler cluster and rerouting on block etc.
