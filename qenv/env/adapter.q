@@ -122,7 +122,7 @@ createFlattenEvents          :{[aId; time]
     openQty:.state.getOpenPositionAmtBySide[aId];
     {.adapter.createMarketOrderEvent[
         x;y;z[`currentQty]
-        ]}[aId;time] each openQty);
+        ]}[aId;time] each openQty;
     };  
 
 createOrderEventsFromDist   :{[accountId;time;dist;side]

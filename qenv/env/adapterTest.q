@@ -124,7 +124,7 @@ test:.qt.Unit[
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
     (
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z);
