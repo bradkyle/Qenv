@@ -29,7 +29,7 @@ test:.qt.Unit[
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
-
+// TODO test with differing intime?
 test:.qt.Unit[
     ".env.Advance";
     {[c]
@@ -71,11 +71,11 @@ test:.qt.Unit[
             (1;((1;0)));
             (sc[z] 5*til[5]);
             (
-                (sz 1);
-                (sz 2);
-                (sz 3);
-                (sz 4);
-                (sz 5)
+                (sz 1;());
+                (sz 2;());
+                (sz 3;());
+                (sz 4;());
+                (sz 5;())
             );
             3;
             4;
