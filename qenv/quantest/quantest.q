@@ -77,10 +77,8 @@ Unit        :{[name;testFn;formFn;cases;hooks;dscr]
     test:cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;formFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
     `.qt.Test upsert test;
 
-    if[(count[cases]>0);[
-        $[(type[formFn]=100h);
-            [{.qt.AddCase[y;z[0];x[z[1]]]}[formFn;test] each cases]; 
-            [{.qt.AddCase[test;x[0];x[1]]} each cases]]]];
+    pfn:$[(type[formFn]=100h);{.qt.AddCase[y;z[0];x[z[1]]]}[formFn;test];{.qt.AddCase[test;x[0];x[1]]}];
+    $[(count[cases]>1);pfn each cases;(count[cases]=1);pfn[first cases];0N];
 
     :test;
     };
@@ -172,6 +170,10 @@ showFailedTests :{[]
     .qt.pntTest each (select from 0!.qt.Test where state=`FAIL);
     };
 
+RunTest:{
+
+    };
+
 RunTests :{
     runTest each select from 0!.qt.Test where state=`READY;
     show 99#"#";show (45#" "),"TEST";show 99#"#";
@@ -231,19 +233,23 @@ AddCase     :{[test;dscr;params]
 
 
 Skp    :{[case] 
-    update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId=case[`caseId];
+    c:$[type[case]~98h;case[`caseID];case];
+    update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId=c;
     };
 
-SkpAft    :{[case] 
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>x[`caseId];show y}[case];
+SkpAft    :{[case]
+    c:$[type[case]~98h;case[`caseID];case];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>x;y}[c];
     };
 
 SkpBef    :{[case] 
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<x[`caseId];show y}[case];
+    c:$[type[case]~98h;case[`caseID];case];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<x;y}[c];
     };
 
 SkpBes     :{[case]
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<>x[`caseId];show y}[case];
+    c:$[type[case]~98h;case[`caseID];case];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<>x;y}[c];
     };
 
 // Mock

@@ -20,33 +20,34 @@ test:.qt.Unit[
     ".adapter.createOrderAtLevel";
     {[c]
         p:c[`params];
-        p1:p[`MgetPriceAtLevel];   
-        p2:p[`MgenNextClOrdId];   
-        .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
-        .qt.M[`.state.genNextClOrdId;p2[`fn];c];
+
+        .state.DefaultInstrumentId:p[`eDI];
+        .qt.M[`.state.getPriceAtLevel;p[`MgetPriceAtLevel];c];
+        .qt.M[`.state.genNextClOrdId;p[`MgenNextClOrdId];c];
         
-        a:p[`args]
-        res:.adapter.createOrderAtLevel[];
+        a:p[`args];
+        res:.adapter.createOrderAtLevel[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]
-        mCols:`called`numCalls`calledWith;
-        :`args`MgetPriceAtLevel`MgenNextClOrdId`eRes!(
-            p[0];
-            mCols!p[1];
-            mCols!p[2];
-            p[3]
-        );
-    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
     (
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z);
-            ();();
-            ()
-        ));
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
     );
     .qt.sBlk;
     "Global function for processing new orders"];
+
+/ .qt.SkpAft[0];
 
 test:.qt.Unit[
     ".adapter.createOrderEventsByTargetDist";
