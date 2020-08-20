@@ -761,7 +761,7 @@ deriveCaseParams    :{[params]
 
     nom:(`fn,mCols)!params[6];
 
-    p:`cOB`cOrd`params`eNewOrder!(
+    p:`cOB`cOrd`vInv`cIns`params`eNewOrder!(
         makeDepthUpdate[params[0]]; 
         makeOrders[params[1]];
         pCols!params[2];
