@@ -260,6 +260,6 @@ adapters[`MARKETMAKER]   :{[time;action]
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter.
-Adapt :{[adapterType; actions]
+Adapt :{[adapterType; time; actions]
     :adapters[adapterType] each actions;
     };

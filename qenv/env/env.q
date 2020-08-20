@@ -39,7 +39,7 @@ Agent :(
 
 
 
-Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+.env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 BatchSize:0;
 StepIndex:();
 EventBatch:();
@@ -92,10 +92,7 @@ Reset       :{[aIds] // TODO make into accountConfigs
 
 // batching/episodes and episode randomization/replay buffer.
 // Loads events into memory such that they can be more rapidly stepped over
-// moving this to a seperate process will increase the speed even further.
-SetBatch: {[]
-    EventBatch:0; 
-    };
+// moving this to a seperate process will increase the speed even further. 
 
 firstDay:{`datetime$((select first date from events)[`date])}
 
@@ -120,10 +117,10 @@ Advance :{[step;actions]
             // the events.
             // TODO offset
             // TODO 
-            aevents:.adapter.Adapt[.env.Adapter][time]'[actions]; 
+            aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
             xevents: .engine.ProcessEvents[(nevents,aevents)];
 
-            .env.InsertResultantEvents[xevents];
+            .state.InsertResultantEvents[xevents];
         ];
         // If the current step is within the bounds
         // of the first and last events.

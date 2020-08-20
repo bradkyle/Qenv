@@ -34,6 +34,10 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
+        mck1: .qt.M[`.engine.ProcessEvents;{[e]};c];
+        mck1: .qt.M[`.state.InsertResultantEvents;{[e]};c];
+
         .env.InsertResultantEvents[p[`events]];
         
         // Assertions
