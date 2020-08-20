@@ -56,7 +56,7 @@ test:.qt.Unit[
         {.qt.A[get[y];~;z;string[y];x]}[c] each p[`eState]; 
     };
     {[p]
-        e:([] );
+        / e:({`time`kind`cmd`datum!x} each p[0]);
         :`args`eAdapt`eProcessEvents``eInsertResultantEvents`eloadEvents!(
             e;
             p[1];
