@@ -1,6 +1,19 @@
+\l adapter.q
+\l state.q
+system "d .adapterTest";
+\cd ../quantest/
+\l quantest.q 
+\cd ../engine/
 
 
+defaultAfterEach: {
+     
+     .qt.RestoreMocks[];
+    };
 
+defaultBeforeEach: {
+     
+    };
 
 test:.qt.Unit[
     ".adapter.createOrderEventsAtLevel";
@@ -118,3 +131,6 @@ test:.qt.Unit[
         
     };();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
+
+
+.qt.RunTests[];

@@ -138,6 +138,7 @@ DepthEventHistory: (
     price:`int$();
     size:`int$());
 
+depthCols:cols CurrentDepth;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -215,7 +216,7 @@ InsertResultantEvents   :{[events]
         k:event[`kind];
         t:event[`time];
         $[k=`DEPTH;
-          [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols])];
+          [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols]))];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
