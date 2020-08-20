@@ -2,59 +2,32 @@
 
 
 
-test:.qt.Unit[
-    ".adapter.getPriceAtLevel";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-.qt.AddCase[test;"hedged:long_to_longer";()];
 
 test:.qt.Unit[
-    ".adapter.getOpenPositions";
+    ".state.InsertResultantEvents";
     {[c]
         p:c[`params];
+        setupState[p];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-test:.qt.Unit[
-    ".adapter.getCurrentOrderLvlDist";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-test:.qt.Unit[
-    ".engine.InsertResultantEvents";
-    {[c]
-        p:c[`params];
-        time:.z.z;
-        eacc:p[`eaccount];
-        einv:p[`einventory];
-        ecols:p[`ecols];
-
-        account:Sanitize[p[`account];.account.defaults[];.account.allCols];        
-        inventory:Sanitize[p[`inventory];.inventory.defaults[];.inventory.allCols];
-
-        // Execute tested function
-        x:p[`params];
-        .account.execFill[account;inventory;x[`fillQty];x[`price];x[`fee]];
-
-        // 
-        acc:exec from .account.Account where accountId=account[`accountId];
-        invn:exec from .inventory.Inventory where accountId=inventory[`accountId], side=inventory[`side];
-
+        res:.observation.getFeatureVectors[p[`aids]];
+        
         // Assertions
-        .qt.A[{x!y[x]}[cols eacc;acc];~;eacc;"account";c];
-        .qt.A[{x!y[x]}[cols einv;invn];~;einv;"inventory";c];
+        checkFeatureBuffer[p;c];
+        .qt.A[res;~;p[`eRes]];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
+    };
+    {[p]:`aids`cEvents`eFea`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Should return normalized feature buffer for 1 account";(
+            (til 3);
+            ();
+            ()));
+        ("Should fill in resultant nulls with 0 and upsert where neccessary";(
+            (til 4);
+            ();
+            ();
+            ()))
+    );
+    .qt.sBlk;
+    ("Derives a feature vector for each account, inserts it into a feature buffer ",
+    "then returns normalized (min max) vector bundle for each account.")];

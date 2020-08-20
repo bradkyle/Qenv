@@ -5,6 +5,8 @@ FeatureBuffer   :();
 // Agent specific observation functions
 // --------------------------------------------------->
 
+// TODO check if successful feature derive
+
 // Efficiently returns the aggregated and normalised
 // feature vector represenations of the agent state 
 // and environment state for a set of agent ids.
