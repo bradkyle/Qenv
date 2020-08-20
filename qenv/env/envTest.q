@@ -52,3 +52,4 @@ test:.qt.Unit[
 
 
 // TODO profile event step!!!
+.qt.RunTests[];
