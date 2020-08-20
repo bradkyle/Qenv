@@ -5,6 +5,7 @@ system "d .adapterTest";
 \l quantest.q 
 \cd ../env/
 
+z:.z.z;
 
 defaultAfterEach: {
      
@@ -24,12 +25,13 @@ test:.qt.Unit[
         .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
         .qt.M[`.state.genNextClOrdId;p2[`fn];c];
         
+        a:p[`args]
         res:.adapter.createOrderAtLevel[];
 
     };
     {[p]
         mCols:`called`numCalls`calledWith;
-        :`params`MgetPriceAtLevel`MgenNextClOrdId`eRes!(
+        :`args`MgetPriceAtLevel`MgenNextClOrdId`eRes!(
             p[0];
             mCols!p[1];
             mCols!p[2];
@@ -37,7 +39,11 @@ test:.qt.Unit[
         );
     };
     (
-        ("Given correct params should return correct";(();();();()))
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            ();();
+            ()
+        ));
     );
     .qt.sBlk;
     "Global function for processing new orders"];
