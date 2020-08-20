@@ -1,6 +1,7 @@
 
 \l util.q
 \d .state
+\l adapter.q 
 
 // State specifically represents a set of events that are derived from the engine
 
@@ -10,7 +11,7 @@
 maxLvls:20;
 DefaultInstrumentId:0;
 
-filt: {raze[x!y[x]]}
+filt: {x!y[x]};
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -207,30 +208,85 @@ liquidationCols:`size`price`side`time;
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer // TODO validation on events
 InsertResultantEvents   :{[events]
-    {[event]
-        k:event[`kind];
-        t:event[`time];
-        d:enlist[event[`datum]];
+    .qt.EV:events;
+    {[events]
+        k:first events[`kind];
+
+        events:flip[events];
+        d:events[`datum];
+        t:events[`time];
         d[`time]:t;
+        .qt.D:d;
+
         $[k=`DEPTH;
           [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols]))];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
           [
-              .state.BAM:filt[.state.accountCols;d];
-              `.state.AccountEventHistory upsert enlist[filt[.state.accountCols;d]];
+                show filt[.state.inventoryCols;d];
+                `.state.AccountEventHistory upsert filt[.state.inventoryCols;d];
           ];
           k=`INVENTORY;
-          [`.state.InventoryEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
+          [show d[;.state.inventoryCols];`.state.InventoryEventHistory upsert d[;.state.inventoryCols]];
           k=`ORDER;
           [`.state.AccountEventHistory upsert (.state.orderCols!(event[`datum][.state.orderCols]))]; 
           k=`LIQUIDATION;
           [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
           [0N]];
-    } each events;
+    } each 0!(`kind`cmd xgroup events);
     };
 
-Advance :{[]
 
+// Source Event Tables
+// =====================================================================================>
+
+Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+BatchSize:0;
+StepIndex:();
+EventBatch:();
+FeatureBatch:();
+
+// step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
+
+// batching/episodes and episode randomization/replay buffer.
+
+// get daily 
+
+
+SetBatch: {[]
+    EventBatch:0; 
+    };
+
+firstDay:{`datetime$((select first date from events)[`date])}
+
+
+// SIMPLE DERIVE STEP RATE
+Advance :{[step;actions]
+    $[
+        (step=0);
+        [
+            idx:.pipe.StepIndex@step;
+        ];
+        (step<(count[.pipe.StepIndex]-1));
+        [
+            idx:.pipe.StepIndex@step;
+            nevents:flip[.pipe.EventBatch@idx];
+            
+            / feature:FeatureBatch@thresh;
+            // should add a common offset to actions before inserting them into
+            // the events.
+            // TODO offset
+            // TODO 
+            aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+            newEvents: .engine.ProcessEvents[(nevents,aevents)];
+
+            .state.InsertResultantEvents[newEvents];
+        ];
+        [
+            .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within ();
+            .pipe.StepIndex:key .pipe.EventBatch;
+            / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
+        ]
+    ];
     };

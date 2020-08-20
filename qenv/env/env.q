@@ -62,16 +62,16 @@ Config      :{[config]
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
-Info        :{[accountIds]
+Info        :{[aIds]
 
     };
 
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-Reset       :{[accountIds] // TODO make into accountConfigs 
+Reset       :{[aIds] // TODO make into accountConfigs 
     // Reset public singletons
-    .engine.Reset[accountIds];
-    :.state.Reset[accountIds];
+    .engine.Reset[aIds];
+    :.state.Reset[aIds];
     };
 
 // Carries out a step in the exchange environment
