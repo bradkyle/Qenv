@@ -16,12 +16,14 @@ defaultBeforeEach: {
     };
 
 test:.qt.Unit[
-    ".adapter.createOrderEventsAtLevel";
+    ".adapter.createOrderAtLevel";
     {[c]
         p:c[`params];
         p1:p[`egetPriceAtLevel];   
         .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
         
+        res:.adapter.createOrderAtLevel[];
+
     };
     {[p]
     
