@@ -24,12 +24,12 @@ DefaultInstrumentId:0;
 // interacting with a live exchange. 
 AccountEventHistory: (
     [accountId : `long$(); time : `datetime$()]
-    balance             : `float$();
-    available           : `float$();
-    frozen              : `float$();
-    maintMargin         : `float$()
+    balance             : `long$();
+    available           : `long$();
+    frozen              : `long$();
+    maintMargin         : `long$()
     );
-
+accountCols:cols .state.AccountEventHistory;
 
 // INVENTORY
 // ----------------------------------------------------------------------------------------------->
@@ -44,6 +44,7 @@ InventoryEventHistory: (
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
+accountCols:cols .state.InventoryEventHistory;
 
 
 // Return all open positions for an account
@@ -105,7 +106,7 @@ OrderEventHistory: (
     isClose         :   `boolean$();
     trigger         :   `symbol$();
     execInst        :   `symbol$());
-
+accountCols:cols .state.OrderEventHistory;
 
 // Get the current qtys at each order level
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
@@ -135,6 +136,7 @@ CurrentDepth:(
     [price:`long$()]
     side:`symbol$();
     size:`long$());
+currentDepthCols:cols .state.CurrentDepth;
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
@@ -147,8 +149,7 @@ DepthEventHistory: (
     side:`symbol$();
     price:`int$();
     size:`int$());
-
-depthCols:cols CurrentDepth;
+depthCols:cols DepthEventHistory;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -171,6 +172,7 @@ TradeEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
+tradeCols:cols .state.TradeEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -180,6 +182,7 @@ MarkEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
+markCols:cols .state.MarkEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -189,6 +192,7 @@ FundingEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
+fundingCols:cols .state.FundingEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -198,6 +202,7 @@ LiquidationEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
+liquidationCols:cols .state.LiquidationEventHistory;
 
 // TODO batching + 
 
