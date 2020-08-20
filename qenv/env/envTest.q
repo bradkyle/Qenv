@@ -35,11 +35,17 @@ test:.qt.Unit[
         p:c[`params];
 
         mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
-        mck1: .qt.M[`.engine.ProcessEvents;{[e]};c];
-        mck1: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck1: .qt.M[`.env.loadEvents;{[e]};c];
+        mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
+        mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
+        mck4: .qt.M[`.env.loadEvents;{[e]};c];
 
-        .env.InsertResultantEvents[p[`events]];
+        res:.env.Advance[p[`step];p[`actions]];
+
+        .qt.MA[
+            mck1;
+            p1[`called];
+            p1[`numCalls];
+            p1[`calledWith];c];
         
         // Assertions
         {.qt.A[get[y];~;z;string[y];x]}[c] each p[`eState]; 
