@@ -51,7 +51,7 @@ getOpenPositions              :{[accountId]
     :(select from .state.InventoryEventHistory where accountId=accountId);
     };
 
-getPositionAmtBySIde           :{[aId]
+getOpenPositionAmtBySide           :{[aId]
     :select sum currentQty by side from .state.InventoryEventHistory where accountId=aId;
     };
 

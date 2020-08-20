@@ -119,10 +119,10 @@ makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
 // the current positions to closed positions using
 // market orders for a specific agent
 createFlattenEvents          :{[aId; time]
-    openQty:.state.getPositionAmtBySIde[aId];
+    openQty:.state.getOpenPositionAmtBySide[aId];
     {.adapter.createMarketOrderEvent[
         x;y;z[`currentQty]
-        ]}[accountId;time] each (openQty where[openQty[`currentQty]>0]);
+        ]}[aId;time] each openQty);
     };  
 
 createOrderEventsFromDist   :{[accountId;time;dist;side]

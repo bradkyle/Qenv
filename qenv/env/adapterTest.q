@@ -115,8 +115,8 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        .qt.M[`.adapter.makerSide;p[`MmakerSide];c];
-        .qt.M[`.adapter.MakeActionEvent;p[`MMakeActionEvent];c];
+        .qt.M[`.adapter.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
         
         a:p[`args];
         res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
@@ -124,7 +124,7 @@ test:.qt.Unit[
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]:`args`MMmakerSide`MMakeActionEvent`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3];p[4])};
     (
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z);
