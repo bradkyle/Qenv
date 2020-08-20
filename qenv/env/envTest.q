@@ -5,7 +5,8 @@ system "d .stateTest";
 \cd ../env/
 
 z:.z.z;
-
+sc:{x+(`second$y)};
+sz:sc[z];
 
 test:.qt.Unit[
     ".env.Config";
@@ -28,7 +29,7 @@ test:.qt.Unit[
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
- 
+
 test:.qt.Unit[
     ".env.Advance";
     {[c]
@@ -56,18 +57,29 @@ test:.qt.Unit[
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
-        :`args`eAdapt`eProcessEvents``eInsertResultantEvents`eloadEvents!(
+        :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
             `step`actions!p[0];
             p[1];
             p[2];
             p[3];
-            p[4]
+            p[4];
+            p[5];
+            p[6]
         )};
     (
-        ("First step single action account pair";(
+        ("First step single action account pair ordered by 1 second per step, 5 steps";(
             (1;((1;0)));
-            ()
-            ();3;4;5
+            (sc[z] 5*til[5]);
+            (
+                (sz 1);
+                (sz 2);
+                (sz 3);
+                (sz 4);
+                (sz 5)
+            );
+            3;
+            4;
+            5
         ));
         ("First step multiple action account pair";(
             (1;((1;0); (1;1); (1;2)));

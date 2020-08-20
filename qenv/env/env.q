@@ -1,4 +1,6 @@
 
+// TODO CHANGE EVENTS TO LISTS INSTEAD OF DICTIONARIES
+
 // Agent ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
 //      \_____ other features _____________________________/
@@ -40,7 +42,7 @@ Agent :(
 
 
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-BatchSize:0;
+BatchSize:`minute$5;
 StepIndex:();
 EventBatch:();
 FeatureBatch:();
@@ -125,7 +127,7 @@ Advance :{[step;actions]
             // should add a common offset to actions before inserting them into
             // the events.
             aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
-            xevents: .engine.ProcessEvents[(nevents,aevents)];
+            xevents:.engine.ProcessEvents[(nevents,aevents)];
 
             .state.InsertResultantEvents[xevents];
         ];
