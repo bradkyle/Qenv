@@ -8,11 +8,11 @@ z:.z.z;
 
 
 test:.qt.Unit[
-    ".env.Advance";
+    ".env.Config";
     {[c]
         p:c[`params];
 
-        .env.InsertResultantEvents[p[`events]];
+        .env.Config[p[`config]];
         
         // Assertions
         {.qt.A[get[y];~;z;string[y];x]}[c] each p[`eState]; 
