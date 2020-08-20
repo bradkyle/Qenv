@@ -56,18 +56,20 @@ test:.qt.Unit[
         {.qt.A[get[y];~;z;string[y];x]}[c] each p[`eState]; 
     };
     {[p]
-        e:({`time`kind`cmd`datum!x} each p[0]);
+        e:([] );
         :`args`eAdapt`eProcessEvents``eInsertResultantEvents`eloadEvents!(
             e;
             p[1];
-
+            p[2];
+            p[3];
+            p[4]
         )};
     (
         ("First";(
-
+            1;2;3;4;5
         ));
         ("Second";(
-            
+            1;2;3;4;5
         ))
     );
     .qt.sBlk;
