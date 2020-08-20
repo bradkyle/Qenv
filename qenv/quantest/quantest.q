@@ -41,6 +41,7 @@ Test    :(
     state        : `.qt.TESTSTATE$();
     dscr         : `symbol$();
     func         : {};
+    formFunc     : {};
     repeat       : `long$();
     retry        : `long$();
     beforeAll    : {};
@@ -71,10 +72,13 @@ Unit        :{[name;testFn;formFn;cases;hooks;dscr]
     / validFn:$[100h~type vFn:value replacement; $[1~count (value vFn) 1; 1b; 0b]; 0b];
     / if[not validFn; :(0b;0b;"testFn should be dual arg function [p;c]")];
 
-    test:cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
+    test:cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;formFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
     `.qt.Test upsert test;
 
-    if[count[cases]>0;.qt.AddCase[test] each cases];
+    if[(count[cases]>0);[
+        $[(type[formFn]=100h);
+            [.qt.AddCase[formFn[test]] each cases]; 
+            [.qt.AddCase[test] each cases]]]];
 
     :test;
     };

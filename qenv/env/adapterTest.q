@@ -20,10 +20,19 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };
+    {[p]
+    
+    
+    };
+    (
+        ("";);
+        ("";);
+        ("";);
+        ("";)
+    );
+    ({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
-
-
 
 test:.qt.Unit[
     ".adapter.createOrderEventsByTargetDist";
