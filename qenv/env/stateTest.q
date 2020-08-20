@@ -2,6 +2,9 @@
 
 
 
+checkState  :{[]
+
+    };
 
 test:.qt.Unit[
     ".state.InsertResultantEvents";
@@ -9,12 +12,10 @@ test:.qt.Unit[
         p:c[`params];
         setupState[p];
 
-        res:.observation.getFeatureVectors[p[`aids]];
+        res:.state.InsertResultantEvents[p[`aids]];
         
         // Assertions
-        checkFeatureBuffer[p;c];
-        .qt.A[res;~;p[`eRes]];
-
+        checkState[];
     };
     {[p]:`aids`cEvents`eFea`eRes!(p[0];p[1];p[2];p[3])};
     (
