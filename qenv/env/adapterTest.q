@@ -19,21 +19,25 @@ test:.qt.Unit[
     ".adapter.createOrderAtLevel";
     {[c]
         p:c[`params];
-        p1:p[`egetPriceAtLevel];   
+        p1:p[`MgetPriceAtLevel];   
         .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
         
         res:.adapter.createOrderAtLevel[];
 
     };
     {[p]
-
+        :`params`MgetPriceAtLevel`eRes!(
+            p[0];
+            p[1];
+            p[2]
+        )
     
     };
     (
-        ("";(();()));
-        ("";(();()));
-        ("";(();()));
-        ("";(();()))
+        ("";(();();());
+        ("";(();();()));
+        ("";(();();()));
+        ("";(();();()))
     );
     ({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];

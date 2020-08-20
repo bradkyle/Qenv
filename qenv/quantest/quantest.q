@@ -77,8 +77,8 @@ Unit        :{[name;testFn;formFn;cases;hooks;dscr]
 
     if[(count[cases]>0);[
         $[(type[formFn]=100h);
-            [.qt.AddCase[formFn[test]] each cases]; 
-            [.qt.AddCase[test] each cases]]]];
+            [{.qt.AddCase[y;z[0];x[z[1]]]}[formFn;test] each cases]; 
+            [{.qt.AddCase[test;x[0];x[1]]} each cases]]]];
 
     :test;
     };
