@@ -722,6 +722,9 @@ test:.qt.Unit[
     ".account.UpdateMarkPrice";
     {[c]
         p:c[`params];  
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
         setupOrders[p];
 
         p1:p[`eNewOrder];  
