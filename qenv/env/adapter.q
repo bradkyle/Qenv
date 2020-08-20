@@ -203,7 +203,7 @@ adapters[`MARKETMAKER]   :{[time;action]
     aId:action[1];
     limitSize: 8;
     marketSize: 10;
-    makerFn:makerBuySell[aId;time;limitSize];
+    makerFn:makerDelta[aId;time;limitSize];
     takerFn:createMarketOrderEvent[aId;time;marketSize];
     res: $[
         a=0;
