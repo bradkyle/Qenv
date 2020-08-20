@@ -26,7 +26,7 @@ Env  :(
         currentStep         : `long$();
         stepTime            : `datetime$();
         numFailures         : `long$();
-        numAgentSteps       : `long$();
+        numAgentSteps       : `long$()
     );
 
 Agent :(
@@ -56,7 +56,8 @@ Config      :{[config]
     // adapter kind, 
     // encouragement, 
     // lookback size
-
+    // source of events
+    // 
 
     };
 
