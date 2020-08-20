@@ -65,12 +65,13 @@ test:.qt.Unit[
         )};
     (
         ("First";(
+            (1;((1;0)));
+            ();3;4;5
+        ));
+        ("First";(
             (1;((1;0); (1;1); (1;2)));
             ();3;4;5
         ));
-        ("Second";(
-            1;2;3;4;5
-        ))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
