@@ -1,7 +1,6 @@
 
 \l util.q
 \d .state
-\l adapter.q 
 
 // State specifically represents a set of events that are derived from the engine
 
@@ -12,6 +11,7 @@ maxLvls:20;
 DefaultInstrumentId:0;
 
 filt: {x!y[x]};
+
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -205,6 +205,50 @@ liquidationCols:`size`price`side`time;
 
 // TODO batching + 
 
+
+FeatureBuffer   :();
+
+// Agent specific observation functions
+// --------------------------------------------------->
+
+// TODO check if successful feature derive
+
+// Efficiently returns the aggregated and normalised
+// feature vector represenations of the agent state 
+// and environment state for a set of agent ids.
+getFeatureVectors    :{[accountIds]
+
+        // TODO add long term prediction features.
+
+        // TODO add account id to feature vector
+        obs: raze(
+            value 1_last depth;
+            last mark.mark_price;
+            last funding.funding_rate;
+            last trades.price;
+            value 1_last account;
+            value last piv[0!update time:max time from select num:count size, high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size, lsize: min size by side from source_trades where time>= max time - `minute$5;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
+            value last piv[0!update time:max source_trades.time from select high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size, lsize: min size by side from source_trades where {x|next x}/[100;time=max time];`time;`side;`high`low`open`close`volume`msize`hsize`lsize];
+            value exec sum leaves, avg price from orders where ordtyp=`limit, status=`new, side=`buy;
+            value exec sum leaves, avg price from orders where ordtyp=`limit, status=`new, side=`sell;
+            value exec sum leaves, max price from orders where ordtyp=`stop_market, status=`new, side=`buy;
+            value exec sum leaves, min price from orders where ordtyp=`stop_market, status=`new, side=`sell; 
+            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`long;
+            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`short
+        );
+
+        `.observation.FeatureBuffer upsert obs;
+
+        // TODO count by account id
+        / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
+        // TODO fill forward + normalize
+        :.ml.minmaxscaler[-100#.schema.FeatureBuffer];
+    };
+
+
+// State Event Insertion
+// =====================================================================================>
+
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer // TODO validation on events
 InsertResultantEvents   :{[events]
@@ -224,7 +268,6 @@ InsertResultantEvents   :{[events]
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
           [
-                show filt[.state.inventoryCols;d];
                 `.state.AccountEventHistory upsert filt[.state.inventoryCols;d];
           ];
           k=`INVENTORY;
@@ -235,58 +278,4 @@ InsertResultantEvents   :{[events]
           [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
           [0N]];
     } each 0!(`kind`cmd xgroup events);
-    };
-
-
-// Source Event Tables
-// =====================================================================================>
-
-Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-BatchSize:0;
-StepIndex:();
-EventBatch:();
-FeatureBatch:();
-
-// step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
-
-// batching/episodes and episode randomization/replay buffer.
-
-// get daily 
-
-
-SetBatch: {[]
-    EventBatch:0; 
-    };
-
-firstDay:{`datetime$((select first date from events)[`date])}
-
-
-// SIMPLE DERIVE STEP RATE
-Advance :{[step;actions]
-    $[
-        (step=0);
-        [
-            idx:.pipe.StepIndex@step;
-        ];
-        (step<(count[.pipe.StepIndex]-1));
-        [
-            idx:.pipe.StepIndex@step;
-            nevents:flip[.pipe.EventBatch@idx];
-            
-            / feature:FeatureBatch@thresh;
-            // should add a common offset to actions before inserting them into
-            // the events.
-            // TODO offset
-            // TODO 
-            aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
-            newEvents: .engine.ProcessEvents[(nevents,aevents)];
-
-            .state.InsertResultantEvents[newEvents];
-        ];
-        [
-            .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within ();
-            .pipe.StepIndex:key .pipe.EventBatch;
-            / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
-        ]
-    ];
     };

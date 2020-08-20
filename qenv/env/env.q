@@ -74,6 +74,62 @@ Reset       :{[aIds] // TODO make into accountConfigs
     :.state.Reset[aIds];
     };
 
+
+
+
+/ Advancing System
+// =====================================================================================>
+
+Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+BatchSize:0;
+StepIndex:();
+EventBatch:();
+FeatureBatch:();
+
+// step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
+
+// batching/episodes and episode randomization/replay buffer.
+
+// get daily 
+
+
+SetBatch: {[]
+    EventBatch:0; 
+    };
+
+firstDay:{`datetime$((select first date from events)[`date])}
+
+// SIMPLE DERIVE STEP RATE
+Advance :{[step;actions]
+    $[
+        (step=0);
+        [
+            idx:.pipe.StepIndex@step;
+        ];
+        (step<(count[.pipe.StepIndex]-1));
+        [
+            idx:.pipe.StepIndex@step;
+            nevents:flip[.pipe.EventBatch@idx];
+            
+            / feature:FeatureBatch@thresh;
+            // should add a common offset to actions before inserting them into
+            // the events.
+            // TODO offset
+            // TODO 
+            aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+            newEvents: .engine.ProcessEvents[(nevents,aevents)];
+
+            .pipe.InsertResultantEvents[newEvents];
+        ];
+        [
+            .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within ();
+            .pipe.StepIndex:key .pipe.EventBatch;
+            / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
+        ]
+    ];
+    };
+
+
 // Carries out a step in the exchange environment
 // It generates a set of events for each action
 // given its time and sets a given offset for 
@@ -86,14 +142,8 @@ Reset       :{[aIds] // TODO make into accountConfigs
 Step    :{[actions]
     // TODO format actions
 
-    // TODO actions as a tuple of account id and action: derive account ids from actions.
-    
-
-    // The engine produces a set of new events.
-    newEvents: .engine.ProcessEventBatch[events];
-
     // Advances the current state of the environment
-    result: .state.Advance[accountIds; newEvents];
+    results: .pipe.Advance[accountIds; newEvents];
 
     // Derive the current info for the
     // entire engine and for each subsequent
