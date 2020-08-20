@@ -34,9 +34,9 @@ MakeActionEvent :{[kind;time;datum]
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
-createOrderXAtLevel     :{[level;side;size;accountId]
+createOrderAtLevel     :{[level;side;size;accountId]
     
-    price: getPriceAtLevel[level;side];
+    price: .state.getPriceAtLevel[level;side];
     / :MakeActionEvent[`];
     };
 

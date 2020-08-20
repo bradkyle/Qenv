@@ -19,17 +19,19 @@ test:.qt.Unit[
     ".adapter.createOrderEventsAtLevel";
     {[c]
         p:c[`params];
-
+        p1:p[`egetPriceAtLevel];   
+        .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
+        
     };
     {[p]
     
     
     };
     (
-        ("";);
-        ("";);
-        ("";);
-        ("";)
+        ("";());
+        ("";());
+        ("";());
+        ("";())
     );
     ({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for processing new orders"];
