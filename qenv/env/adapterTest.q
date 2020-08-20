@@ -1,34 +1,6 @@
 
 
 
-test:.qt.Unit[
-    ".adapter.getPriceAtLevel";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-.qt.AddCase[test;"hedged:long_to_longer";()];
-
-test:.qt.Unit[
-    ".adapter.getOpenPositions";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-test:.qt.Unit[
-    ".adapter.getCurrentOrderLvlDist";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
 
 test:.qt.Unit[
     ".adapter.createOrderEventsAtLevel";
