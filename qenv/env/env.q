@@ -39,8 +39,6 @@ Env  :(
 /     encouragement       : `float$()
 /     );
 
-
-
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 BatchInterval:`minute$5;
 BatchSize: 50;
