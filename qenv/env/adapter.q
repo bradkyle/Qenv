@@ -98,7 +98,6 @@ makerSide   :{[aId;lvls;sizes;s;time]
 
 // TODO test for 1, 0 count lvl etc
 makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
-    
     a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
     b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
 
