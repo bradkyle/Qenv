@@ -748,29 +748,43 @@ test:.qt.Unit[
     "Global function for updating the mark price with respect to the account namespace"];
 
 
-deriveCaseParams    :{[params] 
-    mCols:`called`numCalls`calledWith; // Mock specific
-    pCols:`markPrice`instrumentId`time;
+deriveCaseParams :{[p]
 
-    makeOrdersEx :{
-    :$[count[x]>0;[ 
-        // Side, Price, Size
-        :{:(`clId`instrumentId`accountId`side`otype`offset`leaves`price`status!(
-            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7];(`.order.ORDERSTATUS$x[8]));x[9])} each flip[x];
-        ];()]};
+    cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier)!p[0];
 
-    nom:(`fn,mCols)!params[6];
+    // Construct Current Account
+    cAcc:(`accountId`positionType`balance`available`frozen,
+    `orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
+    
+    // Construct Current Inventory
+    cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
-    p:`cOB`cOrd`vInv`cIns`params`eNewOrder!(
-        makeDepthUpdate[params[0]]; 
-        makeOrders[params[1]];
-        pCols!params[2];
-        nom  
+    // Construct Fill
+    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
+    f[`accountId]: `.account.Account!f[`accountId];
+    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
+    f[`side]: `.order.ORDERSIDE$f[`side]; 
+
+    // Construct Expected Account
+    eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[5];
+
+    // Construct Expected Inventory
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
+
+    :`cIns`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+        cIns;
+        cAcc;
+        cInv;
+        f;
+        p[4];
+        eAcc;
+        eInv;
+        p[7]
         );
-    :p;
     };
-
-
+    
 .qt.AddCase[test;"Mark price increases, no liquidations should occur, accounts should be updated";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
     (0;0.5;1e9;0f;1e6f;0f;100);
