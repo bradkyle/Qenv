@@ -67,9 +67,9 @@ test:.qt.Unit[
             p[6]
         )};
     (
-        ("First step single action account pair ordered by 1 second per step, 5 steps";(
+        ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
             (1;((1;0)));
-            (sc[z] 5*til[5]);
+            (sz 5*til[5]);
             (
                 (sz 1;());
                 (sz 2;());
@@ -77,9 +77,10 @@ test:.qt.Unit[
                 (sz 4;());
                 (sz 5;())
             );
-            3;
-            4;
-            5
+            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
+            enlist(1b;1;());
+            enlist(1b;1;());
+            enlist(0b;0;());
         ));
         ("First step multiple action account pair";(
             (1;((1;0); (1;1); (1;2)));
