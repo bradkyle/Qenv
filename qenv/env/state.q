@@ -201,24 +201,6 @@ LiquidationEventHistory: (
 
 // TODO batching + 
 
-// Maintains a lookback buffer of 
-// aggregations of state including
-// state that has not been modified 
-// by the engine per accountId
-// sorted by time for which normalization
-// and feature scaling that requires more
-// than a single row can be done. 
-/ FeatureBuffer   :(
-
-/     );
-
-// The step buffer maintains a set of observation ids,
-// rewards, info etc for prioritized experience replay
-// diagnostics etc.
-/ StepBuffer  :(
-
-/     );
-
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer
 InsertResultantEvents   :{[events]
