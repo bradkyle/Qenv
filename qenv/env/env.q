@@ -103,15 +103,9 @@ firstDay:{`datetime$((select first date from events)[`date])}
 // SIMPLE DERIVE STEP RATE
 Advance :{[step;actions]
     $[
-        // If the current step is the first
-        // set the index
-        (step=0);
-        [
-            idx:.env.StepIndex@step;
-        ];
-        // If the current step is the last step
-        // for the current set of step indicies
-        (step<(count[.env.StepIndex]-1));
+        // If the current step is not the first or the last
+        // step in the in the event batch
+        ((step<>0) and (step<(count[.env.StepIndex]-1)));
         [
             idx:.env.StepIndex@step;
             nevents:flip[.env.EventBatch@idx];
@@ -124,10 +118,11 @@ Advance :{[step;actions]
 
             .state.InsertResultantEvents[xevents];
         ];
-        // If the current step is within the bounds
-        // of the first and last events.
+        // If the current step is the first or last step 
+        // in the given event batch.
         [
             //
+            idx:.env.StepIndex@step;
             .env.EventBatch:.env.loadEvents[];
             .env.StepIndex:key .env.EventBatch;
             / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;

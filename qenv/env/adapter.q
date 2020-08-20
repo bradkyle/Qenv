@@ -157,7 +157,6 @@ adapters : (`.adapter.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
 adapters[`DISCRETE]     :{[action;accountId]
-    
     penalty:0f;
     $[action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()

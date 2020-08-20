@@ -60,11 +60,15 @@ test:.qt.Unit[
         :`args`eAdapt`eProcessEvents``eInsertResultantEvents`eloadEvents!(
             e;
             p[1];
-            
+
         )};
     (
-        ("Should work with event count window StepIndex";( ));
-        ("Should work with time window StepIndex";( ))
+        ("First";(
+
+        ));
+        ("Second";(
+            
+        ))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
