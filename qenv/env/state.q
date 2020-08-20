@@ -10,6 +10,8 @@
 maxLvls:20;
 DefaultInstrumentId:0;
 
+filt: { enlist[x!y[x]]}
+
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
@@ -44,7 +46,7 @@ InventoryEventHistory: (
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
-accountCols:cols .state.InventoryEventHistory;
+inventoryCols:cols .state.InventoryEventHistory;
 
 
 // Return all open positions for an account
@@ -203,18 +205,19 @@ liquidationCols:`size`price`side`time;
 // TODO batching + 
 
 // Recieves a table of events from the engine 
-// and proceeds to insert them into the local historic buffer // TODO validation on 
+// and proceeds to insert them into the local historic buffer // TODO validation on events
 InsertResultantEvents   :{[events]
     {[event]
         k:event[`kind];
         t:event[`time];
+        d:enlist[event[`datum]];
         $[k=`DEPTH;
           [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols]))];
           k=`TRADE;
           [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
           k=`ACCOUNT;
           [
-              `.state.AccountEventHistory upsert (.state.accountCols!(event[`datum][.state.accountCols]))
+              `.state.AccountEventHistory upsert (.state.accountCols!([.state.accountCols]))
           ];
           k=`INVENTORY;
           [`.state.InventoryEventHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))];
