@@ -7,6 +7,8 @@ dline: {show 99#"="};
 hline: {show 99#"#"}
 uline: {line[];}
 
+sBlk:({};{};{};{});
+
 lg:{a:string[.z.t],$[type[x]=98h; "\r\n"; "  "],$[type[x] in 10 -10h; x; .Q.s x],"\r\n"; l::l,enlist a; 1 a; x};
 
 // Forms a message pertaining to form

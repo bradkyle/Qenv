@@ -20,25 +20,26 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
         p1:p[`MgetPriceAtLevel];   
+        p2:p[`MgenNextClOrdId];   
         .qt.M[`.state.getPriceAtLevel;p1[`fn];c];
+        .qt.M[`.state.genNextClOrdId;p2[`fn];c];
         
         res:.adapter.createOrderAtLevel[];
 
     };
     {[p]
-        :`params`MgetPriceAtLevel`eRes!(
+        mCols:`called`numCalls`calledWith;
+        :`params`MgetPriceAtLevel`MgenNextClOrdId`eRes!(
             p[0];
-            p[1];
-            p[2]
-        )
+            mCols!p[1];
+            mCols!p[2];
+            p[3]
+        );
     };
     (
-        ("Given correct params should return correct";(();();());
-        ("";(();();()));
-        ("";(();();()));
-        ("";(();();()))
+        ("Given correct params should return correct";(();();();()))
     );
-    ({};{};defaultBeforeEach;defaultAfterEach);
+    .qt.sBlk;
     "Global function for processing new orders"];
 
 test:.qt.Unit[

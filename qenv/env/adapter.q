@@ -39,7 +39,6 @@ MakeActionEventC :{[kind;cmd;time;datum]
 // the placement of orders at a set of levels
 // represented as a list
 createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
-    
     price: .state.getPriceAtLevel[level;side];
     o:`price`clId`instrumentId`accountId`side`otype`size`reduceOnly!(
         price;
@@ -58,8 +57,8 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
 // the placement of orders at a set of levels
 // represented as a list
 createOrderEventsByTargetDist :{[targetAskDist;targetBidDist]
-    currentDist: getCurrentOrderLvlDist[count targetAskDist; count targetBidDist];
-    currentPrices: getCurrentLvlPrices[count targetAskDist; count targetBidDist];
+    currentDist: .state.getCurrentOrderLvlDist[count targetAskDist; count targetBidDist];
+    currentPrices: .state.getCurrentLvlPrices[count targetAskDist; count targetBidDist];
     askDeltas: targetAskDist - currentDist[0];
     bidDeltas: targetBidDist - currentDist[1];
     
