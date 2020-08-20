@@ -32,6 +32,15 @@ test:.qt.Unit[
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
+
+dSecEvents: (
+                (sz 1;(0 0 0 1 1 1 2 2 2));
+                (sz 2;(0 0 0 1 1 1 2 2 2));
+                (sz 3;(0 0 0 1 1 1 2 2 2));
+                (sz 4;(0 0 0 1 1 1 2 2 2));
+                (sz 5;(0 0 0 1 1 1 2 2 2))
+            );
+
 // TODO test with differing intime?
 test:.qt.Unit[
     ".env.Advance";
@@ -61,17 +70,9 @@ test:.qt.Unit[
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
         / show p[0];
-
-
         makeEvents      :{
 
             };
-
-        
-
-
-
-
 
         :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
             `step`actions!p[0];
@@ -80,19 +81,13 @@ test:.qt.Unit[
             p[3];
             p[4];
             p[5];
-            p[6]
-        )};
+            p[6])
+    };
     (
         ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
             (1;((1;0)));
             (sz 5*til[5]);
-            (
-                (sz 1;(0 0 0 1 1 1 2 2 2));
-                (sz 2;(0 0 0 1 1 1 2 2 2));
-                (sz 3;(0 0 0 1 1 1 2 2 2));
-                (sz 4;(0 0 0 1 1 1 2 2 2));
-                (sz 5;(0 0 0 1 1 1 2 2 2))
-            );
+            dSecEvents;
             enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]}); // Adapt
             enlist(1b;1;()); // ProcessEvents
             enlist(1b;1;()); // InsertResultantEvents
