@@ -88,6 +88,8 @@ Reset       :{[aIds] // TODO make into accountConfigs
 / Advancing System
 // =====================================================================================>
 
+firstDay:{`datetime$((select first date from events)[`date])};
+
 loadEvents  :{
     :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()
     };
@@ -97,8 +99,6 @@ loadEvents  :{
 // batching/episodes and episode randomization/replay buffer.
 // Loads events into memory such that they can be more rapidly stepped over
 // moving this to a seperate process will increase the speed even further. 
-
-firstDay:{`datetime$((select first date from events)[`date])}
 
 // SIMPLE DERIVE STEP RATE
 Advance :{[step;actions]
