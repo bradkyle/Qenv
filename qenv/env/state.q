@@ -149,7 +149,7 @@ DepthEventHistory: (
     side:`symbol$();
     price:`int$();
     size:`int$());
-depthCols:cols DepthEventHistory;
+depthCols:`time`intime`side`price`size;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -172,17 +172,15 @@ TradeEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
-tradeCols:cols .state.TradeEventHistory;
+tradeCols:`size`price`side`time;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
 MarkEventHistory: (
-    size            :   `float$();
-    price           :   `float$();
-    side            :   `symbol$();
+    markprice           :   `float$();
     time            :   `datetime$());
-markCols:cols .state.MarkEventHistory;
+markCols:`markprice`time;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -192,7 +190,7 @@ FundingEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
-fundingCols:cols .state.FundingEventHistory;
+fundingCols:`fundingRate`f;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
