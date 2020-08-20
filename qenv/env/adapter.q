@@ -35,6 +35,26 @@ MakeActionEventC :{[kind;cmd;time;datum]
     :`time`intime`kind`cmd`datum!(time;time;kind;cmd;datum);
     };
 
+// Creates a simple market order event for the
+// respective agent
+createMarketOrderEvent      :{[accountId;time;size;side]
+    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;side;size)];
+    };
+
+// Creates an event that cancels all open orders for
+// a given agent.
+createCancelAllOrdersEvent  :{[accountId;time]
+    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId)];
+    };
+
+createDepositEvent  :{[accountId;amt;time]
+    :MakeActionEvent[time;`DEPOSIT;(accountId; amt)];
+    };
+
+createWithdrawEvent  :{[accountId;amt;time]
+    :MakeActionEvent[time;`WITHDRAW;(accountId; amt)];
+    };
+
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
@@ -61,9 +81,13 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
 
 // TODO add logic for reducing order count when neccessary
 // TODO testing
+// @aid: accountId
+// @lvls: levels ascending from spread
+// @sizes: target sizes
+// @s: side
 makerSide   :{[aId;lvls;sizes;s;time]
-    p:.adapter.getPriceAtLevel[lvls;s];
-    c:select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
+    p:.state.getPriceAtLevel[lvls;s];
+    c:.state.getLvlOQtysByPrice[aId;s];
     dlt: neg[c] + (1!([]price:p;dlt:sizes));
     j:ej[`price;dlt;`price xgroup `time xdesc (select orderId,leaves by price, time from .state.OrderEventHistory where side=s)];
     
@@ -73,7 +97,7 @@ makerSide   :{[aId;lvls;sizes;s;time]
     };
 
 // TODO test for 1, 0 count lvl etc
-makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
+makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
     
     a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
     b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
@@ -89,37 +113,6 @@ makerBuySell : {[aId;time;limitSize;buyLvls;sellLvls]
     reqs,:{.adapter.MakeActionEvent[`AMEND_BATCH_ORDER;x;flip[y]]}[time] each amd;
     reqs,:{.adapter.MakeActionEvent[`PLACE_BATCH_ORDER;x;flip[y]]}[time] each nord;
     :reqs;
-    };
-
-
-// Generates a set of events that represent
-// the placement of orders at a set of levels
-// represented as a list
-createOrderEventsByTargetDist :{[targetAskDist;targetBidDist]
-    currentDist: .state.getCurrentOrderLvlDist[count targetAskDist; count targetBidDist];
-    currentPrices: .state.getCurrentLvlPrices[count targetAskDist; count targetBidDist];
-    askDeltas: targetAskDist - currentDist[0];
-    bidDeltas: targetBidDist - currentDist[1];
-    
-    };
-
-// Generates a set of events that represent
-// the placement of orders at a set of levels
-// represented as a list
-createOrderEventsByLevelDeltas :{[lvlDeltas]
-
-    };
-
-// Creates a simple market order event for the
-// respective agent
-createMarketOrderEvent      :{[accountId;time;size;side]
-    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;side;size)];
-    };
-
-// Creates an event that cancels all open orders for
-// a given agent.
-createCancelAllOrdersEvent  :{[accountId;time]
-    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId)];
     };
 
 // Creates a set of events neccessary to transition
@@ -140,13 +133,6 @@ createMarketOrderEventsFromDist :{[]
 
     };
 
-createDepositEvent  :{[accountId;amt;time]
-    :MakeActionEvent[time;`DEPOSIT;(accountId; amt)];
-    };
-
-createWithdrawEvent  :{[accountId;amt;time]
-    :MakeActionEvent[time;`WITHDRAW;(accountId; amt)];
-    };
 
 // Creates a set of stop orders that oppose the 
 // current position accoutding to a certain loss
