@@ -116,7 +116,6 @@ loadEvents  :{
 // SIMPLE DERIVE STEP RATE
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
-    show step;
     $[
         // If the current step is not the first or the last
         // step in the in the event batch
@@ -139,7 +138,7 @@ Advance :{[step;actions]
             //
             idx:.env.StepIndex@step;
             .env.EventBatch:.env.loadEvents[];
-            .env.StepIndex:key .env.EventBatch;
+            .env.StepIndex:key[.env.EventBatch];
             / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
         ]
     ];

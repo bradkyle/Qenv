@@ -33,13 +33,15 @@ test:.qt.Unit[
     "then returns normalized (min max) vector bundle for each account.")];
 
 
-dSecEvents: (
-                (sz 1;(0 0 0 1 1 1 2 2 2));
-                (sz 2;(0 0 0 1 1 1 2 2 2));
-                (sz 3;(0 0 0 1 1 1 2 2 2));
-                (sz 4;(0 0 0 1 1 1 2 2 2));
-                (sz 5;(0 0 0 1 1 1 2 2 2))
-            );
+dSecEvents: {[x;y]
+            t:{{x+`second$(rand 10)} each y#x}[y];
+
+            tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
+            dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
+            mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
+
+            :(flip[dpth],flip[mk],flip[tds]);
+    };
 
 // TODO test with differing intime?
 test:.qt.Unit[
@@ -70,9 +72,8 @@ test:.qt.Unit[
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
         / show p[0];
-        makeEvents      :{
-
-            };
+        events:.envTest.dSecEvents[10;z];
+        
 
         :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
             `step`actions!p[0];
@@ -85,11 +86,9 @@ test:.qt.Unit[
     };
     (
         ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
-            (1;((1;0)));
-            (sz 5*til[5]);
-            dSecEvents;
-            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]}); // Adapt
-            enlist(1b;1;()); // ProcessEvents
+            (1;((1;0))); 
+            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]}); // Adapt \\ returns 
+            enlist(1b;1;()); // ProcessEvents assert = nevents + 
             enlist(1b;1;()); // InsertResultantEvents
             enlist(0b;0;()) // loadEvents
         ));
