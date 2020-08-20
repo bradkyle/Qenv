@@ -115,7 +115,7 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        .qt.M[`.adapter.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
         .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
         
         a:p[`args];
@@ -140,6 +140,97 @@ test:.qt.Unit[
     .qt.sBlk;
     "creates the set of events that serve to flatten the inventory for the account"];
 
+
+test:.qt.Unit[
+    ".adapter.createOrderEventsFromDist";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
+        
+        a:p[`args];
+        / res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        / .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "Creates the set of order events that conforms to provided dist"];
+
+test:.qt.Unit[
+    ".adapter.createOrderEventsFromDist";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
+        
+        a:p[`args];
+        / res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        / .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "Creates the set of market order events that conforms to provided dist"];
+
+
+test:.qt.Unit[
+    ".adapter.createNaiveStopEvents";
+    {[c]
+        p:c[`params];
+
+        .qt.M[`.state.getOpenPositionAmtBySide;p[`MgetOpenPositionAmtBySide];c];
+        .qt.M[`.adapter.createMarketOrderEvent;p[`McreateMarketOrderEvent];c];
+        
+        a:p[`args];
+        / res:.adapter.createFlattenEvents[a[0];a[1];a[2];a[3];a[4]];
+
+        / .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetOpenPositionAmtBySide`MMakeActionEvent`eRes!(p[0];p[1];p[2];p[3])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "Creates the set of market order events that conforms to provided dist"];
 
 
 .qt.RunTests[];

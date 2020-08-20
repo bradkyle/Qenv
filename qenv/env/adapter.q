@@ -120,15 +120,20 @@ makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
 // market orders for a specific agent
 createFlattenEvents          :{[aId; time]
     openQty:.state.getOpenPositionAmtBySide[aId];
-    {.adapter.createMarketOrderEvent[
+    :({.adapter.createMarketOrderEvent[
         x;y;z[`currentQty]
-        ]}[aId;time] each openQty;
+        ]}[aId;time] each openQty);
     };  
 
+// Creates a set of order events that transition the current
+// open order events to a new set that satisfies the distribution
+// provided TODO make better.
 createOrderEventsFromDist   :{[accountId;time;dist;side]
-
+    
     };
 
+// Creates a set of market order events that satisfy the provided
+// distribution.
 createMarketOrderEventsFromDist :{[]
 
     };
@@ -139,11 +144,11 @@ createMarketOrderEventsFromDist :{[]
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createNaiveStopEvents  :{[accountId;loss;time]
-    openInv:select by side from .state.InventoryEventHistory where accountId=accountId, abs[currentQty]>0;
+createNaiveStopEvents  :{[aId;loss;time]
+    openQty:.state.getOpenPositionAmtBySide[aId];
     {
         0n;
-    }[accountId;loss;time] each openInv;
+    }[aId;loss;time] each openInv;
     };
 
 
