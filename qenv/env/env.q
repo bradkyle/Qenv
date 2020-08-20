@@ -2,7 +2,7 @@
 // Agent ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
 //      \_____ other features _____________________________/
-
+\d .env
 
 Env  :(
         [envId               :`long$()]
@@ -104,27 +104,27 @@ Advance :{[step;actions]
     $[
         (step=0);
         [
-            idx:.pipe.StepIndex@step;
+            idx:.env.StepIndex@step;
         ];
-        (step<(count[.pipe.StepIndex]-1));
+        (step<(count[.env.StepIndex]-1));
         [
-            idx:.pipe.StepIndex@step;
-            nevents:flip[.pipe.EventBatch@idx];
+            idx:.env.StepIndex@step;
+            nevents:flip[.env.EventBatch@idx];
             
             / feature:FeatureBatch@thresh;
             // should add a common offset to actions before inserting them into
             // the events.
             // TODO offset
             // TODO 
-            aevents:.adapter.Adapt[.pipe.Adapter][time] each actions; 
+            aevents:.adapter.Adapt[.env.Adapter][time] each actions; 
             newEvents: .engine.ProcessEvents[(nevents,aevents)];
 
-            .pipe.InsertResultantEvents[newEvents];
+            .env.InsertResultantEvents[newEvents];
         ];
         [
-            .pipe.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .pipe.events where time within ();
-            .pipe.StepIndex:key .pipe.EventBatch;
-            / .pipe.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
+            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
+            .env.StepIndex:key .env.EventBatch;
+            / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
         ]
     ];
     };
@@ -143,7 +143,7 @@ Step    :{[actions]
     // TODO format actions
 
     // Advances the current state of the environment
-    results: .pipe.Advance[accountIds; newEvents];
+    results: .env.Advance[accountIds; newEvents];
 
     // Derive the current info for the
     // entire engine and for each subsequent
