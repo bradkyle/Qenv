@@ -38,6 +38,12 @@ Agent :(
     );
 
 
+Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+BatchSize:0;
+StepIndex:();
+EventBatch:();
+FeatureBatch:();
+
 // Main Callable functions
 // --------------------------------------------------->
 
@@ -80,12 +86,6 @@ Reset       :{[aIds] // TODO make into accountConfigs
 
 / Advancing System
 // =====================================================================================>
-
-Adapter:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-BatchSize:0;
-StepIndex:();
-EventBatch:();
-FeatureBatch:();
 
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
