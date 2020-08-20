@@ -144,12 +144,10 @@ currentDepthCols:cols .state.CurrentDepth;
 // i.e. The depth has been directly affected by 
 // the agent.
 DepthEventHistory: (
-    time:`datetime$();
-    intime:`datetime$();
+    [price:`long$();time:`datetime$()]
     side:`symbol$();
-    price:`int$();
     size:`int$());
-depthCols:`time`intime`side`price`size;
+depthCols:cols DepthEventHistory;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -190,7 +188,7 @@ FundingEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
-fundingCols:`fundingRate`f;
+fundingCols:`fundingRate;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -200,7 +198,7 @@ LiquidationEventHistory: (
     price           :   `float$();
     side            :   `symbol$();
     time            :   `datetime$());
-liquidationCols:cols .state.LiquidationEventHistory;
+liquidationCols:`size`price`side`time;
 
 // TODO batching + 
 
