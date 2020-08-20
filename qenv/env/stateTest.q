@@ -19,7 +19,7 @@ test:.qt.Unit[
     {[p]:`events`eState!(p[0];p[1])};
     (
         ("Should correctly insert account events";(
-            (til 3);
+            ();
             ()));
         ("Should correctly insert inventory events";(
             (til 4);

@@ -301,6 +301,4 @@ test:.qt.Unit[
     "Creates the set of stop market orders that serve to stop loss at a given loss fraction"];
 
 
-
-
 .qt.RunTests[];
