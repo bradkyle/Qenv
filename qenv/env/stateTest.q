@@ -12,12 +12,12 @@ test:.qt.Unit[
         p:c[`params];
         setupState[p];
 
-        res:.state.InsertResultantEvents[p[`aids]];
+        .state.InsertResultantEvents[p[`events]];
         
         // Assertions
         checkState[];
     };
-    {[p]:`aids`cEvents`eFea`eRes!(p[0];p[1];p[2];p[3])};
+    {[p]:`events`eFea`eRes!(p[0];p[1];p[2];p[3])};
     (
         ("Should return normalized feature buffer for 1 account";(
             (til 3);
