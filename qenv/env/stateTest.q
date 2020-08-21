@@ -39,7 +39,7 @@ test:.qt.Unit[
                 (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
             );
             til[10]
-        )));
+        ));
         ("Should correctly insert depth events into both current depth and depth event history";(
             0 1;
             (
@@ -47,7 +47,7 @@ test:.qt.Unit[
                 (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
             );
             til[10]
-        )))
+        ))
     );
     .qt.sBlk;
     "Creates the event to place a new order at a given level in the orderbook"];
@@ -147,7 +147,7 @@ test:.qt.Unit[
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
-            )));
+            )))
     );
     .qt.sBlk;
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
