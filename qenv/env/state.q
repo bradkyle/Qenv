@@ -302,6 +302,9 @@ getFeatureVectors    :{[accountIds]
             mfi:100*mf%(1+mf);                /money flow as a percentage
             mfi };
 
+        update mfi:mfiMain[high;low;close;6;volume] from ohlc;
+
+
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
         // TODO add long term prediction features.
