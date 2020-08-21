@@ -47,10 +47,10 @@ checkState  :{[]
 // @x: count
 // @y: time // TODO check cols correct
 // TODO deterministic ordering
-// .stateTest.genRandomState[1000000;.z.z;100]; generates a million events between .z.z and 100 minutes
+// .stateTest.genRandomState[100000;.z.z;250]; generates a million events between .z.z and 100 minutes
 genRandomState      :{[x;y;z] // TODO add max time
             / t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
-            t:{{x+(`minute$(rand 30))} each y#x}[y];
+            t:{{x+(`minute$(rand 250))} each y#x}[y];
             p:{{10000+x+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
 
@@ -100,10 +100,13 @@ genRandomState      :{[x;y;z] // TODO add max time
             lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[.state.liquidationCols!(
                 til[x];
                 t x;
-                p x;
                 sz x;
+                p x;
                 x?`BUY`SELL
             )]);
+
+            show lq;
+            show 99#"BAM";
 
             x:(
                 flip[tds],
@@ -120,7 +123,7 @@ genRandomState      :{[x;y;z] // TODO add max time
 
 // TODO should time cases
 test:.qt.Unit[
-    ".state.getFeatureVectors";
+    ".state.GetFeatures";
     {[c]
         p:c[`params];
         setupState[p[`cState]];
@@ -186,9 +189,9 @@ test:.qt.Unit[
                 (z;`FUNDING;`UPDATE;.state.fundingCols!(z;1;z));
                 (z;`FUNDING;`UPDATE;.state.fundingCols!(z;1;z));
 
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(0;z;`BUY;1000;1000));
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(1;z;`BUY;1000;1000));
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(2;z;`BUY;1000;1000))
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(0;z;1000;1000;`BUY));
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(1;z;1000;1000;`BUY));
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(2;z;1000;1000;`BUY))
             );
             til[10]
         ))

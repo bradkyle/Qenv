@@ -250,15 +250,110 @@ Piv:{[t;k;p;v]
 // feature vector represenations of the agent state 
 // and environment state for a set of agent ids. // CHANGE to FeatureVector
 // https://code.kx.com/q/wp/trend-indicators/
-getFeatureVectors    :{[accountIds]
+
+
+relativeStrength:{[num;y]
+        begin:num#0Nf;
+        start:avg((num+1)#y);
+        begin,start,{(y+x*(z-1))%z}\[start;(num+1)_y;num]};
+
+
+rsiMain:{[close;n]
+    diff:-[close;prev close];
+    rs:relativeStrength[n;diff*diff>0]%relativeStrength[n;abs diff*diff<0];
+    rsi:100*rs%(1+rs);
+    rsi };
+
+mfiMain:{[h;l;c;n;v]
+            TP:avg(h;l;c);                    / typical price
+            rmf:TP*v;                         / real money flow
+            diff:deltas[0n;TP];               / diffs
+            /money-flow leveraging func for RSI
+            mf:relativeStrength[n;rmf*diff*diff>0]%relativeStrength[n;abs rmf*diff*diff<0];
+            mfi:100*mf%(1+mf);                /money flow as a percentage
+            mfi };
+
+maDev:{[tp;ma;n]
+    ((n-1)#0Nf),
+        {[x;y;z;num] reciprocal[num]*sum abs z _y#x}'
+        [(n-1)_tp-/:ma; n+l; l:til count[tp]-n-1; n] };
+
+// TODO change to interval
+CCI:{[high;low;close;n] 
+    TP:avg(high;low;close);
+    sma:mavg[n;TP];
+    mad:maDev[TP;sma;n];
+    reciprocal[0.015*mad]*TP-sma };
+
+
+// TODO doesn't work
+/ forceIndex:{[c;v;n]
+/     forceIndex1:1_deltas[0nf;c]*v;
+/     n#0nf,(n-1)_ema[2%1+n;forceIndex1] }
+
+/ ohlc:update ForceIndex:forceIndex[close;volume;13] from ohlc;
+
+//Ease of movement value -EMV
+/h-high
+/l-low
+/v-volume
+/s-scale
+/n-num of periods
+emv:{[h;l;v;s;n]
+    boxRatio:reciprocal[-[h;l]]*v%s;
+    distMoved:deltas[0n;avg(h;l)];
+    (n#0nf),n _mavg[n;distMoved%boxRatio] };
+
+
+//Price Rate of change Indicator (ROC)
+/c-close
+/n-number of days prior to compare
+roc:{[c;n]
+    curP:_[n;c];
+    prevP:_[neg n;c];
+    (n#0nf),100*reciprocal[prevP]*curP-prevP };
+
+
+//null out first 13 days if 14 days moving avg
+//Stochastic Oscillator
+/h-high
+/l-low
+/n-num of periods
+/c-close price
+/o-open
+stoOscCalc:{[c;h;l;n]
+    lows:mmin[n;l];
+    highs:mmax[n;h];
+    (a#0n),(a:n-1)_100*reciprocal[highs-lows]*c-lows };
+
+stoOcsK:{[c;h;l;n;k] (a#0nf),(a:n+k-2)_mavg[k;stoOscCalc[c;h;l;n]] };
+stoOscD:{[c;h;l;n;k;d] (a#0n),(a:n+k+d-3)_mavg[d;stoOscK[c;h;l;n;k]] };
+
+
+//Aroon Indicator
+aroonFunc:{[c;n;f]
+    m:reverse each a _'(n+1+a:til count[c]-n)#\:c;
+    #[n;0ni],{x? y x}'[m;f] };
+
+aroon:{[c;n;f] 100*reciprocal[n]*n-aroonFunc[c;n;f]};
+
+/- aroon[tab`high;25;max]-- aroon up
+/- aroon[tab`low;25;max]-- aroon down
+aroonOsc:{[h;l;n] aroon[h;n;max] - aroon[l;n;min]};
+
+signal:{ema[2%10;x]};
+macd:{[x] ema[2%13;x]-ema[2%27;x]};
+
+/ tradeFuncs:`lowPr`highPr`tcnt`avgPr`vwap`volatility`totalReturn`volume`dollarVol`open`close`twap`twas`avgSz`minSz`maxSz`startTime`endTime!((min;`tp);(max;`tp);(count;`tp);(avg;`tp);(wavg;`ts;`tp);(volatility;`tp);(totalReturn;`tp);(sum;`ts);(dollarVol;`ts;`tp);(first;`tp);(last;`tp);(tw;`time;`tp);(tw;`time;`ts);(avg;`ts);(min;`ts);(max;`ts);(min;`time);(max;`time))
+/ quoteFuncs:`minAp`maxAp`minBp`maxBp`qcnt`avgSprd`maxSprd`minSprd`twAsk`twBid`twSprd!((min;`ap);(max;`ap);(min;`bp);(max;`bp);(count;`ap);(avg;(-;`ap;`bp));(max;(-;`ap;`bp));(min;(-;`ap;`bp));(tw;`time;`ap);(tw;`time;`bp);(tw;`time;(-;`ap;`bp)))
+
+
+GetFeatures    :{[accountIds]
         windowsize:100;
         / interval: 
 
         // TOO long only do within given intervals
         ohlc:0!select num:count size, high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size,time: max time, lsize: min size by (1 xbar `minute$time) from .state.TradeEventHistory;
-
-        signal:{ema[2%10;x]};
-        macd:{[x] ema[2%13;x]-ema[2%27;x]};
 
         ohlc:update 
             sma10:mavg[10;close], 
@@ -268,110 +363,30 @@ getFeatureVectors    :{[accountIds]
             macd:macd[close] 
             from ohlc;
         
+        show ohlc;
+
         ohlc:update signal:signal[macd] from ohlc;
-
-        relativeStrength:{[num;y]
-                begin:num#0Nf;
-                start:avg((num+1)#y);
-                begin,start,{(y+x*(z-1))%z}\[start;(num+1)_y;num]};
-
-        rsiMain:{[close;n]
-            diff:-[close;prev close];
-            rs:relativeStrength[n;diff*diff>0]%relativeStrength[n;abs diff*diff<0];
-            rsi:100*rs%(1+rs);
-            rsi };
 
         ohlc:update rsi:rsiMain[close;14] from ohlc;
 
-        mfiMain:{[h;l;c;n;v]
-            TP:avg(h;l;c);                    / typical price
-            rmf:TP*v;                         / real money flow
-            diff:deltas[0n;TP];               / diffs
-            /money-flow leveraging func for RSI
-            mf:relativeStrength[n;rmf*diff*diff>0]%relativeStrength[n;abs rmf*diff*diff<0];
-            mfi:100*mf%(1+mf);                /money flow as a percentage
-            mfi };
-
         ohlc:update mfi:mfiMain[high;low;close;6;volume], avtp:avg(high;low;close) from ohlc;
-
-        maDev:{[tp;ma;n]
-            ((n-1)#0Nf),
-                {[x;y;z;num] reciprocal[num]*sum abs z _y#x}'
-                [(n-1)_tp-/:ma; n+l; l:til count[tp]-n-1; n] };
 
         ohlc:update mfi:mfiMain[high;low;close;6;volume] from ohlc;
 
-        // TODO change to interval
-        CCI:{[high;low;close;avtp;ndays] 
-            sma:mavg[ndays;avtp];
-            mad:maDev[avtp;sma;n];
-            reciprocal[0.015*mad]*avtp-sma };
+        ohlc:update cci:CCI[high;low;close;14] from ohlc;
 
-        ohlc:update cci:CCI[high;low;close;avtp;14] from ohlc;
-
-        update sma:mavg[20;avtp],sd:mdev[20;avtp] from ohlc;
+        ohlc:update sma:mavg[20;avtp],sd:mdev[20;avtp] from ohlc;
 
         ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
 
-        forceIndex:{[c;v;n]
-            forceIndex1:1_deltas[0nf;c]*v;
-            n#0nf,(n-1)_ema[2%1+n;forceIndex1] }
-
-        ohlc:update ForceIndex:forceIndex[close;vol;13] from ohlc;
-
-        //Ease of movement value -EMV
-        /h-high
-        /l-low
-        /v-volume
-        /s-scale
-        /n-num of periods
-        emv:{[h;l;v;s;n]
-        boxRatio:reciprocal[-[h;l]]*v%s;
-        distMoved:deltas[0n;avg(h;l)];
-        (n#0nf),n _mavg[n;distMoved%boxRatio] };
-
-        ohlc:update EMV:emv[high;low;vol;1000000;14] from ohlc;
-
-        //Price Rate of change Indicator (ROC)
-        /c-close
-        /n-number of days prior to compare
-        roc:{[c;n]
-        curP:_[n;c];
-        prevP:_[neg n;c];
-        (n#0nf),100*reciprocal[prevP]*curP-prevP }
+        ohlc:update EMV:emv[high;low;volume;1000000;14] from ohlc;
 
         ohlc:update ROC:roc[close;10] from ohlc;
-
-        //null out first 13 days if 14 days moving avg
-        //Stochastic Oscillator
-        /h-high
-        /l-low
-        /n-num of periods
-        /c-close price
-        /o-open
-        stoOscCalc:{[c;h;l;n]
-        lows:mmin[n;l];
-        highs:mma[n;h];
-        (a#0n),(a:n-1)_100*reciprocal[highs-lows]*c-lows };
-
-        stoOcsK:{[c;h;l;n;k] (a#0nf),(a:n+k-2)_mavg[k;stoOscCalc[c;h;l;n]] };
-        stoOscD:{[c;h;l;n;k;d] (a#0n),(a:n+k+d-3)_mavg[d;stoOscK[c;h;l;n;k]] }
 
         ohlc: update
             sC:stoOscCalc[close;high;low;5],
             sk:stoOscK[close;high;low;5;2],
             stoOscD[close;high;low;5;2;3] from ohlc;
-
-        //Aroon Indicator
-        aroonFunc:{[c;n;f]
-        m:reverse each a _'(n+1+a:til count[c]-n)#\:c;
-        #[n;0ni],{x? y x}'[m;f] }
-
-        aroon:{[c;n;f] 100*reciprocal[n]*n-aroonFunc[c;n;f]}
-
-        /- aroon[tab`high;25;max]-- aroon up
-        /- aroon[tab`low;25;max]-- aroon down
-        aroonOsc:{[h;l;n] aroon[h;n;max] - aroon[l;n;min]}
 
         ohlc:update
             aroonUp:aroon[high;25;max],
@@ -380,19 +395,24 @@ getFeatureVectors    :{[accountIds]
 
         // Pivot and combine per accountId
 
-        ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
-
+        / ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
+        ohlc: value last (0^(`time`time _ ohlc));
+        show 99#"BAM";
         // TODO add long term prediction features.
 
         // Flattened last trades
 
         // TODO add account id to feature vector
-        obs: raze(
-            exec size from .state.CurrentDepth;
-            value last ohlc;
+        obs: raze( 
+            ohlc;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
-            exec last price from .state.TradeEventHistory;
+            value flip select[-5] price from .state.TradeEventHistory where side=`BUY;
+            value flip select[-5] price from .state.TradeEventHistory where side=`SELL;
+            value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
+            value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
+            value flip select[5] size from `price xasc .state.CurrentDepth where side=`BUY;
+            value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL;
             value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
             value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY
         );
@@ -433,6 +453,7 @@ InsertResultantEvents   :{[events]
             .qt.L:l;
             `.state.CurrentDepth upsert 1!l;
             `.state.DepthEventHistory upsert 2!l;
+            delete from `.state.CurrentDepth where size=0; // TODO remove stratified orderbook
           ];
           k=`TRADE;[
               t:(
