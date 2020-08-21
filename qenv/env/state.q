@@ -228,6 +228,22 @@ FeatureBuffer   :();
 // Agent specific observation functions
 // --------------------------------------------------->
 
+Piv:{[t;k;p;v]
+    f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
+    v:(),v; 
+    k:(),k; 
+    p:(),p;
+    G:group flip k!(t:.Q.v t)k;
+    F:group flip p!t p;
+    key[G]!flip(C:f[v]P:flip value flip key F)!raze{[i;j;k;x;y]
+        a:count[x]#x 0N;a[y]:x y;
+        b:count[x]#0b;
+        b[y]:1b;
+        c:a i;
+        c[k]:first'[a[j]@'where'[b j]];
+        c
+    }[I[;0];I J;J:where 1<>count'[I:value G]]/:\:[t v;value F]};
+
 // TODO check if successful feature derive
 
 // Efficiently returns the aggregated and normalised
@@ -239,11 +255,11 @@ getFeatureVectors    :{[accountIds]
 
         // TODO add account id to feature vector
         obs: raze(
-            value .state.CurrentDepth;
+            exec size from .state.CurrentDepth;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
             exec last price from .state.TradeEventHistory;
-            value last piv[0!select 
+            value last Piv[0!select 
                     num:count size, 
                     high:max price, 
                     low: min price, 
@@ -258,16 +274,18 @@ getFeatureVectors    :{[accountIds]
                     from .state.TradeEventHistory
                     where time>= max time - `minute$5;
                 `time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
-            exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY;
-            exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL
+            value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
+            value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY
         );
+
+        .qt.O:obs;
         // if count feature buffer
-        `.observation.FeatureBuffer upsert obs;
+        `.state.FeatureBuffer upsert obs;
 
         // TODO count by account id
         / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
         // TODO fill forward + normalize
-        :.ml.minmaxscaler[-100#.schema.FeatureBuffer];
+        :.ml.minmaxscaler[-100#.state.FeatureBuffer];
     };
 
 
@@ -291,7 +309,7 @@ InsertResultantEvents   :{[events]
         d:events[;`datum];
         t:events[`time];
 
-        $[k=`DEPTH;[
+        $[k=`DEPTH;[ // TODO delete from current depth
             l:flip[.state.depthCols!(d[;`price];t;d[;`side];0^d[;`size])];
             .qt.L:l;
             `.state.CurrentDepth upsert 1!l;
