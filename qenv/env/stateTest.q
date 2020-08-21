@@ -127,7 +127,7 @@ test:.qt.Unit[
         setupState[p[`cState]];
 
         a:p[`args];
-        res:.state.getFeatureVectors[a];
+        res:.state.GetFeatures[a];
 
         .qt.A[res;~;p[`eRes];"result";c];
 

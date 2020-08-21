@@ -347,12 +347,7 @@ macd:{[x] ema[2%13;x]-ema[2%27;x]};
 / tradeFuncs:`lowPr`highPr`tcnt`avgPr`vwap`volatility`totalReturn`volume`dollarVol`open`close`twap`twas`avgSz`minSz`maxSz`startTime`endTime!((min;`tp);(max;`tp);(count;`tp);(avg;`tp);(wavg;`ts;`tp);(volatility;`tp);(totalReturn;`tp);(sum;`ts);(dollarVol;`ts;`tp);(first;`tp);(last;`tp);(tw;`time;`tp);(tw;`time;`ts);(avg;`ts);(min;`ts);(max;`ts);(min;`time);(max;`time))
 / quoteFuncs:`minAp`maxAp`minBp`maxBp`qcnt`avgSprd`maxSprd`minSprd`twAsk`twBid`twSprd!((min;`ap);(max;`ap);(min;`bp);(max;`bp);(count;`ap);(avg;(-;`ap;`bp));(max;(-;`ap;`bp));(min;(-;`ap;`bp));(tw;`time;`ap);(tw;`time;`bp);(tw;`time;(-;`ap;`bp)))
 
-
-GetFeatures    :{[accountIds]
-        windowsize:100;
-        / interval: 
-
-        // TOO long only do within given intervals
+getOhlcFeatures :{[]
         ohlc:0!select 
             num:count size, 
             high:max price, 
@@ -408,14 +403,21 @@ GetFeatures    :{[accountIds]
 
         / ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
         ohlc: value last (0^(`time`time _ ohlc));
-        show 99#"BAM";
-        // TODO add long term prediction features.
+    };
 
-        // Flattened last trades
+getOBFeatures   :{
+
+    };
+
+// TODO get orderbook features
+
+GetFeatures    :{[accountIds]
+        windowsize:100;
+        / interval: 
 
         // TODO add account id to feature vector
-        obs: raze( 
-            ohlc;
+        pubobs: raze raze'[( 
+            10#0;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
             value flip select[-5] price from .state.TradeEventHistory where side=`BUY;
@@ -423,10 +425,8 @@ GetFeatures    :{[accountIds]
             value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
             value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
             value flip select[5] size from `price xasc .state.CurrentDepth where side=`BUY;
-            value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL;
-            value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
-            value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY
-        );
+            value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL
+        )];
 
         .qt.O:obs;
         // if count feature buffer
