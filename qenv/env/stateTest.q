@@ -47,6 +47,7 @@ checkState  :{[]
 // @x: count
 // @y: time // TODO check cols correct
 // TODO deterministic ordering
+// .stateTest.genRandomState[1000000;.z.z;100]; generates a million events between .z.z and 100 minutes
 genRandomState      :{[x;y;z] // TODO add max time
             t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
 
