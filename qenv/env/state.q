@@ -266,16 +266,14 @@ InsertResultantEvents   :{[events]
         t:events[`time];
 
         $[k=`DEPTH;
-            `.state.DepthEventHistory upsert ([
-                        price:d[;`price];
-                        time:t] 
-                        side:0^d[;`side];
-                        size:0^d[;`size]);
+            l:(price:d[;`price];
+               time:t;
+               side:0^d[;`side];
+               size:0^d[;`size]);
 
-            `.state.CurrentDepth upsert (
-                        [price:d[;`price]] 
-                        side:0^d[;`side];
-                        size:0^d[;`size]);
+            `.state.CurrentDepth upsert 1!l;
+            `.state.DepthEventHistory upsert 2!l;
+            
           k=`TRADE;
             `.state.TradeEventHistory upsert ([
                         tid:d[;`tid];
@@ -305,16 +303,22 @@ InsertResultantEvents   :{[events]
           ];
           k=`ORDER;
           [
-            o:([
+            o:(
                         orderId:d[;`orderId];
                         time:t;
                         accountId:d[;`accountId];
                         side:d[;`side];
                         otype:d[;`side];
-                        amt:0^d[;`amt];
-                        realizedPnl:0^d[;`realizedPnl];
-                        avgPrice:0^d[;`avgPrice];
-                        unrealizedPnl:0^d[;`unrealizedPnl]);
+                        price:0^d[;`amt];
+                        leaves:0^d[;`realizedPnl];
+                        filled:0^d[;`avgPrice];
+                        limitprice:0^d[;`avgPrice];
+                        stopprice:0^d[;`avgPrice];
+                        status:0^d[;`avgPrice];
+                        time:0^d[;`avgPrice];
+                        isClose:0^d[;`avgPrice];
+                        trigger:0^d[;`avgPrice];
+                        execInst:0^d[;`unrealizedPnl]);
 
               `.state.CurrentOrders upsert 1!o;
               `.state.OrderEventHistory upsert 2!o;
