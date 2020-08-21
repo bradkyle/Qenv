@@ -372,6 +372,17 @@ getFeatureVectors    :{[accountIds]
             sk:stoOscK[close;high;low;5;2],
             stoOscD[close;high;low;5;2;3] from ohlc;
 
+        //Aroon Indicator
+        aroonFunc:{[c;n;f]
+        m:reverse each a _'(n+1+a:til count[c]-n)#\:c;
+        #[n;0ni],{x? y x}'[m;f] }
+
+        aroon:{[c;n;f] 100*reciprocal[n]*n-aroonFunc[c;n;f]}
+
+        /- aroon[tab`high;25;max]-- aroon up
+        /- aroon[tab`low;25;max]-- aroon down
+        aroonOsc:{[h;l;n] aroon[h;n;max] - aroon[l;n;min]}
+
         // Pivot and combine per accountId
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
