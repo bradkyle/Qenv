@@ -503,6 +503,10 @@ getOhlcFeatures :{[]
         ohlc: value last (0^(`time`time _ ohlc));
     };
 
+getPeriodSplit  :{
+
+    };
+
 getOBFeatures   :{
 
         ob update avg(bestBid,bestAsk) from .state.DepthEventHistory;
@@ -551,15 +555,17 @@ GetFeatures    :{[accountIds] // TODO configurable window size
 // Reward Extraction and Derivation
 // =====================================================================================>
 
-sortinoRealizedPnl  :{
+sortino  :{
 
     };
 
 GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100
 
-    wnRet:r:0!select 
-        1_deltas[realizedPnl] 
+    wnRet:r:
+
+        0!select 
+        returns:1_deltas[realizedPnl] 
         by accountId 
         from select[-100] 
             last realizedPnl 

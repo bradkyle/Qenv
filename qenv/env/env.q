@@ -90,6 +90,24 @@ Reset       :{[aIds] // TODO make into accountConfigs, TODO load initial events 
     // Reset public singletons
     .engine.Reset[aIds];
     :.state.Reset[aIds];
+
+
+    $[
+        // If the current step is not the first or the last
+        // step in the in the event batch
+        ((step<>0) and (step<(count[.env.BatchSize]-1)));
+        
+        // If the current step is the first or last step 
+        // in the given event batch.
+        [
+            //
+            idx:.env.StepIndex@step;
+            .env.EventBatch:.env.loadEvents[];
+            .env.StepIndex:key[.env.EventBatch];
+            / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
+        ]
+    ];
+
     };
 
 
@@ -123,32 +141,23 @@ loadEvents  :{
 // SIMPLE DERIVE STEP RATE
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
-    $[
-        // If the current step is not the first or the last
-        // step in the in the event batch
-        ((step<>0) and (step<(count[.env.BatchSize]-1)));
-        [
-            idx:.env.StepIndex@step;
-            nevents:flip[.env.EventBatch@idx];
-            
-            / feature:FeatureBatch@thresh;
-            // should add a common offset to actions before inserting them into
-            // the events.
-            aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
-            xevents:.engine.ProcessEvents[(nevents,aevents)];
+        $[
+            [
+                idx:.env.StepIndex@step;
+                nevents:flip[.env.EventBatch@idx];
+                
+                / feature:FeatureBatch@thresh;
+                // should add a common offset to actions before inserting them into
+                // the events.
+                aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
+                xevents:.engine.ProcessEvents[(nevents,aevents)];
 
-            .state.InsertResultantEvents[xevents];
+                .state.InsertResultantEvents[xevents];
+            ];
+            [
+
+            ]
         ];
-        // If the current step is the first or last step 
-        // in the given event batch.
-        [
-            //
-            idx:.env.StepIndex@step;
-            .env.EventBatch:.env.loadEvents[];
-            .env.StepIndex:key[.env.EventBatch];
-            / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
-        ]
-    ];
     };
 
 
@@ -173,7 +182,7 @@ Step    :{[actions]
     // Returns a table of Info indexed by accountId
     info: Info[accountIds];
 
-    if[.env.ActiveEnv[`doAnalytics]; 
+    if[.env.ActiveEnv[`doAnalytics]; // CHANGE to config
         .analytics.LogStep[actions;result[0];result[1];info;newEvents]];
 
     // Returns a set of observations, rewards and info
