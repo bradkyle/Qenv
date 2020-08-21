@@ -94,6 +94,25 @@ getOpenPositionAmtBySide           :{[aId]
 /    isClose:10#0b;
 /    trigger:10#`NIL);
 
+CurrentOrders: (
+    [
+        orderId        :   `long$();
+        time           :   `datetime$()
+    ]
+    accountId       :   `long$();
+    side            :   `symbol$();
+    otype           :   `symbol$();
+    price           :   `long$();
+    leaves          :   `long$();
+    filled          :   `long$();
+    limitprice      :   `long$(); / multiply by 100
+    stopprice       :   `long$(); / multiply by 100
+    status          :   `symbol$();
+    time            :   `datetime$();
+    isClose         :   `boolean$();
+    trigger         :   `symbol$();
+    execInst        :   `symbol$());
+
 OrderEventHistory: (
     [orderId        :   `long$()]
     accountId       :   `long$();
@@ -188,9 +207,8 @@ markCols:cols MarkEventHistory;
 // and indicators etc.
 FundingEventHistory: (
     [time            :   `datetime$()]
-    size            :   `float$();
-    price           :   `float$();
-    side            :   `symbol$());
+    fundingrate      :   `long$();
+    fundingtime      :   `datetime$());
 fundingCols:cols FundingEventHistory;
 
 // Maintains a set of historic trade events
@@ -222,19 +240,28 @@ getFeatureVectors    :{[accountIds]
 
         // TODO add account id to feature vector
         obs: raze(
-            value 1_last depth;
-            last mark.mark_price;
-            last funding.funding_rate;
-            last trades.price;
-            value 1_last account;
-            value last piv[0!update time:max time from select num:count size, high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size, lsize: min size by side from source_trades where time>= max time - `minute$5;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
-            value last piv[0!update time:max source_trades.time from select high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size, lsize: min size by side from source_trades where {x|next x}/[100;time=max time];`time;`side;`high`low`open`close`volume`msize`hsize`lsize];
-            value exec sum leaves, avg price from orders where ordtyp=`limit, status=`new, side=`buy;
-            value exec sum leaves, avg price from orders where ordtyp=`limit, status=`new, side=`sell;
-            value exec sum leaves, max price from orders where ordtyp=`stop_market, status=`new, side=`buy;
-            value exec sum leaves, min price from orders where ordtyp=`stop_market, status=`new, side=`sell; 
-            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`long;
-            value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`short
+            value .state.CurrentDepth;
+            exec last markprice from .state.MarkEventHistory;
+            exec last fundingrate from .state.FundingEventHistory;
+            exec last price from .state.TradeEventHistory;
+            value last piv[0!update 
+                time:max time 
+                from select 
+                    num:count size, 
+                    high:max price, 
+                    low: min price, 
+                    open: first price, 
+                    close: last price, 
+                    volume: sum size, 
+                    msize: avg size, 
+                    hsize: max size, 
+                    lsize: min size 
+                    by side 
+                    from .state.TradeEventHistory
+                    where time>= max time - `minute$5;
+                `time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
+            exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY;
+            exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL
         );
         // if count feature buffer
         `.observation.FeatureBuffer upsert obs;

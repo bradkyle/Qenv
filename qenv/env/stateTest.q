@@ -6,6 +6,28 @@ system "d .stateTest";
 
 z:.z.z;
 
+
+defaultAfterEach: {
+     
+     .qt.RestoreMocks[];
+    };
+
+defaultBeforeEach: {
+     delete from `.state.AccountEventHistory;
+     delete from `.state.InventoryEventHistory;
+     delete from `.state.OrderEventHistory;
+     delete from `.state.CurrentDepth;
+     delete from `.state.DepthEventHistory;
+     delete from `.state.TradeEventHistory;
+     delete from `.state.MarkEventHistory;
+     delete from `.state.FundingEventHistory;
+     delete from `.state.LiquidationEventHistory;
+    };
+
+setupState  :{[events]
+    .state.InsertResultantEvents[events];
+    };
+
 checkState  :{[]
 
     };
@@ -18,18 +40,15 @@ test:.qt.Unit[
         p:c[`params];
         setupState[p[`cState]];
 
-        .state.DefaultInstrumentId:p[`eDI];
-        .qt.M[`.state.getPriceAtLevel;p[`MgetPriceAtLevel];c];
-        .qt.M[`.state.genNextClOrdId;p[`MgenNextClOrdId];c];
-        
         a:p[`args];
-        res:.adapter.createOrderAtLevel[a[0];a[1];a[2];a[3]];
+        res:.state.getFeatureVectors[a];
 
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
     {[p]
-        :`args`cState`eResp!p;
+        e:({`time`kind`cmd`datum!x} each p[1]);
+        :`args`cState`eResp!(p[0];e;p[1]);
     };
     (
         ("Should correctly insert depth events into both current depth and depth event history";(
