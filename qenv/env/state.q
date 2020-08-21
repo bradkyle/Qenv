@@ -558,4 +558,12 @@ sortinoRealizedPnl  :{
 GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100
 
+    wnRet:r:0!select 
+        1_deltas[realizedPnl] 
+        by accountId 
+        from select[-100] 
+            last realizedPnl 
+            by 1 xbar `minute$time, 
+            accountId from .state.InventoryEventHistory;
+
     };
