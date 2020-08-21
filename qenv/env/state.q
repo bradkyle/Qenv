@@ -289,10 +289,10 @@ InsertResultantEvents   :{[events]
           k=`FUNDING;[
             `.state.FundingEventHistory upsert (
                 [time:t]
-                side:d[;`side];
-                size:0^d[;`size]);
+                fundingrate:d[;`fundingrate];
+                fundingtime:d[;`fundingtime]);
           ];
-          k=`LIQUIDATION;[
+          k=`LIQUIDATION;[ // TODO
             `.state.LiquidationEventHistory upsert (
                 [time:t]
                 side:d[;`side];
