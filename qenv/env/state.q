@@ -250,7 +250,8 @@ Piv:{[t;k;p;v]
 // feature vector represenations of the agent state 
 // and environment state for a set of agent ids. // CHANGE to FeatureVector
 getFeatureVectors    :{[accountIds]
-        windSize:100;
+        windowsize:100;
+        / interval: 
 
         ohlc:0!select 
             num:count size, 
@@ -263,7 +264,43 @@ getFeatureVectors    :{[accountIds]
             hsize: max size,
             time: max time, 
             lsize: min size 
-            by side, (1 xbar `minute$time) from .state.TradeEventHistory; // TODO should have a limit.
+            by (1 xbar `minute$time) from .state.TradeEventHistory
+            where time <= (max[time] - `minute$(windowsize));
+
+        signal:{ema[2%10;x]};
+        macd:{[x] ema[2%13;x]-ema[2%27;x]};
+
+        ohlc:update 
+            sma10:mavg[10;close], 
+            sma20:mavg[20;close], 
+            ema12:ema[2%13;close], 
+            ema26:ema[2%27;close], 
+            macd:macd[close] 
+            from ohlc;
+        
+        ohlc:update signal:signal[macd] from ohlc;
+
+        relativeStrength:{[num;y]
+                begin:num#0Nf;
+                start:avg((num+1)#y);
+                begin,start,{(y+x*(z-1))%z}\[start;(num+1)_y;num]};
+
+        rsiMain:{[close;n]
+            diff:-[close;prev close];
+            rs:relativeStrength[n;diff*diff>0]%relativeStrength[n;abs diff*diff<0];
+            rsi:100*rs%(1+rs);
+            rsi };
+
+        update rsi:rsiMain[close;14] from ohlc;
+
+        mfiMain:{[h;l;c;n;v]
+            TP:avg(h;l;c);                    / typical price
+            rmf:TP*v;                         / real money flow
+            diff:deltas[0n;TP];               / diffs
+            /money-flow leveraging func for RSI
+            mf:relativeStrength[n;rmf*diff*diff>0]%relativeStrength[n;abs rmf*diff*diff<0];
+            mfi:100*mf%(1+mf);                /money flow as a percentage
+            mfi };
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
