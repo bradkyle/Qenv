@@ -43,7 +43,7 @@ accountCols:cols .state.AccountEventHistory;
 // therin
 InventoryEventHistory: (
     [accountId:  `long$();side: `symbol$();time : `datetime$()]
-    currentQty          :  `long$();
+    amt                 :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
@@ -248,32 +248,83 @@ getFeatureVectors    :{[accountIds]
 
 // State Event Insertion
 // =====================================================================================>
-
+/ InventoryEventHistory: (
+/     [accountId:  `long$();side: `symbol$();time : `datetime$()]
+/     currentQty          :  `long$();
+/     realizedPnl         :  `long$();
+/     avgPrice            :  `long$(); // TODO check all exchanges have
+/     unrealizedPnl       :  `long$());
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer // TODO validation on events
 InsertResultantEvents   :{[events]
-    .qt.EV:events;
     {[events]
         k:first events[`kind];
+        c:first events[`cmd];
 
         events:flip[events];
-        d:events[`datum];
+        d:events[;`datum];
         t:events[`time];
-        d[`time]:t;
-        .qt.D:d;
 
         $[k=`DEPTH;
-          [`.state.DepthEventHistory insert (.state.depthCols!(event[`datum][.state.depthCols]))];
+            `.state.DepthEventHistory upsert ([
+                        price:d[;`price];
+                        time:t] 
+                        side:0^d[;`side];
+                        size:0^d[;`size]);
+
+            `.state.CurrentDepth upsert (
+                        [price:d[;`price]] 
+                        side:0^d[;`side];
+                        size:0^d[;`size]);
           k=`TRADE;
-          [`.state.TradeEventHistory upsert (.state.tradeCols!(event[`datum][.state.tradeCols]))];
+            `.state.TradeEventHistory upsert ([
+                        tid:d[;`tid];
+                        time:t] 
+                        side:0^d[;`side];
+                        size:0^d[;`size]);
           k=`ACCOUNT;
           [
-                `.state.AccountEventHistory upsert filt[.state.inventoryCols;d];
+                `.state.AccountEventHistory upsert ([
+                    accountId:d[;`accountId];
+                    time:t] 
+                    balance:0^d[;`balance];
+                    available:0^d[;`available];
+                    frozen:0^d[;`frozen];
+                    maintMargin:0^d[;`maintMargin]);
           ];
           k=`INVENTORY;
-          [show d[;.state.inventoryCols];`.state.InventoryEventHistory upsert d[;.state.inventoryCols]];
+          [
+            `.state.InventoryEventHistory upsert ([
+                accountId:d[;`accountId];
+                side:d[;`side];
+                time:t] 
+                amt:0^d[;`amt];
+                realizedPnl:0^d[;`realizedPnl];
+                avgPrice:0^d[;`avgPrice];
+                unrealizedPnl:0^d[;`unrealizedPnl]);
+          ];
           k=`ORDER;
-          [`.state.AccountEventHistory upsert (.state.orderCols!(event[`datum][.state.orderCols]))]; 
+          [
+            `.state.CurrentOrders upsert ([
+                        [orderId:d[;`orderId];time:t];
+                        accountId:d[;`accountId];
+                        side:d[;`side];
+                        time:t] 
+                        amt:0^d[;`amt];
+                        realizedPnl:0^d[;`realizedPnl];
+                        avgPrice:0^d[;`avgPrice];
+                        unrealizedPnl:0^d[;`unrealizedPnl]);
+
+              `.state.OrderEventHistory upsert ([
+                        [orderId:d[;`orderId];time:t];
+                        accountId:d[;`accountId];
+                        side:d[;`side];
+                        time:t] 
+                        amt:0^d[;`amt];
+                        realizedPnl:0^d[;`realizedPnl];
+                        avgPrice:0^d[;`avgPrice];
+                        unrealizedPnl:0^d[;`unrealizedPnl]);
+          ]; 
           k=`LIQUIDATION;
           [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
           [0N]];
