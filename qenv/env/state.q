@@ -303,22 +303,23 @@ getFeatureVectors    :{[accountIds]
             mfi:100*mf%(1+mf);                /money flow as a percentage
             mfi };
 
-        ohlc:update mfi:mfiMain[high;low;close;6;volume] from ohlc;
+        ohlc:update mfi:mfiMain[high;low;close;6;volume], avtp:avg(high;low;close) from ohlc;
 
         maDev:{[tp;ma;n]
             ((n-1)#0Nf),
                 {[x;y;z;num] reciprocal[num]*sum abs z _y#x}'
                 [(n-1)_tp-/:ma; n+l; l:til count[tp]-n-1; n] };
 
-        CCI:{[high;low;close;ndays]
-            TP:avg(high;low;close);
-            sma:mavg[ndays;TP];
-            mad:maDev[TP;sma;n];
-            reciprocal[0.015*mad]*TP-sma };
+        ohlc:update mfi:mfiMain[high;low;close;6;volume] from ohlc;
+
+        // TODO change to interval
+        CCI:{[high;low;close;avtp;ndays] 
+            sma:mavg[ndays;avtp];
+            mad:maDev[avtp;sma;n];
+            reciprocal[0.015*mad]*avtp-sma };
 
         ohlc:update cci:CCI[high;low;close;14] from ohlc;
 
-        TP:avg(high;low;close);
         update sma:mavg[n;TP],sd:mdev[n;TP] from update TP:avg(high;low;close) 
 
         ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
