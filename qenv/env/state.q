@@ -469,8 +469,6 @@ getOhlcFeatures :{[]
             macd:macd[close] 
             from ohlc;
         
-        show ohlc;
-
         ohlc:update signal:signal[macd] from ohlc;
 
         ohlc:update rsi:rsiMain[close;14] from ohlc;

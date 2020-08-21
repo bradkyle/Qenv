@@ -71,6 +71,25 @@ genRandomState      :{[x;y;z] // TODO add max time
                 sz x
             )]);
 
+            invn:`time`intime`kind`cmd`datum!(t x;t x;x#`INVENTORY;x#`UPDATE;flip[.state.inventoryCols!(
+                x?til 3;
+                x?`BUY`SELL;
+                t x;
+                sz x;
+                sz x;
+                p x;
+                sz x
+            )]);
+
+            accn:`time`intime`kind`cmd`datum!(t x;t x;x#`ACCOUNT;x#`UPDATE;flip[.state.accountCols!(
+                x?til 3;
+                t x;
+                sz x;
+                sz x;
+                sz x;
+                sz x
+            )]);
+
             odrs:`time`intime`kind`cmd`datum!(t x;t x;x#`ORDER;x#`UPDATE;flip[.state.ordCols!(
                 til[x];
                 t x;
@@ -110,6 +129,8 @@ genRandomState      :{[x;y;z] // TODO add max time
                 flip[tds],
                 flip[dpth],
                 flip[odrs],
+                flip[accn],
+                flip[invn],
                 flip[mk],
                 flip[fnd],
                 flip[lq]
@@ -143,12 +164,12 @@ test:.qt.Unit[
                 (z;`ACCOUNT;`UPDATE;.state.accountCols!(0;0;0;0;0;0));
                 (z;`ACCOUNT;`UPDATE;.state.accountCols!(0;0;0;0;0;0));
 
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
-                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`LONG;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(1;`LONG;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`SHORT;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(1;`SHORT;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BOTH;z;0;1000;10;0));
+                (z;`INVENTORY;`UPDATE;.state.inventoryCols!(1;`BOTH;z;0;1000;10;0));
 
                 (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
                 (z;`ORDER;`UPDATE;.state.ordCols!(1;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
