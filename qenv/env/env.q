@@ -75,6 +75,8 @@ Info        :{[aIds]
 
     };
 
+
+// TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
 Reset       :{[aIds] // TODO make into accountConfigs 
@@ -156,7 +158,7 @@ Step    :{[actions]
     // TODO format actions
 
     // Advances the current state of the environment
-    results: .env.Advance[accountIds; newEvents];
+    results: .env.Advance[accountIds];
 
     // Derive the current info for the
     // entire engine and for each subsequent
