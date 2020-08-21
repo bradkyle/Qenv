@@ -302,13 +302,13 @@ InsertResultantEvents   :{[events]
           ];
           k=`ACCOUNT;
           [
-                `.state.AccountEventHistory upsert ([
-                    accountId:d[;`accountId];
-                    time:t] 
-                    balance:0^d[;`balance];
-                    available:0^d[;`available];
-                    frozen:0^d[;`frozen];
-                    maintMargin:0^d[;`maintMargin]);
+            `.state.AccountEventHistory upsert ([
+                accountId:d[;`accountId];
+                time:t] 
+                balance:0^d[;`balance];
+                available:0^d[;`available];
+                frozen:0^d[;`frozen];
+                maintMargin:0^d[;`maintMargin]);
           ];
           k=`INVENTORY;
           [
@@ -323,25 +323,24 @@ InsertResultantEvents   :{[events]
           ];
           k=`ORDER;
           [
-            o:(
-                        orderId:d[;`orderId];
-                        time:t;
-                        accountId:d[;`accountId];
-                        side:d[;`side];
-                        otype:d[;`side];
-                        price:0^d[;`amt];
-                        leaves:0^d[;`realizedPnl];
-                        filled:0^d[;`avgPrice];
-                        limitprice:0^d[;`avgPrice];
-                        stopprice:0^d[;`avgPrice];
-                        status:0^d[;`avgPrice];
-                        time:0^d[;`avgPrice];
-                        isClose:0^d[;`avgPrice];
-                        trigger:0^d[;`avgPrice];
-                        execInst:0^d[;`unrealizedPnl]);
+            o:(orderId:d[;`orderId];
+                time:t;
+                accountId:d[;`accountId];
+                side:d[;`side];
+                otype:d[;`side];
+                price:0^d[;`amt];
+                leaves:0^d[;`realizedPnl];
+                filled:0^d[;`avgPrice];
+                limitprice:0^d[;`avgPrice];
+                stopprice:0^d[;`avgPrice];
+                status:0^d[;`avgPrice];
+                time:0^d[;`avgPrice];
+                isClose:0^d[;`avgPrice];
+                trigger:0^d[;`avgPrice];
+                execInst:0^d[;`unrealizedPnl]);
 
-              `.state.CurrentOrders upsert 1!o;
-              `.state.OrderEventHistory upsert 2!o;
+            `.state.CurrentOrders upsert 1!o;
+            `.state.OrderEventHistory upsert 2!o;
           ]
           ['INVALID_KIND]];
     } each 0!(`kind`cmd xgroup events); // TODO benchmark with peach and each
