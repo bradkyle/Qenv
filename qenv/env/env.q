@@ -79,7 +79,7 @@ Info        :{[aIds]
 // TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-Reset       :{[aIds] // TODO make into accountConfigs 
+Reset       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
     // Reset public singletons
     .engine.Reset[aIds];
     :.state.Reset[aIds];

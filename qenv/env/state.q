@@ -263,7 +263,7 @@ getFeatureVectors    :{[accountIds]
            hsize: max size,
            time: max time, 
            lsize: min size 
-           by side, (1 xbar `minute$time) from .state.TradeEventHistory;
+           by side, (1 xbar `minute$time) from .state.TradeEventHistory; // TODO should have a limit.
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
