@@ -422,9 +422,9 @@ GetFeatures    :{[accountIds]
             10#0;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
-            value flip select[-5] price from .state.TradeEventHistory where side=`BUY;
+            value flip select[-5] price from .state.TradeEventHistory where side=`BUY; // TODO fill 0's
             value flip select[-5] price from .state.TradeEventHistory where side=`SELL;
-            value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
+            value flip select[-5] size from .state.TradeEventHistory where side=`BUY;
             value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
             value flip select[5] size from `price xasc .state.CurrentDepth where side=`BUY;
             value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL
@@ -439,7 +439,6 @@ GetFeatures    :{[accountIds]
         select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
         select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in accountIds;
 
-        .qt.O:pobs;
         // if count feature buffer
         `.state.FeatureBuffer upsert obs;
 
