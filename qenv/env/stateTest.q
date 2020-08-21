@@ -24,6 +24,18 @@ defaultBeforeEach: {
      delete from `.state.LiquidationEventHistory;
     };
 
+defaultAfterAll     :{
+     delete from `.state.AccountEventHistory;
+     delete from `.state.InventoryEventHistory;
+     delete from `.state.OrderEventHistory;
+     delete from `.state.CurrentDepth;
+     delete from `.state.DepthEventHistory;
+     delete from `.state.TradeEventHistory;
+     delete from `.state.MarkEventHistory;
+     delete from `.state.FundingEventHistory;
+     delete from `.state.LiquidationEventHistory;
+    };
+
 setupState  :{[events]
     .state.InsertResultantEvents[events];
     };
@@ -37,31 +49,33 @@ checkState  :{[]
 // TODO deterministic ordering
 genRandomState      :{[x;y;z]
             t:{{x+`second$(rand 10)} each y#x}[y];
+            p:{{10000+x+rand 100} each til[x]};
+            sz:{{x+rand 100} each til[x]};
 
             // 
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[.state.tradeCols!(
                 til[x];
-                x#z;
-                x#{rand 1000}[];
-                x#{10000+rand 100}[];
+                t x;
+                sz x;
+                p x;
                 x?`BUY`SELL
             )]);
             
             dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[.state.depthCols!(
-                x#{10000+rand 100}[];
+                p x;
                 x#z;
                 x?`BUY`SELL;
-                x#{rand 1000}[])]
+                sz x
             );
 
             odrs:`time`intime`kind`cmd`datum!(t x;t x;x#`ORDER;x#`UPDATE;flip[.state.ordCols!(
                 til[x];
                 x#.z.z;
-                10?0 1;
+                x?0 1;
                 x?`BUY`SELL;
                 x#`LIMIT;
-                x#{10000+rand 100}[];
-                x#{rand 1000}[];
+                sz x;
+                p x;
                 x#0;
                 x#0;
                 x#0;
@@ -73,19 +87,19 @@ genRandomState      :{[x;y;z]
 
             mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;flip[.state.markCols!(
                 x#z;
-                x#{10000+rand 1000}[])]);
+                p x)]);
             
             fnd:`time`intime`kind`cmd`datum!(t x;t x;x#`FUNDING;x#`UPDATE;flip[.state.fundingCols!(
                 x#z;
-                x#{rand 1000}[];
+                sz x;
                 x#z
             )]);
             
             lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[.state.liquidationCols!(
                 til[x];
                 x#z;
-                x#{rand 1000}[];
-                x#{10000+rand 100}[];
+                p x;
+                sz x;
                 x?`BUY`SELL
             )]);
 
@@ -98,8 +112,7 @@ genRandomState      :{[x;y;z]
                 flip[lq]
             );
 
-            / .state.InsertResultantEvents[x];
-            :x;
+            .state.InsertResultantEvents[x];
     };
 
 
@@ -178,7 +191,7 @@ test:.qt.Unit[
             til[10]
         ))
     );
-    .qt.sBlk;
+    ({};defaultAfterAll;defaultBeforeEach;defaultAfterEach);
     "Creates the event to place a new order at a given level in the orderbook"];
 
 .qt.SkpBes[0];
@@ -279,7 +292,7 @@ test:.qt.Unit[
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )))
     );
-    .qt.sBlk;
+    ({};defaultAfterAll;defaultBeforeEach;defaultAfterEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
