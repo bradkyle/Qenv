@@ -49,9 +49,8 @@ checkState  :{[]
 // TODO deterministic ordering
 // .stateTest.genRandomState[1000000;.z.z;100]; generates a million events between .z.z and 100 minutes
 genRandomState      :{[x;y;z] // TODO add max time
-            t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
-
-            t:{{x+(`minute$(rand 10))} each y#x}[y];
+            / t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
+            t:{{x+(`minute$(rand 30))} each y#x}[y];
             p:{{10000+x+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
 

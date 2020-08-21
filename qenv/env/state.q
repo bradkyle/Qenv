@@ -254,19 +254,8 @@ getFeatureVectors    :{[accountIds]
         windowsize:100;
         / interval: 
 
-        ohlc:0!select 
-            num:count size, 
-            high:max price, 
-            low: min price, 
-            open: first price, 
-            close: last price, 
-            volume: sum size, 
-            msize: avg size, 
-            hsize: max size,
-            time: max time, 
-            lsize: min size 
-            by (1 xbar `minute$time) from .state.TradeEventHistory
-            where time <= (max[time] - `minute$(windowsize));
+        // TOO long only do within given intervals
+        ohlc:0!select num:count size, high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size,time: max time, lsize: min size by (1 xbar `minute$time) from .state.TradeEventHistory;
 
         signal:{ema[2%10;x]};
         macd:{[x] ema[2%13;x]-ema[2%27;x]};
@@ -318,9 +307,9 @@ getFeatureVectors    :{[accountIds]
             mad:maDev[avtp;sma;n];
             reciprocal[0.015*mad]*avtp-sma };
 
-        ohlc:update cci:CCI[high;low;close;14] from ohlc;
+        ohlc:update cci:CCI[high;low;close;avtp;14] from ohlc;
 
-        update sma:mavg[n;TP],sd:mdev[n;TP] from update TP:avg(high;low;close) 
+        update sma:mavg[20;avtp],sd:mdev[20;avtp] from ohlc;
 
         ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
 
