@@ -327,10 +327,6 @@ InsertResultantEvents   :{[events]
                 side:d[;`side];
                 size:0^d[;`size];
                 price:0^d[;`price]);
-            .qt.T:t;
-            .qt.D:d;
-            show d;
-            .qt.K:k;
             `.state.TradeEventHistory upsert t;
           ];
           k=`MARK;[

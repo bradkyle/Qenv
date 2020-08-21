@@ -34,6 +34,7 @@ checkState  :{[]
 
 // @x: count
 // @y: time // TODO check cols correct
+// TODO deterministic ordering
 genRandomState      :{[x;y;z]
             t:{{x+`second$(rand 10)} each y#x}[y];
 
