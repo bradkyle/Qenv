@@ -47,8 +47,8 @@ checkState  :{[]
 // @x: count
 // @y: time // TODO check cols correct
 // TODO deterministic ordering
-genRandomState      :{[x;y;z]
-            t:{{x+`second$(rand 10)} each y#x}[y];
+genRandomState      :{[x;y;z] // TODO add max time
+            t:{{x+(`minute$(rand 10))} each y#x}[y];
             p:{{10000+x+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
 
@@ -63,14 +63,14 @@ genRandomState      :{[x;y;z]
             
             dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[.state.depthCols!(
                 p x;
-                x#z;
+                t x;
                 x?`BUY`SELL;
                 sz x
-            );
+            )]);
 
             odrs:`time`intime`kind`cmd`datum!(t x;t x;x#`ORDER;x#`UPDATE;flip[.state.ordCols!(
                 til[x];
-                x#.z.z;
+                t x;
                 x?0 1;
                 x?`BUY`SELL;
                 x#`LIMIT;
@@ -86,18 +86,18 @@ genRandomState      :{[x;y;z]
             )]);
 
             mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;flip[.state.markCols!(
-                x#z;
+                t x;
                 p x)]);
             
             fnd:`time`intime`kind`cmd`datum!(t x;t x;x#`FUNDING;x#`UPDATE;flip[.state.fundingCols!(
-                x#z;
+                t x;
                 sz x;
-                x#z
+                t x
             )]);
             
             lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[.state.liquidationCols!(
                 til[x];
-                x#z;
+                t x;
                 p x;
                 sz x;
                 x?`BUY`SELL
