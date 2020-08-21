@@ -253,17 +253,17 @@ getFeatureVectors    :{[accountIds]
         windSize:100;
 
         ohlc:0!select 
-           num:count size, 
-           high:max price, 
-           low: min price, 
-           open: first price, 
-           close: last price, 
-           volume: sum size, 
-           msize: avg size, 
-           hsize: max size,
-           time: max time, 
-           lsize: min size 
-           by side, (1 xbar `minute$time) from .state.TradeEventHistory; // TODO should have a limit.
+            num:count size, 
+            high:max price, 
+            low: min price, 
+            open: first price, 
+            close: last price, 
+            volume: sum size, 
+            msize: avg size, 
+            hsize: max size,
+            time: max time, 
+            lsize: min size 
+            by side, (1 xbar `minute$time) from .state.TradeEventHistory; // TODO should have a limit.
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
