@@ -16,7 +16,7 @@ test:.qt.Unit[
     ".state.getFeatureVectors";
     {[c]
         p:c[`params];
-        setupState[];
+        setupState[p[`cState]];
 
         .state.DefaultInstrumentId:p[`eDI];
         .qt.M[`.state.getPriceAtLevel;p[`MgetPriceAtLevel];c];
