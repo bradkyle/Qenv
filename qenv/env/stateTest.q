@@ -35,9 +35,10 @@ checkState  :{[]
 genRandomState      :{[]
             t:{{x+`second$(rand 10)} each y#x}[y];
 
-
-
+            // 
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[(
+                til[x];
+                x#z;
                 x?`BUY`SELL;
                 x#{10000+rand 100}[];
                 x#{rand 1000}[]
@@ -66,8 +67,6 @@ genRandomState      :{[]
             lq:`liqId`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`UPDATE;
                 enlist'[x#{10000+rand 1000}[]]
             );
-
-
 
             :(
                 flip[tds],
