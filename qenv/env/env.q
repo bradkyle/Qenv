@@ -68,7 +68,7 @@ Config      :{[config]
     // order size
     // min inventory
     // max inventory
-    // training episodes
+    // training episodes (roughly 8X training sample size)
     // training sample size
     // testing sample size
     // memory size
