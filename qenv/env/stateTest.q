@@ -64,10 +64,10 @@ test:.qt.Unit[
                 (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
                 (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
 
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;0;0;0;0;0));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;0;0;0;0;0));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;0;0;0;0;0));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;0;0;0;0;0));
+                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
 
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10001;z;`BUY;1000));
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10002;z;`BUY;1000));
@@ -81,17 +81,17 @@ test:.qt.Unit[
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10009;z;`SELL;1000));
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10010;z;`SELL;1000));
 
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
 
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`UPDATE;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
 
                 (z;`MARK;`UPDATE;.state.markCols!(z;1000));
                 (z;`MARK;`UPDATE;.state.markCols!(z;1000));
@@ -111,6 +111,7 @@ test:.qt.Unit[
     .qt.sBlk;
     "Creates the event to place a new order at a given level in the orderbook"];
 
+.qt.SkpBes[0];
 
 test:.qt.Unit[
     ".state.InsertResultantEvents";
@@ -137,8 +138,8 @@ test:.qt.Unit[
             )));
         ("Should correctly insert trade events into trade event history";(
             (
-                (z;`TRADE;`NEW;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`TRADE;`NEW;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))

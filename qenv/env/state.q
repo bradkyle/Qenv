@@ -94,10 +94,10 @@ getOpenPositionAmtBySide           :{[aId]
 /    isClose:10#0b;
 /    trigger:10#`NIL);
 
-CurrentOrders: (
+OrderEventHistory: (
     [
-        orderId        :   `long$();
-        time           :   `datetime$()
+        orderId:`long$();
+        time:`datetime$()
     ]
     accountId       :   `long$();
     side            :   `symbol$();
@@ -108,13 +108,13 @@ CurrentOrders: (
     limitprice      :   `long$(); / multiply by 100
     stopprice       :   `long$(); / multiply by 100
     status          :   `symbol$();
-    time            :   `datetime$();
     isClose         :   `boolean$();
     trigger         :   `symbol$();
     execInst        :   `symbol$());
 
-OrderEventHistory: (
+CurrentOrders: (
     [orderId        :   `long$()]
+    time            :   `datetime$();
     accountId       :   `long$();
     side            :   `symbol$();
     otype           :   `symbol$();
@@ -124,11 +124,10 @@ OrderEventHistory: (
     limitprice      :   `long$(); / multiply by 100
     stopprice       :   `long$(); / multiply by 100
     status          :   `symbol$();
-    time            :   `datetime$();
     isClose         :   `boolean$();
     trigger         :   `symbol$();
     execInst        :   `symbol$());
-orderCols:cols .state.OrderEventHistory;
+ordCols:cols .state.OrderEventHistory;
 
 // Get the current qtys at each order level
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
@@ -156,9 +155,9 @@ genNextClOrdId  :{
 /`.state.CurrentDepth upsert ([]price:(1000+til 20),(1000-til 20);side:(20#`SELL),(20#`BUY);size:40#1000)
 CurrentDepth:(
     [price:`long$()]
+    time:`datetime$();
     side:`symbol$();
     size:`long$());
-currentDepthCols:cols .state.CurrentDepth;
 
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
@@ -189,8 +188,8 @@ getPriceAtLevel         :{[level;s]
 // and indicators etc.
 TradeEventHistory: (
     [tid:`long$(); time:`datetime$()]
-    size            :   `float$();
-    price           :   `float$();
+    size            :   `long$();
+    price           :   `long$();
     side            :   `symbol$());
 tradeCols:cols TradeEventHistory;
 
@@ -199,7 +198,7 @@ tradeCols:cols TradeEventHistory;
 // and indicators etc.
 MarkEventHistory: (
     [time            :   `datetime$()]
-    markprice           :   `float$());
+    markprice        :   `long$());
 markCols:cols MarkEventHistory;
 
 // Maintains a set of historic trade events
@@ -216,8 +215,8 @@ fundingCols:cols FundingEventHistory;
 // and indicators etc.
 LiquidationEventHistory: (
     [time            :   `datetime$()]
-    size            :   `float$();
-    price           :   `float$();
+    size            :   `long$();
+    price           :   `long$();
     side            :   `symbol$());
 liquidationCols:cols LiquidationEventHistory;
 
@@ -294,20 +293,22 @@ InsertResultantEvents   :{[events]
         t:events[`time];
 
         $[k=`DEPTH;[
-            l:(price:d[;`price];
-               time:t;
-               side:0^d[;`side];
-               size:0^d[;`size]);
-
+            l:flip[.state.depthCols!(d[;`price];t;d[;`side];0^d[;`size])];
+            .qt.L:l;
             `.state.CurrentDepth upsert 1!l;
             `.state.DepthEventHistory upsert 2!l;
           ];
           k=`TRADE;[
-            `.state.TradeEventHistory upsert ([
-                tid:d[;`tid];
-                time:t]
+              t:(
+                [tid:d[;`tid];time:t]
                 side:d[;`side];
-                size:0^d[;`size]);
+                size:0^d[;`size];
+                price:0^d[;`price]);
+            .qt.T:t;
+            .qt.D:d;
+            show d;
+            .qt.K:k;
+            `.state.TradeEventHistory upsert t;
           ];
           k=`MARK;[
             `.state.MarkEventHistory upsert (
@@ -321,10 +322,10 @@ InsertResultantEvents   :{[events]
                 fundingtime:d[;`fundingtime]);
           ];
           k=`LIQUIDATION;[ // TODO
-            `.state.LiquidationEventHistory upsert (
-                [time:t]
-                side:d[;`side];
-                size:0^d[;`size]);
+            / `.state.LiquidationEventHistory upsert (
+                / [time:t]
+                / side:d[;`side];
+                / size:0^d[;`size]);
           ]; 
           k=`ACCOUNT;
           [
@@ -349,22 +350,19 @@ InsertResultantEvents   :{[events]
           ];
           k=`ORDER;
           [
-            o:(orderId:d[;`orderId];
-                time:t;
-                accountId:d[;`accountId];
-                side:d[;`side];
-                otype:d[;`side];
-                price:0^d[;`amt];
-                leaves:0^d[;`realizedPnl];
-                filled:0^d[;`avgPrice];
-                limitprice:0^d[;`avgPrice];
-                stopprice:0^d[;`avgPrice];
-                status:0^d[;`avgPrice];
-                time:0^d[;`avgPrice];
-                isClose:0^d[;`avgPrice];
-                trigger:0^d[;`avgPrice];
-                execInst:0^d[;`unrealizedPnl]);
-
+            o:flip[.state.ordCols!(d[;`orderId];t;
+               d[;`accountId];
+               d[;`side];
+               d[;`otype];
+               d[;`price];
+               0^d[;`leaves];
+               0^d[;`filled];
+               0^d[;`limitprice];
+               0^d[;`stopprice];
+               `NEW^d[;`status];
+               0b^d[;`isClose];
+               `NIL^d[;`trigger];
+               `NIL^d[;`execInst])];
             `.state.CurrentOrders upsert 1!o;
             `.state.OrderEventHistory upsert 2!o;
           ];
