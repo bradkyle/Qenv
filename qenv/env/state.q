@@ -267,9 +267,6 @@ getFeatureVectors    :{[accountIds]
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
-        .qt.OHLC:ohlc;
-        .qt.T:.state.TradeEventHistory;
-
         // TODO add long term prediction features.
 
         // TODO add account id to feature vector

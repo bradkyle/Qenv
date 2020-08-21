@@ -48,6 +48,8 @@ checkState  :{[]
 // @y: time // TODO check cols correct
 // TODO deterministic ordering
 genRandomState      :{[x;y;z] // TODO add max time
+            t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
+
             t:{{x+(`minute$(rand 10))} each y#x}[y];
             p:{{10000+x+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
