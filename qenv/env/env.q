@@ -141,7 +141,7 @@ loadEvents  :{
 // SIMPLE DERIVE STEP RATE
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
-        // TODO validate actions, and step index etc.
+        // TODO validate actions, and step index etc. / other schema
         $[
             [
                 idx:.env.StepIndex@step;
@@ -156,8 +156,8 @@ Advance :{[step;actions]
                 .state.InsertResultantEvents[xevents];
 
                 aIds:actions[;1];
-                obs:.state.GetFeatures[];
-                rwd:.state.GetRewards[];
+                obs:.state.GetFeatures[aids];
+                rwd:.state.GetRewards[aids];
                 :(obs;rwd);
             ];
             [
