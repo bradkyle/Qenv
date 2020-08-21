@@ -248,32 +248,41 @@ Piv:{[t;k;p;v]
 
 // Efficiently returns the aggregated and normalised
 // feature vector represenations of the agent state 
-// and environment state for a set of agent ids.
+// and environment state for a set of agent ids. // CHANGE to FeatureVector
 getFeatureVectors    :{[accountIds]
+        windSize:100;
+
+        ohlc:0!select 
+            num:count size, 
+            high:max price, 
+            low: min price, 
+            open: first price, 
+            close: last price, 
+            volume: sum size, 
+            msize: avg size, 
+            hsize: max size,
+            time: max time, 
+            lsize: min size 
+            by side, 1 xbar `minute$time
+            from .state.TradeEventHistory;
+
+
+
+
+        ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
+
+        .qt.OHLC:ohlc;
+        .qt.T:.state.TradeEventHistory;
 
         // TODO add long term prediction features.
 
         // TODO add account id to feature vector
         obs: raze(
             exec size from .state.CurrentDepth;
+            value last ohlc;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
             exec last price from .state.TradeEventHistory;
-            value last Piv[0!select 
-                    num:count size, 
-                    high:max price, 
-                    low: min price, 
-                    open: first price, 
-                    close: last price, 
-                    volume: sum size, 
-                    msize: avg size, 
-                    hsize: max size,
-                    time: max time, 
-                    lsize: min size 
-                    by side 
-                    from .state.TradeEventHistory
-                    where time>= max time - `minute$5;
-                `time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
             value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
             value exec sum leaves, avg price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY
         );

@@ -82,16 +82,16 @@ test:.qt.Unit[
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10010;z;`SELL;1000));
 
                 (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(1;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(2;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(3;z;1000;1000;`BUY));
+                (z;`TRADE;`NEW;.state.tradeCols!(4;z;1000;1000;`BUY));
 
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;`TRADE;`NEW;.state.tradeCols!(0;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(5;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(6;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(7;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(8;z;1000;1000;`SELL));
+                (z;`TRADE;`NEW;.state.tradeCols!(9;z;1000;1000;`SELL));
 
                 (z;`MARK;`UPDATE;.state.markCols!(z;1000));
                 (z;`MARK;`UPDATE;.state.markCols!(z;1000));
