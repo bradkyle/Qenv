@@ -41,15 +41,15 @@ genRandomState      :{[x;y;z]
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[.state.tradeCols!(
                 til[x];
                 x#z;
-                x?`BUY`SELL;
+                x#{rand 1000}[];
                 x#{10000+rand 100}[];
-                x#{rand 1000}[]
+                x?`BUY`SELL
             )]);
             
             dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[.state.depthCols!(
-                x?`BUY`SELL;
-                x#z;
                 x#{10000+rand 100}[];
+                x#z;
+                x?`BUY`SELL;
                 x#{rand 1000}[])]
             );
 
@@ -70,21 +70,25 @@ genRandomState      :{[x;y;z]
                 x#`NIL
             )]);
 
-            mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;
-                enlist'[x#{10000+rand 1000}[]]
-            );
+            mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;flip[.state.markCols!(
+                x#z;
+                x#{10000+rand 1000}[])]);
             
             fnd:`time`intime`kind`cmd`datum!(t x;t x;x#`FUNDING;x#`UPDATE;flip[.state.fundingCols!(
                 x#z;
                 x#{rand 1000}[];
-                xz
+                x#z
             )]);
             
-            lq:`liqId`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`UPDATE;
-                enlist'[x#{10000+rand 1000}[]]
-            );
+            lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[.state.liquidationCols!(
+                til[x];
+                x#z;
+                x#{rand 1000}[];
+                x#{10000+rand 100}[];
+                x?`BUY`SELL
+            )]);
 
-            :(
+            x:(
                 flip[tds],
                 flip[dpth],
                 flip[odrs],
@@ -92,6 +96,9 @@ genRandomState      :{[x;y;z]
                 flip[fnd],
                 flip[lq]
             );
+
+            / .state.InsertResultantEvents[x];
+            :x;
     };
 
 
