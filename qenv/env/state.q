@@ -243,9 +243,7 @@ getFeatureVectors    :{[accountIds]
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
             exec last price from .state.TradeEventHistory;
-            value last piv[0!update 
-                time:max time 
-                from select 
+            value last piv[0!select 
                     num:count size, 
                     high:max price, 
                     low: min price, 
@@ -253,7 +251,8 @@ getFeatureVectors    :{[accountIds]
                     close: last price, 
                     volume: sum size, 
                     msize: avg size, 
-                    hsize: max size, 
+                    hsize: max size,
+                    time: max time, 
                     lsize: min size 
                     by side 
                     from .state.TradeEventHistory
