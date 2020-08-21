@@ -141,6 +141,7 @@ loadEvents  :{
 // SIMPLE DERIVE STEP RATE
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
+        // TODO validate actions, and step index etc.
         $[
             [
                 idx:.env.StepIndex@step;
