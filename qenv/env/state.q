@@ -305,25 +305,19 @@ InsertResultantEvents   :{[events]
           ];
           k=`ORDER;
           [
-            `.state.CurrentOrders upsert ([
-                        [orderId:d[;`orderId];time:t];
+            o:([
+                        orderId:d[;`orderId];
+                        time:t;
                         accountId:d[;`accountId];
                         side:d[;`side];
-                        time:t] 
+                        otype:d[;`side];
                         amt:0^d[;`amt];
                         realizedPnl:0^d[;`realizedPnl];
                         avgPrice:0^d[;`avgPrice];
                         unrealizedPnl:0^d[;`unrealizedPnl]);
 
-              `.state.OrderEventHistory upsert ([
-                        [orderId:d[;`orderId];time:t];
-                        accountId:d[;`accountId];
-                        side:d[;`side];
-                        time:t] 
-                        amt:0^d[;`amt];
-                        realizedPnl:0^d[;`realizedPnl];
-                        avgPrice:0^d[;`avgPrice];
-                        unrealizedPnl:0^d[;`unrealizedPnl]);
+              `.state.CurrentOrders upsert 1!o;
+              `.state.OrderEventHistory upsert 2!o;
           ]; 
           k=`LIQUIDATION;
           [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
