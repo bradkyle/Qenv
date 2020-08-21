@@ -153,6 +153,10 @@ Advance :{[step;actions]
                 xevents:.engine.ProcessEvents[(nevents,aevents)];
 
                 .state.InsertResultantEvents[xevents];
+
+                obs:.state.GetFeatures[];
+                rwd:.state.GetRewards[];
+                ()
             ];
             [
 
