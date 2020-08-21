@@ -276,34 +276,34 @@ InsertResultantEvents   :{[events]
           ];
           k=`TRADE;[
             `.state.TradeEventHistory upsert ([
-                        tid:d[;`tid];
-                        time:t]
-                        side:d[;`side];
-                        size:0^d[;`size]);
+                tid:d[;`tid];
+                time:t]
+                side:d[;`side];
+                size:0^d[;`size]);
           ];
           k=`MARK;[
             `.state.MarkEventHistory upsert (
-                        [time:t]
-                        markprice:d[;`markprice]);
+                [time:t]
+                markprice:d[;`markprice]);
           ];
           k=`FUNDING;[
             `.state.FundingEventHistory upsert (
-                        [time:t]
-                        side:d[;`side];
-                        size:0^d[;`size]);
+                [time:t]
+                side:d[;`side];
+                size:0^d[;`size]);
           ];
           k=`LIQUIDATION;[
             `.state.LiquidationEventHistory upsert (
-                        [time:t]
-                        side:d[;`side];
-                        size:0^d[;`size]);
+                [time:t]
+                side:d[;`side];
+                size:0^d[;`size]);
           ];
           k=`TRADE;[
             `.state.TradeEventHistory upsert ([
-                        tid:d[;`tid];
-                        time:t]
-                        side:d[;`side];
-                        size:0^d[;`size]);
+                tid:d[;`tid];
+                time:t]
+                side:d[;`side];
+                size:0^d[;`size]);
           ];
           k=`ACCOUNT;
           [
