@@ -249,6 +249,7 @@ Piv:{[t;k;p;v]
 // Efficiently returns the aggregated and normalised
 // feature vector represenations of the agent state 
 // and environment state for a set of agent ids. // CHANGE to FeatureVector
+// https://code.kx.com/q/wp/trend-indicators/
 getFeatureVectors    :{[accountIds]
         windowsize:100;
         / interval: 
@@ -291,7 +292,7 @@ getFeatureVectors    :{[accountIds]
             rsi:100*rs%(1+rs);
             rsi };
 
-        update rsi:rsiMain[close;14] from ohlc;
+        ohlc:update rsi:rsiMain[close;14] from ohlc;
 
         mfiMain:{[h;l;c;n;v]
             TP:avg(h;l;c);                    / typical price
@@ -302,8 +303,20 @@ getFeatureVectors    :{[accountIds]
             mfi:100*mf%(1+mf);                /money flow as a percentage
             mfi };
 
-        update mfi:mfiMain[high;low;close;6;volume] from ohlc;
+        ohlc:update mfi:mfiMain[high;low;close;6;volume] from ohlc;
 
+        maDev:{[tp;ma;n]
+            ((n-1)#0Nf),
+                {[x;y;z;num] reciprocal[num]*sum abs z _y#x}'
+                [(n-1)_tp-/:ma; n+l; l:til count[tp]-n-1; n] };
+
+        CCI:{[high;low;close;ndays]
+            TP:avg(high;low;close);
+            sma:mavg[ndays;TP];
+            mad:maDev[TP;sma;n];
+            reciprocal[0.015*mad]*TP-sma };
+
+        ohlc:update cci:CCI[high;low;close;14] from ohlc;
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
