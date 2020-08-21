@@ -32,6 +32,10 @@ checkState  :{[]
 
     };
 
+genRandomState      :{[]
+
+    };
+
 
 // TODO should time cases
 test:.qt.Unit[

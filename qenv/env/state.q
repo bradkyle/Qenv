@@ -266,9 +266,6 @@ getFeatureVectors    :{[accountIds]
             by side, 1 xbar `minute$time
             from .state.TradeEventHistory;
 
-
-
-
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
         .qt.OHLC:ohlc;
