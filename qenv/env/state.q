@@ -383,6 +383,11 @@ getFeatureVectors    :{[accountIds]
         /- aroon[tab`low;25;max]-- aroon down
         aroonOsc:{[h;l;n] aroon[h;n;max] - aroon[l;n;min]}
 
+        ohlc:update
+            aroonUp:aroon[high;25;max],
+            aroonDown:aroon[low;25;min],
+            aroonOsc:aroonOsc[high;low;25] from ohlc;
+
         // Pivot and combine per accountId
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
