@@ -156,7 +156,7 @@ Advance :{[step;actions]
 
                 obs:.state.GetFeatures[];
                 rwd:.state.GetRewards[];
-                ()
+                :(obs;rwd);
             ];
             [
 
