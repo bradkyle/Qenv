@@ -415,8 +415,10 @@ GetFeatures    :{[accountIds]
         windowsize:100;
         / interval: 
 
+        // TODO add liquidation as feature.
+
         // TODO add account id to feature vector
-        pubobs: raze raze'[( 
+        pobs: raze raze'[( 
             10#0;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
@@ -428,7 +430,16 @@ GetFeatures    :{[accountIds]
             value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL
         )];
 
-        .qt.O:obs;
+        // TODO do uj
+        oobs: (
+            select sum leaves by accountId,price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
+            select sum leaves by accountId,price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
+        );
+
+        select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
+        select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in accountIds;
+
+        .qt.O:pobs;
         // if count feature buffer
         `.state.FeatureBuffer upsert obs;
 

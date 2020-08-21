@@ -25,15 +25,15 @@ defaultBeforeEach: {
     };
 
 defaultAfterAll     :{
-     delete from `.state.AccountEventHistory;
-     delete from `.state.InventoryEventHistory;
-     delete from `.state.OrderEventHistory;
-     delete from `.state.CurrentDepth;
-     delete from `.state.DepthEventHistory;
-     delete from `.state.TradeEventHistory;
-     delete from `.state.MarkEventHistory;
-     delete from `.state.FundingEventHistory;
-     delete from `.state.LiquidationEventHistory;
+    /  delete from `.state.AccountEventHistory;
+    /  delete from `.state.InventoryEventHistory;
+    /  delete from `.state.OrderEventHistory;
+    /  delete from `.state.CurrentDepth;
+    /  delete from `.state.DepthEventHistory;
+    /  delete from `.state.TradeEventHistory;
+    /  delete from `.state.MarkEventHistory;
+    /  delete from `.state.FundingEventHistory;
+    /  delete from `.state.LiquidationEventHistory;
     };
 
 setupState  :{[events]
@@ -151,9 +151,14 @@ test:.qt.Unit[
                 (z;`INVENTORY;`UPDATE;.state.inventoryCols!(0;`BUY;z;0;1000;10;0));
 
                 (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
-                (z;`ORDER;`UPDATE;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(1;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(2;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(3;z;0;`BUY;`LIMIT;1000;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+
+                (z;`ORDER;`UPDATE;.state.ordCols!(4;z;0;`SELL;`LIMIT;1001;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(5;z;0;`SELL;`LIMIT;1001;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(6;z;0;`SELL;`LIMIT;1001;1000;0;0;0;`NEW;0b;`NIL;`NIL));
+                (z;`ORDER;`UPDATE;.state.ordCols!(7;z;0;`SELL;`LIMIT;1001;1000;0;0;0;`NEW;0b;`NIL;`NIL));
 
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10001;z;`BUY;1000));
                 (z;`DEPTH;`UPDATE;.state.depthCols!(10002;z;`BUY;1000));
