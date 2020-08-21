@@ -187,10 +187,10 @@ markCols:cols MarkEventHistory;
 // that could be used to create ohlc features
 // and indicators etc.
 FundingEventHistory: (
+    [time            :   `datetime$()]
     size            :   `float$();
     price           :   `float$();
-    side            :   `symbol$();
-    time            :   `datetime$());
+    side            :   `symbol$());
 fundingCols:`fundingRate;
 
 // Maintains a set of historic trade events
@@ -344,5 +344,5 @@ InsertResultantEvents   :{[events]
               `.state.OrderEventHistory upsert 2!o;
           ]
           ['INVALID_KIND]];
-    } each 0!(`kind`cmd xgroup events);
+    } each 0!(`kind`cmd xgroup events); // TODO benchmark with peach and each
     };
