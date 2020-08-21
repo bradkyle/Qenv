@@ -48,6 +48,7 @@ checkState  :{[]
 // @y: time // TODO check cols correct
 // TODO deterministic ordering
 // .stateTest.genRandomState[100000;.z.z;250]; generates a million events between .z.z and 100 minutes
+// TODO gen based on data
 genRandomState      :{[x;y;z] // TODO add max time
             / t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
             t:{{x+(`minute$(rand 250))} each y#x}[y];
@@ -104,9 +105,6 @@ genRandomState      :{[x;y;z] // TODO add max time
                 p x;
                 x?`BUY`SELL
             )]);
-
-            show lq;
-            show 99#"BAM";
 
             x:(
                 flip[tds],

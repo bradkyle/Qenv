@@ -353,7 +353,18 @@ GetFeatures    :{[accountIds]
         / interval: 
 
         // TOO long only do within given intervals
-        ohlc:0!select num:count size, high:max price, low: min price, open: first price, close: last price, volume: sum size, msize: avg size, hsize: max size,time: max time, lsize: min size by (1 xbar `minute$time) from .state.TradeEventHistory;
+        ohlc:0!select 
+            num:count size, 
+            high:max price, 
+            low: min price, 
+            open: first price, 
+            close: last price, 
+            volume: sum size, 
+            msize: avg size, 
+            hsize: max size,
+            time: max time, 
+            lsize: min size 
+            by (1 xbar `minute$time) from .state.TradeEventHistory;
 
         ohlc:update 
             sma10:mavg[10;close], 
