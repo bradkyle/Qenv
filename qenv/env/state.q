@@ -318,9 +318,47 @@ getFeatureVectors    :{[accountIds]
 
         ohlc:update cci:CCI[high;low;close;14] from ohlc;
 
+        TP:avg(high;low;close);
+        update sma:mavg[n;TP],sd:mdev[n;TP] from update TP:avg(high;low;close) 
+
+        ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
+
+        forceIndex:{[c;v;n]
+            forceIndex1:1_deltas[0nf;c]*v;
+            n#0nf,(n-1)_ema[2%1+n;forceIndex1] }
+
+        ohlc:update ForceIndex:forceIndex[close;vol;13] from ohlc;
+
+        //Ease of movement value -EMV
+        /h-high
+        /l-low
+        /v-volume
+        /s-scale
+        /n-num of periods
+        emv:{[h;l;v;s;n]
+        boxRatio:reciprocal[-[h;l]]*v%s;
+        distMoved:deltas[0n;avg(h;l)];
+        (n#0nf),n _mavg[n;distMoved%boxRatio] };
+
+        ohlc:update EMV:emv[high;low;vol;1000000;14] from ohlc;
+
+        //Price Rate of change Indicator (ROC)
+        /c-close
+        /n-number of days prior to compare
+        roc:{[c;n]
+        curP:_[n;c];
+        prevP:_[neg n;c];
+        (n#0nf),100*reciprocal[prevP]*curP-prevP }
+
+        ohlc:update ROC:roc[close;10] from ohlc;
+
+        // Pivot and combine per accountId
+
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
 
         // TODO add long term prediction features.
+
+        // Flattened last trades
 
         // TODO add account id to feature vector
         obs: raze(
