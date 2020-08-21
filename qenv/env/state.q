@@ -136,7 +136,8 @@ getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
     };
 
 getLvlOQtysByPrice  :{[aId;s]
-    :select dlt:sum leaves by price from .state.OrderEventHistory where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
+    :select dlt:sum leaves by price from .state.OrderEventHistory 
+        where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
     };
 
 
