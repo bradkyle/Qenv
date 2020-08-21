@@ -352,6 +352,26 @@ getFeatureVectors    :{[accountIds]
 
         ohlc:update ROC:roc[close;10] from ohlc;
 
+        //null out first 13 days if 14 days moving avg
+        //Stochastic Oscillator
+        /h-high
+        /l-low
+        /n-num of periods
+        /c-close price
+        /o-open
+        stoOscCalc:{[c;h;l;n]
+        lows:mmin[n;l];
+        highs:mma[n;h];
+        (a#0n),(a:n-1)_100*reciprocal[highs-lows]*c-lows };
+
+        stoOcsK:{[c;h;l;n;k] (a#0nf),(a:n+k-2)_mavg[k;stoOscCalc[c;h;l;n]] };
+        stoOscD:{[c;h;l;n;k;d] (a#0n),(a:n+k+d-3)_mavg[d;stoOscK[c;h;l;n;k]] }
+
+        ohlc: update
+            sC:stoOscCalc[close;high;low;5],
+            sk:stoOscK[close;high;low;5;2],
+            stoOscD[close;high;low;5;2;3] from ohlc;
+
         // Pivot and combine per accountId
 
         ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
