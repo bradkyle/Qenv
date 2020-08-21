@@ -65,6 +65,13 @@ Config      :{[config]
     // encouragement, 
     // lookback size
     // source of events
+    // order size
+    // min inventory
+    // max inventory
+    // training episodes
+    // training sample size
+    // testing sample size
+    // memory size
     // 
 
     };

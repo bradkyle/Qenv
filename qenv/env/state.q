@@ -505,6 +505,7 @@ getOhlcFeatures :{[]
 
 getOBFeatures   :{
 
+        ob update avg(bestBid,bestAsk) from .state.DepthEventHistory;
     };
 
 // TODO get orderbook features
@@ -550,6 +551,9 @@ GetFeatures    :{[accountIds] // TODO configurable window size
 // Reward Extraction and Derivation
 // =====================================================================================>
 
+sortinoRealizedPnl  :{
+
+    };
 
 GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100

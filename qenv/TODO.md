@@ -61,3 +61,22 @@ Worker Types
 
 
 Distributed Crawler cluster and rerouting on block etc.
+
+
+Training episodes 1000 days
+Training sample size ∼ 120 days
+Testing sample size 40 days
+Memory size 107
+Number of tilings (M) 32
+Weights for linear combination of tile codings (0.6, 0.1, 0.3)
+[agent, market, full] (λi )
+Learning rate (α) 0.001
+Step-size [R-learning] (β) 0.005
+Discount factor (γ ) 0.97
+Trace parameter (λ) 0.96
+Exploration rate (ε) 0.7
+εFloor 0.0001
+εT 1000
+Order size (ω) 1000
+Min inventory (min Inv) -10000
+Max inventory (max Inv) 10000
