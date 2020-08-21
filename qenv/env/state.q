@@ -236,7 +236,7 @@ getFeatureVectors    :{[accountIds]
             value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`long;
             value exec last amount, last average_entry_price, last leverage, last realized_pnl, last unrealized_pnl from positions where side=`short
         );
-
+        // if count feature buffer
         `.observation.FeatureBuffer upsert obs;
 
         // TODO count by account id
@@ -256,6 +256,7 @@ getFeatureVectors    :{[accountIds]
 /     unrealizedPnl       :  `long$());
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer // TODO validation on events
+// TODO liquidation, settlement, pricerange
 InsertResultantEvents   :{[events]
     {[events]
         k:first events[`kind];
