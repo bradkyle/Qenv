@@ -169,19 +169,19 @@ getPriceAtLevel         :{[level;s]
 // that could be used to create ohlc features
 // and indicators etc.
 TradeEventHistory: (
+    [tid:`long$(); time:`datetime$()]
     size            :   `float$();
     price           :   `float$();
-    side            :   `symbol$();
-    time            :   `datetime$());
-tradeCols:`size`price`side`time;
+    side            :   `symbol$());
+tradeCols:cols TradeEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
 MarkEventHistory: (
-    markprice           :   `float$();
-    time            :   `datetime$());
-markCols:`markprice`time;
+    [time            :   `datetime$()]
+    markprice           :   `float$());
+markCols:cols MarkEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -265,7 +265,7 @@ InsertResultantEvents   :{[events]
         d:events[;`datum];
         t:events[`time];
 
-        $[k=`DEPTH;
+        $[k=`DEPTH;[
             l:(price:d[;`price];
                time:t;
                side:0^d[;`side];
@@ -273,13 +273,33 @@ InsertResultantEvents   :{[events]
 
             `.state.CurrentDepth upsert 1!l;
             `.state.DepthEventHistory upsert 2!l;
-            
-          k=`TRADE;
+          ];
+          k=`TRADE;[
             `.state.TradeEventHistory upsert ([
                         tid:d[;`tid];
-                        time:t] 
-                        side:0^d[;`side];
+                        time:t]
+                        side:d[;`side];
                         size:0^d[;`size]);
+          ];
+          k=`MARK;[
+            `.state.MarkEventHistory upsert (
+                        [time:t]
+                        markprice:d[;`markprice]);
+          ];
+          k=`FUNDING;[
+            `.state.TradeEventHistory upsert ([
+                        tid:d[;`tid];
+                        time:t]
+                        side:d[;`side];
+                        size:0^d[;`size]);
+          ];
+          k=`TRADE;[
+            `.state.TradeEventHistory upsert ([
+                        tid:d[;`tid];
+                        time:t]
+                        side:d[;`side];
+                        size:0^d[;`size]);
+          ];
           k=`ACCOUNT;
           [
                 `.state.AccountEventHistory upsert ([
@@ -322,9 +342,7 @@ InsertResultantEvents   :{[events]
 
               `.state.CurrentOrders upsert 1!o;
               `.state.OrderEventHistory upsert 2!o;
-          ]; 
-          k=`LIQUIDATION;
-          [`.state.LiquidationHistory upsert (.state.inventoryCols!(event[`datum][.state.inventoryCols]))]; 
-          [0N]];
+          ]
+          ['INVALID_KIND]];
     } each 0!(`kind`cmd xgroup events);
     };
