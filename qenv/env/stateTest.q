@@ -28,16 +28,17 @@ test:.qt.Unit[
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]
+        :`args`cState`eResp!p;
+    };
     (
         ("Should correctly insert depth events into both current depth and depth event history";(
             (
                 (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
                 (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
             );
-            (
-                (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
-            )));
+            (til 10)
+        )));
         ("Should correctly insert depth events into both current depth and depth event history";(
             (
                 (z;`ACCOUNT;`UPDATE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
