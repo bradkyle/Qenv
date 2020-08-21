@@ -39,10 +39,10 @@ genRandomState      :{[]
 
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
             dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
-            odrs:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
+            odrs:`time`intime`kind`cmd`datum!(t x;t x;x#`ORDER;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
             mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
-            fnd:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
-            lq:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
+            fnd:`time`intime`kind`cmd`datum!(t x;t x;x#`FUNDING;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
+            lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
 
 
 
@@ -125,9 +125,9 @@ test:.qt.Unit[
                 (z;`FUNDING;`UPDATE;.state.fundingCols!(z;1;z));
                 (z;`FUNDING;`UPDATE;.state.fundingCols!(z;1;z));
 
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(z;`BUY;1000;1000));
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(z;`BUY;1000;1000));
-                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(z;`BUY;1000;1000))
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(0;z;`BUY;1000;1000));
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(1;z;`BUY;1000;1000));
+                (z;`LIQUIDATION;`UPDATE;.state.liquidationCols!(2;z;`BUY;1000;1000))
             );
             til[10]
         ))

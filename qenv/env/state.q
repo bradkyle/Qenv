@@ -214,7 +214,7 @@ fundingCols:cols FundingEventHistory;
 // that could be used to create ohlc features
 // and indicators etc.
 LiquidationEventHistory: (
-    [time            :   `datetime$()]
+    [liqid:`long$();time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
     side            :   `symbol$());
@@ -344,11 +344,12 @@ InsertResultantEvents   :{[events]
                 fundingrate:d[;`fundingrate];
                 fundingtime:d[;`fundingtime]);
           ];
-          k=`LIQUIDATION;[ // TODO
-            / `.state.LiquidationEventHistory upsert (
-                / [time:t]
-                / side:d[;`side];
-                / size:0^d[;`size]);
+          k=`LIQUIDATION;[ // TODO if delete remove from current
+            `.state.LiquidationEventHistory upsert (
+                [liqId:`long$(); time:t]
+                side:d[;`side];
+                price:d[;`price];
+                size:0^d[;`size]);
           ]; 
           k=`ACCOUNT;
           [
