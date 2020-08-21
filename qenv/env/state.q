@@ -191,7 +191,7 @@ FundingEventHistory: (
     size            :   `float$();
     price           :   `float$();
     side            :   `symbol$());
-fundingCols:`fundingRate;
+fundingCols:cols FundingEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -287,7 +287,14 @@ InsertResultantEvents   :{[events]
                         markprice:d[;`markprice]);
           ];
           k=`FUNDING;[
-            `.state.TradeEventHistory upsert ([
+            `.state.FundingEventHistory upsert ([
+                        tid:d[;`tid];
+                        time:t]
+                        side:d[;`side];
+                        size:0^d[;`size]);
+          ];
+          k=`LIQUIDATION;[
+            `.state.LiquidationEventHistory upsert ([
                         tid:d[;`tid];
                         time:t]
                         side:d[;`side];
