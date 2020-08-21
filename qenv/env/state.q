@@ -298,14 +298,7 @@ InsertResultantEvents   :{[events]
                 [time:t]
                 side:d[;`side];
                 size:0^d[;`size]);
-          ];
-          k=`TRADE;[
-            `.state.TradeEventHistory upsert ([
-                tid:d[;`tid];
-                time:t]
-                side:d[;`side];
-                size:0^d[;`size]);
-          ];
+          ]; 
           k=`ACCOUNT;
           [
             `.state.AccountEventHistory upsert ([
@@ -347,7 +340,7 @@ InsertResultantEvents   :{[events]
 
             `.state.CurrentOrders upsert 1!o;
             `.state.OrderEventHistory upsert 2!o;
-          ]
+          ];
           ['INVALID_KIND]];
     } each 0!(`kind`cmd xgroup events); // TODO benchmark with peach and each
     };
