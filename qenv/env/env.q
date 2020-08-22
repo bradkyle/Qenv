@@ -31,6 +31,8 @@ Env  :(
         numAgentSteps       : `long$()
     );
 
+// TODO episodes
+
 / Agent :(
 /     [agentId        :`long$()]
 /     accountId       :`long$();
@@ -105,8 +107,14 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
 GenNextBatch    :{
-
-     :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
+ 
+     $[.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL;
+            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
+       .env.WindowKind=`.env.WINDOWKIND$`ALLEVENTS;
+            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ();
+       'INVALID_WINDOWING_METHOD;
+     ];
+     .state.StepIndex:
     };
 
 / Reset Logic
@@ -138,6 +146,7 @@ Reset    :{
     aids:actions[;1];
     obs:.state.PrimeFeatures[aids; 100; 0];
     .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
+    .env.StepIndex:.env.PrimeBatchNum_.env.StepIndex;
 
     .env.CurrentStep+:1;
     };
