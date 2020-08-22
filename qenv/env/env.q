@@ -142,7 +142,7 @@ loadEvents  :{
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
         // TODO validate actions, and step index etc. / other schema
-        $[
+        $[();
             [
                 idx:.env.StepIndex@step;
                 nevents:flip[.env.EventBatch@idx];

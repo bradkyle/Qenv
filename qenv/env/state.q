@@ -557,14 +557,15 @@ GetFeatures    :{[accountIds] // TODO configurable window size
 // Reward Extraction and Derivation
 // =====================================================================================>
 
-sortino  :{
-
-    };
+sortinoRatio:{[asset;minAccRet] 
+ excessRet:-1*minAccRet-(100*1_asset-prev[asset])%1_asset;
+ 100*avg[excessRet]% sqrt sum[(excessRet*0>excessRet) xexp 2]%count[excessRet]
+ };
 
 GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100
 
-    wnRet:r:
+    r:
         // TODO fill zeros etc.
         0!select 
         returns:1_deltas[realizedPnl] 
