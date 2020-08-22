@@ -50,6 +50,9 @@ Episode :{
         rewardTotal              :`float$()
     };
 
+.env.EventPath:`path;
+.env.EventSource:`events;
+
 .env.CurrentEpisde:0;
 .env.CurrentStep:0; // The current step of the environment.
 .env.PrimeBatchNum:0; // How many events are used to prime the engine with state.
@@ -127,8 +130,9 @@ GenNextBatch    :{
     // not set create the set of batch idxs.
     // set the batch window intervals above.
     if[count[.env.BatchIndex]<1; 
-        
-
+        bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
+        bidx:update end:next start from bidx;
+        bidx:update end:first[(select last time from events)`time]^end from bidx;
     ];
 
      $[(.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
