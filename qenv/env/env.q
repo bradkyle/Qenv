@@ -179,7 +179,9 @@ Step    :{[actions]
 
             // TODO analytics
             / if[.env.ActiveEnv[`doAnalytics]; // CHANGE to config
-                / .analytics.LogStep[actions;obs;rwd;ifo;nevents;aevents;xevents]];
+                / .analytics.LogStep[step;actions;obs;rwd;ifo;nevents;aevents;xevents]];
+
+            
 
             :(obs;rwd;ifo);
         ];
