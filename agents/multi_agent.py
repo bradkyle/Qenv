@@ -1,6 +1,6 @@
 from policy import LSTMPolicy, MlpPolicyValue
 import gym
-import gym_compete
+import qenv
 import pickle
 import sys
 import argparse
@@ -26,8 +26,7 @@ def setFromFlat(var_list, flat_params):
     tf.get_default_session().run(op, {theta: flat_params})
 
 def run(config):
-    
-
+    env = qenv.MultiAgentEnv();
     param_paths = config.param_paths
 
     tf_config = tf.ConfigProto(
@@ -37,7 +36,7 @@ def run(config):
     sess.__enter__()
 
     policy = []
-    for i in range(2): # specify num agents
+    for i in range(2):
         scope = "policy" + str(i)
         if policy_type == "lstm":
             policy.append(LSTMPolicy(scope=scope, reuse=False,

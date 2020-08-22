@@ -1,4 +1,0 @@
-- Simulate order queue i.e. add randomization to refused order that is directly proportional to the amount of trades that occur in a period
-- Add randomization to deposits and withdraws
-- Completely change the engine to kdb, with adapters in kdb+ or python
-- Allow for multiple agents i.e. (self play) to be utilized 
