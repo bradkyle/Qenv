@@ -3,6 +3,11 @@ from qpython import qconnection
 import numpy as np
 import json
 
+class SimpleAgent():
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class MultiAgentEnv():
     '''
     A multi-agent environment consists of some number of Agents.
