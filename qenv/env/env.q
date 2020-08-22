@@ -85,6 +85,16 @@ Info        :{[aIds;step]
     };
 
 
+/ GenNextEventBatch
+// =====================================================================================>
+
+GenNextBatch    :{
+
+    };
+
+/ Reset Logic
+// =====================================================================================>
+
 // TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
@@ -98,7 +108,9 @@ ResetAll    :{
     .engine.Reset[];
     .state.Reset[];
 
-
+    // Loads the next set of events from 
+    // HDB into memory
+    .env.GenNextBatch[];
 
     };
 
