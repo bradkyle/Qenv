@@ -9,6 +9,7 @@ class MultiAgentEnv():
     '''
     def __init__(self, num_agents):
         self.num_agents=num_agents
+        self.account_ids=list(range(self.num_agents))
 
     def _set_action_space(self):
         self.action_space = spaces.Tuple(
@@ -27,8 +28,12 @@ class MultiAgentEnv():
             pandas=False) as q:
             return q.sendSync(qry) 
 
-    def step(self):
+    def _step(self):
         res = self._exec(".state.Step[("+";".join(["("+str(x)+";"+str(x*2)+")" for x in range(10)])+")]")
+
+
+
+
         return ()
 
     def reset(self):
