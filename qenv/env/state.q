@@ -514,7 +514,7 @@ getOBFeatures   :{
 
 // TODO get orderbook features
 
-GetFeatures    :{[accountIds] // TODO configurable window size
+GetFeatures    :{[aids;windowsize] // TODO configurable window size
         windowsize:100;
         / interval: 
 
