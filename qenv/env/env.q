@@ -119,7 +119,7 @@ GenNextBatch    :{
         [];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
         [];
-        []
+        ['INVALID_BATCH_SELECTION_METHOD]
      ];
 
      $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
