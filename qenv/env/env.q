@@ -117,6 +117,10 @@ ResetAll    :{
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
 
+    aids:actions[;1];
+    obs:.state.GetFeatures[aids; 100; step];
+    rwd:.state.GetRewards[aids; 100; step];
+    ifo:.env.Info[aids;step];
 
     };
 
