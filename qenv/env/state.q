@@ -519,14 +519,16 @@ GetFeatures    :{[aids;windowsize] // TODO configurable window size
         / interval: 
 
         // TODO add liquidation as feature.
+        bp:select[-5] price from .state.TradeEventHistory where side=`BUY; // TODO fill 0's
+        ap:select[-5] price from .state.TradeEventHistory where side=`SELL;
 
         // TODO add account id to feature vector
         pobs: raze raze'[( 
             10#0;
             exec last markprice from .state.MarkEventHistory;
             exec last fundingrate from .state.FundingEventHistory;
-            value flip select[-5] price from .state.TradeEventHistory where side=`BUY; // TODO fill 0's
-            value flip select[-5] price from .state.TradeEventHistory where side=`SELL;
+            value flip bp; // TODO fill 0's
+            value flip ap;
             value flip select[-5] size from .state.TradeEventHistory where side=`BUY;
             value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
             value flip select[5] size from `price xasc .state.CurrentDepth where side=`BUY;
@@ -534,15 +536,16 @@ GetFeatures    :{[aids;windowsize] // TODO configurable window size
         )];
 
         // TODO do uj
-        oobs: (
-            select sum leaves by accountId,price from .state.CurrentOrders 
-                where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
-            select sum leaves by accountId,price from .state.CurrentOrders 
-                where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY;
+        // select by accountId, price from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL
+        oobs: raze(
+            exec leaves from 0^(ap uj select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
+            exec leaves from 0^(ap uj select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
         );
 
-        select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
-        select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in accountIds;
+        ac:select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
+        iv:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in 0 1 2;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]
+
+        aobs:ac uj iv;
 
         // if count feature buffer
         `.state.FeatureBuffer upsert obs;
