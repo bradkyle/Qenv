@@ -113,9 +113,11 @@ firstDay:{`datetime$((select first date from events)[`date])};
 
 // Batches are synonymous with episode
 GenNextBatch    :{
-     $[();
+     $[(.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
         [];
-       ();
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
+        [];
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
         [];
         []
      ];
