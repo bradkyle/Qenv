@@ -177,23 +177,18 @@ Step    :{[actions]
             rwd:.state.GetRewards[aids; 100; step];
             ifo:.env.Info[aids;step];
 
+            // TODO analytics
+            / if[.env.ActiveEnv[`doAnalytics]; // CHANGE to config
+                / .analytics.LogStep[actions;obs;rwd;ifo;nevents;aevents;xevents]];
+
             :(obs;rwd;ifo);
         ];
         [
             
         ]
     ];
+ 
 
-    // Derive the current info for the
-    // entire engine and for each subsequent
-    // account referenced in accountIds
-    // Returns a table of Info indexed by accountId
-    info: Info[accountIds];
+    
 
-    if[.env.ActiveEnv[`doAnalytics]; // CHANGE to config
-        .analytics.LogStep[actions;result[0];result[1];info;newEvents]];
-
-    // Returns a set of observations, rewards and info
-    // to the agents (uj by agent)
-    :((uj)over(result[0];result[1];info[0]), info[1]);
     };
