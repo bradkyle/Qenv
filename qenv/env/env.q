@@ -4,6 +4,8 @@
 // Agent ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
 //      \_____ other features _____________________________/
+// TODO hooks system
+
 \d .env
 
 Env  :(
@@ -35,7 +37,20 @@ WINDOWKIND :   (`TEMPORAL;
                 `EVENTCOUNT;          
                 `THRESHCOUNT);   
 
+BATCHSELECTMETHOD :   (`CHRONOLOGICAL;        
+                `RANDOM;          
+                `CURRICULUM); 
+
 // TODO episodes
+Episode :{
+        [episodeId               :`long$()]
+        batchIdx:                :`long$();
+        batchStart               :`datetime$();
+        batchEnd                 :`datetime$();                        
+        rewardTotal              :`float$();
+
+    };
+
 
 / Agent :(
 /     [agentId        :`long$()]
@@ -49,6 +64,7 @@ WINDOWKIND :   (`TEMPORAL;
 .env.PrimeBatchNum:0;
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 .env.WindowKind:`.env.WINDOWKIND$`TEMPORAL;
+.env.BatchSelectMethod:`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL;
 .env.BatchInterval:`minute$5;
 .env.BatchSize: 50;
 .env.StepIndex:();
@@ -113,6 +129,14 @@ firstDay:{`datetime$((select first date from events)[`date])};
 
 // Batches are synonymous with episode
 GenNextBatch    :{
+    // If the batch idxs which correspond with the length of an episode are
+    // not set create the set of batch idxs.
+    // set the batch window intervals above.
+    if[count[.env.BatchWindows]<1; 
+        
+
+    ];
+
      $[(.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
         [];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
@@ -130,6 +154,9 @@ GenNextBatch    :{
             ['NOTIMPLEMENTED];
        ['INVALID_WINDOWING_METHOD]
      ];
+
+      // TODO insert feature batch.
+
      .state.StepIndex: key .env.EventBatch;
     };
 
