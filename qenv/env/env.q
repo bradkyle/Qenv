@@ -50,6 +50,7 @@ Episode :{
         rewardTotal              :`float$()
     };
 
+.env.CurrentEpisde:0;
 .env.CurrentStep:0; // The current step of the environment.
 .env.PrimeBatchNum:0; // How many events are used to prime the engine with state.
 
