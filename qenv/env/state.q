@@ -542,8 +542,8 @@ GetFeatures    :{[aids;windowsize] // TODO configurable window size
             exec leaves from 0^(ap uj select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
         );
 
-        ac:select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
-        iv:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in 0 1 2;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]
+        ac:select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in aids;
+        iv:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in aids;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]
 
         aobs:ac uj iv;
 
