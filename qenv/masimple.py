@@ -1,0 +1,35 @@
+from gym import Env, spaces
+from qpython import qconnection
+import numpy as np
+
+
+class MultiAgentEnv():
+    '''
+    A multi-agent environment consists of some number of Agents.
+    '''
+    def __init__(self, num_agents):
+        self.num_agents=num_agents
+
+    def _set_action_space(self):
+        self.action_space = spaces.Tuple(
+            [self.agents[i].action_space for i in range(self.n_agents)]
+        )
+
+    def _set_observation_space(self):
+        self.observation_space = spaces.Tuple(
+            [self.agents[i].observation_space for i in range(self.n_agents)]
+        )
+
+    def _exec(self, qry):
+        with qconnection.QConnection(
+            host=self.host, 
+            port=self.port, 
+            pandas=False) as q:
+            return q.sendSync(qry) 
+
+    def step(self):
+        res = self._exec(".state.Step[("+";".join(["("+str(x)+";"+str(x*2)+")" for x in range(10)])+")]")
+        return ()
+
+    def reset(self):
+        res =  self._exec(".state.Reset[("+";".join(self.account_ids)+")]")
