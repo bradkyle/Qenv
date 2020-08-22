@@ -88,8 +88,20 @@ Info        :{[aIds;step]
 / GenNextEventBatch
 // =====================================================================================>
 
+firstDay:{`datetime$((select first date from events)[`date])};
+
+
+/ date       time                    intime                  kind  cmd datum
+/ ---------------------------------------------------------------------------------------
+/ 2020.07.26 2020.07.26T23:54:24.490 2020.07.26T23:54:24.547 TRADE NEW `SELL 993500i 1i
+/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 92i
+/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 110i
+/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
+/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
+
 GenNextBatch    :{
 
+     :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
     };
 
 / Reset Logic
@@ -119,7 +131,7 @@ Reset    :{
     .state.InsertResultantEvents[xevents];
 
     aids:actions[;1];
-    obs:.state.GetFeatures[aids; 100; 0];
+    obs:.state.PrimeFeatures[aids; 100; 0];
     .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
 
     .env.CurrentStep+:1;
@@ -130,21 +142,7 @@ Reset    :{
 / Advancing System
 // =====================================================================================>
 
-firstDay:{`datetime$((select first date from events)[`date])};
 
-
-/ date       time                    intime                  kind  cmd datum
-/ ---------------------------------------------------------------------------------------
-/ 2020.07.26 2020.07.26T23:54:24.490 2020.07.26T23:54:24.547 TRADE NEW `SELL 993500i 1i
-/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 92i
-/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 110i
-/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
-/ 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
-
-loadEvents  :{
-    // .Q.ind[]
-    :select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
-    };
 
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
@@ -164,7 +162,7 @@ Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
     // Advances the current state of the environment
-    $[(step<count[.env.StepIndex]);
+    $[((step+1)<count[.env.StepIndex]);
         [
             idx:.env.StepIndex@step;
             nevents:flip[.env.EventBatch@idx];
@@ -181,12 +179,6 @@ Step    :{[actions]
             obs:.state.GetFeatures[aids; 100; step];
             rwd:.state.GetRewards[aids; 100; step];
             ifo:.env.Info[aids;step];
-
-            // TODO analytics
-            / if[.env.ActiveEnv[`doAnalytics]; // CHANGE to config
-                / .analytics.LogStep[step;actions;obs;rwd;ifo;nevents;aevents;xevents]];
-
-            
 
             :(obs;rwd;ifo);
         ];
