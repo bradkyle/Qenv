@@ -48,6 +48,7 @@ WINDOWKIND :   (`TEMPORAL;
 .env.CurrentStep:0;
 .env.PrimeBatchNum:0;
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
+.env.WindowKind:`.env.WINDOWKIND$`TEMPORAL;
 .env.BatchInterval:`minute$5;
 .env.BatchSize: 50;
 .env.StepIndex:();
@@ -110,15 +111,22 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
+// Batches are synonymous with episode
 GenNextBatch    :{
- 
-     $[.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL;
-            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
-       .env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT;
-            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ();
-       .env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT;
-            'NOTIMPLEMENTED;
-       'INVALID_WINDOWING_METHOD;
+     $[();
+        [];
+       ();
+        [];
+        []
+     ];
+
+     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()];
+       (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ()];
+       (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
+            ['NOTIMPLEMENTED];
+       ['INVALID_WINDOWING_METHOD]
      ];
      .state.StepIndex: key .env.EventBatch;
     };

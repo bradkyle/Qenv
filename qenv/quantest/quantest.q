@@ -27,7 +27,7 @@ formatTable     :{
 
 / BAM:();
 / FOO:();
-// TODO mark skip
+// TODO get memory in profile 
 
 // Test
 // ======================================================================>
