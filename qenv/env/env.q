@@ -47,18 +47,8 @@ Episode :{
         batchIdx:                :`long$();
         batchStart               :`datetime$();
         batchEnd                 :`datetime$();                        
-        rewardTotal              :`float$();
-
+        rewardTotal              :`float$()
     };
-
-
-/ Agent :(
-/     [agentId        :`long$()]
-/     accountId       :`long$();
-/     rewardKind          : `.reward.REWARDKIND$();
-/     lookBackSize        : `long$();
-/     encouragement       : `float$()
-/     );
 
 .env.CurrentStep:0; // The current step of the environment.
 .env.PrimeBatchNum:0; // How many events are used to prime the engine with state.
