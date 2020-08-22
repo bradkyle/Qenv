@@ -535,8 +535,10 @@ GetFeatures    :{[accountIds] // TODO configurable window size
 
         // TODO do uj
         oobs: (
-            select sum leaves by accountId,price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
-            select sum leaves by accountId,price from .state.CurrentOrders where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
+            select sum leaves by accountId,price from .state.CurrentOrders 
+                where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL;
+            select sum leaves by accountId,price from .state.CurrentOrders 
+                where otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`BUY;
         );
 
         select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in accountIds;
@@ -563,7 +565,7 @@ GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100
 
     wnRet:r:
-
+        // TODO fill zeros etc.
         0!select 
         returns:1_deltas[realizedPnl] 
         by accountId 
