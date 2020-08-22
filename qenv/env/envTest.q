@@ -63,15 +63,20 @@ test:.qt.Unit[
         mck5: .qt.M[`.state.GetRewards;{[e]};c];
         mck6: .qt.M[`.env.Info;{[e]};c];
 
-        a:p[`args];
-        res:.env.Advance[a[`step];a[`actions]];
+        if[count[p[`eStepIndex]];.env.StepIndex:p[`eStepIndex]];
+        if[count[p[`eCurrentStep]];.env.CurrentStep:p[`eCurrentStep]];
+        if[count[p[`eEventBatch]];.env.EventBatch:p[`eEventBatch]];
+
+        res:.env.Step[p[`actions]];
+        .qt.A[res;~;p[`eRes];"response";c];
+        / show p1;
 
         .qt.MA[mck1;p1[`called];p1[`numCalls];p1[`calledWith];c];
-        .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
-        .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
-        .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
-        .qt.MA[mck5;p5[`called];p5[`numCalls];p5[`calledWith];c];
-        .qt.MA[mck6;p6[`called];p6[`numCalls];p6[`calledWith];c];
+        / .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
+        / .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
+        / .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
+        / .qt.MA[mck5;p5[`called];p5[`numCalls];p5[`calledWith];c];
+        / .qt.MA[mck6;p6[`called];p6[`numCalls];p6[`calledWith];c];
 
         // Assertions
     };
@@ -79,31 +84,29 @@ test:.qt.Unit[
         / e:({`time`kind`cmd`datum!x} each p[0]);
         / show p[0];
         events:.envTest.dSecEvents[10;z];
-        
+        m:{
+            mCols:`called`numCalls`calledWith`fn;
+            (count[x]#mCols)!x};  
 
-        :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents,
-        `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo!(
-            `step`actions!p[0];
+        :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
+        `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
+            p[0];
             p[1];
             p[2];
             p[3];
             p[4];
-            p[5];
-            p[6];
-            p[7];
-            p[8];
+            m p[5];
+            m p[6];
+            m p[7];
+            m p[8];
+            m p[9];
+            m p[10]
             )
     };
     (
-        ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
-            (1;((1;0))); 
-            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]}); // Adapt \\ returns 
-            enlist(1b;1;()); // ProcessEvents assert = nevents + 
-            enlist(1b;1;()); // InsertResultantEvents
-            enlist(0b;0;()) // loadEvents
-        ));
-        ("step=1 single action account pair ordered by 1 second per step, 5 steps";(
-            (1;((1;0)));
+        enlist("step=1 single action account pair ordered by 1 second per step, 5 steps";(
+            ((1;0));
+            0;
             (sz 5*til[5]);
             (
                 (sz 1;());
@@ -112,10 +115,13 @@ test:.qt.Unit[
                 (sz 4;());
                 (sz 5;())
             );
-            enlist(1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
-            enlist(1b;1;());
-            enlist(1b;1;());
-            enlist(0b;0;())
+            (til 5);
+            (1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
+            (1b;1;());
+            (1b;1;());
+            (1b;1;());
+            (1b;1;());
+            (0b;0;())
         ))
     );
     .qt.sBlk;

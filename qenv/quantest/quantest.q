@@ -2,6 +2,7 @@
 system "d .qt";
 \c 4000 4000
 
+str: {`$(string[x])}
 line: {show 99#"-"};
 dline: {show 99#"="};
 hline: {show 99#"#"}
@@ -476,7 +477,7 @@ A   :{[actual;relation;expected;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
     failFlag::not .[relation; (actual; expected); 0b];
     state:$[failFlag;`FAIL;`PASS];
-    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;(`$string[relation]);expected);
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;str relation;expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
     }

@@ -39,12 +39,13 @@ Env  :(
 /     encouragement       : `float$()
 /     );
 
+.env.CurrentStep:0;
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-BatchInterval:`minute$5;
-BatchSize: 50;
-StepIndex:();
-EventBatch:();
-FeatureBatch:();
+.env.BatchInterval:`minute$5;
+.env.BatchSize: 50;
+.env.StepIndex:();
+.env.EventBatch:();
+.env.FeatureBatch:();
 
 // Main Callable functions
 // --------------------------------------------------->
@@ -137,15 +138,6 @@ loadEvents  :{
 // batching/episodes and episode randomization/replay buffer.
 // Loads events into memory such that they can be more rapidly stepped over
 // moving this to a seperate process will increase the speed even further. 
-
-// SIMPLE DERIVE STEP RATE
-// Actions in this instance are a tuple of (action;accountId)
-Advance :{[step;actions]
-        // TODO validate actions, and step index etc. / other schema
-        
-    };
-
-
 // Carries out a step in the exchange environment
 // It generates a set of events for each action
 // given its time and sets a given offset for 
@@ -159,7 +151,7 @@ Step    :{[actions]
     // TODO format actions
 
     // Advances the current state of the environment
-    $[();
+    $[(.env.CurrentStep<count[.env.StepIndex]);
         [
             idx:.env.StepIndex@step;
             nevents:flip[.env.EventBatch@idx];
@@ -167,7 +159,7 @@ Step    :{[actions]
             / feature:FeatureBatch@thresh;
             // should add a common offset to actions before inserting them into
             // the events.
-            aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
+            aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
             xevents:.engine.ProcessEvents[(nevents,aevents)];
 
             .state.InsertResultantEvents[xevents];
@@ -190,7 +182,7 @@ Step    :{[actions]
         ]
     ];
  
-
+    .env.CurrentStep+:1;
     
 
     };
