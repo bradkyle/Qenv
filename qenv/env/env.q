@@ -40,7 +40,7 @@ Env  :(
 /     );
 
 .env.CurrentStep:0;
-.env.StartBatch:0;
+.env.PrimeBatchNum:0;
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 .env.BatchInterval:`minute$5;
 .env.BatchSize: 50;
@@ -111,6 +111,12 @@ ResetAll    :{
     // Loads the next set of events from 
     // HDB into memory
     .env.GenNextBatch[];
+
+    primeEventBatch:.env.PrimeBatchNum#.env.EventBatch;
+
+    nevents:.env.SetupEvents[];
+    xevents:.engine.ProcessEvents[(nevents,aevents)];
+
 
     };
 
