@@ -87,30 +87,19 @@ Info        :{[aIds;step]
 // TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-Reset       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
+ResetAgents       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
     // Reset public singletons
-    .engine.Reset[aIds];
-    :.state.Reset[aIds];
-
-
-    $[
-        // If the current step is not the first or the last
-        // step in the in the event batch
-        ((step<>0) and (step<(count[.env.BatchSize]-1)));
-        
-        // If the current step is the first or last step 
-        // in the given event batch.
-        [
-            //
-            idx:.env.StepIndex@step;
-            .env.EventBatch:.env.loadEvents[];
-            .env.StepIndex:key[.env.EventBatch];
-            / .env.FeatureBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from events;
-        ]
-    ];
-
+    .engine.ResetAgents[aIds];
+    .state.ResetAgents[aIds];
     };
 
+ResetAll    :{
+    .engine.Reset[];
+    .state.Reset[];
+
+
+    
+    };
 
 
 

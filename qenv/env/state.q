@@ -586,6 +586,22 @@ GetRewards  :{[aids; windowsize; step] // TODO configurable window size
 // Reset State
 // =====================================================================================>
 
-Reset   :{
+ResetAgents   :{[aids]
+    delete from `.state.AccountEventHistory where accountId in aids;
+    delete from `.state.InventoryEventHistory where accountId in aids;
+    delete from `.state.OrderEventHistory where accountId in aids;
+    delete from `.state.CurrentOrders where accountId in aids;
+    delete from `.state.FeatureBuffer where accountId in aids;
+    };
 
-    }
+Reset :{[]
+    delete from `.state.AccountEventHistory;
+    delete from `.state.InventoryEventHistory;
+    delete from `.state.OrderEventHistory;
+    delete from `.state.CurrentOrders;
+    delete from `.state.TradeEventHistory;
+    delete from `.state.MarkEventHistory;
+    delete from `.state.FundingEventHistory;
+    delete from `.state.LiquidationEventHistory;
+    delete from `.state.FeatureBuffer;
+    };
