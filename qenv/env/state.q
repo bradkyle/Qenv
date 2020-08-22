@@ -557,6 +557,7 @@ GetFeatures    :{[aids; windowsize; step] // TODO configurable window size
         / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
         // TODO fill forward + normalize
         :1!(0^select from ungroup(.ml.minmaxscaler'[`accountId xgroup .state.FeatureBuffer]) where step=1);
+        // obs[`accountId]!value'[`accountId`step _ obs]
     };
 
 

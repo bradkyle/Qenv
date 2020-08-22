@@ -184,6 +184,10 @@ ProcessEvents  : {[eventBatch]
 / Main Setup Function
 / -------------------------------------------------------------------->
 
+Info    :{[accountIds]
+        
+    };
+
 // Sets up the engine, active instrument,
 // Initializes agent and respective inventory config
 //  
