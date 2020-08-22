@@ -60,13 +60,16 @@ Episode :{
 /     encouragement       : `float$()
 /     );
 
-.env.CurrentStep:0;
-.env.PrimeBatchNum:0;
+.env.CurrentStep:0; // The current step of the environment.
+.env.PrimeBatchNum:0; // How many events are used to prime the engine with state.
+
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 .env.WindowKind:`.env.WINDOWKIND$`TEMPORAL;
 .env.BatchSelectMethod:`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL;
 .env.BatchInterval:`minute$5;
 .env.BatchSize: 50;
+
+.env.BatchIndex:();
 .env.StepIndex:();
 .env.EventBatch:();
 .env.FeatureBatch:();
@@ -132,7 +135,7 @@ GenNextBatch    :{
     // If the batch idxs which correspond with the length of an episode are
     // not set create the set of batch idxs.
     // set the batch window intervals above.
-    if[count[.env.BatchWindows]<1; 
+    if[count[.env.BatchIndex]<1; 
         
 
     ];
