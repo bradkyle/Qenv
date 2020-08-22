@@ -75,13 +75,18 @@ Config      :{[config]
     // testing sample size
     // memory size
     // 
+    // TODO config engine
 
     };
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
 Info        :{[aIds;step]
-        .engine.Info[];
+        :(
+            .engine.Info[];
+            .state.Info[];
+            .step.CurrentStep
+        );
     };
 
 
