@@ -36,6 +36,7 @@ def run(config):
     sess.__enter__()
 
     policy = []
+    policy_type = "lstm"
     for i in range(2):
         scope = "policy" + str(i)
         if policy_type == "lstm":

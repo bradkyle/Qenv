@@ -28,8 +28,10 @@ class MultiAgentEnv():
         )
 
     def _set_observation_space(self):
+        high = np.inf * np.ones(5)
+        low = -high
         self.observation_space = spaces.Tuple(
-            [self.agents[i].observation_space for i in range(self.n_agents)]
+            [spaces.Box(low,high) for i in range(self.n_agents)]
         )
 
     def _exec(self, qry):
