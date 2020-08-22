@@ -142,32 +142,7 @@ loadEvents  :{
 // Actions in this instance are a tuple of (action;accountId)
 Advance :{[step;actions]
         // TODO validate actions, and step index etc. / other schema
-        $[();
-            [
-                idx:.env.StepIndex@step;
-                nevents:flip[.env.EventBatch@idx];
-                
-                / feature:FeatureBatch@thresh;
-                // should add a common offset to actions before inserting them into
-                // the events.
-                aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
-                xevents:.engine.ProcessEvents[(nevents,aevents)];
-
-                .state.InsertResultantEvents[xevents];
-
-                aIds:actions[;1];
-                obs:.state.GetFeatures[aids; 100; step];
-                rwd:.state.GetRewards[aids; 100; step];
-                ifo:.env.Info[aids;step];
-
-
-
-                :(obs;rwd;ifo);
-            ];
-            [
-                
-            ]
-        ];
+        
     };
 
 
@@ -184,7 +159,30 @@ Step    :{[actions]
     // TODO format actions
 
     // Advances the current state of the environment
-    results: .env.Advance[accountIds];
+    $[();
+        [
+            idx:.env.StepIndex@step;
+            nevents:flip[.env.EventBatch@idx];
+            
+            / feature:FeatureBatch@thresh;
+            // should add a common offset to actions before inserting them into
+            // the events.
+            aevents:.adapter.Adapt[.env.ADPT;time;actions]; 
+            xevents:.engine.ProcessEvents[(nevents,aevents)];
+
+            .state.InsertResultantEvents[xevents];
+
+            aIds:actions[;1];
+            obs:.state.GetFeatures[aids; 100; step];
+            rwd:.state.GetRewards[aids; 100; step];
+            ifo:.env.Info[aids;step];
+
+            :(obs;rwd;ifo);
+        ];
+        [
+            
+        ]
+    ];
 
     // Derive the current info for the
     // entire engine and for each subsequent
