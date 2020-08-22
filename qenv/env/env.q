@@ -126,7 +126,7 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
-// Batches are synonymous with episode
+// Batches are synonymous with episode // TODO train test split
 GenNextBatch    :{
     // If the batch idxs which correspond with the length of an episode are
     // not set create the set of batch idxs.
