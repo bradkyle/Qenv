@@ -141,7 +141,7 @@ GenNextBatch    :{
 
     nextBatch:$[
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
-        [];
+        [:bidx@rand count[bidx]];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
         [];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
