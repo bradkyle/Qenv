@@ -571,7 +571,7 @@ GetRewards  :{[accountIds] // TODO configurable window size
         from select[-100] 
             last realizedPnl 
             by 1 xbar `minute$time, 
-            accountId from .state.InventoryEventHistory;
+            accountId from .state.InventoryEventHistory where time within (); // TODO window size
 
     update sortino:sortinoRatio'[returns;0] from r;
 
