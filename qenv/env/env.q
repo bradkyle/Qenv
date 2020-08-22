@@ -98,13 +98,14 @@ GenNextBatch    :{
 // TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-ResetAgents       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
-    // Reset public singletons
-    .engine.ResetAgents[aIds];
-    .state.ResetAgents[aIds];
-    };
+/ ResetAgents       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
+/     // Reset public singletons
+/     .engine.ResetAgents[aIds];
+/     .state.ResetAgents[aIds];
+/     };
 
-ResetAll    :{
+// TODO validation
+Reset    :{
     .engine.Reset[];
     .state.Reset[];
 
@@ -118,10 +119,10 @@ ResetAll    :{
     .state.InsertResultantEvents[xevents];
 
     aids:actions[;1];
-    obs:.state.GetFeatures[aids; 100; step];
-    rwd:.state.GetRewards[aids; 100; step];
-    ifo:.env.Info[aids;step];
+    obs:.state.GetFeatures[aids; 100; 0];
+    .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
 
+    .env.CurrentStep+:1;
     };
 
 
