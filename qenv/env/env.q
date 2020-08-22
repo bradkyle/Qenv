@@ -156,8 +156,8 @@ Advance :{[step;actions]
                 .state.InsertResultantEvents[xevents];
 
                 aIds:actions[;1];
-                obs:.state.GetFeatures[aids];
-                rwd:.state.GetRewards[aids];
+                obs:.state.GetFeatures[aids; 100; step];
+                rwd:.state.GetRewards[aids; 100; step];
                 :(obs;rwd);
             ];
             [

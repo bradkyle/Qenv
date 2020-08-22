@@ -514,13 +514,13 @@ getOBFeatures   :{
 
 // TODO get orderbook features
 
-GetFeatures    :{[aids;windowsize] // TODO configurable window size
-        windowsize:100;
+// TODO testing etc.
+GetFeatures    :{[aids; windowsize; step] // TODO configurable window size
         / interval: 
 
         // TODO add liquidation as feature.
-        bp:select[-5] price from .state.TradeEventHistory where side=`BUY; // TODO fill 0's
-        ap:select[-5] price from .state.TradeEventHistory where side=`SELL;
+        bp:select[-5] price from .state.CurrentDepth where side=`BUY; // TODO fill 0's
+        ap:select[-5] price from .state.CurrentDepth where side=`SELL;
 
         // TODO add account id to feature vector
         pobs: raze raze'[( 
@@ -543,17 +543,20 @@ GetFeatures    :{[aids;windowsize] // TODO configurable window size
         );
 
         ac:select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in aids;
-        iv:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in aids;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]
+        ivn:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in aids;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl];
 
-        aobs:ac uj iv;
+        aobs:0!(ac uj ivn);
+        aobs[(`$string[til[count[pobs]]])]:pobs;
+        obs:(`accountId,(`$string(til[count[cols[aobs]]-1]))) xcol 0!aobs;
+        obs[`step]:step;
 
         // if count feature buffer
-        `.state.FeatureBuffer upsert obs;
+        `.state.FeatureBuffer upsert (`accountId`step xkey obs);
 
         // TODO count by account id
         / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
         // TODO fill forward + normalize
-        :.ml.minmaxscaler[-100#.state.FeatureBuffer];
+        :1!(0^select from ungroup(.ml.minmaxscaler'[`accountId xgroup .state.FeatureBuffer]) where step=1);
     };
 
 
@@ -565,7 +568,7 @@ sortinoRatio:{[asset;minAccRet]
  100*avg[excessRet]% sqrt sum[(excessRet*0>excessRet) xexp 2]%count[excessRet]
  };
 
-GetRewards  :{[aids; windowsize] // TODO configurable window size
+GetRewards  :{[aids; windowsize; step] // TODO configurable window size
     r:select 
         returns:0^1_deltas[realizedPnl] 
         by accountId 
