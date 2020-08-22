@@ -31,6 +31,10 @@ Env  :(
         numAgentSteps       : `long$()
     );
 
+WINDOWKIND :   (`TEMPORAL;        
+                `EVENTCOUNT;          
+                `THRESHCOUNT);   
+
 // TODO episodes
 
 / Agent :(
@@ -110,8 +114,10 @@ GenNextBatch    :{
  
      $[.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL;
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ();
-       .env.WindowKind=`.env.WINDOWKIND$`ALLEVENTS;
+       .env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT;
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ();
+       .env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT;
+            'NOTIMPLEMENTED;
        'INVALID_WINDOWING_METHOD;
      ];
      .state.StepIndex: key .env.EventBatch;
