@@ -129,20 +129,25 @@ GenNextBatch    :{
     // If the batch idxs which correspond with the length of an episode are
     // not set create the set of batch idxs.
     // set the batch window intervals above.
+
+    // TODO check day is divisible by batch size? 
+    // TODO missing events at start of events
     if[count[.env.BatchIndex]<1; 
         bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
         bidx:update end:next start from bidx;
         bidx:update end:first[(select last time from events)`time]^end from bidx;
+        .env.BatchIndex:bidx;
     ];
 
-     $[(.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
+    nextBatch:$[
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
         [];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
         [];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
         [];
         ['INVALID_BATCH_SELECTION_METHOD]
-     ];
+    ];
 
      $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
             [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()];
