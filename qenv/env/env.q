@@ -78,7 +78,7 @@ Config      :{[config]
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
-Info        :{[aIds]
+Info        :{[aIds;step]
         .engine.Info[];
     };
 
@@ -158,7 +158,11 @@ Advance :{[step;actions]
                 aIds:actions[;1];
                 obs:.state.GetFeatures[aids; 100; step];
                 rwd:.state.GetRewards[aids; 100; step];
-                :(obs;rwd);
+                ifo:.env.Info[aids;step];
+
+
+
+                :(obs;rwd;ifo);
             ];
             [
                 

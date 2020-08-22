@@ -184,7 +184,9 @@ ProcessEvents  : {[eventBatch]
 / Main Setup Function
 / -------------------------------------------------------------------->
 
-Info    :{[accountIds]
+Info    :{[aids]
+        select from .account.Account where accountId in aids;
+        select from .account.Inventory where accountId in aids; 
         
     };
 
