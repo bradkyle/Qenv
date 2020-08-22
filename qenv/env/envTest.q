@@ -45,19 +45,23 @@ dSecEvents: {[x;y]
 
 // TODO test with differing intime?
 test:.qt.Unit[
-    ".env.Advance";
+    ".env.Step";
     {[c]
         p:c[`params];
 
         p1:p[`eAdapt];  
         p2:p[`eProcessEvents];  
         p3:p[`eInsertResultantEvents];  
-        p4:p[`eloadEvents];  
+        p4:p[`eGetFeatures];  
+        p5:p[`eGetRewards];  
+        p6:p[`eInfo];  
 
         mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
         mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck4: .qt.M[`.env.loadEvents;{[e]};c];
+        mck4: .qt.M[`.state.GetFeatures;{[e]};c];
+        mck5: .qt.M[`.state.GetRewards;{[e]};c];
+        mck6: .qt.M[`.env.Info;{[e]};c];
 
         a:p[`args];
         res:.env.Advance[a[`step];a[`actions]];
@@ -66,6 +70,8 @@ test:.qt.Unit[
         .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
         .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
         .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
+        .qt.MA[mck5;p5[`called];p5[`numCalls];p5[`calledWith];c];
+        .qt.MA[mck6;p6[`called];p6[`numCalls];p6[`calledWith];c];
 
         // Assertions
     };
@@ -75,14 +81,18 @@ test:.qt.Unit[
         events:.envTest.dSecEvents[10;z];
         
 
-        :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents`eInsertResultantEvents`eloadEvents!(
+        :`args`eStepIndex`eEventBatch`eAdapt`eProcessEvents,
+        `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo!(
             `step`actions!p[0];
             p[1];
             p[2];
             p[3];
             p[4];
             p[5];
-            p[6])
+            p[6];
+            p[7];
+            p[8];
+            )
     };
     (
         ("step=1 single action account pair ordered by 1 second per step, 5 steps";(

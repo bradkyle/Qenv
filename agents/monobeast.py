@@ -442,7 +442,9 @@ def train(flags):  # pylint: disable=too-many-branches, too-many-statements
     threads = []
     for i in range(flags.num_learner_threads):
         thread = threading.Thread(
-            target=batch_and_learn, name="batch-and-learn-%d" % i, args=(i,)
+            target=batch_and_learn, 
+            name="batch-and-learn-%d" % i, 
+            args=(i,)
         )
         thread.start()
         threads.append(thread)
