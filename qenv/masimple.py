@@ -1,18 +1,21 @@
 from gym import Env, spaces
 from qpython import qconnection
 import numpy as np
-
+import json
 
 class MultiAgentEnv():
     '''
     A multi-agent environment consists of some number of Agents.
     '''
-    def __init__(self, num_agents):
+    def __init__(self, num_agents, config):
         self.n_agents=num_agents
         self.account_ids=list(range(self.n_agents))
+        self.config=config
 
         #TODO config here
-        res = self._exec(".state.Config["+list(zip(actions,self.account_ids))+"]")
+        res = self._exec(".state.Config["+
+            json.dumps(self.config)
+        +"]")
 
     def _set_action_space(self):
         self.action_space = spaces.Tuple(
