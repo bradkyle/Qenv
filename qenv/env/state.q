@@ -581,3 +581,11 @@ GetRewards  :{[aids; windowsize; step] // TODO configurable window size
     :update sortino:sortinoRatio'[returns;0] from r;
 
     };
+
+
+// Reset State
+// =====================================================================================>
+
+Reset   :{
+
+    }

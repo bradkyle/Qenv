@@ -164,7 +164,7 @@ Step    :{[actions]
 
             .state.InsertResultantEvents[xevents];
 
-            aIds:actions[;1];
+            aids:actions[;1];
             obs:.state.GetFeatures[aids; 100; step];
             rwd:.state.GetRewards[aids; 100; step];
             ifo:.env.Info[aids;step];

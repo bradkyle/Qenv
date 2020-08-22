@@ -59,9 +59,9 @@ test:.qt.Unit[
         mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
         mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck4: .qt.M[`.state.GetFeatures;{[e]};c];
-        mck5: .qt.M[`.state.GetRewards;{[e]};c];
-        mck6: .qt.M[`.env.Info;{[e]};c];
+        mck4: .qt.M[`.state.GetFeatures;{[a;w;s]};c];
+        mck5: .qt.M[`.state.GetRewards;{[e;w;s]};c];
+        mck6: .qt.M[`.env.Info;{[a;s]};c];
 
         if[count[p[`eStepIndex]];.env.StepIndex:p[`eStepIndex]];
         if[count[p[`eCurrentStep]];.env.CurrentStep:p[`eCurrentStep]];
@@ -108,7 +108,7 @@ test:.qt.Unit[
     };
     (
         enlist("step=1 single action account pair ordered by 1 second per step, 5 steps";(
-            ((1;0));
+            ((1;0);(1;1));
             0;
             (`second$(sz[0]);`second$(sz[1]));
             (
@@ -130,7 +130,7 @@ test:.qt.Unit[
                 ))
             );
             (til 5);
-            (1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});
+            (1b;1;(`.adapter.ADAPTERTYPE$`MARKETMAKER;z;(1;0));{[x;t;a]});
             (1b;1;());
             (1b;1;());
             (1b;1;());

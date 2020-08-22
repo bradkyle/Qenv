@@ -156,12 +156,6 @@ UpdateEngineProbs   :{[]
 
     };
 
-// Resets engine and its associated state to
-// the initial config set in Setup
-ResetEngine     : {
-    //
-    };
-
 // 
 prepareIngress   :{[eventBatch]
     / :0!`kind xgroup eventBatch;
@@ -203,3 +197,8 @@ Setup   :{[config]
 
 
     }
+
+Reset   :{[]
+
+
+    };
