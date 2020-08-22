@@ -114,7 +114,7 @@ GenNextBatch    :{
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ();
        'INVALID_WINDOWING_METHOD;
      ];
-     .state.StepIndex:
+     .state.StepIndex: key .env.EventBatch;
     };
 
 / Reset Logic
