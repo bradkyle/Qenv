@@ -110,12 +110,12 @@ ResetAll    :{
 
     // Loads the next set of events from 
     // HDB into memory
-    .env.GenNextBatch[];
+    .env.GenNextBatch[]; // TODO check that length is greater than config
 
-    primeEventBatch:.env.PrimeBatchNum#.env.EventBatch;
-
-    nevents:.env.SetupEvents[];
+    nvents:.env.PrimeBatchNum#.env.EventBatch;
+    aevents:.env.SetupEvents[];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
+    .state.InsertResultantEvents[xevents];
 
 
     };
