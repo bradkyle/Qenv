@@ -152,9 +152,9 @@ GenNextBatch    :{
     ];
 
      $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within ()];
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within value[nextBatch]];
        (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within ()];
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within value[nextBatch]];
        (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
             ['NOTIMPLEMENTED];
        ['INVALID_WINDOWING_METHOD]
