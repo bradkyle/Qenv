@@ -565,14 +565,14 @@ sortinoRatio:{[asset;minAccRet]
 GetRewards  :{[accountIds] // TODO configurable window size
     windowsize:100
 
-    r:
-        // TODO fill zeros etc.
-        0!select 
-        returns:1_deltas[realizedPnl] 
+    r:0!select 
+        returns:0^1_deltas[realizedPnl] 
         by accountId 
         from select[-100] 
             last realizedPnl 
             by 1 xbar `minute$time, 
             accountId from .state.InventoryEventHistory;
+
+    update sortino:sortinoRatio'[returns;0] from r;
 
     };
