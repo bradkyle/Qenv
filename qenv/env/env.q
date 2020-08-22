@@ -47,7 +47,9 @@ Episode :{
         batchIdx:                :`long$();
         batchStart               :`datetime$();
         batchEnd                 :`datetime$();                        
-        rewardTotal              :`float$()
+        rewardTotal              :`float$();
+        returnQuoteTotal         :`float$();
+        returnBaseTotal          :`float$()
     };
 
 .env.EventPath:`path;
