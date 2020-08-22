@@ -8,8 +8,11 @@ class MultiAgentEnv():
     A multi-agent environment consists of some number of Agents.
     '''
     def __init__(self, num_agents):
-        self.num_agents=num_agents
-        self.account_ids=list(range(self.num_agents))
+        self.n_agents=num_agents
+        self.account_ids=list(range(self.n_agents))
+
+        #TODO config here
+        res = self._exec(".state.Config["+list(zip(actions,self.account_ids))+"]")
 
     def _set_action_space(self):
         self.action_space = spaces.Tuple(
@@ -28,13 +31,9 @@ class MultiAgentEnv():
             pandas=False) as q:
             return q.sendSync(qry) 
 
-    def _step(self):
-        res = self._exec(".state.Step[("+";".join(["("+str(x)+";"+str(x*2)+")" for x in range(10)])+")]")
-
-
-
-
-        return ()
+    def _step(self, actions):
+        res = self._exec(".state.Step[("+list(zip(actions,self.account_ids))+")]")
+        return res
 
     def reset(self):
         res =  self._exec(".state.Reset[("+";".join(self.account_ids)+")]")
