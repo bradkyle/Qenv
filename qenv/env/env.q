@@ -193,5 +193,5 @@ Step    :{[actions]
 
     // Returns a set of observations, rewards and info
     // to the agents (uj by agent)
-    :(uj)over(result[0];result[1];info);
+    :((uj)over(result[0];result[1];info[0]), info[1]);
     };
