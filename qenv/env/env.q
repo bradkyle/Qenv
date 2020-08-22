@@ -40,6 +40,7 @@ Env  :(
 /     );
 
 .env.CurrentStep:0;
+.env.StartBatch:0;
 .env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
 .env.BatchInterval:`minute$5;
 .env.BatchSize: 50;
@@ -98,7 +99,7 @@ ResetAll    :{
     .state.Reset[];
 
 
-    
+
     };
 
 
