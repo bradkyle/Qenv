@@ -83,17 +83,20 @@ test:.qt.Unit[
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
         / show p[0];
-        events:.envTest.dSecEvents[10;z];
         m:{
             mCols:`called`numCalls`calledWith`fn;
             (count[x]#mCols)!x};  
+
+        e:{`time`kind`cmd`datum!x};
+
+        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:`second$(x[0]);m}'[p[3]]));
 
         :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
         `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
             p[0];
             p[1];
             p[2];
-            p[3];
+            v;
             p[4];
             m p[5];
             m p[6];
@@ -107,13 +110,24 @@ test:.qt.Unit[
         enlist("step=1 single action account pair ordered by 1 second per step, 5 steps";(
             ((1;0));
             0;
-            (sz 5*til[5]);
+            (`second$(sz[0]);`second$(sz[1]));
             (
-                (sz 1;());
-                (sz 2;());
-                (sz 3;());
-                (sz 4;());
-                (sz 5;())
+                (sz 0; (
+                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ));
+                (sz 7;(
+                  (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ))
             );
             (til 5);
             (1b;1;(`MARKETMAKER;z;(1;0));{[x;t;a]});

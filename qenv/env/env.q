@@ -149,9 +149,9 @@ loadEvents  :{
 // TODO is done, buffering/historic replay etc.
 Step    :{[actions]
     // TODO format actions
-
+    step:.env.CurrentStep;
     // Advances the current state of the environment
-    $[(.env.CurrentStep<count[.env.StepIndex]);
+    $[(step<count[.env.StepIndex]);
         [
             idx:.env.StepIndex@step;
             nevents:flip[.env.EventBatch@idx];
