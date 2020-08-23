@@ -154,6 +154,9 @@ initialMargin      :{[]
     // Initial margin rate
     imr:lm[`mmr];
 
+    // Maintenence amount
+    // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
+    :amt*(mm+instrument[`riskBuffer]); // TODO derive premium
     };
 
 // TODO inverse vs quanto vs vanilla
@@ -191,6 +194,8 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
             %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
     };
 
+// The point at which the entirety of the inventories initial margin has been 
+// consumed. 
 bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
         bal:account[`balance];
         tmm:0; 
