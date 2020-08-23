@@ -188,7 +188,7 @@ Info    :{[aids]
 // Resets engine state 
 // Sets up the engine, active instrument,
 // Initializes agent and respective inventory config
-Reset   :{[]
+Reset   :{[config]
     delete from `.order.Order;
     delete from `.order.OrderBook;
     delete from `.instrument.Instrument;
@@ -196,8 +196,12 @@ Reset   :{[]
     delete from `.inventory.Inventory;
     delete from `.event.Event;
 
-    // Instantiate instrument with given config
+    // Instantiate instrument with 
+    // given config.
     .instrument.NewInstrument[];
+    
+    // Instantiate the given set 
+    // of accounts.
     .account.NewAccount'[];
 
 
