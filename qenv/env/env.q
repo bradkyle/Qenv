@@ -181,6 +181,7 @@ SetupEvents     :{
     // NewAccounts
     // NewInventories
     // Deposit
+    //
     };
 
 / Reset Logic
@@ -209,6 +210,11 @@ Reset    :{
     aevents:.env.SetupEvents[];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
+
+    // TODO randomize
+        // order size
+        // offset time
+        // 
 
     aids:(.env.Env@0)`accountIds;
     obs:.state.GetFeatures[aids; 100; 0];
