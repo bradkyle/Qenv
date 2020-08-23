@@ -149,7 +149,7 @@ test:.qt.Unit[
 // TODO test with differing intime?
 // TODO test prime batch num type, env batch type etc.
 // TODO no action events created
-// TODO register Env
+// TODO register Env as config
 test:.qt.Unit[
     ".env.Reset";
     {[c]
