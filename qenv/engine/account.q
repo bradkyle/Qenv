@@ -141,7 +141,6 @@ maintainenceMargin   :{[amt;instrument]
     // Maintenence amount
     // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
     :amt*(mm+instrument[`riskBuffer]);
-
     };
 
 initialMargin        :{[]
