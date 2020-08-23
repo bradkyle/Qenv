@@ -198,9 +198,7 @@ Reset   :{[]
 
     // Instantiate instrument with given config
     .instrument.NewInstrument[];
+    .account.NewAccount'[];
 
-    // Instantiate accounts and inventory
-
-    // Run through Configured batch amount of events.
 
     };
