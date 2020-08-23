@@ -145,7 +145,8 @@ maintainenceMargin   :{[amt;instrument]
 
 // Calculates the amount of margin required to initialize a position, including the premium 
 // charged on the difference between the current price and the mark price of the contract.
-// Initial margin is generally above maintenece margin.
+// Initial margin is generally above maintenece margin .i.e. it requires more margin than
+// the maintenence margin rate.
 initialMargin      :{[]
 
     };
@@ -482,7 +483,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
         [
             i:.account.Inventory@(accountId;`BOTH);
             namt:i[`amt]+qty;
-            $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position
+            $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
                 [
                     // Close positionType BOTH
                     // TODO account netShortPosition, netLongPosition
