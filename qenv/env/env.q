@@ -198,12 +198,11 @@ SetupEvents     :{
 
 // TODO validation
 Reset    :{
-    .engine.Reset[];
     .state.Reset[];
     // TODO randomization of environment config
 
-    .engine.NewAgent[];
-
+    .engine.Reset[]; 
+    
     // Loads the next set of events from 
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config

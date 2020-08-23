@@ -199,6 +199,8 @@ Setup   :{[config]
     }
 
 Reset   :{[]
-
+    delete from `.order.Order;
+    delete from `.order.OrderBook;
+    delete from `.instrument.Instrument;
 
     };
