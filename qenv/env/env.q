@@ -256,7 +256,7 @@ Step    :{[actions]
     obs:.state.GetFeatures[aids; 100; step];
     rwd:.state.GetRewards[aids; 100; step];
     dns:$[((step+1)<count[.env.StepIndex]); 
-            .state.GetDones[aids; ];
+            .state.GetDones[aids; 0];
             flip[(aids;naids#1b)]];
     ifo:.env.Info[aids;step];
 

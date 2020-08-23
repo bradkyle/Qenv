@@ -583,7 +583,7 @@ GetRewards  :{[aids; windowsize; step] // TODO configurable window size
 
     };
 
-GetDones    :{[]
+GetDones    :{[aids; minBalance]
 
     };
 
