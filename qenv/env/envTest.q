@@ -102,8 +102,7 @@ test:.qt.Unit[
             p[4];
             p[5];
             p[6];
-            p[7]
-            )
+            p[7])
     };
     (
         enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
