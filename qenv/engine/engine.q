@@ -202,5 +202,7 @@ Reset   :{[]
     delete from `.order.Order;
     delete from `.order.OrderBook;
     delete from `.instrument.Instrument;
+    delete from `.account.Account;
+    delete from `.inventory.Inventory;
 
     };

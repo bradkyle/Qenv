@@ -202,7 +202,7 @@ Reset    :{
     // TODO randomization of environment config
 
     .engine.Reset[]; 
-    
+
     // Loads the next set of events from 
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config
@@ -247,6 +247,7 @@ Reset    :{
 // the next observations, rewards, done and info
 // for each agent
 // TODO is done, buffering/historic replay etc.
+// TODO add noise events to input i.e. trades etc.
 Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
