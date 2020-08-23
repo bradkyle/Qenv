@@ -91,7 +91,7 @@ test:.qt.Unit[
 
         e:{`time`kind`cmd`datum!x};
 
-        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]]);m}'[p[3]]));
+        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
 
         :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
         `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
@@ -109,7 +109,7 @@ test:.qt.Unit[
             )
     };
     (
-        enlist("step=1 single action account pair ordered by 1 second per step, 5 steps";(
+        enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
             ((1;0);(1;1));
             0;
             (dtz 0;dtz 1);
@@ -132,7 +132,7 @@ test:.qt.Unit[
                 ))
             );
             (til 5);
-            (1b;1;(`.adapter.ADAPTERTYPE$`MARKETMAKER;z;(1;0));{[x;t;a]});
+            (1b;1;enlist(`.adapter.ADAPTERTYPE$`MARKETMAKER;dtz 0;((1;0);(1;1)));{[x;t;a]});
             (1b;1;());
             (1b;1;());
             (1b;1;());

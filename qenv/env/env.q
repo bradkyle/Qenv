@@ -258,7 +258,7 @@ Step    :{[actions]
             rwd:.state.GetRewards[aids; 100; step];
             ifo:.env.Info[aids;step];
 
-            :(obs;rwd;ifo);
+            :(obs;rwd;dns;ifo);
         ];
         [
             
