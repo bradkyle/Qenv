@@ -217,7 +217,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
         totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
         by accountId from `.account.Account;
-    :AddAllAccountsUpdatedEvents[time];
+    :.account.AddAllAccountsUpdatedEvents[time];
     };
 
 // Balance Management
