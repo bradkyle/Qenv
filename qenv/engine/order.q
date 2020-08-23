@@ -73,6 +73,7 @@ isActiveLimit:{:((>;`size;0);
                (in;`price;x);
                (=;`otype;`.order.ORDERTYPE$`LIMIT))};
 
+// TODO remove cols
 // TODO clean
 AddNewOrderEvent   :{[order;time]
     :.event.AddEvent[time;`NEW;`ORDER;order];
@@ -136,9 +137,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
     // TODO check prices don't cross
-    .order.E:event;
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
-    .order.N:nxt;
     // TODO do validation on nxt;
 
     // TODO remove reduncancy
@@ -622,16 +621,18 @@ CancelOrder    :{[order;time]
     .order.DeriveThenAddDepthUpdateEvent[time]; 
     };
 
+// TODO update for batch operations
 CancelAllOrders :{[accountId;time]
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     // Account related validation
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
-    CancelOrder (select from .order.Order where accountId=accountId);
+    CancelOrder'[select from .order.Order where accountId=accountId];
     };
 
-// TODO
+// TODO update for batch operations
+// TODO allowed update cols
 AmendOrder      :{[order;time]
 
     order:ordSubmitFields!order[ordSubmitFields];

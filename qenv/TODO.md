@@ -58,6 +58,7 @@ Worker Types
     - Crawling
     - Rest 
     - Image/Video Compression
+    - Mathematica
 
 
 Distributed Crawler cluster and rerouting on block etc.

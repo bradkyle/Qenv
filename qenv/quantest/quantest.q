@@ -234,23 +234,28 @@ AddCase     :{[test;dscr;params]
 
 
 Skp    :{[case] 
-    c:$[type[case]~98h;case[`caseID];case];
+    c:$[type[case]~98h;case[`caseId];case];
     update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId=c;
     };
 
 SkpAft    :{[case]
-    c:$[type[case]~98h;case[`caseID];case];
+    c:$[type[case]~98h;case[`caseId];case];
     .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId>x;y}[c];
     };
 
 SkpBef    :{[case] 
-    c:$[type[case]~98h;case[`caseID];case];
+    c:$[type[case]~98h;case[`caseId];case];
     .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<x;y}[c];
     };
 
 SkpBes     :{[case]
-    c:$[type[case]~98h;case[`caseID];case];
+    c:$[type[case]~98h;case[`caseId];case];
     .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<>x;y}[c];
+    };
+
+SkpBesTest     :{[test]
+    c:$[(type[test]~98h)or(type[test]~99h);test[`testId];test];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where testId<>x;y}[c];
     };
 
 // Mock
@@ -579,7 +584,9 @@ NxtCaseFail :{
     };
 
 NxtFail :{
-    :last select from .qt.Assertion where state=`FAIL;
+    f:last select from .qt.Assertion where state=`FAIL;
+    f[`dscr]:first exec dscr from .qt.Case where caseId=f[`caseId];
+    :f;
     };
 
 NxtExp  :{
