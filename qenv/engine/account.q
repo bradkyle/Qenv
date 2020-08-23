@@ -130,9 +130,9 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
 
 // Calculates the amount of margin required to keep a position open, if the account no longer 
 // has this margin available, the position will be liquidated.
-//
-maintainenceMargin   :{[]
-
+// 
+maintainenceMargin   :{[amt;]
+    mmr:first select from r where mx<=pos;
     };
 
 initialMargin        :{[]
