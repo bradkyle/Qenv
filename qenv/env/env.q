@@ -252,11 +252,12 @@ Step    :{[actions]
     .state.InsertResultantEvents[xevents];
 
     aids:actions[;1];
+    naids:count[aids];
     obs:.state.GetFeatures[aids; 100; step];
     rwd:.state.GetRewards[aids; 100; step];
     dns:$[((step+1)<count[.env.StepIndex]); 
             .state.GetDones[aids; ];
-            ()];
+            flip[(aids;naids#1b)]];
     ifo:.env.Info[aids;step];
 
     .env.CurrentStep+:1;
