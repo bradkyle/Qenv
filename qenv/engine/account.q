@@ -253,7 +253,7 @@ Withdraw       :{[withdrawn;time;accountId]
         :.account.AddAccountUpdateEvent[accountId;time];
         ];
         [
-            ; //TODO create failure
+            0N; //TODO create failure
         ]
     ];  
     };
