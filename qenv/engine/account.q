@@ -96,7 +96,7 @@ NewAccount :{[account;time]
 
 
 // Used to derive the average entry price for a given inventory
-avgPrice        :{[isignum;execCost;totalEntry]
+avgPrice        :{[isignum;execCost;totalEntry;isinverse]
     :0^$[isignum>0;
         1e8%floor[execCost%totalEntry];
         1e8%ceiling[execCost%totalEntry]];
