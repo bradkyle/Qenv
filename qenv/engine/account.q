@@ -90,6 +90,115 @@ NewAccount :{[account;time]
     / AddAccountUpdateEvent[accountId;time];
     };
 
+
+// Global Account Utils
+// -------------------------------------------------------------->
+
+
+// Used to derive the average entry price for a given inventory
+avgPrice        :{[isignum;execCost;totalEntry]
+    :0^$[isignum>0;
+        1e8%floor[execCost%totalEntry];
+        1e8%ceiling[execCost%totalEntry]];
+    };
+
+// Returns the unrealized profit for the current position considering the current
+// mark price and the average entry price (uses mark price to prevent liquidation).
+// @avgprice: The average price the inventory was entered at
+// @markprice: The current mark price of the instrument
+// @amt: The size of the position
+// @faceValue: The faceValue of the instrument
+// @isignum: The sign of the instrument
+// @isinverse: Is the instrument an inverse contract
+unrealizedPnl       :{[avgprice;markprice;amt;faceValue;isignum;isinverse]
+    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(amt*isignum));
+    };
+
+// Calculates the realized profit and losses for a given position, size is a positive
+// or negative number that represents the portion of the current position that has been
+// closed and thus should be of the same side as the position i.e. negative for short and 
+// positive for long.
+// @avgprice: The average price the inventory was entered at
+// @markprice: The current mark price of the instrument
+// @fillqty: The size of the fill
+// @faceValue: The faceValue of the instrument
+// @isignum: The sign of the instrument
+// @isinverse: Is the instrument an inverse contract
+realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
+    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(fillqty*isignum));
+    };
+
+// TODO inverse vs quanto vs vanilla
+liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
+        bal:account[`balance];
+        tmm:0; 
+
+        // Current Position
+        amtB:inventoryB[`amt];
+        amtL:inventoryL[`amt];
+        amtS:inventoryS[`amt];
+
+        // Derive risk limits
+        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
+        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];
+
+        // Maintenence margin rate
+        mmB:lmB[`mmr];
+        mmL:lmL[`mmr];
+        mmS:lmS[`mmr];
+
+        // Maintenece Amount
+        cumB: amtB*(mmB+instrument[`riskBuffer]);
+        cumL: amtL*(mmL+instrument[`riskBuffer]);
+        cumS: amtS*(mmS+instrument[`riskBuffer]);
+ 
+        // Derive Average price
+        sB:inventoryB[`isignum];
+        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
+        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
+        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
+
+        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
+            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
+    };
+
+bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
+        bal:account[`balance];
+        tmm:0; 
+
+        // Current Position
+        amtB:inventoryB[`amt];
+        amtL:inventoryL[`amt];
+        amtS:inventoryS[`amt];
+
+        // Derive risk limits
+        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
+        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
+        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];        
+
+        // Maintenence margin rate
+        imrB:lmB[`imr];
+        imrL:lmL[`imr];
+        imrS:lmS[`imr];
+
+        // Maintenece Amount
+        cumB: amtB*imrB;
+        cumL: amtL*imrL;
+        cumS: amtS*imrS;
+
+        // Derive Average price
+        sB:inventoryB[`isignum];
+        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
+        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
+        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
+
+        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
+            %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
+    };
+
+
+
 // Funding Event/Logic //TODO convert to cnt for reference
 // -------------------------------------------------------------->
 // Positive funding rate means long pays short an amount equal to their current position
@@ -216,17 +325,6 @@ NewInventory : {[inventory;time]
 HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
 HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
 
-// Used to derive the average entry price for a given inventory
-avgPrice        :{[isignum;execCost;totalEntry]
-    :0^$[isignum>0;
-        1e8%floor[execCost%totalEntry];
-        1e8%ceiling[execCost%totalEntry]];
-    };
-
-// Used for inverse contracts
-pricePerContract  :{[faceValue;price]$[price>0;faceValue%price;0]};
-
-
 // Increments the occurance of an agent's self fill.
 // @x : unique account id
 // @y : self filled count
@@ -237,91 +335,7 @@ IncSelfFill    :{
             0b;`selfFillCount`selfFillVolume!(
                 (+;`selfFillCount;y);
                 (+;`selfFillVolume;z)
-            )];}
-
-
-// Returns the unrealized profit for the current position considering the current
-// mark price and the average entry price (uses mark price to prevent liquidation).
-unrealizedPnl       :{[avgprice;markprice;amt;faceValue;isignum;isinverse]
-    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(amt*isignum));
-    };
-
-// Calculates the realized profit and losses for a given position, size is a positive
-// or negative number that represents the portion of the current position that has been
-// closed and thus should be of the same side as the position i.e. negative for short and 
-// positive for long.
-realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
-    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(fillqty*isignum));
-    };
-
-// TODO inverse vs quanto vs vanilla
-liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
-        bal:account[`balance];
-        tmm:0; 
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive risk limits
-        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
-        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];
-
-        // Maintenence margin rate
-        mmB:lmB[`mmr];
-        mmL:lmL[`mmr];
-        mmS:lmS[`mmr];
-
-        // Maintenece Amount
-        cumB: amtB*(mmB+instrument[`riskBuffer]);
-        cumL: amtL*(mmL+instrument[`riskBuffer]);
-        cumS: amtS*(mmS+instrument[`riskBuffer]);
- 
-        // Derive Average price
-        sB:inventoryB[`isignum];
-        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
-        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
-        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
-            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
-    };
-
-bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
-        bal:account[`balance];
-        tmm:0; 
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive risk limits
-        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
-        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];        
-
-        // Maintenence margin rate
-        imrB:lmB[`imr];
-        imrL:lmL[`imr];
-        imrS:lmS[`imr];
-
-        // Maintenece Amount
-        cumB: amtB*imrB;
-        cumL: amtL*imrL;
-        cumS: amtS*imrS;
-
-        // Derive Average price
-        sB:inventoryB[`isignum];
-        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
-        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
-        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
-            %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
-    };
+            )];};
 
 
 // ORDER Margin
