@@ -245,9 +245,9 @@ Step    :{[actions]
         // should add a common offset to actions before inserting them into
         // the events.
         tme:$[type idx~15h;idx;exec first time from nevents];
-        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; // TODO should add offset to action events.
+        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; // TODO should add offset to action events!!!.
         xevents:.engine.ProcessEvents[(nevents,aevents)];
-
+        // TODO should add offset to resultant events!!!
         .state.InsertResultantEvents[xevents];
 
         aids:actions[;1];
