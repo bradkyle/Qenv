@@ -12,7 +12,8 @@ sc:{x+(`second$y)};
 sz:sc[z];
 dts:{(`date$x)+(`second$x)};
 dtz:{dts[sc[x;y]]}[z]
-
+doz:`date$z;
+dozc:{x+1}[doz];
 
 dSecEvents: {[x;y]
             t:{{x+`second$(rand 10)} each y#x}[y];
@@ -108,22 +109,18 @@ test:.qt.Unit[
             1; // actions
             (dtz 0;dtz 1); // step index
             (
-                (sz 0; (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
-                ));
-                (sz 7;(
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
-                ))
             );
             (til 5); // expected response
             (1b;1;enlist(`.adapter.ADAPTERTYPE$`MARKETMAKER;dtz 0;((1;0);(1;1)));{[x;t;a]}); // eAdapt

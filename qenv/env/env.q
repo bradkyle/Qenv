@@ -214,6 +214,8 @@ Reset    :{
     // TODO randomize
         // order size
         // offset time
+        // balance 
+        // withdraws 
         // 
 
     aids:(.env.Env@0)`accountIds;
