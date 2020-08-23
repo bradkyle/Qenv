@@ -54,6 +54,7 @@ Episode :(
 .env.EventSource:`events;
 .env.UseFeatures:0b;
 .env.MaxEpisodes:1000;
+.env.RewardKind:0;
 
 .env.CurrentEpisde:0;
 .env.CurrentStep:0; // The current step of the environment.
