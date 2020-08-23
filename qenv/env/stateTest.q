@@ -141,6 +141,7 @@ genRandomState      :{[x;y;z] // TODO add max time
 
 
 // TODO should time cases
+// TODO change to simple update better for processing speed
 test:.qt.Unit[
     ".state.GetFeatures";
     {[c]

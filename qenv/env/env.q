@@ -236,31 +236,33 @@ Reset    :{
 Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
+    csi:count[.env.StepIndex];
     // Advances the current state of the environment
-    idx:.env.StepIndex@step;
-    nevents:flip[.env.EventBatch@idx];
-    $[;
+    $[.env.CurrentStep<csi;[    
+        idx:.env.StepIndex@step;
+        .env.I:idx;
+        .env.E:.env.EventBatch;
+        .env.N:.env.EventBatch@idx;
+        nevents:flip[.env.EventBatch@idx];
+        / feature:FeatureBatch@thresh;
+        // should add a common offset to actions before inserting them into
+        // the events.
+        tme:$[type idx~15h;idx;exec first time from nevents];
+        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
+        xevents:.engine.ProcessEvents[(nevents,aevents)];
 
-    
-    / feature:FeatureBatch@thresh;
-    // should add a common offset to actions before inserting them into
-    // the events.
-    tme:$[type idx<>15h; exec first time from nevents; idx];
-    aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
-    xevents:.engine.ProcessEvents[(nevents,aevents)];
+        .state.InsertResultantEvents[xevents];
 
-    .state.InsertResultantEvents[xevents];
+        aids:actions[;1];
+        naids:count[aids];
+        obs:.state.GetFeatures[aids; 100; step];
+        rwd:.state.GetRewards[aids; 100; step];
+        dns:$[((step+1)<count[.env.StepIndex]); 
+                .state.GetDones[aids; 0];
+                flip[(aids;naids#1b)]];
+        ifo:.env.Info[aids;step];
 
-    aids:actions[;1];
-    naids:count[aids];
-    obs:.state.GetFeatures[aids; 100; step];
-    rwd:.state.GetRewards[aids; 100; step];
-    dns:$[((step+1)<count[.env.StepIndex]); 
-            .state.GetDones[aids; 0];
-            flip[(aids;naids#1b)]];
-    ifo:.env.Info[aids;step];
-
-    .env.CurrentStep+:1;
-    :(obs;rwd;dns;ifo);
- 
+        .env.CurrentStep+:1;
+        :(obs;rwd;dns;ifo);
+    ];'INVALID_STEP];
     };

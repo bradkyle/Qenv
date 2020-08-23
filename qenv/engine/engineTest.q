@@ -64,3 +64,4 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 // TODO engine integration tests i.e. on real data
+// TODO test that live data generates same state

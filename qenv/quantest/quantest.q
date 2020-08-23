@@ -485,7 +485,35 @@ A   :{[actual;relation;expected;msg;case]
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;str relation;expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
-    }
+    };
+
+AT  :{[func; arg; exception; msg; case]
+    $[not null[`$msg];msg:`$msg;msg:`$""];
+    if[not (type func) within 100 104h; '"assertT first arg should be function type within 100 104h. ",msg];
+    r:@[{(1b;x y)}[func;]; arg; {(0b; x)}];
+    state:`PASS;
+    $[r 0; 
+        [
+            msg:msg,": assertThrows Function never threw exception.";
+            state:`FAIL;
+            actual:();
+        ];
+      (not r[1] like (),exception);
+        [
+            msg:msg,"exception like format expected: ",exceptionLike;
+            state:`FAIL;
+            actual:r[1];
+        ];
+        [
+            state:`PASS;
+            actual:r[1];
+        ]];
+
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`throws;exception);
+    `.qt.Assertion upsert ass;
+    :{.qt.Assertion@x}.qt.assertId;
+
+    };
 
 // Assert that the relation between expected and actual value holds
 // @param actual An object representing the actual result value
@@ -500,7 +528,7 @@ AIn  :{[actual;expected;msg;case]
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`allin;expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
-    }
+    };
 
 // Assert that the relation between expected and actual value holds
 // @param actual An object representing the actual result value
