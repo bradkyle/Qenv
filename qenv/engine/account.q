@@ -128,6 +128,16 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
     :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(fillqty*isignum));
     };
 
+// Calculates the amount of margin required to keep a position open, if the account no longer 
+// has this margin available, the position will be liquidated.
+maintainenceMargin   :{[]
+
+    };
+
+initialMargin        :{[]
+
+    };
+
 // TODO inverse vs quanto vs vanilla
 liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance];
