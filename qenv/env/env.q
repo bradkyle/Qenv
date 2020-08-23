@@ -142,10 +142,6 @@ GenNextEpisode    :{
      .state.StepIndex: key .env.EventBatch;
     };
 
-SetupEvents     :{
-    // Deposit / withdraw events
-    // Random orders?
-    };
 
 / Reset Logic
 // =====================================================================================>

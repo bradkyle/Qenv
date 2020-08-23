@@ -174,6 +174,10 @@ ProcessEvents  : {[eventBatch]
         / :prepareEgress[.engine.PopEvents[]];
     };
 
+NewAccountFromConfig    :{[]
+
+
+    };
 
 / Main Setup Function
 / -------------------------------------------------------------------->
@@ -183,6 +187,7 @@ Info    :{[aids]
         select from .account.Inventory where accountId in aids; 
         
     };
+
 
  
 // Resets engine state 
