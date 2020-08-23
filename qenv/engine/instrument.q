@@ -86,6 +86,7 @@ Instrument: (
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
     numForcedCancellations  : `long$();
+    riskBuffer              : `long$();
     feeTiers                : ();
     riskTiers               : ());
 
@@ -121,7 +122,7 @@ defaults:{:(
     (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,-0.00025,
     0.00025,0.5,10,1,200f,100f,0f,0f,
     (`timespan$(`minute$480)),0,0,0f,1e6f,0f,0,0f,0b,1b,0b,0b,0b,1e6f,0f,1f,1e5f,0f,
-    25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0,0N,0N)
+    25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0,0,0N,0N)
     };
 allCols:cols Instrument;
 
