@@ -80,33 +80,29 @@ test:.qt.Unit[
         / if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
         / if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
         / if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
-        .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventSource"; c]
+        .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventBatch"; c]
 
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
         / show p[0];
-        m:{
-            mCols:`called`numCalls`calledWith`fn;
-            (count[x]#mCols)!x};  
+        / m:{
+            / mCols:`called`numCalls`calledWith`fn;
+            / (count[x]#mCols)!x};  
 
-        e:{`time`kind`cmd`datum!x};
+        / e:{`time`kind`cmd`datum!x};
 
-        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
+        / v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
 
-        :(`actions`cCurrentStep`cStepIndex`cEventBatch`eRes`eAdapt`eProcessEvents,
-        `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
+        :(`cCurrentStep`cStepIndex`cBatchIndex`cCurrentStep`cCurrentEpisode`cEventSource`eEventBatch`eStepIndex)!(
             p[0];
             p[1];
             p[2];
-            v;
+            p[3]
             p[4];
-            m p[5];
-            m p[6];
-            m p[7];
-            m p[8];
-            m p[9];
-            m p[10]
+            p[5];
+            p[6];
+            p[7]
             )
     };
     (
