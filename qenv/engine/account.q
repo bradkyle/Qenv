@@ -143,7 +143,9 @@ maintainenceMargin   :{[amt;instrument]
     :amt*(mm+instrument[`riskBuffer]);
     };
 
-initialMargin        :{[]
+// Calculates the amount of margin required to initialize a position, including the premium 
+// charged on the difference between the current price and the mark price of the contract
+initialMargin      :{[]
 
     };
 
