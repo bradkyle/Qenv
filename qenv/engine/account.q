@@ -148,6 +148,11 @@ maintainenceMargin   :{[amt;instrument]
 // Initial margin is generally above maintenece margin .i.e. it requires more margin than
 // the maintenence margin rate.
 initialMargin      :{[]
+    // Derive risk limit
+    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+
+    // Initial margin rate
+    imr:lm[`mmr];
 
     };
 
