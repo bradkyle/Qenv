@@ -82,8 +82,12 @@ test:.qt.Unit[
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
 
-        res:.env.Step[p[`actions]];
-        .qt.A[res;~;p[`eRes];"response";c];
+        $[all(null[p[`eThrows]]);[
+            .env.GenNextEpisode[];
+        ];[
+            .qt.AT[.env.GenNextEpisode;();p[`eThrows];"Reset";c];
+        ]];
+ 
         / show p1;
 
         .qt.MA[mck1;p1[`called];p1[`numCalls];p1[`calledWith];c];
