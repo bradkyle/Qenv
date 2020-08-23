@@ -30,7 +30,8 @@ Env  :(
         currentStep         : `long$();
         stepTime            : `datetime$();
         numFailures         : `long$();
-        numAgentSteps       : `long$());
+        numAgentSteps       : `long$();
+        accountIds          : ());
 
 WINDOWKIND :  `TEMPORAL`EVENTCOUNT`THRESHCOUNT;   
 
@@ -203,15 +204,15 @@ Reset    :{
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config
 
-    nevents:.env.PrimeBatchNum#.env.EventBatch;
+    nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]];
     aevents:.env.SetupEvents[];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
 
-    aids:actions[;1];
+    aids:(.env.Env@0)`accountIds;
     obs:.state.GetFeatures[aids; 100; 0];
-    .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
-    .env.StepIndex:.env.PrimeBatchNum_.env.StepIndex;
+    .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
+    .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
     .env.CurrentStep:0;
     :(obs);

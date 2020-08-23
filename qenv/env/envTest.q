@@ -148,6 +148,8 @@ test:.qt.Unit[
 
 // TODO test with differing intime?
 // TODO test prime batch num type, env batch type etc.
+// TODO no action events created
+// TODO register Env
 test:.qt.Unit[
     ".env.Reset";
     {[c]
@@ -256,7 +258,52 @@ test:.qt.Unit[
                   (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
                 ));
-                (7;(
+                (7; (
+                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ));
+                (14;(
+                  (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ))
+            );
+            (til 5); // expected response
+            (1b;1;enlist(`.adapter.ADAPTERTYPE$`MARKETMAKER;dtz 0;((1;0);(1;1)));{[x;t;a]}); // eAdapt
+            (1b;1;()); // eProcessEvents
+            (1b;1;()); // eInsertResultantEvents
+            (1b;1;()); // eGetFeatures
+            0N
+        ));
+        ("prime batch num=1 ordered by 1 second per step, 5 steps";(
+            2; // actions
+            0; // current step
+            (dtz 0;dtz 1); // step index
+            (
+                (0; (
+                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ));
+                (7; (
+                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ));
+                (14;(
                   (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
@@ -294,6 +341,7 @@ defaultEnvEach: {
 // TODO features
 // TODO check offset is added.
 // TODO test no acounts exist etc.
+// TODO no action/nevents created
 test:.qt.Unit[
     ".env.Step";
     {[c]
