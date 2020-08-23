@@ -240,15 +240,12 @@ Step    :{[actions]
     // Advances the current state of the environment
     $[.env.CurrentStep<csi;[    
         idx:.env.StepIndex@step;
-        .env.I:idx;
-        .env.E:.env.EventBatch;
-        .env.N:.env.EventBatch@idx;
         nevents:flip[.env.EventBatch@idx];
         / feature:FeatureBatch@thresh;
         // should add a common offset to actions before inserting them into
         // the events.
         tme:$[type idx~15h;idx;exec first time from nevents];
-        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
+        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; // TODO should add offset to action events.
         xevents:.engine.ProcessEvents[(nevents,aevents)];
 
         .state.InsertResultantEvents[xevents];
