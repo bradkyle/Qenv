@@ -201,7 +201,7 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
         lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];        
 
         // Maintenence margin rate
-        imrB:lmB[`imr];
+        imrB:lmB[`imr]; 
         imrL:lmL[`imr];
         imrS:lmS[`imr];
 
