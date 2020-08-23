@@ -96,9 +96,7 @@ test:.qt.Unit[
             / mCols:`called`numCalls`calledWith`fn;
             / (count[x]#mCols)!x};  
 
-        / e:{`time`kind`cmd`datum!x};
-
-        v:`grp xasc (`grp xgroup  raze flip ({m:]; m[`grp]:.envTest.dts[x[0]];m}'[p[5]]));
+        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:x[0];m}'[p[5]]));
 
         :(`cCurrentStep`cBatchIndex`cCurrentEpisode`cEventSource`cEvents`eEventBatch`eStepIndex`eThrows)!(
             p[0];
@@ -238,8 +236,6 @@ test:.qt.Unit[
         .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
         .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
         .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
-
-        // Assertions
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
