@@ -198,11 +198,11 @@ Reset   :{[config]
 
     // Instantiate instrument with 
     // given config.
-    .instrument.NewInstrument[];
+    .instrument.NewInstrument[config[`instrument]];
     
     // Instantiate the given set 
     // of accounts.
-    .account.NewAccount'[];
+    .account.NewAccountFromConfig'[config[`accounts]];
 
 
     };
