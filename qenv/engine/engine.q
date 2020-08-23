@@ -197,6 +197,7 @@ Reset   :{[]
     delete from `.event.Event;
 
     // Instantiate instrument with given config
+    .instrument.NewInstrument[];
 
     // Instantiate accounts and inventory
 
