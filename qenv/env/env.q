@@ -193,6 +193,7 @@ GenNextEpisode    :{
 Reset    :{
     .engine.Reset[];
     .state.Reset[];
+    // TODO randomization of environment config
 
     // Loads the next set of events from 
     // HDB into memory
@@ -238,6 +239,8 @@ Step    :{[actions]
     // Advances the current state of the environment
     idx:.env.StepIndex@step;
     nevents:flip[.env.EventBatch@idx];
+    $[;
+
     
     / feature:FeatureBatch@thresh;
     // should add a common offset to actions before inserting them into
@@ -251,8 +254,10 @@ Step    :{[actions]
     aids:actions[;1];
     obs:.state.GetFeatures[aids; 100; step];
     rwd:.state.GetRewards[aids; 100; step];
+    dns:$[((step+1)<count[.env.StepIndex]); 
+            .state.GetDones[aids; ];
+            ()];
     ifo:.env.Info[aids;step];
-    dns:();
 
     .env.CurrentStep+:1;
     :(obs;rwd;dns;ifo);

@@ -65,9 +65,9 @@ test:.qt.Unit[
         mck5: .qt.M[`.state.GetRewards;{[e;w;s]};c];
         mck6: .qt.M[`.env.Info;{[a;s]};c];
 
-        if[count[p[`eStepIndex]];.env.StepIndex:p[`eStepIndex]];
-        if[count[p[`eCurrentStep]];.env.CurrentStep:p[`eCurrentStep]];
-        if[count[p[`eEventBatch]];.env.EventBatch:p[`eEventBatch]];
+        if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
+        if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
+        if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
 
         res:.env.Step[p[`actions]];
         .qt.A[res;~;p[`eRes];"response";c];
@@ -93,7 +93,7 @@ test:.qt.Unit[
 
         v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
 
-        :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
+        :(`actions`cCurrentStep`cStepIndex`cEventBatch`eRes`eAdapt`eProcessEvents,
         `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
             p[0];
             p[1];

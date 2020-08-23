@@ -583,6 +583,9 @@ GetRewards  :{[aids; windowsize; step] // TODO configurable window size
 
     };
 
+GetDones    :{[]
+
+    };
 
 // Reset State
 // =====================================================================================>
