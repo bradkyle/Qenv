@@ -94,7 +94,7 @@ test:.qt.Unit[
         setupAccount[p];
         setupInventory[p];
 
-        f:p[`fill];
+        f:p[`funding];
         .account.ApplyFunding[];
         
         // Assertions
@@ -115,11 +115,8 @@ deriveCaseParams :{[p]
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
-    // Construct Fill
-    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
-    f[`accountId]: `.account.Account!f[`accountId];
-    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
-    f[`side]: `.order.ORDERSIDE$f[`side]; 
+    // Construct Funding
+    f:`fundingRate`nextFundingRate`nextFundingTime`time!p[3];
 
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
@@ -129,7 +126,7 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
-    :`cIns`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+    :`cIns`cAcc`cInv`funding`markPrice`eAcc`eInv`eEvents!(
         cIns;
         cAcc;
         cInv;
@@ -179,7 +176,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -206,7 +203,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -232,7 +229,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -259,7 +256,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -285,7 +282,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -312,7 +309,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -338,7 +335,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -365,7 +362,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -391,7 +388,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -418,7 +415,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0.0;zs); // Parameters
+    (0.0;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
