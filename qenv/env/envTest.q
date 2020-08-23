@@ -13,7 +13,7 @@ sz:sc[z];
 dts:{(`date$x)+(`second$x)};
 dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
-dozc:{x+1}[doz];
+dozc:{x+y}[doz];
 
 dSecEvents: {[x;y]
             t:{{x+`second$(rand 10)} each y#x}[y];
@@ -69,6 +69,11 @@ test:.qt.Unit[
         if[count[p[`cCurrentStep]]>0;.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cCurrentEpisode]]>0;.env.CurrentEpisode:p[`cCurrentEpisode]];
         if[count[p[`cEventSource]]>0;.env.cEventSource:p[`cEventSource]];
+        if[(count[p[`cEvents]]>0) and (count[p[`cEventSource]]>0);
+            p[`cEventSource] set p[`cEvents];
+        ];
+
+
 
         $[all(null[p[`eThrows]]);[
             .env.GenNextEpisode[];
@@ -93,23 +98,24 @@ test:.qt.Unit[
 
         / e:{`time`kind`cmd`datum!x};
 
-        / v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
+        / v:`grp xasc (`grp xgroup  raze flip ({m:]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
 
-        :(`cCurrentStep`cBatchIndex`cCurrentEpisode`cEventSource`cEvents`eEventBatch`eStepIndex)!(
+        :(`cCurrentStep`cBatchIndex`cCurrentEpisode`cEventSource`cEvents`eEventBatch`eStepIndex`eThrows)!(
             p[0];
             p[1];
             p[2];
-            p[3]
-            p[4];
+            p[3];
+            {`time`intime`kind`cmd`datum!x}'[p[4]];
             p[5];
-            p[6]);
+            p[6];
+            p[7]);
     };
     (
         enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
             1; // actions
-            (doz;dozc 1); // step index
+            (dozc 0;dozc 1); // step index
             0;
-            `.events.events;
+            `.env.events;
             (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
@@ -125,6 +131,8 @@ test:.qt.Unit[
                   (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
             );
             (til 5); // expected response
+            (dtz 0;dtz 1); // step index
+            0N
         ))
     );
     ({};{};defaultEnvEach;defaultEnvEach);
