@@ -180,10 +180,8 @@ GenNextEpisode    :{
     };
 
 SetupEvents     :{
-    // NewAccounts
-    // NewInventories
-    // Deposit
-    //
+    // Deposit / withdraw events
+    // Random orders?
     };
 
 / Reset Logic
@@ -203,6 +201,8 @@ Reset    :{
     .engine.Reset[];
     .state.Reset[];
     // TODO randomization of environment config
+
+    .engine.NewAgent[];
 
     // Loads the next set of events from 
     // HDB into memory
