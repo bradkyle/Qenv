@@ -132,7 +132,18 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
 // has this margin available, the position will be liquidated.
 // 
 maintainenceMargin   :{[amt;instrument]
-    m:first select from r where mx<=pos;
+    // Derive risk limit
+    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+    
+    // Maintenence margin rate
+    mm:lm[`mmr];
+
+    // Maintenence amount
+    // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
+    cum: amt*(mm+instrument[`riskBuffer]);
+
+
+
     };
 
 initialMargin        :{[]
