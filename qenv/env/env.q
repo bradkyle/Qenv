@@ -163,13 +163,13 @@ GenNextEpisode    :{
         ['INVALID_BATCH_SELECTION_METHOD]
     ];
 
-     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
-       (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i,time from .env.events where time within value[nextBatch]];
-       (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
-            ['NOTIMPLEMENTED];
-       ['INVALID_WINDOWING_METHOD]];
+    $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
+        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
+    (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
+        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i,time from .env.events where time within value[nextBatch]];
+    (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
+        ['NOTIMPLEMENTED];
+    ['INVALID_WINDOWING_METHOD]];
 
       // TODO insert feature batch.
       // TODO upsert new episode with event count etc.
