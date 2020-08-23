@@ -172,7 +172,7 @@ test:.qt.Unit[
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
-        if[count[p[`cPrimeBatchNum]];.env.EventBatch:p[`cPrimeBatchNum]];
+        if[count[p[`cPrimeBatchNum]];.env.PrimeBatchNum:p[`cPrimeBatchNum]];
 
         $[all(null[p[`eThrows]]);[
             res:.env.Step[p[`actions]];
