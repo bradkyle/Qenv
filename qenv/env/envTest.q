@@ -111,8 +111,8 @@ test:.qt.Unit[
             p[7]);
     };
     (
-        enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            1; // actions
+        ("step=0 single action account pair ordered by 1 second per step, 5 steps";(
+            0; // actions
             (dozc 0;dozc 1); // step index
             0;
             `.env.events;
@@ -130,10 +130,27 @@ test:.qt.Unit[
                   (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
             );
-            (til 5); // expected response
+            (
+                (0; (
+                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ));
+                (7;(
+                  (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
+                  (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
+                ))
+            );
             (dtz 0;dtz 1); // step index
             0N
-        ))
+        ));
     );
     ({};{};defaultEnvEach;defaultEnvEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
