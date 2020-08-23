@@ -80,12 +80,12 @@ test:.qt.Unit[
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cBatchIndex]];.env.BatchIndex:p[`cBatchIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
-        if[count[p[`cEventSource]];.env.cEventSource:p[`cEventBatch]];
+        if[count[p[`cEventSource]];.env.cEventSource:p[`cEventSource]];
 
         $[all(null[p[`eThrows]]);[
             .env.GenNextEpisode[];
         ];[
-            .qt.AT[.env.GenNextEpisode;();p[`eThrows];"Reset";c];
+            .qt.AT[.env.GenNextEpisode;();p[`eThrows];"GenNextEpisode";c];
         ]];
  
         / show p1;
