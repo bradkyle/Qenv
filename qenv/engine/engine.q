@@ -174,8 +174,7 @@ ProcessEvents  : {[eventBatch]
         / :prepareEgress[.engine.PopEvents[]];
     };
 
-NewAccountFromConfig    :{[]
-
+NewAccountFromConfig    :{[config]
 
     };
 
@@ -207,7 +206,7 @@ Reset   :{[config]
     
     // Instantiate the given set 
     // of accounts.
-    .account.NewAccountFromConfig'[config[`accounts]];
+    .engine.NewAccountFromConfig'[config[`accounts]];
 
 
     };
