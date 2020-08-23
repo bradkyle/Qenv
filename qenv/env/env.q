@@ -131,11 +131,12 @@ GenNextEpisode    :{
     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
         [
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:(`date$time)+5 xbar `second$time from .env.EventSource where time within value[nextBatch];
+            if[.env.;.env.FeatureBatch:0N];
         ];
     (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
         [
             .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.EventSource where time within value[nextBatch];
-        
+            if[.env.;.env.FeatureBatch:0N];
         ];
     (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
         ['NOTIMPLEMENTED];
