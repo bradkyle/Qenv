@@ -163,11 +163,10 @@ test:.qt.Unit[
         .qt.M[`.state.Reset;{};c];
         .qt.M[`.env.GenNextEpisode;{};c];
 
+        mck1: .qt.M[`.env.SetupEvents;{};c];
         mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck4: .qt.M[`.state.GetFeatures;{[a;w;s]};c];
-        mck5: .qt.M[`.state.GetRewards;{[e;w;s]};c];
-        mck6: .qt.M[`.env.Info;{[a;s]};c];
+        mck4: .qt.M[`.state.PrimeFeatures;{[a;w;s]};c];
 
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
