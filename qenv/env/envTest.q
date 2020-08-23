@@ -102,14 +102,14 @@ test:.qt.Unit[
             p[3]
             p[4];
             p[5];
-            p[6];
-            p[7]);
+            p[6]);
     };
     (
         enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
             1; // actions
             (doz;dozc 1); // step index
             0;
+            `.events.events;
             (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
