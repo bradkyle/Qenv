@@ -153,7 +153,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`fundingRate;nextFundingRate;nextFundingTime;time
-    (0.0;0.1;sz 5;z); // Parameters
+    (0.1;0.1;sz 5;z); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
