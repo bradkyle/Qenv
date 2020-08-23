@@ -68,18 +68,6 @@ Episode :(
 .env.EventBatch:();
 .env.FeatureBatch:();
 
-// Main Callable functions
-// --------------------------------------------------->
-
-// config recieves a json representation of the given config
-// that pertains to the initial environment state, agent state 
-// aswell as the strategy for which steps will take place.
-// utilizes the .j (json) namespace to process a json representation
-// sent to it.
-Config      :{[config]
-
-    
-    };
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
@@ -199,10 +187,10 @@ Reset    :{[config]
     // 
     // TODO config engine
 
-    .state.Reset[];
+    .state.Reset[config];
     // TODO randomization of environment config
 
-    .engine.Reset[]; 
+    .engine.Reset[config]; 
 
     // Loads the next set of events from 
     // HDB into memory
@@ -226,6 +214,9 @@ Reset    :{[config]
     .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
     .env.CurrentStep:0;
+
+    // TODO analytics log reset
+
     :(obs);
     };
 
