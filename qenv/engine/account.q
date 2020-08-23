@@ -154,14 +154,18 @@ initialMargin      :{[]
     // Initial margin rate
     imr:lm[`mmr];
 
+    // TODO gross open premium
+
     // Maintenence amount
     // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :amt*(mm+instrument[`riskBuffer]); // TODO derive premium
+    :amt*(imr+()); // TODO derive premium
     };
 
 // TODO inverse vs quanto vs vanilla
+// The point at which the exchange will force close all orders and shortly
+// thereafter liquidate the position
 liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
-        bal:account[`balance];
+        bal:account[`balance]; // TODO change to margin?
         tmm:0; 
 
         // Current Position
