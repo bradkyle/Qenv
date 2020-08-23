@@ -150,9 +150,9 @@ GenNextEpisode    :{
     // TODO check day is divisible by batch size? 
     // TODO missing events at start of events
     if[count[.env.BatchIndex]<1;[ 
-        bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
+        bidx:select start:((`date$time)+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
         bidx:update end:next start from bidx;
-        bidx:update end:first[(select last time from events)`time]^end from bidx;
+        bidx:update end:first[(select last time from .env.EventSource)`time]^end from bidx;
         .env.BatchIndex:bidx;
     ]];
 
@@ -166,9 +166,9 @@ GenNextEpisode    :{
         ['INVALID_BATCH_SELECTION_METHOD]];
 
     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
-        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
+        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:(`date$time)+5 xbar `second$time from .env.EventSource where time within value[nextBatch]];
     (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
-        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within value[nextBatch]];
+        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.EventSource where time within value[nextBatch]];
     (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
         ['NOTIMPLEMENTED];
     ['INVALID_WINDOWING_METHOD]];

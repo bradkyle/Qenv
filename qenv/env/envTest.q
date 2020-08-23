@@ -68,7 +68,7 @@ test:.qt.Unit[
         if[count[p[`cBatchIndex]]>0;.env.BatchIndex:p[`cBatchIndex]];
         if[count[p[`cCurrentStep]]>0;.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cCurrentEpisode]]>0;.env.CurrentEpisode:p[`cCurrentEpisode]];
-        if[count[p[`cEventSource]]>0;.env.cEventSource:p[`cEventSource]];
+        if[count[p[`cEventSource]]>0;.env.EventSource:p[`cEventSource]];
         if[(count[p[`cEvents]]>0) and (count[p[`cEventSource]]>0);
             p[`cEventSource] set p[`cEvents];
         ];
@@ -86,7 +86,7 @@ test:.qt.Unit[
         / if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
         / if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
         / if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
-        .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventBatch"; c]
+        .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventBatch"; c];
 
     };
     {[p]
@@ -109,51 +109,11 @@ test:.qt.Unit[
             p[7]);
     };
     (
-        ("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            0; // actions
-            (dozc 0;dozc 1); // step index
-            0;
-            `.env.events;
-            (
-                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
-            );
-            (
-                (0; (
-                  (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 3;sz 3;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 4;sz 4;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 5;sz 5;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 6;sz 6;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
-                ));
-                (7;(
-                  (sz 7;sz 7;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 8;sz 8;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 9;sz 9;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 10;sz 10;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 11;sz 11;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
-                  (sz 12;sz 12;`DEPTH;`UPDATE;enlist(10001;`BUY;1000))
-                ))
-            );
-            (dtz 0;dtz 1); // step index
-            0N
-        ));
-        ("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            0; // actions
-            (dozc 0;dozc 1); // step index
-            0;
-            `.env.events;
+        enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
+            0; // current Step
+            (); // BatchIndex
+            0; // Current Episode
+            `.env.events; // events splayed table
             (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
