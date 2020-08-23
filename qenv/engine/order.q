@@ -698,8 +698,9 @@ triggerStop    :{[stop]
 // Updates the orderbook mark price and subsequently
 // checks if any stop orders or liquidations have
 // occurred as a result of the mark price change.
+// TODO select by trigger
 UpdateMarkPrice : {[markPrice;instrumentId;time]
-    ins:.instrument.Instrument@instrumentId;
+    ins:.instrument.Instrument@instrumentId; 
 
     orders:triggerStop select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 

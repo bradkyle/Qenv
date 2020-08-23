@@ -1565,50 +1565,18 @@ deriveCaseParams    :{[params]
     :p;
     };
 
-/ test:.qt.Unit[
-/     ".order.triggerStop";
-/     {[c]
-/         p:c[`params];
-        
-/         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
 
-/     };();();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Private function for advancing stop orders once triggered"];
- 
-/ test:.qt.Unit[
-/     ".order.UpdateMarkPrice";
-/     {[c]
-/         p:c[`params];
-        
-/         res: .order.UpdateMarkPrice[p[`markPrice];1;.z.z];
-
-/     };();();({};{};defaultBeforeEach;defaultAfterEach);
-/     "Global function for processing mark price updates specifically for orders"];
-
-/ .qt.AddCase[test;"Should update markprice for instrument, account inventory etc.";
-/     deriveCaseParams[(
-/         ();();96000;
-/     )]];
-
-/ .qt.AddCase[test;"Should update the cumulative unrealized pnl, available balance, margin, orders etc.";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Should liquidate relevant inventory/accounts depending on the configuration";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Should trigger triggerable stop limit orders";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Should not trigger non-triggerable stop limit orders";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Should trigger triggerable stop market orders";
-/     deriveCaseParams[]];
-
-/ .qt.AddCase[test;"Should not trigger non-triggerable stop market orders";
-/     deriveCaseParams[]];
-
-// TODO integration tests i.e. loading data and making sure that it works
-
+.qt.AddCase[test;"Should trigger buy stop orders triggered ";
+    deriveCaseParams[(
+        ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5)));
+        (); // CUrrent orders
+        `accountId`instrumentId`side`otype`size`price!(1;1;`SELL;`MARKET;1000;1005); // TODO 
+        ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(10#1000);vqty:(2000,9#1000)); // expected order book
+        (); // expected orders
+        ();
+        ({[a;b;c;d;e]};1b;1;enlist(`.order.ORDERSIDE$`BUY;1000;1000;0b;1));
+        (0b;0;());
+        (1b;1;())
+    )]];
 
 .qt.RunTests[];
