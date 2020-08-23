@@ -172,7 +172,7 @@ SetupEvents     :{
 /     };
 
 // TODO validation
-Reset    :{
+Reset    :{[config]
     // Env Config
         // Create accounts
         // Create inventory
