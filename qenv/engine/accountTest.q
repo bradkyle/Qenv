@@ -489,7 +489,88 @@ deriveCaseParams :{[p]
     };
 
 
-.qt.AddCase[test;"hedged:long_to_longer ";deriveCaseParams[(
+.qt.AddCase[test;"deposit invalid account";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"deposit amount too small";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"deposit amount too large";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"deposit";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
     (0;0.5;1e9;0f;1e6f;0f;100);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
@@ -573,8 +654,103 @@ deriveCaseParams :{[p]
         );
     };
 
+.qt.AddCase[test;"withdraw invalid account id";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    ();
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    ();
+    () // Expected events
+    )]];
 
-.qt.AddCase[test;"hedged:long_to_longer ";deriveCaseParams[(
+.qt.AddCase[test;"withdraw amount too small";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    ();
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    ();
+    () // Expected events
+    )]];
+
+.qt.AddCase[test;"withdraw amount too large";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    ();
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    ();
+    () // Expected events
+    )]];
+
+.qt.AddCase[test;"withdraw sufficient balance";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    ();
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    ();
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"withdraw insufficient balance";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    ();
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
+
+
+.qt.AddCase[test;"withdraw insufficient balance with inventory";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
     (0;0.5;1e9;0f;1e6f;0f;100);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
@@ -600,6 +776,31 @@ deriveCaseParams :{[p]
     () // Expected events
     )]];
 
+.qt.AddCase[test;"withdraw sufficient balance with inventory";deriveCaseParams[(
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
+    (0;0.5;1e9;0f;1e6f;0f;100);
+    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+    // activeMakerFee;activeTakerFee;realizedPnl
+    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (
+        (0;`BOTH;100;100;l 1e9; 1000);
+        (0;`LONG;100;100;l 1e9; 1000);
+        (0;`SHORT;100;100;l 1e9; 1000)
+    );
+    //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
+    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
+    1000; // Mark Price
+    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+        (0;`BOTH;100;100;l 1e9; 1000; 0);
+        (0;`LONG;100;100;l 1e9; 1000; 0);
+        (0;`SHORT;100;100;l 1e9; 1000; 0)
+    );
+    () // Expected events
+    )]];
 
 // AveragePrice
 // ==================================================================================>
