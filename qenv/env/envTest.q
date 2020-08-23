@@ -159,7 +159,10 @@ test:.qt.Unit[
         p5:p[`eGetRewards];  
         p6:p[`eInfo];  
 
-        mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
+        .qt.M[`.engine.Reset;{};c];
+        .qt.M[`.state.Reset;{};c];
+        .qt.M[`.env.GenNextEpisode;{};c];
+
         mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
         mck4: .qt.M[`.state.GetFeatures;{[a;w;s]};c];
@@ -169,6 +172,7 @@ test:.qt.Unit[
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
+        if[count[p[`cPrimeBatchNum]];.env.EventBatch:p[`cPrimeBatchNum]];
 
         $[all(null[p[`eThrows]]);[
             res:.env.Step[p[`actions]];

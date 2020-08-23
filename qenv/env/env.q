@@ -199,7 +199,7 @@ Reset    :{
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config
 
-    nvents:.env.PrimeBatchNum#.env.EventBatch;
+    nevents:.env.PrimeBatchNum#.env.EventBatch;
     aevents:.env.SetupEvents[];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
@@ -216,8 +216,6 @@ Reset    :{
 
 / Advancing System
 // =====================================================================================>
-
-
 
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
