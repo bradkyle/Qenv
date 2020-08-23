@@ -129,9 +129,14 @@ GenNextEpisode    :{
         ['INVALID_BATCH_SELECTION_METHOD]];
 
     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
-        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:(`date$time)+5 xbar `second$time from .env.EventSource where time within value[nextBatch]];
+        [
+            .env.EventBatch:select time, intime, kind, cmd, datum by grp:(`date$time)+5 xbar `second$time from .env.EventSource where time within value[nextBatch];
+        ];
     (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
-        [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.EventSource where time within value[nextBatch]];
+        [
+            .env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.EventSource where time within value[nextBatch];
+        
+        ];
     (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
         ['NOTIMPLEMENTED];
     ['INVALID_WINDOWING_METHOD]];
@@ -149,12 +154,6 @@ GenNextEpisode    :{
 // TODO reset step count, load first batch etc.
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
-/ ResetAgents       :{[aIds] // TODO make into accountConfigs, TODO load initial events for given buffer time
-/     // Reset public singletons
-/     .engine.ResetAgents[aIds];
-/     .state.ResetAgents[aIds];
-/     };
-
 // TODO validation
 Reset    :{[config]
     // Env Config
