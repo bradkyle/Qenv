@@ -184,25 +184,22 @@ Info    :{[aids]
         
     };
 
+ 
+// Resets engine state 
 // Sets up the engine, active instrument,
 // Initializes agent and respective inventory config
-//  
-Setup   :{[config]
-
-    // Instantiate instrument with given config
-
-    // Instantiate accounts and inventory
-
-    // Run through Configured batch amount of events.
-
-
-    }
-
 Reset   :{[]
     delete from `.order.Order;
     delete from `.order.OrderBook;
     delete from `.instrument.Instrument;
     delete from `.account.Account;
     delete from `.inventory.Inventory;
+    delete from `.event.Event;
+
+    // Instantiate instrument with given config
+
+    // Instantiate accounts and inventory
+
+    // Run through Configured batch amount of events.
 
     };
