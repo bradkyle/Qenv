@@ -63,11 +63,11 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        if[count[p[`cStepIndex]]>0;.env.StepIndex:p[`cStepIndex][0]];
-        if[count[p[`cBatchIndex]]>0;.env.BatchIndex:p[`cBatchIndex][0]];
-        if[count[p[`cCurrentStep]]>0;.env.CurrentStep:p[`cCurrentStep][0]];
-        if[count[p[`cCurrentEpisode]]>0;.env.CurrentEpisode:p[`cCurrentEpisode][0]];
-        if[count[p[`cEventSource]]>0;.env.cEventSource:p[`cEventSource][0]];
+        if[count[p[`cStepIndex]]>0;.env.StepIndex:p[`cStepIndex]];
+        if[count[p[`cBatchIndex]]>0;.env.BatchIndex:p[`cBatchIndex]];
+        if[count[p[`cCurrentStep]]>0;.env.CurrentStep:p[`cCurrentStep]];
+        if[count[p[`cCurrentEpisode]]>0;.env.CurrentEpisode:p[`cCurrentEpisode]];
+        if[count[p[`cEventSource]]>0;.env.cEventSource:p[`cEventSource]];
 
         $[all(null[p[`eThrows]]);[
             .env.GenNextEpisode[];
@@ -80,8 +80,8 @@ test:.qt.Unit[
         if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
         if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
         if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
+        .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventSource"; c]
 
-        // Assertions
     };
     {[p]
         / e:({`time`kind`cmd`datum!x} each p[0]);
