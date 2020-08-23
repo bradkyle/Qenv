@@ -75,11 +75,11 @@ test:.qt.Unit[
             .qt.AT[.env.GenNextEpisode;();p[`eThrows];"GenNextEpisode";c];
         ]];
  
-        if[count[p[`cStepIndex]]>1;.qt.A[.env.StepIndex;=;p[`cStepIndex][1];".env.StepIndex"; c]];
-        if[count[p[`cBatchIndex]]>1;.qt.A[.env.BatchIndex;=;p[`cBatchIndex][1];".env.BatchIndex"; c]];
-        if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
-        if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
-        if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
+        / if[count[p[`cStepIndex]]>1;.qt.A[.env.StepIndex;=;p[`cStepIndex][1];".env.StepIndex"; c]];
+        / if[count[p[`cBatchIndex]]>1;.qt.A[.env.BatchIndex;=;p[`cBatchIndex][1];".env.BatchIndex"; c]];
+        / if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
+        / if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
+        / if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
         .qt.A[.env.EventBatch;=;p[`eEventBatch];".env.EventSource"; c]
 
     };
