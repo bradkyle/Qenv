@@ -63,24 +63,11 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        p1:p[`eAdapt];  
-        p2:p[`eProcessEvents];  
-        p3:p[`eInsertResultantEvents];  
-        p4:p[`eGetFeatures];  
-        p5:p[`eGetRewards];  
-        p6:p[`eInfo];  
-
-        mck1: .qt.M[`.adapter.Adapt;{[at;t;a]};c];
-        mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
-        mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck4: .qt.M[`.state.GetFeatures;{[a;w;s]};c];
-        mck5: .qt.M[`.state.GetRewards;{[e;w;s]};c];
-        mck6: .qt.M[`.env.Info;{[a;s]};c];
-
-        if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
-        if[count[p[`cBatchIndex]];.env.BatchIndex:p[`cBatchIndex]];
-        if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
-        if[count[p[`cEventSource]];.env.cEventSource:p[`cEventSource]];
+        if[count[p[`cStepIndex]]>0;.env.StepIndex:p[`cStepIndex][0]];
+        if[count[p[`cBatchIndex]]>0;.env.BatchIndex:p[`cBatchIndex][0]];
+        if[count[p[`cCurrentStep]]>0;.env.CurrentStep:p[`cCurrentStep][0]];
+        if[count[p[`cCurrentEpisode]]>0;.env.CurrentEpisode:p[`cCurrentEpisode][0]];
+        if[count[p[`cEventSource]]>0;.env.cEventSource:p[`cEventSource][0]];
 
         $[all(null[p[`eThrows]]);[
             .env.GenNextEpisode[];
@@ -88,13 +75,11 @@ test:.qt.Unit[
             .qt.AT[.env.GenNextEpisode;();p[`eThrows];"GenNextEpisode";c];
         ]];
  
-        / show p1;
-        .qt.MA[mck1;p1[`called];p1[`numCalls];p1[`calledWith];c];
-        / .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
-        / .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
-        / .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
-        / .qt.MA[mck5;p5[`called];p5[`numCalls];p5[`calledWith];c];
-        / .qt.MA[mck6;p6[`called];p6[`numCalls];p6[`calledWith];c];
+        if[count[p[`cStepIndex]]>1;.qt.A[.env.StepIndex;=;p[`cStepIndex][1];".env.StepIndex"; c]];
+        if[count[p[`cBatchIndex]]>1;.qt.A[.env.BatchIndex;=;p[`cBatchIndex][1];".env.BatchIndex"; c]];
+        if[count[p[`cCurrentStep]]>1;.qt.A[.env.CurrentStep;=;p[`cCurrentStep][1];".env.CurrentStep"; c]];
+        if[count[p[`cCurrentEpisode]]>1;.qt.A[.env.CurrentEpisde;=;p[`cCurrentEpisode][1];".env.CurrentEpisde"; c]];
+        if[count[p[`cEventSource]]>1;.qt.A[.env.EventSource;=;p[`cEventSource][1];".env.EventSource"; c]];
 
         // Assertions
     };
