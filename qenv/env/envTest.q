@@ -80,7 +80,7 @@ test:.qt.Unit[
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cBatchIndex]];.env.BatchIndex:p[`cBatchIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
-        if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
+        if[count[p[`cEventSource]];.env.cEventSource:p[`cEventBatch]];
 
         $[all(null[p[`eThrows]]);[
             .env.GenNextEpisode[];
@@ -89,7 +89,6 @@ test:.qt.Unit[
         ]];
  
         / show p1;
-
         .qt.MA[mck1;p1[`called];p1[`numCalls];p1[`calledWith];c];
         / .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
         / .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
