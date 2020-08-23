@@ -94,20 +94,18 @@ test:.qt.Unit[
 
         / v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
 
-        :(`cCurrentStep`cStepIndex`cBatchIndex`cCurrentStep`cCurrentEpisode`cEventSource`eEventBatch`eStepIndex)!(
+        :(`cCurrentStep`cBatchIndex`cStepIndex`cCurrentEpisode`cEventSource`eEventBatch`eStepIndex)!(
             p[0];
             p[1];
             p[2];
             p[3]
             p[4];
             p[5];
-            p[6];
-            p[7])
+            p[6])
     };
     (
         enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            ((1;0);(1;1)); // actions
-            0; // current step
+            1; // actions
             (dtz 0;dtz 1); // step index
             (
                 (sz 0; (
