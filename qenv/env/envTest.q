@@ -13,6 +13,27 @@ sz:sc[z];
 dts:{(`date$x)+(`second$x)};
 dtz:{dts[sc[x;y]]}[z]
 
+
+dSecEvents: {[x;y]
+            t:{{x+`second$(rand 10)} each y#x}[y];
+
+            tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
+            dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
+            mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
+
+            :(flip[dpth],flip[mk],flip[tds]);
+    };
+
+defaultEnvEach: {
+     .env.CurrentStep:0;
+     .env.CurrentEpisde:0;
+     .env.PrimeBatchNum:0;
+     .env.StepIndex:();
+     .env.BatchIndex:();
+     .env.EventBatch:();
+     .env.FeatureBatch:();
+    };
+
 test:.qt.Unit[
     ".env.Config";
     {[c]
@@ -30,20 +51,11 @@ test:.qt.Unit[
         ("Should correctly insert account events from different accounts, different times";());
         ("Should correctly insert inventory events";())
     );
-    .qt.sBlk;
+    ({};{};defaultEnvEach;defaultEnvEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
 
-dSecEvents: {[x;y]
-            t:{{x+`second$(rand 10)} each y#x}[y];
-
-            tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
-            dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[(x?`BUY`SELL;x#{10000+rand 100}[];x#{rand 1000}[])]);
-            mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;enlist'[x#{10000+rand 1000}[]]);
-
-            :(flip[dpth],flip[mk],flip[tds]);
-    };
 
 // TODO test with differing intime?
 test:.qt.Unit[
@@ -140,7 +152,7 @@ test:.qt.Unit[
             (0b;0;()) // eInfo
         ))
     );
-    .qt.sBlk;
+    ({};{};defaultEnvEach;defaultEnvEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
 
@@ -320,19 +332,9 @@ test:.qt.Unit[
             0N
         ))
     );
-    .qt.sBlk;
+    ({};{};defaultEnvEach;defaultEnvEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
     "then returns normalized (min max) vector bundle for each account.")];
-
-defaultEnvEach: {
-     .env.CurrentStep:0;
-     .env.CurrentEpisde:0;
-     .env.PrimeBatchNum:0;
-     .env.StepIndex:();
-     .env.BatchIndex:();
-     .env.EventBatch:();
-     .env.FeatureBatch:();
-    };
 
 
 // TODO test with differing intime?

@@ -178,7 +178,9 @@ GenNextEpisode    :{
     };
 
 SetupEvents     :{
-
+    // NewAccounts
+    // NewInventories
+    // Deposit
     };
 
 / Reset Logic
@@ -248,7 +250,9 @@ Step    :{[actions]
         // should add a common offset to actions before inserting them into
         // the events.
         tme:$[type idx~15h;idx;exec first time from nevents];
-        aevents:.adapter.Adapt[.env.ADPT;idx;actions]; // TODO should add offset to action events!!!.
+        // TODO should add offset to action events!!!.
+        // 
+        aevents:.adapter.Adapt[.env.ADPT;idx;actions];
         xevents:.engine.ProcessEvents[(nevents,aevents)];
         // TODO should add offset to resultant events!!!
         .state.InsertResultantEvents[xevents];
