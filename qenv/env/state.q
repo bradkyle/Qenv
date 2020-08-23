@@ -516,7 +516,7 @@ getOBFeatures   :{
 // TODO get orderbook features
 // TODO volatility, standard deviation, etc.
 // TODO testing etc.
-GetFeatures    :{[aids; windowsize; step] // TODO configurable window size
+GetObservations    :{[aids; windowsize; step] // TODO configurable window size
         / interval: 
 
         // TODO add liquidation as feature.

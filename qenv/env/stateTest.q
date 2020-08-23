@@ -143,13 +143,13 @@ genRandomState      :{[x;y;z] // TODO add max time
 // TODO should time cases
 // TODO change to simple update better for processing speed
 test:.qt.Unit[
-    ".state.GetFeatures";
+    ".state.GetObservations";
     {[c]
         p:c[`params];
         setupState[p[`cState]];
 
         a:p[`args];
-        res:.state.GetFeatures[a];
+        res:.state.GetObservations[a];
 
         .qt.A[res;~;p[`eRes];"result";c];
 

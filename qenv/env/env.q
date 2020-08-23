@@ -208,7 +208,7 @@ Reset    :{[config]
         // 
 
     aids:(.env.Env@0)`accountIds;
-    obs:.state.GetFeatures[aids; 100; 0];
+    obs:.state.GetObservations[aids; 100; 0];
     .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
     .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
@@ -260,7 +260,7 @@ Step    :{[actions]
 
         aids:actions[;1];
         naids:count[aids];
-        obs:.state.GetFeatures[aids; 100; step];
+        obs:.state.GetObservations[aids; 100; step];
         rwd:.state.GetRewards[aids; 100; step];
         dns:$[((step+1)<count[.env.StepIndex]); 
                 .state.GetDones[aids; 0];
