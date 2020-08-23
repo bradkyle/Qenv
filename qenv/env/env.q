@@ -135,7 +135,7 @@ firstDay:{`datetime$((select first date from events)[`date])};
 PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
 // Returns the next batch from the
-getNextBatch    :{[batchIdx]
+getNextBatch    :{[]
     if[count[.env.BatchIndex]<1;[ 
         bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
         bidx:update end:next start from bidx;
@@ -152,7 +152,7 @@ getNextBatch    :{[batchIdx]
         ['NOTIMPLEMENTED];
         ['INVALID_BATCH_SELECTION_METHOD]
     ];
-    }
+    };
 
 // Batches are synonymous with episode // TODO train test split
 // TODO test next

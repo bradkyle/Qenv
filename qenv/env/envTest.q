@@ -10,6 +10,8 @@ system "d .envTest";
 z:.z.z;
 sc:{x+(`second$y)};
 sz:sc[z];
+dts:{(`date$x)+(`second$x)};
+dtz:{dts[sc[x;y]]}[z]
 
 test:.qt.Unit[
     ".env.Config";
@@ -89,7 +91,7 @@ test:.qt.Unit[
 
         e:{`time`kind`cmd`datum!x};
 
-        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:((`date$x[0])+(`second$(x[0])));m}'[p[3]]));
+        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:.envTest.dts[x[0]]);m}'[p[3]]));
 
         :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
         `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(
@@ -110,7 +112,7 @@ test:.qt.Unit[
         enlist("step=1 single action account pair ordered by 1 second per step, 5 steps";(
             ((1;0);(1;1));
             0;
-            (`second$(sz[0]);`second$(sz[1]));
+            (dtz 0;dtz 1);
             (
                 (sz 0; (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
