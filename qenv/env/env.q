@@ -209,11 +209,12 @@ Reset    :{
     .state.InsertResultantEvents[xevents];
 
     aids:actions[;1];
-    obs:.state.PrimeFeatures[aids; 100; 0];
+    obs:.state.GetFeatures[aids; 100; 0];
     .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
     .env.StepIndex:.env.PrimeBatchNum_.env.StepIndex;
 
     .env.CurrentStep:0;
+    :(obs);
     };
 
 

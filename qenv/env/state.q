@@ -561,6 +561,9 @@ GetFeatures    :{[aids; windowsize; step] // TODO configurable window size
         // obs[`accountId]!value'[`accountId`step _ obs]
     };
 
+PrimeFeatures   :{[]
+
+    };
 
 // Reward Extraction and Derivation
 // =====================================================================================>

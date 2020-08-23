@@ -147,6 +147,7 @@ test:.qt.Unit[
 
 
 // TODO test with differing intime?
+// TODO test prime batch num type, env batch type etc.
 test:.qt.Unit[
     ".env.Reset";
     {[c]
@@ -155,7 +156,7 @@ test:.qt.Unit[
         p1:p[`eSetupEvents];  
         p2:p[`eProcessEvents];  
         p3:p[`eInsertResultantEvents];  
-        p4:p[`ePrimeFeatures];  
+        p4:p[`eGetFeatures];  
 
         .qt.M[`.engine.Reset;{};c];
         .qt.M[`.state.Reset;{};c];
@@ -164,7 +165,7 @@ test:.qt.Unit[
         mck1: .qt.M[`.env.SetupEvents;{};c];
         mck2: .qt.M[`.engine.ProcessEvents;{[e]};c];
         mck3: .qt.M[`.state.InsertResultantEvents;{[e]};c];
-        mck4: .qt.M[`.state.PrimeFeatures;{[a;w;s]};c];
+        mck4: .qt.M[`.state.GetFeatures;{[a;w;s]};c];
 
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
@@ -198,8 +199,8 @@ test:.qt.Unit[
         v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:x[0];m}'[p[3]]));
 
 
-        :(`actions`cCurrentStep`cStepIndex`cEventBatch`eRes`eAdapt`eProcessEvents,
-        `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo`eThrows)!(
+        :(`cPrimeBatchNum`cCurrentStep`cStepIndex`cEventBatch`eRes`eSetupEvents`eProcessEvents,
+        `eInsertResultantEvents`eGetFeatures`eThrows)!(
             p[0];
             p[1];
             p[2];
@@ -209,15 +210,13 @@ test:.qt.Unit[
             m p[6];
             m p[7];
             m p[8];
-            m p[9];
-            m p[10];
-            p[11]
+            p[9]
             )
     };
     (
-        ("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            ((1;0);(1;1)); // actions
-            0; // current step
+        ("prime batch num=0 ordered by 1 second per step, 5 steps";(
+            0; // actions
+            0; // prime batch num
             (dtz 0;dtz 1); // step index
             (
                 (0; (
@@ -242,11 +241,10 @@ test:.qt.Unit[
             (1b;1;()); // eProcessEvents
             (1b;1;()); // eInsertResultantEvents
             (1b;1;()); // eGetFeatures
-            (1b;1;()); // eGetRewards
-            (0b;0;()) // eInfo
+            0N
         ));
-        ("step=0 single action account pair ordered by 1 second per step, 5 steps";(
-            ((1;0);(1;1)); // actions
+        ("prime batch num=1 ordered by 1 second per step, 5 steps";(
+            1; // actions
             0; // current step
             (dtz 0;dtz 1); // step index
             (
@@ -272,8 +270,7 @@ test:.qt.Unit[
             (1b;1;()); // eProcessEvents
             (1b;1;()); // eInsertResultantEvents
             (1b;1;()); // eGetFeatures
-            (1b;1;()); // eGetRewards
-            (0b;0;()) // eInfo
+            0N
         ))
     );
     .qt.sBlk;
