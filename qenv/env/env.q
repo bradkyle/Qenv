@@ -114,7 +114,7 @@ Info        :{[aIds;step]
     };
 
 
-/ GenNextEventBatch
+/ Env Utils
 // =====================================================================================>
 
 firstDay:{`datetime$((select first date from events)[`date])};
@@ -175,6 +175,10 @@ GenNextEpisode    :{
       // TODO upsert new episode with event count etc.
 
      .state.StepIndex: key .env.EventBatch;
+    };
+
+SetupEvents     :{
+
     };
 
 / Reset Logic
