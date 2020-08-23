@@ -160,8 +160,7 @@ GenNextEpisode    :{
         [.env.BatchIndex@(.env.CurrentEpisde mod count[.env.BatchIndex])];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM); // TODO
         ['NOTIMPLEMENTED];
-        ['INVALID_BATCH_SELECTION_METHOD]
-    ];
+        ['INVALID_BATCH_SELECTION_METHOD]];
 
     $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
         [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
