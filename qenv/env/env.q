@@ -129,7 +129,7 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
 // Probabalistic choice
-P1Choice {[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
+PChoice {[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
 // Batches are synonymous with episode // TODO train test split
 GenNextEpisode    :{
@@ -151,8 +151,8 @@ GenNextEpisode    :{
         [.env.BatchIndex@rand count[bidx]];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
         [.env.BatchIndex@(.env.CurrentEpisde mod count[.env.BatchIndex])];
-       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
-        [0N];
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM); // TODO
+        ['NOTIMPLEMENTED];
         ['INVALID_BATCH_SELECTION_METHOD]
     ];
 
