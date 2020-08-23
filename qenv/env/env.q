@@ -135,24 +135,6 @@ firstDay:{`datetime$((select first date from events)[`date])};
 PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
 // Returns the next batch from the
-getNextBatch    :{[]
-    if[count[.env.BatchIndex]<1;[ 
-        bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
-        bidx:update end:next start from bidx;
-        bidx:update end:first[(select last time from events)`time]^end from bidx;
-        .env.BatchIndex:bidx;
-    ]];
-
-    :$[
-       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
-        [.env.BatchIndex@rand count[bidx]];
-       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
-        [.env.BatchIndex@(.env.CurrentEpisde mod count[.env.BatchIndex])];
-       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM); // TODO
-        ['NOTIMPLEMENTED];
-        ['INVALID_BATCH_SELECTION_METHOD]
-    ];
-    };
 
 // Batches are synonymous with episode // TODO train test split
 // TODO test next
@@ -163,7 +145,22 @@ GenNextEpisode    :{
 
     // TODO check day is divisible by batch size? 
     // TODO missing events at start of events
-    
+    if[count[.env.BatchIndex]<1;[ 
+        bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
+        bidx:update end:next start from bidx;
+        bidx:update end:first[(select last time from events)`time]^end from bidx;
+        .env.BatchIndex:bidx;
+    ]];
+
+    nextBatch:$[
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
+        [.env.BatchIndex@rand count[bidx]];
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
+        [.env.BatchIndex@(.env.CurrentEpisde mod count[.env.BatchIndex])];
+       (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM); // TODO
+        ['NOTIMPLEMENTED];
+        ['INVALID_BATCH_SELECTION_METHOD]
+    ];
 
      $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
             [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
@@ -239,31 +236,25 @@ Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
     // Advances the current state of the environment
-    $[((step+1)<count[.env.StepIndex]);
-        [
-            idx:.env.StepIndex@step;
-            nevents:flip[.env.EventBatch@idx];
-            
-            / feature:FeatureBatch@thresh;
-            // should add a common offset to actions before inserting them into
-            // the events.
-            tme:$[type idx<>15h; exec first time from nevents; idx];
-            aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
-            xevents:.engine.ProcessEvents[(nevents,aevents)];
+    idx:.env.StepIndex@step;
+    nevents:flip[.env.EventBatch@idx];
+    
+    / feature:FeatureBatch@thresh;
+    // should add a common offset to actions before inserting them into
+    // the events.
+    tme:$[type idx<>15h; exec first time from nevents; idx];
+    aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
+    xevents:.engine.ProcessEvents[(nevents,aevents)];
 
-            .state.InsertResultantEvents[xevents];
+    .state.InsertResultantEvents[xevents];
 
-            aids:actions[;1];
-            obs:.state.GetFeatures[aids; 100; step];
-            rwd:.state.GetRewards[aids; 100; step];
-            ifo:.env.Info[aids;step];
+    aids:actions[;1];
+    obs:.state.GetFeatures[aids; 100; step];
+    rwd:.state.GetRewards[aids; 100; step];
+    ifo:.env.Info[aids;step];
+    dns:();
 
-            :(obs;rwd;dns;ifo);
-        ];
-        [
-            
-        ]
-    ];
- 
     .env.CurrentStep+:1;
+    :(obs;rwd;dns;ifo);
+ 
     };
