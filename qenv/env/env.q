@@ -139,6 +139,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
 // Batches are synonymous with episode // TODO train test split
 // TODO test next
+// TODO batch by price movement
 GenNextEpisode    :{
     // If the batch idxs which correspond with the length of an episode are
     // not set create the set of batch idxs.
