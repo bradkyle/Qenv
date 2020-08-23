@@ -89,7 +89,7 @@ test:.qt.Unit[
 
         e:{`time`kind`cmd`datum!x};
 
-        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:`second$(x[0]);m}'[p[3]]));
+        v:`grp xasc (`grp xgroup  raze flip ({m:{`time`intime`kind`cmd`datum!x}'[x[1]]; m[`grp]:((`date$x[0])+(`second$(x[0])));m}'[p[3]]));
 
         :(`actions`eCurrentStep`eStepIndex`eEventBatch`eRes`eAdapt`eProcessEvents,
         `eInsertResultantEvents`eGetFeatures`eGetRewards`eInfo)!(

@@ -235,6 +235,7 @@ liquidationCols:cols LiquidationEventHistory;
 // Recieves a table of events from the engine 
 // and proceeds to insert them into the local historic buffer // TODO validation on events
 // TODO liquidation, settlement, pricerange
+// TODO change to non-dictionary updates
 InsertResultantEvents   :{[events]
     {[events]
         k:first events[`kind];

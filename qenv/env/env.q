@@ -129,16 +129,13 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
 // Probabalistic choice
-PChoice {[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
+// @n: number of choices
+// @k: count of choices
+// @p: probability spread
+PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
-// Batches are synonymous with episode // TODO train test split
-GenNextEpisode    :{
-    // If the batch idxs which correspond with the length of an episode are
-    // not set create the set of batch idxs.
-    // set the batch window intervals above.
-
-    // TODO check day is divisible by batch size? 
-    // TODO missing events at start of events
+// Returns the next batch from the
+getNextBatch    :{[batchIdx]
     if[count[.env.BatchIndex]<1;[ 
         bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
         bidx:update end:next start from bidx;
@@ -146,7 +143,7 @@ GenNextEpisode    :{
         .env.BatchIndex:bidx;
     ]];
 
-    nextBatch:$[
+    :$[
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
         [.env.BatchIndex@rand count[bidx]];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
@@ -155,11 +152,23 @@ GenNextEpisode    :{
         ['NOTIMPLEMENTED];
         ['INVALID_BATCH_SELECTION_METHOD]
     ];
+    }
+
+// Batches are synonymous with episode // TODO train test split
+// TODO test next
+GenNextEpisode    :{
+    // If the batch idxs which correspond with the length of an episode are
+    // not set create the set of batch idxs.
+    // set the batch window intervals above.
+
+    // TODO check day is divisible by batch size? 
+    // TODO missing events at start of events
+    
 
      $[(.env.WindowKind=`.env.WINDOWKIND$`TEMPORAL);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar `second$time from .env.events where time within value[nextBatch]];
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:date+5 xbar `second$time from .env.events where time within value[nextBatch]];
        (.env.WindowKind=`.env.WINDOWKIND$`EVENTCOUNT);
-            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i from .env.events where time within value[nextBatch]];
+            [.env.EventBatch:select time, intime, kind, cmd, datum by grp:5 xbar i,time from .env.events where time within value[nextBatch]];
        (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
             ['NOTIMPLEMENTED];
        ['INVALID_WINDOWING_METHOD]
@@ -238,6 +247,7 @@ Step    :{[actions]
             / feature:FeatureBatch@thresh;
             // should add a common offset to actions before inserting them into
             // the events.
+            tme:$[type idx<>15h; exec first time from nevents; idx];
             aevents:.adapter.Adapt[.env.ADPT;idx;actions]; 
             xevents:.engine.ProcessEvents[(nevents,aevents)];
 
