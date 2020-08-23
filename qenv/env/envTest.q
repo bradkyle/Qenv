@@ -98,7 +98,7 @@ test:.qt.Unit[
 
         / e:{`time`kind`cmd`datum!x};
 
-        / v:`grp xasc (`grp xgroup  raze flip ({m:]; m[`grp]:.envTest.dts[x[0]];m}'[p[3]]));
+        v:`grp xasc (`grp xgroup  raze flip ({m:]; m[`grp]:.envTest.dts[x[0]];m}'[p[5]]));
 
         :(`cCurrentStep`cBatchIndex`cCurrentEpisode`cEventSource`cEvents`eEventBatch`eStepIndex`eThrows)!(
             p[0];
@@ -106,7 +106,7 @@ test:.qt.Unit[
             p[2];
             p[3];
             {`time`intime`kind`cmd`datum!x}'[p[4]];
-            p[5];
+            v;
             p[6];
             p[7]);
     };
