@@ -209,7 +209,7 @@ Reset    :{
     .env.EventBatch:.env.PrimeBatchNum_.env.EventBatch;
     .env.StepIndex:.env.PrimeBatchNum_.env.StepIndex;
 
-    .env.CurrentStep+:1;
+    .env.CurrentStep:0;
     };
 
 

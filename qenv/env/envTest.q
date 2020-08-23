@@ -152,12 +152,10 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        p1:p[`eAdapt];  
+        p1:p[`eSetupEvents];  
         p2:p[`eProcessEvents];  
         p3:p[`eInsertResultantEvents];  
-        p4:p[`eGetFeatures];  
-        p5:p[`eGetRewards];  
-        p6:p[`eInfo];  
+        p4:p[`ePrimeFeatures];  
 
         .qt.M[`.engine.Reset;{};c];
         .qt.M[`.state.Reset;{};c];
@@ -174,10 +172,10 @@ test:.qt.Unit[
         if[count[p[`cPrimeBatchNum]];.env.PrimeBatchNum:p[`cPrimeBatchNum]];
 
         $[all(null[p[`eThrows]]);[
-            res:.env.Step[p[`actions]];
+            res:.env.Reset[p];
             .qt.A[res;~;p[`eRes];"response";c];
         ];[
-            .qt.AT[.env.Step;p[`actions];p[`eThrows];"Step";c];
+            .qt.AT[.env.Reset;();p[`eThrows];"Reset";c];
         ]];
         / show p1;
 
@@ -185,8 +183,6 @@ test:.qt.Unit[
         .qt.MA[mck2;p2[`called];p2[`numCalls];p2[`calledWith];c];
         .qt.MA[mck3;p3[`called];p3[`numCalls];p3[`calledWith];c];
         .qt.MA[mck4;p4[`called];p4[`numCalls];p4[`calledWith];c];
-        .qt.MA[mck5;p5[`called];p5[`numCalls];p5[`calledWith];c];
-        .qt.MA[mck6;p6[`called];p6[`numCalls];p6[`calledWith];c];
 
         // Assertions
     };
