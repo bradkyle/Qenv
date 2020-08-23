@@ -8,6 +8,8 @@
 
 \d .env
 
+
+// TODO config order size, balance randomization prob, 
 Env  :(
         [envId               :`long$()]
         initialBalance      : `float$();

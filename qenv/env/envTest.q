@@ -107,7 +107,7 @@ test:.qt.Unit[
     (
         enlist("step=0 single action account pair ordered by 1 second per step, 5 steps";(
             1; // actions
-            (dtz 0;dtz 1); // step index
+            (doz;dozc 1); // step index
             (
                   (sz 1;sz 1;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
                   (sz 2;sz 2;`DEPTH;`UPDATE;enlist(10001;`BUY;1000));
