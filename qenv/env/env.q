@@ -30,27 +30,22 @@ Env  :(
         currentStep         : `long$();
         stepTime            : `datetime$();
         numFailures         : `long$();
-        numAgentSteps       : `long$()
-    );
+        numAgentSteps       : `long$());
 
-WINDOWKIND :   (`TEMPORAL;        
-                `EVENTCOUNT;          
-                `THRESHCOUNT);   
+WINDOWKIND :  `TEMPORAL`EVENTCOUNT`THRESHCOUNT;   
 
-BATCHSELECTMETHOD :   (`CHRONOLOGICAL;        
-                `RANDOM;          
-                `CURRICULUM); 
+BATCHSELECTMETHOD :`CHRONOLOGICAL`RANDOM`CURRICULUM; 
 
 // TODO episodes
-Episode :{
+Episode :(
         [episodeId               :`long$()]
-        batchIdx:                :`long$();
+        batchIdx                 :`long$();
         batchStart               :`datetime$();
         batchEnd                 :`datetime$();                        
         rewardTotal              :`float$();
         returnQuoteTotal         :`float$();
         returnBaseTotal          :`float$()
-    };
+    );
 
 .env.EventPath:`path;
 .env.EventSource:`events;
@@ -81,8 +76,15 @@ Episode :{
 Config      :{[config]
 
     // Env Config
+        // Create accounts
+        // Create inventory
+        // Create Instrument
+        // Set engine instrument
+    / .engine.Config[];
 
     // Agent Config
+    / env:.env.Env@0;
+
     // - reward kind, 
     // feature kind, 
     // adapter kind, 
@@ -107,7 +109,7 @@ Info        :{[aIds;step]
         :(
             .engine.Info[];
             .state.Info[];
-            .step.CurrentStep
+            .env.CurrentStep
         );
     };
 
@@ -126,20 +128,23 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
+// Probabalistic choice
+P1Choice {[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
+
 // Batches are synonymous with episode // TODO train test split
-GenNextBatch    :{
+GenNextEpisode    :{
     // If the batch idxs which correspond with the length of an episode are
     // not set create the set of batch idxs.
     // set the batch window intervals above.
 
     // TODO check day is divisible by batch size? 
     // TODO missing events at start of events
-    if[count[.env.BatchIndex]<1; 
+    if[count[.env.BatchIndex]<1;[ 
         bidx:select start:(date+(.env.BatchSize xbar `minute$time)) from .env.EventSource;
         bidx:update end:next start from bidx;
         bidx:update end:first[(select last time from events)`time]^end from bidx;
         .env.BatchIndex:bidx;
-    ];
+    ]];
 
     nextBatch:$[
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`RANDOM);
@@ -147,7 +152,7 @@ GenNextBatch    :{
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL);
         [.env.BatchIndex@(.env.CurrentEpisde mod count[.env.BatchIndex])];
        (.env.BatchSelectMethod=`.env.BATCHSELECTMETHOD$`CURRICULUM);
-        [];
+        [0N];
         ['INVALID_BATCH_SELECTION_METHOD]
     ];
 
@@ -161,6 +166,7 @@ GenNextBatch    :{
      ];
 
       // TODO insert feature batch.
+      // TODO upsert new episode with event count etc.
 
      .state.StepIndex: key .env.EventBatch;
     };
@@ -184,7 +190,7 @@ Reset    :{
 
     // Loads the next set of events from 
     // HDB into memory
-    .env.GenNextBatch[]; // TODO check that length is greater than config
+    .env.GenNextEpisode[]; // TODO check that length is greater than config
 
     nvents:.env.PrimeBatchNum#.env.EventBatch;
     aevents:.env.SetupEvents[];
