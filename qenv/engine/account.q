@@ -144,7 +144,7 @@ Withdraw       :{[withdrawn;time;accountId]
         :.account.AddAccountUpdateEvent[accountId;time];
         ];
         [
-            0N; //TODO create failure
+            ; //TODO create failure
         ]
     ];  
     };
@@ -242,15 +242,8 @@ IncSelfFill    :{
 
 // Returns the unrealized profit for the current position considering the current
 // mark price and the average entry price (uses mark price to prevent liquidation).
-unrealizedPnl       :{[avgprice;markprice;amt;faceValue;kind]
-    :$[kind=`INVERSE;
-        (.account.pricePerContract[faceValue;avgprice] - .account.pricePerContract[faceValue;markprice])*amt;
-      kind=`VANILLA;
-        ();
-      kind=`QUANTO;
-        ();
-      () 
-    ];
+unrealizedPnl       :{[avgprice;markprice;amt;faceValue;isignum;isinverse]
+    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(amt*isignum));
     };
 
 // Calculates the realized profit and losses for a given position, size is a positive
