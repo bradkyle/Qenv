@@ -78,6 +78,7 @@ test:.qt.Unit[
         mck6: .qt.M[`.env.Info;{[a;s]};c];
 
         if[count[p[`cStepIndex]];.env.StepIndex:p[`cStepIndex]];
+        if[count[p[`cBatchIndex]];.env.BatchIndex:p[`cBatchIndex]];
         if[count[p[`cCurrentStep]];.env.CurrentStep:p[`cCurrentStep]];
         if[count[p[`cEventBatch]];.env.EventBatch:p[`cEventBatch]];
 

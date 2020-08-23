@@ -28,6 +28,7 @@ formatTable     :{
 / BAM:();
 / FOO:();
 // TODO get memory in profile 
+// TODO create watcher that watches transition in state
 
 // Test
 // ======================================================================>

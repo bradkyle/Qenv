@@ -245,7 +245,7 @@ Step    :{[actions]
     $[.env.CurrentStep<csi;[    
         idx:.env.StepIndex@step;
         nevents:flip[.env.EventBatch@idx];
-        / feature:FeatureBatch@thresh;
+        / feature:FeatureBatch@thresh; // TODO feature batch with noisy offsets
         // should add a common offset to actions before inserting them into
         // the events.
         tme:$[type idx~15h;idx;exec first time from nevents];
