@@ -251,7 +251,7 @@ Step    :{[actions]
         // the events.
         tme:$[type idx~15h;idx;exec first time from nevents];
         // TODO should add offset to action events!!!.
-        // 
+        // TODO should add random withraws, deposits outages etc.
         aevents:.adapter.Adapt[.env.ADPT;idx;actions];
         xevents:.engine.ProcessEvents[(nevents,aevents)];
         // TODO should add offset to resultant events!!!
