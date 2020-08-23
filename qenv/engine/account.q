@@ -100,7 +100,7 @@ NewAccount :{[account;time]
 // This function is accessed by the engine upon a funding event and unilaterally applies
 // an update to all the open position quantites held in the schema/state representation.
 // TODO next funding rate and next funding time (funding time delta)
-ApplyFunding       :{[fundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
+ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
 
     // todo available, frozen
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
