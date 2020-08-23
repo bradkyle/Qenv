@@ -78,32 +78,7 @@ Episode :(
 // sent to it.
 Config      :{[config]
 
-    // Env Config
-        // Create accounts
-        // Create inventory
-        // Create Instrument
-        // Set engine instrument
-    / .engine.Config[];
-
-    // Agent Config
-    / env:.env.Env@0;
-
-    // - reward kind, 
-    // feature kind, 
-    // adapter kind, 
-    // encouragement, 
-    // lookback size
-    // source of events
-    // order size
-    // min inventory
-    // max inventory
-    // training episodes (roughly 8X training sample size)
-    // training sample size
-    // testing sample size
-    // memory size
-    // 
-    // TODO config engine
-
+    
     };
 
 // Derives a dictionary of info pertaining to the agents
@@ -198,6 +173,32 @@ SetupEvents     :{
 
 // TODO validation
 Reset    :{
+    // Env Config
+        // Create accounts
+        // Create inventory
+        // Create Instrument
+        // Set engine instrument
+    / .engine.Config[];
+
+    // Agent Config
+    / env:.env.Env@0;
+
+    // - reward kind, 
+    // feature kind, 
+    // adapter kind, 
+    // encouragement, 
+    // lookback size
+    // source of events
+    // order size
+    // min inventory
+    // max inventory
+    // training episodes (roughly 8X training sample size)
+    // training sample size
+    // testing sample size
+    // memory size
+    // 
+    // TODO config engine
+
     .state.Reset[];
     // TODO randomization of environment config
 
