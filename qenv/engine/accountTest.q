@@ -847,7 +847,30 @@ test:.qt.Unit[
     };();();setupB;
     "The unrealized profit of a given inventory"];
 
-.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Binance) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+
+.qt.AddCase[test;"Inverse (Bitmex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Bitmex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+
+.qt.AddCase[test;"Vanilla (Okex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Vanilla (Okex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+
+.qt.AddCase[test;"Inverse (Okex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Okex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+
+.qt.AddCase[test;"Inverse (Huobi) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"Inverse (Huobi) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 
 // RealizedPnl
@@ -1390,6 +1413,7 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 30/70 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
 
+// TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
 
 // ApplyFill
 // ==================================================================================>
