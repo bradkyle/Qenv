@@ -97,10 +97,21 @@ NewAccount :{[account;time]
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
 // Used to derive the average entry price for a given inventory
-avgPrice        :{[isignum;execCost;totalEntry;isinverse]
-    :0^$[isignum>0;
-        $[isinverse;1e8%floor[execCost%totalEntry];1e8%floor[execCost*totalEntry]];
-        $[isinverse;1e8%ceiling[execCost%totalEntry];1e8%ceiling[execCost*totalEntry]]];
+// TODO add randomization to this!!
+avgPrice        :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
+    :$[(totalEntry>0) and (execCost>0);[
+        :0^$[isinverse;
+            [
+                // If the contract is inverse, i.e. Bitmex
+                p:execCost%totalEntry;
+                :$[isignum>0;1e8%floor[p];1e8%ceiling[p]];
+            ];
+            [   
+                // If the contract is linear i.e. Binance
+                execCost*totalEntry;
+            ]
+        ];
+    ];:0];
     };
 
 // Returns the unrealized profit for the current position considering the current
@@ -175,6 +186,8 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         tmm:0; 
 
         rt:instrument[`riskTiers];
+        rb:instrument[`riskBuffer];
+        isinverse:(instrument[`contractType]=`INVERSE);
 
         // Current Position
         amtB:inventoryB[`amt];
@@ -182,7 +195,7 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         amtS:inventoryS[`amt];
 
         // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()];
+        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()]; // TODO switch on leverage/amount etc.
         lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
         lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];
 
@@ -192,15 +205,17 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         mmS:lmS[`mmr];
 
         // Maintenece Amount
-        cumB: amtB*(mmB+instrument[`riskBuffer]);
-        cumL: amtL*(mmL+instrument[`riskBuffer]);
-        cumS: amtS*(mmS+instrument[`riskBuffer]);
+        cumB: amtB*(mmB+rb);
+        cumL: amtL*(mmL+rb);
+        cumS: amtS*(mmS+rb);
  
         // Derive Average price
         sB:inventoryB[`isignum];
-        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
-        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
-        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
+        epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
+        epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
+        epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
+
+        .qt.BAM:(amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
 
         :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
             %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
@@ -499,7 +514,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 / an entry is added for calculation of average entry
                 / price. 
                 i[`totalEntry]+: abs[qty];
-                i[`execCost]+: floor[1e8%price] * abs[qty]; // TODO make unilaterally applicable.
+
+                i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
 
                 / Calculates the average price of entry for 
                 / the current postion, used in calculating 

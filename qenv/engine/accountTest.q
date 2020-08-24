@@ -804,34 +804,38 @@ deriveCaseParams :{[p]
 
 // AveragePrice
 // ==================================================================================>
-
+// TODO fix // TODO total entry=0, execCost=0 etc.
 test:.qt.Unit[
     ".account.avgPrice";
     {[c]
         p:c[`params];
-        res: .account.avgPrice[p[0];p[1];p[2]];
-        .qt.A[res;=;p[3];c];
+
+        a:p[0];
+        res: .account.avgPrice[a[0];a[1];a[2];a[3]];
+        .qt.A[res;=;p[1];"avgPrice";c];
 
     };();();setupB;
     "The average entry price of a given inventory"];
 
-.qt.AddCase[test;"(Linear) hedged long position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) hedged long position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) hedged short position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) hedged short position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) combined short position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) combined short position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) combined long position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Linear) combined long position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) hedged long position avgPrice one entry";((1;7964637;1000;1b);12556.5)];
+.qt.AddCase[test;"(Linear) hedged long position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Linear) hedged long position avgPrice one entry";((-1;7964637;1000;1b);12554.93)];
+.qt.AddCase[test;"(Linear) hedged short position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Linear) combined short position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Linear) combined short position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Linear) combined long position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Linear) combined long position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
 
-.qt.AddCase[test;"(Inverse) hedged long position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) hedged long position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) hedged short position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) hedged short position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) combined short position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) combined short position avgPrice multiple entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) combined long position avgPrice one entry";(1;100;100;100)];
-.qt.AddCase[test;"(Inverse) combined long position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) hedged long position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) hedged long position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) hedged short position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) hedged short position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) combined short position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) combined short position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) combined long position avgPrice one entry";((1;797e5;100000;1b);12545.5)];
+.qt.AddCase[test;"(Inverse) combined long position avgPrice multiple entry";((1;797e5;100000;1b);12545.5)];
+
+/ .qt.SkpBes[24];
 
 // UnrealizedPnl
 // ==================================================================================>
@@ -841,8 +845,10 @@ test:.qt.Unit[
     {[c]
 
         p:c[`params];
-        res: .account.unrealizedPnl[p[0];p[1];p[2];p[3]];
-        .qt.A[res;=;p[4];c];
+
+        a:p[0];
+        res: .account.unrealizedPnl[a[0];a[1];a[2];a[3]];
+        .qt.A[res;=;p[1];"unrealizedPnl";c];
 
     };();();setupB;
     "The unrealized profit of a given inventory"];
@@ -880,8 +886,9 @@ test:.qt.Unit[
     ".account.realizedPnl";
     {[c]
         p:c[`params]; 
-        res: .account.realizedPnl[p[0];p[1];p[2];p[3]];
-        .qt.A[res;=;p[4];c];   
+        a:p[0];
+        res: .account.realizedPnl[a[0];a[1];a[2];a[3]];
+        .qt.A[res;=;p[1];"realizedPnl";c];   
 
     };();();setupB;
     "The realized profit incurred by placing an order"];
@@ -955,29 +962,32 @@ deriveCaseParams    :{[p]
 
 // Simulation of vanilla contracts
 // vanilla uses
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Long; Warning avg price not accurate";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
-    (`BOTH;55000;1;55e8;55000); // Both Position
+    (`BOTH;1;1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
-    985.84
+    11601.91
     )]];
+
 
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
-    (`BOTH;55000;-1;55e8;55000); // Both Position
+    (`BOTH;1;-1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
-    985.84
+    13501.49
     )]];
+
+.qt.SkpAft[79];
 
 .qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account

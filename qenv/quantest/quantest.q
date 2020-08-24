@@ -156,6 +156,7 @@ runNxtFail  :{
     }
 
 beforeHooks:{[x;y]}; // TODO convert to lambda
+afterHooks:{[x;y]}; // TODO convert to lambda
 
 runTest         :{[test]
     cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
@@ -165,6 +166,7 @@ runTest         :{[test]
     {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)]; // TODO fix messy
     test[`end]:.z.z;
     test[`afterAll][];
+    .qt.afterHooks[""];
     `qt.Test upsert test;
     };
 
@@ -258,6 +260,11 @@ SkpBesTest     :{[test]
     c:$[(type[test]~98h)or(type[test]~99h);test[`testId];test];
     .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where testId<>x;y}[c];
     };
+
+Warn        :{[case]
+    c:$[type[case]~98h;case[`caseId];case];
+    .qt.afterHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId=x;y}[c];
+    }
 
 // Mock
 // ======================================================================>
