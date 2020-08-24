@@ -1453,6 +1453,8 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 30/70 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
 
+
+.qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
 
 // ApplyFill
@@ -2577,4 +2579,4 @@ deriveCaseParams :{[p]
     () // Expected events
     )]];
 
-.qt.RunTests[];
+/ .qt.RunTests[];
