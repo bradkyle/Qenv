@@ -181,6 +181,8 @@ initialMargin      :{[amt;riskTiers;premium] // TODO fix
 // TODO inverse vs quanto vs vanilla
 // The point at which the exchange will force close all orders and shortly
 // thereafter liquidate the position
+// (raze(`isinverse;`rb;`bal;`tmm;`amtB;`amtL;`amtS;`lmB;`lmL;`lmS;`mmB;`mmL;`mmS;`cumB;`cumL;`cumS;`sB;`epB;`epL;`epS))!.qt.BAM
+
 liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance]; // TODO change to margin?
         tmm:0; 
@@ -189,15 +191,28 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         rb:instrument[`riskBuffer];
         isinverse:(instrument[`contractType]=`INVERSE);
 
+        .qt.RT:rt;
+
         // Current Position
         amtB:inventoryB[`amt];
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
 
+        // Derive Average price
+        sB:inventoryB[`isignum];
+        epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
+        epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
+        epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
+
+        $[isinverse;
+            [nvalB:amtB%epB;nvalS:amtS%epS;nvalL:amtL%epL];
+            [nvalB:amtB*epB;nvalS:amtS*epS;nvalL:amtS*epS]
+        ];
+
         // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()]; // TODO switch on leverage/amount etc.
-        lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];
+        lmB:first ?[rt;enlist(>;`mxamt;nvalB); 0b; ()]; // TODO switch on leverage/amount etc.
+        lmL:first ?[rt;enlist(>;`mxamt;nvalL); 0b; ()];
+        lmS:first ?[rt;enlist(>;`mxamt;nvalS); 0b; ()];
 
         // Maintenence margin rate
         mmB:lmB[`mmr];
@@ -209,16 +224,12 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         cumL: amtL*(mmL+rb);
         cumS: amtS*(mmS+rb);
  
-        // Derive Average price
-        sB:inventoryB[`isignum];
-        epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
-        epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
-        epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
+        / .qt.BAM:(isinverse;rb;bal;tmm;amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
 
-        .qt.BAM:(bal;tmm;amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
+        // TODO round to nearest long vs short etc.
 
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
-            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
+        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)+(amtL*epL)-(amtS*epS))
+            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)+(amtL-amtS)));
     };
 
 // The point at which the entirety of the inventories initial margin has been 
@@ -404,6 +415,7 @@ IncSelfFill    :{
 // ORDER Margin
 // -------------------------------------------------------------->
 // Does premium change with changing mark price?
+
 
 // Validates that the account can open the order.
 // Updates the open order state of an account
