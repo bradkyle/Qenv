@@ -150,7 +150,7 @@ maintainenceMargin   :{[amt;riskTiers;riskBuffer]
 // charged on the difference between the current price and the mark price of the contract.
 // Initial margin is generally above maintenece margin .i.e. it requires more margin than
 // the maintenence margin rate.
-initialMargin      :{[amt;riskTiers;riskBuffer]
+initialMargin      :{[amt;riskTiers;premium] // TODO fix
     // Derive risk limit
     lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
 
@@ -161,7 +161,7 @@ initialMargin      :{[amt;riskTiers;riskBuffer]
 
     // Maintenence amount
     // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :amt*(imr+()); // TODO derive premium
+    :amt*(imr+premium); // TODO derive premium
     };
 
 // TODO inverse vs quanto vs vanilla
@@ -479,7 +479,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
                 / Calculates the average price of entry for the current postion, used in calculating 
                 / realized and unrealized pnl.
-                i[`avgPrice]: .account.avgPrice[i[`isignum];i[`execCost];i[`totalEntry];isinverse];
+                i[`avgPrice]: .account.avgPrice[
+                    i[`isignum];
+                    i[`execCost];
+                    i[`totalEntry];
+                    isinverse];
+                    
                 i[`unrealizedPnl]:.account.unrealizedPnl[
                     i[`avgPrice];
                     markPrice;
