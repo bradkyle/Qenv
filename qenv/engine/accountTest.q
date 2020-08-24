@@ -1339,15 +1339,26 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"hedged: 70% long and 30% short position, open buy, with open (buy/sell) 50/50 orders";deriveCaseParams[()]];
 
 .qt.AddCase[test;"hedged: no positions, open sell";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 70/30 open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 30/70 open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: full long position, open sell";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: full short position, open sell";deriveCaseParams[()]];
-.qt.AddCase[test;"hedged: 70% long and 30% short position, open sell";deriveCaseParams[()]];
-.qt.AddCase[test;"hedged: 30% long and 70% short position, open sell";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 70/30 open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 30/70 open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: full short position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: 70% long and 30% short position, open sell no open orders";deriveCaseParams[()]];
+.qt.AddCase[test;"hedged: 30% long and 70% short position, open sell no open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: 70% long and 30% short position, open sell, with open (buy/sell) 70/30 orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: 30% long and 70% short position, open sell, with open (buy/sell) 30/70 orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: 70% long and 30% short position, open sell, with open (buy/sell) 50/50 orders";deriveCaseParams[()]];
 
-
+.qt.AddCase[test;"combined: no positions, open sell";deriveCaseParams[()]];
+.qt.AddCase[test;"combined: full long position, open sell";deriveCaseParams[()]];
+.qt.AddCase[test;"combined: full short position, open sell";deriveCaseParams[()]];
+.qt.AddCase[test;"combined: 70% long and 30% short position, open sell, with open (buy/sell) 70/30 orders";deriveCaseParams[()]];
+.qt.AddCase[test;"combined: 30% long and 70% short position, open sell, with open (buy/sell) 30/70 orders";deriveCaseParams[()]];
+.qt.AddCase[test;"combined: 70% long and 30% short position, open sell, with open (buy/sell) 50/50 orders";deriveCaseParams[()]];
 
 
 
