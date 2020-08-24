@@ -99,8 +99,8 @@ NewAccount :{[account;time]
 // Used to derive the average entry price for a given inventory
 avgPrice        :{[isignum;execCost;totalEntry;isinverse]
     :0^$[isignum>0;
-        $[isinverse;1e8%floor[execCost%totalEntry];0];
-        $[isinverse;1e8%ceiling[execCost%totalEntry];0]];
+        $[isinverse;1e8%floor[execCost%totalEntry];1e8%floor[execCost*totalEntry]];
+        $[isinverse;1e8%ceiling[execCost%totalEntry];1e8%ceiling[execCost*totalEntry]]];
     };
 
 // Returns the unrealized profit for the current position considering the current
