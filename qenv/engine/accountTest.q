@@ -1401,7 +1401,9 @@ deriveCaseParams :{[p]
     };
 
 .qt.AddCase[test;"hedged: no positions, open buy";deriveCaseParams[(
-
+        (); // Account
+        (); // Instrument
+        (`SELL;1000;100;1b;);
     )]];
 
 
