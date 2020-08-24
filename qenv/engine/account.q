@@ -432,6 +432,8 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // derive the 
     openloss:qty * abs[min[0,(isignum*(markprice-price))]];
 
+    / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
+    / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
     // open buy order qty
     // open buy premium
@@ -463,7 +465,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 // TODO make global enums file
 // TOD7,776e+6/1000
 // TODO make simpler
-// TODO update applicable fee when neccessary
+// TODO update applicable fee when neccessary // TODO convert accountId/instrumentId to dictionary
 ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
     qty:abs[qty];
 
