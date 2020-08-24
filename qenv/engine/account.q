@@ -131,28 +131,31 @@ realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
 
 // Calculates the amount of margin required to keep a position open, if the account no longer 
 // has this margin available, the position will be liquidated.
-maintainenceMargin   :{[amt;instrument]
+// @amt: the size of the position
+// @riskTiers: The table of risk tiers
+// @riskBuffer: Additional risk buffer coefficient
+maintainenceMargin   :{[amt;riskTiers;riskBuffer]
     // Derive risk limit
-    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+    lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
     
     // Maintenence margin rate
     mm:lm[`mmr];
 
     // Maintenence amount
     // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :amt*(mm+instrument[`riskBuffer]);
+    :amt*(mm+riskBuffer);
     };
 
 // Calculates the amount of margin required to initialize a position, including the premium 
 // charged on the difference between the current price and the mark price of the contract.
 // Initial margin is generally above maintenece margin .i.e. it requires more margin than
 // the maintenence margin rate.
-initialMargin      :{[]
+initialMargin      :{[amt;riskTiers;riskBuffer]
     // Derive risk limit
-    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
+    lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
 
     // Initial margin rate
-    imr:lm[`mmr];
+    imr:lm[`imr];
 
     // TODO gross open premium
 
@@ -419,6 +422,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     ins:.instrument.Instrument@instrumentId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
 
+    isinverse: instrument[`contractType]=`INVERSE;
+
     $[acc[`positionType]=`HEDGED;
         $[reduceOnly;
             [
@@ -474,8 +479,14 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
                 / Calculates the average price of entry for the current postion, used in calculating 
                 / realized and unrealized pnl.
-                i[`avgPrice]: .account.avgPrice[i;side];
-                i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
+                i[`avgPrice]: .account.avgPrice[i[`isignum];i[`execCost];i[`totalEntry];isinverse];
+                i[`unrealizedPnl]:.account.unrealizedPnl[
+                    i[`avgPrice];
+                    markPrice;
+                    i[`amt];
+                    ins[`faceValue];
+                    i[`isignum];
+                    isinverse];
 
                 i[`entryValue]:i[`amt]%i[`avgPrice];
                 i[`initMargin]:i[`entryValue]%acc[`leverage];
