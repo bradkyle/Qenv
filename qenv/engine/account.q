@@ -171,15 +171,17 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance]; // TODO change to margin?
         tmm:0; 
 
+        rt:instrument[`riskTiers];
+
         // Current Position
         amtB:inventoryB[`amt];
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
 
         // Derive risk limits
-        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()];
-        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];
+        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()];
+        lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
+        lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];
 
         // Maintenence margin rate
         mmB:lmB[`mmr];
@@ -392,7 +394,12 @@ IncSelfFill    :{
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
 UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
-
+    ![`.account.Account;
+            enlist (=;`accountId;x);
+            0b;`selfFillCount`selfFillVolume!(
+                (+;`selfFillCount;y);
+                (+;`selfFillVolume;z)
+            )];};
     };
 
 
@@ -477,14 +484,15 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 i[`totalEntry]+: abs[qty];
                 i[`execCost]+: floor[1e8%price] * abs[qty]; // TODO make unilaterally applicable.
 
-                / Calculates the average price of entry for the current postion, used in calculating 
+                / Calculates the average price of entry for 
+                / the current postion, used in calculating 
                 / realized and unrealized pnl.
                 i[`avgPrice]: .account.avgPrice[
                     i[`isignum];
                     i[`execCost];
                     i[`totalEntry];
                     isinverse];
-                    
+
                 i[`unrealizedPnl]:.account.unrealizedPnl[
                     i[`avgPrice];
                     markPrice;
@@ -494,8 +502,11 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     isinverse];
 
                 i[`entryValue]:i[`amt]%i[`avgPrice];
+
                 i[`initMargin]:i[`entryValue]%acc[`leverage];
+                
                 i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                
                 i[`maintMargin]:.account.maintainenceMargin[i;ins];
 
                 lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
