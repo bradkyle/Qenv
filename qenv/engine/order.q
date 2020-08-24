@@ -75,15 +75,15 @@ isActiveLimit:{:((>;`size;0);
 
 // TODO remove cols
 // TODO clean
-AddNewOrderEvent   :{[order;time]
+AddNewOrderEvent   :{[order;time] // TODO convert to list instead of dict
     :.event.AddEvent[time;`NEW;`ORDER;order];
     }
 
-AddUpdateOrderEvent :{[order;time]
+AddUpdateOrderEvent :{[order;time] // TODO convert to list instead of dict
     :.event.AddEvent[time;`UPDATE;`ORDER;order];
     }
  
-AddCancelOrderEvent :{[order;time]
+AddCancelOrderEvent :{[order;time] // TODO convert to list instead of dict
     :.event.AddEvent[time;`DELETE;`ORDER;order];
     }
 
@@ -109,16 +109,16 @@ bestBid:{exec max price from .order.OrderBook where side=`BUY};
 bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 bestSidePrice:{$[x=`SELL;:bestAsk[];bestBid[]]};
 
-DeriveThenAddDepthUpdateEvent :{[time] // TODO check
+DeriveThenAddDepthUpdateEvent :{[time] // TODO check // TODO convert to list instead of dict
     :.event.AddEvent[time;`UPDATE;`DEPTH;(select price,side,vqty from .order.OrderBook)];
     };
 
-AddDepthUpdateEvent :{[depth;time]
-    :.event.AddEvent[time;`UPDATE;`DEPTH;(`side`price`size!depth)];
+AddDepthUpdateEvent :{[depth;time] // TODO convert to list instead of dict
+    :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
     };
 
-AddTradeEvent  :{[trade;time]
-    :.event.AddEvent[time;`NEW;`TRADE;(`side`price`size!trade)];
+AddTradeEvent  :{[trade;time] // TODO convert to list instead of dict
+    :.event.AddEvent[time;`NEW;`TRADE;trade];
     };
 
 // Orderbook Utilities

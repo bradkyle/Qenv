@@ -62,12 +62,12 @@ allCols:cols Account;
 // Event creation utilities
 // -------------------------------------------------------------->
 
-AddAccountUpdateEvent  :{[time;account]
+AddAccountUpdateEvent  :{[time;account] // TODO convert to list instead of dict
     // TODO check if value is null
     :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
     };
 
-AddAllAccountsUpdatedEvents :{[time]
+AddAllAccountsUpdatedEvents :{[time] // TODO convert to list instead of dict
     :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
     };
 
