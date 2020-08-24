@@ -1374,15 +1374,12 @@ test:.qt.Unit[
 // ==================================================================================>
 
 test:.qt.Unit[
-    ".account.UpdateOrderMargin";
+    ".account.UpdateInitialMargin";
     {[c]
         p:c[`params];
-        setupInstrument[p];
-        setupAccount[p];
-        setupInventory[p];
 
         f:p[`fill];
-        .account.UpdateOrderMargin[
+        .account.UpdateInitialMargin[
             f[`side];
             f[`price];
             f[`size];
@@ -1404,7 +1401,7 @@ deriveCaseParams :{[p]
         (); // Account
         (); // Instrument
         (`SELL;1000;100;1b;);
-        (); // Expected Accountq
+        () // Expected Account
     )]];
 
 

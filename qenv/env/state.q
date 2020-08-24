@@ -128,6 +128,7 @@ CurrentOrders: (
     trigger         :   `symbol$();
     execInst        :   `symbol$());
 ordCols:cols .state.OrderEventHistory;
+clOrdCount:0;
 
 // Get the current qtys at each order level
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
@@ -146,9 +147,7 @@ getOrders   :{
         where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;    
     };
 
-genNextClOrdId  :{
-
-    };
+genNextClOrdId  :{.state.clOrdCount+:1;:.state.clOrdCount};
 
 // DEPTH
 // ----------------------------------------------------------------------------------------------->

@@ -426,7 +426,7 @@ IncSelfFill    :{
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-UpdateOrderMargin    :{[side;price;size;reduceOnly;account;instrument]
+UpdateInitialMargin    :{[side;price;size;reduceOnly;account;instrument]
     // open buy order qty
     // open buy premium
     // open sell order qty

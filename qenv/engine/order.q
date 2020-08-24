@@ -544,7 +544,7 @@ NewOrder       : {[o;time];
                     // add orderbook references
                     // todo if there is a row at price and qty is greater than zero
                     // TODO 
-                    .account.UpdateOrderMargin[
+                    .account.UpdateInitialMargin[
                         o[`side];
                         o[`price];
                         o[`size];
