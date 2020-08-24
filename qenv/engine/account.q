@@ -413,7 +413,8 @@ UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
             0b;`selfFillCount`selfFillVolume!(
                 (+;`selfFillCount;y);
                 (+;`selfFillVolume;z)
-            )];};
+            )];
+            
     };
 
 
