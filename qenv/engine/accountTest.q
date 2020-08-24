@@ -815,8 +815,23 @@ test:.qt.Unit[
     };();();setupB;
     "The average entry price of a given inventory"];
 
-.qt.AddCase[test;"";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) hedged long position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) hedged long position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) hedged short position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) hedged short position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) combined short position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) combined short position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) combined long position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Linear) combined long position avgPrice multiple entry";(1;100;100;100)];
 
+.qt.AddCase[test;"(Inverse) hedged long position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) hedged long position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) hedged short position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) hedged short position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) combined short position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) combined short position avgPrice multiple entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) combined long position avgPrice one entry";(1;100;100;100)];
+.qt.AddCase[test;"(Inverse) combined long position avgPrice multiple entry";(1;100;100;100)];
 
 // UnrealizedPnl
 // ==================================================================================>
@@ -1374,8 +1389,6 @@ deriveCaseParams :{[p]
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 70/30 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 30/70 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
-
-
 
 
 // ApplyFill
