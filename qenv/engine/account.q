@@ -164,7 +164,7 @@ initialMargin      :{[amt;riskTiers;premium] // TODO fix
 
     // Maintenence amount
     // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :amt*(imr+premium); // TODO derive premium
+    :(amt*imr)+(amt * premium); // TODO derive premium
     };
 
 // TODO inverse vs quanto vs vanilla
@@ -212,15 +212,17 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
         bal:account[`balance];
         tmm:0; 
 
+        rt:instrument[`riskTiers];
+
         // Current Position
         amtB:inventoryB[`amt];
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
 
         // Derive risk limits
-        lmB:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
-        lmL:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[instrument[`riskTiers];enlist(>;`mxamt;amtS); 0b; ()];        
+        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
+        lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
+        lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];        
 
         // Initial margin rate
         imrB:lmB[`imr]; 

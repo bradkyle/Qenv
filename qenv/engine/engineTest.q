@@ -65,3 +65,19 @@ test:.qt.Unit[
 
 // TODO engine integration tests i.e. on real data
 // TODO test that live data generates same state
+
+// Bitmex
+
+events:();
+
+
+// Okex
+
+events:();
+
+
+// Binance
+
+events:();
+
+// Huobi
