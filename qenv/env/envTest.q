@@ -188,7 +188,7 @@ test:.qt.Unit[
             );
             (dtz 0;dtz 1); // step index
             0N
-        ));
+        ))
     );
     ({};{};defaultEnvEach;defaultEnvEach);
     ("Derives a feature vector for each account, inserts it into a feature buffer ",
