@@ -150,6 +150,9 @@ maintainenceMargin   :{[amt;riskTiers;riskBuffer]
 // charged on the difference between the current price and the mark price of the contract.
 // Initial margin is generally above maintenece margin .i.e. it requires more margin than
 // the maintenence margin rate.
+// @amt: the size of the position
+// @riskTiers: The table of risk tiers
+// @premium: The premium charged 
 initialMargin      :{[amt;riskTiers;premium] // TODO fix
     // Derive risk limit
     lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
@@ -265,6 +268,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 // Balance Management
 // -------------------------------------------------------------->
 
+// Adds a given amount to the accounts balance.
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     update 
@@ -394,6 +398,16 @@ IncSelfFill    :{
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
 UpdateOrderMargin    :{[side;price;size;reduceOnly;accountId]
+    // open buy order qty
+    // open buy premium
+    // open sell order qty
+    // open sell order premium
+    // order margin
+    // liquidation price
+    // bankrupt price
+    // available
+    // maintMargin
+    // frozen
     ![`.account.Account;
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
