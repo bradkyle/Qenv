@@ -426,7 +426,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 i:.account.Inventory@(accountId;HedgedNegSide[side]);
                 oi:.account.Inventory@(accountId;HedgedSide[side]);
 
-                if[size>i[`amt];:.event.AddFailure[]];
+                if[size>i[`amt];:.event.AddFailure[]]; // TODO error
 
                 cost:qty*fee;
                 rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
