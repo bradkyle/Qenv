@@ -962,8 +962,8 @@ deriveCaseParams    :{[p]
 
 // Simulation of vanilla contracts
 // vanilla uses
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long; Warning avg price not accurate";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Long (first level)";deriveCaseParams[(
+    (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;1;1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
@@ -974,9 +974,8 @@ deriveCaseParams    :{[p]
     11601.91
     )]];
 
-
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
+.qt.AddCase[test;"Vanilla (Binance) Combined Full Short (first level)";deriveCaseParams[(
+    (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;1;-1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
@@ -987,55 +986,31 @@ deriveCaseParams    :{[p]
     13501.49
     )]];
 
-.qt.SkpAft[79];
-
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
-    (`BOTH;55000;1;55e8;55000); // Both Position
-    (`LONG;0;0;0;0); // Long Position 
-    (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
-    )];0;1;0.01;0.001); // Instrument
-    985.84
-    )]];
-
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
-    (`BOTH;55000;-1;55e8;55000); // Both Position
-    (`LONG;0;1;0;0); // Long Position 
-    (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
-    )];0;1;0.01;0.001); // Instrument
-    985.84
-    )]];
-
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long (first level)";deriveCaseParams[(
+    (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
-    (`LONG;55000;1;55e8;55000); // Long Position 
+    (`LONG;1;1;7964.637;1); // Long Position price:12555.5
     (`SHORT;0;0;0;0); // Short Position
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
-    985.84
+    11601.91
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short";deriveCaseParams[(
-    (1e3;1;`HEDGED;25); // Account
+.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short (first level)";deriveCaseParams[(
+    (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
-    (`LONG;0;0;0;0); // Long Position 
-    (`SHORT;55000;1;55e8;55000); // Short Position
+    (`LONG;0;0;0;0); // Long Position price:12555.5
+    (`SHORT;1;-1;7964.637;1); // Short Position
     (`VANILLA;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
-    985.84
+    13501.49
     )]];
+
+.qt.SkpAft[80];
 
 // TODO half short etc.
 

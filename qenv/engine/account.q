@@ -100,7 +100,7 @@ NewAccount :{[account;time]
 // TODO add randomization to this!!
 avgPrice        :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
     :$[(totalEntry>0) and (execCost>0);[
-        :0^$[isinverse;
+        :$[isinverse;
             [
                 // If the contract is inverse, i.e. Bitmex
                 p:execCost%totalEntry;
@@ -108,7 +108,7 @@ avgPrice        :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceil
             ];
             [   
                 // If the contract is linear i.e. Binance
-                execCost*totalEntry;
+                :1e8%(execCost*totalEntry);
             ]
         ];
     ];:0];
@@ -215,7 +215,7 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
         epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
 
-        .qt.BAM:(amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
+        .qt.BAM:(bal;tmm;amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
 
         :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
             %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)-(amtL+amtS)));
@@ -240,9 +240,9 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
         lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];        
 
         // Initial margin rate
-        imrB:lmB[`imr]; 
-        imrL:lmL[`imr];
-        imrS:lmS[`imr];
+        imrB:lmB[`imr]; // TODO change this to the positions initial margin  
+        imrL:lmL[`imr]; // TODO change this to the positions initial margin
+        imrS:lmS[`imr]; // TODO change this to the positions initial margin
 
         // Maintenece Amount
         cumB: amtB*imrB;
