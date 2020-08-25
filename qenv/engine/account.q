@@ -450,7 +450,10 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // If one places a buy order above the mark price or a sell order
     // below the mark price, the execution of this order at that price
     // would incur a loss with respect to the mark price at that instant
-    // This would infer that margin needs to allow for this loss.q
+    // This would infer that margin needs to allow for this loss.
+    // Essentially the only difference between the initialMargin of the
+    // orders and the initial margin of the positions is that one needs
+    // to cross the spread in order to release the latter.
 
     (abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
      abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)])
