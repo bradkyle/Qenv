@@ -432,7 +432,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
-    premium:abs[min[0,(isignum*(markprice-price))]];
+    openloss:qty * abs[min[0,(isignum*(markprice-price))]];
 
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
@@ -453,7 +453,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // This would infer that margin needs to allow for this loss.
     // Essentially the only difference between the initialMargin of the
     // orders and the initial margin of the positions is that one needs
-    // to cross the spread in order to release the latter.
+    // to cross the spread in order to release the latter. 
 
     (abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
      abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)])
@@ -462,6 +462,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()];
     imr:lm[`imr];
+
     
 
     // open buy order qty

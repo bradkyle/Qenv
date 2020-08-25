@@ -81,3 +81,16 @@ Exploration rate (ε) 0.7
 Order size (ω) 1000
 Min inventory (min Inv) -10000
 Max inventory (max Inv) 10000
+
+No problem, I just need to find a solution
+Specifically with respect to the article, the open loss is incurred as the difference 
+between the current mark price and the limit price of the orders
+the mark price changes and surely as such the open loss should change
+if one were to open a given buy order when there were already 4 unfavorably placed buy orders, 
+one would need to know the sum of the open loss of the other orders at that instant
+This article is also insufficient. i.e. the available margin isn't only affected by initial
+margin requirements of the open orders, it is also affected by the sum of the loss of 
+the unfavorably placed orders. How does one calculate this loss?
+This article is also insufficient. i.e. the available margin isn't only affected by initial 
+margin requirements of the open orders, it is also affected by the sum of the loss of the 
+unfavorably placed orders. How does one calculate this loss?
