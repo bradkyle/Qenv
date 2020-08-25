@@ -437,10 +437,14 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
         newOpenBuyOrderQty:account[`openBuyOrderQty]+dlt;
+        newOpenSellPremium:account[`openSellPremium];
+        newOpenSellOrderQty:account[`openSellOrderQty];
     ];
     [
         newOpenSellPremium:account[`openSellPremium]+premium;
         newOpenSellOrderQty:account[`openSellOrderQty]+dlt;
+        newOpenBuyPremium:account[`openBuyPremium];
+        newOpenBuyOrderQty:account[`openBuyOrderQty];
     ]];
 
 
