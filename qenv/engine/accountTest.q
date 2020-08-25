@@ -1378,13 +1378,8 @@ test:.qt.Unit[
     {[c]
         p:c[`params];
 
-        f:p[`fill];
-        .account.UpdateInitialMargin[
-            f[`side];
-            f[`price];
-            f[`size];
-            f[`reduceOnly];
-            f[`accountId]];
+        a:p[`args];
+        .account.UpdateInitialMargin[a til[4]];
         
         // Assertions
         checkAccount[p;c];
@@ -1394,7 +1389,17 @@ test:.qt.Unit[
     "Updates a given accounts order margin when it has enough margin etc. else returns error/failure"];
 
 deriveCaseParams :{[p]
+    icols:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier);    
+
+    // Construct Current Account
+    acols:(`accountId`positionType`balance`available`frozen`orderMargin`posMargin);
     
+    :`cAccount`cInstrument`args`eAccount!(
+        acols!p[0];
+        icols!p[1];
+        p[2];
+        acols!p[3]
+    );
     };
 
 .qt.AddCase[test;"hedged: no positions, open buy";deriveCaseParams[(
