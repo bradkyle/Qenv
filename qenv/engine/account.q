@@ -434,6 +434,14 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // derive the 
     openloss:qty * abs[min[0,(isignum*(markprice-price))]];
 
+    $[isignum>0;[
+        newOpenBuyPremium
+    ];
+    [
+
+    ]];
+
+
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
