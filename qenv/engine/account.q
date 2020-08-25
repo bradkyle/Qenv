@@ -432,7 +432,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
-    premium:qty * abs[min[0,(isignum*(markprice-price))]];
+    premium:abs[min[0,(isignum*(markprice-price))]];
 
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
