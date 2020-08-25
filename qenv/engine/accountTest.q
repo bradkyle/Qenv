@@ -1408,10 +1408,6 @@ deriveCaseParams :{[p]
         (0;`HEDGED;500;500;0;0;0) // Expected Account
     )]];
 
-
-
-
-
 .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 70/30 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 30/70 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 50/50 open orders";deriveCaseParams[()]];

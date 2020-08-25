@@ -421,6 +421,8 @@ IncSelfFill    :{
 // Updates the open order state of an account
 // Updates an accounts order margin, open order amount, order premium 
 // netLongPosition/netShortPosition
+// used when opening a position
+// used when cancelling orders, placing new orders
 // @delta      : the amount by which the order quantity is to be changed.
 // @side       : the side that is to be updated by the order.
 // @price      : the price of the given order.
