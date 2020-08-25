@@ -1401,12 +1401,21 @@ deriveCaseParams :{[p]
         acols!p[3]);
     };
 
-.qt.AddCase[test;"hedged: no positions, open buy";deriveCaseParams[(
+.qt.AddCase[test;"hedged: no positions, open buy below mark price";deriveCaseParams[(
         (0;`HEDGED;500;500;0;0;0); // Account
         (0;0.5;1e9;0f;1e6f;0f;100); // Instrument
         (`SELL;1000;100;1b;);
         (0;`HEDGED;500;500;0;0;0) // Expected Account
     )]];
+
+
+.qt.AddCase[test;"hedged: no positions, open buy above mark price";deriveCaseParams[(
+        (0;`HEDGED;500;500;0;0;0); // Account
+        (0;0.5;1e9;0f;1e6f;0f;100); // Instrument
+        (`SELL;1000;100;1b;);
+        (0;`HEDGED;500;500;0;0;0) // Expected Account
+    )]];
+
 
 .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 70/30 open orders";deriveCaseParams[()]];
 .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 30/70 open orders";deriveCaseParams[()]];
