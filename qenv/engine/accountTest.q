@@ -1398,8 +1398,7 @@ deriveCaseParams :{[p]
         acols!p[0];
         icols!p[1];
         p[2];
-        acols!p[3]
-    );
+        acols!p[3]);
     };
 
 .qt.AddCase[test;"hedged: no positions, open buy";deriveCaseParams[(
