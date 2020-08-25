@@ -447,10 +447,19 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
         newOpenBuyOrderQty:account[`openBuyOrderQty];
     ]];
 
+    // If one places a buy order above the mark price or a sell order
+    // below the mark price, the execution of this order at that price
+    // would incur a loss with respect to the mark price at that instant
+    // This would infer that margin needs to allow for this loss.q
+
     (abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
      abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)])
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
+
+    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()];
+    imr:lm[`imr];
+    
 
     // open buy order qty
     // open buy premium
