@@ -447,7 +447,7 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
         newOpenBuyOrderQty:account[`openBuyOrderQty];
     ]];
 
-
+    abs[(newOpenBuyPremium * sum[])] + abs[]
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
