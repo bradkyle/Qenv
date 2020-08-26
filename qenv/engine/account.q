@@ -470,10 +470,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     amt:max[account[`netLongPosition],account[`netShortPosition]];
 
-    // TODO select by leverage etc as well
-    // THIS 
-    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()]; // make into seperate function
-    imr:lm[`imr];
+    
 
     / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 
     / when opening an order at an unfavorable price with respect to the mark price serves to 
@@ -487,7 +484,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Is my assumption about the changing premium correct in this regard? Thanks
     
     oval:(newOpenBuyOrderQty+newOpenSellOrderQty)*instrument[`markPrice];
-    orderMargin:(imr*oval);
+    orderMargin:oval%account[`leverage];
     account[`orderMargin]: + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
 
