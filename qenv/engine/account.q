@@ -515,8 +515,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
                     newOpenBuyOrderQty;
                     newOpenBuyPremium;
                     grossOpenPremium;
-                    newOrderMargin;
-                    `long$(1e8*newAvailable);
+                    `long$(1e8*newOrderMargin);
+                    `long$(1e8*newAvailable); // TODO change to multiplier
                     0
                 )];
     ];['INSUFFICIENT_MARGIN]];
