@@ -459,9 +459,11 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 
     // equity = balance + unrealized pnl
 
-    grossOpenPremium:(abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
-     abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)]);
-     
+    grossOpenPremium:(
+        abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
+        abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)]
+    );
+
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
