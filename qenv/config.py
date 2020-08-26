@@ -14,3 +14,7 @@ class Inventory():
 class Instrument():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+class Engine():
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
