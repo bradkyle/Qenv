@@ -295,7 +295,7 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
         
         `.order.Order upsert ordUpd;
 
-        // update 
+        // update isignum, price, qty, account, instrument
 
         // TODO Update the new open cost of the orders with respect to the mark price 
 
