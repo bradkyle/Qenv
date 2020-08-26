@@ -449,7 +449,7 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
 
     // TODO add conversions
-    $[isignum>0;[
+    $[(isignum>0) and (premium>0);[
         account[`openBuyPremium]+:premium;
         account[`openBuyQty]+:qty; 
         account[`openBuyValue]+:`long$(price*qty);
