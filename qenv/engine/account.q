@@ -515,9 +515,9 @@ AddMargin    :{[isignum;price;qty;account;instrument]
         // Available/frozen/withdrawable
         ![`.account.Account;
                 enlist (=;`accountId;account[`accountId]);0b;
-                (`openSellOrderQty`openSellPremium,
-                  `openBuyOrderQty`openBuyPremium`grossOpenPremium,
-                  `orderMargin`available`withdrawable)!(
+                (`openSellQty`openSellPremium`openSellValue`openSellCost,
+                  `openBuyQty`openBuyPremium`openBuyValue`openBuyCost,
+                  `grossPremium`orderMargin`available`withdrawable)!(
                     newOpenSellOrderQty;
                     newOpenSellPremium;
                     newOpenBuyOrderQty;
