@@ -432,7 +432,8 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
-    openloss:qty * abs[min[0,(isignum*(markprice-price))]];
+    premium:abs[min[0,(isignum*(markprice-price))]];
+    openloss:qty * premium;
 
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
@@ -454,8 +455,11 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // Essentially the only difference between the initialMargin of the
     // orders and the initial margin of the positions is that one needs
     // to cross the spread in order to release the latter. 
+    // Open order cost 
 
-    (abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
+    // equity = balance + unrealized pnl
+
+    grossOpenPremium:(abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
      abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)])
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
@@ -463,7 +467,16 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()];
     imr:lm[`imr];
 
-    
+    / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 
+    / when opening an order at an unfavorable price with respect to the mark price serves to 
+    / reference the loss that would be incurred by this order when it is filled. 
+    / My first assumption would be that okex would update this premium with the new mark 
+    / price when the mark price changes? i.e. 4 buy orders are placed unfavorably with respect 
+    / to the mark price, they incur a loss expressed by the premium. Presumably when the mark 
+    / price changes, this associated loss changes. How does one calculate the sum of this loss 
+    / expressed as a function of the difference between the order prices and the mark price 
+    / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
+    / Is my assumption about the changing premium correct in this regard? Thanks
 
     // open buy order qty
     // open buy premium
