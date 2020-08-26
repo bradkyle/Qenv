@@ -495,7 +495,7 @@ AddMargin    :{[isignum;price;qty;account;instrument]
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
     account[`orderMargin]:(account[`openBuyValue]+account[`openSellValue])%account[`leverage];
-    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openCost]);
+    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openCost]);
 
     .qt.ACC:account;
     / .qt.OM:omc!(account);
