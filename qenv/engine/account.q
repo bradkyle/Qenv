@@ -31,6 +31,8 @@ Account: (
             openSellValue       : `long$();
             openSellQty         : `long$();
             openSellPremium     : `long$();
+            grossOpenPremium    : `long$();
+            openCost            : `long$();
             orderMargin         : `long$();
             marginType          : `.account.MARGINTYPE$();
             positionType        : `.account.POSITIONTYPE$();
@@ -60,7 +62,7 @@ Account: (
             leverage            : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -442,22 +444,22 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
     // derive next amount
     // derive the 
-    premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]]; // TODO avg price
-    openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
+    premium:`long$(abs[min[0,(isignum*(instrument[`markPrice]-price))]]); // TODO avg price
+    / openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
 
     // TODO add conversions
     $[isignum>0;[
         account[`openBuyPremium]+:premium;
         account[`openBuyQty]+:qty; 
-        account[`openBuyValue]+:(price*qty);
-        account[`openBuyCost]+:(premium*qty);
+        account[`openBuyValue]+:`long$(price*qty);
+        account[`openBuyCost]+:`long$(premium*qty);
     ];
     [
         account[`openSellPremium]+:premium;
         account[`openSellQty]+:qty; 
-        account[`openSellValue]+:(price*qty);
-        account[`openSellCost]+:(premium*qty);
+        account[`openSellValue]+:`long$(price*qty);
+        account[`openSellCost]+:`long$(premium*qty);
     ]];
 
 
@@ -473,13 +475,13 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
     // equity = balance + unrealized pnl
 
-    account[`grossOpenPremium]:(
+    account[`grossOpenPremium]:`long$(
         (abs[(account[`openSellPremium] * (sum[account[`netLongPosition], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0) + 
         (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0));
 
-    account[`openCost]:(sum[account`openSellCost`openBuyCost] | 0);
+    account[`openCost]:`long$(sum[account`openSellCost`openBuyCost] | 0);
 
-    amt:max[account`netLongPosition`netShortPosition];
+    / amt:max[account`netLongPosition`netShortPosition];
 
     // TODO get maximum position for set leverage
     
@@ -500,8 +502,8 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
-    account[`orderMargin]:(account[`openBuyValue]+account[`openSellValue])%account[`leverage];
-    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openCost]);
+    account[`orderMargin]:`long$((account[`openBuyValue]+account[`openSellValue])%account[`leverage]);
+    account[`available]:`long$(account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openCost]));
 
     .qt.ACC:account;
     / .qt.OM:omc!(account);
