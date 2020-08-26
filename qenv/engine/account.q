@@ -778,6 +778,16 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
 
 UpdateMarkPrice : {[mp;instrumentId;time]
+    / https://www.bitmex.com/app/liquidationExamples
+    / https://www.bitmex.com/app/liquidation
+    / https://www.bitmex.com/app/wsAPI#Deleverage
+    / https://www.bitmex.com/app/wsAPI#Liquidation
+    / https://huobiglobal.zendesk.com/hc/en-us/articles/360000143042-Partial-Liquidation-of-Futures
+    / https://www.okex.com/academy/en/full-liquidation
+    / https://www.binance.com/en/support/faq/360033525271
+    / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
+
+
     ins:.instrument.Instrument@instrumentId;
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
@@ -825,6 +835,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             // The long and short positions of the contract of the same period will be self-traded;
 
             // If the maintMargin req still exceeds available liquidation shall occur
+            x[`liquidationStrat]
             
         ]]; 
     }[ins;time]'[select from x where available<maintMarginReq];
