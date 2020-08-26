@@ -25,8 +25,10 @@ Account: (
             withdrawable        : `long$();
             openBuyOrderQty     : `long$();
             openBuyOrderCost    : `long$();
+            openBuyValue        : `long$();
             openBuyPremium      : `long$();
             openSellOrderCost   : `long$();
+            openSellValue       : `long$();
             openSellOrderQty    : `long$();
             openSellPremium     : `long$();
             orderMargin         : `long$();
@@ -57,7 +59,7 @@ Account: (
             leverage            : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -439,17 +441,16 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
     $[isignum>0;[
-        newOpenBuyPremium:account[`openBuyPremium]+premium;
-        newOpenBuyOrderQty:account[`openBuyOrderQty]+qty;
-        newOpenSellPremium:account[`openSellPremium];
-        newOpenSellOrderQty:account[`openSellOrderQty];
+        account[`openBuyPremium]+:premium;
+        account[`openBuyOrderQty]+:qty; 
+        account[`openBuyValue]+:(price*qty);
     ];
     [
-        newOpenSellPremium:account[`openSellPremium]+premium;
-        newOpenSellOrderQty:account[`openSellOrderQty]+qty;
-        newOpenBuyPremium:account[`openBuyPremium];
-        newOpenBuyOrderQty:account[`openBuyOrderQty];
+        account[`openSellPremium]+:premium;
+        account[`openSellOrderQty]+:qty; 
+        account[`openSellValue]+:(price*qty);
     ]];
+
 
     // If one places a buy order above the mark price or a sell order
     // below the mark price, the execution of this order at that price
@@ -463,12 +464,12 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     // equity = balance + unrealized pnl
 
-    grossOpenPremium:(
-        (abs[(newOpenBuyPremium * (sum[account[`netLongPosition], newOpenBuyOrderQty]%newOpenBuyOrderQty))] | 0) + 
-        (abs[(newOpenSellPremium * (sum[neg[account[`netShortPosition]], newOpenSellOrderQty]%newOpenSellOrderQty))] | 0)
+    account[`grossOpenPremium]:(
+        (abs[(account[`openSellPremium] * (sum[account[`netLongPosition], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0) + 
+        (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0)
     );
 
-    grossOpenLoss:(
+    account[`openLoss]:(
         (prd[account`openBuyPremium`openBuyValue] | 0)+
         (prd[account`openSellPremium`openSellValue] | 0)
     );
@@ -492,20 +493,18 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Is my assumption about the changing premium correct in this regard? Thanks
     
     // Notional value of open orders
-    nval:(newOpenBuyOrderQty+newOpenSellOrderQty)*price;
+    / nval:(newOpenBuyOrderQty+newOpenSellOrderQty)*price;
 
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
-    orderMargin:nval%account[`leverage];
-    account[`orderMargin]+: orderMargin;
+    account[`orderMargin]:(account[`openBuyValue]+account[`openSellValue])%account[`leverage];
     account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openLoss]);
 
     omc:raze(`qty;`account;`grossOpenPremium;`amt;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
     `newAvailable;`orderMargin;`nval;`premium;`openloss);
 
-
-    .qt.OM:omc!(qty;account;grossOpenPremium;amt;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
-    newAvailable;orderMargin;nval;premium;openloss);
+    .qt.ACC:account;
+    / .qt.OM:omc!(account);
 
 
     $[(account[`available]>0);[
