@@ -761,7 +761,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             posMargin,
             orderMargin,
             openCost] by accountId from 
-            (.account.Account lj (select sum unrealizedPnl by accountId from i)); // TODO test this
+            (a lj (select sum unrealizedPnl by accountId from i)); // TODO test this
   
     // TODO open cost changes
     / select sum'[orderMargin;openCost] 
