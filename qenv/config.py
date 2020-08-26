@@ -18,3 +18,7 @@ class Instrument():
 class Engine():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+class Env():
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
