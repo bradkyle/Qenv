@@ -581,8 +581,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
         acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openCost]));
     ]];
 
-
-
     $[acc[`positionType]=`HEDGED;
         $[reduceOnly;
             [
