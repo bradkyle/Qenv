@@ -24,7 +24,9 @@ Account: (
             available           : `long$();
             withdrawable        : `long$();
             openBuyOrderQty     : `long$();
+            openBuyOrderCost    : `long$();
             openBuyPremium      : `long$();
+            openSellOrderCost   : `long$();
             openSellOrderQty    : `long$();
             openSellPremium     : `long$();
             orderMargin         : `long$();
@@ -54,7 +56,7 @@ Account: (
             selfFillVolume      : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
