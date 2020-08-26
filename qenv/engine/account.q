@@ -786,6 +786,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.okex.com/academy/en/full-liquidation
     / https://www.binance.com/en/support/faq/360033525271
     / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
+    / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
 
 
     ins:.instrument.Instrument@instrumentId;
