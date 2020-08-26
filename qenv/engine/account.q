@@ -773,9 +773,11 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     {
         
         // TODO check this
+        // TODO close orders where not reduce only
         .order.CancelAllOrders[x[`accountId]];
         x:exec from .qt.Account where accountId:x[`accountId];
         if[x[`available]<x[`maintMarginReq];[
+            // TODO self trading
             
         ]]; 
     }'[select from x where available<maintMarginReq];
