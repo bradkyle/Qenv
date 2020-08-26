@@ -459,7 +459,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // orders and the initial margin of the positions is that one needs
     // to cross the spread in order to release the latter. 
     // Open order cost 
-    // TODO check if order is reduce only/ is combined vs 
+    // TODO check if order is reduce only/ is combined vs (reducing a position does not cost margin)
 
     // equity = balance + unrealized pnl
 
