@@ -469,6 +469,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     amt:max[account[`netLongPosition],account[`netShortPosition]];
 
     // TODO select by leverage etc as well
+    // THIS 
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()]; // make into seperate function
     imr:lm[`imr];
 
@@ -490,6 +491,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     omc:raze(`imr;`qty;`account;`grossOpenPremium;`amt;`lm;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
     `newAvailable;`newOrderMargin;`orderMargin;`oval;`premium;`openloss);
+
+
     .qt.OM:omc!(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
     newAvailable;newOrderMargin;orderMargin;oval;premium;openloss);
 

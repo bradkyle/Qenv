@@ -1471,8 +1471,8 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000);
         (0;`SHORT;100;100;l 1e9; 1000)
     );
-    //`fundingRate;nextFundingRate;nextFundingTime;time
-    (-1;1000;100;1b); // Parameters
+    //`isignum`price`qty`reduceOnly`account`instrument
+    (-1;1000;3;1b); // Parameters
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,

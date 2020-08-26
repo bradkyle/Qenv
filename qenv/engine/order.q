@@ -295,6 +295,8 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
         
         `.order.Order upsert ordUpd;
 
+        // TODO Update the new open cost of the orders with respect to the mark price 
+
         // Derive account fills from state and call .acount Apply fill for each.
         // order in the order book.
         accFlls:select from (update
@@ -543,7 +545,7 @@ NewOrder       : {[o;time];
                 [
                     // add orderbook references
                     // todo if there is a row at price and qty is greater than zero
-                    // TODO 
+                    // TODO recalculate the total order open cost with respect to the mark price
                     .account.UpdateInitialMargin[
                         o[`side];
                         o[`price];
@@ -606,6 +608,7 @@ CancelOrder    :{[order;time]
     // If the order does not belong to the account    
 
     // other validations
+    // TODO recalculate the total order open cost with respect to the mark price
 
     / if[not[.account.UpdateOpenOrderState[neg[corder[`leaves]];corder[`side];corder[`price];acc;ins];
         / :.event.AddFailure[time;`MAX_OPEN_ORDERS;""]];
@@ -629,6 +632,7 @@ CancelAllOrders :{[accountId;time]
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[orderId]," could not be found"]];
 
     CancelOrder'[select from .order.Order where accountId=accountId];
+    // TODO recalculate the total order open cost with respect to the mark price
     };
 
 // TODO update for batch operations
@@ -657,6 +661,7 @@ AmendOrder      :{[order;time]
 
                 `.order.Order upsert order;
                 .order.AddUpdateOrderEvent[order;time];
+                // TODO recalculate the total order open cost with respect to the mark price
 
                 .account.UpdateOpenOrderState[];
                 .order.DeriveThenAddDepthUpdateEvent[time];
@@ -667,6 +672,7 @@ AmendOrder      :{[order;time]
                 if[null[order[`offset]];[
                     qty:(.order.OrderBook@order[`price])[`qty];
                     order[`offset]: $[not null[qty];qty;0]]];
+                // TODO recalculate the total order open cost with respect to the mark price
                 
                 `.order.Order upsert order;
                 .order.AddUpdateOrderEvent[order;time];
@@ -701,7 +707,7 @@ triggerStop    :{[stop]
 // TODO select by trigger
 UpdateMarkPrice : {[markPrice;instrumentId;time]
     ins:.instrument.Instrument@instrumentId; 
-
+    // TODO recalculate the total order open cost with respect to the mark price
     orders:triggerStop select from .order.Order 
         where otype in (`STOP_LIMIT`STOPMARKET), 
         (side=`SELL and price>stopprice),
