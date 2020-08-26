@@ -468,6 +468,10 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
         (abs[(newOpenSellPremium * (sum[neg[account[`netShortPosition]], newOpenSellOrderQty]%newOpenSellOrderQty))] | 0)
     );
 
+    grossOpenLoss:(
+        ()+
+        ()
+    );
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
