@@ -1380,9 +1380,6 @@ test:.qt.Unit[
         acc:setupAccount[p];
         setupInventory[p];
 
-        show acc;
-
-
         a:p[`args];
         a,:0 0;
         a[4]:acc;

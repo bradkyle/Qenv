@@ -494,7 +494,6 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     $[(newAvailable>0);[
 
-        show newAvailable;
         // open buy order qty
         // open buy premium
         // open sell order qty
@@ -517,7 +516,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
                     newOpenBuyPremium;
                     grossOpenPremium;
                     newOrderMargin;
-                    newAvailable;
+                    `long$(1e8*newAvailable);
                     0
                 )];
     ];['INSUFFICIENT_MARGIN]];
