@@ -492,7 +492,9 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
                 (+;`selfFillCount;y);
-                (+;`selfFillVolume;z)
+                (+;`selfFillVolume;z);
+                (+;`orderMargin;x);
+                (+;)
             )];
             
     };
