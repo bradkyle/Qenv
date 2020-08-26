@@ -587,8 +587,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     iside:HedgedNegSide[side];
                     oside:HedgedSide[side];
                     // CLOSE given side for position
-                    i:.account.Inventory@(accountId;HedgedNegSide[side]);
-                    oi:.account.Inventory@(accountId;HedgedSide[side]);
+                    i:.account.Inventory@(accountId;iside);
+                    oi:.account.Inventory@(accountId;oside);
 
                     if[size>i[`amt];:.event.AddFailure[]]; // TODO error
 
