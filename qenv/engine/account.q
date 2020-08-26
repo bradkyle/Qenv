@@ -557,7 +557,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     isinverse: instrument[`contractType]=`INVERSE;
 
-    if[isMaker;[
+    if[isMaker and not[reduceOnly];[
         // Remove order margin from account and add it to position margin
         premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
         $[(isignum>0) and (premium>0);[ // TODO fix
@@ -792,6 +792,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
+    / During liquidation, users are unable to send orders on their account
 
     // TODO unrealizedPnl
     // TODO bankruptCost
