@@ -98,6 +98,8 @@ NewAccount :{[account;time]
 // Global Account Utils
 // -------------------------------------------------------------->
 
+
+
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
 // Used to derive the average entry price for a given inventory
@@ -517,9 +519,9 @@ AddMargin    :{[isignum;price;qty;account;instrument]
         // frozen
         // Available/frozen/withdrawable
         ![`.account.Account;
-            enlist (=;`accountId;account[`accountId]);
-            0b;
-            account];
+                enlist (=;`accountId;account[`accountId]);0b;
+                account];
+                
     ];['INSUFFICIENT_MARGIN]];
             
     };
