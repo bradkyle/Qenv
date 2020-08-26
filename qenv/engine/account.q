@@ -198,7 +198,7 @@ liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         amtL:inventoryL[`amt];
         amtS:inventoryS[`amt];
 
-        // Derive Average price
+        // Derive Average price // change total entry to execQty
         sB:inventoryB[`isignum];
         epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
         epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
