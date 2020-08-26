@@ -1410,6 +1410,11 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
+    a:p[3];
+    a,:0 0;
+    a[4]:cAcc;
+    a[5]:cIns;
+
     :`cIns`cAcc`cInv`args`markPrice`eAcc`eInv`eEvents!(
         cIns;
         cAcc;
@@ -1434,7 +1439,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`fundingRate;nextFundingRate;nextFundingTime;time
-    (`SELL;1000;100;1b;); // Parameters
+    (-1;1000;100;1b); // Parameters
     1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
