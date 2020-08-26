@@ -41,8 +41,6 @@ Account: (
             posMargin           : `long$();
             longMargin          : `long$();
             shortMargin         : `long$();
-            longValue           : `long$();
-            shortValue          : `long$();
             shortFundingCost    : `long$();
             longFundingCost     : `long$();
             totalFundingCost    : `long$();
@@ -56,7 +54,7 @@ Account: (
             selfFillVolume      : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -460,12 +458,14 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // equity = balance + unrealized pnl
 
     grossOpenPremium:(
-        abs[(newOpenBuyPremium * sum[amt, newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
-        abs[(newOpenSellPremium * sum[amt, newOpenSellOrderQty]%newOpenSellOrderQty)]
+        abs[(newOpenBuyPremium * sum[account[`netLongPosition], newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
+        abs[(newOpenSellPremium * sum[account[`netShortPosition], newOpenSellOrderQty]%newOpenSellOrderQty)]
     );
 
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
+
+    amt:max[account[`netLongPosition],account[`netShortPosition]];
 
     // TODO select by leverage etc as well
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()]; // make into seperate function
