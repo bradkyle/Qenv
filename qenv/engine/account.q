@@ -468,12 +468,9 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
     account[`grossOpenPremium]:(
         (abs[(account[`openSellPremium] * (sum[account[`netLongPosition], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0) + 
-        (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0)
-    );
+        (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0));
 
     account[`openCost]:(sum[account`openSellCost`openBuyCost] | 0);
-    / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
-    / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
     amt:max[account[`netLongPosition],account[`netShortPosition]];
 
