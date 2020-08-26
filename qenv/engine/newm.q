@@ -18,3 +18,5 @@ grossOpenPremium:(
         (abs[(buyPremium * (sum[account[`netLongPosition], buyQty]%newOpenBuyOrderQty))] | 0) + 
         (abs[(sellPremium * (sum[neg[account[`netShortPosition]], buyQty]%newOpenSellOrderQty))] | 0)
     );
+
+// checks if an account has enough balance to place an order!
