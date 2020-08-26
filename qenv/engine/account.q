@@ -434,7 +434,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
-    premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]];
+    premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]]; // TODO avg price
     openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
     $[isignum>0;[
