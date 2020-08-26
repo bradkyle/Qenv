@@ -468,7 +468,7 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
     // TODO select by leverage etc as well
-    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()];
+    lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()]; // make into seperate function
     imr:lm[`imr];
 
 
@@ -482,33 +482,38 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / expressed as a function of the difference between the order prices and the mark price 
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
+    
+    orderMargin:(imr*qty);
+    newOrderMargin: account[`orderMargin] + orderMargin;
+    newAvailable:account[`balance]-(account[`posMargin]+(newOrderMargin+grossOpenPremium));
 
-    newOrderMargin: account[`orderMargin] + (imr*qty);
-    available:account[`balance]-account[]
 
-    // open buy order qty
-    // open buy premium
-    // open sell order qty
-    // open sell order premium
-    // order margin
-    // liquidation price
-    // bankrupt price
-    // available
-    // maintMargin
-    // frozen
-    // Available/frozen/withdrawable
-    ![`.account.Account;
-            enlist (=;`accountId;x);
-            0b;`selfFillCount`selfFillVolume!(
-                (`openSellOrderQty;newOpenSellOrderQty);
-                (`openSellPremium;newOpenSellOrderQty);
-                (`openBuyOrderQty;newOpenBuyOrderQty);
-                (`openBuyPremium;newOpenBuyPremium);
-                (`grossOpenPremium;grossOpenPremium);
-                (+;`orderMargin;);
-                (`available;);
-                (`withdrawable;0)
-            )];
+    $[(newAvailable>0);[
+
+        // open buy order qty
+        // open buy premium
+        // open sell order qty
+        // open sell order premium
+        // order margin
+        // liquidation price
+        // bankrupt price
+        // available
+        // maintMargin
+        // frozen
+        // Available/frozen/withdrawable
+        ![`.account.Account;
+                enlist (=;`accountId;x);
+                0b;`selfFillCount`selfFillVolume!(
+                    (`openSellOrderQty;newOpenSellOrderQty);
+                    (`openSellPremium;newOpenSellOrderQty);
+                    (`openBuyOrderQty;newOpenBuyOrderQty);
+                    (`openBuyPremium;newOpenBuyPremium);
+                    (`grossOpenPremium;grossOpenPremium);
+                    (`orderMargin;newOrderMargin);
+                    (`available;newAvailable);
+                    (`withdrawable;0)
+                )];
+    ];['INSUFFICIENT_MARGIN]];
             
     };
 
