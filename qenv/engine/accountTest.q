@@ -1377,12 +1377,16 @@ test:.qt.Unit[
     ".account.AddMargin";
     {[c]
         p:c[`params];
-        setupInstrument[p];
         setupAccount[p];
         setupInventory[p];
 
         a:p[`args];
-        .account.AddMargin[a[0];a[1];a[2];a[3];a[4];a[5]];
+
+        $[all(null[p[`eThrows]]);[
+            .account.AddMargin[a[0];a[1];a[2];a[3];a[4];a[5]];
+        ];[
+            .qt.AT[.account.AddMargin;(a[0];a[1];a[2];a[3];a[4];a[5]);p[`eThrows];"AddMargin";c];
+        ]];
         
         // Assertions
         checkAccount[p;c];
@@ -1393,7 +1397,8 @@ test:.qt.Unit[
 
 deriveCaseParams :{[p]
 
-    cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice)!p[0];
+    cIns:(`instrumentId`contractType`tickSize`maxPrice,
+    `minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice`riskTiers)!p[0];
 
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
@@ -1401,8 +1406,6 @@ deriveCaseParams :{[p]
     
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
-
-    show count p[]
 
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
@@ -1430,10 +1433,10 @@ deriveCaseParams :{[p]
 
 .qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (`VANILLA;0;0.5;1e9;0f;1e6f;0f;100;1000f;.instrument.NewRiskTier[(
+    (0;`VANILLA;0.5;1e9;0f;1e6f;0f;100;1000f;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
-    ));
+    )]);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
