@@ -772,13 +772,13 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // do liquidation protocol
     {
+        // After force liquidation occurs, the liquidation positions will be separated from the user’s equity balance.
         
         // TODO check this
         // TODO close orders where not reduce only
-        .order.CancelAllOrders[x[`accountId]];
-        x:exec from .qt.Account where accountId:x[`accountId];
-        if[x[`available]<x[`maintMarginReq];[
-            // TODO self trading
+        .order.CancelAllOrders[y[`accountId]];
+        y:exec from .qt.Account where accountId:y[`accountId];
+        if[y[`available]<y[`maintMarginReq];[
             // The system will cancel all current orders for this symbol contract;
 
             // The long and short positions of the contract of the same period will be self-traded;
