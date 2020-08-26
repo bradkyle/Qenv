@@ -1382,7 +1382,7 @@ test:.qt.Unit[
         setupInventory[p];
 
         a:p[`args];
-        .account.AddMargin[a til[4]];
+        .account.AddMargin[a[0];a[1];a[2];a[3];a[4];a[5]];
         
         // Assertions
         checkAccount[p;c];
@@ -1393,7 +1393,7 @@ test:.qt.Unit[
 
 deriveCaseParams :{[p]
 
-    cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier)!p[0];
+    cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice)!p[0];
 
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
@@ -1402,34 +1402,35 @@ deriveCaseParams :{[p]
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
+    show count p[]
+
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[5];
+    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
 
     // Construct Expected Inventory
-    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
 
     a:p[3];
     a,:0 0;
     a[4]:cAcc;
     a[5]:cIns;
 
-    :`cIns`cAcc`cInv`args`markPrice`eAcc`eInv`eEvents!(
+    :`cIns`cAcc`cInv`args`eAcc`eInv`eEvents!(
         cIns;
         cAcc;
         cInv;
-        p[3];
-        p[4];
+        a;
         eAcc;
         eInv;
-        p[7]
+        p[6]
         );
     };
 
 .qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
-    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier
-    (0;0.5;1e9;0f;1e6f;0f;100);
+    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
+    (0;0.5;1e9;0f;1e6f;0f;100;1000f);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
@@ -1440,7 +1441,6 @@ deriveCaseParams :{[p]
     );
     //`fundingRate;nextFundingRate;nextFundingTime;time
     (-1;1000;100;1b); // Parameters
-    1000; // Mark Price
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,

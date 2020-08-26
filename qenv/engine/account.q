@@ -432,18 +432,18 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
-    premium:abs[min[0,(isignum*(markprice-price))]];
+    premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]];
     openloss:qty * premium;
 
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
-        newOpenBuyOrderQty:account[`openBuyOrderQty]+dlt;
+        newOpenBuyOrderQty:account[`openBuyOrderQty]+qty;
         newOpenSellPremium:account[`openSellPremium];
         newOpenSellOrderQty:account[`openSellOrderQty];
     ];
     [
         newOpenSellPremium:account[`openSellPremium]+premium;
-        newOpenSellOrderQty:account[`openSellOrderQty]+dlt;
+        newOpenSellOrderQty:account[`openSellOrderQty]+qty;
         newOpenBuyPremium:account[`openBuyPremium];
         newOpenBuyOrderQty:account[`openBuyOrderQty];
     ]];
