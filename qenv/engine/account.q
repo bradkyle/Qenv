@@ -775,11 +775,11 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // do liquidation protocol
     {
-        .order.CancelAllOrders[x];
+        .order.CancelAllOrders[x[`accountId]];
         acc:.account.Account@x;
         if[acc[`initMargin];[
             
         ]]; 
-    } select from x where available<maintMarginReq;
+    }'[select from x where available<maintMarginReq];
     
     };
