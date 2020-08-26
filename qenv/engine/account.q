@@ -558,17 +558,18 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     if[isMaker;[
         // Remove order margin from account and add it to position margin
+        premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
         $[(isignum>0) and (premium>0);[ // TODO fix
-            acc[`openBuyPremium]+:premium;
-            acc[`openBuyQty]+:qty; 
-            acc[`openBuyValue]+:`long$(price*qty);
-            acc[`openBuyCost]+:`long$(premium*qty);
+            acc[`openBuyPremium]-:premium; // TODO?
+            acc[`openBuyQty]-:qty; 
+            acc[`openBuyValue]-:`long$(price*qty);
+            acc[`openBuyCost]-:`long$(premium*qty);
         ];
         [
-            acc[`openSellPremium]+:premium;
-            acc[`openSellQty]+:qty; 
-            acc[`openSellValue]+:`long$(price*qty);
-            acc[`openSellCost]+:`long$(premium*qty);
+            acc[`openSellPremium]-:premium;
+            acc[`openSellQty]-:qty; 
+            acc[`openSellValue]-:`long$(price*qty);
+            acc[`openSellCost]-:`long$(premium*qty);
         ]];
 
         acc[`grossOpenPremium]:`long$(
