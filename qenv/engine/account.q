@@ -23,13 +23,13 @@ Account: (
             maintMargin         : `long$();
             available           : `long$();
             withdrawable        : `long$();
-            openBuyOrderQty     : `long$();
-            openBuyOrderCost    : `long$();
+            openBuyQty          : `long$();
+            openBuyCost         : `long$();
             openBuyValue        : `long$();
             openBuyPremium      : `long$();
-            openSellOrderCost   : `long$();
+            openSellCost        : `long$();
             openSellValue       : `long$();
-            openSellOrderQty    : `long$();
+            openSellQty         : `long$();
             openSellPremium     : `long$();
             orderMargin         : `long$();
             marginType          : `.account.MARGINTYPE$();
@@ -442,13 +442,13 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     $[isignum>0;[
         account[`openBuyPremium]+:premium;
-        account[`openBuyOrderQty]+:qty; 
+        account[`openBuyQty]+:qty; 
         account[`openBuyValue]+:(price*qty);
         account[`openBuyCost]+:(premium*qty);
     ];
     [
         account[`openSellPremium]+:premium;
-        account[`openSellOrderQty]+:qty; 
+        account[`openSellQty]+:qty; 
         account[`openSellValue]+:(price*qty);
         account[`openSellCost]+:(premium*qty);
     ]];
@@ -471,10 +471,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
         (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0)
     );
 
-    account[`openLoss]:(
-        (prd[account`openBuyPremium`openBuyValue] | 0)+
-        (prd[account`openSellPremium`openSellValue] | 0)
-    );
+    account[`openCost]:(sum[account`openSellCost`openBuyCost] | 0);
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
@@ -500,10 +497,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
     account[`orderMargin]:(account[`openBuyValue]+account[`openSellValue])%account[`leverage];
-    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openLoss]);
-
-    omc:raze(`qty;`account;`grossOpenPremium;`amt;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
-    `newAvailable;`orderMargin;`nval;`premium;`openloss);
+    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openCost]);
 
     .qt.ACC:account;
     / .qt.OM:omc!(account);
