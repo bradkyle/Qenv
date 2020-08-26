@@ -777,6 +777,11 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     };
 
 
+// Liquidation
+// -------------------------------------------------------------->
+
+
+
 UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.bitmex.com/app/liquidationExamples
     / https://www.bitmex.com/app/liquidation
@@ -793,6 +798,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
     / During liquidation, users are unable to send orders on their account
+    / Liquidation is executed as Fill or Kill and it will be executed immediately.
 
     // TODO unrealizedPnl
     // TODO bankruptCost
