@@ -470,6 +470,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     amt:max[account[`netLongPosition],account[`netShortPosition]];
 
+    // TODO get maximum position for set leverage
     
 
     / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 

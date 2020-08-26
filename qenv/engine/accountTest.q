@@ -1405,7 +1405,7 @@ deriveCaseParams :{[p]
 
     // Construct Current Account
     cAcc:(`accountId`positionType`balance`available`frozen,
-    `orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
+    `leverage`orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
     
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
@@ -1437,7 +1437,7 @@ deriveCaseParams :{[p]
     )]);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`HEDGED;1000;1000;0;0;0;1;0); // Current Account
+    (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);
