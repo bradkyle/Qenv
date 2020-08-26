@@ -782,6 +782,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             // The system will cancel all current orders for this symbol contract;
 
             // The long and short positions of the contract of the same period will be self-traded;
+
+            // If the maintMargin req still exceeds available liquidation shall occur
             
         ]]; 
     }[ins]'[select from x where available<maintMarginReq];
