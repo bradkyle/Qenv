@@ -517,19 +517,9 @@ AddMargin    :{[isignum;price;qty;account;instrument]
         // frozen
         // Available/frozen/withdrawable
         ![`.account.Account;
-                enlist (=;`accountId;account[`accountId]);0b;
-                (`openSellQty`openSellPremium`openSellValue`openSellCost,
-                  `openBuyQty`openBuyPremium`openBuyValue`openBuyCost,
-                  `grossPremium`orderMargin`available`withdrawable`openCost)!(
-                    newOpenSellOrderQty;
-                    newOpenSellPremium;
-                    newOpenBuyOrderQty;
-                    newOpenBuyPremium;
-                    grossOpenPremium;
-                    `long$(1e8*newOrderMargin);
-                    `long$(1e8*newAvailable); // TODO change to multiplier
-                    0
-                )];
+            enlist (=;`accountId;account[`accountId]);
+            0b;
+            account];
     ];['INSUFFICIENT_MARGIN]];
             
     };
