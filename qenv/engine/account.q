@@ -751,7 +751,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt // TODO upscale
         from `.account.Inventory;
 
-    / accounts:.account.Account lj select sum unrealizedPnl from .account.Inventory where amt>0;
+    / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
   
     // TODO open cost changes
     / select sum'[orderMargin;openCost] 
