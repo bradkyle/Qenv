@@ -10,6 +10,7 @@ accountCount:0;
 MARGINTYPE      :   `CROSS`ISOLATED;
 POSITIONTYPE    :   `HEDGED`COMBINED;
 
+// FAIR price vs ema 
 // Account state in this instance serves as a proxy
 // for a single agent and contains config therin
 // pertaining to what the agent setting is.
