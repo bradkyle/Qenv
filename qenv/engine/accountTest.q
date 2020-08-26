@@ -1381,14 +1381,11 @@ test:.qt.Unit[
         setupInventory[p];
 
         a:p[`args];
-        a,:0 0;
-        a[4]:acc;
-        a[5]:p[`cIns];
 
         $[all(null[p[`eThrows]]);[
-            .account.AddMargin[a[0];a[1];a[2];a[3];a[4];a[5]];
+            .account.AddMargin[a[0];a[1];a[2];acc;p[`cIns]];
         ];[
-            .qt.AT[.account.AddMargin;(a[0];a[1];a[2];a[3];a[4];a[5]);p[`eThrows];"AddMargin";c];
+            .qt.AT[.account.AddMargin;(a[0];a[1];a[2];acc;p[`cIns]);p[`eThrows];"AddMargin";c];
         ]];
         
         // Assertions
@@ -1444,7 +1441,7 @@ deriveCaseParams :{[p]
         (0;`SHORT;100;100;l 1e9; 1000)
     );
     //`fundingRate;nextFundingRate;nextFundingTime;time
-    (-1;100;3;1b); // Parameters
+    (-1;100;3); // Parameters
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
@@ -1471,8 +1468,8 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000);
         (0;`SHORT;100;100;l 1e9; 1000)
     );
-    //`isignum`price`qty`reduceOnly`account`instrument
-    (-1;100;3;1b); // Parameters
+    //`isignum`price`qty`account`instrument
+    (-1;100;3); // Parameters
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
