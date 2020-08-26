@@ -282,6 +282,7 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 // This function is accessed by the engine upon a funding event and unilaterally applies
 // an update to all the open position quantites held in the schema/state representation.
 // TODO next funding rate and next funding time (funding time delta)
+// Update available withdrawable etc.
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
 
     // todo available, frozen
@@ -297,6 +298,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 // -------------------------------------------------------------->
 
 // Adds a given amount to the accounts balance.
+// Update available/withdrawable etc.
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     update 
@@ -312,6 +314,7 @@ Deposit  :{[deposited;time;accountId]
 // Checks that a given account has enough available balance to
 // withdraw a given amount and then executes a withdrawal
 // updating balance,withdrawCount and withdrawAmount
+// Update available/withdrawable etc
 Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
 
@@ -493,6 +496,7 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // available
     // maintMargin
     // frozen
+    // Available/frozen/withdrawable
     ![`.account.Account;
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
