@@ -20,3 +20,7 @@ grossOpenPremium:(
     );
 
 // checks if an account has enough balance to place an order!
+
+// get the current loss of open orders
+
+// Abalance = (wallet balance + unrealized pnl) - ((order initial margin + order loss) + (position initial margin + unrealized pnl))

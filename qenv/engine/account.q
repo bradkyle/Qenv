@@ -469,8 +469,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     );
 
     grossOpenLoss:(
-        (prd[account`openBuyPremium`openBuyValue])+
-        (prd[account`openSellPremium`openSellValue])
+        (prd[account`openBuyPremium`openBuyValue] | 0)+
+        (prd[account`openSellPremium`openSellValue] | 0)
     );
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
@@ -498,7 +498,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // initial margin requirements on your open orders.
     orderMargin:nval%account[`leverage];
     account[`orderMargin]+: orderMargin;
-    newAvailable:account[`balance]-(account[`posMargin]+account[`orderMargin]+grossOpenPremium);
+    newAvailable:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openCost]);
 
     omc:raze(`qty;`account;`grossOpenPremium;`amt;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
     `newAvailable;`orderMargin;`nval;`premium;`openloss);
