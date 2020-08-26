@@ -441,6 +441,8 @@ AddMargin    :{[isignum;price;qty;account;instrument]
     premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]]; // TODO avg price
     openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
+
+    // TODO add conversions
     $[isignum>0;[
         account[`openBuyPremium]+:premium;
         account[`openBuyQty]+:qty; 
