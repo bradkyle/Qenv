@@ -487,8 +487,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Is my assumption about the changing premium correct in this regard? Thanks
     
     oval:(newOpenBuyOrderQty+newOpenSellOrderQty)*instrument[`markPrice];
-    orderMargin:(imr*oval)+grossOpenPremium;
-    newOrderMargin: account[`orderMargin] + orderMargin;
+    orderMargin:(imr*oval);
+    account[`orderMargin]: + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
 
     omc:raze(`imr;`qty;`account;`grossOpenPremium;`amt;`lm;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
