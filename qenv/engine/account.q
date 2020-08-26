@@ -469,8 +469,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     );
 
     grossOpenLoss:(
-        ()+
-        ()
+        (newOpenBuyPremium * account[`openSellValue])+
+        (newOpenSellPremium * account[`openSellValue])
     );
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
