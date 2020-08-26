@@ -53,10 +53,11 @@ Account: (
             bankruptPrice       : `long$();
             totalCommission     : `long$();
             selfFillCount       : `long$();
-            selfFillVolume      : `long$());
+            selfFillVolume      : `long$();
+            leverage            : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -458,6 +459,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // orders and the initial margin of the positions is that one needs
     // to cross the spread in order to release the latter. 
     // Open order cost 
+    // TODO check if order is reduce only/ is combined vs 
 
     // equity = balance + unrealized pnl
 
@@ -485,20 +487,21 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
     
-    oval:(newOpenBuyOrderQty+newOpenSellOrderQty)*instrument[`markPrice];
+    // Notional value of open orders
+    nval:(newOpenBuyOrderQty+newOpenSellOrderQty)*price;
 
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
-    orderMargin:oval%account[`leverage];
+    orderMargin:nval%account[`leverage];
     account[`orderMargin]+: orderMargin;
-    newAvailable:account[`balance]-(account[`posMargin]+account[`orderMargin]);
+    newAvailable:account[`balance]-(account[`posMargin]+account[`orderMargin]+grossOpenPremium);
 
-    omc:raze(`imr;`qty;`account;`grossOpenPremium;`amt;`lm;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
-    `newAvailable;`orderMargin;`oval;`premium;`openloss);
+    omc:raze(`qty;`account;`grossOpenPremium;`amt;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
+    `newAvailable;`orderMargin;`nval;`premium;`openloss);
 
 
-    .qt.OM:omc!(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
-    newAvailable;orderMargin;oval;premium;openloss);
+    .qt.OM:omc!(qty;account;grossOpenPremium;amt;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
+    newAvailable;orderMargin;nval;premium;openloss);
 
 
     $[(newAvailable>0);[
