@@ -752,6 +752,12 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         from `.account.Inventory;
 
     / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
+    select available:balance-sum[
+            neg[unrealizedPnl],
+            posMargin,
+            orderMargin,
+            openCost] by accountId from 
+            (.account.Account lj select sum unrealizedPnl by accountId from x where amt>0); // TODO test this
   
     // TODO open cost changes
     / select sum'[orderMargin;openCost] 
