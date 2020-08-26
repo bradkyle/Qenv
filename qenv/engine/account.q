@@ -483,7 +483,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
     
-    orderMargin:(imr*qty);
+    orderMargin:imr*qty;
     newOrderMargin: account[`orderMargin] + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+(newOrderMargin+grossOpenPremium));
 
