@@ -51,6 +51,7 @@ Account: (
             totalLossPnl        : `long$();
             totalGainPnl        : `long$();
             realizedPnl         : `long$();
+            unrealizedPnl       : `long$();
             liquidationPrice    : `long$();
             bankruptPrice       : `long$();
             totalCommission     : `long$();
@@ -59,7 +60,7 @@ Account: (
             leverage            : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
