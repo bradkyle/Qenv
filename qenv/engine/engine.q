@@ -176,7 +176,11 @@ ProcessEvents  : {[eventBatch]
     };
 
 NewAccountFromConfig    :{[config]
+    a:.account.NewAccount[config[`account]];
 
+    .account.NewInventory[];
+    .account.NewInventory[];
+    .account.NewInventory[];
     };
 
 / Main Setup Function
