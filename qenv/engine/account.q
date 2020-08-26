@@ -500,12 +500,14 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     ![`.account.Account;
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
-                (+;`openSellOrderQty;y);
-                (+;`openSellPremium;z);
-                (+;`openBuyOrderQty;y);
-                (+;`openBuyPremium;z);
-                (+;`orderMargin;x);
-                (+;)
+                (`openSellOrderQty;newOpenSellOrderQty);
+                (`openSellPremium;newOpenSellOrderQty);
+                (`openBuyOrderQty;newOpenBuyOrderQty);
+                (`openBuyPremium;newOpenBuyPremium);
+                (`grossOpenPremium;grossOpenPremium);
+                (+;`orderMargin;(imr*qty));
+                (`available;0);
+                (`withdrawable;0)
             )];
             
     };
