@@ -751,6 +751,10 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt // TODO upscale
         from .account.Inventory where amt>0;
 
+    a:update
+        openCost:0
+        from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
+
     / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
     select available:balance-sum[
             neg[unrealizedPnl],
