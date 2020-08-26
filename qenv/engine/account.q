@@ -428,7 +428,7 @@ IncSelfFill    :{
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
+UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
@@ -467,8 +467,10 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
     / Math.abs((newOpenSellPremium * net(-currentQty, newOpenSellQty) / newOpenSellQty) || 0);
 
+    // TODO select by leverage etc as well
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()];
     imr:lm[`imr];
+
 
     / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 
     / when opening an order at an unfavorable price with respect to the mark price serves to 
@@ -491,14 +493,14 @@ UpdateMargin    :{[isignum;price;dlt;reduceOnly;account;instrument]
     // available
     // maintMargin
     // frozen
-    ![`.account.Account;
-            enlist (=;`accountId;x);
-            0b;`selfFillCount`selfFillVolume!(
-                (+;`selfFillCount;y);
-                (+;`selfFillVolume;z);
-                (+;`orderMargin;x);
-                (+;)
-            )];
+    / ![`.account.Account;
+    /         enlist (=;`accountId;x);
+    /         0b;`selfFillCount`selfFillVolume!(
+    /             (+;`selfFillCount;y);
+    /             (+;`selfFillVolume;z);
+    /             (+;`orderMargin;x);
+    /             (+;)
+    /         )];
             
     };
 
