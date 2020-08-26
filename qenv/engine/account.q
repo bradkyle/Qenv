@@ -748,6 +748,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;ins[`faceValue];isignum;ins[`isinverse]],
         markValue:mp*amt
         from `.account.Inventory;
+
+    accounts:.account.Account lj select sum unrealizedPnl from .account.Inventory where amt>0;
   
     // TODO open cost changes
     select sum'[orderMargin;openCost] 
