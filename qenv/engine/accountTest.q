@@ -1420,14 +1420,15 @@ deriveCaseParams :{[p]
     a[4]:cAcc;
     a[5]:cIns;
 
-    :`cIns`cAcc`cInv`args`eAcc`eInv`eEvents!(
+    :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows`eEvents!(
         cIns;
         cAcc;
         cInv;
         a;
         eAcc;
         eInv;
-        p[6]
+        p[6];
+        p[7]
         );
     };
 
@@ -1456,6 +1457,7 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000; 0);
         (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
+    "INSUFFICIENT_MARGIN";
     () // Expected events
     )]];
 
