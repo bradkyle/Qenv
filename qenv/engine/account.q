@@ -440,7 +440,7 @@ dcCnt   :{`long(x*y)};
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-AddMargin    :{[isignum;price;qty;account;instrument]
+AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order margin
     isinverse: instrument[`contractType]=`INVERSE;
 
     // derive next amount
@@ -523,6 +523,7 @@ AddMargin    :{[isignum;price;qty;account;instrument]
     };
 
 
+
 // TODO
 // maint margin
 // liquidation price
@@ -537,6 +538,8 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
     qty:abs[qty];
 
+    // TODO if is maker reduce order margin here!
+
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[accountId]," could not be found"]];
@@ -548,8 +551,13 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     acc:.account.Account@accountId;
     ins:.instrument.Instrument@instrumentId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-
     isinverse: instrument[`contractType]=`INVERSE;
+
+    if[isMaker;[
+        // Remove order margin from account and add it to position margin
+    ]];
+
+
 
     $[acc[`positionType]=`HEDGED;
         $[reduceOnly;
@@ -783,7 +791,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             // The system will cancel all current orders for this symbol contract;
 
             // The long and short positions of the contract of the same period will be self-traded;
-
 
             // If the maintMargin req still exceeds available liquidation shall occur
             
