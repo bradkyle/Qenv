@@ -775,9 +775,11 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // do liquidation protocol
     {
+        
+        // TODO check this
         .order.CancelAllOrders[x[`accountId]];
-        acc:.account.Account@x;
-        if[acc[`initMargin];[
+        x:exec from .qt.Account where accountId:x[`accountId];
+        if[acc[`available]<acc[`maintMarginReq];[
             
         ]]; 
     }'[select from x where available<maintMarginReq];
