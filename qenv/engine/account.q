@@ -517,7 +517,7 @@ AddMargin    :{[isignum;price;qty;account;instrument]
                 enlist (=;`accountId;account[`accountId]);0b;
                 (`openSellQty`openSellPremium`openSellValue`openSellCost,
                   `openBuyQty`openBuyPremium`openBuyValue`openBuyCost,
-                  `grossPremium`orderMargin`available`withdrawable)!(
+                  `grossPremium`orderMargin`available`withdrawable`openCost)!(
                     newOpenSellOrderQty;
                     newOpenSellPremium;
                     newOpenBuyOrderQty;
