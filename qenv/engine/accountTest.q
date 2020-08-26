@@ -1374,12 +1374,12 @@ test:.qt.Unit[
 // ==================================================================================>
 
 test:.qt.Unit[
-    ".account.UpdateInitialMargin";
+    ".account.AddMargin";
     {[c]
         p:c[`params];
 
         a:p[`args];
-        .account.UpdateInitialMargin[a til[4]];
+        .account.AddMargin[a til[4]];
         
         // Assertions
         checkAccount[p;c];

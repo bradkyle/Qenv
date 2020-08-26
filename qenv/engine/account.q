@@ -428,7 +428,7 @@ IncSelfFill    :{
 // @price      : the price of the given order.
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
-UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
+AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     // derive next amount
     // derive the 
@@ -486,7 +486,6 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     orderMargin:(imr*qty);
     newOrderMargin: account[`orderMargin] + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+(newOrderMargin+grossOpenPremium));
-
 
     $[(newAvailable>0);[
 
