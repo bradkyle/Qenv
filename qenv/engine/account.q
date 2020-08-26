@@ -510,18 +510,6 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
 
     $[(account[`available]>0);[
-
-        // open buy order qty
-        // open buy premium
-        // open sell order qty
-        // open sell order premium
-        // order margin
-        // liquidation price
-        // bankrupt price
-        // available
-        // maintMargin
-        // frozen
-        // Available/frozen/withdrawable
         ![`.account.Account;
                 enlist (=;`accountId;account[`accountId]);
                 0b;
