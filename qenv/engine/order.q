@@ -295,6 +295,8 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
         
         `.order.Order upsert ordUpd;
 
+        // update 
+
         // TODO Update the new open cost of the orders with respect to the mark price 
 
         // Derive account fills from state and call .acount Apply fill for each.
@@ -329,6 +331,8 @@ ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
                 isMaker, 
                 preduceOnly from accFlls;
 
+
+            // 
             {.account.ApplyFill[
                 x[`paccountId];
                 x[`insId];

@@ -101,7 +101,7 @@ NewAccount :{[account;time]
 
 // Used to derive the average entry price for a given inventory
 // TODO add randomization to this!!
-avgPrice        :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
+avgPrice :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
     :$[(totalEntry>0) and (execCost>0);[
         :$[isinverse;
             [
@@ -753,7 +753,7 @@ liqudiatePosition :{[]
 UpdateMarkPrice : {[markPrice;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
 
-    // update openSellCost, openBuyCost
+    // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
 
     // todo update the open loss of all accounts
     // TODO check for liquidations
