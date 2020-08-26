@@ -734,10 +734,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     ];
     };
 
-// 
-liqudiatePosition :{[]
-
-    };
 
 UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
