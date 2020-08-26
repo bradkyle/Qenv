@@ -522,7 +522,10 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
             
     };
 
+// Utilized when cancelling orders or filling positions
+RemoveOrderMargin       :{
 
+    };
 
 // TODO
 // maint margin
@@ -555,6 +558,18 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     if[isMaker;[
         // Remove order margin from account and add it to position margin
+        $[(isignum>0) and (premium>0);[ // TODO fix
+            acc[`openBuyPremium]+:premium;
+            acc[`openBuyQty]+:qty; 
+            acc[`openBuyValue]+:`long$(price*qty);
+            acc[`openBuyCost]+:`long$(premium*qty);
+        ];
+        [
+            acc[`openSellPremium]+:premium;
+            acc[`openSellQty]+:qty; 
+            acc[`openSellValue]+:`long$(price*qty);
+            acc[`openSellCost]+:`long$(premium*qty);
+        ]];
     ]];
 
 
