@@ -489,7 +489,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
 
     .qt.OM:(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
-    newAvailable;newOrderMargin);
+    newAvailable;newOrderMargin;orderMargin);
 
 
     $[(newAvailable>0);[
