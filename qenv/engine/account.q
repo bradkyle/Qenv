@@ -458,8 +458,8 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // equity = balance + unrealized pnl
 
     grossOpenPremium:(
-        abs[(newOpenBuyPremium * sum[account[`netLongPosition], newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
-        abs[(newOpenSellPremium * sum[account[`netShortPosition], newOpenSellOrderQty]%newOpenSellOrderQty)]
+        0^abs[(newOpenBuyPremium * sum[account[`netLongPosition], newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
+        0^abs[(newOpenSellPremium * sum[account[`netShortPosition], newOpenSellOrderQty]%newOpenSellOrderQty)]
     );
 
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
@@ -483,12 +483,18 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
     
+
     orderMargin:imr*qty;
     newOrderMargin: account[`orderMargin] + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+(newOrderMargin+grossOpenPremium));
 
+    .qt.OM:(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
+    newAvailable;newOrderMargin);
+
+
     $[(newAvailable>0);[
 
+        show newAvailable;
         // open buy order qty
         // open buy premium
         // open sell order qty
@@ -501,7 +507,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
         // frozen
         // Available/frozen/withdrawable
         ![`.account.Account;
-                enlist (=;`accountId;x);0b;
+                enlist (=;`accountId;account[`accountId]);0b;
                 (`openSellOrderQty`openSellPremium,
                   `openBuyOrderQty`openBuyPremium`grossOpenPremium,
                   `orderMargin`available`withdrawable)!(

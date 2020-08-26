@@ -26,7 +26,7 @@ dozc:{x+y}[doz];
 
 deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
-setupAccount      : {if[count[x[`cAcc]]>0;.account.NewAccount[x[`cAcc];.z.z]]};
+setupAccount      : {if[count[x[`cAcc]]>0;[.account.NewAccount[x[`cAcc];.z.z]; :exec from .account.Account where accountId=x[`cAcc][`accountId]]]};
 setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x;.z.z]} each x[`cInv]]};
 setupInstrument   : {if[count[x[`cIns]]>0;.instrument.NewInstrument[x[`cIns];.z.z]]};
 
@@ -1377,10 +1377,16 @@ test:.qt.Unit[
     ".account.AddMargin";
     {[c]
         p:c[`params];
-        setupAccount[p];
+        acc:setupAccount[p];
         setupInventory[p];
 
+        show acc;
+
+
         a:p[`args];
+        a,:0 0;
+        a[4]:acc;
+        a[5]:p[`cIns];
 
         $[all(null[p[`eThrows]]);[
             .account.AddMargin[a[0];a[1];a[2];a[3];a[4];a[5]];
@@ -1415,16 +1421,11 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
 
-    a:p[3];
-    a,:0 0;
-    a[4]:cAcc;
-    a[5]:cIns;
-
     :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows`eEvents!(
         cIns;
         cAcc;
         cInv;
-        a;
+        p[3];
         eAcc;
         eInv;
         p[6];
@@ -1440,7 +1441,7 @@ deriveCaseParams :{[p]
     )]);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
+    (0;`HEDGED;1000;1000;0;0;0;1;0); // Current Account
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);
@@ -1457,7 +1458,7 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000; 0);
         (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
-    "INSUFFICIENT_MARGIN";
+    0N;
     () // Expected events
     )]];
 
