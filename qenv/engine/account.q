@@ -498,7 +498,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // initial margin requirements on your open orders.
     orderMargin:nval%account[`leverage];
     account[`orderMargin]+: orderMargin;
-    newAvailable:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openCost]);
+    account[`available]:account[`balance]-(sum[account`unrealizedPnl`posMargin]+sum[account`orderMargin`openLoss]);
 
     omc:raze(`qty;`account;`grossOpenPremium;`amt;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
     `newAvailable;`orderMargin;`nval;`premium;`openloss);
