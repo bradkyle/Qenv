@@ -353,7 +353,8 @@ Withdraw       :{[withdrawn;time;accountId]
 
 inventoryCount:0;
 POSITIONSIDE   : `LONG`SHORT`BOTH;
-
+// TODO posState
+// TODO liqudation price
 Inventory: (
     [
         accountId    :  `.account.Account$();
@@ -747,7 +748,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // withdrawable
     // frozen
 
-
     // todo update the open loss of all accounts
     // TODO check for liquidations
     i:update 
@@ -772,20 +772,22 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // do liquidation protocol
     {
-        // After force liquidation occurs, the liquidation positions will be separated from the user’s equity balance.
+        // After force liquidation occurs, the liquidation 
+        // positions will be separated from the user’s equity balance.
         
         // TODO check this
         // TODO close orders where not reduce only
         .order.CancelAllOrders[y[`accountId]];
-        y:exec from .qt.Account where accountId:y[`accountId];
-        if[y[`available]<y[`maintMarginReq];[
+        z:exec from .qt.Account where accountId:z[`accountId];
+        if[z[`available]<z[`maintMarginReq];[
             // The system will cancel all current orders for this symbol contract;
 
             // The long and short positions of the contract of the same period will be self-traded;
 
+
             // If the maintMargin req still exceeds available liquidation shall occur
             
         ]]; 
-    }[ins]'[select from x where available<maintMarginReq];
+    }[ins;time]'[select from x where available<maintMarginReq];
     
     };
