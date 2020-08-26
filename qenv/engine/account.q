@@ -508,7 +508,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     newAvailable;orderMargin;nval;premium;openloss);
 
 
-    $[(newAvailable>0);[
+    $[(account[`available]>0);[
 
         // open buy order qty
         // open buy premium
