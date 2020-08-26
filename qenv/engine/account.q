@@ -444,11 +444,13 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
         account[`openBuyPremium]+:premium;
         account[`openBuyOrderQty]+:qty; 
         account[`openBuyValue]+:(price*qty);
+        account[`openBuyCost]+:(premium*qty);
     ];
     [
         account[`openSellPremium]+:premium;
         account[`openSellOrderQty]+:qty; 
         account[`openSellValue]+:(price*qty);
+        account[`openSellCost]+:(premium*qty);
     ]];
 
 
