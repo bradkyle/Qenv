@@ -1377,6 +1377,9 @@ test:.qt.Unit[
     ".account.AddMargin";
     {[c]
         p:c[`params];
+        setupInstrument[p];
+        setupAccount[p];
+        setupInventory[p];
 
         a:p[`args];
         .account.AddMargin[a til[4]];
