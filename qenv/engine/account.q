@@ -744,6 +744,13 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
 
+    // TODO unrealizedPnl
+    // TODO bankruptCost
+    // grossOpenPremium
+    // withdrawable
+    // frozen
+
+
     // todo update the open loss of all accounts
     // TODO check for liquidations
     i:update 
@@ -756,7 +763,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
-    select available:balance-sum[
+    x:select available:balance-sum[
             neg[unrealizedPnl],
             posMargin,
             orderMargin,
@@ -773,6 +780,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         if[acc[`initMargin];[
             
         ]]; 
-    } select accountId from .account.Account where (initMargin+realizedPnl+unrealizedPnl)<maintMargin;
+    } select from x where available<maintMarginReq;
     
     };
