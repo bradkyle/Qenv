@@ -493,14 +493,16 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     // available
     // maintMargin
     // frozen
-    / ![`.account.Account;
-    /         enlist (=;`accountId;x);
-    /         0b;`selfFillCount`selfFillVolume!(
-    /             (+;`selfFillCount;y);
-    /             (+;`selfFillVolume;z);
-    /             (+;`orderMargin;x);
-    /             (+;)
-    /         )];
+    ![`.account.Account;
+            enlist (=;`accountId;x);
+            0b;`selfFillCount`selfFillVolume!(
+                (+;`openSellOrderQty;y);
+                (+;`openSellPremium;z);
+                (+;`openBuyOrderQty;y);
+                (+;`openBuyPremium;z);
+                (+;`orderMargin;x);
+                (+;)
+            )];
             
     };
 
