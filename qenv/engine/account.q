@@ -422,6 +422,8 @@ IncSelfFill    :{
 // -------------------------------------------------------------->
 // Does premium change with changing mark price?
 
+dcMrg   :{`long(x*y)};
+dcCnt   :{`long(x*y)};
 
 // Validates that the account can open the order.
 // Updates the open order state of an account
@@ -477,7 +479,7 @@ AddMargin    :{[isignum;price;qty;account;instrument]
 
     account[`openCost]:(sum[account`openSellCost`openBuyCost] | 0);
 
-    amt:max[account[`netLongPosition],account[`netShortPosition]];
+    amt:max[account`netLongPosition`netShortPosition];
 
     // TODO get maximum position for set leverage
     
@@ -519,9 +521,10 @@ AddMargin    :{[isignum;price;qty;account;instrument]
         // frozen
         // Available/frozen/withdrawable
         ![`.account.Account;
-                enlist (=;`accountId;account[`accountId]);0b;
+                enlist (=;`accountId;account[`accountId]);
+                0b;
                 account];
-                
+
     ];['INSUFFICIENT_MARGIN]];
             
     };
