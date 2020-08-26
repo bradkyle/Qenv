@@ -581,99 +581,104 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
         acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openCost]));
     ]];
 
-    $[acc[`positionType]=`HEDGED;
-        $[reduceOnly;
-            [
-                // CLOSE given side for position
-                i:.account.Inventory@(accountId;HedgedNegSide[side]);
-                oi:.account.Inventory@(accountId;HedgedSide[side]);
+    $[acc[`positionType]=`HEDGED;[ 
+            $[reduceOnly;
+                [
+                    iside:HedgedNegSide[side];
+                    oside:HedgedSide[side];
+                    // CLOSE given side for position
+                    i:.account.Inventory@(accountId;HedgedNegSide[side]);
+                    oi:.account.Inventory@(accountId;HedgedSide[side]);
 
-                if[size>i[`amt];:.event.AddFailure[]]; // TODO error
+                    if[size>i[`amt];:.event.AddFailure[]]; // TODO error
 
-                cost:qty*fee;
-                rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
-                i[`totalCommission]+:cost;
-                i[`realizedGrossPnl]+:(rpl-cost);
-                i[`realizedPnl]+:rpl;
-                i[`amt]-:qty;
-                i[`fillCount]+:1;
-                i[`tradeVolume]+:qty;
+                    cost:qty*fee;
+                    rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
+                    i[`totalCommission]+:cost;
+                    i[`realizedGrossPnl]+:(rpl-cost);
+                    i[`realizedPnl]+:rpl;
+                    i[`amt]-:qty;
+                    i[`fillCount]+:1;
+                    i[`tradeVolume]+:qty;
 
-                i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
+                    i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
 
-                i[`initMargin]:i[`entryValue]%acc[`leverage];
-                i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                if[isMaker;i[`orderMargin]];
-                i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
+                    i[`initMargin]:i[`entryValue]%acc[`leverage];
+                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                    if[isMaker;i[`orderMargin]];
+                    i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
 
-                acc[`balance]+:(rpl-cost); 
-                acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+                    acc[`balance]+:(rpl-cost); 
+                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
 
-                // TODO account netShortPosition, netLongPosition
+                    // TODO account netShortPosition, netLongPosition
+                ];
+                [
+                    iside:HedgedNegSide[side];
+                    oside:HedgedSide[side];
+                    // OPEN given side for position
+                    i:.account.Inventory@(accountId;iside);
+                    oi:.account.Inventory@(accountId;oside);
+
+                    i[`currentQty]+:qty;
+
+                    cost:qty*fee;
+                    i[`totalCommission]+:cost;
+                    i[`fillCount]+:1;
+                    i[`tradeVolume]+:qty;
+                    i[`realizedPnl]-:cost;
+
+                    / Because the current position is being increased
+                    / an entry is added for calculation of average entry
+                    / price. 
+                    i[`totalEntry]+: abs[qty];
+
+                    i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
+
+                    / Calculates the average price of entry for 
+                    / the current postion, used in calculating 
+                    / realized and unrealized pnl.
+                    i[`avgPrice]: .account.avgPrice[
+                        i[`isignum];
+                        i[`execCost];
+                        i[`totalEntry];
+                        isinverse];
+
+                    i[`unrealizedPnl]:.account.unrealizedPnl[
+                        i[`avgPrice];
+                        markPrice;
+                        i[`amt];
+                        ins[`faceValue];
+                        i[`isignum];
+                        isinverse];
+
+                    i[`entryValue]:i[`amt]%i[`avgPrice];
+
+                    i[`initMargin]:i[`entryValue]%acc[`leverage];
+                    
+                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+                    
+                    i[`maintMargin]:.account.maintainenceMargin[i;ins];
+
+                    lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+                    bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
+    
+                    acc[`balance]+:(rpl-cost); 
+                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+                    // TODO account netShortPosition, netLongPosition
+
+                ]
             ];
-            [
-                // OPEN given side for position
-                side:HedgedNegSide[side];
-                i:.account.Inventory@(accountId;side);
-                oi:.account.Inventory@(accountId;HedgedSide[side]);
-
-                i[`currentQty]+:qty;
-
-                cost:qty*fee;
-                i[`totalCommission]+:cost;
-                i[`fillCount]+:1;
-                i[`tradeVolume]+:qty;
-                i[`realizedPnl]-:cost;
-
-                / Because the current position is being increased
-                / an entry is added for calculation of average entry
-                / price. 
-                i[`totalEntry]+: abs[qty];
-
-                i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
-
-                / Calculates the average price of entry for 
-                / the current postion, used in calculating 
-                / realized and unrealized pnl.
-                i[`avgPrice]: .account.avgPrice[
-                    i[`isignum];
-                    i[`execCost];
-                    i[`totalEntry];
-                    isinverse];
-
-                i[`unrealizedPnl]:.account.unrealizedPnl[
-                    i[`avgPrice];
-                    markPrice;
-                    i[`amt];
-                    ins[`faceValue];
-                    i[`isignum];
-                    isinverse];
-
-                i[`entryValue]:i[`amt]%i[`avgPrice];
-
-                i[`initMargin]:i[`entryValue]%acc[`leverage];
-                
-                i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                
-                i[`maintMargin]:.account.maintainenceMargin[i;ins];
-
-                lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-                bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
- 
-                acc[`balance]+:(rpl-cost); 
-                acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-                // TODO account netShortPosition, netLongPosition
-
-            ]
         ];
         [
-            i:.account.Inventory@(accountId;`BOTH);
+            iside:`BOTH;
+            i:.account.Inventory@(accountId;iside);
             namt:i[`amt]+qty;
             $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
                 [
