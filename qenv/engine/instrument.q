@@ -126,7 +126,7 @@ defaults:{:(
     };
 allCols:cols Instrument;
 
-// Inventory CRUD Logic
+// Instrument CRUD Logic
 // -------------------------------------------------------------->
 
 // TODO instrument udpate event
@@ -148,6 +148,6 @@ UpdateMarkPrice : {[markPrice;instrumentId;time]
     update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
     };
 
-DerivePremium   :{[]
 
-    };
+// Instrument Liquidation Logic?
+// -------------------------------------------------------------->
