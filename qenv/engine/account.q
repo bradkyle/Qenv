@@ -501,16 +501,18 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
         // frozen
         // Available/frozen/withdrawable
         ![`.account.Account;
-                enlist (=;`accountId;x);
-                0b;`selfFillCount`selfFillVolume!(
-                    (`openSellOrderQty;newOpenSellOrderQty);
-                    (`openSellPremium;newOpenSellOrderQty);
-                    (`openBuyOrderQty;newOpenBuyOrderQty);
-                    (`openBuyPremium;newOpenBuyPremium);
-                    (`grossOpenPremium;grossOpenPremium);
-                    (`orderMargin;newOrderMargin);
-                    (`available;newAvailable);
-                    (`withdrawable;0)
+                enlist (=;`accountId;x);0b;
+                (`openSellOrderQty`openSellPremium,
+                  `openBuyOrderQty`openBuyPremium`grossOpenPremium,
+                  `orderMargin`available`withdrawable)!(
+                    newOpenSellOrderQty;
+                    newOpenSellOrderQty;
+                    newOpenBuyOrderQty;
+                    newOpenBuyPremium;
+                    grossOpenPremium;
+                    newOrderMargin;
+                    newAvailable;
+                    0
                 )];
     ];['INSUFFICIENT_MARGIN]];
             
