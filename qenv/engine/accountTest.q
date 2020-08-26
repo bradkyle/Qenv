@@ -1418,15 +1418,14 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
 
-    :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows`eEvents!(
+    :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows!(
         cIns;
         cAcc;
         cInv;
         p[3];
         eAcc;
         eInv;
-        p[6];
-        p[7]
+        p[6]
         );
     };
 
@@ -1455,8 +1454,7 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000; 0);
         (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
-    0N;
-    () // Expected events
+    0N
     )]];
 
 .qt.AddCase[test;"Order is placed with premium and no previous order margin etc.";deriveCaseParams[(
@@ -1484,8 +1482,7 @@ deriveCaseParams :{[p]
         (0;`LONG;100;100;l 1e9; 1000; 0);
         (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
-    0N;
-    () // Expected events
+    0N
     )]];
 
 / .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 70/30 open orders";deriveCaseParams[()]];

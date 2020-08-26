@@ -472,7 +472,6 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     lm:first ?[instrument[`riskTiers];enlist(>;`mxamt;amt); 0b; ()]; // make into seperate function
     imr:lm[`imr];
 
-
     / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 
     / when opening an order at an unfavorable price with respect to the mark price serves to 
     / reference the loss that would be incurred by this order when it is filled. 
@@ -514,7 +513,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
                   `openBuyOrderQty`openBuyPremium`grossOpenPremium,
                   `orderMargin`available`withdrawable)!(
                     newOpenSellOrderQty;
-                    newOpenSellOrderQty;
+                    newOpenSellPremium;
                     newOpenBuyOrderQty;
                     newOpenBuyPremium;
                     grossOpenPremium;
