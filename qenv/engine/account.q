@@ -369,9 +369,6 @@ Inventory: (
     totalCloseAmt            :  `long$();
     totalCrossAmt            :  `long$();
     totalOpenAmt             :  `long$(); 
-    liquidationPrice         :  `long$();
-    bankruptPrice            :  `long$();
-    breakEvenPrice           :  `long$(); 
     lastValue                :  `long$(); 
     markValue                :  `long$();
     initMarginReq            :  `long$();
@@ -385,7 +382,7 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  
 NewInventory : {[inventory;time] 
@@ -486,6 +483,9 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
 
+    newOrderMargin: account[`orderMargin] + (imr*qty);
+    available:account[`balance]-account[]
+
     // open buy order qty
     // open buy premium
     // open sell order qty
@@ -505,8 +505,8 @@ UpdateMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
                 (`openBuyOrderQty;newOpenBuyOrderQty);
                 (`openBuyPremium;newOpenBuyPremium);
                 (`grossOpenPremium;grossOpenPremium);
-                (+;`orderMargin;(imr*qty));
-                (`available;0);
+                (+;`orderMargin;);
+                (`available;);
                 (`withdrawable;0)
             )];
             

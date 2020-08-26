@@ -433,7 +433,7 @@ NewOrder       : {[o;time];
     // Account related validation
     if[not(o[`accountId] in key .account.Account);(.event.AddFailure[time;`INVALID_ACCOUNTID;"not right"]; 'INVALID_ACCOUNTID)];
 
-    acc:.account.Account@o[`accountId];
+    acc:.account.Account@o[`accountId]; // TODO get account leverage setting
 
     if[o[`reduceOnly] and (o[`otype] in `LIMIT`MARKET) and
         (((o[`side]=`SELL) and (o[`size]> acc[`netShortPosition])) or
