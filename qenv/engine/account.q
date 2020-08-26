@@ -384,7 +384,6 @@ Inventory: (
     leverage                 :  `long$();
     effectiveLeverage        :  `long$();
     totalCommission          :  `long$();
-    faceValue                :  `long$();
     isignum                  :  `long$();
     fillCount                :  `long$());
 
@@ -746,7 +745,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // todo update the open loss of all accounts
     // TODO check for liquidations
     update 
-        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;ins[`faceValue];isignum;ins[`isinverse]], 
+        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;ins[`faceValue];isignum;ins[`isinverse]],
+        markValue:mp*amt
         from `.account.Inventory;
   
 
