@@ -738,19 +738,16 @@ liqudiatePosition :{[]
 
     };
 
-UpdateMarkPrice : {[markPrice;instrumentId;time]
+UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
 
     // todo update the open loss of all accounts
     // TODO check for liquidations
-    update unrealizedPnl:unrealizedPnl[avgPrice;amt;ins] from `.account.Inventory;
     update 
-        unrealizedPnl:0, 
-        posMargin:0, 
-        available:0, 
-        leverage:0 from `.account.Inventory;
+        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;ins[`faceValue];isignum;ins[`isinverse]], 
+        from `.account.Inventory;
   
 
     // do liquidation protocol
