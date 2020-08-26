@@ -542,6 +542,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     qty:abs[qty];
 
     // TODO if is maker reduce order margin here!
+    // TODO fill cannot occur when BOTH inventory is open
 
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not(accountId in key .account.Account);
@@ -685,7 +686,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // Close positionType BOTH
                     // TODO account netShortPosition, netLongPosition
                     // CLOSE given side for position
-                    i:.account.Inventory@(accountId;HedgedNegSide[side]);
 
                     if[size>i[`amt];:.event.AddFailure[]];
 
@@ -704,6 +704,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
                     if[isMaker;i[`orderMargin]];
                     i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+                    i[`isignum]:neg[i[`isignum]];
 
                     acc[`balance]+:(rpl-cost); 
                     acc[`unrealizedPnl]: i[`unrealizedPnl];
