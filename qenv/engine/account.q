@@ -780,6 +780,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         if[x[`available]<x[`maintMarginReq];[
             // TODO self trading
             // The system will cancel all current orders for this symbol contract;
+
+            // The long and short positions of the contract of the same period will be self-traded;
             
         ]]; 
     }[ins]'[select from x where available<maintMarginReq];
