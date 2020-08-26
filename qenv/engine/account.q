@@ -775,7 +775,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         // TODO check this
         .order.CancelAllOrders[x[`accountId]];
         x:exec from .qt.Account where accountId:x[`accountId];
-        if[acc[`available]<acc[`maintMarginReq];[
+        if[x[`available]<x[`maintMarginReq];[
             
         ]]; 
     }'[select from x where available<maintMarginReq];
