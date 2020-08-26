@@ -778,8 +778,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         x:exec from .qt.Account where accountId:x[`accountId];
         if[x[`available]<x[`maintMarginReq];[
             // TODO self trading
+            // The system will cancel all current orders for this symbol contract;
             
         ]]; 
-    }'[select from x where available<maintMarginReq];
+    }[ins]'[select from x where available<maintMarginReq];
     
     };
