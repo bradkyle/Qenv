@@ -131,7 +131,7 @@ avgPrice :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling res
 // @isignum: The sign of the instrument
 // @isinverse: Is the instrument an inverse contract
 unrealizedPnl       :{[avgprice;markprice;amt;faceValue;isignum;isinverse]
-    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(amt*isignum));
+    :($[isinverse;(faceValue%markprice)-(faceValue%avgprice);markprice-avgprice]*(amt*isignum));
     };
 
 // Calculates the realized profit and losses for a given position, size is a positive
@@ -389,7 +389,7 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  
 NewInventory : {[inventory;time] 
@@ -505,6 +505,8 @@ AddMargin    :{[isignum;price;qty;account;instrument]
     account[`available]:`long$(account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openCost]));
 
     .qt.ACC:account;
+    .qt.ACT:.account.Account;
+    .qt.INV:.account.Inventory;
     / .qt.OM:omc!(account);
 
 
@@ -745,17 +747,17 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // todo update the open loss of all accounts
     // TODO check for liquidations
     update 
-        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;ins[`faceValue];isignum;ins[`isinverse]],
-        markValue:mp*amt
+        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;1;isignum;0b], // TODO upscale
+        markValue:mp*amt // TODO upscale
         from `.account.Inventory;
 
-    accounts:.account.Account lj select sum unrealizedPnl from .account.Inventory where amt>0;
+    / accounts:.account.Account lj select sum unrealizedPnl from .account.Inventory where amt>0;
   
     // TODO open cost changes
-    select sum'[orderMargin;openCost] 
+    / select sum'[orderMargin;openCost] 
     
 
-    select sum'[unrealizedPnl;posMargin;orderMargin;openCost] by accountId from .account.Inventory where amt>0;
+    / select sum'[unrealizedPnl;posMargin;orderMargin;openCost] by accountId from .account.Inventory where amt>0;
 
     // do liquidation protocol
     {
