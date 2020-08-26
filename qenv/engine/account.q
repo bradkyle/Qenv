@@ -522,10 +522,6 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
             
     };
 
-// Utilized when cancelling orders or filling positions
-RemoveMargin       :{
-
-    };
 
 // TODO
 // maint margin
