@@ -1465,7 +1465,7 @@ deriveCaseParams :{[p]
     )]);
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`HEDGED;1000;1000;0;0;0;1;0); // Current Account
+    (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);

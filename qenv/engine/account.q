@@ -421,8 +421,9 @@ IncSelfFill    :{
 // Updates the open order state of an account
 // Updates an accounts order margin, open order amount, order premium 
 // netLongPosition/netShortPosition
-// used when opening a position
+// used when opening a position/ apply fill
 // used when cancelling orders, placing new orders
+// used when mark price is updated
 // @delta      : the amount by which the order quantity is to be changed.
 // @side       : the side that is to be updated by the order.
 // @price      : the price of the given order.
@@ -485,16 +486,19 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Is my assumption about the changing premium correct in this regard? Thanks
     
     oval:(newOpenBuyOrderQty+newOpenSellOrderQty)*instrument[`markPrice];
+
+    // The portion of your margin that is assigned to the 
+    // initial margin requirements on your open orders.
     orderMargin:oval%account[`leverage];
-    account[`orderMargin]: + orderMargin;
-    newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
+    account[`orderMargin]+: orderMargin;
+    newAvailable:account[`balance]-(account[`posMargin]+account[`orderMargin]);
 
     omc:raze(`imr;`qty;`account;`grossOpenPremium;`amt;`lm;`newOpenBuyPremium;`newOpenSellPremium;`newOpenBuyOrderQty;`newOpenSellOrderQty;
-    `newAvailable;`newOrderMargin;`orderMargin;`oval;`premium;`openloss);
+    `newAvailable;`orderMargin;`oval;`premium;`openloss);
 
 
     .qt.OM:omc!(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
-    newAvailable;newOrderMargin;orderMargin;oval;premium;openloss);
+    newAvailable;orderMargin;oval;premium;openloss);
 
 
     $[(newAvailable>0);[
