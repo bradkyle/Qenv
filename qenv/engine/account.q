@@ -427,11 +427,12 @@ IncSelfFill    :{
 // @account    : dict representation of the account to be updated
 // @instrument : dict representation of the orders instrument 
 AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
+    isinverse: instrument[`contractType]=`INVERSE;
 
     // derive next amount
     // derive the 
     premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]];
-    openloss:qty * premium;
+    openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
     $[isignum>0;[
         newOpenBuyPremium:account[`openBuyPremium]+premium;
@@ -459,7 +460,7 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
 
     grossOpenPremium:(
         0^abs[(newOpenBuyPremium * sum[account[`netLongPosition], newOpenBuyOrderQty]%newOpenBuyOrderQty)] + 
-        0^abs[(newOpenSellPremium * sum[account[`netShortPosition], newOpenSellOrderQty]%newOpenSellOrderQty)]
+        0^abs[(newOpenSellPremium * sum[neg[account[`netShortPosition]], newOpenSellOrderQty]%newOpenSellOrderQty)]
     );
 
     / Math.abs((newOpenBuyPremium * net(currentQty, newOpenBuyQty) / newOpenBuyQty) || 0) +
@@ -483,13 +484,13 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
     / Is my assumption about the changing premium correct in this regard? Thanks
     
-
-    orderMargin:imr*((newOpenBuyOrderQty+newOpenSellOrderQty)+grossOpenPremium);
+    oval:((newOpenBuyOrderQty+newOpenSellOrderQty)+grossOpenPremium);
+    orderMargin:imr*oval;
     newOrderMargin: account[`orderMargin] + orderMargin;
     newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
 
     .qt.OM:(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
-    newAvailable;newOrderMargin;orderMargin);
+    newAvailable;newOrderMargin;orderMargin;oval;premium;openloss);
 
 
     $[(newAvailable>0);[
