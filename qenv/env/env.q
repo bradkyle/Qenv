@@ -184,7 +184,7 @@ Reset    :{[config]
     // testing sample size
     // memory size
     // 
-    // TODO config engine
+    // TODO log config to analytics 
 
     .state.Reset[config];
     // TODO randomization of environment config
