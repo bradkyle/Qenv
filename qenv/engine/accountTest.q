@@ -1430,7 +1430,10 @@ deriveCaseParams :{[p]
 
 .qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;0.5;1e9;0f;1e6f;0f;100;1000f);
+    (`VANILLA;0;0.5;1e9;0f;1e6f;0f;100;1000f;.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    ));
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
