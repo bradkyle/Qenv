@@ -767,8 +767,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
         ]
     ];
 
-    ![`.account.Account;enlist(=;`accountId;accountId);0b;];
-    ![`.account.Account;enlist(=;`accountId;accountId);0b;];
+    ![`.account.Account;enlist(=;`accountId;accountId);0b;acc];
+    ![`.account.Account;enlist(=;`accountId;accountId);0b;i];
 
     };
 
