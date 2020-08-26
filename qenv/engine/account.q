@@ -749,7 +749,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt
         from `.account.Inventory;
   
-    select sum'[unrealizedPnl;posMargin] by accountId from .account.Inventory;
+    select orderMargin select neg[sum'[unrealizedPnl;posMargin]] by accountId from .account.Inventory;
 
     // do liquidation protocol
     {
