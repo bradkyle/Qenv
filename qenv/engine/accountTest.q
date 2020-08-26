@@ -1461,7 +1461,7 @@ deriveCaseParams :{[p]
 
 .qt.AddCase[test;"Order is placed with premium and no previous order margin etc.";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;`VANILLA;0.5;1e9;0f;1e6f;0f;100;1000f;.instrument.NewRiskTier[(
+    (0;`VANILLA;0.5;1e9;0f;1e6f;0f;100;1010f;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )]);

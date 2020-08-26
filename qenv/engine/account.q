@@ -484,9 +484,9 @@ AddMargin    :{[isignum;price;qty;reduceOnly;account;instrument]
     / Is my assumption about the changing premium correct in this regard? Thanks
     
 
-    orderMargin:imr*qty;
+    orderMargin:imr*((newOpenBuyOrderQty+newOpenSellOrderQty)+grossOpenPremium);
     newOrderMargin: account[`orderMargin] + orderMargin;
-    newAvailable:account[`balance]-(account[`posMargin]+(newOrderMargin+grossOpenPremium));
+    newAvailable:account[`balance]-(account[`posMargin]+newOrderMargin);
 
     .qt.OM:(imr;qty;account;grossOpenPremium;amt;lm;newOpenBuyPremium;newOpenSellPremium;newOpenBuyOrderQty;newOpenSellOrderQty;
     newAvailable;newOrderMargin);
