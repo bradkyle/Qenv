@@ -746,10 +746,10 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // todo update the open loss of all accounts
     // TODO check for liquidations
-    update 
+    i:update 
         unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;1;isignum;0b], // TODO upscale
         markValue:mp*amt // TODO upscale
-        from `.account.Inventory;
+        from .account.Inventory where amt>0;
 
     / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
     select available:balance-sum[
@@ -757,7 +757,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             posMargin,
             orderMargin,
             openCost] by accountId from 
-            (.account.Account lj select sum unrealizedPnl by accountId from x where amt>0); // TODO test this
+            (.account.Account lj (select sum unrealizedPnl by accountId from i)); // TODO test this
   
     // TODO open cost changes
     / select sum'[orderMargin;openCost] 
