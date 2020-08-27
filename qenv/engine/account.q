@@ -443,7 +443,7 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     isinverse: instrument[`contractType]=`INVERSE;
 
     // derive next amount
-    // derive the 
+    // derive the // Clip Neg and account for premium in inverse and linear contracts
     premium:`long$(abs[min[0,(isignum*(instrument[`markPrice]-price))]]); // TODO avg price
     / openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
 
