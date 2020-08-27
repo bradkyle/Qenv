@@ -56,55 +56,44 @@ OKEX_MM_1 = {
                 "maxUpdateDrift":30,
             },
             "instrument":{
-                "contractType":"LINEAR",
-                "quoteAsset":"BTC",
-                "settleAsset":"USDT",
+                "contractType":"INVERSE",
+                "quoteAsset":"USD",
+                "settleAsset":"XBT",
                 "faceValue":1,
-                "maxLeverage":125,
+                "maxLeverage":100,
                 "minLeverage":0,
-                "tickSize":0.01,
-                "priceMultiplier":100,
-                "cntMultiplier":1000,
-                "marginMultiplier":1,
+                "tickSize":0.5,
+                "priceMultiplier":10,
+                "cntMultiplier":0,
+                "marginMultiplier":1e8,
                 "maxPrice":1000000,
                 "maxOrderQty":10000000,
                 "minPrice":0,
-                "lotSize":1,  # TODO
-                "junkOrderSize":25, # TODO
+                "lotSize":1,
+                "junkOrderSize":25,
                 "liquidationStrat":[
-                    "CANCELORDERS",  # TODO
+                    "CANCELORDERS",
                     "TAKEOVER"
                 ],
-                "insuranceFee":"",  # TODO
-                "maxOpenOrders":0, 
+                "insuranceFee":"",
+                "maxOpenOrders":100,
                 "feeTiers":{
-                    "kind":"tier",
-                    "tiers":(
-                        (50,      0.0006,    0.0006,    600),
-                        (500,     0.00054,   0.0006,    600),
-                        (1500,    0.00048,   0.0006,    600),
-                        (4500,    0.00042,   0.0006,    600),
-                        (10000,   0.00042,   0.00054,   600),
-                        (20000,   0.00036,   0.00048,   600),
-                        (40000,   0.00024,   0.00036,   600),
-                        (80000,   0.00018,   0.000300,  600),
-                        (150000,  0.00012,   0.00024,   600)                    
-                    )
+                    "kind":"flat",
+                    "vol": 0,
+                    "makerFee":-0.00025,
+                    "takerFee":0.00075,
+                    "wdrawFee":0,
+                    "dpsitFee":0,
+                    "wdrawLimit":0
                 },
                 "riskTiers":{
-                    "kind":"tier",
-                    "tiers":(
-                        (50000,       0.004,    0.008,    125),
-                        (250000,      0.005,    0.01,     100),
-                        (1000000,     0.01,     0.02,     50),
-                        (5000000,     0.025,    0.05,     20),
-                        (20000000,    0.05,     0.1,      10),
-                        (50000000,    0.1,      0.20,     5),
-                        (100000000,   0.125,    0.25,     4),
-                        (200000000,   0.15,     0.333,    3),
-                        (500000000,   0.25,     0.50,     2),
-                        (500000000,   0.25,     1.0,      1)
-                    )
+                    "kind":"procedural",
+                    "baserl":200,
+                    "step":100,
+                    "maintM":0.0035,
+                    "initM":0.01,
+                    "maxLev":100,
+                    "numTier":40
                 }
             },
             "accounts":[ # TODO add more i.e. 10

@@ -58,7 +58,7 @@ BINANCE_MM_1 = {
                 "contractType":"LINEAR",
                 "quoteAsset":"BTC",
                 "settleAsset":"USDT",
-                "faceValue":1,
+                "faceValue":100,
                 "maxLeverage":125,
                 "minLeverage":0,
                 "tickSize":0.01,
