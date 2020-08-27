@@ -809,7 +809,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
 
     / The change in premium is equal to the amount of contracts open 
-    / 
+    / times the delta in the mark price
+    markdelta:mp-ins[`markPrice];
 
     // TODO unrealizedPnl
     // TODO bankruptCost
