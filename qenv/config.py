@@ -29,9 +29,10 @@ class Env():
         "name":"bitmex_1",
         "config":{
             "env":{
-                "rewardkind":"sortino",
-                "adapterKind":"marketmaker",
-                "windowing":{
+                "adapter":{
+                    "kind":"marketmaker"
+                },
+                "step":{
                     "kind":"temporal",
                     "interval":5 #Seconds
                 },
@@ -44,10 +45,10 @@ class Env():
                     "max":100,
                 },
                 "observation":{
-
+                    "window":100,
                 },
                 "reward":{
-                    
+                    "window":300,
                 }
             },
             "engine":{
