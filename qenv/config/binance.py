@@ -56,10 +56,10 @@ BITMEX_MM_1 = {
             },
             "instrument":{
                 "contractType":"LINEAR",
-                "quoteAsset":"USD",
-                "settleAsset":"XBT",
+                "quoteAsset":"BTC",
+                "settleAsset":"USDT",
                 "faceValue":1,
-                "maxLeverage":100,
+                "maxLeverage":125,
                 "minLeverage":0,
                 "tickSize":0.5,
                 "priceMultiplier":10,
