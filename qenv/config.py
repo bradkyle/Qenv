@@ -69,8 +69,7 @@ class Env():
             "instrument":{
                 "contractType":"INVERSE",
                 "quoteAsset":"USD",
-                "baseAsset":"XBT",
-                "underlyingAsset": "XBT",
+                "settleAsset":"XBT",
                 "faceValue":1,
                 "maxLeverage":100,
                 "minLeverage":0,
@@ -80,7 +79,7 @@ class Env():
                 "marginMultiplier":1e8,
                 "maxPrice":1000000,
                 "maxOrderQty":10000000,
-                "minPrice":"",
+                "minPrice":0,
                 "lotSize":1,
                 "junkOrderSize":25,
                 "liquidationStrat":{},
