@@ -815,7 +815,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         openCost:0 // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
-    / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
     x:select available:balance-sum[
             neg[unrealizedPnl],
             posMargin,
