@@ -35,7 +35,7 @@ class Env():
 
                     },
                     "limitSize":0,
-                    "marketSize":0,
+                    "marketSize":0
                 },
                 "step":{
                     "kind":"temporal",
