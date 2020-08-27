@@ -831,9 +831,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // new OrderCost: deltaMarkprice
     // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
 
-    sellcostdelta:{((x%y)-1)*806};
-    buycostdelta:{};
-
     a:update
         openCost:.account.newOpenCost[ins[`markPrice];mp;openCost;openBuyCost;openSellCost]
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
