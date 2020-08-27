@@ -42,6 +42,12 @@ class Env():
                 "balance":{
                     "min":0,
                     "max":100,
+                },
+                "observation":{
+
+                },
+                "reward":{
+                    
                 }
             },
             "engine":{
