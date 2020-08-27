@@ -73,10 +73,16 @@ class Env():
                 "insuranceFee":"",
                 "maxOpenOrders":0,
                 "feeTiers":{
-
+                    "kind":"flat"
                 },
                 "riskTiers":{
-
+                    "kind":"procedural",
+                    "baserl":200,
+                    "step":100,
+                    "maintM":0.0035,
+                    "initM":0.01,
+                    "maxLev":100,
+                    "numTier":40
                 }
             },
             "accounts":[
