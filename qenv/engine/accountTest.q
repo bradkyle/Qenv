@@ -2480,21 +2480,21 @@ deriveCaseParams :{[p]
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[6];
+    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[5];
 
     // Construct Expected Inventory
-    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[7]]];
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
     :`cIns`cAcc`cInv`cOrd`fill`markPrice`eAcc`eInv`eOrd`eEvents!(
         cIns;
         cAcc;
         cInv;
         makeOrders[p[3]];
-        p[5];
+        p[4];
         eAcc;
         eInv;
-        makeOrders[p[8]];
-        p[9]
+        makeOrders[p[7]];
+        p[8]
         );
     };
 
