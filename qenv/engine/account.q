@@ -445,9 +445,9 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     / price:1020; mark:1010; leverage:10; quantity:1000;
     / inverse_notional:(quantity*(1%price))%leverage // inverse
     / linear_notional:(quantity*price)%leverage // inverse
-    /
-    /
-    /
+    / premium: abs[min[0,(isignum*(mark-price))]];
+    / inverse_cost:0;
+    / linear_cost:0;
     /
     /
     /
