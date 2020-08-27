@@ -88,7 +88,8 @@ class Env():
                 "lotSize":1,
                 "junkOrderSize":25,
                 "liquidationStrat":[
-                    ""
+                    "CANCELORDERS",
+                    "TAKEOVER"
                 ],
                 "insuranceFee":"",
                 "maxOpenOrders":0,
