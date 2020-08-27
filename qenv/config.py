@@ -52,7 +52,8 @@ class Env():
                     "window":300,
                 },
                 "done":{
-                    "minBalanceFrac":
+                    "onLiquidation":True,
+                    "balance":0,
                 }
             },
             "engine":{
