@@ -23,8 +23,8 @@ NewFeeTier              :{[tier]
     };
 
 
-NewFlatFee              :{[]
-    // TODO
+NewFlatFee              :{[tier]
+    :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
 
 // https://blog.bitmex.com/xbt-vs-xbu-chain/
