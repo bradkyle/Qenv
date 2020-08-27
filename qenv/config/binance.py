@@ -61,21 +61,21 @@ BITMEX_MM_1 = {
                 "faceValue":1,
                 "maxLeverage":125,
                 "minLeverage":0,
-                "tickSize":0.5,
-                "priceMultiplier":10,
-                "cntMultiplier":0,
-                "marginMultiplier":1e8,
+                "tickSize":0.01,
+                "priceMultiplier":100,
+                "cntMultiplier":1000,
+                "marginMultiplier":1,
                 "maxPrice":1000000,
                 "maxOrderQty":10000000,
                 "minPrice":0,
-                "lotSize":1,
-                "junkOrderSize":25,
+                "lotSize":1,  # TODO
+                "junkOrderSize":25, # TODO
                 "liquidationStrat":[
-                    "CANCELORDERS",
+                    "CANCELORDERS",  # TODO
                     "TAKEOVER"
                 ],
-                "insuranceFee":"",
-                "maxOpenOrders":0,
+                "insuranceFee":"",  # TODO
+                "maxOpenOrders":0, 
                 "feeTiers":{
                     "kind":"tier",
                     "tiers":(

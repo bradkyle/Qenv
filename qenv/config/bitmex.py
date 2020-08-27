@@ -77,7 +77,7 @@ BITMEX_MM_1 = {
                     "TAKEOVER"
                 ],
                 "insuranceFee":"",
-                "maxOpenOrders":0,
+                "maxOpenOrders":100,
                 "feeTiers":{
                     "kind":"flat",
                     "vol": 0,
