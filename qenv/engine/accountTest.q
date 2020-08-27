@@ -2476,7 +2476,6 @@ deriveCaseParams :{[p]
     
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
-    cOrd:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
     // Construct Fill
     f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
