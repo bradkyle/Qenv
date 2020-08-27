@@ -787,7 +787,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // -------------------------------------------------------------->
 
 newOpenCost :{[pmarkprice;nmarkprice;opencost;openbuycost;opensellcost]
-
+    
 
     };
 
