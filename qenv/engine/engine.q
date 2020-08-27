@@ -184,6 +184,11 @@ NewAccountFromConfig    :{[config]
     .account.NewInventory[config[`bothInventory]];
     };
 
+NewInstrumentFromConfig :{[]
+
+
+    };
+
 / Main Setup Function
 / -------------------------------------------------------------------->
 
