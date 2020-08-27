@@ -560,6 +560,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     ins:.instrument.Instrument@instrumentId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     isinverse: ins[`contractType]=`INVERSE;
+    isignum:$[side=`SELL;-1;1];
 
     // TODO update
     if[(isMaker and not[reduceOnly]);[
