@@ -155,7 +155,7 @@ createNaiveStopEvents  :{[aId;loss;time]
 
 
 // Action Adapters
-// --------------------------------------------------->
+// ---------------------------------------------------------------------------------------->
 adapters : (`.adapter.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
