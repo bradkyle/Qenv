@@ -26,7 +26,7 @@ class Env():
 
 [
     {
-        "name":"",
+        "name":"bitmex_1",
         "config":{
             "env":{
                 "rewardkind":"sortino",
@@ -44,13 +44,29 @@ class Env():
                 # TODO
             },
             "instrument":{
+                "contractType":"",
                 "quoteAsset":"",
                 "baseAsset":"",
                 "underlyingAsset": "",
                 "faceValue":"",
                 "maxLeverage":"",
                 "minLeverage":"",
-                ""
+                "tickSize":"",
+                "priceMultiplier":"",
+                "sizeMultiplier":"",
+                "maxPrice":"",
+                "minPrice":"",
+                "lotSize":"",
+                "junkOrderSize":"",
+                "liquidationStrat":{},
+                "insuranceFee":"",
+                "maxOpenOrders":0,
+                "feeTiers":{
+
+                },
+                "riskTiers":{
+                    
+                }
             },
             "accounts":[
                 {
