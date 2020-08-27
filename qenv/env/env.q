@@ -196,7 +196,7 @@ Reset    :{[config]
     .env.GenNextEpisode[]; // TODO check that length is greater than config
 
     nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]];
-    aevents:.env.SetupEvents[];
+    aevents:.env.SetupEvents[config];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
 
