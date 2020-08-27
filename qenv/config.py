@@ -50,6 +50,9 @@ class Env():
                 "reward":{
                     "kind":"sortino",
                     "window":300,
+                },
+                "done":{
+                    "minBalanceFrac":
                 }
             },
             "engine":{
