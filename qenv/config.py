@@ -41,10 +41,16 @@ class Env():
                 }
             },
             "engine":{
-
+                # TODO
             },
             "instrument":{
-
+                "quoteAsset":"",
+                "baseAsset":"",
+                "underlyingAsset": "",
+                "faceValue":"",
+                "maxLeverage":"",
+                "minLeverage":"",
+                ""
             },
             "accounts":[
                 {
