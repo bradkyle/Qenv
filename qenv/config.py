@@ -29,7 +29,16 @@ class Env():
         "name":"",
         "config":{
             "env":{
-
+                "rewardkind":"sortino",
+                "adapterKind":"marketmaker",
+                "windowing":{
+                    "kind":"temporal",
+                    "interval":5 #Seconds
+                },
+                "minibatch":{
+                    "kind":"chronological",
+                    "size":86400 #Seconds
+                }
             },
             "engine":{
 
