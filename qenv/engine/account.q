@@ -451,9 +451,6 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     / linear_cost:(linear_notional%leverage) + (quantity*premium);
     / 
     /
-    /
-    /
-    /
     // derive next amount
     // derive the // Clip Neg and account for premium in inverse and linear contracts
     premium:`long$(abs[min[0,(isignum*(instrument[`markPrice]-price))]]); // TODO avg price
