@@ -22,7 +22,7 @@ NewFeeTier              :{[tier]
     :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
 
-
+// TODO fix
 NewFlatFee              :{[tier]
     :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
