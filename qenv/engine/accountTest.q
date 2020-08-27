@@ -2477,12 +2477,6 @@ deriveCaseParams :{[p]
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
-    // Construct Fill
-    f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[4];
-    f[`accountId]: `.account.Account!f[`accountId];
-    f[`instrumentId]: `.instrument.Instrument!f[`instrumentId];
-    f[`side]: `.order.ORDERSIDE$f[`side]; 
-
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
@@ -2496,7 +2490,6 @@ deriveCaseParams :{[p]
         cAcc;
         cInv;
         makeOrders[p[3]];
-        f;
         p[5];
         eAcc;
         eInv;
@@ -2518,8 +2511,7 @@ deriveCaseParams :{[p]
     );
     (til[4];4#0;4#0;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Current Orders
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
-    (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
-    1000; // Mark Price
+    (1000;0;z); // Parameters
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
