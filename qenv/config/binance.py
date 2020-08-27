@@ -12,7 +12,10 @@ BINANCE_MM_1 = {
                     "limitSize":0,
                     "marketSize":0,
                     "actionSpace":{
-                        
+                        "kind":"tuple",
+                        "space":{
+                            
+                        }
                     }
                 },
                 "step":{
