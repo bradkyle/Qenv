@@ -63,20 +63,21 @@ class Env():
 
                 },
                 "egress_offsets":{
-                    
+
                 }
             },
             "instrument":{
-                "contractType":"",
-                "quoteAsset":"",
-                "baseAsset":"",
-                "underlyingAsset": "",
-                "faceValue":"",
-                "maxLeverage":"",
-                "minLeverage":"",
-                "tickSize":"",
-                "priceMultiplier":"",
-                "sizeMultiplier":"",
+                "contractType":"INVERSE",
+                "quoteAsset":"USD",
+                "baseAsset":"XBT",
+                "underlyingAsset": "XBT",
+                "faceValue":1,
+                "maxLeverage":100,
+                "minLeverage":0,
+                "tickSize":0.5,
+                "priceMultiplier":10,
+                "cntMultiplier":0,
+                "marginMultiplier":1e8,
                 "maxPrice":"",
                 "minPrice":"",
                 "lotSize":"",
