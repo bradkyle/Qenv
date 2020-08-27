@@ -442,12 +442,13 @@ dcCnt   :{`long(x*y)};
 AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order margin
     isinverse: instrument[`contractType]=`INVERSE;
 
+    / IM
     / price:1020; mark:1010; leverage:10; quantity:1000;
     / inverse_notional:(quantity*(1%price)); // inverse
     / linear_notional:(quantity*price); // inverse
     / premium: abs[min[0,(isignum*(mark-price))]];
-    / inverse_cost:(inverse_notional%leverage);
-    / linear_cost:(linear_notional%leverage);
+    / inverse_cost:(inverse_notional*IM); 
+    / linear_cost:(linear_notional*IM);
     /
     /
     /
