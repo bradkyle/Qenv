@@ -562,9 +562,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     acc:.account.Account@accountId;
     ins:.instrument.Instrument@instrumentId;
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-    isinverse: instrument[`contractType]=`INVERSE;
+    isinverse: ins[`contractType]=`INVERSE;
 
-    if[isMaker and not[reduceOnly];[
+    if[(isMaker and not[reduceOnly]);[
         // Remove order margin from account and add it to position margin
         premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
         $[(isignum>0) and (premium>0);[ // TODO fix
