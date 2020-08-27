@@ -40,7 +40,7 @@ class Env():
                     "size":86400 #Seconds
                 },
                 "balance":{
-                    
+
                 }
             },
             "engine":{
@@ -73,25 +73,25 @@ class Env():
             },
             "accounts":[
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},

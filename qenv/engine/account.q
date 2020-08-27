@@ -60,7 +60,8 @@ Account: (
             totalCommission     : `long$();
             selfFillCount       : `long$();
             selfFillVolume      : `long$();
-            leverage            : `long$());
+            leverage            : `long$();
+            monthVolume         : `long$());
 
 mandCols:();
 defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
