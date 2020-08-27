@@ -1,7 +1,6 @@
 
 
 
-
 BITMEX_MM_1 = {
         "name":"bitmex_mm_combined",
         "config":{
