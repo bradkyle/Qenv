@@ -1,7 +1,7 @@
 
 
 BINANCE_MM_1 = {
-        "name":"bitmex_mm_combined",
+        "name":"binance_mm_combined",
         "config":{
             "env":{
                 "adapter":{

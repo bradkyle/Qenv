@@ -2,7 +2,7 @@
 
 
 BINANCE_MM_1 = {
-        "name":"bitmex_mm_combined",
+        "name":"okex_mm_combined",
         "config":{
             "env":{
                 "adapter":{
