@@ -32,6 +32,13 @@ setupInstrument   : {if[count[x[`cIns]]>0;.instrument.NewInstrument[x[`cIns];.z.
 setupDepth      : {if[count[x[`cOB]]>0;.order.ProcessDepthUpdateEvent[x[`cOB]]]}
 setupOrders     : {if[count[x[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each x[`cOrd]]}
 
+makeOrders :{
+    :$[count[x]>0;[ 
+        // Side, Price, Size
+        :{:(`clId`instrumentId`accountId`side`otype`offset`size`price!(
+            x[0];x[1];x[2];(`.order.ORDERSIDE$x[3]);(`.order.ORDERTYPE$x[4]);x[5];x[6];x[7]);x[8])} each flip[x];
+        ];()]};
+
 // @x : params
 // @y : case
 checkInventory     :{
@@ -2469,6 +2476,7 @@ deriveCaseParams :{[p]
     
     // Construct Current Inventory
     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
+    cOrd:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
     // Construct Fill
     f:`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty!p[3];
