@@ -443,11 +443,11 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     isinverse: instrument[`contractType]=`INVERSE;
 
     / price:1020; mark:1010; leverage:10; quantity:1000;
-    / inverse_notional:(quantity*(1%price))%leverage // inverse
-    / linear_notional:(quantity*price)%leverage // inverse
+    / inverse_notional:(quantity*(1%price)); // inverse
+    / linear_notional:(quantity*price); // inverse
     / premium: abs[min[0,(isignum*(mark-price))]];
-    / inverse_cost:0;
-    / linear_cost:0;
+    / inverse_cost:(inverse_notional%leverage);
+    / linear_cost:(linear_notional%leverage);
     /
     /
     /
