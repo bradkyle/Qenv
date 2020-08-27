@@ -564,6 +564,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     isinverse: ins[`contractType]=`INVERSE;
 
+    // TODO update
     if[(isMaker and not[reduceOnly]);[
         // Remove order margin from account and add it to position margin
         premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
