@@ -830,6 +830,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // max[0;(markDelta+openSellCost)]
     // max[0;(markDelta+openBuyCost)]
+    // ((mp%ins[`markPrice])-1) * orderCost
 
     sellcostdelta:{((x%y)-1)*806};
     buycostdelta:{};
