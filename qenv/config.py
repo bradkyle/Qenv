@@ -58,6 +58,9 @@ class Env():
             },
             "engine":{
                 # TODO
+                "loadShedding":{
+
+                },
                 "ingress_offsets":{
 
                 },
