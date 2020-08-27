@@ -812,7 +812,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         from .account.Inventory where amt>0;
 
     a:update
-        openCost:0 // TODO derive open cost
+        openCost:() // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     x:select available:balance-sum[
