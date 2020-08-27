@@ -73,7 +73,13 @@ class Env():
                 "insuranceFee":"",
                 "maxOpenOrders":0,
                 "feeTiers":{
-                    "kind":"flat"
+                    "kind":"flat",
+                    "vol": 0,
+                    "makerFee":-0.00025,
+                    "takerFee":0.00075,
+                    "wdrawFee":0,
+                    "dpsitFee":0,
+                    "wdrawLimit":0
                 },
                 "riskTiers":{
                     "kind":"procedural",
