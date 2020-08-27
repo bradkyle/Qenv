@@ -826,7 +826,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         openCost:() // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
-    x:select maintMarginReq:0, available:balance-sum[
+    x:select
+            maintMarginReq:0, 
+            available:balance-sum[
             neg[unrealizedPnl],
             posMargin,
             orderMargin,
