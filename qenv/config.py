@@ -58,9 +58,6 @@ class Env():
             },
             "engine":{
                 # TODO
-                "orderBook":{
-
-                },
                 "loadShedding":{
 
                 },
@@ -70,6 +67,9 @@ class Env():
                 "egress_offsets":{
 
                 }
+            },
+            "orderBook":{
+                "maxUpdateDrift":30,
             },
             "instrument":{
                 "contractType":"INVERSE",
