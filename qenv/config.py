@@ -26,15 +26,43 @@ class Env():
 
 [
     {
-        "",
-        {
+        "name":"",
+        "config":{
             "env":{
 
             },
             "engine":{
 
             },
+            "instrument":{
 
+            },
+            "accounts":[
+                {
+                    "account":{},
+                    "shortInventory":{},
+                    "longInventory":{},
+                    "bothInventory":{}
+                },
+                {
+                    "account":{},
+                    "shortInventory":{},
+                    "longInventory":{},
+                    "bothInventory":{}
+                },
+                {
+                    "account":{},
+                    "shortInventory":{},
+                    "longInventory":{},
+                    "bothInventory":{}
+                },
+                {
+                    "account":{},
+                    "shortInventory":{},
+                    "longInventory":{},
+                    "bothInventory":{}
+                }
+            ]
         }
     }
 ]
