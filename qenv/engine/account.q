@@ -832,7 +832,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // max[0;(markDelta+openBuyCost)]
 
     a:update
-        openCost:min[0;(openCost+(markdelta*openBuyQty)+(markdelta*openSellQty))] // TODO derive open cost
+        openCost:openCost // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     x:select
