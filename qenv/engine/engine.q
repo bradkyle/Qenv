@@ -184,8 +184,7 @@ NewAccountFromConfig    :{[config]
     .account.NewInventory[config[`bothInventory]];
     };
 
-NewInstrumentFromConfig :{[]
-
+NewInstrumentFromConfig :{[config]
 
     };
 
