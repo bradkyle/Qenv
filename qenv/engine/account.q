@@ -102,8 +102,6 @@ NewAccount :{[account;time]
 // Global Account Utils
 // -------------------------------------------------------------->
 
-
-
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
 // Used to derive the average entry price for a given inventory
