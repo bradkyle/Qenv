@@ -32,7 +32,7 @@ NewFlatFee              :{[tier]
 / instrument enumerations
 INSTRUMENTTYPE      :   `PERPETUAL`ADAPTIVE;
 LIQUIDATIONSTRAT    :   `COMPLETE`PARTIAL; 
-CONTRACTTYPE        :   `VANILLA`QUANTO`INVERSE; // TODO change vanilla to inverse
+CONTRACTTYPE        :   `LINEAR`QUANTO`INVERSE; // TODO change LINEAR to inverse
 LIQUIDATEFEETYPE    :   `TOTAL`COMMISSION;
 INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 

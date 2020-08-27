@@ -188,7 +188,7 @@ initialMargin      :{[amt;riskTiers;premium] // TODO fix
     :(amt*imr)+(amt * premium); // TODO derive premium
     };
 
-// TODO inverse vs quanto vs vanilla
+// TODO inverse vs quanto vs LINEAR
 // The point at which the exchange will force close all orders and shortly
 // thereafter liquidate the position
 // (raze(`isinverse;`rb;`bal;`tmm;`amtB;`amtL;`amtS;`lmB;`lmL;`lmS;`mmB;`mmL;`mmS;`cumB;`cumL;`cumS;`sB;`epB;`epL;`epS))!.qt.BAM

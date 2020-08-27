@@ -55,7 +55,7 @@ BITMEX_MM_1 = {
                 "maxUpdateDrift":30,
             },
             "instrument":{
-                "contractType":"INVERSE",
+                "contractType":"LINEAR",
                 "quoteAsset":"USD",
                 "settleAsset":"XBT",
                 "faceValue":1,

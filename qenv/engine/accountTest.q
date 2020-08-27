@@ -853,20 +853,20 @@ test:.qt.Unit[
     };();();setupB;
     "The unrealized profit of a given inventory"];
 
-.qt.AddCase[test;"Vanilla (Binance) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 .qt.AddCase[test;"Inverse (Bitmex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Vanilla (Okex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) unrealized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) unrealized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 .qt.AddCase[test;"Inverse (Okex) unrealized pnl short loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Okex) unrealized pnl short gain";((1000;1001;100;1;-1;0b);100)];
@@ -893,23 +893,23 @@ test:.qt.Unit[
     };();();setupB;
     "The realized profit incurred by placing an order"];
 
-// Simulation of vanilla contracts
-// vanilla uses
+// Simulation of LINEAR contracts
+// LINEAR uses
 
-.qt.AddCase[test;"Vanilla (Binance) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Binance) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Binance) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 .qt.AddCase[test;"Inverse (Bitmex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Bitmex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
-.qt.AddCase[test;"Vanilla (Okex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
-.qt.AddCase[test;"Vanilla (Okex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) realized pnl long loss";((1000;1001;100;1;-1;0b);100)];
+.qt.AddCase[test;"LINEAR (Okex) realized pnl long gain";((1000;1001;100;1;-1;0b);100)];
 
 .qt.AddCase[test;"Inverse (Okex) realized pnl short loss";((1000;1001;100;1;-1;0b);100)];
 .qt.AddCase[test;"Inverse (Okex) realized pnl short gain";((1000;1001;100;1;-1;0b);100)];
@@ -960,50 +960,50 @@ deriveCaseParams    :{[p]
 // Binance
 // ------------------------------------------------------------------------->
 
-// Simulation of vanilla contracts
-// vanilla uses // TODO precision
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long (first tier)";deriveCaseParams[(
+// Simulation of LINEAR contracts
+// LINEAR uses // TODO precision
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Long (first tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;1;1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     11601.90 // actually .91
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short (first tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Short (first tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;1;-1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     13501.5 // actually .49
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long (first tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Long (first tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;1;1;7964.637;1); // Long Position price:12555.5
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     11601.9 // actually .91
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short (first tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Short (first tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;0;0;0;0); // Long Position price:12555.5
     (`SHORT;1;-1;7964.637;1); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
@@ -1012,48 +1012,48 @@ deriveCaseParams    :{[p]
 
 // Second tier
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long (second tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Long (second tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;5;1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     12407.54 // actually .91
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short (second tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Short (second tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;5;-1;7964.637;1); // Both Position price:12555.5
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     12701.99 // actually .49
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long (second tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Long (second tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;5;1;7964.637;1); // Long Position price:12555.5
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     12407.54 // actually .91
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short (second tier)";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Short (second tier)";deriveCaseParams[(
     (1e3;1e3;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;0;0;0;0); // Long Position price:12555.5
     (`SHORT;5;-1;7964.637;1); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
@@ -1111,12 +1111,12 @@ deriveCaseParams    :{[p]
     987.6
     )]];
 
-.qt.AddCase[test;"Vanilla (Okex) Hedged Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Okex) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;55000;1;55e8;55000); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
     )];0;0.01;0.1;1); // Instrument
@@ -1124,12 +1124,12 @@ deriveCaseParams    :{[p]
     )]];
 
 // `contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize
-.qt.AddCase[test;"Vanilla (Okex) Combined Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Okex) Combined Full Long";deriveCaseParams[(
     (1;1;`COMBINED;25); // Account
     (`BOTH;550;1;55e8;550); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
     )];0;0.01;0.1;1); // Instrument TODO check
@@ -1190,74 +1190,74 @@ test:.qt.Unit[
 // Binance
 // ------------------------------------------------------------------------->
 
-// Simulation of vanilla contracts
-// vanilla uses
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+// Simulation of LINEAR contracts
+// LINEAR uses
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;1;55e8;55000); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;-1;55e8;55000); // Both Position
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Short";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;1;55e8;55000); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Combined Full Short";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Combined Full Short";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;55000;-1;55e8;55000); // Both Position
     (`LONG;0;1;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;55000;1;55e8;55000); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
     985.84
     )]];
 
-.qt.AddCase[test;"Vanilla (Binance) Hedged Full Short";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Binance) Hedged Full Short";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;55000;1;55e8;55000); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )];0;1;0.01;0.001); // Instrument
@@ -1315,12 +1315,12 @@ test:.qt.Unit[
     987.6
     )]];
 
-.qt.AddCase[test;"Vanilla (Okex) Hedged Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Okex) Hedged Full Long";deriveCaseParams[(
     (1e3;1;`HEDGED;25); // Account
     (`BOTH;0;0;0;0); // Both Position
     (`LONG;55000;1;55e8;55000); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
     )];0;0.01;0.1;1); // Instrument
@@ -1328,12 +1328,12 @@ test:.qt.Unit[
     )]];
 
 // `contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize
-.qt.AddCase[test;"Vanilla (Okex) Combined Full Long";deriveCaseParams[(
+.qt.AddCase[test;"LINEAR (Okex) Combined Full Long";deriveCaseParams[(
     (1;1;`COMBINED;25); // Account
     (`BOTH;550;1;55e8;550); // Both Position
     (`LONG;0;0;0;0); // Long Position 
     (`SHORT;0;0;0;0); // Short Position
-    (`VANILLA;.instrument.NewRiskTier[(
+    (`LINEAR;.instrument.NewRiskTier[(
         50000     0.005    0.01    100f;
         300000    0.01     0.015   66.66f
     )];0;0.01;0.1;1); // Instrument TODO check
@@ -1428,7 +1428,7 @@ deriveCaseParams :{[p]
 
 .qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;`VANILLA;0.5;1e9;0f;1e6f;0f;100;100f;.instrument.NewRiskTier[(
+    (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;100f;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )]);
@@ -1456,7 +1456,7 @@ deriveCaseParams :{[p]
 
 .qt.AddCase[test;"Order is placed with premium and no previous order margin etc.";deriveCaseParams[(
     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;`VANILLA;0.5;1e9;0f;1e6f;0f;100;106f;.instrument.NewRiskTier[(
+    (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;106f;.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f
     )]);

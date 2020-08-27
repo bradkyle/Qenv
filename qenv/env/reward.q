@@ -112,7 +112,7 @@ equation.
 \
 
 /
-Vanilla sortino
+LINEAR sortino
 \
 
 
