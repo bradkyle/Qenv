@@ -786,7 +786,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // Liquidation
 // -------------------------------------------------------------->
 
+newOpenCost :{[pmarkprice;nmarkprice;opencost;openbuycost;opensellcost]
 
+
+    };
 
 UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.bitmex.com/app/liquidationExamples
@@ -805,12 +808,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
     / During liquidation, users are unable to send orders on their account
     / Liquidation is executed as Fill or Kill and it will be executed immediately.
-
-
-
-    / The change in premium is equal to the amount of contracts open 
-    / times the delta in the mark price
-    markdelta:mp-ins[`markPrice];
 
     // TODO unrealizedPnl
     // TODO bankruptCost
@@ -831,12 +828,14 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // max[0;(markDelta+openSellCost)]
     // max[0;(markDelta+openBuyCost)]
     // ((mp%ins[`markPrice])-1) * orderCost
+    // new OrderCost: deltaMarkprice
+    // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
 
     sellcostdelta:{((x%y)-1)*806};
     buycostdelta:{};
 
     a:update
-        openCost:openCost + 
+        openCost:.account.newOpenCost[ins[`markPrice];mp;openCost;openBuyCost;openSellCost]
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     x:select
