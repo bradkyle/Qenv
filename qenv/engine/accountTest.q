@@ -2492,10 +2492,11 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
-    :`cIns`cAcc`cInv`fill`markPrice`eAcc`eInv`eEvents!(
+    :`cIns`cAcc`cInv`cOrd`fill`markPrice`eAcc`eInv`eEvents!(
         cIns;
         cAcc;
         cInv;
+        makeOrders[params[1]];
         f;
         p[4];
         eAcc;
@@ -2510,12 +2511,12 @@ deriveCaseParams :{[p]
     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
     // activeMakerFee;activeTakerFee;realizedPnl
     (0;`HEDGED;1;1;0;0;0;1;0); // Current Account
-    (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Current Orders
     (
         (0;`BOTH;100;100;l 1e9; 1000);
         (0;`LONG;100;100;l 1e9; 1000);
         (0;`SHORT;100;100;l 1e9; 1000)
     );
+    (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Current Orders
     //`accountId`instrumentId`side`time`reduceOnly`isMaker`price`qty
     (0;0;`BUY;z;0b;1b;1000;1000); // Parameters
     1000; // Mark Price
@@ -2523,12 +2524,12 @@ deriveCaseParams :{[p]
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
     (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
-    (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Expected orders
     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
         (0;`BOTH;100;100;l 1e9; 1000; 0);
         (0;`LONG;100;100;l 1e9; 1000; 0);
         (0;`SHORT;100;100;l 1e9; 1000; 0)
     );
+    (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Expected orders
     () // Expected events
     )]];
 
