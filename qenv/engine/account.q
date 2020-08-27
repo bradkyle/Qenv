@@ -803,13 +803,16 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // todo update the open loss of all accounts
     // TODO check for liquidations
+    // Update the unrealizedPnl and the markPrice 
+    // of the inventory such that they can be used
+    // later in deriving 
     i:update 
         unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;1;isignum;0b], // TODO upscale
         markValue:mp*amt // TODO upscale
         from .account.Inventory where amt>0;
 
     a:update
-        openCost:0
+        openCost:0 // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     / accounts:.account.Account lj select sum unrealizedPnl by accountId from .account.Inventory where amt>0;
