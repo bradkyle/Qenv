@@ -108,25 +108,25 @@ BINANCE_MM_1 = {
             },
             "accounts":[ # TODO add more i.e. 10
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":20},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":20},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":20},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":20},
                     "shortInventory":{"amt":0,"leverage":0},
                     "longInventory":{"amt":0,"leverage":0},
                     "bothInventory":{"amt":0,"leverage":0},
