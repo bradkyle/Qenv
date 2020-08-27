@@ -185,7 +185,7 @@ NewAccountFromConfig    :{[config]
     };
 
 NewInstrumentFromConfig :{[config]
-
+    
     };
 
 / Main Setup Function

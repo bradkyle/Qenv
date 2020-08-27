@@ -59,6 +59,9 @@ class Env():
             },
             "engine":{
                 # TODO
+                "offsets":{
+                    
+                }
             },
             "instrument":{
                 "contractType":"",
