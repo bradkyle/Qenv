@@ -38,6 +38,9 @@ class Env():
                 "minibatch":{
                     "kind":"chronological",
                     "size":86400 #Seconds
+                },
+                "balance":{
+                    
                 }
             },
             "engine":{
