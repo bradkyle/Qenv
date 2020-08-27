@@ -2515,6 +2515,7 @@ deriveCaseParams :{[p]
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
     (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+    (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Expected orders
     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
         (0;`BOTH;100;100;l 1e9; 1000; 0);
         (0;`LONG;100;100;l 1e9; 1000; 0);
