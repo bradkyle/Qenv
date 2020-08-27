@@ -65,33 +65,33 @@ class Env():
 
                 },
                 "riskTiers":{
-                    
+
                 }
             },
             "accounts":[
                 {
-                    "account":{},
-                    "shortInventory":{},
-                    "longInventory":{},
-                    "bothInventory":{}
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "shortInventory":{"amt":0,"leverage":0},
+                    "longInventory":{"amt":0,"leverage":0},
+                    "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{},
-                    "shortInventory":{},
-                    "longInventory":{},
-                    "bothInventory":{}
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "shortInventory":{"amt":0,"leverage":0},
+                    "longInventory":{"amt":0,"leverage":0},
+                    "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{},
-                    "shortInventory":{},
-                    "longInventory":{},
-                    "bothInventory":{}
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "shortInventory":{"amt":0,"leverage":0},
+                    "longInventory":{"amt":0,"leverage":0},
+                    "bothInventory":{"amt":0,"leverage":0},
                 },
                 {
-                    "account":{},
-                    "shortInventory":{},
-                    "longInventory":{},
-                    "bothInventory":{}
+                    "account":{"balance":0,"marginType":"cross","positionType":"combined"},
+                    "shortInventory":{"amt":0,"leverage":0},
+                    "longInventory":{"amt":0,"leverage":0},
+                    "bothInventory":{"amt":0,"leverage":0},
                 }
             ]
         }
