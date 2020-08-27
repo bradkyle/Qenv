@@ -2450,10 +2450,8 @@ test:.qt.Unit[
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.order.CancelAllOrders;{[a;b]};c];
 
-        res:.account.UpdateMarkPrice[
-            p[`markPrice];
-            p[`instrumentId];
-            .z.z]; // TODO assert throws?
+        a:p[`args];
+        res:.account.UpdateMarkPrice[a[0];a[1];a[2]]; // TODO assert throws?
 
         .qt.MA[
             mck1;
@@ -2485,7 +2483,7 @@ deriveCaseParams :{[p]
     // Construct Expected Inventory
     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
 
-    :`cIns`cAcc`cInv`cOrd`fill`markPrice`eAcc`eInv`eOrd`eEvents!(
+    :`cIns`cAcc`cInv`cOrd`args`eAcc`eInv`eOrd`eEvents!(
         cIns;
         cAcc;
         cInv;
