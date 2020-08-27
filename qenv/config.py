@@ -59,7 +59,10 @@ class Env():
             },
             "engine":{
                 # TODO
-                "offsets":{
+                "ingress_offsets":{
+
+                },
+                "egress_offsets":{
                     
                 }
             },
