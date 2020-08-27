@@ -29,6 +29,8 @@ rmFkeys :{cols[x] except key[fkeys x]};
 setupAccount      : {if[count[x[`cAcc]]>0;[.account.NewAccount[x[`cAcc];.z.z]; :exec from .account.Account where accountId=x[`cAcc][`accountId]]]};
 setupInventory    : {if[count[x[`cInv]]>0;{.account.NewInventory[x;.z.z]} each x[`cInv]]};
 setupInstrument   : {if[count[x[`cIns]]>0;.instrument.NewInstrument[x[`cIns];.z.z]]};
+setupDepth      : {if[count[x[`cOB]]>0;.order.ProcessDepthUpdateEvent[x[`cOB]]]}
+setupOrders     : {if[count[x[`cOrd]]>0;{.order.NewOrder[x[0];x[1]]} each x[`cOrd]]}
 
 // @x : params
 // @y : case
@@ -1528,7 +1530,7 @@ deriveCaseParams :{[p]
 / .qt.AddCase[test;"combined: full long position, open sell (buy/sell) 50/50 open orders";deriveCaseParams[()]];
 
 
-.qt.RunTest[test];
+/ .qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
 
 // ApplyFill
@@ -2653,4 +2655,4 @@ deriveCaseParams :{[p]
     () // Expected events
     )]];
 
-/ .qt.RunTests[];
+.qt.RunTests[];

@@ -447,7 +447,7 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     / inverse_notional:(quantity*(1%price)); // inverse
     / linear_notional:(quantity*price); // inverse
     / premium: abs[min[0,(isignum*(mark-price))]];
-    / inverse_cost:(inverse_notional%leverage) + (inverse_notional*());
+    / inverse_cost:(inverse_notional%leverage) + (quantity%premium);
     / linear_cost:(linear_notional%leverage) + (quantity*premium);
     / 
     /
