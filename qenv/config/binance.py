@@ -24,8 +24,8 @@ BINANCE_MM_1 = {
                     "size":86400 #Seconds
                 },
                 "balance":{
-                    "min":0.01,
-                    "max":100,
+                    "min":10,
+                    "max":1000,
                 },
                 "observation":{ # TODO 
                     "window":100,
