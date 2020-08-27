@@ -30,7 +30,12 @@ class Env():
         "config":{
             "env":{
                 "adapter":{
-                    "kind":"marketmaker"
+                    "kind":"marketmaker",
+                    "mapping":{
+
+                    },
+                    "limitSize":0,
+                    "marketSize":0,
                 },
                 "step":{
                     "kind":"temporal",
