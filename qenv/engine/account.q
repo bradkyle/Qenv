@@ -831,6 +831,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // max[0;(markDelta+openSellCost)]
     // max[0;(markDelta+openBuyCost)]
 
+    sellcostdelta:{((x%y)-1)*806};
+    buycostdelta:{};
+
     a:update
         openCost:openCost + 
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
