@@ -54,7 +54,6 @@ class Env():
                 "done":{
                     "onLiquidation":True,
                     "balanceCnt":500,
-
                 }
             },
             "engine":{
@@ -82,7 +81,9 @@ class Env():
                 "minPrice":0,
                 "lotSize":1,
                 "junkOrderSize":25,
-                "liquidationStrat":{},
+                "liquidationStrat":[
+                    ""
+                ],
                 "insuranceFee":"",
                 "maxOpenOrders":0,
                 "feeTiers":{
@@ -104,7 +105,7 @@ class Env():
                     "numTier":40
                 }
             },
-            "accounts":[
+            "accounts":[ # TODO add more i.e. 10
                 {
                     "account":{"balance":0,"marginType":"cross","positionType":"combined","leverage":100},
                     "shortInventory":{"amt":0,"leverage":0},
