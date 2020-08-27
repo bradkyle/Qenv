@@ -828,6 +828,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt // TODO upscale
         from .account.Inventory where amt>0;
 
+    // max[0;(markDelta+openSellCost)]
+    // max[0;(markDelta+openBuyCost)]
+
     a:update
         openCost:min[0;(openCost+(markdelta*openBuyQty)+(markdelta*openSellQty))] // TODO derive open cost
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
