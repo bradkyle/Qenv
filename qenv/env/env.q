@@ -194,9 +194,9 @@ Reset    :{[config]
     // Loads the next set of events from 
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config
-
-    nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]];
+    
     aevents:.env.SetupEvents[config];
+    nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive from config
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
 
