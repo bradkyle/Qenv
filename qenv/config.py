@@ -40,7 +40,8 @@ class Env():
                     "size":86400 #Seconds
                 },
                 "balance":{
-
+                    "min":0,
+                    "max":100,
                 }
             },
             "engine":{
