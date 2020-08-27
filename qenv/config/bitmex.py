@@ -7,7 +7,7 @@ BITMEX_MM_1 = {
         "config":{
             "env":{
                 "adapter":{
-                    "kind":"marketmaker",
+                    "kind":"MARKETMAKER",
                     "mapping":{
 
                     },
@@ -18,11 +18,11 @@ BITMEX_MM_1 = {
                     }
                 },
                 "step":{
-                    "kind":"temporal",
+                    "kind":"TEMPORAL",
                     "interval":5 #Seconds
                 },
                 "minibatch":{
-                    "kind":"chronological",
+                    "kind":"CHRONOLOGICAL",
                     "size":86400 #Seconds
                 },
                 "balance":{
@@ -33,7 +33,7 @@ BITMEX_MM_1 = {
                     "window":100,
                 },
                 "reward":{
-                    "kind":"sortino",
+                    "kind":"SORTINO",
                     "window":300,
                 },
                 "done":{
