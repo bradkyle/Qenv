@@ -58,6 +58,9 @@ class Env():
             },
             "engine":{
                 # TODO
+                "orderBook":{
+
+                },
                 "loadShedding":{
 
                 },
