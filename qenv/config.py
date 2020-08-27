@@ -48,6 +48,7 @@ class Env():
                     "window":100,
                 },
                 "reward":{
+                    "kind":"sortino",
                     "window":300,
                 }
             },
