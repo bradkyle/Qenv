@@ -550,12 +550,12 @@ NewOrder       : {[o;time];
                     // add orderbook references
                     // todo if there is a row at price and qty is greater than zero
                     // TODO recalculate the total order open cost with respect to the mark price
-                    .account.UpdateInitialMargin[
-                        o[`side];
-                        o[`price];
-                        o[`size];
-                        o[`reduceOnly];
-                        o[`accountId]];
+                    / .account.UpdateInitialMargin[
+                    /     o[`side];
+                    /     o[`price];
+                    /     o[`size];
+                    /     o[`reduceOnly];
+                    /     o[`accountId]];
                     
                     // TODO make better
                     `.order.Order upsert o;
