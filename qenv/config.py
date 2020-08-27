@@ -41,7 +41,7 @@ class Env():
                     "size":86400 #Seconds
                 },
                 "balance":{
-                    "min":0,
+                    "min":0.01,
                     "max":100,
                 },
                 "observation":{ # TODO 
@@ -53,7 +53,8 @@ class Env():
                 },
                 "done":{
                     "onLiquidation":True,
-                    "balance":0,
+                    "balanceCnt":500,
+
                 }
             },
             "engine":{
