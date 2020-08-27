@@ -44,7 +44,7 @@ class Env():
                     "min":0,
                     "max":100,
                 },
-                "observation":{
+                "observation":{ # TODO 
                     "window":100,
                 },
                 "reward":{
