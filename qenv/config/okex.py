@@ -1,7 +1,7 @@
 
 
 
-BINANCE_MM_1 = {
+OKEX_MM_1 = {
         "name":"okex_mm_combined",
         "config":{
             "env":{
