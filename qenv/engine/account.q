@@ -806,6 +806,11 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     / During liquidation, users are unable to send orders on their account
     / Liquidation is executed as Fill or Kill and it will be executed immediately.
 
+
+
+    / The change in premium is equal to the amount of contracts open 
+    / 
+
     // TODO unrealizedPnl
     // TODO bankruptCost
     // grossOpenPremium
