@@ -299,7 +299,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
     //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
     //          netShortPosition, liquidationPrice, bankruptcyPrice
     // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
-    //          posMargin, initMargin, entryValue, totalCost, totalEntry, execCost
+    //            posMargin, initMargin, entryValue, totalCost, totalEntry, execCost
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
@@ -315,7 +315,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 // Update available/withdrawable etc.
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
-    // available, liquidation price, bankruptcyprice, 
+    // available, liquidation price, bankruptcyprice, depositCount
     update 
         balance:balance+deposited, 
         depositAmount:depositAmount+deposited,
