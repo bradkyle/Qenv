@@ -292,7 +292,7 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 // TODO next funding rate and next funding time (funding time delta)
 // Update available withdrawable etc.
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
-
+    // Applies the current funding rate and subsequent
     // todo available, frozen
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
@@ -842,8 +842,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
             posMargin,
             unrealizedPnl,
             orderMargin.
-            sum[openBuyLoss, openSellLoss]
-        ]
+            sum[openBuyLoss, openSellLoss]]
         from update
         openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue],
         openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
