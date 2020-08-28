@@ -396,14 +396,13 @@ Inventory: (
     initMarginReq            :  `long$();
     maintMarginReq           :  `long$();
     leverage                 :  `long$();
-    effectiveLeverage        :  `long$();
     totalCommission          :  `long$();
     isignum                  :  `long$();
     fillCount                :  `long$());
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  
 NewInventory : {[inventory;time] 
