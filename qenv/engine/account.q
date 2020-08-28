@@ -299,7 +299,8 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
     //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
     //          netShortPosition, liquidationPrice, bankruptcyPrice
     // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
-    //            posMargin, initMargin, entryValue, totalCost, totalEntry, execCost, maintMarginReq, initMarginReq
+    //            posMargin, initMargin, entryValue, totalCost, totalEntry, 
+    //            execCost, maintMarginReq, initMarginReq
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
