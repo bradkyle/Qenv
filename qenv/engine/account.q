@@ -787,11 +787,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // Liquidation
 // -------------------------------------------------------------->
 
-newOpenCost :{[pmarkprice;nmarkprice;opencost;openbuycost;opensellcost]
-
-
-    };
-
 UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.bitmex.com/app/liquidationExamples
     / https://www.bitmex.com/app/liquidation
@@ -841,7 +836,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // avgValue:
  
     a:update // TODO change to openLoss
-        openCost:.account.newOpenCost[ins[`markPrice];mp;openCost;openBuyCost;openSellCost]
+        openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue],
+        openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
     x:select
