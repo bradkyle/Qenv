@@ -816,6 +816,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // withdrawable
     // frozen
 
+    // openSellLoss:min[0,neg[(mp*openSellQty)-openSellValue]];
+    // openBuyLoss:min[0,neg[(mp*openBuyQty)-openBuyValue]];
+
     // todo update the open loss of all accounts
     // TODO check for liquidations
     // Update the unrealizedPnl and the markPrice 
