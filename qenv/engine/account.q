@@ -295,8 +295,11 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 // Update available withdrawable etc.
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
     // Applies the current funding rate and subsequent
-    // Account: available, fundingCount, frozen, realizedPnl, unrealizedPnl, posMargin, initMargin, netLongPosition, netShortPosition
-    // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, posMargin, initMargin, entryValue, totalCost, totalEntry, execCost
+    // Account: available, fundingCount, frozen, realizedPnl, 
+    //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
+    //          netShortPosition, liquidationPrice, bankruptcyPrice
+    // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
+    //          posMargin, initMargin, entryValue, totalCost, totalEntry, execCost
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
