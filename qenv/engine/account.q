@@ -833,7 +833,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
     
     // openCost:markValue - orderValue;
-    // avgValue: 
+    // avgValue:
  
     a:update
         openCost:.account.newOpenCost[ins[`markPrice];mp;openCost;openBuyCost;openSellCost]
