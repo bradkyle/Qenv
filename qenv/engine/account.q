@@ -298,6 +298,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
     // Account: available, fundingCount, frozen, realizedPnl, 
     //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
     //          netShortPosition, liquidationPrice, bankruptcyPrice
+    //          
     // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
     //            posMargin, initMargin, entryValue, totalCost, totalEntry, 
     //            execCost, maintMarginReq, initMarginReq
@@ -316,7 +317,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 // Update available/withdrawable etc.
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
-    // available, liquidation price, bankruptcyprice, depositCount
+    // Account: available, liquidationprice, bankruptcyprice, depositCount
     update 
         balance:balance+deposited, 
         depositAmount:depositAmount+deposited,
@@ -333,6 +334,7 @@ Deposit  :{[deposited;time;accountId]
 // Update available/withdrawable etc
 Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
+    // Account: available, liquidationprice, bankruptcyprice, depositCount
 
     $[withdrawn < acc[`available];
         [
