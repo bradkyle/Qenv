@@ -517,6 +517,7 @@ NewOrder       : {[o;time];
     / Invalid multiLegReportingType
     / Invalid currency
     / Invalid settlCurrency
+    / 
 
     // TODO set offset
     // TODO check orderbook has liquidity
