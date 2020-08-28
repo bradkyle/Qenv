@@ -818,7 +818,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
     // openLoss:openBuyLoss+openSellLoss
     // openSellLoss:min[0,neg[(mp*openSellQty)-openSellValue]];
-    // openBuyLoss:min[0,neg[(mp*openBuyQty)-openBuyValue]];
+    // openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue];
+    // 
 
     // todo update the open loss of all accounts
     // TODO check for liquidations
