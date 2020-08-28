@@ -800,6 +800,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
 
 
     ins:.instrument.Instrument@instrumentId;
+    // TODO derive risk buffer
 
     // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
     / During liquidation, users are unable to send orders on their account
