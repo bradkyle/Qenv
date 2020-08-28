@@ -5,6 +5,8 @@
 
 accountCount:0;
 
+// TODO executions
+
 /*******************************************************
 / account related enumerations  
 MARGINTYPE      :   `CROSS`ISOLATED;
@@ -309,6 +311,7 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 // Update available/withdrawable etc.
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
+    // available, liquidation price, bankruptcyprice, 
     update 
         balance:balance+deposited, 
         depositAmount:depositAmount+deposited,
