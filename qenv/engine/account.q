@@ -295,7 +295,8 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 // Update available withdrawable etc.
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
     // Applies the current funding rate and subsequent
-    // todo available, frozen
+    // Account: available, fundingCount, frozen, realizedPnl, unrealizedPnl, posMargin, initMargin, netLongPosition, netShortPosition
+    // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, posMargin, initMargin, entryValue, totalCost, totalEntry, execCost
     update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
         longFundingCost:longFundingCost+(longValue*fundingRate),
         shortFundingCost:shortFundingCost+(longValue*fundingRate),
@@ -850,7 +851,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         from update
         openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue],
         openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
-        from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
+        from (.account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
 
     x:select
             maintMarginReq:0, 
