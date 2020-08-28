@@ -2445,7 +2445,7 @@ test:.qt.Unit[
         setupInventory[p];
         setupOrders[p];
 
-        p1:p[`eNewOrder];  
+        p1:p[`eCancelAllOrders];  
 
         // instantiate mock for ApplyFill
         mck1: .qt.M[`.order.CancelAllOrders;{[a;b]};c];

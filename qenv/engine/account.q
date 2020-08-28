@@ -848,18 +848,22 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // openLoss:(mp * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue);
     // avgValue:
  
+    .qt.ACT:.account.Account;
+
     // TODO check this 
     a:update // TODO change to openLoss
         openLoss:openBuyLoss+openSellLoss,
         available:balance - sum[
             posMargin, // TODO derive new maint margin
             unrealizedPnl, 
-            orderMargin.
+            orderMargin,
             sum[openBuyLoss, openSellLoss]]
         from update
         openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue],
         openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
-        from (.account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
+        from (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
+
+    .qt.ABC:a;
 
     x:select
             maintMarginReq:0, 
