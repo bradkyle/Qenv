@@ -839,8 +839,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     a:update // TODO change to openLoss
         openLoss:openBuyLoss+openSellLoss,
         available:balance - sum[
-            posMargin,
-            unrealizedPnl,
+            posMargin, // TODO derive new maint margin
+            unrealizedPnl, 
             orderMargin.
             sum[openBuyLoss, openSellLoss]]
         from update
