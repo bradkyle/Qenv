@@ -816,6 +816,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // withdrawable
     // frozen
 
+    // openLoss:openBuyLoss+openSellLoss
     // openSellLoss:min[0,neg[(mp*openSellQty)-openSellValue]];
     // openBuyLoss:min[0,neg[(mp*openBuyQty)-openBuyValue]];
 
