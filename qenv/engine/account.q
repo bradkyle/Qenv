@@ -643,6 +643,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     / price. 
                     i[`totalEntry]+: abs[qty];
 
+                    // TODO dont divide price
                     i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
 
                     / Calculates the average price of entry for 
@@ -787,7 +788,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // -------------------------------------------------------------->
 
 newOpenCost :{[pmarkprice;nmarkprice;opencost;openbuycost;opensellcost]
-    
+
 
     };
 
