@@ -19,6 +19,7 @@ POSITIONTYPE    :   `HEDGED`COMBINED;
 // TODO realized Gross PNL, unrealized Gross PNL, total Unrealized Pnl etc
 // TODO is suspended, state etc.
 // TODO ownFillCount, requestCount
+// TODO margin call price
 Account: (
             [accountId          : `long$()]
             balance             : `long$();
