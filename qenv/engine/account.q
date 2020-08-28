@@ -832,7 +832,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // new OrderCost: deltaMarkprice
     // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
     
-    // openCost:openCost+((mpdelta * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue));
+    // openLoss:openLoss+((mpdelta * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue));
     // avgValue:
  
     a:update
