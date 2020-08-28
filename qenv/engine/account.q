@@ -832,10 +832,10 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // new OrderCost: deltaMarkprice
     // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
     
-    // openLoss:openLoss+((mpdelta * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue));
+    // openLoss:(mp * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue);
     // avgValue:
  
-    a:update
+    a:update // TODO change to openLoss
         openCost:.account.newOpenCost[ins[`markPrice];mp;openCost;openBuyCost;openSellCost]
         from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0;
 
