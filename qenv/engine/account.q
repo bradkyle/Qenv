@@ -696,13 +696,13 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`totalEntry];
                         isinverse]];
 
-                    i[`unrealizedPnl]:.account.unrealizedPnl[
+                    i[`unrealizedPnl]:sm[.account.unrealizedPnl[
                         i[`avgPrice];
-                        markPrice;
+                        ins[`markPrice];
                         i[`amt];
                         ins[`faceValue];
                         i[`isignum];
-                        isinverse];
+                        isinverse]];
 
                     i[`entryValue]:i[`amt]%i[`avgPrice];
 
