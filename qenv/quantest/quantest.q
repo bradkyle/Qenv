@@ -457,29 +457,14 @@ BM      :{[]
 
     };
 
-// Adds a specific case to a test with assertions and mocks included.
-// @param ref is either a table or a id
-// @param dscr Description of this test or related message
-// @param params are the specific case params that are to be passed 
-// to the testFn on execution of the test.
-// @return case
-AddBench     :{[test;dscr;params]
-    $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
-    if[not((type[test] in 98 99h) and (test[`testId] in key[.qt.Test]));show "error"]; // TODO better error
-    if[not(type[params] in 98 99h);0N]; // TODO better error
-    case:cols[.qt.Case]!((.qt.caseId+:1);test[`testId];`READY;dscr;(`$"");params;0;0;.z.z;.z.z);
-    `.qt.Case upsert case;
-    :case;
-    };
-
 Bench   :{[name;benchFn;formFn;benches;dscr]
     $[not null[`$name];name:`$name;name:`$""];
     $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
 
-    bench:cols[.qt.Test]!((.qt.testId+:1);name;`UNIT;`READY;dscr;testFn;formFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
+    bench:cols[.qt.Benchmark]!((.qt.testId+:1);name;`READY;dscr;testFn;formFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
     `.qt.Benchmark upsert bench;
 
-    pfn:$[(type[formFn]=100h);{.qt.AddBench[y;z[0];x[z[1]]]}[formFn;test];{.qt.AddBench[test;x[0];x[1]]}];
+    pfn:$[(type[formFn]=100h);{.qt.AddBenchCase[y;z[0];x[z[1]]]}[formFn;test];{.qt.AddCase[test;x[0];x[1]]}];
     $[(count[cases]>1);pfn each cases;(count[cases]=1);pfn[first cases];0N];
 
     :bench;
