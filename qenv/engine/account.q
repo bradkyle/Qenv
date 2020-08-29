@@ -484,6 +484,9 @@ accTransition :{[acc;price;markprice;qty;isignum]
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
     acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
+
+    // TODO check available balance and error if incorrect
+
     :acc
     };
 

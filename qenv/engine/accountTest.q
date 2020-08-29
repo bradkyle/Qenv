@@ -1546,9 +1546,13 @@ test:.qt.Unit[
         p:c[`params];
 
         a:p[`args];
-        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+        $[all(null[p[`eThrows]]);[
+            res:.account.accTransition[a[0];a[1];a[2];a[3]];
+        ];[
+            .qt.AT[.account.accTransition;(a[0];a[1];a[2];a[3]);p[`eThrows];".account.accTransition";c];
+        ]];
 
-        .qt.A[res;~;p[`eRes];"result";c];
+        .qt.A[res;~;p[`eAcc];"result";c];
 
     };
     {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
@@ -1622,7 +1626,7 @@ test:.qt.Unit[
             (1;`SELL;100;1;0b;z);
             {[l;s] :100};
             {0};
-            0;0));
+            0;0))
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
