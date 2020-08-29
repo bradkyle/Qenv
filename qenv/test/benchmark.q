@@ -78,7 +78,7 @@ bench:.qt.Bench[
     {[c]
         p:c[`params];
 
-        .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
+        .qt.BM[.state.InsertResultantEvents;p[`datafn][];p[`repeats];".state.InsertResultantEvents";c];
 
     };
     {[p]
@@ -147,7 +147,7 @@ bench:.qt.Bench[
     {[c]
         p:c[`params];
 
-        .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
+        .qt.BM[.state.GetObservations;p[`datafn][];p[`repeats];".state.GetObservations";c];
 
     };
     {[p]
@@ -203,7 +203,7 @@ bench:.qt.Bench[
 
         ))
     );
-    ("Benchmarks the processing speed of the .engine.ProcessEvents",
+    ("Benchmarks the processing speed of the .state.GetObservations",
      "function with differing configuration")];
 
 // STATE BENCHMARKS : GetRewards
@@ -214,7 +214,7 @@ bench:.qt.Bench[
     {[c]
         p:c[`params];
 
-        .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
+        .qt.BM[.state.GetRewards;p[`datafn][];p[`repeats];".state.GetRewards";c];
 
     };
     {[p]
@@ -234,7 +234,7 @@ bench:.qt.Bench[
 
         ))
     );
-    ("Benchmarks the processing speed of the .engine.ProcessEvents",
+    ("Benchmarks the processing speed of the .state.GetRewards",
      "function with differing configuration")];
 
 
