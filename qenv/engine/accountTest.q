@@ -1598,7 +1598,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+    "Should update a given inventory by adding a given amount to it"];
 
 test:.qt.Unit[
     ".account.hedgedClose";

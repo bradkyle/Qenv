@@ -514,7 +514,7 @@ accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
-hedgedOpen    :{[i;qty;price;markprice;leverage;]
+hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
         i[`amt]+:qty;
 
         i[`totalCommission]+:cost;
