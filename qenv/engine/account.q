@@ -468,22 +468,19 @@ dcCnt   :{`long(x*y)};
 
 accNewOrderTransition:{[price;markPrice;]
 
-     // Validation
-    // ---------------------------------------------------------------------------------------->
-
     // TODO update move to own function
     premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
     $[(isignum>0) and (premium>0);[ // TODO fix
-        acc[`openBuyPremium]-:premium; // TODO?
-        acc[`openBuyQty]-:qty; 
-        acc[`openBuyValue]-:`long$(price*qty); // TODO check
-        acc[`openBuyLoss]-:`long$(premium*qty);
+        acc[`openBuyPremium]+:premium; // TODO?
+        acc[`openBuyQty]+:qty; 
+        acc[`openBuyValue]+:`long$(price*qty); // TODO check
+        acc[`openBuyLoss]+:`long$(premium*qty);
     ];
     [
         acc[`openSellPremium]-:premium;
-        acc[`openSellQty]-:qty; 
-        acc[`openSellValue]-:`long$(price*qty);
-        acc[`openSellLoss]-:`long$(premium*qty);
+        acc[`openSellQty]+:qty; 
+        acc[`openSellValue]+:`long$(price*qty);
+        acc[`openSellLoss]+:`long$(premium*qty);
     ]];
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
@@ -494,8 +491,28 @@ accNewOrderTransition:{[price;markPrice;]
 
 accFillTransition:{[price;markPrice;]
 
-     // Validation
-    // ---------------------------------------------------------------------------------------->
+    // TODO update move to own function
+    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
+    $[(isignum>0) and (premium>0);[ // TODO fix
+        acc[`openBuyPremium]-:premium; // TODO?
+        acc[`openBuyQty]-:qty; 
+        acc[`openBuyValue]-:`long$(price*qty); // TODO check
+        acc[`openBuyLoss]-:`long$(premium*qty);
+    ];
+    [
+        acc[`openSellPremium]-:premium;
+        acc[`openSellQty]-:qty; 
+        acc[`openSellValue]-:`long$(price*qty);
+        acc[`openSellLoss]-:`long$(premium*qty);
+    ]];
+
+    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
+    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
+    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
+    :acc
+ };
+
+accCancelOrderTransition:{[price;markPrice;]
 
     // TODO update move to own function
     premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
@@ -518,10 +535,105 @@ accFillTransition:{[price;markPrice;]
     :acc
  };
 
-// Margin Transition logic
+
+// Hedged Open And Close Fill Logic
 // ---------------------------------------------------------------------------------------->
 
+hedgedOpen    :{[]
+        iside:HedgedNegSide[side];
+        oside:HedgedSide[side];
+        // OPEN given side for position
+        i:.account.Inventory@(accountId;iside);
+        oi:.account.Inventory@(accountId;oside);
 
+        i[`amt]+:qty;
+
+        cost:qty*fee;
+        i[`totalCommission]+:cost;
+        i[`fillCount]+:1;
+        i[`tradeVolume]+:qty;
+        i[`realizedPnl]-:cost;
+
+        / Because the current position is being increased
+        / an entry is added for calculation of average entry
+        / price. 
+        i[`totalEntry]+: abs[qty];
+
+        // TODO dont divide price
+        i[`execCost]+: sm[.account.execCost[
+            price;
+            qty;
+            isinverse]];  // TODO make unilaterally applicable.
+        .qt.INV:i;
+
+        // TODO convert price to float
+        / Calculates the average price of entry for 
+        / the current postion, used in calculating 
+        / realized and unrealized pnl.
+        i[`avgPrice]: pm[.account.avgPrice[
+            i[`isignum];
+            i[`execCost];
+            i[`totalEntry];
+            isinverse]];
+
+        i[`unrealizedPnl]:sm[.account.unrealizedPnl[
+            i[`avgPrice];
+            ins[`markPrice];
+            i[`amt];
+            ins[`faceValue];
+            i[`isignum];
+            isinverse]];
+
+        i[`entryValue]: i[`amt]%i[`avgPrice];
+        i[`initMargin]: i[`entryValue]%acc[`leverage];
+        i[`posMargin]:  i[`initMargin]+i[`unrealizedPnl];
+        i[`maintMargin]:.account.maintainenceMargin[i;ins];
+
+        lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+        bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
+
+        acc[`balance]+:(rpl-cost); 
+        acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+        acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+        acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+        acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+        // TODO account netShortPosition, netLongPosition
+    };
+
+hedgedClose    :{[]
+        iside:HedgedNegSide[side];
+        oside:HedgedSide[side];
+        // CLOSE given side for position
+        i:.account.Inventory@(accountId;iside);
+        oi:.account.Inventory@(accountId;oside);
+
+        if[size>i[`amt];:.event.AddFailure[]]; // TODO error
+
+        cost:qty*fee;
+        rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
+        i[`totalCommission]+:cost;
+        i[`realizedGrossPnl]+:(rpl-cost);
+        i[`realizedPnl]+:rpl;
+        i[`amt]-:qty;
+        i[`fillCount]+:1;
+        i[`tradeVolume]+:qty;
+
+        i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
+
+        i[`initMargin]:i[`entryValue]%acc[`leverage];
+        i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+        if[isMaker;i[`orderMargin]];
+        i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
+
+        acc[`balance]+:(rpl-cost); 
+        acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+        acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+        acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+        acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+    };
+
+// Combined Cross, Open and Close Fill Logic
+// ---------------------------------------------------------------------------------------->
 
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
@@ -556,106 +668,14 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
     pm:{:`long$(x[`priceMultiplier]*y)}[ins];
 
-    if[(isMaker and not[reduceOnly]);.account.accMarginFillTransition[]];
+    if[(isMaker and not[reduceOnly]);.account.accFillTransition[]];
 
     .qt.ACC:acc;
 
     $[acc[`positionType]=`HEDGED;[ 
             $[reduceOnly;
-                [
-                    iside:HedgedNegSide[side];
-                    oside:HedgedSide[side];
-                    // CLOSE given side for position
-                    i:.account.Inventory@(accountId;iside);
-                    oi:.account.Inventory@(accountId;oside);
-
-                    if[size>i[`amt];:.event.AddFailure[]]; // TODO error
-
-                    cost:qty*fee;
-                    rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
-                    i[`totalCommission]+:cost;
-                    i[`realizedGrossPnl]+:(rpl-cost);
-                    i[`realizedPnl]+:rpl;
-                    i[`amt]-:qty;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-
-                    i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
-
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    if[isMaker;i[`orderMargin]];
-                    i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
-
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-
-                    // TODO account netShortPosition, netLongPosition
-                ];
-                [
-                    iside:HedgedNegSide[side];
-                    oside:HedgedSide[side];
-                    // OPEN given side for position
-                    i:.account.Inventory@(accountId;iside);
-                    oi:.account.Inventory@(accountId;oside);
-
-                    i[`amt]+:qty;
-
-                    cost:qty*fee;
-                    i[`totalCommission]+:cost;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`realizedPnl]-:cost;
-
-                    / Because the current position is being increased
-                    / an entry is added for calculation of average entry
-                    / price. 
-                    i[`totalEntry]+: abs[qty];
-
-                    // TODO dont divide price
-                    i[`execCost]+: sm[.account.execCost[
-                        price;
-                        qty;
-                        isinverse]];  // TODO make unilaterally applicable.
-                    .qt.INV:i;
-
-                    // TODO convert price to float
-                    / Calculates the average price of entry for 
-                    / the current postion, used in calculating 
-                    / realized and unrealized pnl.
-                    i[`avgPrice]: pm[.account.avgPrice[
-                        i[`isignum];
-                        i[`execCost];
-                        i[`totalEntry];
-                        isinverse]];
-
-                    i[`unrealizedPnl]:sm[.account.unrealizedPnl[
-                        i[`avgPrice];
-                        ins[`markPrice];
-                        i[`amt];
-                        ins[`faceValue];
-                        i[`isignum];
-                        isinverse]];
-
-                    i[`entryValue]: i[`amt]%i[`avgPrice];
-                    i[`initMargin]: i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:  i[`initMargin]+i[`unrealizedPnl];
-                    i[`maintMargin]:.account.maintainenceMargin[i;ins];
-
-                    lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-                    bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
-    
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-                    // TODO account netShortPosition, netLongPosition
-
-                ]
+                .account.hedgedClose[];
+                .account.hedgedOpen[]
             ];
         ];
         [
