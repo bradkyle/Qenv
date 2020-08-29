@@ -615,12 +615,6 @@ combinedCross       :{[]
     i[`maintMargin]:maintainenceMargin[i[`amt];ins];
     i[`isignum]:neg[i[`isignum]];
 
-    acc[`balance]+:(rpl-cost); 
-    acc[`unrealizedPnl]: i[`unrealizedPnl];
-    acc[`orderMargin]: i[`orderMargin];
-    acc[`posMargin]: i[`posMargin];
-    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-
     }
 
 // Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
@@ -645,13 +639,7 @@ combinedOpen          :{[]
     i[`initMargin]:i[`entryValue]%acc[`leverage];
     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
 
-    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-
-    acc[`balance]+:(rpl-cost); 
-    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));       
+    i[`maintMargin]:maintainenceMargin[i[`amt];ins];  
 
     };
 
@@ -678,12 +666,6 @@ combinedClose       :{[]
     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
 
     i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-
-    acc[`balance]+:(rpl-cost); 
-    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
 
     };
 
@@ -728,7 +710,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     // then return it.
     acc:$[(isMaker and not[reduceOnly]);.account.accFillTransition[
 
-    ];acc];
+        ];acc];
 
     .qt.ACC:acc;
 
@@ -750,7 +732,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // CLOSE given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-                    .account.hedgedClose[]
+                    .account.hedgedClose[];
                 ];
                 [
                     iside:HedgedNegSide[side];
@@ -758,7 +740,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // CLOSE given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-                    .account.hedgedOpen[]
+                    .account.hedgedOpen[];
                 ]
             ];
             // Common Hedged Account Logic
@@ -782,6 +764,17 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 .account.combinedClose[];
                 .account.combinedOpen[]                
             ];
+
+
+            acc[`balance]+:(rpl-cost); 
+            acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+            acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+            acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+            acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+            
+            lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+            bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
+
         ]
     ];
 
