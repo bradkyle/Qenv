@@ -28,10 +28,10 @@ Account: (
             available           : `long$();
             withdrawable        : `long$();
             openBuyQty          : `long$();
-            openBuyCost         : `long$();
+            openBuyLoss         : `long$();
             openBuyValue        : `long$();
             openBuyPremium      : `long$();
-            openSellCost        : `long$();
+            openSellLoss        : `long$();
             openSellValue       : `long$();
             openSellQty         : `long$();
             openSellPremium     : `long$();
@@ -495,13 +495,13 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
         account[`openBuyPremium]+:premium;
         account[`openBuyQty]+:qty; 
         account[`openBuyValue]+:`long$(price*qty);
-        account[`openBuyCost]+:`long$(premium*qty);
+        account[`openBuyLoss]+:`long$(premium*qty);
     ];
     [
         account[`openSellPremium]+:premium;
         account[`openSellQty]+:qty; 
         account[`openSellValue]+:`long$(price*qty);
-        account[`openSellCost]+:`long$(premium*qty);
+        account[`openSellLoss]+:`long$(premium*qty);
     ]];
 
 
@@ -517,7 +517,7 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
 
     // equity = balance + unrealized pnl
 
-    account[`openLoss]:`long$(sum[account`openSellCost`openBuyCost] | 0);
+    account[`openLoss]:`long$(sum[account`openSellLoss`openBuyLoss] | 0);
 
     / amt:max[account`netLongPosition`netShortPosition];
 
@@ -608,16 +608,16 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             acc[`openBuyPremium]-:premium; // TODO?
             acc[`openBuyQty]-:qty; 
             acc[`openBuyValue]-:`long$(price*qty); // TODO check
-            acc[`openBuyCost]-:`long$(premium*qty);
+            acc[`openBuyLoss]-:`long$(premium*qty);
         ];
         [
             acc[`openSellPremium]-:premium;
             acc[`openSellQty]-:qty; 
             acc[`openSellValue]-:`long$(price*qty);
-            acc[`openSellCost]-:`long$(premium*qty);
+            acc[`openSellLoss]-:`long$(premium*qty);
         ]];
 
-        acc[`openLoss]:`long$(sum[acc`openSellCost`openBuyCost] | 0);
+        acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
         acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
         acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
     ]];
@@ -840,7 +840,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
     // TODO derive risk buffer
 
-    // update openSellCost, openBuyCost, openBuyPremium, openSellPremium
+    // update openSellLoss, openBuyLoss, openBuyPremium, openSellPremium
     / During liquidation, users are unable to send orders on their account
     / Liquidation is executed as Fill or Kill and it will be executed immediately.
 
@@ -865,8 +865,8 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt // TODO upscale
         from .account.Inventory where amt>0;
 
-    // max[0;(markDelta+openSellCost)]
-    // max[0;(markDelta+openBuyCost)]
+    // max[0;(markDelta+openSellLoss)]
+    // max[0;(markDelta+openBuyLoss)]
     // ((mp%ins[`markPrice])-1) * orderCost
     // new OrderCost: deltaMarkprice
     // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
