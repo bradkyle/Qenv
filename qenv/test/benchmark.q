@@ -9,7 +9,7 @@ bench:.qt.Bench[
     {[c]
         p:c[`params];
 
-        .qt.BM[.engine.ProcessEvents;getdata[];".engine.ProcessEvents";];
+        .qt.BM[.engine.ProcessEvents;getdata[];p[`repeats];".engine.ProcessEvents";c];
 
     };
     {[p]
