@@ -771,9 +771,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`execCost];
                         i[`totalEntry];
                         isinverse];
-                    
-                    
-                    
     
                     // TODO account netShortPosition, netLongPosition
                 ]
@@ -799,8 +796,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
             acc[`maintMargin]:.account.maintainenceMargin[i;ins];
 
-
             // TODO initMarginReq/maintMarginReq
+            // TODO set oi values
 
             acc[`balance]+:(rpl-cost); 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
