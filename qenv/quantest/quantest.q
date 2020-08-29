@@ -477,11 +477,9 @@ timeFn  :{[target;args]
 BM      :{[target;args;repeats;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
 
-    tms:$[repeats>1;[
-        :(deltas'[{timeFn[x;y]}[target]'[repeats#enlist args])[;1];
-    ];[
-        :last(deltas timeFn[target;args]);
-    ]];
+    tms:$[repeats>1;
+        (deltas'[{timeFn[x;y]}[target]'[repeats#enlist args]])[;1];
+        last(deltas timeFn[target;args])];
 
     bnch:cols[.qt.BenchMark]!(
         (bnchId+:1);
@@ -496,8 +494,8 @@ BM      :{[target;args;repeats;msg;case]
         max[tms];
         (`timespan$(avg[tms]))
         );
-    `.qt.BenchMark upsert bnch;
-
+    / `.qt.BenchMark upsert bnch;
+    :bnch;
     };
 
 / // Errors TODO
