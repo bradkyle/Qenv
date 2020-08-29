@@ -1589,12 +1589,52 @@ test:.qt.Unit[
         :`args`eInv!(a;iCols!p[6]);
     };
     (
-        ("Non inverse short increase, flat price";(
+        ("Non inverse short increase, equal mark/fill price, no rpl";(
             (`LONG;100;1000;0;0;0;0); // Inventory
             100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
             (`LONG;100;1000;0;0;0;0) // Expected Inventory
             ));
-        ("Non inverse short increase, flat price";(
+        ("Inverse short increase, equal mark/fill price, no rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, 0>(mark/fill) price, no rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, 0<(mark/fill) price, no rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, equal mark/fill price, 0>rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, equal mark/fill price, 0<rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, 0>(mark/fill) price, no rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, 0<(mark/fill) price, no rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, equal mark/fill price, 0>rpl";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ));
+        ("Non inverse short increase, equal mark/fill price, 0<rpl";(
             (`LONG;100;1000;0;0;0;0); // Inventory
             100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
             (`LONG;100;1000;0;0;0;0) // Expected Inventory
