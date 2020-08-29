@@ -403,7 +403,7 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  // TODO validation here
 NewInventory : {[inventory;time] 
@@ -590,8 +590,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
 
-    sm:{ins[`sizeMultiplier]};
-    pm:{ins[`priceMultiplier]};
+    sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
+    pm:{:`long$(x[`priceMultiplier]*y)}[ins];
 
     // Validation
     // ---------------------------------------------------------------------------------------->
