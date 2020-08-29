@@ -732,23 +732,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     if[size>i[`amt];:.event.AddFailure[]]; // TODO error
                     cost:qty*fee;
                     rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
-                    i[`totalCommission]+:cost;
-                    i[`realizedGrossPnl]+:(rpl-cost);
                     i[`realizedPnl]+:rpl;
-                    i[`amt]-:qty;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`unrealizedPnl]:.account.unrealizedPnl[i[`avgPrice];i[`amt];ins];
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    if[isMaker;i[`orderMargin]];
-                    i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-                    // TODO account netShortPosition, netLongPosition
+                    i[`amt]-:qty; 
                 ];
                 [
                     iside:HedgedNegSide[side];
@@ -798,6 +783,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
             // TODO initMarginReq/maintMarginReq
             // TODO set oi values
+            // TODO account netShortPosition, netLongPosition
 
             acc[`balance]+:(rpl-cost); 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
