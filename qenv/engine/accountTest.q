@@ -1563,7 +1563,7 @@ test:.qt.Unit[
                 `openBuyLoss`openSellLoss,
                 `openLoss`orderMargin,
                 `leverage);
-        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);p[1])};
+        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);p[6];p[7])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
