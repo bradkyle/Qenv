@@ -1,11 +1,16 @@
 
+getdata:{select from x where time within (min[time];(min[time]+(`minute$y)))};
 
-hrdata:{count select from x where time within (min[time];(min[time]+(`minute$y)))};
+// ENGINE BENCHMARKS
+// ============================================================================>
 
 bench:.qt.Bench[
     ".engine.ProcessEvents";
     {[c]
-    
+        p:c[`params];
+
+        .qt.BM[.engine.ProcessEvents;getdata[];".engine.ProcessEvents";];
+
     };
     {[p]
 
@@ -20,3 +25,7 @@ bench:.qt.Bench[
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
+
+
+// STATE BENCHMARKS
+// ============================================================================>
