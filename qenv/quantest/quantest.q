@@ -452,22 +452,22 @@ P   :{
 
 // BenchMark
 // ======================================================================>
+BenchMark   :(
+    [assertId      : `long$()]
+    testId         : `.qt.Test$();
+    caseId         : `.qt.Case$();
+    state          : `.qt.TESTSTATE;
+    msg            : `symbol$();
+    repeats        : `symbol$();
+    target         : ();
+    totaltime      : `long$();
+    mintime        : `long$();
+    maxtime        : `long$();
+    avgtime        : `long$()
+    );
 
-BM      :{[]
 
-    };
-
-Bench   :{[name;benchFn;formFn;benches;dscr]
-    $[not null[`$name];name:`$name;name:`$""];
-    $[not null[`$dscr];dscr:`$dscr;dscr:`$""];
-
-    bench:cols[.qt.Benchmark]!((.qt.testId+:1);name;`READY;dscr;testFn;formFn;0;0;hooks[0];hooks[1];hooks[2];hooks[3];.z.z;.z.z;.z.f);
-    `.qt.Benchmark upsert bench;
-
-    pfn:$[(type[formFn]=100h);{.qt.AddBenchCase[y;z[0];x[z[1]]]}[formFn;test];{.qt.AddCase[test;x[0];x[1]]}];
-    $[(count[cases]>1);pfn each cases;(count[cases]=1);pfn[first cases];0N];
-
-    :bench;
+BM      :{[target;args;repeats;msg;case]
 
     };
 
