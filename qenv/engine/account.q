@@ -36,7 +36,7 @@ Account: (
             openSellQty         : `long$();
             openSellPremium     : `long$();
             grossOpenPremium    : `long$();
-            openCost            : `long$();
+            openLoss            : `long$();
             orderMargin         : `long$();
             marginType          : `.account.MARGINTYPE$();
             positionType        : `.account.POSITIONTYPE$();
@@ -404,9 +404,16 @@ Inventory: (
 
 DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
-/ default:  
+/ default:  // TODO validation here
 NewInventory : {[inventory;time] 
     if[any null inventory[`accountId`side]; :0b];
+    $[inventory[`side]=`LONG;
+        0N;
+      inventory[`side]=`SHORT;
+        0N;
+      inventory[`side]=`BOTH;
+        0N
+    ];
     inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
     `.account.Inventory upsert inventory; // TODO check if successful
@@ -496,7 +503,7 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
 
     // equity = balance + unrealized pnl
 
-    account[`openCost]:`long$(sum[account`openSellCost`openBuyCost] | 0);
+    account[`openLoss]:`long$(sum[account`openSellCost`openBuyCost] | 0);
 
     / amt:max[account`netLongPosition`netShortPosition];
 
@@ -520,7 +527,7 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
     // The portion of your margin that is assigned to the 
     // initial margin requirements on your open orders.
     account[`orderMargin]:`long$((account[`openBuyValue]+account[`openSellValue])%account[`leverage]);
-    account[`available]:`long$(account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openCost]));
+    account[`available]:`long$(account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openLoss]));
 
     .qt.ACC:account;
     .qt.ACT:.account.Account;
@@ -556,6 +563,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     // TODO if is maker reduce order margin here!
     // TODO fill cannot occur when BOTH inventory is open
 
+    // Validation
+    // ---------------------------------------------------------------------------------------->
+
     if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
     if[not(accountId in key .account.Account);
         :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[accountId]," could not be found"]];
@@ -570,6 +580,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
 
+
+    // Validation
+    // ---------------------------------------------------------------------------------------->
+
     // TODO update move to own function
     if[(isMaker and not[reduceOnly]);[
         // Remove order margin from account and add it to position margin
@@ -577,7 +591,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
         $[(isignum>0) and (premium>0);[ // TODO fix
             acc[`openBuyPremium]-:premium; // TODO?
             acc[`openBuyQty]-:qty; 
-            acc[`openBuyValue]-:`long$(price*qty);
+            acc[`openBuyValue]-:`long$(price*qty); // TODO check
             acc[`openBuyCost]-:`long$(premium*qty);
         ];
         [
@@ -587,10 +601,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             acc[`openSellCost]-:`long$(premium*qty);
         ]];
 
-        acc[`openCost]:`long$(sum[acc`openSellCost`openBuyCost] | 0);
+        acc[`openLoss]:`long$(sum[acc`openSellCost`openBuyCost] | 0);
         acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-        acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openCost]));
+        acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
     ]];
+
+    .qt.ACC:acc;
 
     $[acc[`positionType]=`HEDGED;[ 
             $[reduceOnly;
@@ -649,7 +665,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
                     // TODO dont divide price
                     i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
-
+                    .qt.INV:i;
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
                     / realized and unrealized pnl.
@@ -840,8 +856,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     // openLoss:(mp * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue);
     // avgValue:
  
-    .qt.ACT:.account.Account;
-
     // TODO check this 
     a:update // TODO change to openLoss
         openLoss:openBuyLoss+openSellLoss,
@@ -855,19 +869,17 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
         from (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
 
-    .qt.ABC:a;
-
     x:select
             maintMarginReq:0, 
             available:balance-sum[
             neg[unrealizedPnl],
             posMargin,
             orderMargin,
-            openCost] 
+            openLoss] 
             by accountId from (a lj (select sum unrealizedPnl by accountId from i)); // TODO test this
     
 
-    / select sum'[unrealizedPnl;posMargin;orderMargin;openCost] by accountId from .account.Inventory where amt>0;
+    / select sum'[unrealizedPnl;posMargin;orderMargin;openLoss] by accountId from .account.Inventory where amt>0;
 
     // do liquidation protocol
     {
