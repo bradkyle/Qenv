@@ -695,6 +695,11 @@ combinedOpen          :{[]
 
     };
 
+combinedClose       :{[]
+
+
+    };
+
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
@@ -745,32 +750,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
                 ;
               ((i[`amt]*namt)<0); // TODO check sign
-                [ 
-                    // Cross position
-                    i[`totalEntry]+: abs[namt];
-                    i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
-
-                    / Calculates the average price of entry for the current postion, used in calculating 
-                    / realized and unrealized pnl.
-                    i[`avgPrice]: {$[x[`side]=`LONG;
-                        1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-                        1e8%ceiling[x[`execCost]%x[`totalEntry]]
-                        ]}[i];
-
-                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-
-                    i[`entryValue]:i[`amt]%i[`avgPrice];
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-
-                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-                ];
+                
                 
             ];
         ]
