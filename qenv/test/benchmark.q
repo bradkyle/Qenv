@@ -166,6 +166,42 @@ bench:.qt.Bench[
         ("Bencmark depth and ohlc observations (1 second step; 30 windowsize)";(
 
         ));
+        ("Benchmark ohlc only observations (30 second step; 30 windowsize)";(
+
+        ));
+        ("Bencmark depth only observations (30 second step; 30 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (30 second step; 30 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (30 second step; 30 windowsize)";(
+
+        ));
+        ("Benchmark ohlc only observations (1 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth only observations (1 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (1 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (1 second step; 100 windowsize)";(
+
+        ));
+        ("Benchmark ohlc only observations (30 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth only observations (30 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (30 second step; 100 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (30 second step; 100 windowsize)";(
+
+        ));
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
