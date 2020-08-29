@@ -778,7 +778,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         isinverse];
                     
                     
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
                     
                     i[`maintMargin]:.account.maintainenceMargin[i;ins];
     
@@ -796,6 +795,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
             i[`entryValue]:i[`amt]%i[`avgPrice];
             i[`initMargin]:i[`entryValue]%acc[`leverage];
+            i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
 
             // TODO initMarginReq/maintMarginReq
 
