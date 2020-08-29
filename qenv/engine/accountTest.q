@@ -1573,17 +1573,15 @@ test:.qt.Unit[
 // Hedged Position
 // ------------------------------------------------------------------------------>
 
-.qt.SkpBes[.qt.Unit[
+.qt.SkpBesTest[.qt.Unit[
     ".account.hedgedOpen";
     {[c]
         p:c[`params];
 
         a:p[`args];
-        res:.account.hedgedOpen[a[0];a[1];a[2];a[3]];
+        rinv:.account.hedgedOpen[a[0];a[1];a[2];a[3];a[4];a[5]];
 
-        eInvCols: rmFkeys[rinv] inter cols[y];
-        .qt.A[count[rinv];>;0;s," inventory exists";x];
-        .qt.A[(eInvCols#0!rinv);~;(eInvCols#0!y);s," inventory";x];
+        .qt.A[rinv;~;p[`eInv];"inventory";c];
     };
     {[p]
         iCols:`side`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
