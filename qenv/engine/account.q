@@ -704,12 +704,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`isignum];
                         isinverse]];
 
-                    i[`entryValue]:i[`amt]%i[`avgPrice];
-
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    
+                    i[`entryValue]: i[`amt]%i[`avgPrice];
+                    i[`initMargin]: i[`entryValue]%acc[`leverage];
+                    i[`posMargin]:  i[`initMargin]+i[`unrealizedPnl];
                     i[`maintMargin]:.account.maintainenceMargin[i;ins];
 
                     lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
