@@ -468,12 +468,7 @@ dcCnt   :{`long(x*y)};
 // TODO 
 premium:{`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]])};
 
-
-accNewOrderTransition:{[price;markPrice;]
-
-    p:premium[];
-
-    // TODO update move to own function
+accTransition :{[]
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
@@ -490,65 +485,29 @@ accNewOrderTransition:{[price;markPrice;]
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
     acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
     acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
-    :acc
- };
+    };
+
 
 accFillTransition:{[price;markPrice;]
+    p:.account.premium[];
+    :.account.accTransition[];    
+    };
 
-    // TODO update move to own function
-    $[(isignum>0) and (premium>0);[ // TODO fix
-        acc[`openBuyPremium]-:premium; // TODO?
-        acc[`openBuyQty]-:qty; 
-        acc[`openBuyValue]-:`long$(price*qty); // TODO check
-        acc[`openBuyLoss]-:`long$(premium*qty);
-    ];
-    [
-        acc[`openSellPremium]-:premium;
-        acc[`openSellQty]-:qty; 
-        acc[`openSellValue]-:`long$(price*qty);
-        acc[`openSellLoss]-:`long$(premium*qty);
-    ]];
-
-    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
-    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
-    :acc
- };
+accNewOrderTransition:{[price;markPrice;]
+    p:.account.premium[];
+    :.account.accTransition[];
+    };
 
 accCancelOrderTransition:{[price;markPrice;]
-
-    // TODO update move to own function
-    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
-    $[(isignum>0) and (premium>0);[ // TODO fix
-        acc[`openBuyPremium]-:premium; // TODO?
-        acc[`openBuyQty]-:qty; 
-        acc[`openBuyValue]-:`long$(price*qty); // TODO check
-        acc[`openBuyLoss]-:`long$(premium*qty);
-    ];
-    [
-        acc[`openSellPremium]-:premium;
-        acc[`openSellQty]-:qty; 
-        acc[`openSellValue]-:`long$(price*qty);
-        acc[`openSellLoss]-:`long$(premium*qty);
-    ]];
-
-    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
-    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
-    :acc
- };
+    p:.account.premium[];
+    :.account.accTransition[];    
+    };
 
 
 // Hedged Open And Close Fill Logic
 // ---------------------------------------------------------------------------------------->
 
 hedgedOpen    :{[]
-        iside:HedgedNegSide[side];
-        oside:HedgedSide[side];
-        // OPEN given side for position
-        i:.account.Inventory@(accountId;iside);
-        oi:.account.Inventory@(accountId;oside);
-
         i[`amt]+:qty;
 
         cost:qty*fee;
