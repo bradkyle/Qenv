@@ -42,6 +42,7 @@ INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 // TODO short/long ratio
 // TODO people online, bots online
 // TODO long fraction, short fraction, historic data
+// TODO apply premium
 Instrument: (
     [instrumentId           : `long$()];
     state                   : `.instrument.INSTRUMENTSTATE$();
