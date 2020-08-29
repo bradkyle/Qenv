@@ -496,10 +496,6 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
 
     // equity = balance + unrealized pnl
 
-    account[`grossOpenPremium]:`long$(
-        (abs[(account[`openSellPremium] * (sum[account[`netLongPosition], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0) + 
-        (abs[(account[`openSellPremium] * (sum[neg[account[`netShortPosition]], account[`openBuyOrderQty]]%account[`openBuyOrderQty]))] | 0));
-
     account[`openCost]:`long$(sum[account`openSellCost`openBuyCost] | 0);
 
     / amt:max[account`netLongPosition`netShortPosition];
