@@ -409,16 +409,19 @@ NewInventory : {[inventory;time]
     if[any null inventory[`accountId`side]; :0b];
     $[inventory[`side]=`LONG;
         [
-            
+            inventory[`isignum]:1;
         ];
       inventory[`side]=`SHORT;
-        [
-
+        [   
+            inventory[`isignum]:-1;
         ];
       inventory[`side]=`BOTH;
         [
-
-        ]
+            inventory[`isignum]:1;
+        ];
+      [
+          'INVALID_POSITIONSIDE;
+      ]
     ];
     inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
@@ -672,6 +675,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // TODO dont divide price
                     i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
                     .qt.INV:i;
+
+                    // TODO convert price to float
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
                     / realized and unrealized pnl.
