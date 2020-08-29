@@ -758,7 +758,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     // If the order was placed by a market maker i.e. it was a limit order
     // complete a limit order filled transition update on the account and 
-    // then 
+    // then return it.
     acc:$[(isMaker and not[reduceOnly]);.account.accFillTransition[
 
     ];acc];
@@ -767,8 +767,22 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     $[acc[`positionType]=`HEDGED;[ 
             $[reduceOnly;
-                .account.hedgedClose[];
-                .account.hedgedOpen[]
+                [
+                    iside:HedgedNegSide[side];
+                    oside:HedgedSide[side];
+                    // CLOSE given side for position
+                    i:.account.Inventory@(accountId;iside);
+                    oi:.account.Inventory@(accountId;oside);
+                    .account.hedgedClose[]
+                ];
+                [
+                    iside:HedgedNegSide[side];
+                    oside:HedgedSide[side];
+                    // CLOSE given side for position
+                    i:.account.Inventory@(accountId;iside);
+                    oi:.account.Inventory@(accountId;oside);
+                    .account.hedgedOpen[]
+                ]
             ];
         ];
         [
