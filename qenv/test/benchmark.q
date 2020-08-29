@@ -10,5 +10,9 @@ bench:.qt.Bench[
     {[p]
 
     };
+    (
+        ();
+        ()
+    );
     ("Benchmarks the processing speed of the",
      "engine with differing configuration")];
