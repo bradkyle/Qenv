@@ -1581,7 +1581,9 @@ test:.qt.Unit[
         a:p[`args];
         res:.account.hedgedOpen[a[0];a[1];a[2];a[3]];
 
-        checkInventory[p;c];
+        eInvCols: rmFkeys[rinv] inter cols[y];
+        .qt.A[count[rinv];>;0;s," inventory exists";x];
+        .qt.A[(eInvCols#0!rinv);~;(eInvCols#0!y);s," inventory";x];
     };
     {[p]
         iCols:`side`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
