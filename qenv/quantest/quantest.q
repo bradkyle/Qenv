@@ -475,6 +475,7 @@ timeFn  :{[target;args]
     };
 
 BM      :{[target;args;repeats;msg;case]
+    $[not null[`$msg];msg:`$msg;msg:`$""];
 
     tms:$[repeats>1;[
         :(deltas'[{timeFn[x;y]}[target]'[repeats#enlist args])[;1];
