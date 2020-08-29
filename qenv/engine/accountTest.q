@@ -1590,9 +1590,9 @@ test:.qt.Unit[
         :`args`eInv!(a;icols!p[2]);
     };
     (
-        enlist("Non inverse short increase";(
-            (`LONG;100;1;0b;z); // Inventory
-            100;1000;1000;1;0b;
+        enlist("Non inverse short increase, flat price";(
+            (`LONG;100;1000;0;0;); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
             (1;`SELL;100;1;0b;z); // Expected Inventory
             ));
     );
