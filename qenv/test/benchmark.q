@@ -11,8 +11,12 @@ bench:.qt.Bench[
 
     };
     (
-        ();
-        ()
+        ("";(
+
+        ));
+        ("";(
+
+        ))
     );
-    ("Benchmarks the processing speed of the",
-     "engine with differing configuration")];
+    ("Benchmarks the processing speed of the .engine.ProcessEvents",
+     "function with differing configuration")];
