@@ -466,8 +466,16 @@ BenchMark   :(
     avgtime        : `long$()
     );
 
+timeFn  :{[target;args]
+    st:.z.p;
+    target . args;
+    en:.z.p;
+    :(st;en);
+    };
 
 BM      :{[target;args;repeats;msg;case]
+
+    tms:(deltas'[{timeFn[x;y]}'[repeats#(target;args)]])[;1];
 
     };
 
