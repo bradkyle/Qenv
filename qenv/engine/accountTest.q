@@ -1562,72 +1562,71 @@ test:.qt.Unit[
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (); / Current Account
             1000;1000;100;-1;1b;
-            ();));
+            ();0N));
         ("fill transition (Linear): should reduce the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("new order transition (Inverse): should increase outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("new order transition (Linear): should increase outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("new order transition fail (Inverse): should fail, insufficient balance";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("new order transition fail (Linear): should fail, insufficient balance";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("cancel order transition (Inverse): should reduce the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("cancel order transition (Linear): should reduce the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Inverse): should reduce the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Linear): should reduce the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Inverse): should increase the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Linear): should increase the outstanding order margin";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Inverse): should fail, insufficient balance";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0));
-        ("amend order transition (Linear): should fail, insufficient balance";(
-            (1;`SELL;100;1;0b;z);
-            {[l;s] :100};
-            {0};
-            0;0))
+            (); / Current Account
+            1000;1000;100;-1;1b;
+            ();0N))
+        / ("new order transition (Inverse): should increase outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("new order transition (Linear): should increase outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("new order transition fail (Inverse): should fail, insufficient balance";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("new order transition fail (Linear): should fail, insufficient balance";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("cancel order transition (Inverse): should reduce the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("cancel order transition (Linear): should reduce the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Inverse): should reduce the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Linear): should reduce the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Inverse): should increase the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Linear): should increase the outstanding order margin";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Inverse): should fail, insufficient balance";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0));
+        / ("amend order transition (Linear): should fail, insufficient balance";(
+        /     (1;`SELL;100;1;0b;z);
+        /     {[l;s] :100};
+        /     {0};
+        /     0;0))
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
