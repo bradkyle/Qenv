@@ -1581,20 +1581,24 @@ test:.qt.Unit[
         a:p[`args];
         res:.account.hedgedOpen[a[0];a[1];a[2];a[3]];
 
-        .qt.A[res;~;p[`eRes];"result";c];
-
+        checkInventory[p;c];
     };
     {[p]
         iCols:`side`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
         a:(iCols!p[0];p[1];p[2];p[3];p[4];p[5]);
-        :`args`eInv!(a;icols!p[2]);
+        :`args`eInv!(a;iCols!p[6]);
     };
     (
-        enlist("Non inverse short increase, flat price";(
-            (`LONG;100;1000;0;0;); // Inventory
+        ("Non inverse short increase, flat price";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
             100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
-            (1;`SELL;100;1;0b;z); // Expected Inventory
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
             ));
+        ("Non inverse short increase, flat price";(
+            (`LONG;100;1000;0;0;0;0); // Inventory
+            100;1000;1000;1;0b; // i;qty;price;markprice;leverage;isinverse
+            (`LONG;100;1000;0;0;0;0) // Expected Inventory
+            ))
     );
     .qt.sBlk;
     "Should update a given inventory by adding a given amount to it"]];
