@@ -1595,7 +1595,7 @@ test:.qt.Unit[
             0;0));
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z); // Inventory
-            {0};
+            (1;`SELL;100;1;0b;z); // Expected Inventory
             0;0))
     );
     .qt.sBlk;
