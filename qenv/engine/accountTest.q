@@ -1540,11 +1540,6 @@ test:.qt.Unit[
 // Transition Tests
 // ==================================================================================>
 
-
-
-// Fill Logic Tests
-// ==================================================================================>
-
 test:.qt.Unit[
     ".account.accTransition";
     {[c]
@@ -1572,6 +1567,143 @@ test:.qt.Unit[
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
 
+// Fill Logic Tests
+// ==================================================================================>
+
+test:.qt.Unit[
+    ".account.hedgedOpen";
+    {[c]
+        p:c[`params];
+
+        a:p[`args];
+        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+test:.qt.Unit[
+    ".account.hedgedClose";
+    {[c]
+        p:c[`params];
+
+        a:p[`args];
+        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+test:.qt.Unit[
+    ".account.combinedCross";
+    {[c]
+        p:c[`params];
+
+        a:p[`args];
+        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+test:.qt.Unit[
+    ".account.combinedOpen";
+    {[c]
+        p:c[`params];
+
+        a:p[`args];
+        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+test:.qt.Unit[
+    ".account.combinedClose";
+    {[c]
+        p:c[`params];
+
+        a:p[`args];
+        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+
+        .qt.A[res;~;p[`eRes];"result";c];
+
+    };
+    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    (
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("Given correct params should return correct";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0))
+    );
+    .qt.sBlk;
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
 
 / .qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
