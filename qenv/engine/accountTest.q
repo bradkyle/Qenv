@@ -1581,6 +1581,8 @@ test:.qt.Unit[
         setupAccount[p];
         setupInventory[p];
 
+        / mck1: .qt.M[`.account.accFillTransition;parse["{[a;b;c;d;e] :",string[p[`modAcc]],"}"];c];
+
         f:p[`fill];
         .account.ApplyFill[
             f[`accountId];

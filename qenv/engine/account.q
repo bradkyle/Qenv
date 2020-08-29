@@ -534,6 +534,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
     cost:qty*fee;
+    markprice:ins[`markPrice];
 
     sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
     pm:{:`long$(x[`priceMultiplier]*y)}[ins];
@@ -542,7 +543,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     // complete a limit order filled transition update on the account and 
     // then return it.
     acc:$[(isMaker and not[reduceOnly]);.account.accFillTransition[
-
+        acc;price;markprice;qty;isignum
         ];acc];
 
     // Account: balance, frozen, maintMargin, available, withdrawable, openBuyQty, 
