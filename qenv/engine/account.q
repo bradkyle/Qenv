@@ -776,30 +776,34 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`execCost];
                         i[`totalEntry];
                         isinverse];
-                    i[`unrealizedPnl]:.account.unrealizedPnl[
-                        i[`avgPrice];
-                        markPrice;
-                        i[`amt];
-                        ins[`faceValue];
-                        i[`isignum];
-                        isinverse];
+                    
                     i[`entryValue]:i[`amt]%i[`avgPrice];
                     i[`initMargin]:i[`entryValue]%acc[`leverage];
                     
                     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
                     
                     i[`maintMargin]:.account.maintainenceMargin[i;ins];
-                    lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-                    bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
     
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
                     // TODO account netShortPosition, netLongPosition
                 ]
             ];
+
+            i[`unrealizedPnl]:.account.unrealizedPnl[
+                        i[`avgPrice];
+                        markPrice;
+                        i[`amt];
+                        ins[`faceValue];
+                        i[`isignum];
+                        isinverse];
+
+            acc[`balance]+:(rpl-cost); 
+            acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+            acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+            acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+            acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
+            lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+            bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
         ];
         [
             iside:`BOTH;
