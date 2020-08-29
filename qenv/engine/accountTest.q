@@ -1556,10 +1556,12 @@ test:.qt.Unit[
 
     };
     {[p]
-        x:();
-        :`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+        aCols:`balance`available`positionType`leverage;
+        x:aCols!p[0];
+        :`args`eRes`eThrows!(();;p[2];p[3];p[4])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
+            (); / Current Account
             (1;`SELL;100;1;0b;z);
             {[l;s] :100};
             {0};
