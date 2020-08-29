@@ -201,7 +201,7 @@ bench:.qt.Bench[
         ));
         ("Bencmark depth and ohlc observations (30 second step; 100 windowsize)";(
 
-        ));
+        ))
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
