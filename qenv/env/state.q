@@ -514,7 +514,7 @@ getOBFeatures   :{
     };
 
 // TODO construct observation getter
-
+// TODO register obs in order and parse them , register parsed result and use that in get observations
 
 
 // TODO get orderbook features
