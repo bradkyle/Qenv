@@ -756,12 +756,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // OPEN given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-                    i[`currentQty]+:qty;
-                    cost:qty*fee;
-                    i[`totalCommission]+:cost;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`realizedPnl]-:cost;
+                    
                     / Because the current position is being increased
                     / an entry is added for calculation of average entry
                     / price. 
@@ -779,11 +774,16 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     
                     
                     
-                    i[`maintMargin]:.account.maintainenceMargin[i;ins];
     
                     // TODO account netShortPosition, netLongPosition
                 ]
             ];
+
+            i[`currentQty]+:qty;
+            i[`totalCommission]+:cost;
+            i[`fillCount]+:1;
+            i[`tradeVolume]+:qty;
+            i[`realizedPnl]-:cost;
 
             i[`unrealizedPnl]:.account.unrealizedPnl[
                         i[`avgPrice];
@@ -796,6 +796,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             i[`entryValue]:i[`amt]%i[`avgPrice];
             i[`initMargin]:i[`entryValue]%acc[`leverage];
             i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+
+            acc[`maintMargin]:.account.maintainenceMargin[i;ins];
+
 
             // TODO initMarginReq/maintMarginReq
 
