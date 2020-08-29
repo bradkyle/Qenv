@@ -1570,7 +1570,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "Creates the event to place a new order at a given level in the orderbook"];
+    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
 
 
 / .qt.RunTest[test];
