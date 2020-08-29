@@ -93,7 +93,7 @@ eventEngine[`SETTLEMENT] :   {[event]
 
 eventEngine[`PRICERANGE] :   {[event]
     .logger.Debug["new price range"][event];
-    .order.DoSettlement[event];
+    .order.UpdatePriceRange[event];
     };
 
 / Private Event Processing logic (Writes)

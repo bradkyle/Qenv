@@ -9,7 +9,7 @@ bench:.qt.Bench[
     {[c]
         p:c[`params];
 
-        .qt.BM[.engine.ProcessEvents;getdata[];p[`repeats];".engine.ProcessEvents";c];
+        .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
 
     };
     {[p]
@@ -21,7 +21,13 @@ bench:.qt.Bench[
         ));
         ("Bencmark an hours worth of non agent trades";(
 
-        ))
+        ));
+        ("Bencmark an hours worth of mark price updates";(
+
+        ));
+        ("Bencmark an hours worth of non agent trades";(
+
+        ));
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
