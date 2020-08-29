@@ -1548,15 +1548,15 @@ test:.qt.Unit[
         a:p[`args];
         $[all(null[p[`eThrows]]);[
             res:.account.accTransition[a[0];a[1];a[2];a[3]];
+            .qt.A[res;~;p[`eAcc];"account result";c];
         ];[
             .qt.AT[.account.accTransition;(a[0];a[1];a[2];a[3]);p[`eThrows];".account.accTransition";c];
         ]];
 
-        .qt.A[res;~;p[`eAcc];"result";c];
 
     };
     {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
-    (
+    ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;`SELL;100;1;0b;z);
             {[l;s] :100};
