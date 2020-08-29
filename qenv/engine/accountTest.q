@@ -1584,7 +1584,10 @@ test:.qt.Unit[
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]
+    
+    
+    };
     (
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z);
@@ -1611,7 +1614,10 @@ test:.qt.Unit[
         .qt.A[res;~;p[`eRes];"result";c];
 
     };
-    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]
+    
+    
+    };
     (
         ("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z);
