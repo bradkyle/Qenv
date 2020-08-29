@@ -790,7 +790,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
               ((i[`amt]*namt)<0); // TODO check sign
                 [ 
                     // Cross position
-                    i[`totalEntry]+: abs[namt];
+                    i[`totalEntry]: abs[namt];
 
                     // derive execCost
                     i[`execCost]+: .account.execCost[
