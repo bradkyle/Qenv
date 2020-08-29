@@ -1585,18 +1585,14 @@ test:.qt.Unit[
 
     };
     {[p]
-    
-    
+        a:();
+        :`args`eInv!(a;p[2]);
     };
     (
-        ("Given correct params should return correct";(
+        enlist("Given correct params should return correct";(
             (1;`SELL;100;1;0b;z); // Inventory
             (1;`SELL;100;1;0b;z); // Expected Inventory
-            0;0));
-        ("Given correct params should return correct";(
-            (1;`SELL;100;1;0b;z); // Inventory
-            (1;`SELL;100;1;0b;z); // Expected Inventory
-            0;0))
+            ));
     );
     .qt.sBlk;
     "Should update a given inventory by adding a given amount to it"];
