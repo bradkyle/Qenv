@@ -1613,6 +1613,16 @@ test:.qt.Unit[
             {[l;s] :100};
             {0};
             0;0));
+        ("amend order transition (Inverse): should fail, insufficient balance";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("amend order transition (Linear): should fail, insufficient balance";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
