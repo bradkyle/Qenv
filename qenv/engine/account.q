@@ -514,8 +514,13 @@ accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
-hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
+hedgedOpen    :{[i;qty;price;markprice;leverage;]
         i[`amt]+:qty;
+
+        i[`totalCommission]+:cost;
+        i[`fillCount]+:1;
+        i[`tradeVolume]+:qty;
+        i[`realizedPnl]-:cost;
 
         / Because the current position is being increased
         / an entry is added for calculation of average entry
@@ -558,9 +563,8 @@ hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
-hedgedClose    :{[i;qty;price;markprice;leverage;isinverse]
+hedgedClose    :{[]
         // todo max close = amt
-        qty:min[i[`amt];qty];
 
         cost:qty*fee;
         rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
@@ -586,7 +590,7 @@ hedgedClose    :{[i;qty;price;markprice;leverage;isinverse]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedCross       :{[i;qty;price;markprice;leverage;isinverse]
+combinedCross       :{[]
     // Close positionType BOTH
     // TODO account netShortPosition, netLongPosition
     // CLOSE given side for position
@@ -616,7 +620,7 @@ combinedCross       :{[i;qty;price;markprice;leverage;isinverse]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedOpen          :{[i;qty;price;markprice;leverage;isinverse]
+combinedOpen          :{[]
     // Open positionType BOTH
     i[`totalEntry]+: abs[namt];
     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
@@ -642,7 +646,7 @@ combinedOpen          :{[i;qty;price;markprice;leverage;isinverse]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedClose       :{[i;qty;price;markprice;leverage;isinverse]
+combinedClose       :{[]
     // Cross position
     i[`totalEntry]+: abs[namt];
     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
@@ -727,8 +731,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // CLOSE given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-
-                    i:.account.hedgedClose[];
+                    .account.hedgedClose[];
                 ];
                 [
                     iside:HedgedNegSide[side];
@@ -736,17 +739,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // CLOSE given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-
-                    i:.account.hedgedOpen[];
+                    .account.hedgedOpen[];
                 ]
             ];
-            // Common Hedged Account/Inventory Logic
-
-            // TODO check ordering of this
-            i[`totalCommission]+:cost;
-            i[`fillCount]+:1;
-            i[`tradeVolume]+:qty;
-            i[`realizedPnl]-:cost;
+            // Common Hedged Account Logic
 
             acc[`balance]+:(rpl-cost); 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
