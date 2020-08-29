@@ -507,10 +507,11 @@ accCancelOrderTransition:{[price;markPrice;]
 // Hedged Open And Close Fill Logic
 // ---------------------------------------------------------------------------------------->
 
-hedgedOpen    :{[]
+// Increases the number of contracts that form part of a given 
+// inventory and subsequently derives the 
+hedgedOpen    :{[i;]
         i[`amt]+:qty;
 
-        cost:qty*fee;
         i[`totalCommission]+:cost;
         i[`fillCount]+:1;
         i[`tradeVolume]+:qty;
