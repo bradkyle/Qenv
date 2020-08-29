@@ -1625,7 +1625,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+    "Should update a given inventory by removing a given amount from it"];
 
 // Combined Position
 // ------------------------------------------------------------------------------>
@@ -1655,7 +1655,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+    "Should inverse the position signum"];
 
 test:.qt.Unit[
     ".account.combinedOpen";
