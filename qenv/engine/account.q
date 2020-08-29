@@ -690,11 +690,11 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
                     / realized and unrealized pnl.
-                    i[`avgPrice]: .account.avgPrice[
+                    i[`avgPrice]: pm[.account.avgPrice[
                         i[`isignum];
                         i[`execCost];
                         i[`totalEntry];
-                        isinverse];
+                        isinverse]];
 
                     i[`unrealizedPnl]:.account.unrealizedPnl[
                         i[`avgPrice];
