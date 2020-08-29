@@ -468,7 +468,7 @@ dcCnt   :{`long(x*y)};
 premium:{`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]])};
 
 accTransition :{[acc;price;markprice;qty;isignum]
-    p
+    p:.account.premium[];
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
@@ -485,22 +485,20 @@ accTransition :{[acc;price;markprice;qty;isignum]
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
     acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
     acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
+    :acc
     };
 
 
-accFillTransition:{[price;markPrice;]
-    p:.account.premium[];
-    :.account.accTransition[];    
+accFillTransition:{[acc;price;markPrice;qty;isignum]
+    :.account.accTransition[acc;price;markPrice;qty;isignum];    
     };
 
-accNewOrderTransition:{[price;markPrice;]
-    p:.account.premium[];
-    :.account.accTransition[];
+accNewOrderTransition:{[acc;price;markPrice;qty;isignum]
+    :.account.accTransition[acc;price;markPrice;qty;isignum];
     };
 
-accCancelOrderTransition:{[price;markPrice;]
-    p:.account.premium[];
-    :.account.accTransition[];    
+accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
+    :.account.accTransition[acc;price;markPrice;qty;isignum];    
     };
 
 
