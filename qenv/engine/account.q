@@ -408,11 +408,17 @@ DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 NewInventory : {[inventory;time] 
     if[any null inventory[`accountId`side]; :0b];
     $[inventory[`side]=`LONG;
-        0N;
+        [
+            
+        ];
       inventory[`side]=`SHORT;
-        0N;
+        [
+
+        ];
       inventory[`side]=`BOTH;
-        0N
+        [
+
+        ]
     ];
     inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
