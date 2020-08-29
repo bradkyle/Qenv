@@ -1573,7 +1573,7 @@ test:.qt.Unit[
 // Hedged Position
 // ------------------------------------------------------------------------------>
 
-test:.qt.Unit[
+.qt.SkpBes[.qt.Unit[
     ".account.hedgedOpen";
     {[c]
         p:c[`params];
@@ -1585,17 +1585,19 @@ test:.qt.Unit[
 
     };
     {[p]
-        a:();
-        :`args`eInv!(a;p[2]);
+        iCols:`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
+        a:(iCols!p[0];p[1];p[2];p[3];p[4];p[5]);
+        :`args`eInv!(a;icols!p[2]);
     };
     (
-        enlist("Given correct params should return correct";(
+        enlist("Non inverse short increase";(
             (1;`SELL;100;1;0b;z); // Inventory
+            100;1000;1000;1;0b;
             (1;`SELL;100;1;0b;z); // Expected Inventory
             ));
     );
     .qt.sBlk;
-    "Should update a given inventory by adding a given amount to it"];
+    "Should update a given inventory by adding a given amount to it"]];
 
 test:.qt.Unit[
     ".account.hedgedClose";
@@ -2709,5 +2711,4 @@ deriveCaseParams :{[p]
     )]];
 
 
-.qt.SkpBes[110];
 .qt.RunTests[];

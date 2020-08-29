@@ -563,7 +563,7 @@ hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
-hedgedClose    :{[]
+hedgedClose    :{[i;qty;price;markprice;leverage;isinverse]
         // todo max close = amt
         qty:min[i[`amt];qty];
 
@@ -591,7 +591,7 @@ hedgedClose    :{[]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedCross       :{[]
+combinedCross       :{[i;qty;price;markprice;leverage;isinverse]
     // Close positionType BOTH
     // TODO account netShortPosition, netLongPosition
     // CLOSE given side for position
@@ -621,7 +621,7 @@ combinedCross       :{[]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedOpen          :{[]
+combinedOpen          :{[i;qty;price;markprice;leverage;isinverse]
     // Open positionType BOTH
     i[`totalEntry]+: abs[namt];
     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
@@ -647,7 +647,7 @@ combinedOpen          :{[]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedClose       :{[]
+combinedClose       :{[i;qty;price;markprice;leverage;isinverse]
     // Cross position
     i[`totalEntry]+: abs[namt];
     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
