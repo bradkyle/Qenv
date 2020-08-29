@@ -136,3 +136,7 @@ bench:.qt.Bench[
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
+
+
+// Run benchmarks and output results to the results dir
+.qt.RunBenchmarks["results"];
