@@ -756,7 +756,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
     pm:{:`long$(x[`priceMultiplier]*y)}[ins];
 
-    if[(isMaker and not[reduceOnly]);.account.accFillTransition[]];
+    // If the order was placed by a market maker i.e. it was a limit order
+    // complete a limit order filled transition update on the account and 
+    // then 
+    acc:$[(isMaker and not[reduceOnly]);.account.accFillTransition[
+
+    ];acc];
 
     .qt.ACC:acc;
 
