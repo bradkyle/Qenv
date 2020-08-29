@@ -2465,7 +2465,7 @@ test:.qt.Unit[
 
 
 deriveCaseParams :{[p]
-
+    mCols:`called`numCalls`calledWith; // Mock specific
     cIns:(`instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier)!p[0];
 
     // Construct Current Account
@@ -2478,21 +2478,22 @@ deriveCaseParams :{[p]
     // Construct Expected Account
     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[5];
+    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[6];
 
     // Construct Expected Inventory
-    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[6]]];
+    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[7]]];
 
-    :`cIns`cAcc`cInv`cOrd`args`eAcc`eInv`eOrd`eEvents!(
+    :`cIns`cAcc`cInv`cOrd`args`eCancelAllOrders`eAcc`eInv`eOrd`eEvents!(
         cIns;
         cAcc;
         cInv;
         makeOrders[p[3]];
         p[4];
+        mCols!p[5];        
         eAcc;
         eInv;
-        makeOrders[p[7]];
-        p[8]
+        makeOrders[p[8]];
+        p[9]
         );
     };
 
@@ -2513,6 +2514,7 @@ deriveCaseParams :{[p]
     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+    (0b;0;());
     (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
         (0;`BOTH;100;100;l 1e9; 1000; 0);

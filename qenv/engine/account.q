@@ -591,10 +591,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             acc[`openSellCost]-:`long$(premium*qty);
         ]];
 
-        acc[`grossOpenPremium]:`long$(
-        (abs[(acc[`openSellPremium] * (sum[acc[`netLongPosition], acc[`openBuyOrderQty]]%acc[`openBuyOrderQty]))] | 0) + 
-        (abs[(acc[`openSellPremium] * (sum[neg[acc[`netShortPosition]], acc[`openBuyOrderQty]]%acc[`openBuyOrderQty]))] | 0));
-
         acc[`openCost]:`long$(sum[acc`openSellCost`openBuyCost] | 0);
         acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
         acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openCost]));
