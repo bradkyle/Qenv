@@ -1579,7 +1579,7 @@ test:.qt.Unit[
         p:c[`params];
 
         a:p[`args];
-        res:.account.accTransition[a[0];a[1];a[2];a[3]];
+        res:.account.hedgedOpen[a[0];a[1];a[2];a[3]];
 
         .qt.A[res;~;p[`eRes];"result";c];
 
@@ -1590,12 +1590,12 @@ test:.qt.Unit[
     };
     (
         ("Given correct params should return correct";(
-            (1;`SELL;100;1;0b;z);
+            (1;`SELL;100;1;0b;z); // Inventory
             {[l;s] :100};
             {0};
             0;0));
         ("Given correct params should return correct";(
-            (1;`SELL;100;1;0b;z);
+            (1;`SELL;100;1;0b;z); // Inventory
             {[l;s] :100};
             {0};
             0;0))

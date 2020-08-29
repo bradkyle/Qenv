@@ -565,6 +565,7 @@ hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
 hedgedClose    :{[]
         // todo max close = amt
+        qty:min[i[`amt];qty];
 
         cost:qty*fee;
         rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
