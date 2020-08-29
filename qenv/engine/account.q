@@ -729,11 +729,11 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // CLOSE given side for position
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
-                    if[size>i[`amt];:.event.AddFailure[]]; // TODO error
-                    cost:qty*fee;
+
                     rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
                     i[`realizedPnl]+:rpl;
                     i[`amt]-:qty; 
+                    acc[`balance]+:rpl;
                 ];
                 [
                     iside:HedgedNegSide[side];
@@ -785,7 +785,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             // TODO set oi values
             // TODO account netShortPosition, netLongPosition
 
-            acc[`balance]+:(rpl-cost); 
+            acc[`balance]-:cost; 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
             acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
             acc[`posMargin]: i[`posMargin]+oi[`posMargin];
@@ -806,23 +806,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     if[size>i[`amt];:.event.AddFailure[]];
                     cost:qty*fee;
                     rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
-                    i[`totalCommission]+:cost;
-                    i[`realizedGrossPnl]+:(rpl-cost);
                     i[`realizedPnl]+:rpl;
                     i[`amt]-:qty;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    if[isMaker;i[`orderMargin]];
-                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
                     i[`isignum]:neg[i[`isignum]];
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin];
-                    acc[`posMargin]: i[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
                 ];
               ((i[`amt]*namt)<0); // TODO check sign
                 [ 
@@ -831,20 +817,14 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
-                    i[`avgPrice]: {$[x[`side]=`LONG;
-                        1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-                        1e8%ceiling[x[`execCost]%x[`totalEntry]]
-                        ]}[i];
+                    i[`avgPrice]: .account.avgPrice[
+                        i[`isignum];
+                        i[`execCost];
+                        i[`totalEntry];
+                        isinverse];
+                        
                     i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
                     i[`entryValue]:i[`amt]%i[`avgPrice];
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
                 ];
                 [
                     // Open positionType BOTH
@@ -869,6 +849,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
                 ]
             ];
+
+
         ]
     ];
 
