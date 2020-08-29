@@ -739,13 +739,14 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
                     i:.account.hedgedOpen[];
                 ]
-
-                i[`totalCommission]+:cost;
-                i[`fillCount]+:1;
-                i[`tradeVolume]+:qty;
-                i[`realizedPnl]-:cost;
             ];
-            // Common Hedged Account Logic
+            // Common Hedged Account/Inventory Logic
+
+            // TODO check ordering of this
+            i[`totalCommission]+:cost;
+            i[`fillCount]+:1;
+            i[`tradeVolume]+:qty;
+            i[`realizedPnl]-:cost;
 
             acc[`balance]+:(rpl-cost); 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
