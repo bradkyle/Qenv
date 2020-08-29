@@ -36,7 +36,7 @@ formatTable     :{
 // ======================================================================>
 
 TESTKIND    :`UNIT`INTEGRATION`BENCHMARK`PROFILE;
-TESTSTATE   :`READY`PASS`FAIL`SKIP`ERROR;
+TESTSTATE   :`READY`PASS`FAIL`SKIP`ERROR`COMPLETE;
 SETUPSTATE  :`SETUP`MOCK`TESTING;
 
 testId:-1;
@@ -461,10 +461,10 @@ BenchMark   :(
     msg            : `symbol$();
     repeats        : `symbol$();
     target         : ();
-    totaltime      : `long$();
-    mintime        : `long$();
-    maxtime        : `long$();
-    avgtime        : `long$()
+    totaltime      : `timespan$();
+    mintime        : `timespan$();
+    maxtime        : `timespan$();
+    avgtime        : `timespan$()
     );
 
 timeFn  :{[target;args]
@@ -477,12 +477,24 @@ timeFn  :{[target;args]
 BM      :{[target;args;repeats;msg;case]
 
     tms:$[repeats>1;[
-        :(deltas'[{timeFn[x;y]}[target]'[repeat#enlist args])[;1];
+        :(deltas'[{timeFn[x;y]}[target]'[repeats#enlist args])[;1];
     ];[
         :last(deltas timeFn[target;args]);
     ]];
 
-    bnch:cols[.qt.BenchMark]!((bnchId+:1);case[`testId];case[`caseId];);
+    bnch:cols[.qt.BenchMark]!(
+        (bnchId+:1);
+        case[`testId];
+        case[`caseId];
+        `COMPLETE;
+        msg;
+        repeats;
+        target;
+        (`timespan$sum[tms]);
+        min[tms];
+        max[tms];
+        (`timespan$(avg[tms]))
+        );
     `.qt.BenchMark upsert bnch;
 
     };
