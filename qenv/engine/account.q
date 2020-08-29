@@ -635,6 +635,39 @@ hedgedClose    :{[]
 // Combined Cross, Open and Close Fill Logic
 // ---------------------------------------------------------------------------------------->
 
+combinedCross       :{[]
+    // Close positionType BOTH
+    // TODO account netShortPosition, netLongPosition
+    // CLOSE given side for position
+
+    if[size>i[`amt];:.event.AddFailure[]];
+
+    cost:qty*fee;
+    rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
+    i[`totalCommission]+:cost;
+    i[`realizedGrossPnl]+:(rpl-cost);
+    i[`realizedPnl]+:rpl;
+    i[`amt]-:qty;
+    i[`fillCount]+:1;
+    i[`tradeVolume]+:qty;
+
+    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
+
+    i[`initMargin]:i[`entryValue]%acc[`leverage];
+    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+    if[isMaker;i[`orderMargin]];
+    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
+    i[`isignum]:neg[i[`isignum]];
+
+    acc[`balance]+:(rpl-cost); 
+    acc[`unrealizedPnl]: i[`unrealizedPnl];
+    acc[`orderMargin]: i[`orderMargin];
+    acc[`posMargin]: i[`posMargin];
+    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
+    }
+
+
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
@@ -683,37 +716,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             i:.account.Inventory@(accountId;iside);
             namt:i[`amt]+qty;
             $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
-                [
-                    // Close positionType BOTH
-                    // TODO account netShortPosition, netLongPosition
-                    // CLOSE given side for position
-
-                    if[size>i[`amt];:.event.AddFailure[]];
-
-                    cost:qty*fee;
-                    rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
-                    i[`totalCommission]+:cost;
-                    i[`realizedGrossPnl]+:(rpl-cost);
-                    i[`realizedPnl]+:rpl;
-                    i[`amt]-:qty;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-
-                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    if[isMaker;i[`orderMargin]];
-                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-                    i[`isignum]:neg[i[`isignum]];
-
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin];
-                    acc[`posMargin]: i[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-
-                ];
+                ;
               ((i[`amt]*namt)<0); // TODO check sign
                 [ 
                     // Cross position
