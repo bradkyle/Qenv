@@ -406,7 +406,7 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  // TODO validation here
 NewInventory : {[inventory;time] 
@@ -501,38 +501,6 @@ accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
     :.account.accTransition[acc;price;markPrice;qty;isignum];    
     };
 
-
-// Hedged Open And Close Fill Logic
-// ---------------------------------------------------------------------------------------->
-
-// Increases the number of contracts that form part of a given 
-// inventory and subsequently derives the
-
-// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
-//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
-//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
-//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
-combinedClose       :{[]
-    // Cross position
-    i[`totalEntry]+: abs[namt];
-    i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
-
-    / Calculates the average price of entry for the current postion, used in calculating 
-    / realized and unrealized pnl.
-    i[`avgPrice]: {$[x[`side]=`LONG;
-        1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-        1e8%ceiling[x[`execCost]%x[`totalEntry]]
-        ]}[i];
-
-    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-
-    i[`entryValue]:i[`amt]%i[`avgPrice];
-    i[`initMargin]:i[`entryValue]%acc[`leverage];
-    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-
-    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-
-    };
 
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
@@ -725,10 +693,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     i[`initMargin]:i[`entryValue]%acc[`leverage];
     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
 
-    $[i[`amt]>0;[
-
-    ]];
-
     acc[`maintMargin]:.account.maintainenceMargin[i;ins];
 
     // TODO initMarginReq/maintMarginReq
@@ -766,6 +730,7 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
     / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
 
+    // TODO validate instrument exists
 
     ins:.instrument.Instrument@instrumentId;
     // TODO derive risk buffer
