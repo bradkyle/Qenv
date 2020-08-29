@@ -467,7 +467,8 @@ dcCnt   :{`long(x*y)};
 // TODO 
 premium:{`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]])};
 
-accTransition :{[]
+accTransition :{[acc;price;markprice;qty;isignum]
+    p
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
