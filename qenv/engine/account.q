@@ -465,22 +465,26 @@ dcCnt   :{`long(x*y)};
 // Margin Transition logic
 // ---------------------------------------------------------------------------------------->
 
+// TODO 
+premium:{`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]])};
+
 
 accNewOrderTransition:{[price;markPrice;]
 
+    p:premium[];
+
     // TODO update move to own function
-    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
-    $[(isignum>0) and (premium>0);[ // TODO fix
-        acc[`openBuyPremium]+:premium; // TODO?
+    $[(isignum>0) and (p>0);[ // TODO fix
+        acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
         acc[`openBuyValue]+:`long$(price*qty); // TODO check
-        acc[`openBuyLoss]+:`long$(premium*qty);
+        acc[`openBuyLoss]+:`long$(p*qty);
     ];
     [
-        acc[`openSellPremium]-:premium;
+        acc[`openSellPremium]-:p;
         acc[`openSellQty]+:qty; 
         acc[`openSellValue]+:`long$(price*qty);
-        acc[`openSellLoss]+:`long$(premium*qty);
+        acc[`openSellLoss]+:`long$(p*qty);
     ]];
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
@@ -492,7 +496,6 @@ accNewOrderTransition:{[price;markPrice;]
 accFillTransition:{[price;markPrice;]
 
     // TODO update move to own function
-    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
     $[(isignum>0) and (premium>0);[ // TODO fix
         acc[`openBuyPremium]-:premium; // TODO?
         acc[`openBuyQty]-:qty; 
@@ -564,7 +567,6 @@ hedgedOpen    :{[]
             price;
             qty;
             isinverse]];  // TODO make unilaterally applicable.
-        .qt.INV:i;
 
         // TODO convert price to float
         / Calculates the average price of entry for 
