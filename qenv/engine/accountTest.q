@@ -1570,6 +1570,9 @@ test:.qt.Unit[
 // Fill Logic Tests
 // ==================================================================================>
 
+// Hedged Position
+// ------------------------------------------------------------------------------>
+
 test:.qt.Unit[
     ".account.hedgedOpen";
     {[c]
@@ -1623,6 +1626,9 @@ test:.qt.Unit[
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+// Combined Position
+// ------------------------------------------------------------------------------>
 
 test:.qt.Unit[
     ".account.combinedCross";
