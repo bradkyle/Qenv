@@ -381,7 +381,6 @@ Inventory: (
     realizedPnl              :  `long$();
     unrealizedPnl            :  `long$();
     posMargin                :  `long$();
-    initMargin               :  `long$();
     entryValue               :  `long$();
     totalCost                :  `long$();
     totalEntry               :  `long$();
@@ -509,7 +508,13 @@ accCancelOrderTransition:{[price;markPrice;]
 
 // Increases the number of contracts that form part of a given 
 // inventory and subsequently derives the 
-hedgedOpen    :{[i;]
+
+
+// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum, fillCount
+hedgedOpen    :{[i;qty;price;markprice;leverage;]
         i[`amt]+:qty;
 
         i[`totalCommission]+:cost;
@@ -523,28 +528,28 @@ hedgedOpen    :{[i;]
         i[`totalEntry]+: abs[qty];
 
         // TODO dont divide price
-        i[`execCost]+: sm[.account.execCost[
+        i[`execCost]+: .account.execCost[
             price;
             qty;
-            isinverse]];  // TODO make unilaterally applicable.
+            isinverse];  // TODO make unilaterally applicable.
 
         // TODO convert price to float
         / Calculates the average price of entry for 
         / the current postion, used in calculating 
         / realized and unrealized pnl.
-        i[`avgPrice]: pm[.account.avgPrice[
+        i[`avgPrice]: .account.avgPrice[
             i[`isignum];
             i[`execCost];
             i[`totalEntry];
-            isinverse]];
+            isinverse];
 
-        i[`unrealizedPnl]:sm[.account.unrealizedPnl[
+        i[`unrealizedPnl]:.account.unrealizedPnl[
             i[`avgPrice];
             ins[`markPrice];
             i[`amt];
             ins[`faceValue];
             i[`isignum];
-            isinverse]];
+            isinverse];
 
         i[`entryValue]: i[`amt]%i[`avgPrice];
         i[`initMargin]: i[`entryValue]%acc[`leverage];
@@ -555,13 +560,7 @@ hedgedOpen    :{[i;]
     };
 
 hedgedClose    :{[]
-        iside:HedgedNegSide[side];
-        oside:HedgedSide[side];
-        // CLOSE given side for position
-        i:.account.Inventory@(accountId;iside);
-        oi:.account.Inventory@(accountId;oside);
-
-        if[size>i[`amt];:.event.AddFailure[]]; // TODO error
+        // todo max close = amt
 
         cost:qty*fee;
         rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
@@ -721,6 +720,16 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     ];acc];
 
     .qt.ACC:acc;
+
+    // Account: balance, frozen, maintMargin, available, withdrawable, openBuyQty, 
+    //      orderMargin, tradeVolume, tradeCount, netLongPosition, netShortPosition
+    //      posMargin, longMargin, shortMargin, totalLossPnl, totalGainPnl, realizedPnl, 
+    //      unrealizedPnl, liquidationPrice, bankruptPrice, totalCommission
+
+    // Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+    //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+    //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+    //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum, fillCount
 
     $[acc[`positionType]=`HEDGED;[ 
             $[reduceOnly;
