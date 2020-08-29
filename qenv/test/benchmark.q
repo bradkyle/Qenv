@@ -11,10 +11,10 @@ bench:.qt.Bench[
 
     };
     (
-        ("";(
+        ("Benchmark an hours worth of depth updates";(
 
         ));
-        ("";(
+        ("Bencmark an hours worth of non agent trades";(
 
         ))
     );
