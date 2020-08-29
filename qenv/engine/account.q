@@ -514,7 +514,7 @@ accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
 //      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
-hedge    :{[i;qty;price;markprice;leverage;isinverse]
+hedgedOpen    :{[i;qty;price;markprice;leverage;isinverse]
         i[`amt]+:qty;
 
         / Because the current position is being increased
@@ -728,12 +728,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
 
-                    i[`totalCommission]+:cost;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`realizedPnl]-:cost;
-
-                    .account.hedgedClose[];
+                    i:.account.hedgedClose[];
                 ];
                 [
                     iside:HedgedNegSide[side];
@@ -742,13 +737,13 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
 
-                    i[`totalCommission]+:cost;
-                    i[`fillCount]+:1;
-                    i[`tradeVolume]+:qty;
-                    i[`realizedPnl]-:cost;
-
-                    .account.hedgedOpen[];
+                    i:.account.hedgedOpen[];
                 ]
+
+                i[`totalCommission]+:cost;
+                i[`fillCount]+:1;
+                i[`tradeVolume]+:qty;
+                i[`realizedPnl]-:cost;
             ];
             // Common Hedged Account Logic
 
