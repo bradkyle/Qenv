@@ -746,10 +746,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     / an entry is added for calculation of average entry
                     / price. 
                     i[`totalEntry]+: abs[qty];
-                    // TODO dont divide price
+                    
+                    // derive execCost
                     i[`execCost]+: .account.execCost[
                         
-                        ];  // TODO make unilaterally applicable.
+                        ]; 
+                        
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
                     / realized and unrealized pnl.
