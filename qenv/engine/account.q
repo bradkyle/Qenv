@@ -382,6 +382,7 @@ Inventory: (
     totalCost                :  `long$();
     totalEntry               :  `long$();
     execCost                 :  `long$();
+    totalVolume              :  `long$();
     totalCloseVolume         :  `long$();
     totalCrossVolume         :  `long$();
     totalOpenVolume          :  `long$(); 
@@ -589,8 +590,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
 
-    sm:ins[`sizeMultiplier];
-    pm:ins[`priceMultiplier];
+    sm:{ins[`sizeMultiplier]};
+    pm:{ins[`priceMultiplier]};
+
     // Validation
     // ---------------------------------------------------------------------------------------->
 
@@ -660,7 +662,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
 
-                    i[`currentQty]+:qty;
+                    i[`amt]+:qty;
 
                     cost:qty*fee;
                     i[`totalCommission]+:cost;
