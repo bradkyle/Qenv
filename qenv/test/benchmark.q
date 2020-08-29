@@ -154,10 +154,47 @@ bench:.qt.Bench[
 
     };
     (
-        ("Benchmark an hours worth of depth updates";(
+        ("Benchmark ohlc only observations (1 second step; 30 windowsize)";(
 
         ));
-        ("Bencmark an hours worth of non agent trades";(
+        ("Bencmark depth only observations (1 second step; 30 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (1 second step; 30 windowsize)";(
+
+        ));
+        ("Bencmark depth and ohlc observations (1 second step; 30 windowsize)";(
+
+        ));
+    );
+    ("Benchmarks the processing speed of the .engine.ProcessEvents",
+     "function with differing configuration")];
+
+// STATE BENCHMARKS : GetRewards
+// ============================================================================>
+
+bench:.qt.Bench[
+    ".state.GetRewards";
+    {[c]
+        p:c[`params];
+
+        .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
+
+    };
+    {[p]
+
+    };
+    (
+        ("Benchmark ohlc only observations";(
+
+        ));
+        ("Bencmark depth only observations";(
+
+        ));
+        ("Bencmark depth and ohlc observations";(
+
+        ));
+        ("Bencmark depth and ohlc observations";(
 
         ))
     );
