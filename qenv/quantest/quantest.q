@@ -412,9 +412,9 @@ RestoreMocks  :{[]
 / "x+'til 1000;"        00:00:00.000 0.008581704
 / "x+y+123"             00:00:00.000 9.978725e-05
 / ,"}"                  00:00:00.000 0
-e:{profile[first x;eval each 1_x:parse x]}
+.p.e:{profile[first x;eval each 1_x:parse x]}
 
-profile:{[f;a]
+.p.profile:{[f;a]
   f:$[-11h=type f;get f;f];
   if[100h<>type f;'"profiler nyi"];
   f:@[tag;f;{'"profiler failed to tag:",x}];
@@ -422,9 +422,9 @@ profile:{[f;a]
   :disp[f;t];
  };
 
-stub:";.p.time,:.z.p;"; / append this for timing
+.p.stub:";.p.time,:.z.p;"; / append this for timing
 
-tag:{[f]
+.p.tag:{[f]
   f:-4!string f;
   i:min 2 1 1>f{sums(-). x~\:/:1#'y}/:("{}";"[]";"()"); / indices to ignore brackets
   f:raze f@[;;,;stub]/where i&f~\:1#";";                / append timing stub
@@ -433,25 +433,29 @@ tag:{[f]
   :get f;
  };
 
-run:{[f;a]
+.p.run:{[f;a]
   .p.time:1#.z.p;
   f . a;
   :.p.time,.z.p;
  };
 
-disp:{[f;t]
+.p.disp:{[f;t]
   r:update time:1_deltas t til 1+count fn from([]fn:stub vs string f);
   r:update time:0D from r where all each fn in\:"\t\n }";      / handle "empty" lines
   :update trim fn,`time$0^time,pct:0^100*time%sum time from r; / time easier to read?
  };
 
-P        :{
+P   :{
 
     };
 
 
 // BenchMark
 // ======================================================================>
+
+BM      :{[]
+
+    };
 
 Bench   :{[]
 
