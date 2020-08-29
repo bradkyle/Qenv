@@ -1382,114 +1382,114 @@ test:.qt.Unit[
 // UpdateOrderMargin
 // ==================================================================================>
 
-test:.qt.Unit[
-    ".account.AddMargin";
-    {[c]
-        p:c[`params];
-        acc:setupAccount[p];
-        setupInventory[p];
+/ test:.qt.Unit[
+/     ".account.AddMargin";
+/     {[c]
+/         p:c[`params];
+/         acc:setupAccount[p];
+/         setupInventory[p];
 
-        a:p[`args];
+/         a:p[`args];
 
-        $[all(null[p[`eThrows]]);[
-            .account.AddMargin[a[0];a[1];a[2];acc;p[`cIns]];
-        ];[
-            .qt.AT[.account.AddMargin;(a[0];a[1];a[2];acc;p[`cIns]);p[`eThrows];"AddMargin";c];
-        ]];
+/         $[all(null[p[`eThrows]]);[
+/             .account.AddMargin[a[0];a[1];a[2];acc;p[`cIns]];
+/         ];[
+/             .qt.AT[.account.AddMargin;(a[0];a[1];a[2];acc;p[`cIns]);p[`eThrows];"AddMargin";c];
+/         ]];
         
-        // Assertions
-        checkAccount[p;c];
-        checkInventory[p;c];
+/         // Assertions
+/         checkAccount[p;c];
+/         checkInventory[p;c];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
-    "Updates a given accounts order margin when it has enough margin etc. else returns error/failure"];
+/     };();();({};{};defaultBeforeEach;defaultAfterEach);
+/     "Updates a given accounts order margin when it has enough margin etc. else returns error/failure"];
 
-deriveCaseParams :{[p]
+/ deriveCaseParams :{[p]
 
-    cIns:(`instrumentId`contractType`tickSize`maxPrice,
-    `minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice`riskTiers)!p[0];
+/     cIns:(`instrumentId`contractType`tickSize`maxPrice,
+/     `minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice`riskTiers)!p[0];
 
-    // Construct Current Account
-    cAcc:(`accountId`positionType`balance`available`frozen,
-    `leverage`orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
+/     // Construct Current Account
+/     cAcc:(`accountId`positionType`balance`available`frozen,
+/     `leverage`orderMargin`posMargin`activeFeeId`realizedPnl)!p[1];
     
-    // Construct Current Inventory
-    cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
+/     // Construct Current Inventory
+/     cInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl)!flip[p[2]]];
 
-    // Construct Expected Account
-    eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
-    `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
+/     // Construct Expected Account
+/     eAcc:(`accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+/     `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+/     `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium)!p[4];
 
-    // Construct Expected Inventory
-    eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
+/     // Construct Expected Inventory
+/     eInv:flip[(`accountId`side`amt`totalEntry`execCost`realizedPnl`unrealizedPnl)!flip[p[5]]];
 
-    :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows!(
-        cIns;
-        cAcc;
-        cInv;
-        p[3];
-        eAcc;
-        eInv;
-        p[6]
-        );
-    };
+/     :`cIns`cAcc`cInv`args`eAcc`eInv`eThrows!(
+/         cIns;
+/         cAcc;
+/         cInv;
+/         p[3];
+/         eAcc;
+/         eInv;
+/         p[6]
+/         );
+/     };
 
-.qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
-    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;100f;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
-    )]);
-    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
-    // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
-    (
-        (0;`BOTH;100;100;l 1e9; 1000);
-        (0;`LONG;100;100;l 1e9; 1000);
-        (0;`SHORT;100;100;l 1e9; 1000)
-    );
-    //`fundingRate;nextFundingRate;nextFundingTime;time
-    (-1;100;3); // Parameters
-    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
-    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
-    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
-    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
-        (0;`BOTH;100;100;l 1e9; 1000; 0);
-        (0;`LONG;100;100;l 1e9; 1000; 0);
-        (0;`SHORT;100;100;l 1e9; 1000; 0)
-    );
-    0N
-    )]];
+/ .qt.AddCase[test;"Order is placed with no premium and no previous order margin etc.";deriveCaseParams[(
+/     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
+/     (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;100f;.instrument.NewRiskTier[(
+/         50000       0.004    0.008    125f;
+/         250000      0.005    0.01     100f
+/     )]);
+/     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+/     // activeMakerFee;activeTakerFee;realizedPnl
+/     (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
+/     (
+/         (0;`BOTH;100;100;l 1e9; 1000);
+/         (0;`LONG;100;100;l 1e9; 1000);
+/         (0;`SHORT;100;100;l 1e9; 1000)
+/     );
+/     //`fundingRate;nextFundingRate;nextFundingTime;time
+/     (-1;100;3); // Parameters
+/     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+/     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+/     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+/     (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+/     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+/         (0;`BOTH;100;100;l 1e9; 1000; 0);
+/         (0;`LONG;100;100;l 1e9; 1000; 0);
+/         (0;`SHORT;100;100;l 1e9; 1000; 0)
+/     );
+/     0N
+/     )]];
 
-.qt.AddCase[test;"Order is placed with premium and no previous order margin etc.";deriveCaseParams[(
-    // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
-    (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;106f;.instrument.NewRiskTier[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f
-    )]);
-    // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
-    // activeMakerFee;activeTakerFee;realizedPnl
-    (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
-    (
-        (0;`BOTH;100;100;l 1e9; 1000);
-        (0;`LONG;100;100;l 1e9; 1000);
-        (0;`SHORT;100;100;l 1e9; 1000)
-    );
-    //`isignum`price`qty`account`instrument
-    (-1;100;3); // Parameters
-    // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
-    // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
-    // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
-    (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
-    (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
-        (0;`BOTH;100;100;l 1e9; 1000; 0);
-        (0;`LONG;100;100;l 1e9; 1000; 0);
-        (0;`SHORT;100;100;l 1e9; 1000; 0)
-    );
-    0N
-    )]];
+/ .qt.AddCase[test;"Order is placed with premium and no previous order margin etc.";deriveCaseParams[(
+/     // `instrumentId`tickSize`maxPrice`minPrice`maxOrderSize`minOrderSize`priceMultiplier`markPrice
+/     (0;`LINEAR;0.5;1e9;0f;1e6f;0f;100;106f;.instrument.NewRiskTier[(
+/         50000       0.004    0.008    125f;
+/         250000      0.005    0.01     100f
+/     )]);
+/     // accountId;positionType;balance;available;frozen;orderMargin;posMargin;
+/     // activeMakerFee;activeTakerFee;realizedPnl
+/     (0;`HEDGED;1000;1000;0;10;0;0;1;0); // Current Account
+/     (
+/         (0;`BOTH;100;100;l 1e9; 1000);
+/         (0;`LONG;100;100;l 1e9; 1000);
+/         (0;`SHORT;100;100;l 1e9; 1000)
+/     );
+/     //`isignum`price`qty`account`instrument
+/     (-1;100;3); // Parameters
+/     // `accountId`balance`available`frozen`orderMargin`posMargin`bankruptPrice,
+/     // `liquidationPrice`unrealizedPnl`realizedPnl`tradeCount`netLongPosition`netShortPosition,
+/     // `openBuyOrderQty`openSellOrderQty`openBuyOrderPremium`openSellOrderPremium,
+/     (0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0); // Expected Account
+/     (   // accountId, side;amt;totalEntry;execCost;realizedPnl;unrealizedPnl;
+/         (0;`BOTH;100;100;l 1e9; 1000; 0);
+/         (0;`LONG;100;100;l 1e9; 1000; 0);
+/         (0;`SHORT;100;100;l 1e9; 1000; 0)
+/     );
+/     0N
+/     )]];
 
 / .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 70/30 open orders";deriveCaseParams[()]];
 / .qt.AddCase[test;"hedged: no positions, open buy (buy/sell) 30/70 open orders";deriveCaseParams[()]];

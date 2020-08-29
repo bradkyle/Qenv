@@ -452,113 +452,9 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];};
 
-
-// ORDER Margin
-// -------------------------------------------------------------->
-// Does premium change with changing mark price?
-
+ 
 dcMrg   :{`long(x*y)};
 dcCnt   :{`long(x*y)};
-
-// Validates that the account can open the order.
-// Updates the open order state of an account
-// Updates an accounts order margin, open order amount, order premium 
-// netLongPosition/netShortPosition
-// used when opening a position/ apply fill
-// used when cancelling orders, placing new orders
-// used when mark price is updated
-// @delta      : the amount by which the order quantity is to be changed.
-// @side       : the side that is to be updated by the order.
-// @price      : the price of the given order.
-// @account    : dict representation of the account to be updated
-// @instrument : dict representation of the orders instrument 
-AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order margin
-    isinverse: instrument[`contractType]=`INVERSE;
-
-    /
-    / price:1020; mark:1010; leverage:10; quantity:1000; isignum:-1;
-    / inverse_notional:(quantity*(1%price)); // inverse
-    / linear_notional:(quantity*price); // inverse
-    / premium: abs[min[0,(isignum*(mark-price))]];
-    / inverse_cost:(inverse_notional%leverage) + (quantity%premium);
-    / linear_cost:(linear_notional%leverage) + (quantity*premium);
-    / 
-    /
-    // derive next amount
-    // derive the // Clip Neg and account for premium in inverse and linear contracts
-    premium:abs[min[0,(isignum*(instrument[`markPrice]-price))]]; // TODO avg price
-    / openloss:qty * $[isinverse;instrument[`faceValue]%premium;premium];
-    //
-
-    // TODO add conversions
-    $[(isignum>0) and (premium>0);[
-        account[`openBuyPremium]+:premium;
-        account[`openBuyQty]+:qty; 
-        account[`openBuyValue]+:`long$(price*qty);
-        account[`openBuyLoss]+:`long$(premium*qty);
-    ];
-    [
-        account[`openSellPremium]+:premium;
-        account[`openSellQty]+:qty; 
-        account[`openSellValue]+:`long$(price*qty);
-        account[`openSellLoss]+:`long$(premium*qty);
-    ]];
-
-
-    // If one places a buy order above the mark price or a sell order
-    // below the mark price, the execution of this order at that price
-    // would incur a loss with respect to the mark price at that instant
-    // This would infer that margin needs to allow for this loss.
-    // Essentially the only difference between the initialMargin of the
-    // orders and the initial margin of the positions is that one needs
-    // to cross the spread in order to release the latter. 
-    // Open order cost 
-    // TODO check if order is reduce only/ is combined vs (reducing a position does not cost margin)
-
-    // equity = balance + unrealized pnl
-
-    account[`openLoss]:`long$(sum[account`openSellLoss`openBuyLoss] | 0);
-
-    / amt:max[account`netLongPosition`netShortPosition];
-
-    // TODO get maximum position for set leverage
-    
-
-    / According to the following, https://www.bitmex.com/app/exchangeGuide the premium incurred 
-    / when opening an order at an unfavorable price with respect to the mark price serves to 
-    / reference the loss that would be incurred by this order when it is filled. 
-    / My first assumption would be that okex would update this premium with the new mark 
-    / price when the mark price changes? i.e. 4 buy orders are placed unfavorably with respect 
-    / to the mark price, they incur a loss expressed by the premium. Presumably when the mark 
-    / price changes, this associated loss changes. How does one calculate the sum of this loss 
-    / expressed as a function of the difference between the order prices and the mark price 
-    / multiplied by leavesQty of the unfavorably placed orders at any given instant. 
-    / Is my assumption about the changing premium correct in this regard? Thanks
-    
-    // Notional value of open orders
-    / nval:(newOpenBuyOrderQty+newOpenSellOrderQty)*price;
-
-    // The portion of your margin that is assigned to the 
-    // initial margin requirements on your open orders.
-    account[`orderMargin]:`long$((account[`openBuyValue]+account[`openSellValue])%account[`leverage]);
-    account[`available]:`long$(account[`balance]-(sum[account`unrealizedPnl`posMargin`orderMargin`openLoss]));
-
-    .qt.ACC:account;
-    .qt.ACT:.account.Account;
-    .qt.INV:.account.Inventory;
-    / .qt.OM:omc!(account);
-
-
-    $[(account[`available]>0);[
-        ![`.account.Account;
-                enlist (=;`accountId;account[`accountId]);
-                0b;
-                account];
-
-    ];['INSUFFICIENT_MARGIN]];
-            
-    };
-
 
 // TODO
 // maint margin
@@ -569,7 +465,34 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
 // Margin Transition logic
 // ---------------------------------------------------------------------------------------->
 
-accMarginFillTransition:{[price;markPrice;]
+
+accNewOrderTransition:{[price;markPrice;]
+
+     // Validation
+    // ---------------------------------------------------------------------------------------->
+
+    // TODO update move to own function
+    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
+    $[(isignum>0) and (premium>0);[ // TODO fix
+        acc[`openBuyPremium]-:premium; // TODO?
+        acc[`openBuyQty]-:qty; 
+        acc[`openBuyValue]-:`long$(price*qty); // TODO check
+        acc[`openBuyLoss]-:`long$(premium*qty);
+    ];
+    [
+        acc[`openSellPremium]-:premium;
+        acc[`openSellQty]-:qty; 
+        acc[`openSellValue]-:`long$(price*qty);
+        acc[`openSellLoss]-:`long$(premium*qty);
+    ]];
+
+    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
+    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
+    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
+    :acc
+ };
+
+accFillTransition:{[price;markPrice;]
 
      // Validation
     // ---------------------------------------------------------------------------------------->
