@@ -566,6 +566,42 @@ AddMargin    :{[isignum;price;qty;account;instrument] // TODO convert to order m
 // initial margin
 // bankruptcy price
 
+// Margin Transition logic
+// ---------------------------------------------------------------------------------------->
+
+accMarginFillTransition:{[price;markPrice;]
+
+     // Validation
+    // ---------------------------------------------------------------------------------------->
+
+    // TODO update move to own function
+    premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
+    $[(isignum>0) and (premium>0);[ // TODO fix
+        acc[`openBuyPremium]-:premium; // TODO?
+        acc[`openBuyQty]-:qty; 
+        acc[`openBuyValue]-:`long$(price*qty); // TODO check
+        acc[`openBuyLoss]-:`long$(premium*qty);
+    ];
+    [
+        acc[`openSellPremium]-:premium;
+        acc[`openSellQty]-:qty; 
+        acc[`openSellValue]-:`long$(price*qty);
+        acc[`openSellLoss]-:`long$(premium*qty);
+    ]];
+
+    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
+    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
+    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
+    :acc
+ };
+
+// Margin Transition logic
+// ---------------------------------------------------------------------------------------->
+
+
+
+// Main Public Fill Function
+// ---------------------------------------------------------------------------------------->
 
 // TODO make global enums file
 // TOD7,776e+6/1000
@@ -597,30 +633,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
     pm:{:`long$(x[`priceMultiplier]*y)}[ins];
 
-    // Validation
-    // ---------------------------------------------------------------------------------------->
-
-    // TODO update move to own function
-    if[(isMaker and not[reduceOnly]);[
-        // Remove order margin from account and add it to position margin
-        premium:`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]]);
-        $[(isignum>0) and (premium>0);[ // TODO fix
-            acc[`openBuyPremium]-:premium; // TODO?
-            acc[`openBuyQty]-:qty; 
-            acc[`openBuyValue]-:`long$(price*qty); // TODO check
-            acc[`openBuyLoss]-:`long$(premium*qty);
-        ];
-        [
-            acc[`openSellPremium]-:premium;
-            acc[`openSellQty]-:qty; 
-            acc[`openSellValue]-:`long$(price*qty);
-            acc[`openSellLoss]-:`long$(premium*qty);
-        ]];
-
-        acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
-        acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-        acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
-    ]];
+    if[(isMaker and not[reduceOnly]);.account.accMarginFillTransition[]];
 
     .qt.ACC:acc;
 
