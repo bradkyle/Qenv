@@ -769,39 +769,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     // TODO account netShortPosition, netLongPosition
                 ]
             ];
-
-            i[`currentQty]+:qty;
-            i[`totalCommission]+:cost;
-            i[`fillCount]+:1;
-            i[`tradeVolume]+:qty;
-            i[`realizedPnl]-:cost;
-
-            i[`unrealizedPnl]:.account.unrealizedPnl[
-                        i[`avgPrice];
-                        markPrice;
-                        i[`amt];
-                        ins[`faceValue];
-                        i[`isignum];
-                        isinverse];
-
-            i[`entryValue]:i[`amt]%i[`avgPrice];
-            i[`initMargin]:i[`entryValue]%acc[`leverage];
-            i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-
-            acc[`maintMargin]:.account.maintainenceMargin[i;ins];
-
-            // TODO initMarginReq/maintMarginReq
-            // TODO set oi values
-            // TODO account netShortPosition, netLongPosition
-
-            acc[`balance]-:cost; 
-            acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-            acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-            acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-            acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
-
-            lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-            bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
         ];
         [
             iside:`BOTH;
@@ -870,6 +837,42 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
         ]
     ];
+
+
+    i[`currentQty]+:qty;
+    i[`totalCommission]+:cost;
+    i[`fillCount]+:1;
+    i[`tradeVolume]+:qty;
+    i[`realizedPnl]-:cost;
+
+    i[`unrealizedPnl]:.account.unrealizedPnl[
+                i[`avgPrice];
+                markPrice;
+                i[`amt];
+                ins[`faceValue];
+                i[`isignum];
+                isinverse];
+
+    i[`entryValue]:i[`amt]%i[`avgPrice];
+    i[`initMargin]:i[`entryValue]%acc[`leverage];
+    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
+
+    acc[`maintMargin]:.account.maintainenceMargin[i;ins];
+
+    // TODO initMarginReq/maintMarginReq
+    // TODO set oi values
+    // TODO account netShortPosition, netLongPosition
+
+    acc[`balance]-:cost; 
+    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
+    lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+    bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
+
+    // TODO if oi exists
 
     ![`.account.Account;enlist(=;`accountId;accountId);0b;acc];
     ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i];
