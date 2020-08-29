@@ -1583,6 +1583,36 @@ test:.qt.Unit[
             {[l;s] :100};
             {0};
             0;0));
+        ("cancel order transition (Inverse): should reduce the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("cancel order transition (Linear): should reduce the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("amend order transition (Inverse): should reduce the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("amend order transition (Linear): should reduce the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("amend order transition (Inverse): should increase the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("amend order transition (Linear): should increase the outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
