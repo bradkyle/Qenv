@@ -1555,7 +1555,9 @@ test:.qt.Unit[
 
 
     };
-    {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
+    {[p]
+        x:();
+        :`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;`SELL;100;1;0b;z);
