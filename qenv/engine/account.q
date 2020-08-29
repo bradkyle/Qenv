@@ -589,7 +589,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
 
-
+    sm:ins[`sizeMultiplier];
+    pm:ins[`priceMultiplier];
     // Validation
     // ---------------------------------------------------------------------------------------->
 
