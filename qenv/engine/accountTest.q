@@ -1553,16 +1553,36 @@ test:.qt.Unit[
     };
     {[p]:`args`MgetPriceAtLevel`MgenNextClOrdId`eDI`eRes!(p[0];p[1];p[2];p[3];p[4])};
     (
-        ("accFillTransition: should reduce the outstanding order margin ";(
+        ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;`SELL;100;1;0b;z);
             {[l;s] :100};
             {0};
             0;0));
-        ("Given correct params should return correct";(
+        ("fill transition (Linear): should reduce the outstanding order margin";(
             (1;`SELL;100;1;0b;z);
             {[l;s] :100};
             {0};
-            0;0))
+            0;0));
+        ("new order transition (Inverse): should increase outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("new order transition (Linear): should increase outstanding order margin";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("new order transition fail (Inverse): should fail, insufficient balance";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
+        ("new order transition fail (Linear): should fail, insufficient balance";(
+            (1;`SELL;100;1;0b;z);
+            {[l;s] :100};
+            {0};
+            0;0));
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
