@@ -476,7 +476,7 @@ accTransition :{[]
         acc[`openBuyLoss]+:`long$(p*qty);
     ];
     [
-        acc[`openSellPremium]-:p;
+        acc[`openSellPremium]+:p;
         acc[`openSellQty]+:qty; 
         acc[`openSellValue]+:`long$(price*qty);
         acc[`openSellLoss]+:`long$(p*qty);
@@ -553,11 +553,7 @@ hedgedOpen    :{[]
         lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
         bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
 
-        acc[`balance]+:(rpl-cost); 
-        acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-        acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-        acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-        acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+        
         // TODO account netShortPosition, netLongPosition
     };
 
@@ -745,6 +741,13 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     .account.hedgedOpen[]
                 ]
             ];
+            // Common Hedged Account Logic
+
+            acc[`balance]+:(rpl-cost); 
+            acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
+            acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
+            acc[`posMargin]: i[`posMargin]+oi[`posMargin];
+            acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
         ];
         [
             iside:`BOTH;
