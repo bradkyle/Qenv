@@ -14,6 +14,8 @@ bench:.qt.Bench[
 
         .qt.BM[.engine.ProcessEvents;p[`datafn][];p[`repeats];".engine.ProcessEvents";c];
 
+
+        .qt.P[];
     };
     {[p]
 
@@ -83,6 +85,7 @@ bench:.qt.Bench[
 
         .qt.BM[.state.InsertResultantEvents;p[`datafn][];p[`repeats];".state.InsertResultantEvents";c];
 
+        .qt.P[];
     };
     {[p]
 
@@ -152,6 +155,7 @@ bench:.qt.Bench[
 
         .qt.BM[.state.GetObservations;p[`datafn][];p[`repeats];".state.GetObservations";c];
 
+        .qt.P[];
     };
     {[p]
 
@@ -219,6 +223,7 @@ bench:.qt.Bench[
 
         .qt.BM[.state.GetRewards;p[`datafn][];p[`repeats];".state.GetRewards";c];
 
+        .qt.P[];
     };
     {[p]
 
