@@ -730,7 +730,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i:.account.Inventory@(accountId;iside);
                     oi:.account.Inventory@(accountId;oside);
 
-                    rpl:.account.realizedPnl[i[`avgPrice];price;qty;ins];
+                    rpl:.account.realizedPnl[
+                        i[`avgPrice];
+                        price;
+                        qty;
+                        ins];
+
                     i[`realizedPnl]+:rpl;
                     i[`amt]-:qty; 
                     acc[`balance]+:rpl;
@@ -818,7 +823,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                 [ 
                     // Cross position
                     i[`totalEntry]+: abs[namt];
-                    i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
+
+                    // derive execCost
+                    i[`execCost]+: .account.execCost[
+                        
+                        ]; //namt.
+
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
                     i[`avgPrice]: .account.avgPrice[
@@ -827,30 +837,23 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`totalEntry];
                         isinverse];
 
-                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-                    i[`entryValue]:i[`amt]%i[`avgPrice];
                 ];
                 [
-                    // Open positionType BOTH
+                    // Cross position
                     i[`totalEntry]+: abs[namt];
-                    i[`execCost]+: floor[1e8%price] * abs[namt]; // TODO make unilaterally applicable.
+
+                    // derive execCost
+                    i[`execCost]+: .account.execCost[
+                        
+                        ]; //namt.
                     
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
-                    i[`avgPrice]: {$[(x[`amt]>0);
-                        1e8%floor[x[`execCost]%x[`totalEntry]]; // TODO make this calc unilaterally applicable
-                        1e8%ceiling[x[`execCost]%x[`totalEntry]]
-                        ]}[i];
-                    i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
-                    i[`entryValue]:i[`amt]%i[`avgPrice];
-                    i[`initMargin]:i[`entryValue]%acc[`leverage];
-                    i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-                    i[`maintMargin]:maintainenceMargin[i[`amt];ins];
-                    acc[`balance]+:(rpl-cost); 
-                    acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-                    acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-                    acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-                    acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+                    i[`avgPrice]: .account.avgPrice[
+                        i[`isignum];
+                        i[`execCost];
+                        i[`totalEntry];
+                        isinverse];
                 ]
             ];
 
