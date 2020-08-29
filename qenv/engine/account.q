@@ -107,6 +107,10 @@ NewAccount :{[account;time]
 
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
+execCost :{[price;qty;isinverse]
+    :$[isinverse;floor[1e8%price];1e8%price] * abs[qty]
+    };
+
 // Used to derive the average entry price for a given inventory
 // TODO add randomization to this!!
 avgPrice :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
