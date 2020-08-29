@@ -777,7 +777,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`totalEntry];
                         isinverse];
                     
-                    i[`entryValue]:i[`amt]%i[`avgPrice];
                     i[`initMargin]:i[`entryValue]%acc[`leverage];
                     
                     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
@@ -795,6 +794,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         ins[`faceValue];
                         i[`isignum];
                         isinverse];
+                        
+            i[`entryValue]:i[`amt]%i[`avgPrice];
 
             acc[`balance]+:(rpl-cost); 
             acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
