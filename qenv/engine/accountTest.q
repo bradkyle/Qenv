@@ -1682,7 +1682,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+    "Should add a given amount to the given position"];
 
 test:.qt.Unit[
     ".account.combinedClose";
@@ -1709,7 +1709,7 @@ test:.qt.Unit[
             0;0))
     );
     .qt.sBlk;
-    "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+    "Should remove a given amount to the given position"];
 
 / .qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
