@@ -475,7 +475,13 @@ timeFn  :{[target;args]
 
 BM      :{[target;args;repeats;msg;case]
 
-    tms:(deltas'[{timeFn[x;y]}'[repeats#(target;args)]])[;1];
+    tms:$[repeats>1;[
+        :(deltas'[{timeFn[x;y]}[target]'[repeat#enlist args])[;1];
+    ];[
+        :last(deltas timeFn[target;args]);
+    ]];
+
+    
 
     };
 
