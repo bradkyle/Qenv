@@ -171,7 +171,7 @@ prepareEgress    :{[eventBatch]
 // them with their respective processing 
 // logic above.
 ProcessEvents  : {[eventBatch]
-        {eventEngine[(`.event.INGRESSKIND$first[x[`kind]])][x]} each prepareIngress[eventBatch];
+        {eventEngine[(`.event.INGRESSKIND$first[x[`kind]])][x]} each .engine.prepareIngress[eventBatch];
         / :prepareEgress[.engine.PopEvents[]];
     };
 
