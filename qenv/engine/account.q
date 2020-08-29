@@ -676,10 +676,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`totalEntry]+: abs[qty];
 
                     // TODO dont divide price
-                    i[`execCost]+: .account.execCost[
+                    i[`execCost]+: sm[.account.execCost[
                         price;
                         qty;
-                        isinverse];  // TODO make unilaterally applicable.
+                        isinverse]];  // TODO make unilaterally applicable.
                     .qt.INV:i;
 
                     // TODO convert price to float
