@@ -549,11 +549,7 @@ hedgedOpen    :{[]
         i[`initMargin]: i[`entryValue]%acc[`leverage];
         i[`posMargin]:  i[`initMargin]+i[`unrealizedPnl];
         i[`maintMargin]:.account.maintainenceMargin[i;ins];
-
-        lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-        bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
-
-        
+        :i
         // TODO account netShortPosition, netLongPosition
     };
 
@@ -706,9 +702,12 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     acc:.account.Account@accountId;
     ins:.instrument.Instrument@instrumentId;
+
+    // Common derivations
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     isinverse: ins[`contractType]=`INVERSE;
     isignum:$[side=`SELL;-1;1];
+    cost:qty*fee;
 
     sm:{:`long$(x[`sizeMultiplier]*y)}[ins];
     pm:{:`long$(x[`priceMultiplier]*y)}[ins];
@@ -748,6 +747,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
             acc[`posMargin]: i[`posMargin]+oi[`posMargin];
             acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
+
+            lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
+            bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
         ];
         [
             iside:`BOTH;
