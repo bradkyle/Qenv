@@ -55,6 +55,15 @@ bench:.qt.Bench[
         ("Bencmark an hours worth of amend order events (10 agents)";(
 
         ));
+        ("Bencmark an hours worth of combined events (1 agent)";(
+
+        ));
+        ("Bencmark an hours worth of combined events (5 agents)";(
+
+        ));
+        ("Bencmark an hours worth of combined events (10 agents)";(
+
+        ));
     );
     ("Benchmarks the processing speed of the .engine.ProcessEvents",
      "function with differing configuration")];
