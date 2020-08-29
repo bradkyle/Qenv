@@ -747,7 +747,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     / price. 
                     i[`totalEntry]+: abs[qty];
                     // TODO dont divide price
-                    i[`execCost]+: ($[isinverse;floor[1e8%price];1e8%price] * abs[qty]);  // TODO make unilaterally applicable.
+                    i[`execCost]+: .account.execCost[
+                        
+                        ];  // TODO make unilaterally applicable.
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
                     / realized and unrealized pnl.
@@ -822,7 +824,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`execCost];
                         i[`totalEntry];
                         isinverse];
-                        
+
                     i[`unrealizedPnl]:unrealizedPnl[i[`avgPrice];i[`amt];ins];
                     i[`entryValue]:i[`amt]%i[`avgPrice];
                 ];
