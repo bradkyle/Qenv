@@ -484,10 +484,10 @@ accTransition :{[acc;price;markprice;qty;isignum]
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
     acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
     :acc
     };
 
+/ acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
 
 accFillTransition:{[acc;price;markPrice;qty;isignum]
     :.account.accTransition[acc;price;markPrice;qty;isignum];    
