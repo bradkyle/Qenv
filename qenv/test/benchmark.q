@@ -139,7 +139,7 @@ bench:.qt.Bench[
 
 
 
-// STATE BENCHMARKS : InsertResultantEvents
+// STATE BENCHMARKS : GetObservations
 // ============================================================================>
 
 bench:.qt.Bench[
