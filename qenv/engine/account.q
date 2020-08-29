@@ -809,15 +809,16 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             namt:i[`amt]+qty;
             $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
                 [
-                    // Close positionType BOTH
-                    // TODO account netShortPosition, netLongPosition
+                    // Close position
                     // CLOSE given side for position
-                    if[size>i[`amt];:.event.AddFailure[]];
-                    cost:qty*fee;
-                    rpl:deriveRealizedPnl[i[`avgPrice];price;qty;ins];
+                    rpl:.account.realizedPnl[
+                        i[`avgPrice];
+                        price;
+                        qty;
+                        ins];
+
                     i[`realizedPnl]+:rpl;
                     i[`amt]-:qty;
-                    i[`isignum]:neg[i[`isignum]];
                 ];
               ((i[`amt]*namt)<0); // TODO check sign
                 [ 
@@ -837,6 +838,15 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         i[`totalEntry];
                         isinverse];
 
+                    rpl:.account.realizedPnl[
+                        i[`avgPrice];
+                        price;
+                        qty;
+                        ins];
+
+                    i[`realizedPnl]+:rpl;
+                    i[`amt]:namt;
+                    i[`isignum]:neg[i[`isignum]];                    
                 ];
                 [
                     // Cross position
