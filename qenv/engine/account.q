@@ -510,10 +510,11 @@ accCancelOrderTransition:{[price;markPrice;]
 // inventory and subsequently derives the 
 
 
+
 // Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
 //      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
 //      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
-//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum, fillCount
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
 hedgedOpen    :{[i;qty;price;markprice;leverage;]
         i[`amt]+:qty;
 
@@ -559,6 +560,10 @@ hedgedOpen    :{[i;qty;price;markprice;leverage;]
         // TODO account netShortPosition, netLongPosition
     };
 
+// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission
 hedgedClose    :{[]
         // todo max close = amt
 
@@ -575,19 +580,17 @@ hedgedClose    :{[]
 
         i[`initMargin]:i[`entryValue]%acc[`leverage];
         i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
-        if[isMaker;i[`orderMargin]];
         i[`maintMargin]:.account.maintainenceMargin[i[`amt];ins];
 
-        acc[`balance]+:(rpl-cost); 
-        acc[`unrealizedPnl]: i[`unrealizedPnl]+oi[`unrealizedPnl];
-        acc[`orderMargin]: i[`orderMargin]+oi[`orderMargin];
-        acc[`posMargin]: i[`posMargin]+oi[`posMargin];
-        acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
     };
 
 // Combined Cross, Open and Close Fill Logic
 // ---------------------------------------------------------------------------------------->
 
+// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
 combinedCross       :{[]
     // Close positionType BOTH
     // TODO account netShortPosition, netLongPosition
@@ -620,6 +623,10 @@ combinedCross       :{[]
 
     }
 
+// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
 combinedOpen          :{[]
     // Open positionType BOTH
     i[`totalEntry]+: abs[namt];
@@ -648,6 +655,10 @@ combinedOpen          :{[]
 
     };
 
+// Inventory: amt, avgPrice, realizedPnl, unrealizedPnl, posMargin, entryValue, 
+//      totalCost, totalEntry, execCost, totalVolume, totalCloseVolume, totalCrossVolume
+//      totalOpenVolume, totalCloseMarketValue, totalCrossMarketValue, totalCloseAmt, totalCrossAmt, totalOpenAmt, 
+//      lastValue, markValue, initMarginReq, maintMarginReq, totalCommission, isignum
 combinedClose       :{[]
     // Cross position
     i[`totalEntry]+: abs[namt];
