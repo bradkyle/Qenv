@@ -1585,13 +1585,13 @@ test:.qt.Unit[
 
     };
     {[p]
-        iCols:`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
+        iCols:`side`amt`avgPrice`realizedPnl`unrealizedPnl`posMargin`entryValue;
         a:(iCols!p[0];p[1];p[2];p[3];p[4];p[5]);
         :`args`eInv!(a;icols!p[2]);
     };
     (
         enlist("Non inverse short increase";(
-            (1;`SELL;100;1;0b;z); // Inventory
+            (`LONG;100;1;0b;z); // Inventory
             100;1000;1000;1;0b;
             (1;`SELL;100;1;0b;z); // Expected Inventory
             ));
