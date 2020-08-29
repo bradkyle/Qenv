@@ -481,7 +481,8 @@ BM      :{[target;args;repeats;msg;case]
         :last(deltas timeFn[target;args]);
     ]];
 
-    
+    bnch:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;str relation;expected);
+    `.qt.BenchMark upsert bnch;
 
     };
 
