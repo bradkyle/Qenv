@@ -771,10 +771,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
             i:.account.Inventory@(accountId;iside);
             namt:i[`amt]+qty;
             $[(reduceOnly or (abs[i[`amt]]>abs[namt])); // Close position // TODO change isignum
-                ;
+                .account.combinedCross[];
               ((i[`amt]*namt)<0); // TODO check sign
-                
-                
+                .account.combinedClose[];
+                .account.combinedOpen[]                
             ];
         ]
     ];
