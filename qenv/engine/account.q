@@ -754,8 +754,9 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     
                     // derive execCost
                     i[`execCost]+: .account.execCost[
-                        
-                        ]; 
+                        price;
+                        qty;
+                        isinverse]; 
                         
                     / Calculates the average price of entry for 
                     / the current postion, used in calculating 
@@ -793,9 +794,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`totalEntry]: abs[namt];
 
                     // derive execCost
-                    i[`execCost]+: .account.execCost[
-                        
-                        ]; //namt.
+                    i[`execCost]: .account.execCost[
+                        price;
+                        namt;
+                        isinverse]; //namt.
 
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
@@ -816,13 +818,14 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`isignum]:neg[i[`isignum]];                    
                 ];
                 [
-                    // Cross position
+                    // Open position
                     i[`totalEntry]+: abs[namt];
 
                     // derive execCost
                     i[`execCost]+: .account.execCost[
-                        
-                        ]; //namt.
+                        price;
+                        namt;
+                        isinverse]; //namt.
                     
                     / Calculates the average price of entry for the current postion, used in calculating 
                     / realized and unrealized pnl.
@@ -833,11 +836,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                         isinverse];
                 ]
             ];
-
-
         ]
     ];
 
+    // TODO reset total entry
 
     i[`currentQty]+:qty;
     i[`totalCommission]+:cost;
@@ -857,6 +859,10 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     i[`initMargin]:i[`entryValue]%acc[`leverage];
     i[`posMargin]:i[`initMargin]+i[`unrealizedPnl];
 
+    $[i[`amt]>0;[
+
+    ]];
+
     acc[`maintMargin]:.account.maintainenceMargin[i;ins];
 
     // TODO initMarginReq/maintMarginReq
@@ -869,8 +875,8 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     acc[`posMargin]: i[`posMargin]+oi[`posMargin];
     acc[`available]:((acc[`balance]+acc[`unrealizedPnl])-(acc[`orderMargin]+acc[`posMargin]));
 
-    lp:.account.liquidationPrice[i;oi;acc]; // TODO liquidation price
-    bp:.account.bankruptcyPrice[i;oi;acc]; // TODO bankruptcy price
+    acc[`liquidationPrice]:.account.liquidationPrice[acc;]; // TODO liquidation price
+    acc[`bankruptPrice]:.account.bankruptcyPrice[acc;]; // TODO bankruptcy price
 
     // TODO if oi exists
 
