@@ -513,6 +513,10 @@ getOBFeatures   :{
         ob update avg(bestBid,bestAsk) from .state.DepthEventHistory;
     };
 
+// TODO construct observation getter
+
+
+
 // TODO get orderbook features
 // TODO volatility, standard deviation, etc.
 // TODO testing etc.
