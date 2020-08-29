@@ -1556,13 +1556,19 @@ test:.qt.Unit[
 
     };
     {[p]
-        aCols:`balance`available`positionType`leverage;
-        :`args`eAcc`eThrows!((aCols!p[0];);p[1])};
+        aCols:(`balance`available,
+                `openBuyPremium`openSellPremium,
+                `openBuyQty`openSellQty,
+                `openBuyValue`openSellValue,
+                `openBuyLoss`openSellLoss,
+                `openLoss`orderMargin,
+                `leverage);
+        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);p[1])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
-            (); / Current Account
+            (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
             1000;1000;100;-1;1b;
-            ();0N));
+            (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Linear): should reduce the outstanding order margin";(
             (); / Current Account
             1000;1000;100;-1;1b;

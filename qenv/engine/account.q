@@ -465,7 +465,10 @@ dcCnt   :{`long(x*y)};
 // ---------------------------------------------------------------------------------------->
 
 // TODO 
-premium:{`long$(abs[min[0,(isignum*(ins[`markPrice]-price))]])};
+// @x: isignum
+// @y: markprice
+// @z: price
+premium:{`long$(abs[min[0,(x*(y-z))]])};
 
 accTransition :{[acc;price;markprice;qty;isignum]
     p:.account.premium[];
