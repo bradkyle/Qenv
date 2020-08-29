@@ -459,7 +459,7 @@ BenchMark   :(
     caseId         : `.qt.Case$();
     state          : `.qt.TESTSTATE;
     msg            : `symbol$();
-    repeats        : `symbol$();
+    repeats        : `long$();
     target         : ();
     totaltime      : `timespan$();
     mintime        : `timespan$();
@@ -494,7 +494,7 @@ BM      :{[target;args;repeats;msg;case]
         max[tms];
         (`timespan$(avg[tms]))
         );
-    / `.qt.BenchMark upsert bnch;
+    `.qt.BenchMark upsert bnch;
     :bnch;
     };
 
