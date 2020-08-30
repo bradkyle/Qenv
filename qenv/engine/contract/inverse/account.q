@@ -108,6 +108,9 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
+// Common logic for setting the shared state values of the given account
+// and its BOTH,LONG,SHORT inventory aswell as its respective orders.
+// TODO move upward
 rectifyState        :{
 
     };
@@ -221,7 +224,7 @@ ApplyFill               :{[a;iB;iL;iS;fill]
 
     acc[`balance]-:cost;
 
-    :rectifyState[];   
+    :rectifyState[];  // TODO costly function remove 
     };
 
 // TODO make better
@@ -237,6 +240,7 @@ UpdateMarkPrice         :{[markPrice;instrument;account]
     account[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
+    :rectifyState[];
     };
 
 
@@ -270,4 +274,5 @@ ApplyFunding        :{[fundingRate;instrument;account]
     account[`balance]:0;
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
+    :rectifyState[];
     };
