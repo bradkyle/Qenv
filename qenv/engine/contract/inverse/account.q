@@ -134,6 +134,9 @@ incFill                 :{[price;qty;account;inventory]
         inventory[`execCost];
         inventory[`totalEntry]];
 
+    // TODO unrealizedPnl
+
+    :inventory
     };
 
 // Red Fill is used when the fill is to be removed from the given inventory.
@@ -151,24 +154,50 @@ redFill                 :{[price;qty;account;inventory]
         isign;
         inventory[`avgPrice];
         faceValue];
-        
+
     inventory[`amt]-:qty;
     inventory[`realizedPnl]+:rpl;
 
+    if[abs[inventory[`amt]]=0;inventory[`avgPrice`execCost]:0];
+
+    :inventory
     };
 
-crsFill                 :{[account;inventory]
-
+// Crs Fill is only ever used for combined inventory i.e. `POSITIONSIDE$`BOTH.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return          (Inventory) The new updated inventory
+crsFill                 :{[price;qty;account;inventory]
+    namt:abs[inventory[`amt]+neg[qty]]; // TODO should be neg?
+    inventory:redFill[price;inventory[`amt];account;inventory];
+    inventory:incFill[price;namt;account;inventory];
+    inventory[`isignum]:neg[inventory[`isignum]];  
+    :inventory                  
     };
 
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
-ApplyFill               :{[]
-    $[ishedged;[
-        
-    ]]
+ApplyFill               :{[a;iB;iL;iS;fill]
+    $[ishedged;
+        [
+            $[reduce;
+                redFill[];
+                incFill[];
+            ];
+        ];
+        [
+            $[(reduceOnly or (abs[i[`amt]]>abs[namt]);
+                redFill[];
+              ((iB[`amt]*namt)<0); 
+                crsFill[];
+                incFill[]
+            ];
+        ];
+    ];
 
     };
 

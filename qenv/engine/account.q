@@ -437,7 +437,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     // TODO reset total entry
 
-    i[`currentQty]+:qty;
     i[`totalCommission]+:cost;
     i[`fillCount]+:1;
     i[`tradeVolume]+:qty;
