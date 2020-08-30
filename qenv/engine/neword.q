@@ -16,7 +16,31 @@ ProcessDepth        :{[]
     paccountId:PadM[accountId];
     pprice:PadM[oprice];
     maxN:max count'[offset];
-    numLvls:count[offset] 
+    numLvls:count[offset];
+
+    tgt: last'[size];
+    dneg:sum'[{x where[x<0]}'[dlts]];
+    shft:pleaves+poffset;
+
+    nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]]; // TODO what qty is this referring to
+    mnoffset: (0,'-1_'(shft));
+
+    offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
+
+    noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
+    nshft: pleaves+noffset;
+    nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
+    vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
+
+    `.order.OrderBook upsert (select price, side, qty:tgt, vqty from state where vqty>0);
+
+    `.order.Order upsert (select from (select 
+                price:raze[pprice], 
+                orderId:raze[porderId], 
+                offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
+    
+    dllvl:(select price,side from state where vqty<=0);
+            if[count[dllvl]>0;{delete from `.order.OrderBook where price=x[`price], side=x[`side]}'[dllvl]];
 
     };
 

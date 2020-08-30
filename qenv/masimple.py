@@ -15,9 +15,7 @@ class MultiAgentEnv():
     def __init__(self, num_agents, config):
         self.n_agents=num_agents
         self.account_ids=list(range(self.n_agents))
-        self.config=config
-
-       
+        self.config=config       
 
     def _set_action_space(self):
         self.action_space = spaces.Tuple(
@@ -43,7 +41,5 @@ class MultiAgentEnv():
         return res
 
     def reset(self):
-        res = self._exec(".state.Config["+
-            json.dumps(self.config)
-        +"]")
+        res = self._exec(".state.Reset["+json.dumps(self.config)+"]")
         return res

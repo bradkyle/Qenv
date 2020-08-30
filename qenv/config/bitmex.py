@@ -64,7 +64,7 @@ BITMEX_MM_1 = {
                 "minLeverage":0,
                 "tickSize":0.5,
                 "priceMultiplier":10,
-                "cntMultiplier":0,
+                "cntMultiplier":1,
                 "marginMultiplier":1e8,
                 "maxPrice":1000000,
                 "maxOrderQty":10000000,
