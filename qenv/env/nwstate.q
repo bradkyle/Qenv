@@ -11,65 +11,78 @@ OrderBook Features:
     - bidprice list
     - asksize list
     - askprice list
+    - spread
+    - best bid
+    - best ask
 
-OHLC Features
-    - num
-    - high
-    - low
-    - open
-    - close
-    - volume
-    - msize
-    - hsize
-    - lsize
-    - vwap5
-    - vwap10
-    - sma10
-    - sma20
-    - ema12
-    - ema26
-    - macd
-    - signal
-    - rsi
-    - mfi
-    - avtp
-    - cci
-    - sma
-    - sd
-    - up
-    - down
-    - emv
-    - roc
-    - sc
-    - sk
-    - stoosc
-    - aroonup
-    - aroondown
-    - aroonosc
-    - bbh
-    - bbl
-    - bbm
-    - bbhi
-    - bbli
-    - kstsig
-    - fidx
-    - nvi
+Candlestick Features
+    - num (frac/log/nil)
+    - high (frac/log/nil)
+    - low (frac/log/nil)
+    - open (frac/log/nil)
+    - close (frac/log/nil)
+    - volume (frac/log/nil)
+    - msize (frac/log/nil)
+    - hsize (frac/log/nil)
+    - lsize (frac/log/nil)
+    - vwap5 (frac/log/nil)
+    - vwap10 (frac/log/nil)
+    - sma10 (frac/log/nil)
+    - sma20 (frac/log/nil)
+    - ema12 (frac/log/nil)
+    - ema26 (frac/log/nil)
+    - macd (frac/log/nil)
+    - signal (frac/log/nil)
+    - rsi (frac/log/nil)
+    - mfi (frac/log/nil)
+    - avtp (frac/log/nil)
+    - cci (frac/log/nil)
+    - sma (frac/log/nil)
+    - sd (frac/log/nil)
+    - up (frac/log/nil)
+    - down (frac/log/nil)
+    - emv (frac/log/nil)
+    - roc (frac/log/nil)
+    - sc (frac/log/nil)
+    - sk (frac/log/nil)
+    - stoosc (frac/log/nil)
+    - aroonup (frac/log/nil)
+    - aroondown (frac/log/nil)
+    - aroonosc (frac/log/nil)
+    - bbh (frac/log/nil)
+    - bbl (frac/log/nil)
+    - bbm (frac/log/nil)
+    - bbhi (frac/log/nil)
+    - bbli (frac/log/nil)
+    - kstsig (frac/log/nil)
+    - fidx (frac/log/nil)
+    - nvi (frac/log/nil)
 
 Mark Price Features
     - last mark price
-    - 
+    - basis
+    - ema
 
 Funding Features
-    -
+    - current funding price
+    - next funding price
+    - funding time countdown
 
 Order Features
-    -
+    - one hot level has orders
+    - order leaves by level
+    - order leaves list
+    - order price list
 
 Account Features
-    -
+    - last balance
+    - last available
+    - last maintMargin
 
 Inventory Features
-    -
+    - last unrealized Pnl
+    - last realizedPnl
+    - last avgPrice
 
 Signal Features (External)
     - binance open interest
@@ -89,6 +102,11 @@ Signal Features (External)
     - okex long frac
     - okex short frac
     - tweet sentiment
+    - okex midprice
+    - binance bidprice
+    - coinbase midprice
+    - coinbase last 5 trades
+    - coinbase last price
 
 \
 GetObservations :{[]
