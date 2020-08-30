@@ -340,21 +340,29 @@ Deposit  :{[deposited;time;accountId]
 // withdraw a given amount and then executes a withdrawal
 // updating balance,withdrawCount and withdrawAmount
 // Update available/withdrawable etc
+/  @param withdrawn (Long) The amount that is to be withdrawn
+/  @param time (datetime) The time of the withdraw event
+/  @param accountId (Long) The id of the account to withdraw from
+/  @throws InvalidAccountId accountId was not found.
+/  @throws InsufficientMargin account has insufficient margin for withdraw
 Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
-    //          
 
-    $[withdrawn < acc[`available];
+    $[withdrawn < acc[`withdrawable];
         [
         // TODO more expressive and complete upddate statement accounting for margin etc.
-        update 
-            balance:balance-withdrawAmount 
-            withdrawAmount:withdrawAmount+withdrawn
-            withdrawCount:withdrawCount+1
-            from `.account.Account 
-            where accountId=accountId;
-        :.account.AddAccountUpdateEvent[accountId;time];
+
+        acc[`balance]-:withdrawn;
+        acc[`withdrawAmount]+:withdrawn;
+        acc[`withdrawCount]+:1;
+        acc[`withdrawable]-:withdrawn;
+
+        ![`.account.Account;
+            enlist (=;`accountId;accountId);
+            0b;acc];
+        
+        :.account.AddAccountUpdateEvent[acc;time];
         ];
         [
             0N; //TODO create failure
