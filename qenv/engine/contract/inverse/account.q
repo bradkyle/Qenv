@@ -108,6 +108,10 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
+rectifyState        :{
+
+    };
+
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
@@ -182,6 +186,7 @@ crsFill                 :{[price;qty;account;inventory]
 // from ProcessTrade in .order. // TODO
 // 
 ApplyFill               :{[a;iB;iL;iS;fill]
+    
     $[ishedged;
         [
             $[reduce;
@@ -199,6 +204,24 @@ ApplyFill               :{[a;iB;iL;iS;fill]
         ];
     ];
 
+    // Common logic
+    i[`totalCommission]+:cost;
+    i[`realizedPnl]-:cost;
+    i[`fillCount]+:1;
+    i[`tradeVolume]+:qty;
+    i[`unrealizedPnl]:UnrealizedPnl[
+        i[`amt];
+        isign;
+        i[`avgPrice];
+        markPrice;
+        faceValue];
+
+    i[`entryValue]:(((%/)i`amt`avgPrice) | 0); // TODO to long
+    i[`posMargin]:(((%/)i`entryValue`leverage) | 0); // TODO to long
+
+    acc[`balance]-:cost;
+
+    :rectifyState[];   
     };
 
 // TODO make better
