@@ -1,4 +1,6 @@
 / \l inventory.q
+// THIS FILE REPRESENTS THE LOGIC PERTAINING TO THE ACCOUNT OF AN INSTRUMENT
+
 
 \d .account
 \l util.q
