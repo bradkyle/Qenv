@@ -1574,12 +1574,12 @@ test:.qt.Unit[
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;100;-1;
+            1000;1000;-1;
             (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;100;-1;
+            1000;1000;-1;
             (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N))
         / ("new order transition (Inverse): should increase outstanding order margin";(
