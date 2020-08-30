@@ -108,6 +108,42 @@ Signal Features (External)
     - coinbase last 5 trades
     - coinbase last price
 
+Feature Forecasters
+    - XGBOOST(
+        bidsizes,
+        asksizes,
+        bidprices,
+        askprices) -> midPrice
+    - XGBOOST(
+        bidsizes,
+        asksizes,
+        bidprices,
+        askprices,
+        high,
+        low,
+        open,
+        close,
+        volume,
+        msize,
+        hsize) -> midPrice
+    - SVN(
+        bidsizes,
+        asksizes,
+        bidprices,
+        askprices) -> midPrice
+    - SVN(
+        bidsizes,
+        asksizes,
+        bidprices,
+        askprices,
+        high,
+        low,
+        open,
+        close,
+        volume,
+        msize,
+        hsize) -> midPrice
+
 \
 GetObservations :{[]
     $[
