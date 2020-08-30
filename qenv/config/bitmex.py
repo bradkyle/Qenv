@@ -1,4 +1,5 @@
 
+# TODO rate limit randomization, loadshedding randomization, flakiness etc.
 
 
 BITMEX_MM_1 = {

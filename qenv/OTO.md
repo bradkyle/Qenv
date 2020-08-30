@@ -42,6 +42,17 @@ https://tickertape.tdameritrade.com/trading/trading-basics-advanced-stock-order-
 
 shuffeling accounts for larger simulations i.e. create 1000 accounts and shuffle 10 randomly (resetting state of agent in process);
 
+Robin Hood hands over stolen goods to the poor man
+Man: Wow thank you robin hood, now i'm rich!
+
+Robin: *squints* you're what?
+
+The fattest knight at King Arthur’s round table was
+Sir Cumference.
+
+He acquired his size from too much pi.
+
+Getting rich on robinhood is a
 
 run engine in seperate process, communicate via rpc?
 
@@ -96,6 +107,7 @@ margin requirements of the open orders, it is also affected by the sum of the lo
 unfavorably placed orders. How does one calculate this loss?
 
 Stonks, Bear, Bull, Bagholder, AnkleBiter, Big Uglies, Cockroach Theory, 
+BearIncarnate
 
 1. Ankle biter: This phrase — used outside the world of finance to describe small children who are so little that they, metaphorically at least, barely reach an adult's ankles — can also be used to describe a small cap investment. Small cap just means a company with a relatively low value, or market capitalization — usually somewhere between $300 million and $2 billion.
 

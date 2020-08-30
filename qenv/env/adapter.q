@@ -23,6 +23,9 @@ environment agent state.
 
 // 
 // TODO implement macro actions!
+// - Hidden Orders
+// - Iceberg Orders
+// - sell 1, sell 2, sell 3, buy 3, buy 1, buy 2 etc. 
 
 // TODO create functionality for requesting state when there is none
 
@@ -153,7 +156,17 @@ createMarketOrderEventsFromDist :{[]
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
 createNaiveStops  :{[aId;loss;time]
-    openQty:.state.getOpenPositionAmtBySide[aId];
+    openInv:.state.getOpenPositions[aId];
+    {
+        0n;
+    }[aId;loss;time] each openInv;
+    };
+
+// Creates the set of stop orders that oppose the
+// current position according to a certain loss fraction
+// 
+createStaggeredStops  :{[aId;loss;num;time]
+    openInv:.state.getOpenPositions[aId];
     {
         0n;
     }[aId;loss;time] each openInv;
@@ -164,20 +177,8 @@ createNaiveStops  :{[aId;loss;time]
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createStaggeredStops  :{[aId;loss;time]
-    openQty:.state.getOpenPositionAmtBySide[aId];
-    {
-        0n;
-    }[aId;loss;time] each openInv;
-    };
-
-// Creates a set of stop orders that oppose the 
-// current position accoutding to a certain loss
-// fraction, if the current orders that are open
-// do not have correct price, size they are either
-// cancelled or amended depending on the configuration.
-createExpStaggeredStops  :{[aId;loss;time]
-    openQty:.state.getOpenPositionAmtBySide[aId];
+createExpStaggeredStops  :{[aId;loss;num;time]
+    openInv:.state.getOpenPositions[aId];
     {
         0n;
     }[aId;loss;time] each openInv;
