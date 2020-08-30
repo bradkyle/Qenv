@@ -108,11 +108,38 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
-increaseFill             :{[account]
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param account (Account) The account to which the inventory belongs
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @param 
+/  @return (Inventory) The new updated inventory
+incFill                 :{[account;inventory]
+    
+    inventory[`totalEntry]+:abs[qty];
+
+    // derive execCost
+    inventory[`execCost]+: .account.execCost[
+        price;
+        qty;
+        isinverse]; 
+
+    / Calculates the average price of entry for 
+    / the current postion, used in calculating 
+    / realized and unrealized pnl.
+    inventory[`avgPrice]: .account.avgPrice[
+        i[`isignum];
+        i[`execCost];
+        i[`totalEntry]];
 
     };
 
-reduceFill               :{[account]
+redFill                 :{[account;inventory]
+
+    };
+
+crsFill                 :{[account;inventory]
 
     };
 
