@@ -111,7 +111,6 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // 
 ApplyHedgedFill               :{[]
 
-
     };
 
 // ApplyFill applies a given execution to an account and its respective
