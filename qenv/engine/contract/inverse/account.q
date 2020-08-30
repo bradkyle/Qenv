@@ -207,8 +207,7 @@ ApplyFill               :{[a;iB;iL;iS;fill]
         ];
     ];
 
-    // Common logic
-    i[`totalCommission]+:cost;
+    // Common logic // TODO make aplicable to active inventory
     i[`realizedPnl]-:cost;
     i[`fillCount]+:1;
     i[`tradeVolume]+:qty;
@@ -218,13 +217,15 @@ ApplyFill               :{[a;iB;iL;iS;fill]
         i[`avgPrice];
         markPrice;
         faceValue];
+    i[`markValue]+:qty;
 
     i[`entryValue]:(((%/)i`amt`avgPrice) | 0); // TODO to long
     i[`posMargin]:(((%/)i`entryValue`leverage) | 0); // TODO to long
 
-    acc[`balance]-:cost;
+    a[`balance]-:cost;
+    a[`totalCommission]+:cost;
 
-    :rectifyState[];  // TODO costly function remove 
+    :rectifyState[a;iB;iL;iS];  // TODO costly function remove 
     };
 
 // TODO make better
