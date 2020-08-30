@@ -1563,7 +1563,6 @@ test:.qt.Unit[
     };
     {[p]
         aCols:(`balance`available,
-                `openBuyPremium`openSellPremium,
                 `openBuyQty`openSellQty,
                 `openBuyValue`openSellValue,
                 `openBuyLoss`openSellLoss,
@@ -1573,20 +1572,20 @@ test:.qt.Unit[
         :`args`eAcc`eThrows!((p[1];p[2];p[3];aCols!p[0];insCols!p[4]);aCols!p[5];p[6])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
-            (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;1000;-1;
+            (1;1;0;0;0;0;0;0;0;0;100); / Current Account
+            1000.5;1010;-1;
             (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
-            (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
+            (1;1;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Inverse): should reduce the outstanding order margin with preexisting margin";(
-            (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;1000;-1;
+            (1;1;0;0;0;0;0;0;0;0;100); / Current Account
+            1000.5;1010;-1;
             (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
-            (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
+            (1;1;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Inverse): should reset existing order margin vars considering no more orders";(
-            (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;1000;-1;
-            (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
-            (1;1;0;0;0;0;0;0;0;0;0;0;100);0N))
+            (1;1;0;0;0;0;0;0;0;0;100); / Current Account
+            1000.5;1010;-1;
+            (`INVERSE;defaultRiskTiers;0;1;0.5;1;1010); / Instrument
+            (1;1;0;0;0;0;0;0;0;0;100);0N))
         / ("new order transition (Inverse): should increase outstanding order margin";(
         /     (1;`SELL;100;1;0b;z);
         /     {[l;s] :100};

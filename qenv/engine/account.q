@@ -33,12 +33,9 @@ Account: (
             openBuyQty          : `long$();
             openBuyLoss         : `long$();
             openBuyValue        : `long$();
-            openBuyPremium      : `long$();
             openSellLoss        : `long$();
             openSellValue       : `long$();
             openSellQty         : `long$();
-            openSellPremium     : `long$();
-            grossOpenPremium    : `long$();
             openLoss            : `long$();
             orderMargin         : `long$();
             marginType          : `.account.MARGINTYPE$();
@@ -70,7 +67,7 @@ Account: (
             monthVolume         : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Event creation utilities
@@ -471,26 +468,26 @@ dcCnt   :{`long(x*y)};
 // @x: isignum
 // @y: markprice
 // @z: price
-premium:{`long$(abs[min[0,(x*(y-z))]])};
+premium:{abs[min[0,(x*(y-z))]]};
 
 accTransition :{[price;dlt;isignum;acc;ins]
+    isnv:isinv[ins];
 
-    ppcprice:$[isinv[ins];ppc[price];price];
-    ppcmark:$[isinv[ins];ppc[ins[`markPrice]];ins[`markPrice]];
+    ppcprice:$[isnv;ppc[ins;price];price];
+    ppcmark:$[isnv;ppc[ins;ins[`markPrice]];ins[`markPrice]];
 
+    // returns the price premium/loss that is charged
     p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
-
-
-
+    v:$[isnv;ppcprice*dlt;price*dlt]; // TODO size scale to long
+    l:$[isnv;ppc[ins;p]*dlt;p*dlt];
+    show l;
 
     $[(isignum>0) and (p>0);[ // TODO fix
-        acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:dlt; 
         acc[`openBuyValue]+:`long$(price*dlt); // TODO check
         acc[`openBuyLoss]+:`long$(p*dlt);
     ];
     [
-        acc[`openSellPremium]+:p;
         acc[`openSellQty]+:dlt; 
         acc[`openSellValue]+:`long$(price*dlt);
         acc[`openSellLoss]+:`long$(p*dlt);
