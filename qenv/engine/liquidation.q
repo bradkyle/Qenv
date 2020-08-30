@@ -25,6 +25,7 @@ ForceCancel :{[]
 /  @return (Inventory) The new updated inventory
 Liquidate :{[a;iB;iL;iS;ins]
     a:.liquidation.ForceCancel[];
-    
+    if[();[
 
+        ]];
     };
