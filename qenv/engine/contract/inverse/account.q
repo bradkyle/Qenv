@@ -60,40 +60,82 @@ BankruptcyPrice  :{[]
 
     };
 
+// TODO make shorter
+/ ppcprice:$[isnv;ppc[ins;price];price];
+/ ppcmark:$[isnv;ppc[ins;ins[`markPrice]];ins[`markPrice]];
+
+/ // returns the price premium/loss that is charged
+/ p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
+/ v:$[isnv;ppcprice*dlt;price*dlt]; // TODO size scale to long
+/ l:$[isnv;ppc[ins;p]*dlt;p*dlt];
+/ show l;
+
+/ $[(isignum>0) and (p>0);[ // TODO fix
+/     acc[`openBuyQty]+:dlt; 
+/     acc[`openBuyValue]+:`long$(price*dlt); // TODO check
+/     acc[`openBuyLoss]+:`long$(p*dlt);
+/ ];
+/ [
+/     acc[`openSellQty]+:dlt; 
+/     acc[`openSellValue]+:`long$(price*dlt);
+/     acc[`openSellLoss]+:`long$(p*dlt);
+/ ]];
+
 // AdjustOrderMargin interprets whether a given margin 
 // delta principly derived from either the placement/cancellation
 // of a limit order or the application of a order fill will exceed the
 // accounts available balance in which case an exception will be 
 // thrown, or otherwise will return the resultant account state that the
-// given delta will cause on execution.
+// given delta will cause on execution. TODO dry!
 /  @param price (Long) The effective price of the delta
-/  @param delta (Long) The quantity delta that is to be applied
+/  @param delta (Long) The quantity delta that is to be applied 
 /  @param isign (Long) Either 1: Long, -1:Short 
-AdjustOrderMargin       :{[price;delta;isign]
+/  @return (Account) The input as a symbol
+/  @throws InsufficientMargin account has insufficient margin for adjustment
+AdjustOrderMargin       :{[price;delta;markPrice;isign]
 
+    premium: abs[min[0,(isign*(markPrice-price))]];
 
+    account[`openBuyLoss]:(min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]] | 0);
+    account[`openSellLoss]:(min[0,(markPrice*account[`openSellQty])-account[`openSellValue]] |0);
+    account[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+
+    $[account[`available]<account[`maintMarginReq];'InsufficientMargin] // TODO check
     };
 
 
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
-// from ProcessTrade in .order.
+// from ProcessTrade in .order. // TODO
 // 
-ApplyFill               :{[]
+ApplyHedgedFill               :{[]
+
+
+    };
+
+// ApplyFill applies a given execution to an account and its respective
+// inventory, The function is for all intensive purposes only referenced
+// from ProcessTrade in .order. // TODO
+// 
+ApplyCombinedFill             :{[]
 
 
     };
 
 
+
 // TODO make better
 // UpdateMarkPrice updates an accounts state i.e. openLoss, available, posMargin
 // and its unrealizedPnl when the mark price for a given instrument changes, it
-// is generally used with fair price marking. Assumes unrealizedPnl is already derived? TODO change openLoss to orderLoss
+// is generally used with fair price marking. Assumes unrealizedPnl is already derived? 
+// TODO change openLoss to orderLoss TODO dry
+// @param markPrice (Long) The latest mark price of the instrument
 UpdateMarkPrice         :{[markPrice;instrument;account]
 
-    account[`openBuyLoss]:min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]];
-    account[`openSellLoss]:min[0,(markPrice*account[`openSellQty])-account[`openSellValue]];
-    account[`openLoss]:sum[account`openBuyLoss`openSellLoss];
-    account[`available]:(account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]);
+    account[`openBuyLoss]:(min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]] | 0);
+    account[`openSellLoss]:(min[0,(markPrice*account[`openSellQty])-account[`openSellValue]] |0);
+    account[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     };

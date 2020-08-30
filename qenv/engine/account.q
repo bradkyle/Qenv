@@ -453,57 +453,8 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];};
 
- 
 dcMrg   :{`long(x*y)};
 dcCnt   :{`long(x*y)};
-
-// TODO
-// maint margin
-// liquidation price
-// initial margin
-// bankruptcy price
-
-// Margin Transition logic
-// ---------------------------------------------------------------------------------------->
-
-// TODO 
-// @x: isignum
-// @y: markprice
-// @z: price
-premium:{abs[min[0,(x*(y-z))]]};
-
-accTransition :{[price;dlt;isignum;acc;ins]
-    isnv:isinv[ins];
-
-    ppcprice:$[isnv;ppc[ins;price];price];
-    ppcmark:$[isnv;ppc[ins;ins[`markPrice]];ins[`markPrice]];
-
-    // returns the price premium/loss that is charged
-    p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
-    v:$[isnv;ppcprice*dlt;price*dlt]; // TODO size scale to long
-    l:$[isnv;ppc[ins;p]*dlt;p*dlt];
-    show l;
-
-    $[(isignum>0) and (p>0);[ // TODO fix
-        acc[`openBuyQty]+:dlt; 
-        acc[`openBuyValue]+:`long$(price*dlt); // TODO check
-        acc[`openBuyLoss]+:`long$(p*dlt);
-    ];
-    [
-        acc[`openSellQty]+:dlt; 
-        acc[`openSellValue]+:`long$(price*dlt);
-        acc[`openSellLoss]+:`long$(p*dlt);
-    ]];
-
-    acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
-
-    // TODO derive maint margin req
-    acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
-    // TODO check available balance and error if incorrect
-    // TODO derive riskBuffer + tiered maint/init
-    :$[acc[`available]<acc[`initMarginReq];'INSUFFICIENT_MARGIN;acc];
-    };
 
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
