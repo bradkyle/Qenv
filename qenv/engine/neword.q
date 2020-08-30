@@ -4,66 +4,6 @@
 // -------------------------------------------------------------->
 
 
-// Process Depth update
-// -------------------------------------------------------------->
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessDepth        :{[]
-    dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
-    nqty: last'[size];
-    poffset:PadM[offset];
-    pleaves:PadM[leaves];
-    porderId:PadM[orderId];
-    paccountId:PadM[accountId];
-    pprice:PadM[oprice];
-    maxN:max count'[offset];
-    numLvls:count[offset];
-
-    tgt: last'[size];
-    dneg:sum'[{x where[x<0]}'[dlts]];
-    shft:pleaves+poffset;
-
-    nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]]; // TODO what qty is this referring to
-    mnoffset: (0,'-1_'(shft));
-
-    offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
-
-    noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
-    nshft: pleaves+noffset;
-    nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
-    vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
-
-    `.order.OrderBook upsert (select price, side, qty:tgt, vqty from state where vqty>0);
-
-    `.order.Order upsert (select from (select 
-                price:raze[pprice], 
-                orderId:raze[porderId], 
-                offset:raze[noffset] from state) where orderId in raze[state[`orderId]]);
-    
-    dllvl:(select price,side from state where vqty<=0);
-            if[count[dllvl]>0;{delete from `.order.OrderBook where price=x[`price], side=x[`side]}'[dllvl]];
-
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessDepthEvent   :{
-
-    };
-
 // Extern Functionality Wrappers
 // -------------------------------------------------------------->
 
@@ -104,7 +44,7 @@ addOrderUpdWrapper    :{
     };
 
 
-// Process Trades/Market Orders
+// Common Utilities
 // -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -143,6 +83,69 @@ derivePublicTrades :{
     splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty];
     qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt];
     };
+
+
+// Process Depth update
+// -------------------------------------------------------------->
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessDepth        :{[]
+    dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
+    nqty: last'[size];
+    poffset:PadM[offset];
+    pleaves:PadM[leaves];
+    porderId:PadM[orderId];
+    paccountId:PadM[accountId];
+    pprice:PadM[oprice];
+    maxN:max count'[offset];
+    numLvls:count[offset];
+
+    tgt: last'[size];
+    dneg:sum'[{x where[x<0]}'[dlts]];
+    shft:pleaves+poffset;
+
+    nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]]; // TODO what qty is this referring to
+    mnoffset: (0,'-1_'(shft));
+
+    offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
+
+    noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
+    nshft: pleaves+noffset;
+    nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
+    vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
+
+    oupd:.order.deriveOrderUpdates[];
+    odbk:.order.deriveNewOrderBook[];
+
+    if[count[oupd]>0;[
+        .order.amendOrderWrapper[oupd];
+        ]];
+
+    .order.updDepth[odbk]; 1
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessDepthEvent   :{
+
+    };
+
+
+// Process Trades/Market Orders
+// -------------------------------------------------------------->
 
 // Constructs matrix representation of trades that need to take place 
 // Inc Fill is used when the fill is to be added to the given inventory
