@@ -236,6 +236,7 @@ liquidationCols:cols LiquidationEventHistory;
 // TODO liquidation, settlement, pricerange
 // TODO change to non-dictionary updates
 // TODO Feature Etc.
+// TODO change to list
 InsertResultantEvents   :{[events]
     {[events]
         k:first events[`kind];

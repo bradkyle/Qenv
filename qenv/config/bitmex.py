@@ -14,6 +14,9 @@ BITMEX_MM_1 = {
                     "marketSize":0,
                     "actionSpace":{
                         
+                    },
+                    "stops":{
+                        
                     }
                 },
                 "step":{

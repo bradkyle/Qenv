@@ -71,8 +71,7 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
         side;
         `LIMIT;
         size;
-        reduceOnly
-    );
+        reduceOnly);
     :MakeActionEvent[`ORDER;time;o];
     };
 
@@ -141,18 +140,48 @@ createMarketOrderEventsFromDist :{[]
     };
 
 
+// Stop Event Adapters
+// ---------------------------------------------------------------------------------------->
+// Should use the expected next state inventory
+// to derive a set of stops that serve to protect
+// the inventory from wild swings in the price and
+// subsequently the unrealized pnl.
+
 // Creates a set of stop orders that oppose the 
 // current position accoutding to a certain loss
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createNaiveStopEvents  :{[aId;loss;time]
+createNaiveStops  :{[aId;loss;time]
     openQty:.state.getOpenPositionAmtBySide[aId];
     {
         0n;
     }[aId;loss;time] each openInv;
     };
 
+// Creates a set of stop orders that oppose the 
+// current position accoutding to a certain loss
+// fraction, if the current orders that are open
+// do not have correct price, size they are either
+// cancelled or amended depending on the configuration.
+createStaggeredStops  :{[aId;loss;time]
+    openQty:.state.getOpenPositionAmtBySide[aId];
+    {
+        0n;
+    }[aId;loss;time] each openInv;
+    };
+
+// Creates a set of stop orders that oppose the 
+// current position accoutding to a certain loss
+// fraction, if the current orders that are open
+// do not have correct price, size they are either
+// cancelled or amended depending on the configuration.
+createExpStaggeredStops  :{[aId;loss;time]
+    openQty:.state.getOpenPositionAmtBySide[aId];
+    {
+        0n;
+    }[aId;loss;time] each openInv;
+    };
 
 // Action Adapters
 // ---------------------------------------------------------------------------------------->
