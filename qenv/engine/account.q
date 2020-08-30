@@ -505,19 +505,6 @@ accTransition :{[price;dlt;isignum;acc;ins]
     :$[acc[`available]<acc[`initMarginReq];'INSUFFICIENT_MARGIN;acc];
     };
 
-accFillTransition:{[acc;price;markPrice;qty;isignum]
-    :.account.accTransition[acc;price;markPrice;qty;isignum];    
-    };
-
-accNewOrderTransition:{[acc;price;markPrice;qty;isignum]
-    :.account.accTransition[acc;price;markPrice;qty;isignum];
-    };
-
-accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
-    :.account.accTransition[acc;price;markPrice;qty;isignum];    
-    };
-
-
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
