@@ -85,6 +85,7 @@ ApplyFill               :{[]
     };
 
 
+// TODO make better
 // UpdateMarkPrice updates an accounts state i.e. openLoss, available, posMargin
 // and its unrealizedPnl when the mark price for a given instrument changes, it
 // is generally used with fair price marking. Assumes unrealizedPnl is already derived? TODO change openLoss to orderLoss
@@ -93,7 +94,6 @@ UpdateMarkPrice         :{[markPrice;instrument;account]
     account[`openBuyLoss]:min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]];
     account[`openSellLoss]:min[0,(markPrice*account[`openSellQty])-account[`openSellValue]];
     account[`openLoss]:sum[account`openBuyLoss`openSellLoss];
-
     account[`available]:(account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]);
 
     };
