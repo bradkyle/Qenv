@@ -294,7 +294,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // -------------------------------------------------------------->
 
 GetInsolvent    :{
-
+    [select from x where available<maintMarginReq]
     };
 
 UpdateMarkPrice : {[mp;instrumentId;time]
@@ -313,22 +313,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
     // TODO derive risk buffer
 
-    // todo update the open loss of all accounts
-    // TODO check for liquidations
-    // Update the unrealizedPnl and the markPrice 
-    // of the inventory such that they can be used
-    // later in deriving 
-    i:update 
-        unrealizedPnl:.account.unrealizedPnl[avgPrice;mp;amt;1;isignum;0b], // TODO upscale
-        from .account.Inventory where amt>0;
-
+    // Instrument specific
     UpdateMarkPrice[mp;ins]'(
                 (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
                 lj (select sum unrealizedPnl by accountId from i)); // TODO test this
-    
-
-    / select sum'[unrealizedPnl;posMargin;orderMargin;openLoss] by accountId from .account.Inventory where amt>0;
-
-    // do liquidation protocol
     
     };
