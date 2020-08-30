@@ -1540,6 +1540,9 @@ test:.qt.Unit[
 // Transition Tests
 // ==================================================================================>
 
+// TODO test different faceValue, priceMultiplier/sizeMultiplier, tick size, premium, no premium, 
+// 
+
 test:.qt.Unit[
     ".account.accTransition";
     {[c]
