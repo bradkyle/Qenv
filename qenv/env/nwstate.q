@@ -108,7 +108,7 @@ Signal Features (External)
     - coinbase last 5 trades
     - coinbase last price
 
-Feature Forecasters
+Feature Forecasters TODO iceberg detection!
     - XGBOOST(
         bidsizes,
         asksizes,
