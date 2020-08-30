@@ -204,7 +204,7 @@ adapters[`DISCRETE]     :{[action;accountId]
 
 
 // TODO remove redundancy
-adapters[`MARKETMAKER]   :{[time;action]
+adapters[`MARKETMAKER]   :{[time;action] // TODO refactor to shorter
     a:action[0];
     aId:action[1];
     limitSize: 8;
