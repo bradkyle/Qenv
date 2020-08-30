@@ -128,7 +128,7 @@ ProcessDepth        :{[]
         .order.amendOrderWrapper[oupd];
         ]];
 
-    .order.updDepth[odbk]; 1
+    .order.updDepth[odbk]; 
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
