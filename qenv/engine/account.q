@@ -495,8 +495,6 @@ accTransition :{[price;qty;isignum;acc;ins]
     :$[acc[`available]<acc[`initMarginReq];'INSUFFICIENT_MARGIN;acc];
     };
 
-/ 
-
 accFillTransition:{[acc;price;markPrice;qty;isignum]
     :.account.accTransition[acc;price;markPrice;qty;isignum];    
     };
