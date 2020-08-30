@@ -69,7 +69,7 @@ BankruptcyPrice  :{[]
 /  @param price (Long) The effective price of the delta
 /  @param delta (Long) The quantity delta that is to be applied
 /  @param isign (Long) Either 1: Long, -1:Short 
-AdjustOrderMargin    :{[price;delta;isign]
+AdjustOrderMargin       :{[price;delta;isign]
 
 
     };
@@ -79,7 +79,21 @@ AdjustOrderMargin    :{[price;delta;isign]
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order.
 // 
-ApplyFill       :{[]
+ApplyFill               :{[]
 
+
+    };
+
+
+// UpdateMarkPrice updates an accounts state i.e. openLoss, available, posMargin
+// and its unrealizedPnl when the mark price for a given instrument changes, it
+// is generally used with fair price marking. Assumes unrealizedPnl is already derived?
+UpdateMarkPrice         :{[markPrice;instrument;account]
+
+    account[`openBuyLoss]:min[0,(markPrice*account[`openBuyLoss])-account[`openBuyValue]];
+    account[`openSellLoss]:min[0,(markPrice*account[`openSellLoss])-account[`openSellValue]];
+
+    account[`available]:(account[`balance]-
+        sum[account`posMargin`unrealizedPnl`orderMargin`openBuyLoss`openSellLoss])
 
     };
