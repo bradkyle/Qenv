@@ -201,7 +201,7 @@ ProcessTrade        :{
         .order.addTradeWrapper[trds[1]];
         ]];
 
-
+    .order.updDepth[odbk];
 
     };
 
