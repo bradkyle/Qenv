@@ -29,12 +29,15 @@ RealizedPnl      :{[]
 
     };
 
-
+// Derive the maintenence margin i.e. the amount of margin required to
+// keep the specified inventory open. 
 MaintMargin      :{[]
 
     };
 
-// TODO
+// Derives the initial margin that is reserved for a given inventory 
+// which should not be confused with posMargin which stipulates the
+// inventory/position size divided by the selected margin.
 InitMargin       :{[]
 
     };
@@ -59,7 +62,7 @@ BankruptcyPrice  :{[]
 // accounts available balance in which case an exception will be 
 // thrown, or otherwise will return the resultant account state that the
 // given delta will cause on execution.
-AdjustOrderMargin    :{[price;dlt;isignum]
+AdjustOrderMargin    :{[price;dlt;isignum;]
 
 
     };
