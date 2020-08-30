@@ -190,12 +190,11 @@ ProcessTrade        :{
         ]];
 
     if[count[oupd]>0;[
-        .order.persistOrders[oupd];
-        .order.addOrderUpdWrapper[oupd];
+        .order.amendOrderWrapper[oupd];
         ]];
     
-    if[count[trds[1]]>0;[
-        .order.addTradeWrapper[trds[1]];
+    if[count[trds[0]]>0;[
+        .order.applyFillWrapper[trds[0]];
         ]];
 
     if[count[trds[1]]>0;[
