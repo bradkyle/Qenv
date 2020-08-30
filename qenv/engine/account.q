@@ -515,6 +515,7 @@ accCancelOrderTransition:{[acc;price;markPrice;qty;isignum]
 // TOD7,776e+6/1000
 // TODO make simpler
 // TODO update applicable fee when neccessary // TODO convert accountId/instrumentId to dictionary
+// Apply fill is only used from within ProcessTrade and as such should assume that multipliers are correct
 ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
     qty:abs[qty];
 
