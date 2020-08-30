@@ -486,8 +486,13 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
     };
 
 
-// Liquidation
+// Liquidation And MarkPrice updates
 // -------------------------------------------------------------->
+
+LiquidateAccount :{[]
+
+
+    };
 
 UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.bitmex.com/app/liquidationExamples
@@ -505,21 +510,6 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     ins:.instrument.Instrument@instrumentId;
     // TODO derive risk buffer
 
-    // update openSellLoss, openBuyLoss, openBuyPremium, openSellPremium
-    / During liquidation, users are unable to send orders on their account
-    / Liquidation is executed as Fill or Kill and it will be executed immediately.
-
-    // TODO unrealizedPnl
-    // TODO bankruptCost
-    // grossOpenPremium
-    // withdrawable
-    // frozen
-
-    // openLoss:openBuyLoss+openSellLoss
-    // openSellLoss:min[0,neg[(mp*openSellQty)-openSellValue]];
-    // openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue];
-    // 
-
     // todo update the open loss of all accounts
     // TODO check for liquidations
     // Update the unrealizedPnl and the markPrice 
@@ -530,36 +520,9 @@ UpdateMarkPrice : {[mp;instrumentId;time]
         markValue:mp*amt // TODO upscale
         from .account.Inventory where amt>0;
 
-    // max[0;(markDelta+openSellLoss)]
-    // max[0;(markDelta+openBuyLoss)]
-    // ((mp%ins[`markPrice])-1) * orderCost
-    // new OrderCost: deltaMarkprice
-    // {:y-(y mod x)}[0.5](((1004%996)-1)*806)
-    
-    // openLoss:(mp * (openBuyQty+openSellQty)) - (openBuyValue+openSellValue);
-    // avgValue:
- 
-    // TODO check this 
-    a:update // TODO change to openLoss
-        openLoss:openBuyLoss+openSellLoss,
-        available:balance - sum[
-            posMargin, // TODO derive new maint margin
-            unrealizedPnl, 
-            orderMargin,
-            sum[openBuyLoss, openSellLoss]]
-        from update
-        openBuyLoss:min[0,(mp*openBuyQty)-openBuyValue],
-        openSellLoss: min[0,neg[(mp*openSellQty)-openSellValue]]
-        from (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
-
-    x:select
-            maintMarginReq:0, 
-            available:balance-sum[
-            neg[unrealizedPnl],
-            posMargin,
-            orderMargin,
-            openLoss] 
-            by accountId from (a lj (select sum unrealizedPnl by accountId from i)); // TODO test this
+    UpdateMarkPrice[mp;ins]'(
+                (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i)); // TODO test this
     
 
     / select sum'[unrealizedPnl;posMargin;orderMargin;openLoss] by accountId from .account.Inventory where amt>0;
