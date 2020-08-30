@@ -234,12 +234,12 @@ ApplyFill               :{[a;iB;iL;iS;fill]
 // is generally used with fair price marking. Assumes unrealizedPnl is already derived? 
 // TODO change openLoss to orderLoss TODO dry
 // @param markPrice (Long) The latest mark price of the instrument
-UpdateMarkPrice         :{[markPrice;instrument;account]
+UpdateMarkPrice         :{[markPrice;instrument;a]
 
-    account[`openBuyLoss]:(min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]] | 0);
-    account[`openSellLoss]:(min[0,(markPrice*account[`openSellQty])-account[`openSellValue]] |0);
-    account[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
-    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+    a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0);
+    a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
+    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     :rectifyState[];
     };
