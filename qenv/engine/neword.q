@@ -47,14 +47,18 @@ NewOrder            :{
 
     };
 
-CancelOrder         :{
-
-    };
-
 AmendOrder          :{
 
     };
 
 ProcessOrderEvent   :{
+
+    };
+
+CancelOrder         :{
+
+    };
+
+ProcessCancelEvent   :{
 
     };
