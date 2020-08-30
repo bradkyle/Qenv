@@ -108,7 +108,13 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
+increaseFill             :{[account]
 
+    };
+
+reduceFill               :{[account]
+
+    };
 
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced

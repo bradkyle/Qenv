@@ -30,6 +30,10 @@ BITMEX_MM_1 = {
                 },
                 "observation":{ # TODO 
                     "window":100,
+                    "features":[
+                        "",
+                        ""
+                    ]
                 },
                 "reward":{
                     "kind":"SORTINO",
