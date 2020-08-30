@@ -486,14 +486,16 @@ accTransition :{[price;qty;isignum;acc;ins]
     ]];
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
+
+    // TODO derive maint margin req
     acc[`orderMargin]:`long$((acc[`openBuyValue]+acc[`openSellValue])%acc[`leverage]);
-
+    acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
     // TODO check available balance and error if incorrect
-
-    :acc
+    // TODO derive riskBuffer + tiered maint/init
+    :$[acc[`available]<acc[`initMarginReq];'INSUFFICIENT_MARGIN;acc];
     };
 
-/ acc[`available]:`long$(acc[`balance]-(sum[acc`unrealizedPnl`posMargin`orderMargin`openLoss]));
+/ 
 
 accFillTransition:{[acc;price;markPrice;qty;isignum]
     :.account.accTransition[acc;price;markPrice;qty;isignum];    
