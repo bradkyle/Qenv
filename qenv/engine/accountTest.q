@@ -1560,8 +1560,6 @@ test:.qt.Unit[
         ];[
             .qt.AT[.account.accTransition;(a[0];a[1];a[2];a[3];a[4]);p[`eThrows];".account.accTransition";c];
         ]];
-
-
     };
     {[p]
         aCols:(`balance`available,
