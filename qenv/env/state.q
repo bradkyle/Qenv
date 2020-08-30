@@ -509,6 +509,7 @@ getPeriodSplit  :{
 
     };
 
+// TODO store features in log to do reverse feature selection!
 getOBFeatures   :{
 
         ob update avg(bestBid,bestAsk) from .state.DepthEventHistory;

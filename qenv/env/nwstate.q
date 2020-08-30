@@ -56,12 +56,22 @@ OHLC Features
     - nvi
 
 Mark Price Features
+    - last mark price
     - 
 
 Funding Features
     -
 
-Signal Features
+Order Features
+    -
+
+Account Features
+    -
+
+Inventory Features
+    -
+
+Signal Features (External)
     - binance open interest
     - binance notional value
     - binance top trader acc long frac
@@ -70,6 +80,15 @@ Signal Features
     - binance top trader pos short frac 
     - binance long frac
     - binance short frac
+    - okex open interest
+    - okex notional value
+    - okex top trader acc long frac
+    - okex top trader acc short frac
+    - okex top trader pos long frac
+    - okex top trader pos short frac 
+    - okex long frac
+    - okex short frac
+    - tweet sentiment
 
 \
 GetObservations :{[]

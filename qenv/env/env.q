@@ -3,7 +3,8 @@
 
 // Agent ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
-//      \_____ other features _____________________________/
+//      \_____ other features _____________________________/              \___ Logging
+
 // TODO hooks system
 
 \d .env
