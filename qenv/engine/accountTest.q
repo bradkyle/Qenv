@@ -1547,10 +1547,10 @@ test:.qt.Unit[
 
         a:p[`args];
         $[all(null[p[`eThrows]]);[
-            res:.account.accTransition[a[0];a[1];a[2];a[3]];
+            res:.account.accTransition[a[0];a[1];a[2];a[3];a[4]];
             .qt.A[res;~;p[`eAcc];"account result";c];
         ];[
-            .qt.AT[.account.accTransition;(a[0];a[1];a[2];a[3]);p[`eThrows];".account.accTransition";c];
+            .qt.AT[.account.accTransition;(a[0];a[1];a[2];a[3];a[4]);p[`eThrows];".account.accTransition";c];
         ]];
 
 
@@ -1563,16 +1563,16 @@ test:.qt.Unit[
                 `openBuyLoss`openSellLoss,
                 `openLoss`orderMargin,
                 `leverage);
-        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);p[6];p[7])};
+        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);aCols!p[6];p[7])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
             1000;1000;100;-1;1b;
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Linear): should reduce the outstanding order margin";(
-            (); / Current Account
+            (1;1;0;0;0;0;0;0;0;0;0;0;100);  / Current Account
             1000;1000;100;-1;1b;
-            ();0N))
+            (1;1;0;0;0;0;0;0;0;0;0;0;100);0N))
         / ("new order transition (Inverse): should increase outstanding order margin";(
         /     (1;`SELL;100;1;0b;z);
         /     {[l;s] :100};
@@ -1636,6 +1636,8 @@ test:.qt.Unit[
     );
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
+
+.qt.SkpBesTest[test];
 
 / .qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.

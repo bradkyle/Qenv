@@ -182,7 +182,7 @@ RunTest :{[test]
     .qt.pntTest each 0!.qt.Test;
     };
 
-RunTests :{
+RunTests :{[]
     runTest each select from 0!.qt.Test where state=`READY;
     show 99#"#";show (45#" "),"TEST";show 99#"#";
     .qt.pntTest each 0!.qt.Test;

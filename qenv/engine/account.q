@@ -471,7 +471,7 @@ dcCnt   :{`long(x*y)};
 premium:{`long$(abs[min[0,(x*(y-z))]])};
 
 accTransition :{[acc;price;markprice;qty;isignum]
-    p:.account.premium[];
+    p:.account.premium[isignum;markprice;price];
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
