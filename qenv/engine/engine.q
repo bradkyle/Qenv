@@ -59,6 +59,10 @@ UpdateMarkPrice :{[event]
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .liquidation.Liquidate[ins;time]'.account.GetInsolvent[];
+    
     };
 
 / Public Event Processing logic (Writes)

@@ -278,8 +278,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
     // Common derivations
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-    isinverse: ins[`contractType]=`INVERSE;
-    isignum:$[side=`SELL;-1;1];
     cost:qty*fee;
     markprice:ins[`markPrice];
 
@@ -295,8 +293,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // Liquidation And MarkPrice updates
 // -------------------------------------------------------------->
 
-LiquidateAccount :{[]
-    
+GetInsolvent    :{
 
     };
 
@@ -333,6 +330,5 @@ UpdateMarkPrice : {[mp;instrumentId;time]
     / select sum'[unrealizedPnl;posMargin;orderMargin;openLoss] by accountId from .account.Inventory where amt>0;
 
     // do liquidation protocol
-    LiquidateAccount[ins;time]'[select from x where available<maintMarginReq];
     
     };

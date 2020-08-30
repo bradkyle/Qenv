@@ -60,6 +60,20 @@ BankruptcyPrice  :{[account;inventoryB;inventoryL;inventoryS;instrument]
 
     };
 
+
+// Rectify State Util
+// ---------------------------------------------------------------------------------------->
+
+// Common logic for setting the shared state values of the given account
+// and its BOTH,LONG,SHORT inventory aswell as its respective orders.
+// TODO move upward
+rectifyState        :{
+
+    };
+
+// Adjust Open Limit Order Margin
+// ---------------------------------------------------------------------------------------->
+
 // TODO make shorter
 / ppcprice:$[isnv;ppc[ins;price];price];
 / ppcmark:$[isnv;ppc[ins;ins[`markPrice]];ins[`markPrice]];
@@ -105,15 +119,9 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
     };
 
 
-// Main Public Fill Function
+// Main Public Fill Functionality
 // ---------------------------------------------------------------------------------------->
 
-// Common logic for setting the shared state values of the given account
-// and its BOTH,LONG,SHORT inventory aswell as its respective orders.
-// TODO move upward
-rectifyState        :{
-
-    };
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -172,37 +180,43 @@ redFill                 :{[price;qty;account;inventory]
 
 // Crs Fill is only ever used for combined inventory i.e. `POSITIONSIDE$`BOTH.
 /  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
+/  @param namt      (Long) The resultant amt of the inventory
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-crsFill                 :{[price;qty;account;inventory]
-    namt:abs[inventory[`amt]+neg[qty]]; // TODO should be neg?
+crsFill                 :{[price;namt;account;inventory]
     inventory:redFill[price;inventory[`amt];account;inventory];
     inventory:incFill[price;namt;account;inventory];
     inventory[`isignum]:neg[inventory[`isignum]];  
     :inventory                  
     };
 
+// Checks if an account's positionType is HEDGED
+/  @param   x (Account) The account that is being checked.
+/  @return    (boolean) Is hedged.
+ishedged:{x[`positionType]=`HEDGED};
+
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
 ApplyFill               :{[a;iB;iL;iS;fill]
-    
-    $[ishedged;
+
+    $[ishedged[a];
         [
             $[reduce;
-                redFill[];
-                incFill[];
+                redFill[price;qty;a;];
+                incFill[price;qty;a;];
             ];
         ];
         [
-            $[(reduceOnly or (abs[i[`amt]]>abs[namt]);
-                redFill[];
+            // TODO should be neg?
+            namt:abs[inventory[`amt]+neg[qty]]; // TODO fix
+            $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
+                redFill[price;qty;a;iB];
               ((iB[`amt]*namt)<0); 
-                crsFill[];
-                incFill[]
+                crsFill[price;namt;a;iB];
+                incFill[price;qty;a;iB]
             ];
         ];
     ];
@@ -228,6 +242,10 @@ ApplyFill               :{[a;iB;iL;iS;fill]
     :rectifyState[a;iB;iL;iS];  // TODO costly function remove 
     };
 
+
+// Update Mark Price Functionality // TODO return annotation
+// ---------------------------------------------------------------------------------------->
+
 // TODO make better
 // UpdateMarkPrice updates an accounts state i.e. openLoss, available, posMargin
 // and its unrealizedPnl when the mark price for a given instrument changes, it
@@ -241,7 +259,7 @@ UpdateMarkPrice         :{[markPrice;instrument;a]
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
-    :rectifyState[];
+    :rectifyState[a;iB;iL;iS];
     };
 
 
@@ -259,6 +277,10 @@ UpdateMarkPrice         :{[markPrice;instrument;a]
 /     totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
 /     by accountId from `.account.Account;
 
+
+// Apply Funding Functionality // TODO return annotation
+// ---------------------------------------------------------------------------------------->
+
 // TODO make better
 // Positive funding rate means long pays short an amount equal to their current position
 // * the funding rate.
@@ -275,5 +297,9 @@ ApplyFunding        :{[fundingRate;instrument;account]
     account[`balance]:0;
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
-    :rectifyState[];
+    :rectifyState[a;iB;iL;iS];
     };
+
+
+// TakePosition Functionality
+// ---------------------------------------------------------------------------------------->
