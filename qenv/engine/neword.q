@@ -64,7 +64,7 @@ ProcessDepthEvent   :{
 
     };
 
-// Process Trades/Market Orders
+// Extern Functionality Wrappers
 // -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -78,6 +78,34 @@ ProcessDepthEvent   :{
 applyFillWrapper    :{
     .account.ApplyFill[enlist x`accountId`instrumentId`side`time`reduceOnly`isMaker`price`fillQty];
     };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+addTradeWrapper    :{
+    .account.ApplyFill[enlist x`accountId`instrumentId`side`time`reduceOnly`isMaker`price`fillQty];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+addOrderUpdWrapper    :{
+    .account.ApplyFill[enlist x`accountId`instrumentId`side`time`reduceOnly`isMaker`price`fillQty];
+    };
+
+
+// Process Trades/Market Orders
+// -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -111,8 +139,9 @@ deriveAccountFills  :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-deriveTrades        :{
-
+derivePublicTrades :{
+    splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty];
+    qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt];
     };
 
 // Constructs matrix representation of trades that need to take place 
@@ -150,6 +179,24 @@ ProcessTrade        :{
     accdlts: pleaves - nleaves;
     vqty: {?[x>y;x;y]}'[mxshft;nvqty];
     
+    flls:.order.deriveAccountFills[];
+    oupd:.order.deriveOrderUpdates[];
+    trds:.order.derivePublicTrades[];
+
+    if[count[flls]>0;[
+        .order.persistOrders[oupd];
+        .order.addOrderUpdWrapper[oupd];
+        ]];
+
+    if[count[oupd]>0;[
+        .order.persistOrders[oupd];
+        .order.addOrderUpdWrapper[oupd];
+        ]];
+    
+    if[count[trds[0]]>0;[
+        .order.addTradeWrapper[trds[0]];
+        ]];
+
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
