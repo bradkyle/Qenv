@@ -182,11 +182,11 @@ ProcessTrade        :{
     flls:.order.deriveAccountFills[];
     oupd:.order.deriveOrderUpdates[];
     trds:.order.derivePublicTrades[];
+    odbk:.order.deriveNewOrderBook[];
 
     if[count[flls]>0;[
-        .order.applyFillWrapper[oupd];
+        .order.applyFillWrapper[flls];
         .order.incSelfFillWrapper[flls];
-        .order.addOrderUpdWrapper[oupd];
         ]];
 
     if[count[oupd]>0;[
@@ -200,6 +200,8 @@ ProcessTrade        :{
     if[count[trds[1]]>0;[
         .order.addTradeWrapper[trds[1]];
         ]];
+
+
 
     };
 
