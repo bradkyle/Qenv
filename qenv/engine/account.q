@@ -158,8 +158,7 @@ Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
 
-    $[withdrawn < acc[`withdrawable];
-        [
+    $[withdrawn < acc[`withdrawable];[
         // TODO more expressive and complete upddate statement accounting for margin etc.
 
         acc[`balance]-:withdrawn;
