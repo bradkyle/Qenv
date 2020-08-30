@@ -150,13 +150,6 @@ eventEngine[`AMEND_BATCH_ORDER] :   {[event]
 / Main call/execution functions
 / -------------------------------------------------------------------->
 
-// Updates the configured engine probabilities
-// from which normal distributions on processing
-// time and return /outage probabilities are derived etc.
-UpdateEngineProbs   :{[]
-
-    };
-
 // 
 prepareIngress   :{[eventBatch]
     / :0!`kind xgroup eventBatch;
@@ -169,11 +162,15 @@ prepareEgress    :{[eventBatch]
 
 // Processes a batch of events and matches
 // them with their respective processing 
-// logic above.
+// logic above. // TODO
 ProcessEvents  : {[eventBatch]
         {eventEngine[(`.event.INGRESSKIND$first[x[`kind]])][x]} each .engine.prepareIngress[eventBatch];
         / :prepareEgress[.engine.PopEvents[]];
     };
+
+
+/ Configuration
+/ -------------------------------------------------------------------->
 
 NewAccountFromConfig    :{[config]
     a:.account.NewAccount[config[`account]];
