@@ -105,23 +105,21 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
     };
 
 
-// ApplyFill applies a given execution to an account and its respective
-// inventory, The function is for all intensive purposes only referenced
-// from ProcessTrade in .order. // TODO
-// 
-ApplyHedgedFill               :{[]
+// Main Public Fill Function
+// ---------------------------------------------------------------------------------------->
 
-    };
+
 
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
-ApplyCombinedFill             :{[]
+ApplyFill               :{[]
+    $[ishedged;[
+        
+    ]]
 
     };
-
-
 
 // TODO make better
 // UpdateMarkPrice updates an accounts state i.e. openLoss, available, posMargin
