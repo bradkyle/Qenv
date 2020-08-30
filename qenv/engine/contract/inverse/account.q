@@ -92,8 +92,9 @@ UpdateMarkPrice         :{[markPrice;instrument;account]
 
     account[`openBuyLoss]:min[0,(markPrice*account[`openBuyLoss])-account[`openBuyValue]];
     account[`openSellLoss]:min[0,(markPrice*account[`openSellLoss])-account[`openSellValue]];
+    account[`openLoss]:sum[account`openBuyLoss`openSellLoss];
 
     account[`available]:(account[`balance]-
-        sum[account`posMargin`unrealizedPnl`orderMargin`openBuyLoss`openSellLoss])
+        sum[account`posMargin`unrealizedPnl`orderMargin`openBuyLoss`openSellLoss]);
 
     };
