@@ -38,3 +38,23 @@ ProcessTrade        :{
 ProcessTradeEvent   :{
 
     };
+
+
+// Process Trades/Market Orders
+// -------------------------------------------------------------->
+
+NewOrder            :{
+
+    };
+
+CancelOrder         :{
+
+    };
+
+AmendOrder          :{
+
+    };
+
+ProcessOrderEvent   :{
+
+    };
