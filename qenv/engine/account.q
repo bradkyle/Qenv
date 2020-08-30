@@ -470,8 +470,8 @@ dcCnt   :{`long(x*y)};
 // @z: price
 premium:{`long$(abs[min[0,(x*(y-z))]])};
 
-accTransition :{[acc;price;markprice;qty;isignum]
-    p:.account.premium[isignum;markprice;price];
+accTransition :{[price;qty;isignum;acc;ins]
+    p:.account.premium[isignum;ins[`markPrice];price];
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:qty; 
@@ -581,7 +581,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
                     i[`amt]-:qty; 
                     acc[`balance]+:rpl;
                 ];
-                [
+                [ // Open position
                     iside:HedgedNegSide[side];
                     oside:HedgedSide[side];
                     // OPEN given side for position
