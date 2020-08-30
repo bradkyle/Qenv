@@ -1,4 +1,4 @@
-\d .instrument.inverse.account
+\d .contract.inverse.account
 
 ExecCost        :{[]
 
@@ -15,18 +15,22 @@ UnrealizedPnl  :{[]
 
     };
 
-RealizedPnl    :{[]
+RealizedPnl      :{[]
 
 
     };
 
 
-MaintMargin    :{[]
+MaintMargin      :{[]
 
     };
 
 
-InitMargin     :{[]
+InitMargin       :{[]
+
+    };
+
+LiquidationPrice :{[]
 
     };
 

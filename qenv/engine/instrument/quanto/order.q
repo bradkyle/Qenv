@@ -1,1 +1,0 @@
-\d .instrument.quanto.order
