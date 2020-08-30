@@ -472,6 +472,10 @@ premium:{`long$(abs[min[0,(x*(y-z))]])};
 
 accTransition :{[price;dlt;isignum;acc;ins]
     p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
+
+    
+
+
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
         acc[`openBuyQty]+:dlt; 
