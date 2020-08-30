@@ -1543,6 +1543,11 @@ test:.qt.Unit[
 // TODO test different faceValue, priceMultiplier/sizeMultiplier, tick size, premium, no premium, 
 // 
 
+defaultRiskTiers:.instrument.NewRiskTier[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f
+    )];
+
 test:.qt.Unit[
     ".account.accTransition";
     {[c]
@@ -1567,16 +1572,17 @@ test:.qt.Unit[
                 `openLoss`orderMargin,
                 `leverage);
         insCols:`contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize`markPrice;    
-        :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);aCols!p[6];p[7])};
+        :`args`eAcc`eThrows!((p[1];p[2];p[3];aCols!p[0];insCols!p[4]);aCols!p[5];p[6])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
-            1000;100;-1;1b;
-            (`INVERSE;); / Instrument
+            1000;100;-1;
+            (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
-        ("fill transition (Linear): should reduce the outstanding order margin";(
-            (1;1;0;0;0;0;0;0;0;0;0;0;100);  / Current Account
-            1000;1000;100;-1;1b;
+        ("fill transition (Inverse): should reduce the outstanding order margin";(
+            (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
+            1000;100;-1;
+            (`INVERSE;defaultRiskTiers;0;1;0.5;1;1000); / Instrument
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N))
         / ("new order transition (Inverse): should increase outstanding order margin";(
         /     (1;`SELL;100;1;0b;z);
