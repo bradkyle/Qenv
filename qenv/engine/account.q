@@ -3,6 +3,9 @@
 \d .account
 \l util.q
 
+isinv:{x[`contractType]=`INVERSE}; // Is the instrument an inverse contract
+ppc:{x[`faceValue]%y}; // Derive price per contract
+
 accountCount:0;
 
 // TODO executions
@@ -471,9 +474,13 @@ dcCnt   :{`long(x*y)};
 premium:{`long$(abs[min[0,(x*(y-z))]])};
 
 accTransition :{[price;dlt;isignum;acc;ins]
+
+    ppcprice:$[isinv[ins];ppc[price];price];
+    ppcmark:$[isinv[ins];ppc[ins[`markPrice]];ins[`markPrice]];
+
     p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
 
-    
+
 
 
     $[(isignum>0) and (p>0);[ // TODO fix
