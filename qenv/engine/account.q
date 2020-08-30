@@ -299,7 +299,7 @@ bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
 // This function is accessed by the engine upon a funding event and unilaterally applies
 // an update to all the open position quantites held in the schema/state representation.
 // TODO next funding rate and next funding time (funding time delta)
-// Update available withdrawable etc.
+// Update available withdrawable etc. // TODO move to instrument
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
     // Applies the current funding rate and subsequent
     // Account: available, fundingCount, frozen, realizedPnl, 

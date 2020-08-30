@@ -3,6 +3,7 @@
 
 instrumentCount:0;
 
+// TODO logic mappings per CONTRACTTYPE
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
@@ -147,5 +148,6 @@ UpdateMarkPrice : {[markPrice;instrumentId;time]
     };
 
 
-// Instrument Liquidation Logic?
+// TODO instrument logic/
+// Instrument Logic?
 // -------------------------------------------------------------->
