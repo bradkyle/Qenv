@@ -111,31 +111,49 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
-/  @param account (Account) The account to which the inventory belongs
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
-/  @param 
 /  @return (Inventory) The new updated inventory
-incFill                 :{[account;inventory]
+incFill                 :{[price;qty;account;inventory]
     
-    inventory[`totalEntry]+:abs[qty];
+    // Increase the total Entry and amt
+    inventory[`amt`totalEntry]+:qty;
 
     // derive execCost
     inventory[`execCost]+: .account.execCost[
         price;
-        qty;
-        isinverse]; 
+        qty]; 
 
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
     inventory[`avgPrice]: .account.avgPrice[
-        i[`isignum];
-        i[`execCost];
-        i[`totalEntry]];
+        inventory[`isignum];
+        inventory[`execCost];
+        inventory[`totalEntry]];
 
     };
 
-redFill                 :{[account;inventory]
+// Red Fill is used when the fill is to be removed from the given inventory.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return          (Inventory) The new updated inventory
+redFill                 :{[price;qty;account;inventory]
+
+    // When the inventory is being closed it realizes 
+    rpl:RealizedPnl[
+        qty;
+        price;
+        isign;
+        inventory[`avgPrice];
+        faceValue];
+        
+    inventory[`amt]-:qty;
+    inventory[`realizedPnl]+:rpl;
 
     };
 
