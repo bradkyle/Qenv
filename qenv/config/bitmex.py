@@ -14,10 +14,10 @@ BITMEX_MM_1 = {
                     "marketSize":0,
                     "actionSpace":{
                         
-                    },
-                    "stops":{
-                        
                     }
+                },
+                "stops":{
+                    "kind":"NAIVE" # randomize (NAIVE,STAGGERED,EXPSTAGGERED,NIL)
                 },
                 "step":{
                     "kind":"TEMPORAL",
@@ -78,10 +78,10 @@ BITMEX_MM_1 = {
                 "minPrice":0,
                 "lotSize":1,
                 "junkOrderSize":25,
-                "liquidationStrat":[
+                "liquidationStrat":{
                     "CANCELORDERS",
                     "TAKEOVER"
-                ],
+                },
                 "insuranceFee":"",
                 "maxOpenOrders":100,
                 "feeTiers":{

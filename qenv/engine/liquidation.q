@@ -11,8 +11,9 @@
 / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
 / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
 
-ForceCancel :{[]
-
+ForceCancel :{[a;time]
+    .order.CancelAllOrders[a;time];
+    :(exec from .account.Account where accountId=a[`accountId])
     };
 
 // Enacts liquidation of a specified account/inventory pair 
@@ -23,8 +24,8 @@ ForceCancel :{[]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Liquidate :{[a;iB;iL;iS;ins]
-    a:.liquidation.ForceCancel[];
+Liquidate :{[a;iB;iL;iS;ins;time]
+    a:.liquidation.ForceCancel[a;time];
     if[sum[a`available`maintMarginReq]<0;[
 
         ]];
