@@ -49,14 +49,14 @@ InitMargin       :{[]
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the approximate price point at which 
 // the account will be liquidated.
-LiquidationPrice :{[]
+LiquidationPrice :{[account;inventoryB;inventoryL;inventoryS;instrument]
 
     };
 
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the price point at which the account
 // will become bankrupt.
-BankruptcyPrice  :{[]
+BankruptcyPrice  :{[account;inventoryB;inventoryL;inventoryS;instrument]
 
     };
 
@@ -118,7 +118,6 @@ ApplyHedgedFill               :{[]
 // from ProcessTrade in .order. // TODO
 // 
 ApplyCombinedFill             :{[]
-
 
     };
 
