@@ -1566,12 +1566,13 @@ test:.qt.Unit[
                 `openBuyLoss`openSellLoss,
                 `openLoss`orderMargin,
                 `leverage);
+        insCols:`contractType`riskTiers`riskBuffer`faceValue`tickSize`lotSize`markPrice;    
         :`args`eAcc`eThrows!((aCols!p[0];p[1];p[2];p[3];p[4];p[5]);aCols!p[6];p[7])};
     ( // 
         ("fill transition (Inverse): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100); / Current Account
             1000;100;-1;1b;
-            (); / Instrument
+            (`INVERSE;); / Instrument
             (1;1;0;0;0;0;0;0;0;0;0;0;100);0N));
         ("fill transition (Linear): should reduce the outstanding order margin";(
             (1;1;0;0;0;0;0;0;0;0;0;0;100);  / Current Account
