@@ -184,7 +184,8 @@ ProcessTrade        :{
     trds:.order.derivePublicTrades[];
 
     if[count[flls]>0;[
-        .order.persistOrders[oupd];
+        .order.applyFillWrapper[oupd];
+        .order.incSelfFillWrapper[flls];
         .order.addOrderUpdWrapper[oupd];
         ]];
 
@@ -193,8 +194,12 @@ ProcessTrade        :{
         .order.addOrderUpdWrapper[oupd];
         ]];
     
-    if[count[trds[0]]>0;[
-        .order.addTradeWrapper[trds[0]];
+    if[count[trds[1]]>0;[
+        .order.addTradeWrapper[trds[1]];
+        ]];
+
+    if[count[trds[1]]>0;[
+        .order.addTradeWrapper[trds[1]];
         ]];
 
     };
