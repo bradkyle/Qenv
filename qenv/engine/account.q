@@ -109,211 +109,14 @@ NewAccount :{[account;time]
 
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
-execCost :{[price;qty;isinverse]
-    :$[isinverse;floor[1e8%price];1e8%price] * abs[qty]
-    };
+OrderLoss:{(sum[x`openSellLoss`openBuyLoss] | 0)};
+Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
 
-// Used to derive the average entry price for a given inventory
-// TODO add randomization to this!!
-avgPrice :{[isignum;execCost;totalEntry;isinverse] // TODO floor and ceiling respectively cause difference
-    :$[(totalEntry>0) and (execCost>0);[
-        :$[isinverse;
-            [
-                // If the contract is inverse, i.e. Bitmex
-                p:execCost%totalEntry;
-                :$[isignum>0;1e8%floor[p];1e8%ceiling[p]];
-            ];
-            [   
-                // If the contract is linear i.e. Binance
-                :1e8%(execCost*totalEntry);
-            ]
-        ];
-    ];:0];
-    };
-
-// Returns the unrealized profit for the current position considering the current
-// mark price and the average entry price (uses mark price to prevent liquidation).
-// @avgprice: The average price the inventory was entered at
-// @markprice: The current mark price of the instrument
-// @amt: The size of the position
-// @faceValue: The faceValue of the instrument
-// @isignum: The sign of the instrument
-// @isinverse: Is the instrument an inverse contract
-unrealizedPnl       :{[avgprice;markprice;amt;faceValue;isignum;isinverse]
-    :($[isinverse;(faceValue%markprice)-(faceValue%avgprice);markprice-avgprice]*(amt*isignum));
-    };
-
-// Calculates the realized profit and losses for a given position, size is a positive
-// or negative number that represents the portion of the current position that has been
-// closed and thus should be of the same side as the position i.e. negative for short and 
-// positive for long.
-// @avgprice: The average price the inventory was entered at
-// @markprice: The current mark price of the instrument
-// @fillqty: The size of the fill
-// @faceValue: The faceValue of the instrument
-// @isignum: The sign of the instrument
-// @isinverse: Is the instrument an inverse contract
-realizedPnl         :{[avgprice;fillprice;fillqty;faceValue;isignum;isinverse]
-    :($[isinverse;(faceValue%fillprice)-(faceValue%avgprice);fillprice-avgprice]*(fillqty*isignum));
-    };
-
-// Calculates the amount of margin required to keep a position open, if the account no longer 
-// has this margin available, the position will be liquidated.
-// @amt: the size of the position
-// @riskTiers: The table of risk tiers
-// @riskBuffer: Additional risk buffer coefficient
-maintainenceMargin   :{[amt;riskTiers;riskBuffer]
-    // Derive risk limit
-    lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
-    
-    // Maintenence margin rate
-    mm:lm[`mmr];
-
-    // Maintenence amount
-    // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :amt*(mm+riskBuffer);
-    };
-
-// Calculates the amount of margin required to initialize a position, including the premium 
-// charged on the difference between the current price and the mark price of the contract.
-// Initial margin is generally above maintenece margin .i.e. it requires more margin than
-// the maintenence margin rate.
-// @amt: the size of the position
-// @riskTiers: The table of risk tiers
-// @premium: The premium charged 
-initialMargin      :{[amt;riskTiers;premium] // TODO fix
-    // Derive risk limit
-    lm:first ?[riskTiers;enlist(>;`mxamt;amt); 0b; ()];
-
-    // Initial margin rate
-    imr:lm[`imr];
-
-    // TODO gross open premium
-
-    // Maintenence amount
-    // riskBuffer: i.e. takerFee*2 + fundingRate for bitmex
-    :(amt*imr)+(amt * premium); // TODO derive premium
-    };
-
-// TODO inverse vs quanto vs LINEAR
-// The point at which the exchange will force close all orders and shortly
-// thereafter liquidate the position
-// (raze(`isinverse;`rb;`bal;`tmm;`amtB;`amtL;`amtS;`lmB;`lmL;`lmS;`mmB;`mmL;`mmS;`cumB;`cumL;`cumS;`sB;`epB;`epL;`epS))!.qt.BAM
-
-liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
-        bal:account[`balance]; // TODO change to margin?
-        tmm:0; 
-
-        rt:instrument[`riskTiers];
-        rb:instrument[`riskBuffer];
-        isinverse:(instrument[`contractType]=`INVERSE);
-
-        .qt.RT:rt;
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive Average price // change total entry to execQty
-        sB:inventoryB[`isignum];
-        epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
-        epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
-        epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
-
-        $[isinverse;
-            [nvalB:amtB%epB;nvalS:amtS%epS;nvalL:amtL%epL];
-            [nvalB:amtB*epB;nvalS:amtS*epS;nvalL:amtS*epS]
-        ];
-
-        // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;nvalB); 0b; ()]; // TODO switch on leverage/amount etc.
-        lmL:first ?[rt;enlist(>;`mxamt;nvalL); 0b; ()];
-        lmS:first ?[rt;enlist(>;`mxamt;nvalS); 0b; ()];
-
-        // Maintenence margin rate
-        mmB:lmB[`mmr];
-        mmL:lmL[`mmr];
-        mmS:lmS[`mmr];
-
-        // Maintenece Amount
-        cumB: amtB*(mmB+rb);
-        cumL: amtL*(mmL+rb);
-        cumS: amtS*(mmS+rb);
- 
-        / .qt.BAM:(isinverse;rb;bal;tmm;amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
-
-        // TODO round to nearest long vs short etc.
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)+(amtL*epL)-(amtS*epS))
-            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)+(amtL-amtS)));
-    };
-
-// The point at which the entirety of the inventories initial margin has been 
-// consumed. 
-bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
-        bal:account[`balance];
-        tmm:0; 
-
-        rt:instrument[`riskTiers];
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
-        lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];        
-
-        // Initial margin rate
-        imrB:lmB[`imr]; // TODO change this to the positions initial margin  
-        imrL:lmL[`imr]; // TODO change this to the positions initial margin
-        imrS:lmS[`imr]; // TODO change this to the positions initial margin
-
-        // Maintenece Amount
-        cumB: amtB*imrB;
-        cumL: amtL*imrL;
-        cumS: amtS*imrS;
-
-        // Derive Average price
-        sB:inventoryB[`isignum];
-        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
-        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
-        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
-            %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
-    };
-
-
-
-// Funding Event/Logic //TODO convert to cnt for reference
+// Funding Application
 // -------------------------------------------------------------->
-// Positive funding rate means long pays short an amount equal to their current position
-// * the funding rate.
-// Negative funding rate means short pays long an amount equal to their current position
-// * the funding rate.
-// The funding rate6\ can either be applied to the current position or to the margin/balance.
-// This function is accessed by the engine upon a funding event and unilaterally applies
-// an update to all the open position quantites held in the schema/state representation.
-// TODO next funding rate and next funding time (funding time delta)
-// Update available withdrawable etc. // TODO move to instrument
+
 ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
-    // Applies the current funding rate and subsequent
-    // Account: available, fundingCount, frozen, realizedPnl, 
-    //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
-    //          netShortPosition, liquidationPrice, bankruptcyPrice
-    //          
-    // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
-    //            posMargin, initMargin, entryValue, totalCost, totalEntry, 
-    //            execCost, maintMarginReq, initMarginReq, (isignum if both)
-    update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
-        longFundingCost:longFundingCost+(longValue*fundingRate),
-        shortFundingCost:shortFundingCost+(longValue*fundingRate),
-        totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
-        by accountId from `.account.Account;
+    
     :.account.AddAllAccountsUpdatedEvents[time];
     };
 
@@ -325,14 +128,20 @@ ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO 
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     // Account: available, liquidationprice, bankruptcyprice, depositCount
-    // 
-    update 
-        balance:balance+deposited, 
-        depositAmount:depositAmount+deposited,
-        depositCount:depositCount+1
-        from `.account.Account 
-        where accountId=accountId;
-    :.account.AddAccountUpdateEvent[accountId;time];
+    acc:exec from  .account.Account where accountId=accountId;
+
+    acc[`balance]-:deposited;
+    acc[`depositAmount]+:deposited;
+    acc[`depositCount]+:1;
+    acc[`withdrawable]+:deposited;
+    / account[`available]:.account.Available[acc]; // TODO
+    / account[`initMarginReq`maintMarginReq]
+
+    ![`.account.Account;
+        enlist (=;`accountId;accountId);
+        0b;acc];
+
+    :.account.AddAccountUpdateEvent[acc;time];
     };
 
 
@@ -357,17 +166,14 @@ Withdraw       :{[withdrawn;time;accountId]
         acc[`withdrawAmount]+:withdrawn;
         acc[`withdrawCount]+:1;
         acc[`withdrawable]-:withdrawn;
+        / account[`available]:.account.Available[acc]; // TODO
 
         ![`.account.Account;
             enlist (=;`accountId;accountId);
             0b;acc];
         
         :.account.AddAccountUpdateEvent[acc;time];
-        ];
-        [
-            0N; //TODO create failure
-        ]
-    ];  
+        ];'InsufficientMargin];  
     };
 
 

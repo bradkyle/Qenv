@@ -139,3 +139,36 @@ UpdateMarkPrice         :{[markPrice;instrument;account]
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     };
+
+
+/ // Applies the current funding rate and subsequent
+/ // Account: available, fundingCount, frozen, realizedPnl, 
+/ //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
+/ //          netShortPosition, liquidationPrice, bankruptcyPrice
+/ //          
+/ // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
+/ //            posMargin, initMargin, entryValue, totalCost, totalEntry, 
+/ //            execCost, maintMarginReq, initMarginReq, (isignum if both)
+/ update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
+/     longFundingCost:longFundingCost+(longValue*fundingRate),
+/     shortFundingCost:shortFundingCost+(longValue*fundingRate),
+/     totalFundingCost:totalFundingCost+((longValue*fundingRate)-(longValue*fundingRate))
+/     by accountId from `.account.Account;
+
+// TODO make better
+// Positive funding rate means long pays short an amount equal to their current position
+// * the funding rate.
+// Negative funding rate means short pays long an amount equal to their current position
+// * the funding rate.
+// The funding rate6\ can either be applied to the current position or to the margin/balance.
+// This function is accessed by the engine upon a funding event and unilaterally applies
+// an update to all the open position quantites held in the schema/state representation.
+// TODO next funding rate and next funding time (funding time delta)
+// Update available withdrawable etc. // TODO move to instrumentTODO dry
+// @param markPrice (Long) The latest mark price of the instrument // TODO return updated values?
+ApplyFunding        :{[fundingRate;instrument;account]
+
+    account[`balance]:0;
+    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+
+    };
