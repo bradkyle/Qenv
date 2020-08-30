@@ -179,7 +179,7 @@ showFailedTests :{[]
 RunTest :{[test]
     runTest[test];
     show 99#"#";show (45#" "),"TEST";show 99#"#";
-    .qt.pntTest each 0!.qt.Test;
+    .qt.pntTest[exec from .qt.Test where testId=test[`testId]];
     };
 
 RunTests :{[]
@@ -684,3 +684,9 @@ NxtAct  :{
 NxtCA :{
     :select dscr,state,actual,relation,expected from ej[`caseId;.qt.Case;select caseId,actual,relation,expected from .qt.Assertion where state=`FAIL];
     };
+
+NxtAE :{
+    x: (NxtExp[];NxtAct[]);
+    x[`col]:`expected`actual;
+    :(`col xkey x);
+    }

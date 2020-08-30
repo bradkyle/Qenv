@@ -1651,7 +1651,7 @@ test:.qt.Unit[
     .qt.sBlk;
     "In the event of adding or removing orders from the orderbook, should update account accordingly"];
 
-.qt.SkpBesTest[test];
+.qt.RunTest[test]
 
 / .qt.RunTest[test];
 // TODO Failed, insufficient balance, leverage too high, max amt for leverage selected etc.
@@ -2644,4 +2644,4 @@ deriveCaseParams :{[p]
     )]];
 
 
-.qt.RunTests[];
+/ .qt.RunTests[];

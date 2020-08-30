@@ -470,19 +470,19 @@ dcCnt   :{`long(x*y)};
 // @z: price
 premium:{`long$(abs[min[0,(x*(y-z))]])};
 
-accTransition :{[price;qty;isignum;acc;ins]
-    p:.account.premium[isignum;ins[`markPrice];price];
+accTransition :{[price;dlt;isignum;acc;ins]
+    p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
     $[(isignum>0) and (p>0);[ // TODO fix
         acc[`openBuyPremium]+:p; // TODO?
-        acc[`openBuyQty]+:qty; 
-        acc[`openBuyValue]+:`long$(price*qty); // TODO check
-        acc[`openBuyLoss]+:`long$(p*qty);
+        acc[`openBuyQty]+:dlt; 
+        acc[`openBuyValue]+:`long$(price*dlt); // TODO check
+        acc[`openBuyLoss]+:`long$(p*dlt);
     ];
     [
         acc[`openSellPremium]+:p;
-        acc[`openSellQty]+:qty; 
-        acc[`openSellValue]+:`long$(price*qty);
-        acc[`openSellLoss]+:`long$(p*qty);
+        acc[`openSellQty]+:dlt; 
+        acc[`openSellValue]+:`long$(price*dlt);
+        acc[`openSellLoss]+:`long$(p*dlt);
     ]];
 
     acc[`openLoss]:`long$(sum[acc`openSellLoss`openBuyLoss] | 0);
