@@ -2,6 +2,9 @@
 \l event.q
 \l order.q
 \d .engine
+
+// TODO move validation into engine
+
 // TODO dropped response etc.
 /*******************************************************
 // TODO deleverage probability

@@ -293,9 +293,7 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 // Liquidation And MarkPrice updates
 // -------------------------------------------------------------->
 
-GetInsolvent    :{
-    [select from x where available<maintMarginReq]
-    };
+GetInsolvent    :{[select from x where available<maintMarginReq]};
 
 UpdateMarkPrice : {[mp;instrumentId;time]
     / https://www.bitmex.com/app/liquidationExamples

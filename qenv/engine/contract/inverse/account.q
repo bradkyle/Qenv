@@ -301,5 +301,5 @@ ApplyFunding        :{[fundingRate;instrument;account]
     };
 
 
-// TakePosition Functionality
+// TakeOverPosition Functionality
 // ---------------------------------------------------------------------------------------->
