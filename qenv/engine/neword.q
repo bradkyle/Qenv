@@ -81,9 +81,23 @@ addOrderDelWrapper    :{
 /  @return (Inventory) The new updated inventory
 isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
-               (in;`price;x);
-               (in;`side;y);
+               (in;`price;x); // TODO CONDITIONAL
+               (in;`side;y); // TODO CONDITIONAL
                (=;`otype;`.order.ORDERTYPE$`LIMIT))};
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+isActiveStop:{:((>;`size;0);
+               (in;`status;enlist[`NEW`PARTIALFILLED]);
+               (in;`price;x); // TODO CONDITIONAL
+               (in;`side;y); // TODO CONDITIONAL
+               (in;`otype;enlist[`STOP_MARKET`STOP_LIMIT]))};
 
 
 // Common Utilities
@@ -97,8 +111,15 @@ isActiveLimit:{:((>;`size;0);
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-deriveOrderUpdates  :{
+deriveOrderUpdates  :{[rp;nshft;poffset;nleaves;porderId;pprice]
+    
+    raze[pprice];
+    raze[porderId];
+    raze[poffset];
+    Clip[raze[nleaves]]
+    raze[pstatus]
 
+    // Delete from orderbook where in filled, cancelled, triggered etc.
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -110,7 +131,15 @@ deriveOrderUpdates  :{
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 deriveAccountFills  :{
+    
+    };
 
+applyAccountFills   :{
+    flls:.order.deriveAccountFills[];
+    if[count[flls]>0;[
+        .order.applyFillWrapper[flls];
+        .order.incSelfFillWrapper[flls];
+        ]];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -121,9 +150,12 @@ deriveAccountFills  :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-derivePublicTrades :{
+applyPublicTrades :{[pleaves;nagentQty;rp]
     splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty];
     qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt];
+    numtd:count'[qty];
+
+
     };
 
 
@@ -140,6 +172,11 @@ derivePublicTrades :{
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessDepth        :{[]
+
+    // TODO uj new event
+    state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
+       ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
+
     dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
     nqty: last'[size];
     poffset:PadM[offset];
@@ -154,7 +191,11 @@ ProcessDepth        :{[]
     dneg:sum'[{x where[x<0]}'[dlts]];
     shft:pleaves+poffset;
 
-    nagentQty: flip PadM[raze'[(poffset[;0]; Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];Clip[qty-max'[shft]])]]; // TODO what qty is this referring to
+    nagentQty: flip PadM[raze'[(
+        poffset[;0]; 
+        Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];
+        Clip[qty-max'[shft]]
+        )]]; // TODO what qty is this referring to
     mnoffset: (0,'-1_'(shft));
 
     offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
@@ -164,26 +205,19 @@ ProcessDepth        :{[]
     nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
     vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
 
-    oupd:.order.deriveOrderUpdates[];
-    odbk:.order.deriveNewOrderBook[];
+    .order.applyOrderUpdates[ // TODO 
+        pprice;
+        porderId;
+        noffset;
+        pleaves;
+        pstatus;
+        ();()];
 
-    if[count[oupd]>0;[
-        .order.amendOrderWrapper[oupd];
-        ]];
-
-    .order.updDepth[odbk]; 
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessDepthEvent   :{
-
+    .order.applyNewOrderBook[
+        state`price;
+        state`side;
+        tgt;
+        vqty]; 
     };
 
 
@@ -199,7 +233,7 @@ ProcessDepthEvent   :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessTrade        :{
+ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     nside: .order.NegSide[side];
 
     // Join the opposing side of the orderbook with the current agent orders
@@ -238,6 +272,7 @@ ProcessTrade        :{
     noffset: Clip[poffset-rp];
     nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
 
+    // Calculate the new vis qty
     nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
     nagentQty: flip PadM[
         raze'[(
@@ -248,45 +283,47 @@ ProcessTrade        :{
     nfilled: psize - nleaves; // New amount that is filled
     accdlts: pleaves - nleaves; // The new Account deltas
     vqty: {?[x>y;x;y]}'[mxshft;nvqty]; // The new visible quantity
+
+    // Derived the boolean representation of partially and 
+    // fully filled orders within the matrix of orders referenced
+    // above. They should not overlap.
+    partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]);
+    fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]);
     
-    flls:.order.deriveAccountFills[porderId;paccountId;pprice;nfilled;preduceOnly;state`accountId];
-    oupd:.order.deriveOrderUpdates[];
-    trds:.order.derivePublicTrades[];
-    odbk:.order.deriveNewOrderBook[];
-
-    if[count[flls]>0;[
-        .order.applyFillWrapper[flls];
-        .order.incSelfFillWrapper[flls];
-        ]];
-
-    if[count[oupd]>0;[
-        .order.amendOrderWrapper[oupd];
-        ]];
+    .order.applyAccountFills[
+        porderId;
+        paccountId;
+        pprice;
+        nfilled;
+        preduceOnly;
+        state`accountId];
     
-    if[count[trds[0]]>0;[
-        .order.applyFillWrapper[trds[0]];
-        ]];
+    .order.applyOrderUpdates[
+        pprice;
+        porderId;
+        noffset;
+        nleaves;
+        pstatus;
+        partfilled;
+        fullfilled];
 
-    if[count[trds[1]]>0;[
-        .order.addTradeWrapper[trds[1]];
-        ]];
+    .order.applyPublicTrades[
+        accountId;
+        instrumentId;
+        pleaves;
+        preduceOnly;
+        nagentQty;
+        rp;
+        side;
+        pprice];
 
-    .order.updDepth[odbk];
+    .order.applyNewOrderBook[
+        state`price;
+        state`side;
+        tgt;
+        vqty];
 
     };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessTradeEvent   :{
-
-    };
-
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
@@ -323,31 +360,7 @@ AmendOrder          :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessOrderEvent   :{
-
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
 CancelOrder         :{
-
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessCancelEvent   :{
 
     };
 
@@ -363,7 +376,7 @@ ProcessCancelEvent   :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ExecuteStop         :{[]
+ExecuteStop         :{[instrument;time;stop]
 
     };
 
@@ -375,6 +388,6 @@ ExecuteStop         :{[]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-UpdateMarkPrice     :{[]
-
+CheckStopOrders   :{[instrument;time]
+    ExecuteStop[instrument;time]'[?[`.order.OrderBook;.order.isActiveStop[];0b;()]];
     };

@@ -72,18 +72,6 @@ mandCols:();
 defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
-// Event creation utilities
-// -------------------------------------------------------------->
-
-AddAccountUpdateEvent  :{[time;account] // TODO convert to list instead of dict
-    // TODO check if value is null
-    :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;account];
-    };
-
-AddAllAccountsUpdatedEvents :{[time] // TODO convert to list instead of dict
-    :.global.AddEvent[time;`UPDATE;`ACCOUNT_UPDATE;()]; // TODO get all for account
-    };
-
 // Account CRUD Logic
 // -------------------------------------------------------------->
 / q.account)allCols!(enlist ["b"$not[null[account[allCols]]];((count allCols)-7)#0N;defaults[]])[2]
@@ -112,13 +100,6 @@ NewAccount :{[account;time]
 OrderLoss:{(sum[x`openSellLoss`openBuyLoss] | 0)};
 Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
 
-// Funding Application
-// -------------------------------------------------------------->
-
-ApplyFunding       :{[fundingRate;nextFundingRate;nextFundingTime;time] // TODO convert to cnt (cntPosMrg)
-    
-    :.account.AddAllAccountsUpdatedEvents[time];
-    };
 
 // Balance Management
 // -------------------------------------------------------------->
@@ -250,36 +231,14 @@ dcCnt   :{`long(x*y)};
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
-// TODO make global enums file
-// TOD7,776e+6/1000
-// TODO make simpler
-// TODO update applicable fee when neccessary // TODO convert accountId/instrumentId to dictionary
-// Apply fill is only used from within ProcessTrade and as such should assume that multipliers are correct
-ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price; qty]
-    qty:abs[qty];
-
-    // TODO if is maker reduce order margin here!
-    // TODO fill cannot occur when BOTH inventory is open
-
-    // Validation
-    // ---------------------------------------------------------------------------------------->
-
-    if[null accountId; :.event.AddFailure[time;`INVALID_ACCOUNTID;"accountId is null"]];
-    if[not(accountId in key .account.Account);
-        :.event.AddFailure[time;`INVALID_ACCOUNTID;"An account with the id:",string[accountId]," could not be found"]];
-
-    if[null instrumentId; :.event.AddFailure[time;`INVALID_INSTRUMENTID;"instrumentId is null"]];
-    if[not(instrumentId in key .instrument.Instrument);
-        :.event.AddFailure[time;`INVALID_INSTRUMENTID;"An instrument with the id:",string[instrumentId]," could not be found"]];
-
-    acc:.account.Account@accountId;
-    ins:.instrument.Instrument@instrumentId;
+ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qty]
 
     // Common derivations
     fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
     cost:qty*fee;
     markprice:ins[`markPrice];
 
+    // preprocessing values based on instrument?
 
     // TODO if oi exists
 
@@ -294,9 +253,6 @@ ApplyFill     :{[accountId; instrumentId; side; time; reduceOnly; isMaker; price
 
 GetInsolvent    :{[select from x where available<maintMarginReq]};
 
-TakeOverPosition :{
-
-    };
 
 // UpdateMarkPrice
 // -------------------------------------------------------------->

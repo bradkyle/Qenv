@@ -64,7 +64,7 @@ UpdateMarkPrice :{[event]
     .order.UpdateMarkPrice[];
 
     // Apply liquidations
-    .liquidation.Liquidate[ins;time]'.account.GetInsolvent[];
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
     
     };
 
