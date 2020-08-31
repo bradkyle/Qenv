@@ -1,4 +1,4 @@
-\d .adapter
+\d .pipe.adapter
 \l state.q
 \l util.q
 // Adapters
