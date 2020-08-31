@@ -6,6 +6,8 @@ groupBy: enlist[`accountId]!enlist `accountId;
 // TODO sort by time?
 InsertResultantEvents :{
     {
+        k:x`kind;
+        r:x`datum;
         $[
             k=0;[.state.DepthEventHistory,:r];
             k=1;[.state.TradeEventHistory,:r];
@@ -19,5 +21,5 @@ InsertResultantEvents :{
             k=9;[.state.PriceLimitHistory,:r];
             k=10;[.state.SettlementHistory,:r];
         ];
-    }'[0!(`kind xgroup events)];
+    }'[0!(`kind xgroup x)];
 }
