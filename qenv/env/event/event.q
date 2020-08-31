@@ -133,66 +133,70 @@ POSITIONSIDE    : (0;1;2;3;4);
 /*******************************************************
 / Ingress event Construction
 
-MakePlaceOrderEvent   :{[depth]
+MakePlaceOrderEvent     :{[order;time]
 
         };
 
-MakePlaceBatchEvent   :{[depth]
+MakePlaceBatchEvent     :{[orders;time]
 
         };
 
-MakeCancelOrderEvent   :{[depth]
+MakeCancelOrderEvent    :{[order;time]
 
         };
 
-MakeCancelBatchEvent   :{[depth]
+MakeCancelBatchEvent    :{[orders;time]
 
         };
 
-MakeCancelAllEvent      :{[depth]
+MakeCancelAllEvent      :{[order;time]
 
         };
 
-MakeAmendOrderEvent   :{[depth]
+MakeAmendOrderEvent     :{[order;time]
 
         };
 
-MakeWithdrawEvent :{[order]
+MakeWithdrawEvent       :{[withdraw;time]
 
         };
 
-MakeDepositEvent  :{[account]
+MakeDepositEvent        :{[deposit;time]
 
         };
 
 /*******************************************************
 / MarketData event Construction
 
-MakeDepthEvent   :{[depth]
+MakeDepthEvent          :{[depth;time]
 
         };
 
-MakeTradeEvent   :{[trade]
+MakeTradeEvent          :{[trade;time]
 
         };
 
-MakeMarkEvent      :{[mark]
+MakeMarkEvent           :{[mark;time]
 
         };
 
-MakeFundingEvent    :{[funding]
+MakeFundingEvent        :{[funding;time]
 
         };
 
-MakeOrderEvent   :{[order]
+MakeOrderUpdateEvent    :{[order;time]
 
         };
 
-MakeAccountEvent  :{[account]
+MakeNewOrderEvent       :{[order;time]
 
         };
 
-MakeFailureEvent   :{[failure]
+MakeAccountEvent        :{[account;time]
+
+        };
+
+MakeFailureEvent        :{[failure;time]
 
         };
 

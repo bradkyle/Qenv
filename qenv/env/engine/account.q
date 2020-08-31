@@ -40,8 +40,8 @@ Account: (
             openSellQty         : `long$();
             openLoss            : `long$();
             orderMargin         : `long$();
-            marginType          : `.account.MARGINTYPE$();
-            positionType        : `.account.POSITIONTYPE$();
+            marginType          : `long$();
+            positionType        : `long$();
             depositAmount       : `long$();
             depositCount        : `long$();
             withdrawAmount      : `long$();
@@ -69,7 +69,7 @@ Account: (
             monthVolume         : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,`CROSS,`COMBINED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Account CRUD Logic
@@ -170,7 +170,7 @@ POSITIONSIDE   : `LONG`SHORT`BOTH;
 Inventory: (
     [
         accountId    :  `.account.Account$();
-        side         :  `.account.POSITIONSIDE$()
+        side         :  `long$()
     ]
     amt                      :  `long$();
     avgPrice                 :  `long$();
