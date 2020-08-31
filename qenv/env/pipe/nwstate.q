@@ -7,7 +7,7 @@ InsertResultantEvents :{
         k:x`kind;
         r:x`datum;
         $[
-            k=0;[.state.DepthEventHistory,:r];
+            k=0;[.state.DepthEventHistory,:r]; // TODO fix ordering
             k=1;[.state.TradeEventHistory,:r];
             k=2;[.state.MarkEventHistory,:r];
             k=3;[.state.SettlementHistory,:r];

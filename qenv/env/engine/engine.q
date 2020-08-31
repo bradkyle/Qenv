@@ -61,7 +61,6 @@ UpdateMarkPrice :{[event]
 
     // Apply liquidations
     .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
-    
     };
 
 / Public Event Processing logic (Writes)
