@@ -218,10 +218,9 @@ MakeFailureEvent        :{[failure;time]
 // Acts like a kafka queue/pubsub.
 eventCount:0;
 Events  :( // TODO add failure to table
-    [eventId    :`long$()]
     time        :`datetime$();
-    cmd         :`.event.EVENTCMD$();
-    kind        :`.event.EVENTKIND$();
+    cmd         :`long$();
+    kind        :`long$();
     datum       :());
 
 // Adds an event to the Events table.
@@ -231,7 +230,7 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
         / if[not] //validate datum 
-        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:cmd;kind:kind;datum:datum);
+        .event.Events,:(time:time;cmd:cmd;kind:kind;datum:datum);
         };
 
 // Creates an action i.e. a mapping between
@@ -241,7 +240,7 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
 AddFailure   : {[time;kind;msg]
         if[not (type time)~15h; 'INVALID_TIME]; //TODO fix
         if[not (kind in .event.ERRCODES); 'INVALID_ERRORCODE];
-        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:3;kind:15;datum:msg);
+        .event.Events,:(time:time;cmd:3;kind:15;datum:datum);
         };
 
 // Retrieves all events from the Events table and then
