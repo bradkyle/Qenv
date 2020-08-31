@@ -40,7 +40,7 @@ CurrentAccount: `accountId xkey .state.AccountEventHistory;
 // positions (Inventory) each agent has held and
 // subsequently provides agent specific details
 // therin
-InventoryEventHistory: (
+InventoryEventHistory: ( // TODO change side to long 1,2,3
     [accountId:  `long$();side: `symbol$();time : `datetime$()]
     amt                 :  `long$();
     realizedPnl         :  `long$();
@@ -100,8 +100,8 @@ OrderEventHistory: (
         time:`datetime$()
     ]
     accountId       :   `long$();
-    side            :   `symbol$();
-    otype           :   `symbol$();
+    side            :   `symbol$(); // TODO change to long
+    otype           :   `symbol$(); // TODO change to long
     price           :   `long$();
     leaves          :   `long$();
     filled          :   `long$();
@@ -109,8 +109,8 @@ OrderEventHistory: (
     stopprice       :   `long$(); / multiply by 100
     status          :   `symbol$();
     isClose         :   `boolean$();
-    trigger         :   `symbol$();
-    execInst        :   `symbol$());
+    trigger         :   `symbol$(); // TODO change to long
+    execInst        :   `symbol$()); // TODO change to long
 
 ordCols:cols .state.OrderEventHistory;
 CurrentOrders: `orderId xkey .state.OrderEventHistory;
@@ -145,7 +145,7 @@ genNextClOrdId  :{.state.clOrdCount+:1;:.state.clOrdCount};
 // the agent.
 DepthEventHistory: (
     [price:`long$();time:`datetime$()]
-    side:`symbol$();
+    side:`symbol$(); // change side to long
     size:`int$());
 depthCols:cols DepthEventHistory;
 CurrentDepth: `price xkey .state.DepthEventHistory;
@@ -170,7 +170,7 @@ TradeEventHistory: (
     [tid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
-    side            :   `symbol$());
+    side            :   `symbol$()); // TODO change side to long
 tradeCols:cols TradeEventHistory;
 
 // Maintains a set of historic trade events
@@ -197,7 +197,7 @@ LiquidationEventHistory: (
     [liqid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
-    side            :   `symbol$());
+    side            :   `symbol$()); // todo change side to long
 liquidationCols:cols LiquidationEventHistory;
 
 // Maintains a set of historic trade events
