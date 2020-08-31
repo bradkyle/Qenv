@@ -1,5 +1,7 @@
 \l qtpy.q
 
+// USED TO LOAD FROM 
+
 p:"/home/kx/qenv/lcl/mnt/lcl/";
 // read by day, sid
 writePath:{h:hopen `:./db/par.txt;neg[h] x;hclose h;show x;};

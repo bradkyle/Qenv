@@ -5,6 +5,7 @@ sizeMultiplier:1;
 priceMultiplier:100;
 
 // DEPTHS
+// TODO detect hidden/iceberg orders
 bookParser:{[rows]
     derive:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time

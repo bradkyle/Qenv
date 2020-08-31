@@ -1,5 +1,7 @@
 \d .parser
 
+// TODO documentation and annotation
+
 persist:    {[events; dest]
     events:`utc_day xgroup update utc_day:`date$time from events;
     {[dest;events]
