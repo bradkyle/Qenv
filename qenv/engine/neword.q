@@ -241,15 +241,15 @@ ProcessTrade        :{
     nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
     nagentQty: flip PadM[
         raze'[(
-            0^poffset[;0];
-            Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]];
+            0^poffset[;0]; // Use the first offset as the first non agent qty
+            Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]]; //
             Clip[qty-mxshft]
         )]];
-    nfilled: psize - nleaves;
-    accdlts: pleaves - nleaves;
-    vqty: {?[x>y;x;y]}'[mxshft;nvqty];
+    nfilled: psize - nleaves; // New amount that is filled
+    accdlts: pleaves - nleaves; // The new Account deltas
+    vqty: {?[x>y;x;y]}'[mxshft;nvqty]; // The new visible quantity
     
-    flls:.order.deriveAccountFills[];
+    flls:.order.deriveAccountFills[porderId;paccountId;pprice;nfilled;preduceOnly;state`accountId];
     oupd:.order.deriveOrderUpdates[];
     trds:.order.derivePublicTrades[];
     odbk:.order.deriveNewOrderBook[];
