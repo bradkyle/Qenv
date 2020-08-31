@@ -42,18 +42,6 @@ Master  :{:(.engine.Engine@0)}
 // of order being placed due to overload etc.
 // TODO check within max and min orders, run validation etc.
 
-/ Public REST request handling functionality (Reads)
-/ -------------------------------------------------------------------->
-
-
-/ Private REST request handling functionality (Reads)
-/ -------------------------------------------------------------------->
-
-// get orders
-// get account
-// 
-
-
 / Engine specific logic
 / -------------------------------------------------------------------->
 
@@ -104,6 +92,7 @@ ProcessEvents :{ // WRITE EVENTS
             'INVALID_EVENT_KIND
         ];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch];
+    // TODO pop events
 }
 
 / Main Setup Function
