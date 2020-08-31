@@ -60,7 +60,7 @@ CntToMrg    : {[qty;price;faceValue;doAbs]
         :0];
         };
 
-	
+// Pivots a given table 
 Piv:{[t;k;p;v]
     f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
     v:(),v; 
@@ -77,4 +77,10 @@ Piv:{[t;k;p;v]
         c
     }[I[;0];I J;J:where 1<>count'[I:value G]]/:\:[t v;value F]};
 
-
+// Inc and ret
+IncRet:{
+    $[type[x]=11h;[
+        v:get[x]+1;
+        (x set v);get[v];
+    ];[x+:1;x]];
+    };
