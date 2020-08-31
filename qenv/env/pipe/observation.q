@@ -1,5 +1,11 @@
 
-constructor:();
+/
+The observation module contains logic to construct observation construction
+functionality.
+\
+
+constructor : (`.event.INGRESSKIND$())!(); // TODO change to subset of supported types.
+
 /
 TODO
 OrderBook Features:
@@ -143,9 +149,15 @@ Feature Forecasters TODO iceberg detection!
     - SVN(bidsizes,asksizes,bidprices,askprices,high,
         low,open,close,volume,msize,hsize) -> midPrice;
 \
+
+
+Construct       :{[]
+
+    };
+
+
+
 GetObservations :{[]
     $[
 
-    ];
-
-    };
+    ]};
