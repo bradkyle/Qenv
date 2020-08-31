@@ -29,6 +29,7 @@ AccountEventHistory: (
     frozen              : `long$();
     maintMargin         : `long$());
 accountCols:cols .state.AccountEventHistory;
+CurrentAccount: 1!AccountEventHisory;
 
 // INVENTORY
 // ----------------------------------------------------------------------------------------------->
@@ -44,6 +45,7 @@ InventoryEventHistory: (
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
 inventoryCols:cols .state.InventoryEventHistory;
+CurrentInventory: 2!InventoryEventHisory;
 
 
 // Return all open positions for an account

@@ -1,5 +1,6 @@
 
 
+// Returns a subset(x) of a dictionary(y)'s values
 Filt: {x!y[x]};
 
 // Shortened enlist
