@@ -58,6 +58,8 @@ Last Trades Features:
     - last trades sizes
     - last trades sides (0=`SHORT; 1=`LONG)
 \
+buys:select[-5;<time] price, size from .state.TradeEventHistory where side=`BUY;
+sells:select[-5;<time] price, size from .state.TradeEventHistory where side=`SELL;
 
 /
 Mark Price Features
@@ -97,8 +99,8 @@ Inventory Features
 
 /
 Liquidation Features
-    - last unrealized Pnl
-    - last realizedPnl
+    - liquidation prices
+    - 
     - last avgPrice
 \
 

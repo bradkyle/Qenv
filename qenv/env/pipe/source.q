@@ -72,3 +72,6 @@ GenNextEpisode    :{
 
      .state.StepIndex: key .env.EventBatch;
     };
+
+
+// TODO make client such that this can be held in a seperate process with many simultaneous envs calling it
