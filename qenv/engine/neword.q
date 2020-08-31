@@ -82,6 +82,7 @@ addOrderDelWrapper    :{
 isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x);
+               (in;`side;y);
                (=;`otype;`.order.ORDERTYPE$`LIMIT))};
 
 
@@ -201,25 +202,49 @@ ProcessDepthEvent   :{
 ProcessTrade        :{
     nside: .order.NegSide[side];
 
-    poffset:PadM[offset];
-    psize:PadM[size];
-    pleaves:PadM[leaves];
-    preduceOnly:PadM[reduceOnly];
-    porderId:PadM[orderId];
-    paccountId:PadM[accountId];
-    pinstrumentId:PadM[instrumentId];
-    pprice:PadM[oprice];
-    pstatus:PadM[status];
-    maxN:max count'[offset];
-    numLvls:count[offset];
-    nshft:pleaves+poffset;
+    // Join the opposing side of the orderbook with the current agent orders
+    // at that level, creating the trade effected state
+    state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()];
+       ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
 
+    // TODO move into state
+    pqty: qty+(0^oqty);
+    thresh:sums qty;
+    rp:?[pqty<fillQty;pqty;fillQty]^((thresh-prev[thresh])-(thresh-fillQty));
+    tgt:qty-rp;
+
+    // Order differently based on price
+    state:$[x=`BUY;`price xasc y;`price xdesc y]; // TODO move into above
+
+    // Pad state into a matrix
+    // for faster operations
+    poffset:PadM[state`offset]; // TODO move into one invocation
+    psize:PadM[state`size];
+    pleaves:PadM[state`leaves];
+    preduceOnly:PadM[state`reduceOnly];
+    porderId:PadM[state`orderId];
+    paccountId:PadM[state`accountId];
+    pinstrumentId:PadM[state`instrumentId];
+    pprice:PadM[state`oprice];
+    pstatus:PadM[state`status];
+
+    // Useful counts 
+    maxN:max count'[poffset];
+    numLvls:count[poffset];
+
+    // Calculate new shifts and max shifts
+    nshft:pleaves+poffset;
     mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
     noffset: Clip[poffset-rp];
     nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
 
     nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
-    nagentQty: flip PadM[raze'[(0^poffset[;0];Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]];Clip[qty-mxshft])]];
+    nagentQty: flip PadM[
+        raze'[(
+            0^poffset[;0];
+            Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]];
+            Clip[qty-mxshft]
+        )]];
     nfilled: psize - nleaves;
     accdlts: pleaves - nleaves;
     vqty: {?[x>y;x;y]}'[mxshft;nvqty];

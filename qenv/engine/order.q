@@ -141,7 +141,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
     // TODO do validation on nxt;
 
     // TODO remove reduncancy
-    odrs:?[.order.Order;.order.isActiveLimit[nxt[`price]];0b;()];
+    odrs:?[.order.Order;.order.isActiveLimit[nxt[`price];()];0b;()];
     $[(count[odrs]>0);
       [
           // SHOULD COMBINE INTERNAL REPRESENTATION OF DEPTH AND AGENT ORDER AMOUNTS.
