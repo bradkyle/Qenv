@@ -23,7 +23,8 @@ EVENTKIND:(
         12; // INSTRUMENT
         13; // EXECUTION
         14; // LEVERAGE
-        15 // SIGNAL
+        15; // ERROR 
+        16 // SIGNAL
         );
 
 / `NEW:0,`UPDATE:1,`DELETE:2,`FAILED:3
@@ -127,8 +128,6 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
         $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
-        cmd:(`.event.EVENTCMD$cmd);
-        kind:(`.event.EVENTKIND$kind);
         / if[not] //validate datum 
         `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:cmd;kind:kind;datum:datum);
         };
@@ -139,8 +138,8 @@ AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
 // that conforms to a generaliseable dictionary 
 AddFailure   : {[time;kind;msg]
         if[not (type time)~15h; 'INVALID_TIME]; //TODO fix
-        if[not (kind in .event.ERRORKIND); 'INVALID_ERRORKIND];
-        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:`FAILED;kind:`FAILED_REQUEST;datum:msg);
+        if[not (kind in .event.ERRCODES); 'INVALID_ERRORCODE];
+        `.event.Events upsert (eventId:(eventCount+:1);time:time;cmd:3;kind:15;datum:msg);
         };
 
 // Retrieves all events from the Events table and then

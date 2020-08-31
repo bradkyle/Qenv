@@ -71,88 +71,26 @@ UpdateMarkPrice :{[event]
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-eventEngine : (`.event.INGRESSKIND$())!(); // TODO change to subset of supported types.
-
-eventEngine[`DEPTH]:   {[event]
-    .logger.Debug["new depth"][event];
-    .order.ProcessDepthUpdate[event];
-    };
-
-eventEngine[`TRADE] :   {[event]
-    .logger.Debug["new trade"][event];
-    .order.ProcessTradeEvent[event];
-    };
-
-eventEngine[`FUNDING] :   {[event]
-    .logger.Debug["new funding"][event];
-    .account.ApplyFunding[event];
-    };
-
-eventEngine[`MARK] :   {[event]
-    .logger.Debug["new mark price"][event];
-    .engine.UpdateMarkPrice[event];
-    };
-
-eventEngine[`SETTLEMENT] :   {[event]
-    .logger.Debug["new settlement"][event];
-    .order.DoSettlement[event];
-    };
-
-eventEngine[`PRICERANGE] :   {[event]
-    .logger.Debug["new price range"][event];
-    .order.UpdatePriceRange[event];
-    };
-
-/ Private Event Processing logic (Writes)
-/ -------------------------------------------------------------------->
-
-eventEngine[`DEPOSIT] :   {[event]
-    .logger.Debug["new deposit"][event];
-    .account.ProcessDeposit[event];
-    };
-
-eventEngine[`WITHDRAW] :   {[event]
-    .logger.Debug["new withdrawal"][event];
-    .account.ProcessWithdraw[event];
-    };
-
-eventEngine[`PLACE_ORDER] :   {[event]
-    .logger.Debug["new place order"][event];
-    .order.NewOrder[event[`datum];event[`time]]
-    };
-
-eventEngine[`PLACE_BATCH_ORDER] :   {[event]
-    .logger.Debug["new place batch order"][event];
-    .order.NewOrderBatch[event[`datum];event[`time]]
-    };
-//
-eventEngine[`CANCEL_ORDER] :   {[event]
-    .logger.Debug["new cancel order"][event];
-    .order.CancelOrder[event[`datum];event[`time]]
-    };
-
-eventEngine[`CANCEL_BATCH_ORDER] :   {[event]
-    .logger.Debug["new cancel batch order"][event];
-    .order.CancelOrderBatch[event[`datum];event[`time]]
-    };
-
-eventEngine[`CANCEL_ALL_ORDERS] :   {[event]
-    .logger.Debug["new cancel all orders"][event];
-    .order.CancelOrder[event[`datum];event[`time]]
-    };
-
-// Amend an existing order
-eventEngine[`AMEND_ORDER] :   {[event]
-    .logger.Debug["new amend order"][event];
-    .order.AmendOrder[event[`datum];event[`time]];
-    };
-
-// Amend a batch of existing orders
-eventEngine[`AMEND_BATCH_ORDER] :   {[event]
-    .logger.Debug["new amend batch order"][event];
-    .order.AmendOrderBatch[event[`datum];event[`time]];
-    };
-
+EventIngress :{
+    {
+        k:x`kind;
+        r:x`datum;
+        $[
+            k=0;  [];
+            k=1;  [];
+            k=2;  [];
+            k=3;  [];
+            k=4;  [];
+            k=5;  [];
+            k=6;  [];
+            k=7;  [];
+            k=8;  [];
+            k=9;  [];
+            k=10; [];
+            'INVALID_EVENT_KIND
+        ];
+    }'[0!(`kind xgroup x)];
+}
 
 / Main call/execution functions
 / -------------------------------------------------------------------->
