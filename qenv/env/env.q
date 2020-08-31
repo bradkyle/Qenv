@@ -161,35 +161,8 @@ GenNextEpisode    :{
 // ids have been included into the ids parameter
 // TODO validation
 Reset    :{[config]
-    // Env Config
-        // Create accounts
-        // Create inventory
-        // Create Instrument
-        // Set engine instrument
-    / .engine.Config[];
-
-    // Agent Config
-    / env:.env.Env@0;
-
-    // - reward kind, 
-    // feature kind, 
-    // adapter kind, 
-    // encouragement, 
-    // lookback size
-    // source of events
-    // order size
-    // min inventory
-    // max inventory
-    // training episodes (roughly 8X training sample size)
-    // training sample size
-    // testing sample size
-    // memory size
-    // 
-    // TODO log config to analytics 
-
+    
     .state.Reset[config];
-    // TODO randomization of environment config
-
     .engine.Reset[config]; 
 
     // Loads the next set of events from 
@@ -200,13 +173,6 @@ Reset    :{[config]
     nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive from config
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
-
-    // TODO randomize
-        // order size
-        // offset time
-        // balance 
-        // withdraws 
-        // 
 
     aids:(.env.Env@0)`accountIds;
     obs:.state.GetObservations[aids; 100; 0];

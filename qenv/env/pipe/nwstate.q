@@ -3,8 +3,14 @@
 groupBy: enlist[`accountId]!enlist `accountId;
 `balance`available`frozen`m
 
-/
+InsertResultantEvents :{
+    {
+        
+    }'[0!(`kind xgroup events)];
+}
 
+/
+TODO
 OrderBook Features:
     - midprice
     - bidsize list
@@ -16,6 +22,10 @@ OrderBook Features:
     - best ask
     - bidsize fracs
     - asksize fracs
+    - bidsize differ 
+    - asksize differ
+    - bidsize differ fracs
+    - asksize differ fracs
 
 Candlestick Features
     - num (frac/log/nil)

@@ -21,46 +21,10 @@ the current environment agent state to the desired
 environment agent state.
 \
 
-// 
-// TODO implement macro actions!
-// - Hidden Orders
-// - Iceberg Orders
-// - sell 1, sell 2, sell 3, buy 3, buy 1, buy 2, exit position, etc. 
-// action tree
-
 // TODO create functionality for requesting state when there is none
 
 // Event Creation Utilities
 // --------------------------------------------------->
-
-MakeActionEvent :{[kind;time;datum]
-    :`time`intime`kind`cmd`datum!(time;time;kind;`NEW;datum);
-    };
-
-
-MakeActionEventC :{[kind;cmd;time;datum]
-    :`time`intime`kind`cmd`datum!(time;time;kind;cmd;datum);
-    };
-
-// Creates a simple market order event for the
-// respective agent
-createMarketOrderEvent      :{[accountId;time;size;side]
-    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId;side;size)];
-    };
-
-// Creates an event that cancels all open orders for
-// a given agent.
-createCancelAllOrdersEvent  :{[accountId;time]
-    :MakeActionEvent[time;`CANCEL_ALL_ORDERS;(accountId)];
-    };
-
-createDepositEvent  :{[accountId;amt;time]
-    :MakeActionEvent[time;`DEPOSIT;(accountId; amt)];
-    };
-
-createWithdrawEvent  :{[accountId;amt;time]
-    :MakeActionEvent[time;`WITHDRAW;(accountId; amt)];
-    };
 
 // Generates a set of events that represent
 // the placement of orders at a set of levels
@@ -76,7 +40,7 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
         `LIMIT;
         size;
         reduceOnly);
-    :MakeActionEvent[`ORDER;time;o];
+    :.event.MakePlaceOrderEvent[time;o];
     };
 
 
