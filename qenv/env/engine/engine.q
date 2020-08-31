@@ -57,6 +57,14 @@ Master  :{:(.engine.Engine@0)}
 / Engine specific logic
 / -------------------------------------------------------------------->
 
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
 UpdateMarkPrice :{[event]
     instrumentId:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
@@ -71,46 +79,44 @@ UpdateMarkPrice :{[event]
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-ProcessEvents :{
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessEvents :{ // WRITE EVENTS
     {
         k:x`kind;
         r:x`datum;
         $[
-            k=0;  [];
-            k=1;  [];
-            k=2;  [];
-            k=3;  [];
-            k=4;  [];
-            k=5;  [];
-            k=6;  [];
-            k=7;  [];
-            k=8;  [];
-            k=9;  [];
-            k=10; [];
+            k=0;  []; // DEPTH
+            k=1;  []; // TRADE
+            k=2;  []; // MARK
+            k=3;  []; // SETTLEMENT
+            k=4;  []; // FUNDING
+            k=5;  []; // LIQUIDATION
+            k=8;  []; // ORDER
+            k=9;  []; // PRICELIMIT
+            k=10; []; // INSTRUMENT
             'INVALID_EVENT_KIND
         ];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch];
 }
 
-/ Configuration
-/ -------------------------------------------------------------------->
-
-NewAccountFromConfig    :{[config]
-    a:.account.NewAccount[config[`account]];
-
-    // TODO set accountId
-    .account.NewInventory[config[`shortInventory]];
-    .account.NewInventory[config[`longInventory]];
-    .account.NewInventory[config[`bothInventory]];
-    };
-
-NewInstrumentFromConfig :{[config]
-    
-    };
-
 / Main Setup Function
 / -------------------------------------------------------------------->
 
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
 Info    :{[aids]
         :(
             select from .account.Account where accountId in aids;
@@ -124,6 +130,12 @@ Info    :{[aids]
 // Resets engine state 
 // Sets up the engine, active instrument,
 // Initializes agent and respective inventory config
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
 Reset   :{[config]
     delete from `.order.Order;
     delete from `.order.OrderBook;
@@ -138,7 +150,12 @@ Reset   :{[config]
     
     // Instantiate the given set 
     // of accounts.
-    .engine.NewAccountFromConfig'[config[`accounts]];
+    a:.account.NewAccount[config[`account]];
+
+    // TODO set accountId
+    .account.NewInventory[config[`shortInventory]];
+    .account.NewInventory[config[`longInventory]];
+    .account.NewInventory[config[`bothInventory]];
 
     // TODO update engine obs?
 
