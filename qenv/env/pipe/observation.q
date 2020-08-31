@@ -117,12 +117,12 @@ Signal Features (External)
     - coinbase last price
 
 Feature Forecasters TODO iceberg detection!
-    - XGBOOST(bidsizes,asksizes,bidprices,askprices) -> midPrice
+    - XGBOOST(bidsizes,asksizes,bidprices,askprices) -> midPrice;
     - XGBOOST(bidsizes,asksizes,bidprices,askprices,high,
-        low,open,close,volume,msize,hsize) -> midPrice
-    - SVN(bidsizes,asksizes,bidprices,askprices) -> midPrice
+        low,open,close,volume,msize,hsize) -> midPrice;
+    - SVN(bidsizes,asksizes,bidprices,askprices) -> midPrice;
     - SVN(bidsizes,asksizes,bidprices,askprices,high,
-        low,open,close,volume,msize,hsize) -> midPrice
+        low,open,close,volume,msize,hsize) -> midPrice;
 
 \
 GetObservations :{[]
