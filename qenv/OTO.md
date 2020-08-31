@@ -93,6 +93,9 @@ Order size (ω) 1000
 Min inventory (min Inv) -10000
 Max inventory (max Inv) 10000
 
+ADL Priority Deleveraging Ranking
+LOAD shedding, Deleverage priority Queue, 
+
 No problem, I just need to find a solution
 Specifically with respect to the article, the open loss is incurred as the difference 
 between the current mark price and the limit price of the orders

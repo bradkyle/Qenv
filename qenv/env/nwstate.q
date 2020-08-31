@@ -14,6 +14,8 @@ OrderBook Features:
     - spread
     - best bid
     - best ask
+    - bidsize fracs
+    - asksize fracs
 
 Candlestick Features
     - num (frac/log/nil)
