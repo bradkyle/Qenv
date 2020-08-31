@@ -253,7 +253,7 @@ InsertResultantEvents   :{[events]
           ];
           k=`SIGNAL;[
             `.state.SignalEventHistory upsert (
-                [sigid:d[;sigid];time:t]
+                [sigid:d[;`sigid];time:t]
                 sigvalue:d[;`sigvalue]);
           ];
           k=`FUNDING;[

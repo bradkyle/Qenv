@@ -126,7 +126,7 @@ genRandomState      :{[x;y;z] // TODO add max time
             )]);
 
             sg:`time`intime`kind`cmd`datum!(t x;t x;x#`SIGNAL;x#`UPDATE;flip[cols[.state.SignalEventHistory]!(
-                rand[30];
+                rand'[x#30];
                 t x;
                 rand'[(`float$(sz x))]
             )]);
