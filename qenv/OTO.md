@@ -45,6 +45,9 @@ shuffeling accounts for larger simulations i.e. create 1000 accounts and shuffle
 Robin Hood hands over stolen goods to the poor man
 Man: Wow thank you robin hood, now i'm rich!
 
+Because Robinhood hated rich people
+Because Robinhood never made anyone rich
+
 Robin: *squints* you're what?
 
 The fattest knight at King Arthur’s round table was
@@ -109,8 +112,46 @@ This article is also insufficient. i.e. the available margin isn't only affected
 margin requirements of the open orders, it is also affected by the sum of the loss of the 
 unfavorably placed orders. How does one calculate this loss?
 
+REKT
+DD = double dicking, pretty much means go all in
+Both wrong. It's Deep Dicking -- as in, balls deep.
+GUH
+
+Gain Porn / Loss Porn – posts which chronicle major successes and losses.
+Automatic gain/loss porn
+Gay Bears 🌈🐻/ Gay Bulls 🌈🐂 – bears and bulls are investors who have a bearish (stocks will go down) or bullish (stocks will go up) market outlook. On /r/wallstreetbets, bears and bulls are commonly referred to as gay bears and gay bulls.
+
+todays losers, winners
 Stonks, Bear, Bull, Bagholder, AnkleBiter, Big Uglies, Cockroach Theory, 
 BearIncarnate
+"It literally can't go tits up" – a phrase said by fabled /r/wallstreetbets user 1RONYMAN before it all went tits up and he lost nearly $58,000 on a single trade.
+JPOW – Jerome Hayden Powell, the Chair of the US Federal Reserve.
+Robinhood – a commission-free broker popular among /r/wallstreetbets users.
+POW
+YOLO
+TENDIES
+bull rider
+texan
+spaniard (are you not entertained)
+elon musk
+musketeer
+make stonks great again
+ironyman
+wolf of wallstreet terms
+warren buffet, buy the dip fag
+shrekt
+robinhood risk management, you think this is funny
+my mf stimulus check
+ironyman
+
+AMD CEO Lisa Su – the CEO of multinational company Advanced Micro Devices, Inc. (AMD). In /r/wallstreetbets, Lisa Su acquired a status of a cult personality, a mascot and even a waifu, with memes and copypastas about her being posted, partly due to $AMD being a popular stock both as a meme and a trading choice.
+
+$BECKY – a set of securities which are associated with goods and services in demand among white college girls, namely $ETSY (Etsy), $LULU (Lululemon Athletica), $ULTA (Ulta Beauty, $GOOS (Canada Goos), $SBUX (Starbucks).
+
+Diamond Hands 💎✋ / Paper Hands – Diamond Hands refers to traders who believe in the eventual profitability of their stocks and securities and keep holding them while their value drops below the initial. Paper Hands refer to those traders who either sell their securities too early before the profit is maximized.
+https://www.dailydot.com/debug/wall-street-bets-reddit-
+
+Disney / The Mouse – similar to AMD, Disney, often referred to as "the mouse," is a popular stock in /r/wallstreetbets, both as a meme and a trading choice.
 
 1. Ankle biter: This phrase — used outside the world of finance to describe small children who are so little that they, metaphorically at least, barely reach an adult's ankles — can also be used to describe a small cap investment. Small cap just means a company with a relatively low value, or market capitalization — usually somewhere between $300 million and $2 billion.
 

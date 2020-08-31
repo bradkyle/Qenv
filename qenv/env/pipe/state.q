@@ -4,6 +4,7 @@
 \d .state
 
 // State specifically represents a set of events that are derived from the engine
+// TODO max history size
 
 // TODO house state in its own process
 // TODO prioritized experience replay

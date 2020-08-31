@@ -125,6 +125,12 @@ genRandomState      :{[x;y;z] // TODO add max time
                 x?`BUY`SELL
             )]);
 
+            lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[cols[.state.SignalEventHistory]!(
+                til[x];
+                t x;
+                rand (`float$(sz x))
+            )]);
+
             x:(
                 flip[tds],
                 flip[dpth],
