@@ -91,7 +91,7 @@ ProcessEvents :{ // WRITE EVENTS
             k=10; []; // INSTRUMENT
             'INVALID_EVENT_KIND
         ];
-    }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch];
+    }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
     // TODO pop events
 }
 
