@@ -231,6 +231,7 @@ dcCnt   :{`long(x*y)};
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
+// Convert to matrix/batch/array oriented
 ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qty]
 
     // Common derivations
