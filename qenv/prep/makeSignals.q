@@ -90,31 +90,42 @@ Signal Features (External)
     - okex short frac
     - tweet sentiment
     - okex midprice
-    - binance bidprice
+    - binance 
+        - mid price
+        - last price
+        - avg price
+        - avg size
+        - skew
     - coinbase 
         - mid price
         - last price
         - avg price
         - avg size
+        - skew
     - huobi futures weekly
         - last price
         - avg price
         - mid price
         - avg size
+        - skew
     - huobi futures biweekly
         - last price
         - avg price
         - mid price
         - avg size
+        - skew
     - huobi futures quarterly
         - last price
         - avg price
         - mid price
         - avg size (buy/sell)
+        - skew
     - huobi futures biquarterly
         - last price
         - avg price
         - mid price
+        - skew
+        - ratio
 
 
 / signal:select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory;
