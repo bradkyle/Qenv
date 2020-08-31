@@ -462,6 +462,8 @@ GetDones    :{[aids; minBalance]
 // Reset State
 // =====================================================================================>
 
+// TODO persist episode state
+
 ResetAgents   :{[aids]
     delete from `.state.AccountEventHistory where accountId in aids;
     delete from `.state.InventoryEventHistory where accountId in aids;
@@ -470,7 +472,7 @@ ResetAgents   :{[aids]
     delete from `.state.FeatureBuffer where accountId in aids;
     };
 
-Reset :{[]
+Reset :{[config]
     delete from `.state.AccountEventHistory;
     delete from `.state.InventoryEventHistory;
     delete from `.state.OrderEventHistory;

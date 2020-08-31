@@ -7,25 +7,26 @@ functionality.
 c : (`long$())!(); // TODO change to subset of supported types.
 
 /
-TODO
 OrderBook Features:
-    - midprice
-    - bestbid
-    - bestask
-    - bidsize list
-    - bidprice list
-    - asksize list
-    - askprice list
-    - spread
-    - best bid
-    - best ask
-    - bidsize fracs
-    - asksize fracs
-    - bidsize differ 
-    - asksize differ
-    - bidsize differ fracs
-    - asksize differ fracs
+    - bestbid                            
+    - bestask                            
+    - midprice                             
+    - bidsizelist                            
+    - bidpricelist                            
+    - asksizelist                            
+    - askpricelist                            
+    - spread                            
+    - bestbid                            
+    - bestask                            
+    - bidsizefracs                            
+    - asksizefracs                            
+    - bidsizediffer                             
+    - asksizediffer                            
+    - bidsizedifferfracs                            
+    - asksizedifferfracs                            
 \
+
+
 
 /
 Candlestick/Trade Features
