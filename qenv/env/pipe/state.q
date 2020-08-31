@@ -251,6 +251,11 @@ InsertResultantEvents   :{[events]
                 [time:t]
                 markprice:d[;`markprice]);
           ];
+          k=`SIGNAL;[
+            `.state.SignalEventHistory upsert (
+                [sigid:d[;sigid];time:t]
+                sigvalue:d[;`sigvalue]);
+          ];
           k=`FUNDING;[
             `.state.FundingEventHistory upsert (
                 [time:t]

@@ -125,10 +125,10 @@ genRandomState      :{[x;y;z] // TODO add max time
                 x?`BUY`SELL
             )]);
 
-            lq:`time`intime`kind`cmd`datum!(t x;t x;x#`LIQUIDATION;x#`NEW;flip[cols[.state.SignalEventHistory]!(
-                til[x];
+            sg:`time`intime`kind`cmd`datum!(t x;t x;x#`SIGNAL;x#`UPDATE;flip[cols[.state.SignalEventHistory]!(
+                rand[30];
                 t x;
-                rand (`float$(sz x))
+                rand'[(`float$(sz x))]
             )]);
 
             x:(
@@ -139,7 +139,8 @@ genRandomState      :{[x;y;z] // TODO add max time
                 flip[invn],
                 flip[mk],
                 flip[fnd],
-                flip[lq]
+                flip[lq],
+                flip[sg]
             );
 
             .state.InsertResultantEvents[x];
