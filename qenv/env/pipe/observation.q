@@ -4,7 +4,7 @@ The observation module contains logic to construct observation construction
 functionality.
 \
 
-constructor : (`.event.INGRESSKIND$())!(); // TODO change to subset of supported types.
+c : (`long$())!(); // TODO change to subset of supported types.
 
 /
 TODO
@@ -38,12 +38,9 @@ Candlestick/Trade Features
     - msize (frac/log/nil) (buy/sell/both)
     - hsize (frac/log/nil) (buy/sell/both)
     - lsize (frac/log/nil) (buy/sell/both)
-    - vwap5 (frac/log/nil) (buy/sell/both)
-    - vwap10 (frac/log/nil) (buy/sell/both)
-    - sma10 (frac/log/nil) (buy/sell/both)
-    - sma20 (frac/log/nil) (buy/sell/both)
-    - ema12 (frac/log/nil) (buy/sell/both)
-    - ema26 (frac/log/nil) (buy/sell/both)
+    - vwap (frac/log/nil) (buy/sell/both)
+    - sma (frac/log/nil) (buy/sell/both)
+    - ema (frac/log/nil) (buy/sell/both)
     - macd (frac/log/nil) (buy/sell/both)
     - signal (frac/log/nil) (buy/sell/both)
     - rsi (frac/log/nil) (buy/sell/both)
