@@ -1,6 +1,7 @@
-
+\cd ../util/
 \l util.q
-\d .pipe.state
+\cd ../pipe/
+\d .state
 
 // State specifically represents a set of events that are derived from the engine
 
@@ -29,7 +30,7 @@ AccountEventHistory: (
     frozen              : `long$();
     maintMargin         : `long$());
 accountCols:cols .state.AccountEventHistory;
-CurrentAccount: 1!AccountEventHisory;
+CurrentAccount: `accountId xkey .state.AccountEventHistory;
 
 // INVENTORY
 // ----------------------------------------------------------------------------------------------->
@@ -45,7 +46,7 @@ InventoryEventHistory: (
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
 inventoryCols:cols .state.InventoryEventHistory;
-CurrentInventory: 2!InventoryEventHisory;
+CurrentInventory: `accountId`side xkey .state.InventoryEventHistory;
 
 
 // Return all open positions for an account
@@ -111,12 +112,12 @@ OrderEventHistory: (
     execInst        :   `symbol$());
 
 ordCols:cols .state.OrderEventHistory;
-CurrentOrders: 1!OrderEventHisory;
+CurrentOrders: `orderId xkey .state.OrderEventHistory;
 clOrdCount:0;
 
 // Get the current qtys at each order level
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
-    :exec sum leaves by price from .state.OrderEventHisory 
+    :exec sum leaves by price from .state.OrderEventHistory 
         where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
     };
 
@@ -146,7 +147,7 @@ DepthEventHistory: (
     side:`symbol$();
     size:`int$());
 depthCols:cols DepthEventHistory;
-CurrentDepth: 1!DepthEventHisory;
+CurrentDepth: `price xkey .state.DepthEventHistory;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -220,6 +221,7 @@ SignalEventHistory: (
 // TODO change to non-dictionary updates
 // TODO Feature Etc.
 // TODO change to list
+// TODO maximum drift of current depth, 
 InsertResultantEvents   :{[events]
     {[events]
         k:first events[`kind];
@@ -231,7 +233,6 @@ InsertResultantEvents   :{[events]
 
         $[k=`DEPTH;[ // TODO delete from current depth
             l:flip[.state.depthCols!(d[;`price];t;d[;`side];0^d[;`size])];
-            .qt.L:l;
             `.state.CurrentDepth upsert 1!l;
             `.state.DepthEventHistory upsert 2!l;
             delete from `.state.CurrentDepth where size=0; // TODO remove stratified orderbook

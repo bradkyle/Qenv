@@ -126,6 +126,7 @@ AddTradeEvent  :{[trade;time] // TODO convert to list instead of dict
 
 // TODO simplify into update statement like ProcessTrade
 // Processes a set of updates to the orderbook, (does not infer updates from levels, merely prices)
+// TODO convert to C?
 ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 
     // Derive the deltas for each level given the new update
@@ -219,6 +220,7 @@ ProcessDepthUpdateEvent  : {[event] // TODO validate time, kind, cmd, etc.
 // Updates the state of the orderbook, orders, accounts, inventory etc. when a
 // trade occurs
 // Update for batch trades?
+// TODO convert to C?
 ProcessTrade    :{[instrumentId;side;fillQty;reduceOnly;isAgent;accountId;tim]
     // TODO validate trade
 

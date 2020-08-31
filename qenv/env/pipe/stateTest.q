@@ -1,8 +1,8 @@
 \l state.q
 system "d .stateTest";
-\cd ../quantest/
+\cd ../../quantest/
 \l quantest.q 
-\cd ../env/
+\cd ../env/pipe/
 
 z:.z.z;
 
@@ -52,7 +52,7 @@ checkState  :{[]
 genRandomState      :{[x;y;z] // TODO add max time
             / t:{{y+(`minute$(rand x))}[x] z#y}[z;y];
             t:{{x+(`minute$(rand 250))} each y#x}[y];
-            p:{{10000+x+rand 100} each til[x]};
+            p:{{10000+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
 
             // 

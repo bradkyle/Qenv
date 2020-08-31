@@ -3,18 +3,19 @@
 The observation module contains logic to construct observation construction
 functionality.
 \
+// .stateTest.genRandomState[100000;.z.z;250];
 
 c : (`long$())!(); // TODO change to subset of supported types.
 
 /
-OrderBook Features:
+CurrentOrderBook Features:                      
+    - bidsizelist                            
+    - bidpricelist                          
+    - asksizelist                            
+    - askpricelist      
     - bestbid                            
     - bestask                            
-    - midprice                             
-    - bidsizelist                            
-    - bidpricelist                            
-    - asksizelist                            
-    - askpricelist                            
+    - midprice                               
     - spread                            
     - bestbid                            
     - bestask                            
@@ -25,52 +26,70 @@ OrderBook Features:
     - bidsizedifferfracs                            
     - asksizedifferfracs                            
 \
-
+/ use < for ascending, > for descending
+asks:select[-5;>price] price, size from .state.CurrentDepth where side=`SELL; // price descending asks
+bids:select[-5;<price] price, size from .state.CurrentDepth where side=`BUY; // price ascending bids
+bestask:min asks;
+bestbid:min bids;
+bestbidsize:bestbid`size;
+bestasksize:bestask`size;
+bestasksize:bestask`size;
 
 
 /
 Candlestick/Trade Features
-    - num (frac/log/nil) (buy/sell/both)
-    - high (frac/log/nil) (buy/sell/both)
-    - low (frac/log/nil) (buy/sell/both)
-    - open (frac/log/nil) (buy/sell/both)
-    - close (frac/log/nil) (buy/sell/both)
-    - volume (frac/log/nil) (buy/sell/both)
-    - msize (frac/log/nil) (buy/sell/both)
-    - hsize (frac/log/nil) (buy/sell/both)
-    - lsize (frac/log/nil) (buy/sell/both)
-    - vwap (frac/log/nil) (buy/sell/both)
-    - sma (frac/log/nil) (buy/sell/both)
-    - ema (frac/log/nil) (buy/sell/both)
-    - macd (frac/log/nil) (buy/sell/both)
-    - signal (frac/log/nil) (buy/sell/both)
-    - rsi (frac/log/nil) (buy/sell/both)
-    - mfi (frac/log/nil) (buy/sell/both)
-    - avtp (frac/log/nil) (buy/sell/both)
-    - cci (frac/log/nil) (buy/sell/both)
-    - sma (frac/log/nil) (buy/sell/both)
-    - sd (frac/log/nil) (buy/sell/both)
-    - up (frac/log/nil) (buy/sell/both)
-    - down (frac/log/nil) (buy/sell/both)
-    - emv (frac/log/nil) (buy/sell/both)
-    - roc (frac/log/nil) (buy/sell/both)
-    - sc (frac/log/nil) (buy/sell/both)
-    - sk (frac/log/nil) (buy/sell/both)
-    - stoosc (frac/log/nil) (buy/sell/both)
-    - aroonup (frac/log/nil) (buy/sell/both)
-    - aroondown (frac/log/nil) (buy/sell/both)
-    - aroonosc (frac/log/nil) (buy/sell/both)
-    - bbh (frac/log/nil) (buy/sell/both)
-    - bbl (frac/log/nil) (buy/sell/both)
-    - bbm (frac/log/nil) (buy/sell/both)
-    - bbhi (frac/log/nil) (buy/sell/both)
-    - bbli (frac/log/nil) (buy/sell/both)
-    - kstsig (frac/log/nil) (buy/sell/both)
-    - fidx (frac/log/nil) (buy/sell/both)
-    - nvi (frac/log/nil) (buy/sell/both)
+    - num (frac/log/nil) (buy/sell/both)                                                     
+    - high (frac/log/nil) (buy/sell/both)                                                   
+    - low (frac/log/nil) (buy/sell/both)                                                    
+    - open (frac/log/nil) (buy/sell/both)                                                   
+    - close (frac/log/nil) (buy/sell/both)                                                  
+    - volume (frac/log/nil) (buy/sell/both)                                                 
+    - msize (frac/log/nil) (buy/sell/both)                                                  
+    - hsize (frac/log/nil) (buy/sell/both)                                                  
+    - lsize (frac/log/nil) (buy/sell/both)                                                  
+    - vwap (frac/log/nil) (buy/sell/both)                                                   
+    - sma (frac/log/nil) (buy/sell/both)                                                    
+    - ema (frac/log/nil) (buy/sell/both)                                                    
+    - macd (frac/log/nil) (buy/sell/both)                                                   
+    - signal (frac/log/nil) (buy/sell/both)                                                 
+    - rsi (frac/log/nil) (buy/sell/both)                                                    
+    - mfi (frac/log/nil) (buy/sell/both)                                                    
+    - avtp (frac/log/nil) (buy/sell/both)                                                   
+    - cci (frac/log/nil) (buy/sell/both)                                                    
+    - sma (frac/log/nil) (buy/sell/both)                                                    
+    - sd (frac/log/nil) (buy/sell/both)                                                 
+    - up (frac/log/nil) (buy/sell/both)                                                 
+    - down (frac/log/nil) (buy/sell/both)                                                   
+    - emv (frac/log/nil) (buy/sell/both)                                                    
+    - roc (frac/log/nil) (buy/sell/both)                                                    
+    - sc (frac/log/nil) (buy/sell/both)                                                 
+    - sk (frac/log/nil) (buy/sell/both)                                                 
+    - stoosc (frac/log/nil) (buy/sell/both)                                                 
+    - aroonup (frac/log/nil) (buy/sell/both)                                                    
+    - aroondown (frac/log/nil) (buy/sell/both)                                                  
+    - aroonosc (frac/log/nil) (buy/sell/both)                                                   
+    - bbh (frac/log/nil) (buy/sell/both)                                                    
+    - bbl (frac/log/nil) (buy/sell/both)                                                    
+    - bbm (frac/log/nil) (buy/sell/both)                                                    
+    - bbhi (frac/log/nil) (buy/sell/both)                                                   
+    - bbli (frac/log/nil) (buy/sell/both)                                                   
+    - kstsig (frac/log/nil) (buy/sell/both)                                                 
+    - fidx (frac/log/nil) (buy/sell/both)                                                   
+    - nvi (frac/log/nil) (buy/sell/both)                                                    
 \
 
-constructor[`]
+/ num:count size
+/ high:max price
+/ low: min price 
+/ open: first price 
+/ close: last price 
+/ volume: sum size 
+/ msize: avg size 
+/ hsize: max size
+/ time: max time 
+/ lsize: min size
+
+/ mavg
 
 /
 Last Trades Features:
