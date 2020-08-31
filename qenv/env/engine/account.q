@@ -242,8 +242,8 @@ ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qt
 
     // TODO if oi exists
 
-    ![`.account.Account;enlist(=;`accountId;accountId);0b;acc];
-    ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i];
+    ![`.account.Account;enlist(=;`accountId;accountId);0b;acc]; // change to amend
+    ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i]; // change to amend
 
     };
 
