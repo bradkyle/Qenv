@@ -63,6 +63,13 @@ genRandomState      :{[x;y;z] // TODO add max time
                 x?0,1
             );
 
+            .state.dS:(
+                p x;
+                t x;
+                x?0,1;
+                sz x
+            );
+
             // 
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#`TRADE;x#`NEW;flip[.state.tradeCols!(
                 til[x];

@@ -452,14 +452,6 @@ PrimeFeatures   :{[]
 
 // TODO persist episode state
 
-ResetAgents   :{[aids]
-    delete from `.state.AccountEventHistory where accountId in aids;
-    delete from `.state.InventoryEventHistory where accountId in aids;
-    delete from `.state.OrderEventHistory where accountId in aids;
-    delete from `.state.CurrentOrders where accountId in aids;
-    delete from `.state.FeatureBuffer where accountId in aids;
-    };
-
 Reset :{[config]
     delete from `.state.AccountEventHistory;
     delete from `.state.InventoryEventHistory;
@@ -470,4 +462,6 @@ Reset :{[config]
     delete from `.state.FundingEventHistory;
     delete from `.state.LiquidationEventHistory;
     delete from `.state.FeatureBuffer;
+
+    // TODO setup features 
     };
