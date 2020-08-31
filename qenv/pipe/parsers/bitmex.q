@@ -14,7 +14,7 @@ bookParser:{[rows]
     };
     x:derive each rows;
     x:flip `time`intime`side`price`size!raze each flip x; 
-    x:update dlt:{1_deltas x}size by price, side from x;
+    x:update dlt:{1_deltas x}size by price, side from x; // TODO insufficient approximation
     x:x where[x[`dlt]<>0]; 
     cx:count x;
     x:flip value flip x;
