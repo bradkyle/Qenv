@@ -1,5 +1,7 @@
 
 
+Filt: {x!y[x]};
+
 // Shortened enlist
 E:{[x] :enlist[x]};
 

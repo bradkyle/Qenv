@@ -10,9 +10,6 @@
 maxLvls:20;
 DefaultInstrumentId:0;
 
-filt: {x!y[x]};
-
-
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
@@ -30,8 +27,7 @@ AccountEventHistory: (
     balance             : `long$();
     available           : `long$();
     frozen              : `long$();
-    maintMargin         : `long$()
-    );
+    maintMargin         : `long$());
 accountCols:cols .state.AccountEventHistory;
 
 // INVENTORY
@@ -112,22 +108,8 @@ OrderEventHistory: (
     trigger         :   `symbol$();
     execInst        :   `symbol$());
 
-CurrentOrders: (
-    [orderId        :   `long$()]
-    time            :   `datetime$();
-    accountId       :   `long$();
-    side            :   `symbol$();
-    otype           :   `symbol$();
-    price           :   `long$();
-    leaves          :   `long$();
-    filled          :   `long$();
-    limitprice      :   `long$(); / multiply by 100
-    stopprice       :   `long$(); / multiply by 100
-    status          :   `symbol$();
-    isClose         :   `boolean$();
-    trigger         :   `symbol$();
-    execInst        :   `symbol$());
 ordCols:cols .state.OrderEventHistory;
+CurrentOrders: 1!OrderEventHisory;
 clOrdCount:0;
 
 // Get the current qtys at each order level
@@ -152,13 +134,6 @@ genNextClOrdId  :{.state.clOrdCount+:1;:.state.clOrdCount};
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
 
-/`.state.CurrentDepth upsert ([]price:(1000+til 20),(1000-til 20);side:(20#`SELL),(20#`BUY);size:40#1000)
-CurrentDepth:(
-    [price:`long$()]
-    time:`datetime$();
-    side:`symbol$();
-    size:`long$());
-
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
 // the config for the specified from the engine 
@@ -169,6 +144,7 @@ DepthEventHistory: (
     side:`symbol$();
     size:`int$());
 depthCols:cols DepthEventHistory;
+CurrentDepth: 1!DepthEventHisory;
 
 getLevelPrices          :{[s]
     :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
@@ -220,8 +196,13 @@ LiquidationEventHistory: (
     side            :   `symbol$());
 liquidationCols:cols LiquidationEventHistory;
 
-// TODO batching + 
-
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+SignalEventHistory: (
+    [sigid:`long$(); time:`datetime$()]
+    sigvalue        :   `float$()
+    );
 
 // State Event Insertion
 // =====================================================================================>
@@ -330,121 +311,6 @@ FeatureBuffer   :();
 // Agent specific observation functions
 // --------------------------------------------------->
 
-Piv:{[t;k;p;v]
-    f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
-    v:(),v; 
-    k:(),k; 
-    p:(),p;
-    G:group flip k!(t:.Q.v t)k;
-    F:group flip p!t p;
-    key[G]!flip(C:f[v]P:flip value flip key F)!raze{[i;j;k;x;y]
-        a:count[x]#x 0N;a[y]:x y;
-        b:count[x]#0b;
-        b[y]:1b;
-        c:a i;
-        c[k]:first'[a[j]@'where'[b j]];
-        c
-    }[I[;0];I J;J:where 1<>count'[I:value G]]/:\:[t v;value F]};
-
-// TODO check if successful feature derive
-
-// Efficiently returns the aggregated and normalised
-// feature vector represenations of the agent state 
-// and environment state for a set of agent ids. // CHANGE to FeatureVector
-// https://code.kx.com/q/wp/trend-indicators/
-
-
-relativeStrength:{[num;y]
-        begin:num#0Nf;
-        start:avg((num+1)#y);
-        begin,start,{(y+x*(z-1))%z}\[start;(num+1)_y;num]};
-
-
-rsiMain:{[close;n]
-    diff:-[close;prev close];
-    rs:relativeStrength[n;diff*diff>0]%relativeStrength[n;abs diff*diff<0];
-    rsi:100*rs%(1+rs);
-    rsi };
-
-mfiMain:{[h;l;c;n;v]
-            TP:avg(h;l;c);                    / typical price
-            rmf:TP*v;                         / real money flow
-            diff:deltas[0n;TP];               / diffs
-            /money-flow leveraging func for RSI
-            mf:relativeStrength[n;rmf*diff*diff>0]%relativeStrength[n;abs rmf*diff*diff<0];
-            mfi:100*mf%(1+mf);                /money flow as a percentage
-            mfi };
-
-maDev:{[tp;ma;n]
-    ((n-1)#0Nf),
-        {[x;y;z;num] reciprocal[num]*sum abs z _y#x}'
-        [(n-1)_tp-/:ma; n+l; l:til count[tp]-n-1; n] };
-
-// TODO change to interval
-CCI:{[high;low;close;n] 
-    TP:avg(high;low;close);
-    sma:mavg[n;TP];
-    mad:maDev[TP;sma;n];
-    reciprocal[0.015*mad]*TP-sma };
-
-
-// TODO doesn't work
-/ forceIndex:{[c;v;n]
-/     forceIndex1:1_deltas[0nf;c]*v;
-/     n#0nf,(n-1)_ema[2%1+n;forceIndex1] }
-
-/ ohlc:update ForceIndex:forceIndex[close;volume;13] from ohlc;
-
-//Ease of movement value -EMV
-/h-high
-/l-low
-/v-volume
-/s-scale
-/n-num of periods
-emv:{[h;l;v;s;n]
-    boxRatio:reciprocal[-[h;l]]*v%s;
-    distMoved:deltas[0n;avg(h;l)];
-    (n#0nf),n _mavg[n;distMoved%boxRatio] };
-
-
-//Price Rate of change Indicator (ROC)
-/c-close
-/n-number of days prior to compare
-roc:{[c;n]
-    curP:_[n;c];
-    prevP:_[neg n;c];
-    (n#0nf),100*reciprocal[prevP]*curP-prevP };
-
-
-//null out first 13 days if 14 days moving avg
-//Stochastic Oscillator
-/h-high
-/l-low
-/n-num of periods
-/c-close price
-/o-open
-stoOscCalc:{[c;h;l;n]
-    lows:mmin[n;l];
-    highs:mmax[n;h];
-    (a#0n),(a:n-1)_100*reciprocal[highs-lows]*c-lows };
-
-stoOcsK:{[c;h;l;n;k] (a#0nf),(a:n+k-2)_mavg[k;stoOscCalc[c;h;l;n]] };
-stoOscD:{[c;h;l;n;k;d] (a#0n),(a:n+k+d-3)_mavg[d;stoOscK[c;h;l;n;k]] };
-
-
-//Aroon Indicator
-aroonFunc:{[c;n;f]
-    m:reverse each a _'(n+1+a:til count[c]-n)#\:c;
-    #[n;0ni],{x? y x}'[m;f] };
-
-aroon:{[c;n;f] 100*reciprocal[n]*n-aroonFunc[c;n;f]};
-
-/- aroon[tab`high;25;max]-- aroon up
-/- aroon[tab`low;25;max]-- aroon down
-aroonOsc:{[h;l;n] aroon[h;n;max] - aroon[l;n;min]};
-
-signal:{ema[2%10;x]};
-macd:{[x] ema[2%13;x]-ema[2%27;x]};
 
 / tradeFuncs:`lowPr`highPr`tcnt`avgPr`vwap`volatility`totalReturn`volume`dollarVol`open`close`twap`twas`avgSz`minSz`maxSz`startTime`endTime!((min;`tp);(max;`tp);(count;`tp);(avg;`tp);(wavg;`ts;`tp);(volatility;`tp);(totalReturn;`tp);(sum;`ts);(dollarVol;`ts;`tp);(first;`tp);(last;`tp);(tw;`time;`tp);(tw;`time;`ts);(avg;`ts);(min;`ts);(max;`ts);(min;`time);(max;`time))
 / quoteFuncs:`minAp`maxAp`minBp`maxBp`qcnt`avgSprd`maxSprd`minSprd`twAsk`twBid`twSprd!((min;`ap);(max;`ap);(min;`bp);(max;`bp);(count;`ap);(avg;(-;`ap;`bp));(max;(-;`ap;`bp));(min;(-;`ap;`bp));(tw;`time;`ap);(tw;`time;`bp);(tw;`time;(-;`ap;`bp)))
@@ -573,12 +439,6 @@ PrimeFeatures   :{[]
 
 // Reward Extraction and Derivation
 // =====================================================================================>
-
-// TODO make sure that this isn't applying sortino ratio to the realized pnl as opposed to the balance
-sortinoRatio:{[asset;minAccRet] 
- excessRet:-1*minAccRet-(100*1_asset-prev[asset])%1_asset;
- 100*avg[excessRet]% sqrt sum[(excessRet*0>excessRet) xexp 2]%count[excessRet]
- };
 
 GetRewards  :{[aids; windowsize; step] // TODO configurable window size
     r:select 
