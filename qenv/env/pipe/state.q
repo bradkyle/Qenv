@@ -117,18 +117,18 @@ CurrentOrders: `orderId xkey .state.OrderEventHistory;
 clOrdCount:0;
 
 // Get the current qtys at each order level
-getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls]
+getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls] // TODO shorten
     :exec sum leaves by price from .state.OrderEventHistory 
         where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
     };
 
-getLvlOQtysByPrice  :{[aId;s]
+getLvlOQtysByPrice  :{[aId;s] // TODO shorted
     :select dlt:sum leaves by price from .state.OrderEventHistory 
         where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
     };
 
 
-getOrders   :{
+getOrders   :{ // TODO shorten
     select qty:sum leaves by price from .state.OrderEventHistory 
         where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;    
     };
@@ -208,109 +208,6 @@ SignalEventHistory: (
     sigvalue        :   `float$()
     );
 
-// State Event Insertion
-// =====================================================================================>
-/ InventoryEventHistory: (
-/     [accountId:  `long$();side: `symbol$();time : `datetime$()]
-/     currentQty          :  `long$();
-/     realizedPnl         :  `long$();
-/     avgPrice            :  `long$(); // TODO check all exchanges have
-/     unrealizedPnl       :  `long$());
-// Recieves a table of events from the engine 
-// and proceeds to insert them into the local historic buffer // TODO validation on events
-// TODO liquidation, settlement, pricerange
-// TODO change to non-dictionary updates
-// TODO Feature Etc.
-// TODO change to list
-// TODO maximum drift of current depth, 
-InsertResultantEvents   :{[events]
-    {[events]
-        k:first events[`kind];
-        c:first events[`cmd];
-
-        events:flip[events];
-        d:events[;`datum];
-        t:events[`time];
-
-        $[k=`DEPTH;[ // TODO delete from current depth
-            l:flip[.state.depthCols!(d[;`price];t;d[;`side];0^d[;`size])];
-            `.state.CurrentDepth upsert 1!l;
-            `.state.DepthEventHistory upsert 2!l;
-            delete from `.state.CurrentDepth where size=0; // TODO remove stratified orderbook
-          ];
-          k=`TRADE;[
-              t:(
-                [tid:d[;`tid];time:t]
-                side:d[;`side];
-                size:0^d[;`size];
-                price:0^d[;`price]);
-            `.state.TradeEventHistory upsert t;
-          ];
-          k=`MARK;[
-            `.state.MarkEventHistory upsert (
-                [time:t]
-                markprice:d[;`markprice]);
-          ];
-          k=`SIGNAL;[
-            `.state.SignalEventHistory upsert (
-                [sigid:d[;`sigid];time:t]
-                sigvalue:d[;`sigvalue]);
-          ];
-          k=`FUNDING;[
-            `.state.FundingEventHistory upsert (
-                [time:t]
-                fundingrate:d[;`fundingrate];
-                fundingtime:d[;`fundingtime]);
-          ];
-          k=`LIQUIDATION;[ // TODO if delete remove from current
-            `.state.LiquidationEventHistory upsert (
-                [liqid:d[;`liqid]; time:t]
-                side:d[;`side];
-                price:d[;`price];
-                size:0^d[;`size]);
-          ]; 
-          k=`ACCOUNT;
-          [
-            `.state.AccountEventHistory upsert ([
-                accountId:d[;`accountId];
-                time:t] 
-                balance:0^d[;`balance];
-                available:0^d[;`available];
-                frozen:0^d[;`frozen];
-                maintMargin:0^d[;`maintMargin]);
-          ];
-          k=`INVENTORY;
-          [
-            `.state.InventoryEventHistory upsert ([
-                accountId:d[;`accountId];
-                side:d[;`side];
-                time:t] 
-                amt:0^d[;`amt];
-                realizedPnl:0^d[;`realizedPnl];
-                avgPrice:0^d[;`avgPrice];
-                unrealizedPnl:0^d[;`unrealizedPnl]);
-          ];
-          k=`ORDER;
-          [
-            o:flip[.state.ordCols!(d[;`orderId];t;
-               d[;`accountId];
-               d[;`side];
-               d[;`otype];
-               d[;`price];
-               0^d[;`leaves];
-               0^d[;`filled];
-               0^d[;`limitprice];
-               0^d[;`stopprice];
-               0^d[;`status];
-               0b^d[;`reduce];
-               0^d[;`trigger];
-               0^d[;`execInst])];
-            `.state.CurrentOrders upsert 1!o;
-            `.state.OrderEventHistory upsert 2!o;
-          ];
-          ['INVALID_KIND]];
-    } each 0!(`kind`cmd xgroup events); // TODO benchmark with peach and each
-    };
 
 // Feature Extraction and Derivation
 // =====================================================================================>
