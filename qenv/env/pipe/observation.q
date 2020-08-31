@@ -7,6 +7,14 @@ functionality.
 
 c : (`long$())!(); // TODO change to subset of supported types.
 
+Aggregators :(
+
+    );
+
+Register:{
+
+    };
+
 /
 CurrentOrderBook Features:                      
     - bidsizelist                            
@@ -16,25 +24,34 @@ CurrentOrderBook Features:
     - bestbid                            
     - bestask                            
     - midprice                               
-    - spread                            
-    - bestbid                            
-    - bestask                            
+    - spread                           
     - bidsizefracs                            
-    - asksizefracs                            
-    - bidsizediffer                             
-    - asksizediffer                            
-    - bidsizedifferfracs                            
-    - asksizedifferfracs                            
+    - asksizefracs                               
 \
 / use < for ascending, > for descending
 asks:select[-5;>price] price, size from .state.CurrentDepth where side=`SELL; // price descending asks
 bids:select[-5;<price] price, size from .state.CurrentDepth where side=`BUY; // price ascending bids
 bestask:min asks;
 bestbid:min bids;
+sumasksizes:sum ask`size;
+sumbidsizes:sum bids`size;
 bestbidsize:bestbid`size;
 bestasksize:bestask`size;
-bestasksize:bestask`size;
+bestaskprice:bestask`price;
+bestbidprice:bestbid`price;
+midprice:avg[bestaskprice,bestbidprice];
+spread:(-/)(bestaskprice,bestbidprice);
+bidsizefracs:(bids`size)%(sum(bids`size));
+asksizefracs:(asks`size)%(sum(asks`size));
 
+/
+OrderBookHistory Features:                                              
+    - bidsizediffer                             
+    - asksizediffer                            
+    - bidsizedifferfracs                            
+    - asksizedifferfracs 
+\
+// TODO but very slow.
 
 /
 Candlestick/Trade Features
@@ -169,7 +186,7 @@ Feature Forecasters TODO iceberg detection!
         low,open,close,volume,msize,hsize) -> midPrice;
 \
 
-
+// Compiles feature functions into observation
 Construct       :{[]
 
     };
