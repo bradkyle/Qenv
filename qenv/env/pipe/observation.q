@@ -41,8 +41,10 @@ bids:select[-5;<price] price, size from .state.CurrentDepth where side=`BUY; // 
 bestask:min asks;
 bestbid:min bids;
 asksizes:asks`size;
+askprices:asks`price;
 sumasksizes:sum asksizes;
 bidsizes:bids`size;
+bidprices:bids`price;
 sumbidsizes:sum bidsizes;
 bestbidsize:bestbid`size;
 bestasksize:bestask`size;
@@ -58,15 +60,18 @@ Last Trades Features:
     - last trades sizes
     - last trades sides (0=`SHORT; 1=`LONG)
 \
-buys:select[-5;<time] price, size from .state.TradeEventHistory where side=`BUY;
-sells:select[-5;<time] price, size from .state.TradeEventHistory where side=`SELL;
+buys:select[5;>time] price, size from .state.TradeEventHistory where side=`BUY;
+sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL;
+/ sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL; todo both candle
 
 /
 Mark Price Features
     - last mark price
-    - basis
-    - ema
+    - last basis
+    - -5#mark price
+    - -5#basis
 \
+markprice:last .state.MarkEventHistory;
 
 /
 Funding Features
@@ -82,6 +87,8 @@ Order Features
     - order leaves list
     - order price list
 \
+exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
+exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
 
 /
 Account Features
