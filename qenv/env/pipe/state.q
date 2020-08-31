@@ -41,7 +41,7 @@ CurrentAccount: `accountId xkey .state.AccountEventHistory;
 // subsequently provides agent specific details
 // therin
 InventoryEventHistory: ( // TODO change side to long 1,2,3
-    [accountId:  `long$();side: `symbol$();time : `datetime$()]
+    [accountId:  `long$();side: `long$();time : `datetime$()]
     amt                 :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
@@ -100,17 +100,17 @@ OrderEventHistory: (
         time:`datetime$()
     ]
     accountId       :   `long$();
-    side            :   `symbol$(); // TODO change to long
-    otype           :   `symbol$(); // TODO change to long
+    side            :   `long$(); // TODO change to long
+    otype           :   `long$(); // TODO change to long
     price           :   `long$();
     leaves          :   `long$();
     filled          :   `long$();
     limitprice      :   `long$(); / multiply by 100
     stopprice       :   `long$(); / multiply by 100
-    status          :   `symbol$();
-    isClose         :   `boolean$();
-    trigger         :   `symbol$(); // TODO change to long
-    execInst        :   `symbol$()); // TODO change to long
+    status          :   `long$();
+    reduce          :   `boolean$();
+    trigger         :   `long$(); // TODO change to long
+    execInst        :   `long$()); // TODO change to long
 
 ordCols:cols .state.OrderEventHistory;
 CurrentOrders: `orderId xkey .state.OrderEventHistory;
@@ -145,7 +145,7 @@ genNextClOrdId  :{.state.clOrdCount+:1;:.state.clOrdCount};
 // the agent.
 DepthEventHistory: (
     [price:`long$();time:`datetime$()]
-    side:`symbol$(); // change side to long
+    side:`long$(); // change side to long
     size:`int$());
 depthCols:cols DepthEventHistory;
 CurrentDepth: `price xkey .state.DepthEventHistory;
@@ -170,7 +170,7 @@ TradeEventHistory: (
     [tid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
-    side            :   `symbol$()); // TODO change side to long
+    side            :   `long$()); // TODO change side to long
 tradeCols:cols TradeEventHistory;
 
 // Maintains a set of historic trade events
@@ -197,7 +197,7 @@ LiquidationEventHistory: (
     [liqid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
-    side            :   `symbol$()); // todo change side to long
+    side            :   `long$()); // todo change side to long
 liquidationCols:cols LiquidationEventHistory;
 
 // Maintains a set of historic trade events
@@ -301,10 +301,10 @@ InsertResultantEvents   :{[events]
                0^d[;`filled];
                0^d[;`limitprice];
                0^d[;`stopprice];
-               `NEW^d[;`status];
-               0b^d[;`isClose];
-               `NIL^d[;`trigger];
-               `NIL^d[;`execInst])];
+               0^d[;`status];
+               0b^d[;`reduce];
+               0^d[;`trigger];
+               0^d[;`execInst])];
             `.state.CurrentOrders upsert 1!o;
             `.state.OrderEventHistory upsert 2!o;
           ];

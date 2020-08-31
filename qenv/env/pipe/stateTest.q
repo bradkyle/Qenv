@@ -61,19 +61,19 @@ genRandomState      :{[x;y;z] // TODO add max time
                 t x;
                 sz x;
                 p x;
-                x?`BUY`SELL
+                x?0,1
             )]);
             
             dpth:`time`intime`kind`cmd`datum!(t x;t x;x#`DEPTH;x#`UPDATE;flip[.state.depthCols!(
                 p x;
                 t x;
-                x?`BUY`SELL;
+                x?0,1;
                 sz x
             )]);
 
             invn:`time`intime`kind`cmd`datum!(t x;t x;x#`INVENTORY;x#`UPDATE;flip[.state.inventoryCols!(
                 x?til 3;
-                x?`BUY`SELL;
+                x?0,1;
                 t x;
                 sz x;
                 sz x;
@@ -94,17 +94,17 @@ genRandomState      :{[x;y;z] // TODO add max time
                 til[x];
                 t x;
                 x?0 1;
-                x?`BUY`SELL;
-                x#`LIMIT;
+                x?0,1;
+                x#1;
                 sz x;
                 p x;
                 x#0;
                 x#0;
                 x#0;
-                x#`NEW;
+                x#0;
                 x#0b;
-                x#`NIL;
-                x#`NIL
+                x#0;
+                x#0
             )]);
 
             mk:`time`intime`kind`cmd`datum!(t x;t x;x#`MARK;x#`UPDATE;flip[.state.markCols!(
@@ -122,7 +122,7 @@ genRandomState      :{[x;y;z] // TODO add max time
                 t x;
                 sz x;
                 p x;
-                x?`BUY`SELL
+                x?0,1
             )]);
 
             sg:`time`intime`kind`cmd`datum!(t x;t x;x#`SIGNAL;x#`UPDATE;flip[cols[.state.SignalEventHistory]!(

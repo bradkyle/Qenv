@@ -94,7 +94,7 @@ isActiveLimit:{:((>;`leaves;0);
                (in;`price;x); // TODO CONDITIONAL
                (~;`otype;`LIMIT))};
 
-?[.state.CurrentOrders;isActiveLimit[bidprices];0b;`price`leaves!`price`leaves];
+/ ?[.state.CurrentOrders;isActiveLimit[bidprices];0b;`price`leaves!`price`leaves];
 
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
