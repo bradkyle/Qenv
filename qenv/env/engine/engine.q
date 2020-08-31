@@ -71,7 +71,7 @@ UpdateMarkPrice :{[event]
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 // TODO probabalistic rejection of events
-EventIngress :{
+ProcessEvents :{
     {
         k:x`kind;
         r:x`datum;
@@ -89,30 +89,8 @@ EventIngress :{
             k=10; [];
             'INVALID_EVENT_KIND
         ];
-    }'[0!(`kind xgroup x)];
+    }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch];
 }
-
-/ Main call/execution functions
-/ -------------------------------------------------------------------->
-
-// 
-prepareIngress   :{[eventBatch]
-    / :0!`kind xgroup eventBatch;
-    :`f xgroup update f:{sums((<>) prior x)}kind from `time xasc eventBatch;
-    };
-
-prepareEgress    :{[eventBatch]
-
-    };
-
-// Processes a batch of events and matches
-// them with their respective processing 
-// logic above. // TODO
-ProcessEvents  : {[eventBatch]
-        {eventEngine[(`.event.INGRESSKIND$first[x[`kind]])][x]} each .engine.prepareIngress[eventBatch];
-        / :prepareEgress[.engine.PopEvents[]];
-    };
-
 
 / Configuration
 / -------------------------------------------------------------------->
