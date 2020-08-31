@@ -7,11 +7,18 @@ functionality.
 
 c : (`long$())!(); // TODO change to subset of supported types.
 
-Aggregators :(
+operatorCount:0;
+Operators:(
+    [operatorId : `long$()]
+    ref         :`symbol$();
+    tab         :`symbol$();
+    deps        :();
+    func        :();
+    isroot      :`boolean();
+    inputshape  :`long$();
+    outputshape :`long$());
 
-    );
-
-Register:{
+Register:{[table;deps;func]
 
     };
 
