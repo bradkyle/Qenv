@@ -154,7 +154,7 @@ Events  :( // TODO add failure to table
     datum       :());
 
 // Adds an event to the Events table.
-AddEvent   : {[time;cmd;kind;datum] // TODO make better validation
+AddEvent   : {[time;cmd;kind;datum] // TODO Add better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
         $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
@@ -176,74 +176,81 @@ AddFailure   : {[time;kind;msg]
 // Retrieves all events from the Events table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the events (As a table?)
-PopEvents     :{e: .event.Event;delete from `.event.Events;:e};
+PopEvents               :{
+        e: .event.Event;
+        delete from `.event.Events;
+        e
+        };
 
 ECOLS                   :`time`cmd`kind`datum;
 
-MakePlaceOrderEvent     :{[order;time]
-        
-        };
+/*******************************************************
+/ Event Creation Utils
 
-MakePlaceBatchEvent     :{[orders;time]
-
-        };
-
-MakeCancelOrderEvent    :{[order;time]
+AddPlaceOrderEvent     :{[order;time]
 
         };
 
-MakeCancelBatchEvent    :{[orders;time]
+AddPlaceBatchEvent     :{[orders;time]
 
         };
 
-MakeCancelAllEvent      :{[order;time]
+AddCancelOrderEvent    :{[order;time]
 
         };
 
-MakeAmendOrderEvent     :{[order;time]
+AddCancelBatchEvent    :{[orders;time]
 
         };
 
-MakeWithdrawEvent       :{[withdraw;time]
+AddCancelAllEvent      :{[order;time]
 
         };
 
-MakeDepositEvent        :{[deposit;time]
+AddAmendOrderEvent     :{[order;time]
+
+        };
+
+AddWithdrawEvent       :{[withdraw;time]
+
+        };
+
+AddDepositEvent        :{[deposit;time]
 
         };
 
 /*******************************************************
 / MarketData event Construction
 
-MakeDepthEvent          :{[depth;time]
+AddDepthEvent          :{[depth;time]
 
         };
 
-MakeTradeEvent          :{[trade;time]
+AddTradeEvent          :{[trade;time]
 
         };
 
-MakeMarkEvent           :{[mark;time]
+AddMarkEvent           :{[mark;time]
 
         };
 
-MakeFundingEvent        :{[funding;time]
+AddFundingEvent        :{[funding;time]
 
         };
 
-MakeOrderUpdateEvent    :{[order;time]
+AddOrderUpdateEvent    :{[order;time]
 
         };
 
-MakeNewOrderEvent       :{[order;time]
+AddNewOrderEvent       :{[order;time]
 
         };
 
-MakeAccountEvent        :{[account;time]
+AddAccountEvent        :{[account;time]
 
         };
 
-MakeFailureEvent        :{[failure;time]
+AddFailureEvent        :{[failure;time]
 
         };
 
