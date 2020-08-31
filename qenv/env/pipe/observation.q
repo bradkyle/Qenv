@@ -18,7 +18,9 @@ OrderBook Features:
     - asksize differ
     - bidsize differ fracs
     - asksize differ fracs
+\
 
+/
 Candlestick/Trade Features
     - num (frac/log/nil) (buy/sell/both)
     - high (frac/log/nil) (buy/sell/both)
@@ -61,37 +63,51 @@ Candlestick/Trade Features
     - kstsig (frac/log/nil) (buy/sell/both)
     - fidx (frac/log/nil) (buy/sell/both)
     - nvi (frac/log/nil) (buy/sell/both)
+\
 
+/
 Last Trades Features:
     - last trades sizes
     - last trades sides (0=`SHORT; 1=`LONG)
+\
 
+/
 Mark Price Features
     - last mark price
     - basis
     - ema
+\
 
+/
 Funding Features
     - current funding price
     - next funding price
     - funding time countdown
+\
 
+/
 Order Features
     - one hot level has orders
     - order leaves by level
     - order leaves list
     - order price list
+\
 
+/
 Account Features
     - last balance
     - last available
     - last maintMargin
+\
 
+/
 Inventory Features
     - last unrealized Pnl
     - last realizedPnl
     - last avgPrice
+\
 
+/
 Signal Features (External)
     - binance open interest
     - binance notional value
@@ -115,7 +131,9 @@ Signal Features (External)
     - coinbase midprice
     - coinbase last 5 trades
     - coinbase last price
+\
 
+/
 Feature Forecasters TODO iceberg detection!
     - XGBOOST(bidsizes,asksizes,bidprices,askprices) -> midPrice;
     - XGBOOST(bidsizes,asksizes,bidprices,askprices,high,
@@ -123,7 +141,6 @@ Feature Forecasters TODO iceberg detection!
     - SVN(bidsizes,asksizes,bidprices,askprices) -> midPrice;
     - SVN(bidsizes,asksizes,bidprices,askprices,high,
         low,open,close,volume,msize,hsize) -> midPrice;
-
 \
 GetObservations :{[]
     $[
