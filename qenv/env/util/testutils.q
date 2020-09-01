@@ -170,8 +170,38 @@
     };    
 
 
-// Make event utils
+// Make random event utils
 // -------------------------------------------------------------->
+
+.util.testutils.genRandomTrades        :{
+
+    };
+
+.util.testutils.genRandomDepths        :{
+
+    };
+
+.util.testutils.genRandomInventory     :{
+
+    };
+
+.util.testutils.genRandomAccount       :{
+
+    };
+
+.util.testutils.genRandomOrders        :{
+
+    };
+
+.util.testutils.genRandomMarks        :{
+
+    };
+
+.util.testutils.genRandomOrders        :{
+
+    };
+
+
 
 .util.testutils.genRandomEvent        :{
 
