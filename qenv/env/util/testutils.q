@@ -306,10 +306,8 @@ dozc:{x+y}[doz];
         `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time;
         ({(x;(`.account.Account!$[(x mod 2)=0;0;1]);
             (`.instrument.Instrument!0);
-            floor[1000-(x%2)];
-            $[(x<25);-1;1];
-            100;
-            (x*100)+1;
+            floor[1000-(x%3)];$[(x<25);-1;1];100;
+            ((x mod 3)*110);
             0b;
             .z.z)
         }'[til[50]])]
