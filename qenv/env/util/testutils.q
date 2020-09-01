@@ -45,7 +45,7 @@ dozc:{x+y}[doz];
 /  @param ref (Symbol) The symbol reference to the table
 /  @param cl (List[Symbol]) The list of symbols indicating columns
 /  @param vl (List[List[Any]]) The list of lists to populate with. 
-.util.testutils.makeDefaultsRecords  :{[ref;cl;vl]
+.util.testutils.makeDefaultsRecords  :{[ref;cl;vl] // TODO inter with actual cols
     r:.util.NullRowDict[ref];
     cvl:count[vl];
     :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];r];[r[cl]:vl;r]]};
@@ -129,7 +129,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkOrders         :{ // TODO if provided orders are not table
-        eOrd:$[type[x]=99h;x;.util.testutils.makeOrders[x;z]]
+        eOrd:$[type[x]=99h;x;.util.testutils.makeOrders[x;z]];
         if[count[eOrd]>0;[
             rOrd: select from .order.Order where clId in eOrd[`clId];
             .qt.A[count[eOrd];=;count[rOrd];"order count";y]; // TODO check
@@ -144,7 +144,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .uti.testutils.checkDepth           :{
-        eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]]
+        eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]];
         if[count[eBook]>0;[
             rBook:.order.OrderBook;
             .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";y]; // TODO check
@@ -158,7 +158,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .uti.testutils.checkInstrument         :{
-        eIns:$[type[x]=99h;x;.util.testutils.makeInstruments[x;z]]
+        eIns:$[type[x]=99h;x;.util.testutils.makeInstruments[x;z]];
         if[count[eIns]>0;[
             rIns:.instrument.Instrument;
             .qt.A[count[eIns];=;count[rIns];"instrument count";y]; // TODO check
@@ -172,7 +172,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkEvents         :{
-        eEvents:$[type[x]=99h;x;.util.testutils.makeEvents[x;z]]
+        eEvents:$[type[x]=99h;x;.util.testutils.makeEvents[x;z]];
         if[count[eEvents]>0;[
             rEvents:.pipe.event.Event;
             .qt.A[count[eEvents];=;count[rEvents];"event count";y]; // TODO check
@@ -187,7 +187,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkAccount       :{
-        eAcc:$[type[x]=99h;x;.util.testutils.makeAccounts[x;z]]
+        eAcc:$[type[x]=99h;x;.util.testutils.makeAccounts[x;z]];
         if[count[eAcc]>0;[
             rAcc:.account.Account;
             .qt.A[count[eAcc];=;count[rAcc];"account count";y]; // TODO check
@@ -201,7 +201,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkInventory       :{
-        eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]]
+        eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]];
         if[count[eInv]>0;[
             rInv:.account.Inventory;
             .qt.A[count[eInv];=;count[rInv];"inventory count";y]; // TODO check
@@ -216,12 +216,12 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkLiquidation       :{
-        eLiq:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]]
+        eLiq:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]];
         if[count[eLiq]>0;[
             rLiq:.liqudidation.Liquidation;
             .qt.A[count[eLiq];=;count[rLiq];"liqudidation count";y]; // TODO check
             .qt.A[(y#0!rLiq);~;(y#0!eLiq);"liquidation";y]; // TODO check
-            ];
+            ]];
     };
 
 
