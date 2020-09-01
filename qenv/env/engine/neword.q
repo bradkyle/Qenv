@@ -145,7 +145,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
     // Derive the amount that will be replaced per level
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
-    state:state[where (state`rp)>0]
+    state:state[where (state`rp)>0];
 
     state:uj[?[`.order.OrderBook;enlist(=;`side;neg[side]);0b;()];
        ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
