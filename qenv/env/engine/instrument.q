@@ -28,15 +28,6 @@ NewFlatFee              :{[tier]
     :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
 
-// https://blog.bitmex.com/xbt-vs-xbu-chain/
-/*******************************************************
-/ instrument enumerations
-INSTRUMENTTYPE      :   `PERPETUAL`ADAPTIVE;
-LIQUIDATIONSTRAT    :   `COMPLETE`PARTIAL; 
-CONTRACTTYPE        :   `LINEAR`QUANTO`INVERSE; // TODO change LINEAR to inverse
-LIQUIDATEFEETYPE    :   `TOTAL`COMMISSION;
-INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
-
 // TODO INVERSE vs QUANTO i.e. bitmex + okex vs binance etc.
 // TODO do funding, fair price marking, 
 // TODO are trades aggregated
@@ -46,7 +37,7 @@ INSTRUMENTSTATE     :   `ONLINE`DOWN`MAINTENENCE;
 // TODO apply premium
 Instrument: (
     [instrumentId           : `long$()];
-    state                   : `.instrument.INSTRUMENTSTATE$();
+    state                   : `long$();
     quoteAsset              : `symbol$();
     baseAsset               : `symbol$();
     underlyingAsset         : `symbol$();
@@ -77,8 +68,8 @@ Instrument: (
     maxOrderSize            : `float$();
     minOrderSize            : `float$();
     junkOrderSize           : `float$();
-    liquidationStrat        : `.instrument.LIQUIDATIONSTRAT$();
-    contractType            : `.instrument.CONTRACTTYPE$();
+    liquidationStrat        : `long$();
+    contractType            : `long$();
     insuranceFee            :  `float$();
     maxOpenOrders           : `int$(); // The default maximum number of orders that an agent can have open.
     numLiquidations         : `long$();

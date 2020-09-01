@@ -205,20 +205,19 @@ ProcessEvents :{ // WRITE EVENTS
         ];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
     // TODO pop events
-}
+    };
 
 / Main Setup Function
 / -------------------------------------------------------------------->
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
+// Retreives the important information from account, inventory, orders
+// Instrument, liquidation etc.
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Info    :{[aids]
+Info    :{[aids] 
         :(
             select from .account.Account where accountId in aids;
             select from .account.Inventory where accountId in aids; 
