@@ -1,11 +1,9 @@
 
 // Derives the sortino ratio for a given account balance/returns vector
 // with respect to a given minimum acct return.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
+/  @param asset     (Numeric) The step wise returns/asset balance
+/  @param minAccRet (Inventory) The minimum expected return per period.
+/  @return          (Numeric) The resultant sortino ratio
 .state.rewards.sortinoRatio:{[asset;minAccRet] 
  excessRet:-1*minAccRet-(100*1_asset-prev[asset])%1_asset;
  100*avg[excessRet]% sqrt sum[(excessRet*0>excessRet) xexp 2]%count[excessRet]
