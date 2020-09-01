@@ -110,18 +110,28 @@
 /  @param x (Inventory/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.checkAccount       :{
+.util.testutils.checkInventory       :{
         eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]]
         if[count[eInv]>0;[
-            rInv:.account.Account;
+            rInv:.account.Inventory;
             .qt.A[count];=;count[rInv];"event count";y]; // TODO check
             .qt.A[(y#0!rInv);~;(y#0!eInv);"event";y]; // TODO check
             ]];
     };
 
 
-.util.testutils.checkLiquidation    :{
-
+// Checks that the .liquidation.Liquidation table matches the liquidations
+// that are provided.
+/  @param x (Inventory/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.checkLiquidation       :{
+        eInv:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]]
+        if[count[eInv]>0;[
+            rInv:.account.Account;
+            .qt.A[count];=;count[rInv];"event count";y]; // TODO check
+            .qt.A[(y#0!rInv);~;(y#0!eInv);"event";y]; // TODO check
+            ]];
     };
 
 
