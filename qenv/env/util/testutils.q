@@ -296,7 +296,18 @@ dozc:{x+y}[doz];
     };
 
 .util.testutils.genRandomOrders        :{
-
+       0^.util.testutils.makeOrders[
+        `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time;
+        ({
+            (x;(`.account.Account!$[(x mod 15)=0;0;1]);
+            (`.instrument.Instrument!0);
+            1000-x;
+            $[(x<25);-1;1];
+            100;
+            (x*100)+1;
+            0b;
+            .z.z)
+        }'[til[50]])]
     };
 
 
