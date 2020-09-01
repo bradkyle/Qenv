@@ -231,13 +231,24 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @param i     (Instrument) The instrument for which this order is placed
+/  @param o     (Order) The order that is being placed.
+/  @param a    (Account) The account to which this order belongs.
+/  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-NewOrder            :{
-
+NewOrder            :{[i;o;a;time]
+    ot:o`type;
+    $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // DEPTH
+      k=1;  [.engine.ProcessNewTradeEvents[x]]; // TRADE
+      k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // MARK
+      k=3;  [.engine.ProcessSettlementEvents[x]]; // SETTLEMENT
+      k=4;  [.engine.ProcessFundingEvents[x]]; // FUNDING
+      k=5;  [.engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
+      k=8;  [.engine.ProcessOrderEvents[x]]; // ORDER
+      k=9;  [.engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
+      k=10; [.engine.ProcessWithdrawEvents[x]]; // WITHDRAW
+      k=10; [.engine.ProcessDepositEvents[x]]; // DEPOSIT
+      'INVALID_ORDER_TYPE];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
