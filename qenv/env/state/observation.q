@@ -81,7 +81,7 @@ Funding Features
     - next funding price
     - funding time countdown
 \
-markprice:ls
+funding:last[.state.FundingEventHistory]`fundingrate;
 
 /
 Order Features
@@ -108,7 +108,7 @@ Inventory Features
     - last avgPrice
 \
 (select by accountId from .state.CurrentAccount 
-    uj Piv[0!select by accountId,side from .state.CurrentInventory;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl])
+    uj Piv[0!select by accountId,side from .state.CurrentInventory;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]);
 
 /
 Liquidation Features
@@ -116,6 +116,8 @@ Liquidation Features
     - 
     - last avgPrice
 \
+shortliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`BUY;
+longliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`SELL;
 
 / 
 Signal Feautures
