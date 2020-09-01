@@ -85,8 +85,8 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeAccounts        :{[]
-
+.util.testutils.makeAccounts        :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.account.Account;cl;vl];
     };
 
 
@@ -95,8 +95,8 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeInventories     :{[]
-
+.util.testutils.makeInventories     :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.account.Inventory;cl;vl];
     };
 
 
@@ -105,8 +105,8 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeInstruments     :{[]
-
+.util.testutils.makeInstruments     :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.instrument.Instrument;cl;vl];
     };
 
 
@@ -115,8 +115,8 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeEvents          :{[]
-
+.util.testutils.makeEvents          :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.pipe.event.Event;cl;vl];
     };
 
 // Check Utils
