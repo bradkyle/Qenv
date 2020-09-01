@@ -35,35 +35,81 @@ dozc:{x+y}[doz];
 // Make Test Data Utils
 // -------------------------------------------------------------->
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeDefaultsRecord  :{[]
 
     };
 
-
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeDepthUpdates    :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrderBooks      :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrders          :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeAccounts        :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeInventories     :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeInstruments     :{[]
 
     };
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.makeEvents          :{[]
 
     };
