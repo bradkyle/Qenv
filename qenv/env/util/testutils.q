@@ -276,7 +276,9 @@ dozc:{x+y}[doz];
     };
 
 .util.testutils.genRandomDepths        :{
-    vl:{(1000-x;$[(x<25);-1;1];100;100)}'[til[50]];
+    0^.util.testutils.makeOrders[
+        `price`side`size`vqty;
+        ({(1000-x;$[(x<25);-1;1];100;100)}'[til[50]])]
     };
 
 .util.testutils.genRandomInventory     :{
