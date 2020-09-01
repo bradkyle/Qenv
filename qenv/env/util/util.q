@@ -83,3 +83,10 @@
         (x set v);get[v];
     ];[x+:1;x]];
     };
+
+.util.ColTypes:{
+    $[type[x]=11h;[
+        type'[value ((get x)@0)]
+    ];[type'[value (x@0)]]];
+    :)
+    }
