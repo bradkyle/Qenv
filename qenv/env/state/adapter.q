@@ -69,7 +69,7 @@ environment agent state.
     :(amd;nord);
     };
 
-// TODO test for 1, 0 count lvl etc
+// TODO test for 1, 0 count lvl etc, // TODO exp / log drift
 .state.adapter.makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
     a:.state.adapter.makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
     b:.state.adapter.makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
