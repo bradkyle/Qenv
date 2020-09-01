@@ -147,8 +147,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
     state:state[where (state`rp)>0];
 
-    state:uj[?[`.order.OrderBook;enlist(=;`side;neg[side]);0b;()];
-       ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
+    state:uj[state;?[`.order.Order;.order.isActiveLimit[nside;state`price];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
 
     // TODO move into state
     pqty: qty+(0^oqty);

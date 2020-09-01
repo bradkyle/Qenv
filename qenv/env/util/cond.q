@@ -11,11 +11,12 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.util.cond.isActiveLimit:{:((>;`size;0);
-               (in;`status;enlist[`NEW`PARTIALFILLED]);
-               (in;`price;x); // TODO CONDITIONAL
-               (in;`side;y); // TODO CONDITIONAL
-               (=;`otype;`.order.ORDERTYPE$`LIMIT))}; // TODO improve performance
+.util.cond.isActiveLimit:{:(
+                (=;`side;x);
+                (=;`otype;1);
+                (in;`status;(0 1));
+                (in;`price;y); 
+                (>;`size;0))}; // TODO improve performance
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
