@@ -208,10 +208,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
-        ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
-    ];[
-
-    ]];
+    ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
+    ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
     
     };
 
