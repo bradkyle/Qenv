@@ -81,7 +81,6 @@ NewAccount :{[account;time]
     / show value type each .account.Account@0;
     .account.Account,:acc;
 
-    / AddAccountUpdateEvent[accountId;time];
     };
 
 
@@ -113,7 +112,7 @@ Deposit  :{[deposited;time;accountId]
 
     .account.Account,:acc;
 
-    :.account.AddAccountUpdateEvent[acc;time];
+    // TODO add update event
     };
 
 
@@ -140,8 +139,9 @@ Withdraw       :{[withdrawn;time;accountId]
         / account[`available]:.account.Available[acc]; // TODO
 
         .account.Account,:acc;
+
+        // TODO add update event
         
-        :.account.AddAccountUpdateEvent[acc;time];
         ];'InsufficientMargin];  
     };
 
@@ -218,22 +218,24 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
+    // TODO add update events?
     };
 
 
 // UpdateMarkPrice
 // -------------------------------------------------------------->
 
-UpdateMarkPrice : {[mp;instrumentId;time]
+UpdateMarkPrice : {[intrument;time]
     // TODO validate instrument exists
 
-    ins:.instrument.Instrument@instrumentId;
     // TODO derive risk buffer
+    ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i))
 
-    // Instrument specific
-    UpdateMarkPrice[mp;ins]'(
-                (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i)); // TODO test this
-    
+    // TODO change to vector conditional?
+    res:$[ck=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          ck=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          ck=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
+
     };
 

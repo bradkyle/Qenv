@@ -1,15 +1,15 @@
-\d .contract.inverse.account
+\d .inverse.account
 
 // Derives the execCost which is the cumulative sum of the product of
 // the fillQty and price of entering into a position.
-ExecCost         :{[price;qty]
+.inverse.account.ExecCost         :{[price;qty]
     :(floor[1e8%price]*abs[qty]);
     };
 
 // Given the total entry and the exec cost of the given Inventory
 // this function will derive the average price at which the inventory
 // was opened at/ entered into.
-AvgPrice         :{[isignum;execCost;totalEntry]
+.inverse.account.AvgPrice         :{[isignum;execCost;totalEntry]
     :$[all[(totalEntry,execCost)>0];[
         p:execCost%totalEntry;
         $[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier
@@ -18,7 +18,7 @@ AvgPrice         :{[isignum;execCost;totalEntry]
 
 // Given the current Inventory state, this function will derive the
 // unrealized pnl that the inventory has incurred.
-UnrealizedPnl    :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
+.inverse.account.UnrealizedPnl    :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
     :$[all[(amt,avgPrice,markPrice,faceValue)>0];
         (((faceValue%markPrice)-(faceValue%avgPrice))*(amt*isignum)) // TODO change 1e8 to multiplier
         ;0];
@@ -27,7 +27,7 @@ UnrealizedPnl    :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return mul
 // Given the current Inventory state, this function will derive the
 // resultant pnl that will be realized when a given amount is added
 // back to the balance.
-RealizedPnl      :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
+.inverse.account.RealizedPnl      :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
     :$[all[(fillQty,avgPrice,fillPrice,faceValue)>0];
         (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum)) // TODO change 1e8 to multiplier
         ;0];
@@ -35,21 +35,21 @@ RealizedPnl      :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
 
 // Derive the maintenence margin i.e. the amount of margin required to
 // keep the specified inventory open. 
-MaintMargin      :{[]
+.inverse.account.MaintMargin      :{[]
 
     };
 
 // Derives the initial margin that is reserved for a given inventory 
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
-InitMargin       :{[]
+.inverse.account.InitMargin       :{[]
 
     };
 
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the approximate price point at which 
 // the account will be liquidated.
-LiquidationPrice :{[a;iB;iL;iS;ins]
+.inverse.account.LiquidationPrice :{[a;iB;iL;iS;ins]
     sB:iB[`isignum]; // TODO check
 
     sum[(a`balance),((iB;iL;iS)`maintMarginReq)]
@@ -66,7 +66,7 @@ LiquidationPrice :{[a;iB;iL;iS;ins]
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the price point at which the account
 // will become bankrupt.
-BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
+.inverse.account.BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
     x:prd[iB`isignum`amt];
     :(prd[x,iB[`avgPrice]];
     -((-/)prd[(iL;iS)`amt`avgPrice]))
@@ -80,7 +80,7 @@ BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
 // Common logic for setting the shared state values of the given account
 // and its BOTH,LONG,SHORT inventory aswell as its respective orders.
 // TODO move upward
-rectifyState        :{
+.inverse.account.rectifyState        :{
 
     };
 
@@ -119,7 +119,7 @@ rectifyState        :{
 /  @param isign (Long) Either 1: Long, -1:Short 
 /  @return (Account) The input as a symbol
 /  @throws InsufficientMargin account has insufficient margin for adjustment
-AdjustOrderMargin       :{[price;delta;markPrice;isign]
+.inverse.account.AdjustOrderMargin       :{[price;delta;markPrice;isign]
 
     premium: abs[min[0,(isign*(markPrice-price))]];
 
@@ -144,7 +144,7 @@ AdjustOrderMargin       :{[price;delta;markPrice;isign]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-incFill                 :{[price;qty;account;inventory]
+.inverse.account.incFill                 :{[price;qty;account;inventory]
     
     // Increase the total Entry and amt
     inventory[`amt`totalEntry]+:qty;
@@ -173,7 +173,7 @@ incFill                 :{[price;qty;account;inventory]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-redFill                 :{[price;qty;account;inventory]
+.inverse.account.redFill                 :{[price;qty;account;inventory]
 
     // When the inventory is being closed it realizes 
     rpl:RealizedPnl[
@@ -197,7 +197,7 @@ redFill                 :{[price;qty;account;inventory]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-crsFill                 :{[price;namt;account;inventory]
+.inverse.account.crsFill                 :{[price;namt;account;inventory]
     inventory:redFill[price;inventory[`amt];account;inventory];
     inventory:incFill[price;namt;account;inventory];
     inventory[`isignum]:neg[inventory[`isignum]];  
@@ -213,7 +213,7 @@ ishedged:{x[`positionType]=`HEDGED};
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
-ApplyFill               :{[a;iB;iL;iS;fill]
+.inverse.account.ApplyFill               :{[a;iB;iL;iS;fill]
 
     $[ishedged[a];
         [
@@ -265,7 +265,7 @@ ApplyFill               :{[a;iB;iL;iS;fill]
 // is generally used with fair price marking. Assumes unrealizedPnl is already derived? 
 // TODO change openLoss to orderLoss TODO dry
 // @param markPrice (Long) The latest mark price of the instrument
-UpdateMarkPrice         :{[markPrice;instrument;a]
+.inverse.account.UpdateMarkPrice         :{[markPrice;instrument;a]
 
     a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0);
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
@@ -305,7 +305,7 @@ UpdateMarkPrice         :{[markPrice;instrument;a]
 // TODO next funding rate and next funding time (funding time delta)
 // Update available withdrawable etc. // TODO move to instrumentTODO dry
 // @param markPrice (Long) The latest mark price of the instrument // TODO return updated values?
-ApplyFunding        :{[fundingRate;instrument;account]
+.inverse.account.ApplyFunding        :{[fundingRate;instrument;account]
 
     account[`balance]:0;
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
