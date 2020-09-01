@@ -87,8 +87,11 @@ Info        :{[aIds;step]
 // TODO validation
 Reset    :{[config]
     
-    .state.Reset[config];
-    .engine.Reset[config]; 
+    res:.engine.Reset[config];
+
+
+
+    res:.state.Reset[config];
 
     // Loads the next set of events from 
     // HDB into memory
