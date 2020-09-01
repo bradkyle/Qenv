@@ -12,10 +12,21 @@ dozc:{x+y}[doz];
 // Mock generation and checking utils
 // -------------------------------------------------------------->
 
-.util.testutils.makeMockParams      :{
-
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeMockParams     :{[ref;args]
+    
     };       
 
+
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .uil.testutils.checkMockParams      :{
 
     };
@@ -276,3 +287,11 @@ dozc:{x+y}[doz];
 .util.testutils.setupLiquidation    :{
 
     };
+
+.util.testutils.setupState          :{
+
+    };
+
+
+// Main Param Generation utils
+// -------------------------------------------------------------->

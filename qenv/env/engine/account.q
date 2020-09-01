@@ -78,7 +78,6 @@ NewAccount :{[account;time]
     / show value type each 1_account;
     / show value type each .account.Account@0;
     .account.Account,:acc;
-
     };
 
 
