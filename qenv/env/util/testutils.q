@@ -44,8 +44,7 @@ dozc:{x+y}[doz];
 .util.testutils.makeDefaultsRecord  :{[ref;cl;vl]
     r:.util.NullRowDict[ref];
     r[cl]:vl;
-    r
-    };
+    r};
 
 // Checks that the .order.Order table matches the orders
 // that are provided.
