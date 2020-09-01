@@ -238,16 +238,10 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 /  @return (Inventory) The new updated inventory
 NewOrder            :{[i;o;a;time]
     ot:o`type;
-    $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // DEPTH
-      k=1;  [.engine.ProcessNewTradeEvents[x]]; // TRADE
-      k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // MARK
-      k=3;  [.engine.ProcessSettlementEvents[x]]; // SETTLEMENT
-      k=4;  [.engine.ProcessFundingEvents[x]]; // FUNDING
-      k=5;  [.engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
-      k=8;  [.engine.ProcessOrderEvents[x]]; // ORDER
-      k=9;  [.engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
-      k=10; [.engine.ProcessWithdrawEvents[x]]; // WITHDRAW
-      k=10; [.engine.ProcessDepositEvents[x]]; // DEPOSIT
+    $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
+      k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
+      k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
+      k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
       'INVALID_ORDER_TYPE];
     };
 
