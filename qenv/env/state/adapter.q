@@ -163,16 +163,18 @@ environment agent state.
 // action should be of type long
 .state.adapter.mapping[`DISCRETE]     :{[action;accountId]
     penalty:0f;
+    ordFn:.state.adapter.createOrderEventsFromDist[accountId;time];
+    mktFn:.state.adapter.createMarketOrderEventsFromDist[accountId;time]
     $[action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()
         action=1;
-        .state.adapter.createOrderEventsFromDist[accountId;time;0.05;`BUY];
+        mktFn[0.05;`BUY];
         action=2;
-        .state.adapter.createOrderEventsFromDist[accountId;time;0.05;`SELL];
+        mktFn[accountId;time;0.05;`SELL];
         action=3;
-        .state.adapter.createMarketOrderEventsFromDist[accountId;time;0.05;`BUY];
+        mktFn[0.05;`BUY];
         action=4;
-        .state.adapter.createMarketOrderEventsFromDist[accountId;time;0.05;`SELL];
+        mktFn[0.05;`SELL];
         action=5;
         .state.adapter.createFlattenEvents[accountId;time];
         'INVALID_ACTION];
