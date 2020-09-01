@@ -62,7 +62,7 @@
     };
 
 
-// Checks that the .order.Order table matches the orders
+// Checks that the .order.OrderBook table matches the OrderBook
 // that are provided.
 /  @param x (OrderBook/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
@@ -76,7 +76,7 @@
             ]];
     };
 
-// Checks that the .order.Order table matches the orders
+// Checks that the .pipe.event.Event table matches the events
 // that are provided.
 /  @param x (Events/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
@@ -91,9 +91,9 @@
     };
 
 // TODO test account
-// Checks that the .order.Order table matches the orders
+// Checks that the .account.Account table matches the accounts
 // that are provided.
-/  @param x (Events/List) The orders that are to be checked
+/  @param x (Account/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkAccount       :{
@@ -105,9 +105,20 @@
             ]];
     };
 
-.util.testutils.checkInventory      :{
+// Checks that the .account.Inventory table matches the inventory
+// that are provided.
+/  @param x (Inventory/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.checkAccount       :{
+        eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]]
+        if[count[eInv]>0;[
+            rInv:.account.Account;
+            .qt.A[count];=;count[rInv];"event count";y]; // TODO check
+            .qt.A[(y#0!rInv);~;(y#0!eInv);"event";y]; // TODO check
+            ]];
+    };
 
-    };  
 
 .util.testutils.checkLiquidation    :{
 
