@@ -118,49 +118,49 @@ DefaultInstrumentId:0;
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
-TradeEventHistory: (
+.state.TradeEventHistory: (
     [tid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
     side            :   `long$()); // TODO change side to long
-tradeCols:cols TradeEventHistory;
+.state.tradeCols:cols TradeEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
-MarkEventHistory: (
+.state.MarkEventHistory: (
     [time            :   `datetime$()]
     markprice        :   `long$());
-markCols:cols MarkEventHistory;
+.state.markCols:cols MarkEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
-FundingEventHistory: (
+.state.FundingEventHistory: (
     [time            :   `datetime$()]
     fundingrate      :   `long$();
     fundingtime      :   `datetime$());
-fundingCols:cols FundingEventHistory;
+.state.fundingCols:cols FundingEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
-LiquidationEventHistory: (
+.state.LiquidationEventHistory: (
     [liqid:`long$(); time:`datetime$()]
     size            :   `long$();
     price           :   `long$();
     side            :   `long$()); // todo change side to long
-liquidationCols:cols LiquidationEventHistory;
+.state.liquidationCols:cols LiquidationEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
-SignalEventHistory: (
+.state.SignalEventHistory: (
     [sigid:`long$(); time:`datetime$()]
     sigvalue        :   `float$()
     );
 
-InsertEvents :{
+.state.InsertEvents :{
     {
         k:x`kind;
         r:x`datum;
