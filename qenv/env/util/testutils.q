@@ -295,6 +295,12 @@ dozc:{x+y}[doz];
 
     };
 
+.util.testutils.genInstrument           :{
+    .util.testutils.makeInstruments[
+        `instrumentId`faceValue`maxLeverage;
+        ({(x;1;100)}'[til 2])]
+    };   
+
 .util.testutils.genRandomOrders        :{
        .util.testutils.makeOrders[
         `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time;
