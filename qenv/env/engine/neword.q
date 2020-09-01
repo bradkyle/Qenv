@@ -71,9 +71,7 @@ applyPublicTrades :{[pleaves;nagentQty;rp]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessDepth        :{[]
-
-    
+ProcessDepth        :{[] //TODO fix and test
     odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
     $[count[odrs]>0;[
         // TODO uj new event
@@ -137,7 +135,7 @@ ProcessDepth        :{[]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
+ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO fix and test
     nside:neg[side];
     isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders
