@@ -41,10 +41,11 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeDefaultsRecord  :{[ref;cl;vl]
+.util.testutils.makeDefaultsRecords  :{[ref;cl;vl]
     r:.util.NullRowDict[ref];
-    r[cl]:vl; // TODO make length invariant
-    r};
+    cvl:count[vl];
+    $[cvl>1;[(cvl#r)[cl]:flip[vl];r];[r[cl]:vl;r]]
+    };
 
 // Checks that the .order.Order table matches the orders
 // that are provided.
