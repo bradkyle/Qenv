@@ -20,7 +20,7 @@ accountCount:0;
 // TODO margin call price
 Account: (
             [accountId          : `long$()]
-            balance             : `long$();
+            balance             : `long$(); 
             frozen              : `long$();
             maintMargin         : `long$();
             available           : `long$();

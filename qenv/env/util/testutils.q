@@ -38,8 +38,19 @@
 // Check Utils
 // -------------------------------------------------------------->
 
-.util.testutils.checkOrders         :{
 
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Order) The orders that are to be checked
+/  @param y (Case) The params that are being checked 
+/  @param z (Case) The case that the assertions belong to
+.util.testutils.checkOrders         :{
+        if[count[x]>0;[
+            eOrd:.util.testutils.makeOrders[x;y];
+            rOrd: select from .order.Order where clId in eOrd[`clId];
+            .qt.A[count];=;count[rOrd];"order count";y];
+            .qt.A[(y#0!rOrd);~;(y#0!eOrd);"orders";y];
+            ]];
     };
 
 .uti.testutils.checkDepth           :{
