@@ -39,33 +39,33 @@ EVENTCMD      : (0;1;2;3;4);
 / Datum Construction
 
 /*******************************************************
-/ Events LOGIC
+/ Event LOGIC
 
 // TODO move to global
-// The events table acts as a buffer for all events that occur within
+// The Event table acts as a buffer for all Event that occur within
 // the given environment step, this allows for unilateral event post/pre
 // processing after the environment state has progressed i.e. .pipe.event.Adding lag
 // .pipe.event.Adding "dropout" and randomization etc. it has the .pipe.event.Added benifit of 
 // simplifying (removing) nesting/recursion within the engine. 
 // Drawbacks may include testability?
-// The events table is used exclusively within the engine and is not used
+// The Event table is used exclusively within the engine and is not used
 // by for example the state.
 // Acts like a kafka queue/pubsub.
 eventCount:0;
-Events  :( // TODO .pipe.event.Add failure to table
+Event  :( // TODO .pipe.event.Add failure to table
     time        :`datetime$();
     cmd         :`long$();
     kind        :`long$();
     datum       :());
 
-// .pipe.event.Adds an event to the Events table.
+// .pipe.event.Adds an event to the Event table.
 .pipe.event.AddEvent   : {[time;cmd;kind;datum] // TODO .pipe.event.Add better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
         $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
         $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
         / if[not] //validate datum 
-        .event.Events,:(time;cmd;kind;datum);
+        .event.Event,:(time;cmd;kind;datum);
         };
 
 // Creates an action i.e. a mapping between
@@ -75,12 +75,12 @@ Events  :( // TODO .pipe.event.Add failure to table
 .pipe.event.AddFailure   : {[time;kind;msg]
         if[not (type time)~15h; 'INVALID_TIME]; //TODO fix
         if[not (kind in .event.ERRCODES); 'INVALID_ERRORCODE];
-        .event.Events,:(time;3;15;datum);
+        .event.Event,:(time;3;15;datum);
         };
 
-// Retrieves all events from the Events table and then
+// Retrieves all Event from the Event table and then
 // deletes/drops them all before reverting the eventCount and
-// returning the events (As a table?)
+// returning the Event (As a table?)
 .pipe.event.PopEvents               :{
         e: .pipe.event.Event;
         ![`.pipe.event.Event;();0b;`symbol$()]

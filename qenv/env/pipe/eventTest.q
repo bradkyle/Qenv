@@ -20,7 +20,7 @@ test:.qt.Unit[
 
 
 test:.qt.Unit[
-    ".engine.PopEvents";
+    ".engine.PopEvent";
     {[c]
         p:c[`params];
 

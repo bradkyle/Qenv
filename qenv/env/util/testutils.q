@@ -39,6 +39,10 @@
 
     };
 
+.util.testutils.makeEvents          :{[]
+
+    };
+
 // Check Utils
 // -------------------------------------------------------------->
 
@@ -72,8 +76,18 @@
             ]];
     };
 
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Events/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
 .util.testutils.checkEvents         :{
-
+        eEvents:$[type[x]=99h;x;.util.testutils.makeEvents[x;z]]
+        if[count[eEvents]>0;[
+            rEvents:.pipe.event.Event;
+            .qt.A[count];=;count[rEvents];"event count";y]; // TODO check
+            .qt.A[(y#0!rEvents);~;(y#0!eEvents);"event";y]; // TODO check
+            ]];
     };
 
 .util.testutils.checkAccounts       :{
