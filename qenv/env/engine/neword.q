@@ -73,6 +73,10 @@ applyPublicTrades :{[pleaves;nagentQty;rp]
 /  @return (Inventory) The new updated inventory
 ProcessDepth        :{[]
 
+    
+    odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
+
+
     // TODO uj new event
     // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
     state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
@@ -143,7 +147,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
         // Pad state into a matrix
         // for faster operations
-        padcols:(`offset`size`leaves`reduce`orderId, // TODO make constant?
+        padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM'[state padcols];
 

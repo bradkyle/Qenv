@@ -26,6 +26,20 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
+.util.cond.isActiveLimitB:{:(
+                (=;`otype;1);
+                (in;`status;(0 1));
+                (in;`price;y); 
+                (>;`leaves;0))}; // TODO improve performance
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
 .util.cond.isActiveStop:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x); // TODO CONDITIONAL
