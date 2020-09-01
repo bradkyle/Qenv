@@ -44,20 +44,20 @@ Order: (
     clId            :`long$();
     instrumentId    : `.instrument.Instrument$();
     accountId       : `.account.Account$();
-    side            : `.order.ORDERSIDE$();
-    otype           : `.order.ORDERTYPE$();
+    side            : `long$();
+    otype           : `long$();
     offset          : `long$();
-    timeinforce     : `.order.TIMEINFORCE$();
+    timeinforce     : `long$();
     size            : `long$(); / multiply by 100
     leaves          : `long$();
     filled          : `long$();
     limitprice      : `long$(); / multiply by 100
     stopprice       : `long$(); / multiply by 100
-    status          : `.order.ORDERSTATUS$();
+    status          : `long$();
     time            : `datetime$();
-    reduceOnly         : `boolean$();
-    trigger         : `.order.STOPTRIGGER$();
-    execInst        : `.order.EXECINST$());
+    reduce          : `boolean$();
+    trigger         : `long$();
+    execInst        : `long$());
 
 ClRef :([] orderId: `.order.Order$());
 
@@ -82,7 +82,7 @@ isActiveLimit:{:((>;`size;0);
 // `.order.OrderBook upsert ([price:(`long$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`long$(40#1000)))
 OrderBook:(
     [price      :`long$()]
-    side        :`.order.ORDERSIDE$(); 
+    side        :`long$(); 
     qty         :`long$();
     vqty      :`long$());
 

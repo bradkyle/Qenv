@@ -48,7 +48,7 @@ dozc:{x+y}[doz];
 .util.testutils.makeDefaultsRecords  :{[ref;cl;vl] // TODO inter with actual cols
     r:.util.NullRowDict[ref];
     cvl:count[vl];
-    :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];r];[r[cl]:vl;r]]};
+    :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];:rx];[r[cl]:vl;:r]]};
 
 // Checks that the .order.Order table matches the orders
 // that are provided.
@@ -66,7 +66,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrderBooks      :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.order.OrderBook;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.order.OrderBook;cl;vl]
     };
 
 
@@ -76,7 +76,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrders          :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.order.Order;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.order.Order;cl;vl]
     };
 
 
@@ -86,7 +86,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeAccounts        :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.account.Account;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.account.Account;cl;vl]
     };
 
 
@@ -96,7 +96,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeInventories     :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.account.Inventory;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.account.Inventory;cl;vl]
     };
 
 
@@ -106,7 +106,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeInstruments     :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.instrument.Instrument;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.instrument.Instrument;cl;vl]
     };
 
 
@@ -116,7 +116,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeEvents          :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.pipe.event.Event;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.pipe.event.Event;cl;vl]
     };
 
 // Check Utils
