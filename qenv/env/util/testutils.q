@@ -85,6 +85,20 @@ dozc:{x+y}[doz];
             ]];
     };
 
+// Checks that the .instrument.Instrument table matches the Instrument
+// that are provided.
+/  @param x (Instrument/List) The instrument that is to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.uti.testutils.checkDepth           :{
+        eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]]
+        if[count[eBook]>0;[
+            rBook:.order.OrderBook;
+            .qt.A[count];=;count[rBook];"orderBook lvl count";y]; // TODO check
+            .qt.A[(y#0!rBook);~;(y#0!eBook);"ordersBook";y]; // TODO check
+            ]];
+    };
+
 // Checks that the .pipe.event.Event table matches the events
 // that are provided.
 /  @param x (Events/List) The orders that are to be checked
@@ -235,3 +249,30 @@ dozc:{x+y}[doz];
     };
 
 
+// Table Setup logic
+// -------------------------------------------------------------->
+
+
+.util.testutils.setupOrderbook      :{
+
+    };
+
+.util.testutils.setupOrders         :{
+
+    };
+
+.util.testutils.setupAccount        :{
+
+    };
+
+.util.testutils.setupInventory      :{
+
+    };
+
+.util.testutils.setupInstrument     :{
+
+    };
+
+.util.testutils.setupLiquidation    :{
+
+    };
