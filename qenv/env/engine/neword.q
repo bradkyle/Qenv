@@ -154,21 +154,14 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         
         // Pad state into a matrix
         // for faster operations
-        padcols:(`offset`size`leaves`reduce`orderId,
-        `accountId`instrumentId`price`status);
-        poffset:PadM[state`offset]; // TODO move into one invocation
-        psize:PadM[state`size];
-        pleaves:PadM[state`leaves];
-        preduceOnly:PadM[state`reduceOnly];
-        porderId:PadM[state`orderId];
-        paccountId:PadM[state`accountId];
-        pinstrumentId:PadM[state`instrumentId];
-        pprice:PadM[state`oprice];
-        pstatus:PadM[state`status];
+        padcols:(
+            `offset`size`leaves`reduce`orderId,
+            `accountId`instrumentId`price`status);
+        (state padcols):.util.PadM[state padcols];
 
         // Useful counts 
-        maxN:max count'[poffset];
-        numLvls:count[poffset];
+        maxN:max count'[state`offset];
+        numLvls:count[state`offset];
 
         // Calculate new shifts and max shifts
         nshft:pleaves+poffset;
