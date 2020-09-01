@@ -44,7 +44,7 @@ dozc:{x+y}[doz];
 .util.testutils.makeDefaultsRecords  :{[ref;cl;vl]
     r:.util.NullRowDict[ref];
     cvl:count[vl];
-    $[cvl>1;[(cvl#r)[cl]:flip[vl];r];[r[cl]:vl;r]]
+    $[cvl>1;[(cvl#enlist[r])[cl]:flip[vl];r];[r[cl]:vl;r]]
     };
 
 // Checks that the .order.Order table matches the orders
