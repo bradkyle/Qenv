@@ -143,6 +143,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
           enlist(=;`side;1);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];();0b;
           `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
 
+    // Derive the amount that will be replaced per level
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
     state:state[where (state`rp)>0]
 
