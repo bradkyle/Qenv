@@ -151,7 +151,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;`price xgroup odrs]]; 
-        
+        msk:count'[state`orderId];
+
         // Pad state into a matrix
         // for faster operations
         padcols:(`offset`size`leaves`reduce`orderId, // TODO make constant?
@@ -182,7 +183,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
             )]];
         / nfilled: psize - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
-        vqty: {?[x>y;x;y]}'[mxshft;nvqty]; // The new visible quantity
+        vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
