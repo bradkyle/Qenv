@@ -62,38 +62,6 @@ DefaultInstrumentId:0;
 // ORDERS
 // ----------------------------------------------------------------------------------------------->
 
-// Maintains a historic and current record of orders
-// that the engine has produced.
-/ `.state.OrderEventHistory upsert (
-/     []orderId:til 10;
-/     accountId:10#1;
-/     side:(5#`SELL),(5#`BUY);
-/     price:(1000+til 5),(999-til 5);
-/     otype:10#`LIMIT;
-/     leaves:10#1000;
-/     filled:10#1000;
-/     limitprice:10#0;
-/     stopprice:10#0;
-/     status:10#`NEW;
-/     time:10#.z.z;
-/     isClose:10#0b;
-/     trigger:10#`NIL);
-
-/ `.state.OrderEventHistory upsert (
-/    []orderId:(10+til 10);
-/    accountId:10#1;
-/    side:(5#`SELL),(5#`BUY);
-/    price:(1000+til 5),(999-til 5);
-/    otype:10#`LIMIT;
-/    leaves:10#1000;
-/    filled:10#1000;
-/    limitprice:10#0;
-/    stopprice:10#0;
-/    status:10#`NEW;
-/    time:10#.z.z;
-/    isClose:10#0b;
-/    trigger:10#`NIL);
-
 .state.OrderEventHistory: (
     [
         orderId:`long$();
@@ -131,21 +99,17 @@ DefaultInstrumentId:0;
 // the config for the specified from the engine 
 // i.e. The depth has been directly affected by 
 // the agent.
-DepthEventHistory: (
+.state.DepthEventHistory: (
     [price:`long$();time:`datetime$()]
     side:`long$(); // change side to long
     size:`int$());
-depthCols:cols DepthEventHistory;
-CurrentDepth: `price xkey .state.DepthEventHistory;
+.state.depthCols:cols DepthEventHistory;
+.state.CurrentDepth: `price xkey .state.DepthEventHistory;
 
-getLevelPrices          :{[s]
-    :{$[x=`SELL;asc y;x=`BUY;desc y;`ERROR]}[s; (exec price from .state.CurrentDepth where side=s)]
-    };
+.state.lvlPrices     :{?[]};
 
 // TODO add error handling
-getPriceAtLevel         :{[level;s]
-    :getLevelPrices[s][level];
-    };
+.state.priceAtLvl     :{};
 
 
 // Non-Essential Datums
