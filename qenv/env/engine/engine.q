@@ -53,7 +53,7 @@ Master  :{:(.engine.Engine@0)}
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-UpdateMarkPrice :{[event]
+ProcessMarkUpdateEvent :{[event]
     instrumentId:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
@@ -79,15 +79,15 @@ ProcessEvents :{ // WRITE EVENTS
         k:x`kind;
         r:x`datum;
         $[
-            k=0;  []; // DEPTH
-            k=1;  []; // TRADE
-            k=2;  []; // MARK
-            k=3;  []; // SETTLEMENT
-            k=4;  []; // FUNDING
-            k=5;  []; // LIQUIDATION
-            k=8;  []; // ORDER
-            k=9;  []; // PRICELIMIT
-            k=10; []; // INSTRUMENT
+            k=0;  [.engine.ProcessDepthUpdateEvents[]]; // DEPTH
+            k=1;  [.engine.ProcessNewTradeEvents[]]; // TRADE
+            k=2;  [.engine.ProcessMarkUpdateEvents[]]; // MARK
+            k=3;  [.engine.ProcessSettlementEvents[]]; // SETTLEMENT
+            k=4;  [.engine.ProcessFundingEvents[]]; // FUNDING
+            k=5;  [.engine.ProcessLiquidationEvents[]]; // LIQUIDATION
+            k=8;  [.engine.ProcessOrderEvents[]]; // ORDER
+            k=9;  [.engine.ProcessNewPriceLimitEvents[]]; // PRICELIMIT
+            k=10; [.engine.ProcessInstrumentEvents[]]; // INSTRUMENT
             'INVALID_EVENT_KIND
         ];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];

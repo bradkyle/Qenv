@@ -227,7 +227,7 @@ InsertResultantEvents :{
                 .state.CurrentAccount,:r; 
             ]; // ACCOUNT
             k=7;[
-                .state.InventoryEventHistory,:r;
+                / .state.InventoryEventHistory,:r;
                 .state.CurrentInventory,:r;
             ]; // INVENTORY
             k=8;[
