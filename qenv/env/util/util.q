@@ -84,17 +84,21 @@
     ];[x+:1;x]]};
 
 .util.ColTypes:{
-    $[type[x]=11h;[
-        type'[value ((0!(get x))@-1)]
-    ];[type'[value ((0!x)@-1)]]]};
+    if[type[x]=11h;[x:get x];
+    type'[value ((0!(get x))@-1)]};
 
 .util.NullRow:{
-    $[type[x]=11h;[
-    (value (0!(get x))@-1)]
-    ];[(value (0!(get x))@-1)]]};
+    if[type[x]=11h;[x:get x];
+    (value (0!(get x))@-1)
+    };
+
+.util.NullRowDict:{
+    if[type[x]=11h;[x:get x];
+    cols[x]!(value (0!(get x))@-1)]
     };
 
 .util.ZRow  :{
     r:.util.NullRow[x];
     t:abs type'[r];
+    r[where[t=15]]:`;
     };
