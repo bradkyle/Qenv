@@ -100,8 +100,8 @@
         eAcc:$[type[x]=99h;x;.util.testutils.makeAccounts[x;z]]
         if[count[eAcc]>0;[
             rAcc:.account.Account;
-            .qt.A[count];=;count[rAcc];"event count";y]; // TODO check
-            .qt.A[(y#0!rAcc);~;(y#0!eAcc);"event";y]; // TODO check
+            .qt.A[count];=;count[rAcc];"account count";y]; // TODO check
+            .qt.A[(y#0!rAcc);~;(y#0!eAcc);"account";y]; // TODO check
             ]];
     };
 
@@ -114,8 +114,8 @@
         eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]]
         if[count[eInv]>0;[
             rInv:.account.Inventory;
-            .qt.A[count];=;count[rInv];"event count";y]; // TODO check
-            .qt.A[(y#0!rInv);~;(y#0!eInv);"event";y]; // TODO check
+            .qt.A[count];=;count[rInv];"inventory count";y]; // TODO check
+            .qt.A[(y#0!rInv);~;(y#0!eInv);"inventory";y]; // TODO check
             ]];
     };
 
@@ -129,8 +129,8 @@
         eInv:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]]
         if[count[eInv]>0;[
             rInv:.account.Account;
-            .qt.A[count];=;count[rInv];"event count";y]; // TODO check
-            .qt.A[(y#0!rInv);~;(y#0!eInv);"event";y]; // TODO check
+            .qt.A[count];=;count[rInv];"liqudidation count";y]; // TODO check
+            .qt.A[(y#0!rInv);~;(y#0!eInv);"liquidation";y]; // TODO check
             ]];
     };
 
