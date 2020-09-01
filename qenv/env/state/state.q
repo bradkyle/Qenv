@@ -206,128 +206,6 @@ DefaultInstrumentId:0;
 // Agent specific observation functions
 // --------------------------------------------------->
 
-
-/ tradeFuncs:`lowPr`highPr`tcnt`avgPr`vwap`volatility`totalReturn`volume`dollarVol`open`close`twap`twas`avgSz`minSz`maxSz`startTime`endTime!((min;`tp);(max;`tp);(count;`tp);(avg;`tp);(wavg;`ts;`tp);(volatility;`tp);(totalReturn;`tp);(sum;`ts);(dollarVol;`ts;`tp);(first;`tp);(last;`tp);(tw;`time;`tp);(tw;`time;`ts);(avg;`ts);(min;`ts);(max;`ts);(min;`time);(max;`time))
-/ quoteFuncs:`minAp`maxAp`minBp`maxBp`qcnt`avgSprd`maxSprd`minSprd`twAsk`twBid`twSprd!((min;`ap);(max;`ap);(min;`bp);(max;`bp);(count;`ap);(avg;(-;`ap;`bp));(max;(-;`ap;`bp));(min;(-;`ap;`bp));(tw;`time;`ap);(tw;`time;`bp);(tw;`time;(-;`ap;`bp)))
-
-getOhlcFeatures :{[]
-        ohlc:0!select 
-            num:count size, 
-            high:max price, 
-            low: min price, 
-            open: first price, 
-            close: last price, 
-            volume: sum size, 
-            msize: avg size, 
-            hsize: max size,
-            time: max time, 
-            lsize: min size 
-            by (1 xbar `minute$time) from .state.TradeEventHistory;
-
-        ohlc:update 
-            sma10:mavg[10;close], 
-            sma20:mavg[20;close], 
-            ema12:ema[2%13;close], 
-            ema26:ema[2%27;close], 
-            macd:macd[close] 
-            from ohlc;
-        
-        ohlc:update signal:signal[macd] from ohlc;
-
-        ohlc:update rsi:rsiMain[close;14] from ohlc;
-
-        ohlc:update mfi:mfiMain[high;low;close;6;volume], avtp:avg(high;low;close) from ohlc;
-
-        ohlc:update mfi:mfiMain[high;low;close;6;volume] from ohlc;
-
-        ohlc:update cci:CCI[high;low;close;14] from ohlc;
-
-        ohlc:update sma:mavg[20;avtp],sd:mdev[20;avtp] from ohlc;
-
-        ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
-
-        ohlc:update EMV:emv[high;low;volume;1000000;14] from ohlc;
-
-        ohlc:update ROC:roc[close;10] from ohlc;
-
-        ohlc: update
-            sC:stoOscCalc[close;high;low;5],
-            sk:stoOscK[close;high;low;5;2],
-            stoOscD[close;high;low;5;2;3] from ohlc;
-
-        ohlc:update
-            aroonUp:aroon[high;25;max],
-            aroonDown:aroon[low;25;min],
-            aroonOsc:aroonOsc[high;low;25] from ohlc;
-
-        // Pivot and combine per accountId
-
-        / ohlc:Piv[ohlc;`time;`side;`high`low`open`close`volume`msize`hsize`lsize`num];
-        ohlc: value last (0^(`time`time _ ohlc));
-    };
-
-getPeriodSplit  :{
-
-    };
-
-// TODO store features in log to do reverse feature selection!
-getOBFeatures   :{
-
-        ob update avg(bestBid,bestAsk) from .state.DepthEventHistory;
-    };
-
-// TODO construct observation getter
-// TODO register obs in order and parse them , register parsed result and use that in get observations
-
-
-// TODO get orderbook features
-// TODO volatility, standard deviation, etc.
-// TODO testing etc.
-GetObservations    :{[aids; windowsize; step] // TODO configurable window size
-        / interval: 
-
-        // TODO add liquidation as feature.
-        bp:select[-5] price from .state.CurrentDepth where side=`BUY; // TODO fill 0's
-        ap:select[-5] price from .state.CurrentDepth where side=`SELL;
-
-        // TODO add account id to feature vector
-        pobs: raze raze'[( 
-            10#0;
-            exec last markprice from .state.MarkEventHistory;
-            exec last fundingrate from .state.FundingEventHistory;
-            value flip bp; // TODO fill 0's
-            value flip ap;
-            value flip select[-5] size from .state.TradeEventHistory where side=`BUY;
-            value flip select[-5] size from .state.TradeEventHistory where side=`SELL;
-            value flip select[5] size from `price xasc .state.CurrentDepth where side=`BUY;
-            value flip select[5] size from `price xdesc .state.CurrentDepth where side=`SELL
-        )];
-
-        // TODO do uj
-        // select by accountId, price from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL
-        oobs: raze(
-            exec leaves from 0^(ap uj select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
-            exec leaves from 0^(ap uj select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
-        );
-
-        ac:select last balance, last available, last frozen, last maintMargin by accountId from .state.AccountEventHistory where accountId in aids;
-        ivn:Piv[0!select last amt, last realizedPnl, last avgPrice, last unrealizedPnl by accountId,side from .state.InventoryEventHistory where accountId in aids;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl];
-
-        aobs:0!(ac uj ivn);
-        aobs[(`$string[til[count[pobs]]])]:pobs;
-        obs:(`accountId,(`$string(til[count[cols[aobs]]-1]))) xcol 0!aobs;
-        obs[`step]:step;
-
-        // if count feature buffer
-        `.state.FeatureBuffer upsert (`accountId`step xkey obs);
-
-        // TODO count by account id
-        / $[(count .schema.FeatureBuffer)>maxBufferSize;]; // TODO make max buffer size configurable
-        // TODO fill forward + normalize
-        :1!(0^select from ungroup(.ml.minmaxscaler'[`accountId xgroup .state.FeatureBuffer]) where step=1);
-        // obs[`accountId]!value'[`accountId`step _ obs]
-    };
-
 PrimeFeatures   :{[]
 
     };
@@ -339,15 +217,17 @@ PrimeFeatures   :{[]
 // TODO persist episode state
 
 Reset :{[config]
-    delete from `.state.AccountEventHistory;
-    delete from `.state.InventoryEventHistory;
-    delete from `.state.OrderEventHistory;
-    delete from `.state.CurrentOrders;
-    delete from `.state.TradeEventHistory;
-    delete from `.state.MarkEventHistory;
-    delete from `.state.FundingEventHistory;
-    delete from `.state.LiquidationEventHistory;
-    delete from `.state.FeatureBuffer;
+    .util.table.dropAll[(`.state.AccountEventHistory,
+            `.state.InventoryEventHistory,
+            `.state.OrderEventHistory,
+            `.state.CurrentDepth,
+            `.state.DepthEventHistory,
+            `.state.TradeEventHistory,
+            `.state.MarkEventHistory,
+            `.state.FundingEventHistory,
+            `.state.LiquidationEventHistory)];
+
+    .state.FeatureBuffer:();
 
     // TODO setup features 
     };
