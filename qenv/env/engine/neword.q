@@ -195,19 +195,19 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         .order.Order,:ordUpd;
 
         // Make order updates
-        flls:[];
+        mflls:[];
 
-        if[count[flls]>0;[
-            if[isagnt and (account[`accountId] in flls[`accountId]);
-                .account.IncSelfFill[accountId;count[sflls];sum[sflls`filled]]];
-            .account.ApplyFill[account;instrument;side] flls;
+        if[count[mflls]>0;[
+            if[isagnt and (account[`accountId] in mflls[`accountId]);
+                .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
+            .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
             ]];
   
         trds:[];
 
-        if[isagnt;
-    
-        ];    
+        if[isagnt;[
+
+        ]];    
 
 
     ];[
