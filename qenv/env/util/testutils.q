@@ -267,6 +267,10 @@ dozc:{x+y}[doz];
 // Make random event utils
 // -------------------------------------------------------------->
 
+.util.testutils.genRandomKind          :{
+
+    };
+
 .util.testutils.genRandomTrades        :{
 
     };

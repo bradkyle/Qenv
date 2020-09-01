@@ -211,7 +211,8 @@ AdjustOrderMargin       :{[a; i; side; time; reduce; ismaker; price; qty]
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.AdjustOrderMargin[a;iB;iL;iS;fill];
           k=1;.inverse.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill]];
+          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -233,7 +234,8 @@ ApplyFill           :{[a; i; side; time; reduce; ismaker; price; qty]
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];
           k=1;.inverse.account.ApplyFill[a;iB;iL;iS;fill];
-          k=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill]];
+          k=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill];
+          'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -257,7 +259,8 @@ ApplyFunding        : {[i;fr;ft;time]
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.ApplyFunding[a;iB;iL;iS;i];
           k=1;.inverse.account.ApplyFunding[a;iB;iL;iS;i];
-          k=3;.quanto.account.ApplyFunding[a;iB;iL;iS;i]];
+          k=3;.quanto.account.ApplyFunding[a;iB;iL;iS;i];
+          'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -281,7 +284,8 @@ UpdateMarkPrice     : {[i;mp;time]
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
           k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
+          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];

@@ -1,10 +1,9 @@
 \l account.q
+\l instrument.q
 \d .order
 
 BAM:();
 orderCount:0;
-
-multiply:{x[y]:`long$(x[y]*z);:x};
 
 // Order
 // =====================================================================================>
@@ -65,27 +64,13 @@ ClRef :([] orderId: `.order.Order$());
 orderCount:0;
 ordSubmitFields: cols[.order.Order] except `orderId`leaves`filled`status`time;
 
-NegSide: {:$[x=`.order.ORDERSIDE$`SELL;`.order.ORDERSIDE$`BUY;`.order.ORDERSIDE$`SELL]}
 
 isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x);
                (=;`otype;`.order.ORDERTYPE$`LIMIT))};
 
-// TODO remove cols
-// TODO clean
-AddNewOrderEvent   :{[order;time] // TODO convert to list instead of dict
-    :.event.AddEvent[time;`NEW;`ORDER;order];
-    }
-
-AddUpdateOrderEvent :{[order;time] // TODO convert to list instead of dict
-    :.event.AddEvent[time;`UPDATE;`ORDER;order];
-    }
- 
-AddCancelOrderEvent :{[order;time] // TODO convert to list instead of dict
-    :.event.AddEvent[time;`DELETE;`ORDER;order];
-    }
-
+// TODO 
 
 // OrderBook
 // =====================================================================================>
@@ -101,24 +86,12 @@ OrderBook:(
     qty         :`long$();
     vqty      :`long$());
 
-maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
-minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
+/ maxPrice: ?[.order.OrderBook; (); `side; (max;`price)];
+/ minPrice: ?[.order.OrderBook; (); `side; (min;`price)];
 
 bestBid:{exec max price from .order.OrderBook where side=`BUY};
 bestAsk:{exec min price from .order.OrderBook where side=`SELL};
 bestSidePrice:{$[x=`SELL;:bestAsk[];bestBid[]]};
-
-DeriveThenAddDepthUpdateEvent :{[time] // TODO check // TODO convert to list instead of dict
-    :.event.AddEvent[time;`UPDATE;`DEPTH;(select price,side,vqty from .order.OrderBook)];
-    };
-
-AddDepthUpdateEvent :{[depth;time] // TODO convert to list instead of dict
-    :.event.AddEvent[time;`UPDATE;`DEPTH;depth];
-    };
-
-AddTradeEvent  :{[trade;time] // TODO convert to list instead of dict
-    :.event.AddEvent[time;`NEW;`TRADE;trade];
-    };
 
 // Orderbook Utilities
 // -------------------------------------------------------------->
