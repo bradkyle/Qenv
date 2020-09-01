@@ -1,6 +1,3 @@
-\cd ../util/
-\l util.q
-\cd ../state/
 \d .state
 
 // State specifically represents a set of events that are derived from the engine

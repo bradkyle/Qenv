@@ -17,7 +17,7 @@ sc: {x+(`second$y)};
 
 deRef   :{x[y]:`long$(x[y]);:x};
 rmFkeys :{cols[x] except key[fkeys x]};
-
+show 99#"=";
 
 makeDepthUpdate :{
     :$[count[x]>0;[ 
