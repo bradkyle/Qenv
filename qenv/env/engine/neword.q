@@ -136,6 +136,7 @@ ProcessDepth        :{[]
 /  @return (Inventory) The new updated inventory
 ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     nside:neg[side];
+    isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
     state:![
@@ -203,6 +204,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
             ]];
         
         trds:[];
+
+
   
     ];[
 
