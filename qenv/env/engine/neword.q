@@ -106,19 +106,6 @@ ProcessDepth        :{[]
     nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
     vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
 
-    .order.applyOrderUpdates[ // TODO 
-        pprice;
-        porderId;
-        noffset;
-        pleaves;
-        pstatus;
-        ();()];
-
-    .order.applyNewOrderBook[
-        state`price;
-        state`side;
-        tgt;
-        vqty]; 
     };
 
 
@@ -193,6 +180,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
         ordUpd:();
         .order.Order,:ordUpd;
+        .pipe.event.AddOrderUpdateEvent[];
 
         // Make order updates
         mflls:[];
