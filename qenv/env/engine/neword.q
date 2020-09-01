@@ -139,7 +139,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
     ?[`.order.OrderBook;
-       ((=;`side;1);(<;1000;(+\;`vqty)));0b;
+       enlist(=;`side;1);0b;
        `price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];
 
 
