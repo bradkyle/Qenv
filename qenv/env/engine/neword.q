@@ -74,6 +74,7 @@ applyPublicTrades :{[pleaves;nagentQty;rp]
 ProcessDepth        :{[]
 
     // TODO uj new event
+    // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
     state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
        ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
 
@@ -134,11 +135,10 @@ ProcessDepth        :{[]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
-    nside: .util.cond.NegSide[side];
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
-    state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()];
+    state:uj[?[`.order.OrderBook;enlist(=;`side;neg[side]);0b;()];
        ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
 
     // TODO move into state
