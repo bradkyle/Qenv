@@ -146,15 +146,18 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     // Derive the amount that will be replaced per level
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
     state:state[where (state`rp)>0];
+    state[`tgt]:(-/)state`qty`rp;
     odrs:?[.order.Order;.util.cond.isActiveLimit[neg[side];state`price];0b;()]
 
+    $[count odrs>0;[
+    
+    ];[
+
+    ]];
     // TODO check if count orders>0
-    state:lj[1!state;1!0!odrs]; // todo update oqty, oprice, check perf on smaller sel
+    state:{}lj[1!state;1!0!odrs]; 
 
     // TODO move into state
-    pqty: qty+(0^oqty);
-    thresh:sums qty; // change to svqty
-    rp:?[pqty<fillQty;pqty;fillQty]^((thresh-prev[thresh])-(thresh-fillQty));
     tgt:qty-rp;
 
     // Order differently based on price
