@@ -204,7 +204,7 @@ IncSelfFill    :{
 ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
-    k:instrument`contractType;      
+    k:i`contractType;      
     fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
@@ -232,9 +232,9 @@ ApplyFunding : {[i;time]
                 lj (select sum unrealizedPnl by accountId from i))
 
     // TODO change to vector conditional?
-    res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
+    res:$[k=0;.linear.account.ApplyFunding[a;iB;iL;iS;i];
+          k=1;.inverse.account.ApplyFunding[a;iB;iL;iS;i];
+          k=3;.quanto.account.ApplyFunding[a;iB;iL;iS;i]];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
