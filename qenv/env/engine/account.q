@@ -82,11 +82,10 @@ NewAccount :{[account;time]
     if[any null account[mandCols]; :0b];
     // Replace null values with their respective defailt values
     // TODO dynamic account type checking
-    account:Sanitize[account;defaults[];allCols];
-    .logger.Debug["account validated and decorated"];
+    acc:Sanitize[account;defaults[];allCols];
     / show value type each 1_account;
     / show value type each .account.Account@0;
-    `.account.Account upsert account;
+    .account.Account,:acc;
 
     / AddAccountUpdateEvent[accountId;time];
     };
@@ -212,16 +211,16 @@ IncSelfFill    :{
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-ApplyFill     :{[account; instrument; side; time; reduce; ismaker; price; qty]
+ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
     ck:instrument`contractType;      
     fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
-    res:$[ck=0;.linear.account.ApplyFill[];
-          ck=1;.inverse.account.ApplyFill[];
-          ck=3;.quanto.account.ApplyFill[]];
+    res:$[ck=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];
+          ck=1;.inverse.account.ApplyFill[a;iB;iL;iS;fill];
+          ck=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill]];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
