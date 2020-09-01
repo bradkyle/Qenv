@@ -52,7 +52,7 @@ Engine:(
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessDepthUpdateEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
@@ -70,7 +70,7 @@ ProcessDepthUpdateEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessNewTradeEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
@@ -89,7 +89,7 @@ ProcessNewTradeEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessMarkUpdateEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
@@ -107,7 +107,7 @@ ProcessMarkUpdateEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessSettlementEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
@@ -125,7 +125,7 @@ ProcessSettlementEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessFundingEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
@@ -143,7 +143,7 @@ ProcessFundingEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessLiquidationEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
+    instrument:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
     .order.UpdateMarkPrice[];
