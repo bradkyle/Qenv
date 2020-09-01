@@ -179,11 +179,6 @@ ProcessDepositEvents :{[event]
 / Public Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-// This function conducts post 
-RectifyState  :{
-
-    };
-
 
 // TODO probabalistic rejection of events
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -242,12 +237,9 @@ Info    :{[aids]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 Reset   :{[config]
-    delete from `.order.Order;
-    delete from `.order.OrderBook;
-    delete from `.instrument.Instrument;
-    delete from `.account.Account;
-    delete from `.inventory.Inventory;
-    delete from `.event.Event;
+    .util.table.dropAll[(`.order.Order`.order.OrderBook,
+                `.instrument.Instrument`.account.Account,
+                `.inventory.Inventory`.event.Event)];
 
     // Instantiate instrument with 
     // given config.
@@ -262,6 +254,6 @@ Reset   :{[config]
     .account.NewInventory[config[`longInventory]];
     .account.NewInventory[config[`bothInventory]];
 
-    // TODO update engine obs?
+    // TODO update engine
 
     };
