@@ -41,7 +41,7 @@ orderMandatoryFields    :`accountId`side`otype`size;
 // TODO allow for data derived i.e. exchange market orders.
 Order: (
     [price:`long$(); orderId:`long$()]
-    clId            :`long$();
+    clId            : `long$();
     instrumentId    : `.instrument.Instrument$();
     accountId       : `.account.Account$();
     side            : `long$();
@@ -79,7 +79,7 @@ isActiveLimit:{:((>;`size;0);
 // qtys: represent the different level quantities at their given prices
 // the events will be generated using the sum of the quantities and the 
 // orderbook sizes at each price.
-// `.order.OrderBook upsert ([price:(`long$((1000+til 20),(1000-til 20)))] side:(20#`.order.ORDERSIDE$`SELL),(20#`.order.ORDERSIDE$`BUY);qty:(`long$(40#1000)))
+// TODO add hidden/Iceberg qty
 OrderBook:(
     [price      :`long$()]
     side        :`long$(); 
