@@ -148,9 +148,7 @@ Withdraw       :{[withdrawn;time;accountId]
         acc[`withdrawable]-:withdrawn;
         / account[`available]:.account.Available[acc]; // TODO
 
-        ![`.account.Account;
-            enlist (=;`accountId;accountId);
-            0b;acc];
+        .account.Account,:acc;
         
         :.account.AddAccountUpdateEvent[acc;time];
         ];'InsufficientMargin];  
@@ -164,7 +162,6 @@ Withdraw       :{[withdrawn;time;accountId]
 / Inventory 
 
 inventoryCount:0;
-POSITIONSIDE   : `LONG`SHORT`BOTH;
 // TODO posState
 // TODO liqudation price
 Inventory: (
@@ -188,7 +185,7 @@ Inventory: (
 
 / .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
 
-DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
+DefaultInventory:{(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  // TODO validation here
 NewInventory : {[inventory;time] 
@@ -228,10 +225,6 @@ ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qt
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
-
-    ![`.account.Account;enlist(=;`accountId;accountId);0b;acc]; // change to amend
-    ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i]; // change to amend
-
     };
 
 
