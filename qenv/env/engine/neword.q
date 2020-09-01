@@ -165,7 +165,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // Calculate new shifts and max shifts
         nshft:sum[state`offset`leaves];
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
-        noffset: Clip[poffset-rp];
+        noffset: .util.Clip[(-/)state`offset`rp];
         nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
 
         // Calculate the new vis qty
