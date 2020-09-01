@@ -91,7 +91,8 @@ Order Features
     - order price list
 \
 
-/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices];0b;`price];
+/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;0];0b;`price]; // SELLS
+/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;1];0b;`price]; // BUYS
 
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
