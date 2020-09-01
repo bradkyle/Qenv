@@ -190,6 +190,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // above. They should not overlap.
         partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
+
+        // Make order updates
         
   
     ];[
