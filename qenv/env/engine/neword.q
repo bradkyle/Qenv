@@ -83,20 +83,42 @@ ProcessDepth        :{[]
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
 
-        state[`tgt]: last'[state`size]; 
-        // Pad state into a matrix
-        // for faster operations
-        padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
-            `accountId`instrumentId`price`status);
-        (state padcols):.util.PadM'[state padcols];
+        state[`tgt]: last'[state`size]; // TODO change to next? 
+        
 
         dneg:sum'[{x where[x<0]}'[dlts]];
-        $[count[dneg]>0;[
+        if[count[dneg]>0;[
+                // Pad state into a matrix
+                // for faster operations
+                padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
+                    `accountId`instrumentId`price`status);
+                (state padcols):.util.PadM'[state padcols];
 
-        ]] 
+                shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
+                mnoffset: (0,'-1_'(shft));
 
-        
-    .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
+                // Derive the non agent qtys that
+                // make up the orderbook
+                nagentQty: flip .util.PadM[ // TODO check
+                    raze'[(
+                        0^state[`offset][;0]; // Use the first offset as the first non agent qty
+                        .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
+                        .util.Clip[state[`qty]-mxshft] // TODO change?
+                    )]];
+
+                offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
+                noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
+                nshft:sum[state`leaves;noffset];
+                
+                // Calculate the new vis qty
+                nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+                mxshft:max'[nshft];
+                nvqty: {?[x>y;x;y]}'[mxshft;nvqty];
+
+                vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+            ]];
+        .order.Order,:(); // TODO update orders
+        .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`qty`qty]]]; // TODO fix
     ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
     .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
@@ -172,7 +194,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // above. They should not overlap.
         partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
-        .order.Order,:ordUpd; // update where partial
+        .order.Order,:(); // update where partial
         ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.event.AddOrderUpdateEvent[]; // Emit events for all 
 
