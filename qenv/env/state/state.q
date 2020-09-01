@@ -197,7 +197,11 @@ DefaultInstrumentId:0;
 // Feature Extraction and Derivation
 // =====================================================================================>
 
-FeatureBuffer   :();
+// Is a list / Table that is used to hold
+// a lookback buffer of aggregated features
+// over which normalization can be done before
+// passing the observations to the agent.
+.state.FeatureBuffer   :();
 
 // Agent specific observation functions
 // --------------------------------------------------->
