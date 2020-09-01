@@ -82,32 +82,20 @@ ProcessDepth        :{[]
         ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
-        nqty: last'[size];
-        poffset:PadM[offset];
-        pleaves:PadM[leaves];
-        porderId:PadM[orderId];
-        paccountId:PadM[accountId];
-        pprice:PadM[oprice];
-        maxN:max count'[offset];
-        numLvls:count[offset];
 
-        tgt: last'[size]; 
+        state[`tgt]: last'[state`size]; 
+        // Pad state into a matrix
+        // for faster operations
+        padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
+            `accountId`instrumentId`price`status);
+        (state padcols):.util.PadM'[state padcols];
+
         dneg:sum'[{x where[x<0]}'[dlts]];
-        shft:pleaves+poffset;
+        $[count[dneg]>0;[
 
-        nagentQty: flip PadM[raze'[(
-            poffset[;0]; 
-            Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];
-            Clip[qty-max'[shft]]
-            )]]; // TODO what qty is this referring to
-        mnoffset: (0,'-1_'(shft));
+        ]] 
 
-        offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
-
-        noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
-        nshft: pleaves+noffset;
-        nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
-        vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
+        
     .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`qty`qty]]]; // TODO fix
     ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
