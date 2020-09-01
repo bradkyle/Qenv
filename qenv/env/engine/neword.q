@@ -150,31 +150,35 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
 
     $[count[odrs]>0;[
-        state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;1!0!odrs]]; 
+        state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;`price xgroup odrs]]; 
         
         // Pad state into a matrix
         // for faster operations
         padcols:(`offset`size`leaves`reduce`orderId, // TODO make constant?
             `accountId`instrumentId`price`status);
-        (state padcols):.util.PadM[state padcols];
+        (state padcols):.util.PadM'[state padcols];
 
         // Useful counts 
         maxN:max count'[state`offset];
+        tmaxN:til maxN;
         numLvls:count[state`offset];
 
         // Calculate new shifts and max shifts
-        nshft:sum[state`offset`leaves];
-        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
-        noffset: .util.Clip[(-/)state`offset`rp];
-        nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset];
+        shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
+        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
+        noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
+        nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]; // TODO faster
 
         // Calculate the new vis qty
-        nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
-        nagentQty: flip PadM[
+        nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+
+        // Derive the non agent qtys that
+        // make up the orderbook
+        nagentQty: flip .util.PadM[
             raze'[(
-                0^poffset[;0]; // Use the first offset as the first non agent qty
-                Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]]; //
-                Clip[qty-mxshft]
+                0^state[`offset][;0]; // Use the first offset as the first non agent qty
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
+                .util.Clip[state[`qty]-mxshft]
             )]];
         nfilled: psize - nleaves; // New amount that is filled
         accdlts: pleaves - nleaves; // The new Account deltas

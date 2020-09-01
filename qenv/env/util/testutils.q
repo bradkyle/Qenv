@@ -303,13 +303,13 @@ dozc:{x+y}[doz];
 
 .util.testutils.genRandomOrders        :{
        .util.testutils.makeOrders[
-        `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time;
+        `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time`status`otype`size;
         ({(x;(`.account.Account!$[(x mod 2)=0;0;1]);
             (`.instrument.Instrument!0);
             floor[1000-(x%3)];$[(x<25);-1;1];100;
-            ((x mod 3)*110);
+            (((x+2) mod 3)*110);
             0b;
-            .z.z)
+            .z.z;0;1;100)
         }'[til[50]])]
     };
 

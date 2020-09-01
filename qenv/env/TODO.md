@@ -5,3 +5,6 @@
 // - Iceberg Orders
 // - sell 1, sell 2, sell 3, buy 3, buy 1, buy 2, exit position, etc. 
 // action tree
+
+// BENCHMARK
+2.0 million and 2.5 million inserts per second
