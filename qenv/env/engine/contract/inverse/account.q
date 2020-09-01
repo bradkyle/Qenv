@@ -223,7 +223,7 @@
 .inverse.account.ApplyFill               :{[a;iB;iL;iS;fill]
 
     k:a`positionType;
-    $[k=0;[
+    res:$[k=0;[ // TODO
             $[reduce;
                 redFill[price;qty;a;];
                 incFill[price;qty;a;];
