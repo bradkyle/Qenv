@@ -114,6 +114,7 @@ CurrentOrders: `orderId xkey .state.OrderEventHistory;
 clOrdCount:0;
 
 // Get the current qtys at each order level
+// .util.cond.isActiveAccountOrder
 getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls] // TODO shorten
     :exec sum leaves by price from .state.OrderEventHistory 
         where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
