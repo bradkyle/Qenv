@@ -88,9 +88,6 @@ Info        :{[aIds;step]
 Reset    :{[config]
     
     res:.engine.Reset[config];
-
-
-
     res:.state.Reset[config];
 
     // Loads the next set of events from 
