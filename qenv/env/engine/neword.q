@@ -75,7 +75,7 @@ ProcessDepth        :{[]
 
     // TODO uj new event
     state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
-       ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
+       ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
 
     dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
     nqty: last'[size];
@@ -134,7 +134,7 @@ ProcessDepth        :{[]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
-    nside: .order.NegSide[side];
+    nside: .util.cond.NegSide[side];
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
@@ -238,10 +238,10 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 /  @return (Inventory) The new updated inventory
 NewOrder            :{[i;o;a;time]
     k:o`type;
-    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
-          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
-          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
-          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+    res:$[k=0;  [.order.MarketOrder[x]]; // MARKET ORDER
+          k=1;  [.order.LimitOrder[x]]; // LIMIT ORDER
+          k=2;  [.order.StopOrder[x]]; // STOP_MARKET_ORDER
+          k=3;  [.order.StopOrder[x]]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
     .pipe.event.AddNewOrderEvent[res;time];
     };
@@ -260,8 +260,8 @@ NewOrder            :{[i;o;a;time]
 /  @return (Inventory) The new updated inventory
 AmendOrder          :{[i;o;a;time]
     k:o`type;
-    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
-          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
+    res:$[k=0;  [.engine.MarketOrder[x]]; // MARKET ORDER
+          k=1;  [.engine.LIMIT[x]]; // LIMIT ORDER
           k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
           k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
