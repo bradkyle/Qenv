@@ -212,17 +212,16 @@ IncSelfFill    :{
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qty]
+ApplyFill     :{[account; instrument; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
-    ck:instrument`contractType;        
+    ck:instrument`contractType;      
+    fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
-    res:$[
-        ck=0;.linear.account.ApplyFill[];
-        ck=1;.inverse.account.ApplyFill[];
-        ck=3;.;
-        ];
+    res:$[ck=0;.linear.account.ApplyFill[];
+          ck=1;.inverse.account.ApplyFill[];
+          ck=3;.quanto.account.ApplyFill[]];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
