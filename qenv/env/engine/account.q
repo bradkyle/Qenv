@@ -217,10 +217,12 @@ ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qt
     // Common derivations
     ck:instrument`contractType;        
 
-    $[
-        ck=0;[];
-        
-    ];
+    // TODO change to vector conditional?
+    res:$[
+        ck=0;.linear.account.ApplyFill[];
+        ck=1;.inverse.account.ApplyFill[];
+        ck=3;.;
+        ];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
