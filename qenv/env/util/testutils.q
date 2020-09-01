@@ -286,7 +286,9 @@ dozc:{x+y}[doz];
     };
 
 .util.testutils.genRandomAccount       :{
-
+    0^.util.testutils.makeAccounts[
+        `accountId`balance`available;
+        ({(x;100;100)}'[til[3]])]
     };
 
 .util.testutils.genRandomOrderBook     :{
