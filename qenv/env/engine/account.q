@@ -5,17 +5,11 @@
 \d .account
 \l util.q
 
-isinv:{x[`contractType]=`INVERSE}; // Is the instrument an inverse contract
-ppc:{x[`faceValue]%y}; // Derive price per contract
-
 accountCount:0;
 
 // TODO executions
 
 /*******************************************************
-/ account related enumerations  
-MARGINTYPE      :   `CROSS`ISOLATED;
-POSITIONTYPE    :   `HEDGED`COMBINED;
 
 // FAIR price vs ema 
 // Account state in this instance serves as a proxy
