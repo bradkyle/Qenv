@@ -40,8 +40,7 @@ isActiveStop:{:((>;`size;0);
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-hasOpenPosition:{:((>;`size;0);
-                    (in;`status;enlist[`NEW`PARTIALFILLED]);
-                    (in;`price;x); // TODO CONDITIONAL
-                    (in;`side;y); // TODO CONDITIONAL
-                    (in;`otype;enlist[`STOP_MARKET`STOP_LIMIT]))};
+hasOpenPosition:{:((>;`netLongPosition;0);
+                   (>;`netShortPosition;0); // TODO CONDITIONAL
+                   (>;`openBuyQty;0); // TODO CONDITIONAL
+                   (>;`openSellQty;0))};
