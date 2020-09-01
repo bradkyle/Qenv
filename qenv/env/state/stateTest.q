@@ -322,8 +322,8 @@ test:.qt.Unit[
             )));
         ("Should correctly update current orders to filled ";(
             (
-                (z;8;`DELETE;(0;0;0;0;0;0));
-                (z;8;`DELETE;(1;0;0;0;0;0))
+                (z;8;2;(0;0;0;0;0;0));
+                (z;8;2;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
