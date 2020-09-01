@@ -28,7 +28,7 @@
     };
 
 
-// Common Reset Functions
+// Common Reset/Teardown Functions
 // -------------------------------------------------------------->
 
 .util.testutils.resetEngineTables      :{
@@ -36,6 +36,22 @@
     };
 
 .util.testutils.resetStateTables      :{
+
+    };
+
+
+// Random Engine Generation
+// -------------------------------------------------------------->
+
+.util.testutils.genRandomEngine      :{
+
+    };
+
+
+// Random State Generation
+// -------------------------------------------------------------->
+
+.util.testutils.genRandomState      :{
 
     };
 
