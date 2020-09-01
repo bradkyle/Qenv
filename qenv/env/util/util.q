@@ -96,9 +96,3 @@
     if[type[x]=11h;[x:get x];
     cols[x]!(value (0!(get x))@-1)]
     };
-
-.util.ZRow  :{
-    r:.util.NullRow[x];
-    t:abs type'[r];
-    r[where[t=15]]:`;
-    };
