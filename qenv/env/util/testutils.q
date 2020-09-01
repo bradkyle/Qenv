@@ -268,7 +268,7 @@ dozc:{x+y}[doz];
 // -------------------------------------------------------------->
 
 .util.testutils.genRandomKind          :{
-
+    $[];
     };
 
 .util.testutils.genRandomTrades        :{
@@ -276,7 +276,7 @@ dozc:{x+y}[doz];
     };
 
 .util.testutils.genRandomDepths        :{
-
+    vl:{(1000-x;$[(x<25);-1;1];100;100)}'[til[50]];
     };
 
 .util.testutils.genRandomInventory     :{
