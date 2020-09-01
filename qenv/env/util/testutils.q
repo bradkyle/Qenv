@@ -1,5 +1,16 @@
 
 
+// Mock generation and checking utils
+// -------------------------------------------------------------->
+
+.util.testutils.makeMock            :{
+
+    };       
+
+.uil.testutils.checkMock            :{
+
+    };
+
 // Check Utils
 // -------------------------------------------------------------->
 
@@ -48,6 +59,9 @@
 // Make event utils
 // -------------------------------------------------------------->
 
+.util.testutils.genRandomEvent        :{
+
+    };
 
 // Random Engine Generation
 // -------------------------------------------------------------->

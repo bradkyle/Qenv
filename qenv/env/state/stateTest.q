@@ -55,22 +55,6 @@ genRandomState      :{[x;y;z] // TODO add max time
             p:{{10000+rand 100} each til[x]};
             sz:{{x+rand 100} each til[x]};
 
-            .state.tS:(
-                til[x];
-                t x;
-                sz x;
-                p x;
-                x?0,1
-            );
-
-            .state.dS:(
-                p x;
-                t x;
-                x?0,1;
-                sz x
-            );
-
-            // 
             tds:`time`intime`kind`cmd`datum!(t x;t x;x#1;x#0;flip[(
                 til[x];
                 t x;
@@ -185,8 +169,8 @@ test:.qt.Unit[
         enlist("Should correctly insert depth events into both current depth and depth event history";(
             0 1;
             (
-                (z;6;1;.state.accountCols!(0;0;0;0;0;0));
-                (z;6;1;.state.accountCols!(0;0;0;0;0;0));
+                (z;6;1;(0;0;0;0;0;0));
+                (z;6;1;(0;0;0;0;0;0));
 
                 (z;7;1;(0;1;z;0;1000;10;0));
                 (z;7;1;(1;1;z;0;1000;10;0));
@@ -314,8 +298,8 @@ test:.qt.Unit[
             )));
         ("Should correctly insert inventory events";(
             (
-                (z;7;1;6Id`side`realizedPnl`avgPrice`unrealizedPnl!(0;1;0;0;0));
-                (z;7;1;6Id`side`realizedPnl`avgPrice`unrealizedPnl!(1;1;0;0;0))
+                (z;7;1;6Id(0;1;0;0;0));
+                (z;7;1;6Id(1;1;0;0;0))
             );
             (
                 (`.account.InventoryEventHistory;([accountId:0 1;side:2#1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
