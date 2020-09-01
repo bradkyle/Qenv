@@ -15,11 +15,11 @@
 // Make Test Data Utils
 // -------------------------------------------------------------->
 
-.util.testutils.makeDepthUpdate     :{[]
+.util.testutils.makeDepthUpdates    :{[]
 
     };
 
-.util.testutils.makeOrderBook       :{[]
+.util.testutils.makeOrderBooks      :{[]
 
     };
 
@@ -143,12 +143,14 @@
 // Common Reset/Teardown Functions
 // -------------------------------------------------------------->
 
+// Resets the all the tables used in the engine.
 .util.testutils.resetEngineTables      :{
     .util.table.dropAll[(`.order.Order`.order.OrderBook,
                 `.instrument.Instrument`.account.Account,
                 `.inventory.Inventory`.event.Event)];
     };
 
+// Resets all the tables used in maintaining State
 .util.testutils.resetStateTables      :{
     .util.table.dropAll[(`.state.AccountEventHistory,
             `.state.InventoryEventHistory,
@@ -161,10 +163,12 @@
             `.state.LiquidationEventHistory)];
     };
 
+// Default function that runs before each Unit test etc.
 .util.testutils.defaultBeforeEach     :{
 
     };
 
+// Default function that runs after each Unit test etc.
 .util.testutils.defaultAfterEach      :{
 
     };    
