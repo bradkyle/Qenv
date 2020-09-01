@@ -63,7 +63,6 @@ Account: (
             monthVolume         : `long$());
 
 mandCols:();
-defaults:{:((accountCount+:1),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 allCols:cols Account;
 
 // Account CRUD Logic
@@ -140,7 +139,6 @@ Withdraw       :{[withdrawn;time;accountId]
         / account[`available]:.account.Available[acc]; // TODO
 
         .account.Account,:acc;
-
         .pipe.event.AddAccountEvent[acc;time];    
         
         ];'InsufficientMargin];  
@@ -174,10 +172,6 @@ Inventory: (
     leverage                 :  `long$();
     isignum                  :  `long$();
     fillCount                :  `long$());
-
-/ .account.Inventory@(1;`.account.POSITIONSIDE$`BOTH)
-
-DefaultInventory:{(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 
 / default:  // TODO validation here
 NewInventory : {[inventory;time] 
@@ -219,7 +213,7 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
-    // TODO add update events?
+
     .pipe.event.AddAccountEvent[res[0];time];
     .pipe.event.AddInventoryEvent[res[1];time];
 
@@ -243,6 +237,8 @@ UpdateMarkPrice : {[intrument;time]
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
-    // TODO add account update events
+
+    .pipe.event.AddAccountEvent[res[0];time];
+    .pipe.event.AddInventoryEvent[res[1];time];
     };
 

@@ -53,12 +53,7 @@ Engine:(
 /  @return (Inventory) The new updated inventory
 ProcessDepthUpdateEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -71,12 +66,7 @@ ProcessDepthUpdateEvents :{[event]
 /  @return (Inventory) The new updated inventory
 ProcessNewTradeEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 
@@ -90,12 +80,7 @@ ProcessNewTradeEvents :{[event]
 /  @return (Inventory) The new updated inventory
 ProcessMarkUpdateEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -108,12 +93,7 @@ ProcessMarkUpdateEvents :{[event]
 /  @return (Inventory) The new updated inventory
 ProcessSettlementEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -126,12 +106,7 @@ ProcessSettlementEvents :{[event]
 /  @return (Inventory) The new updated inventory
 ProcessFundingEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -144,12 +119,7 @@ ProcessFundingEvents :{[event]
 /  @return (Inventory) The new updated inventory
 ProcessLiquidationEvents :{[event]
     instrument:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -161,13 +131,8 @@ ProcessLiquidationEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessOrderEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    instrument:.engine.Master[][`instrumentId];
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -179,14 +144,10 @@ ProcessOrderEvents :{[event]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessNewPriceLimitEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
-
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    instrument:.engine.Master[][`instrumentId];
+    
     };
+
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -196,14 +157,23 @@ ProcessNewPriceLimitEvents :{[event]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessInstrumentEvents :{[event]
-    instrumentId:.engine.Master[][`instrumentId];
-    .instrument.UpdateMarkPrice[];
-    .account.UpdateMarkPrice[];
-    .order.UpdateMarkPrice[];
+ProcessWithdrawEvents :{[event]
+    instrument:.engine.Master[][`instrumentId];
+    
+    };
 
-    // Apply liquidations
-    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessDepositEvents :{[event]
+    instrument:.engine.Master[][`instrumentId];
+    
     };
 
 / Public Event Processing logic (Writes)
@@ -229,7 +199,8 @@ ProcessEvents :{ // WRITE EVENTS
             k=5;  [.engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
             k=8;  [.engine.ProcessOrderEvents[x]]; // ORDER
             k=9;  [.engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
-            k=10; [.engine.ProcessInstrumentEvents[x]]; // INSTRUMENT
+            k=10; [.engine.ProcessWithdrawEvents[x]]; // WITHDRAW
+            k=10; [.engine.ProcessDepositEvents[x]]; // DEPOSIT
             'INVALID_EVENT_KIND
         ];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
