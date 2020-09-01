@@ -100,6 +100,8 @@ Deposit  :{[deposited;time;accountId]
     // Account: available, liquidationprice, bankruptcyprice, depositCount
     acc:exec from  .account.Account where accountId=accountId;
 
+    if[not[count[acc]>0];'INVALID_ACCOUNTID];
+
     acc[`balance]-:deposited;
     acc[`depositAmount]+:deposited;
     acc[`depositCount]+:1;
@@ -126,6 +128,8 @@ Deposit  :{[deposited;time;accountId]
 Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
+
+    if[not[count[acc]>0];'INVALID_ACCOUNTID];
 
     $[withdrawn < acc[`withdrawable];[
         // TODO more expressive and complete upddate statement accounting for margin etc.
