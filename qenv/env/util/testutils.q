@@ -1,5 +1,14 @@
 
 
+l: `long$x
+z:.z.z;
+sc:{x+(`second$y)};
+sz:sc[z];
+dts:{(`date$x)+(`second$x)};
+dtz:{dts[sc[x;y]]}[z]
+doz:`date$z;
+dozc:{x+y}[doz];
+
 // Mock generation and checking utils
 // -------------------------------------------------------------->
 
