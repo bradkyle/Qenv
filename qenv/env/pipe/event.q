@@ -17,7 +17,7 @@ EVENTKIND:(
         2; // MARK
         3; // LIQUIDATION
         4; // FUNDING
-        5; // LIQUIDATION
+        5; // SETTLEMENT
         6; // ACCOUNT
         7; // INVENTORY
         8; // ORDER

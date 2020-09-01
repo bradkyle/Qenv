@@ -2,7 +2,7 @@
 system "d .stateTest";
 \cd ../../quantest/
 \l quantest.q 
-\cd ../env/pipe/
+\cd ../env/state/
 
 z:.z.z;
 

@@ -60,6 +60,7 @@ Last Trades Features:
     - last trades sizes
     - last trades sides (0=`SHORT; 1=`LONG)
 \
+lastprice: exec last price from .state.TradeEventHistory;
 buys:select[5;>time] price, size from .state.TradeEventHistory where side=`BUY;
 sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL;
 / sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL; todo both candle
@@ -72,6 +73,7 @@ Mark Price Features
     - -5#basis
 \
 markprice:last .state.MarkEventHistory;
+basis:lastprice-markprice;
 
 /
 Funding Features
@@ -79,6 +81,7 @@ Funding Features
     - next funding price
     - funding time countdown
 \
+
 
 /
 Order Features
