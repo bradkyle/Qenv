@@ -205,7 +205,7 @@ SignalEventHistory: (
     sigvalue        :   `float$()
     );
 
-InsertResultantEvents :{
+InsertEvents :{
     {
         k:x`kind;
         r:x`datum;
