@@ -210,7 +210,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
     ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
-    .pipe.event.AddDepthEvent[]; // TODO add snapshot update?
+    .pipe.event.AddDepthEvent[?[];time]; // TODO add snapshot update?
     };
 
 // Process New Orders
