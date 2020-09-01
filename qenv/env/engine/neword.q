@@ -138,14 +138,18 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
-    ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];
+    ?[`.order.OrderBook;
+       ((=;`side;1);(<;1000;(+\;`vqty)));0b;
+       `price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];
+
+
 
     state:uj[?[`.order.OrderBook;enlist(=;`side;neg[side]);0b;()];
        ?[`.order.Order;.order.isActiveLimit[();nside];0b;()];`price;()]; // todo update oqty, oprice, check perf on smaller sel
 
     // TODO move into state
     pqty: qty+(0^oqty);
-    thresh:sums qty;
+    thresh:sums qty; // change to svqty
     rp:?[pqty<fillQty;pqty;fillQty]^((thresh-prev[thresh])-(thresh-fillQty));
     tgt:qty-rp;
 
