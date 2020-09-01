@@ -224,9 +224,10 @@ ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qt
     cost:qty*fee;
     markprice:ins[`markPrice];
 
-    // preprocessing values based on instrument?
+    $[]
 
-    // TODO if oi exists
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
 
     ![`.account.Account;enlist(=;`accountId;accountId);0b;acc]; // change to amend
     ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i]; // change to amend
