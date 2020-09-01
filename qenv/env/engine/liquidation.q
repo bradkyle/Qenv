@@ -1,6 +1,10 @@
 
 \d .liquidation
 
+Liquidation :(
+
+    );
+
 / https://www.bitmex.com/app/liquidationExamples
 / https://www.bitmex.com/app/liquidation
 / https://www.bitmex.com/app/wsAPI#Deleverage
@@ -24,7 +28,7 @@ ForceCancel :{[a;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Liquidate :{[a;iB;iL;iS;ins;time]
+Liquidate :{[a;iB;iL;iS;i;time]
     a:.liquidation.ForceCancel[a;time];
     if[sum[a`available`maintMarginReq]<0;[
 
