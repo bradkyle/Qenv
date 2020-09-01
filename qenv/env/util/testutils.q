@@ -304,8 +304,7 @@ dozc:{x+y}[doz];
 .util.testutils.genRandomOrders        :{
        .util.testutils.makeOrders[
         `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time;
-        ({
-            (x;(`.account.Account!$[(x mod 2)=0;0;1]);
+        ({(x;(`.account.Account!$[(x mod 2)=0;0;1]);
             (`.instrument.Instrument!0);
             1000-x;
             $[(x<25);-1;1];
