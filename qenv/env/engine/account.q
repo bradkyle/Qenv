@@ -225,11 +225,11 @@ AdjustOrderMargin       :{[a; i; side; time; reduce; ismaker; price; qty]
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-ApplyFill           :{[a; i; side; time; reduce; ismaker; price; qty]
+ApplyFill           :{[a; i; side; time; fill]
 
     // Common derivations
     k:i`contractType;      
-    fill:(side;time;reduce;ismaker;qty);  
+    / fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];

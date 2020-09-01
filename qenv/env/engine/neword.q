@@ -195,13 +195,12 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         flls:[];
 
         if[count[flls]>0;[
-            if[accountId in flls[`paccountId];[
-
+            if[account[`accountId] in flls[`paccountId];[
 
 
             ]];
-            
-            
+                fllfn:.account.ApplyFill[account;instrument;side];            
+                fllfn flls;
             ]];
         
   
