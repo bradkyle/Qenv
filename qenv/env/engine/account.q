@@ -237,5 +237,7 @@ UpdateMarkPrice : {[intrument;time]
           ck=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
           ck=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
 
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
     };
 
