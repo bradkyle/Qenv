@@ -190,6 +190,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // above. They should not overlap.
         partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
+        ordUpd:();
+        .order.Order,:ordUpd;
 
         // Make order updates
         flls:[];
@@ -197,10 +199,10 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         if[count[flls]>0;[
             if[account[`accountId] in flls[`accountId];
                 .account.IncSelfFill[accountId;count[sflls];sum[sflls`filled]]];
-            fllfn:.account.ApplyFill[account;instrument;side];            
-            fllfn flls;
+            .account.ApplyFill[account;instrument;side] flls;
             ]];
         
+        trds:[];
   
     ];[
 
