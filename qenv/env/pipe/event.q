@@ -39,7 +39,7 @@ EVENTCMD      : (0;1;2;3;4);
 / order enumerations
 
 / `BUY:0,`SELL:1;
-ORDERSIDE     : (0;1);
+ORDERSIDE     : (1;-1);
 
 // USING MANUAL LIST FOR REFERENCABILITY 
 ORDERKIND:(
@@ -125,8 +125,8 @@ POSITIONSTATE   : (0;1);
 / `HEDGED:0,`COMBINED:1;
 POSITIONTYPE    : (0;1);
 
-/ `NEW:0,`UPDATE:1,`DELETE:2,`FAILED:3
-POSITIONSIDE    : (0;1;2;3;4);
+/ `SHORT:-1,`BOTH:0,`LONG:1
+POSITIONSIDE    : (-1;0;1);
 
 // TODO create combined table.
 
