@@ -42,7 +42,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeDefaultsRecord  :{[ref;]
-
+    .util.ColTypes[];
     };
 
 // Checks that the .order.Order table matches the orders

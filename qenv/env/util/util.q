@@ -81,12 +81,15 @@
     $[type[x]=11h;[
         v:get[x]+1;
         (x set v);get[v];
-    ];[x+:1;x]];
-    };
+    ];[x+:1;x]]};
 
 .util.ColTypes:{
     $[type[x]=11h;[
-        type'[value ((get x)@0)]
-    ];[type'[value (x@0)]]];
-    :)
-    }
+        type'[value ((0!(get x))@-1)]
+    ];[type'[value ((0!x)@-1)]]]};
+
+.util.NullRow:{
+    $[type[x]=11h;[
+    (enlist value (0!(get x))@-1)]
+    ];[(enlist value (0!(get x))@-1)]]};
+    };
