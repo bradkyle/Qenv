@@ -144,6 +144,12 @@
 // -------------------------------------------------------------->
 
 .util.testutils.resetEngineTables      :{
+    .util.table.dropAll[(`.order.Order`.order.OrderBook,
+                `.instrument.Instrument`.account.Account,
+                `.inventory.Inventory`.event.Event)];
+    };
+
+.util.testutils.resetStateTables      :{
     .util.table.dropAll[(`.state.AccountEventHistory,
             `.state.InventoryEventHistory,
             `.state.OrderEventHistory,
@@ -153,10 +159,6 @@
             `.state.MarkEventHistory,
             `.state.FundingEventHistory,
             `.state.LiquidationEventHistory)];
-    };
-
-.util.testutils.resetStateTables      :{
-
     };
 
 .util.testutils.defaultBeforeEach     :{
