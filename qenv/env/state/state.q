@@ -109,7 +109,7 @@ DefaultInstrumentId:0;
 .state.lvlPrices     :{?[]};
 
 // TODO add error handling
-.state.priceAtLvl     :{};
+.state.priceAtLvl     :{?[]};
 
 
 // Non-Essential Datums
