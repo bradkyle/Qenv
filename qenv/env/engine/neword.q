@@ -135,106 +135,74 @@ ProcessDepth        :{[]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
-
+    nside:neg[side];
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
     state:![
         ?[`.order.OrderBook;
-          enlist(=;`side;1);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];();0b;
+          enlist(=;`side;nside);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];();0b;
           `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
 
     // Derive the amount that will be replaced per level
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
     state:state[where (state`rp)>0];
     state[`tgt]:(-/)state`qty`rp;
-    odrs:?[.order.Order;.util.cond.isActiveLimit[neg[side];state`price];0b;()]
+    odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()]
 
     $[count odrs>0;[
-    
+        state:{}[lj[neg[side]1!state;1!0!odrs]]; 
+        
+    // TODO check if count orders>0
+
+        // TODO move into state
+
+        // Order differently based on price
+        state:$[x=`BUY;`price xasc y;`price xdesc y]; // TODO move into above
+
+        // Pad state into a matrix
+        // for faster operations
+        poffset:PadM[state`offset]; // TODO move into one invocation
+        psize:PadM[state`size];
+        pleaves:PadM[state`leaves];
+        preduceOnly:PadM[state`reduceOnly];
+        porderId:PadM[state`orderId];
+        paccountId:PadM[state`accountId];
+        pinstrumentId:PadM[state`instrumentId];
+        pprice:PadM[state`oprice];
+        pstatus:PadM[state`status];
+
+        // Useful counts 
+        maxN:max count'[poffset];
+        numLvls:count[poffset];
+
+        // Calculate new shifts and max shifts
+        nshft:pleaves+poffset;
+        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
+        noffset: Clip[poffset-rp];
+        nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
+
+        // Calculate the new vis qty
+        nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
+        nagentQty: flip PadM[
+            raze'[(
+                0^poffset[;0]; // Use the first offset as the first non agent qty
+                Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]]; //
+                Clip[qty-mxshft]
+            )]];
+        nfilled: psize - nleaves; // New amount that is filled
+        accdlts: pleaves - nleaves; // The new Account deltas
+        vqty: {?[x>y;x;y]}'[mxshft;nvqty]; // The new visible quantity
+
+        // Derived the boolean representation of partially and 
+        // fully filled orders within the matrix of orders referenced
+        // above. They should not overlap.
+        partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]);
+        fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]);
+        
+  
     ];[
 
-    ]];
-    // TODO check if count orders>0
-    state:{}lj[1!state;1!0!odrs]; 
-
-    // TODO move into state
-    tgt:qty-rp;
-
-    // Order differently based on price
-    state:$[x=`BUY;`price xasc y;`price xdesc y]; // TODO move into above
-
-    // Pad state into a matrix
-    // for faster operations
-    poffset:PadM[state`offset]; // TODO move into one invocation
-    psize:PadM[state`size];
-    pleaves:PadM[state`leaves];
-    preduceOnly:PadM[state`reduceOnly];
-    porderId:PadM[state`orderId];
-    paccountId:PadM[state`accountId];
-    pinstrumentId:PadM[state`instrumentId];
-    pprice:PadM[state`oprice];
-    pstatus:PadM[state`status];
-
-    // Useful counts 
-    maxN:max count'[poffset];
-    numLvls:count[poffset];
-
-    // Calculate new shifts and max shifts
-    nshft:pleaves+poffset;
-    mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
-    noffset: Clip[poffset-rp];
-    nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
-
-    // Calculate the new vis qty
-    nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
-    nagentQty: flip PadM[
-        raze'[(
-            0^poffset[;0]; // Use the first offset as the first non agent qty
-            Clip[0^poffset[;1_(til first maxN)] - 0^nshft[;-1_(til first maxN)]]; //
-            Clip[qty-mxshft]
-        )]];
-    nfilled: psize - nleaves; // New amount that is filled
-    accdlts: pleaves - nleaves; // The new Account deltas
-    vqty: {?[x>y;x;y]}'[mxshft;nvqty]; // The new visible quantity
-
-    // Derived the boolean representation of partially and 
-    // fully filled orders within the matrix of orders referenced
-    // above. They should not overlap.
-    partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]);
-    fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]);
-    
-    .order.applyAccountFills[
-        porderId;
-        paccountId;
-        pprice;
-        nfilled;
-        preduceOnly;
-        state`accountId];
-    
-    .order.applyOrderUpdates[
-        pprice;
-        porderId;
-        noffset;
-        nleaves;
-        pstatus;
-        partfilled;
-        fullfilled];
-
-    .order.applyPublicTrades[
-        accountId;
-        instrumentId;
-        pleaves;
-        preduceOnly;
-        nagentQty;
-        rp;
-        side;
-        pprice];
-
-    .order.applyNewOrderBook[
-        state`price;
-        state`side;
-        tgt;
-        vqty];
+    ]];    
 
     };
 
