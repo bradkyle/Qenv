@@ -243,7 +243,7 @@ ApplyFill           :{[a; i; side; time; reduce; ismaker; price; qty]
 // Main Public Funding Function
 // ---------------------------------------------------------------------------------------->
 
-ApplyFunding        : {[i;time]
+ApplyFunding        : {[i;fr;ft;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
@@ -267,7 +267,7 @@ ApplyFunding        : {[i;time]
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
-UpdateMarkPrice     : {[i;time]
+UpdateMarkPrice     : {[i;mp;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
