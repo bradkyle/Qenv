@@ -36,16 +36,19 @@ dozc:{x+y}[doz];
 // -------------------------------------------------------------->
 
 
-// Checks that the .order.Order table matches the orders
-// that are provided.
-/  @param x (Order/List) The orders that are to be checked
-/  @param y (Case) The case that the assertions belong to
-/  @param z (List[String]) The params that are being checked 
+// The following function takes a reference to a table,
+// and a set of columns (cl) and values (vl).
+// It generates a null row, if the value count is greater
+// than 1 it repeats the row x times and fills the respective
+// columns provided by cl with the respective values provided
+// by vl
+/  @param ref (Symbol) The symbol reference to the table
+/  @param cl (List[Symbol]) The list of symbols indicating columns
+/  @param vl (List[List[Any]]) The list of lists to populate with. 
 .util.testutils.makeDefaultsRecords  :{[ref;cl;vl]
     r:.util.NullRowDict[ref];
     cvl:count[vl];
-    $[cvl>1;[(cvl#enlist[r])[cl]:flip[vl];r];[r[cl]:vl;r]]
-    };
+    :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];r];[r[cl]:vl;r]]};
 
 // Checks that the .order.Order table matches the orders
 // that are provided.
