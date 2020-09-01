@@ -11,7 +11,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-isActiveLimit:{:((>;`size;0);
+.util.cond.isActiveLimit:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x); // TODO CONDITIONAL
                (in;`side;y); // TODO CONDITIONAL
@@ -25,7 +25,7 @@ isActiveLimit:{:((>;`size;0);
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-isActiveStop:{:((>;`size;0);
+.util.cond.isActiveStop:{:((>;`size;0);
                (in;`status;enlist[`NEW`PARTIALFILLED]);
                (in;`price;x); // TODO CONDITIONAL
                (in;`side;y); // TODO CONDITIONAL
@@ -43,7 +43,7 @@ isActiveStop:{:((>;`size;0);
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-hasOpenPosition:{:((>;`netLongPosition;0);
+.util.cond.hasOpenPosition:{:((>;`netLongPosition;0);
                    (>;`netShortPosition;0); // TODO CONDITIONAL
                    (>;`openBuyQty;0); // TODO CONDITIONAL
                    (>;`openSellQty;0))};
@@ -57,4 +57,4 @@ hasOpenPosition:{:((>;`netLongPosition;0);
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-isInsolvent:{:((<;`available;`maintMarginReq))};
+.util.cond.isInsolvent:{:((<;`available;`maintMarginReq))};
