@@ -1,5 +1,4 @@
 \d .instrument
-\l util.q
 
 instrumentCount:0;
 

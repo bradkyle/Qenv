@@ -3,7 +3,6 @@
 
 
 \d .account
-\l util.q
 
 accountCount:0;
 
@@ -216,7 +215,6 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     .pipe.event.AddAccountEvent[res[0];time];
     .pipe.event.AddInventoryEvent[res[1];time];
-
     };
 
 

@@ -3,10 +3,10 @@
 \l event.q
 \l order.q
 system "d .orderTest";
-\l util.q
 \cd ../quantest/
 \l quantest.q 
 \cd ../engine/
+
 
 z:.z.z;
 

@@ -1,6 +1,3 @@
-\d .contract.linear.account
-
-
 
 liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
         bal:account[`balance]; // TODO change to margin?

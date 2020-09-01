@@ -3,7 +3,6 @@
 \l event.q
 \l order.q
 system "d .accountTest";
-\l util.q
 \cd ../quantest/
 \l quantest.q 
 \cd ../engine/

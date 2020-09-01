@@ -1,4 +1,3 @@
-\d .inverse.account
 
 // Derives the execCost which is the cumulative sum of the product of
 // the fillQty and price of entering into a position.
