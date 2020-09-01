@@ -217,7 +217,7 @@ environment agent state.
     takerFn:.state.adapter.createMarketOrderEvent[aId;time;marketSize];
     res: $[
         a=0;
-        [0N]; // TODO derive config from account?
+        [:(();penalty+:.global.Encouragement)]; // TODO derive config from account?
         a=1;
         makerFn[0;4];
         a=2;
