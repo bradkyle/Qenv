@@ -87,7 +87,7 @@ ProcessDepth        :{[]
     maxN:max count'[offset];
     numLvls:count[offset];
 
-    tgt: last'[size];
+    tgt: last'[size]; 
     dneg:sum'[{x where[x<0]}'[dlts]];
     shft:pleaves+poffset;
 
