@@ -97,7 +97,7 @@ Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 
 // -------------------------------------------------------------->
 
 // Adds a given amount to the accounts balance.
-// Update available/withdrawable etc.
+// Update available/withdrawable etc. // TODO validate arguments?
 Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     // Account: available, liquidationprice, bankruptcyprice, depositCount
@@ -113,6 +113,7 @@ Deposit  :{[deposited;time;accountId]
     .account.Account,:acc;
 
     // TODO add update event
+    .pipe.event.AddAccountEvent[acc;time];
     };
 
 
@@ -140,7 +141,7 @@ Withdraw       :{[withdrawn;time;accountId]
 
         .account.Account,:acc;
 
-        // TODO add update event
+        .pipe.event.AddAccountEvent[acc;time];    
         
         ];'InsufficientMargin];  
     };
@@ -219,11 +220,14 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
     // TODO add update events?
+    .pipe.event.AddAccountEvent[res[0];time];
+    .pipe.event.AddInventoryEvent[res[1];time];
+
     };
 
 
-// UpdateMarkPrice
-// -------------------------------------------------------------->
+// Update Mark Price
+// ---------------------------------------------------------------------------------------->
 
 UpdateMarkPrice : {[intrument;time]
     // TODO validate instrument exists
@@ -239,5 +243,6 @@ UpdateMarkPrice : {[intrument;time]
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
+    // TODO add account update events
     };
 

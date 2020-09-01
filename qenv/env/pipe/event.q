@@ -184,8 +184,16 @@ PopEvents               :{
 
 ECOLS                   :`time`cmd`kind`datum;
 
+
+// Event Construction Utils
+// ---------------------------------------------------------------------------------------->
+// The following functions will derive obligatory fields
+// pertaining to the specific datums from the dictionary
+// passed to them.
+
+
 /*******************************************************
-/ Event Creation Utils
+/ Private Creation Utils
 
 AddPlaceOrderEvent     :{[order;time]
 
@@ -247,6 +255,10 @@ AddNewOrderEvent       :{[order;time]
         };
 
 AddAccountEvent        :{[account;time]
+
+        };
+
+AddInventoryEvent      :{[account;time]
 
         };
 
