@@ -16,7 +16,7 @@
                 (=;`otype;1);
                 (in;`status;(0 1));
                 (in;`price;y); 
-                (>;`size;0))}; // TODO improve performance
+                (>;`leaves;0))}; // TODO improve performance
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
