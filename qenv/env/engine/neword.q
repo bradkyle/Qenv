@@ -150,10 +150,12 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
 
     $[count[odrs]>0;[
-        state:{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;1!0!odrs]]; 
+        state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;1!0!odrs]]; 
         
         // Pad state into a matrix
         // for faster operations
+        padcols:(`offset`size`leaves`reduce`orderId,
+        `accountId`instrumentId`price`status);
         poffset:PadM[state`offset]; // TODO move into one invocation
         psize:PadM[state`size];
         pleaves:PadM[state`leaves];
