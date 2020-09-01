@@ -38,7 +38,7 @@ EXECINST    :   `PARTICIPATEDONTINITIATE`ALLORNONE`REDUCEONLY`NIL;
 orderMandatoryFields    :`accountId`side`otype`size;
 
 // TODO change price type to int, longs etc.
-// TODO allow for data derived i.e. exchange market orders.
+// TODO allow for data derived i.e. exchange market orders. // TODO move offset into seperate table?
 Order: (
     [price:`long$(); orderId:`long$()]
     clId            : `long$();
