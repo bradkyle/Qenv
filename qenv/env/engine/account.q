@@ -209,10 +209,6 @@ NewInventory : {[inventory;time]
 // Fill
 // -------------------------------------------------------------->
 
-// Gets the position side that an order fills
-HedgedSide      :{[side] :$[side=`SELL;`SHORT;`LONG]};
-HedgedNegSide   :{[side] :$[side=`SELL;`LONG;`SHORT]};
-
 // Increments the occurance of an agent's self fill.
 // @x : unique account id
 // @y : self filled count
