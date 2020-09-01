@@ -166,7 +166,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         nshft:sum[state`offset`leaves];
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
         noffset: .util.Clip[(-/)state`offset`rp];
-        nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
+        nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset];
 
         // Calculate the new vis qty
         nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]; // TODO make simpler
