@@ -133,7 +133,7 @@ ProcessDepth        :{[]
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
+/  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
 ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     nside:neg[side];
     isagnt:not[null[account]];
@@ -210,7 +210,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
     ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
-    
+    .pipe.event.AddDepthEvent[]; // TODO add snapshot update?
     };
 
 // Process New Orders
