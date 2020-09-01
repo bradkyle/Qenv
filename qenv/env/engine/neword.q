@@ -198,18 +198,20 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         flls:[];
 
         if[count[flls]>0;[
-            if[account[`accountId] in flls[`accountId];
+            if[isagnt and (account[`accountId] in flls[`accountId]);
                 .account.IncSelfFill[accountId;count[sflls];sum[sflls`filled]]];
             .account.ApplyFill[account;instrument;side] flls;
             ]];
         
-        trds:[];
-
 
   
     ];[
 
-    ]];    
+    ]];
+    
+    if[isagnt;
+    
+        ];    
 
     };
 
