@@ -193,14 +193,6 @@ DefaultInventory:{(0,`BOTH,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)};
 / default:  // TODO validation here
 NewInventory : {[inventory;time] 
     if[any null inventory[`accountId`side]; :0b];
-    inventory[`isignum]:$[inventory[`side]=`LONG;
-        1;
-      inventory[`side]=`SHORT;
-        -1;
-      inventory[`side]=`BOTH;
-        1;
-        'INVALID_POSITIONSIDE;
-    ];
     inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
     `.account.Inventory upsert inventory; // TODO check if successful
