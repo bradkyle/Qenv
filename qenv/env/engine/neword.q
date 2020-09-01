@@ -148,7 +148,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     state:state[where (state`rp)>0];
     odrs:?[.order.Order;.util.cond.isActiveLimit[neg[side];state`price];0b;()]
 
-    // TODO check if 
+    // TODO check if count orders>0
     state:lj[1!state;1!0!odrs]; // todo update oqty, oprice, check perf on smaller sel
 
     // TODO move into state
