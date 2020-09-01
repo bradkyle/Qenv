@@ -164,7 +164,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         numLvls:count[state`offset];
 
         // Calculate new shifts and max shifts
-        nshft:pleaves+poffset;
+        nshft:sum[state`offset`leaves];
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft];
         noffset: Clip[poffset-rp];
         nleaves: {?[x>z;(y+z)-x;y]}'[rp;pleaves;poffset];
