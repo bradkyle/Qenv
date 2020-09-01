@@ -110,7 +110,7 @@ ProcessDepth        :{[]
         vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
     .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`qty`qty]]]; // TODO fix
-    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all 
+    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
     .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
@@ -184,9 +184,9 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // above. They should not overlap.
         partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
-        ordUpd:();
-        .order.Order,:ordUpd;
-        .pipe.event.AddOrderUpdateEvent[];
+        .order.Order,:ordUpd; // update where partial
+        ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
+        .pipe.event.AddOrderUpdateEvent[]; // Emit events for all 
 
         // Make order updates
         mflls:[];
@@ -203,8 +203,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
-    ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
-    .pipe.event.AddDepthEvent[?[];time]; // TODO add snapshot update?
+    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
+    .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
 // Process New Orders
