@@ -35,6 +35,19 @@
 
 // Derive the maintenence margin i.e. the amount of margin required to
 // keep the specified inventory open. 
+.inverse.account.MaintMarginReq      :{[]
+
+    };
+
+// Derives the initial margin that is reserved for a given inventory 
+// which should not be confused with posMargin which stipulates the
+// inventory/position size divided by the selected margin.
+.inverse.account.InitMarginReq       :{[]
+
+    };
+
+// Derive the maintenence margin i.e. the amount of margin required to
+// keep the specified inventory open. 
 .inverse.account.MaintMargin      :{[]
 
     };
