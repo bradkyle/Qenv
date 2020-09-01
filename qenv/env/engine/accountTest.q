@@ -75,8 +75,8 @@ defaultAfterEach: {
      delete from `.account.Inventory;
      delete from `.event.Events;
     /  delete from  `.instrument.Instrument;
-     .account.accountCount:0;
-     .order.orderCount:0;
+    .account.accountCount:0;
+    .order.orderCount:0;
     .instrument.instrumentCount:0;
      .qt.RestoreMocks[];
     };

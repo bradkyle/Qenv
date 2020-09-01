@@ -136,7 +136,7 @@
 
 
 .util.testutils.checkStateTable     :{
-
+    'NOTIMPLEMENTED
     };
 
 
@@ -144,7 +144,15 @@
 // -------------------------------------------------------------->
 
 .util.testutils.resetEngineTables      :{
-
+    .util.table.dropAll[(`.state.AccountEventHistory,
+            `.state.InventoryEventHistory,
+            `.state.OrderEventHistory,
+            `.state.CurrentDepth,
+            `.state.DepthEventHistory,
+            `.state.TradeEventHistory,
+            `.state.MarkEventHistory,
+            `.state.FundingEventHistory,
+            `.state.LiquidationEventHistory)];
     };
 
 .util.testutils.resetStateTables      :{
