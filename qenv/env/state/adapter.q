@@ -1,4 +1,3 @@
-\d .pipe.adapter
 \l state.q
 \l util.q
 // Adapters
@@ -6,10 +5,15 @@
 
 /*******************************************************
 / adapter enumerations
-ADAPTERTYPE :   (`MARKETMAKER;        
-                `DUALBOX;          
-                `SIMPLEBOX;    
-                `DISCRETE);   
+.state.adapter.ADAPTERTYPE :
+                (
+                    `MARKETMAKER;        
+                    `DUALBOX;          
+                    `SIMPLEBOX; // TODO
+                    `DISCRETE; // TODO
+                    `LVLDELTAS; // TODO
+                    `MACRO // TODO
+                );   
 
 // TODO move into state
 
@@ -29,7 +33,7 @@ environment agent state.
 // Generates a set of events that represent
 // the placement of orders at a set of levels
 // represented as a list
-createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
+.state.adapter.createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
     price: .state.getPriceAtLevel[level;side];
     o:`price`clId`instrumentId`accountId`side`otype`size`reduceOnly!(
         price;
@@ -55,7 +59,7 @@ createOrderAtLevel     :{[level;side;size;accountId;reduceOnly;time]
 // @lvls: levels ascending from spread
 // @sizes: target sizes
 // @s: side
-makerSide   :{[aId;lvls;sizes;s;time]
+.state.adapter.makerSide   :{[aId;lvls;sizes;s;time]
     p:.state.getPriceAtLevel[lvls;s];
     c:.state.getLvlOQtysByPrice[aId;s];
     dlt: neg[c] + (1!([]price:p;dlt:sizes));
@@ -67,9 +71,9 @@ makerSide   :{[aId;lvls;sizes;s;time]
     };
 
 // TODO test for 1, 0 count lvl etc
-makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
-    a:makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
-    b:makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
+.state.adapter.makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
+    a:.state.adapter.makerSide[aId;sellLvls;count[enlist sellLvls]#limitSize;`SELL;time];
+    b:.state.adapter.makerSide[aId;buyLvls;count[enlist buyLvls]#limitSize;`BUY;time];
 
     // Group amend [ask,bid;max count per req]
     // assumes amend to 0 cancels order
@@ -87,7 +91,7 @@ makerDelta : {[aId;time;limitSize;buyLvls;sellLvls]
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
 // market orders for a specific agent
-createFlattenEvents          :{[aId; time]
+.state.adapter.createFlattenEvents          :{[aId; time]
     openQty:.state.getOpenPositionAmtBySide[aId];
     :({.adapter.createMarketOrderEvent[
         x;y;z[`currentQty]
@@ -97,18 +101,17 @@ createFlattenEvents          :{[aId; time]
 // Creates a set of order events that transition the current
 // open order events to a new set that satisfies the distribution
 // provided TODO make better.
-createOrderEventsFromDist   :{[accountId;time;dist;side]
+.state.adapter.createOrderEventsFromDist   :{[accountId;time;dist;side]
     
     };
 
 // Creates a set of market order events that satisfy the provided
 // distribution.
-createMarketOrderEventsFromDist :{[]
+.state.adapter.createMarketOrderEventsFromDist :{[]
 
     };
 
-
-// Stop Event Adapters
+// Stop Event Utilities
 // ---------------------------------------------------------------------------------------->
 // Should use the expected next state inventory
 // to derive a set of stops that serve to protect
@@ -120,7 +123,7 @@ createMarketOrderEventsFromDist :{[]
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createNaiveStops  :{[aId;loss;time]
+.state.adapter.createNaiveStops  :{[aId;loss;time]
     openInv:.state.getOpenPositions[aId];
     {
         0n;
@@ -130,7 +133,7 @@ createNaiveStops  :{[aId;loss;time]
 // Creates the set of stop orders that oppose the
 // current position according to a certain loss fraction
 // 
-createStaggeredStops  :{[aId;loss;num;time]
+.state.adapter.createStaggeredStops  :{[aId;loss;num;time]
     openInv:.state.getOpenPositions[aId];
     {
         0n;
@@ -142,33 +145,38 @@ createStaggeredStops  :{[aId;loss;num;time]
 // fraction, if the current orders that are open
 // do not have correct price, size they are either
 // cancelled or amended depending on the configuration.
-createExpStaggeredStops  :{[aId;loss;num;time]
+.state.adapter.createExpStaggeredStops  :{[aId;loss;num;time]
     openInv:.state.getOpenPositions[aId];
     {
         0n;
     }[aId;loss;time] each openInv;
     };
 
-// Action Adapters
+
+
+
+// Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->
-adapters : (`.adapter.ADAPTERTYPE$())!();
+
+.state.adapter.mapping : (`.state.adapter.ADAPTERTYPE$())!();
 
 // Simply places orders at best bid/ask
-adapters[`DISCRETE]     :{[action;accountId]
+// action should be of type long
+.state.adapter.mapping[`DISCRETE]     :{[action;accountId]
     penalty:0f;
     $[action=0;
         [:(();penalty+:.global.Encouragement)]; // TODO change from global to state config ()
         action=1;
-        createOrderEventsFromDist[accountId;time;0.05;`BUY];
+        .state.adapter.createOrderEventsFromDist[accountId;time;0.05;`BUY];
         action=2;
-        createOrderEventsFromDist[accountId;time;0.05;`SELL];
+        .state.adapter.createOrderEventsFromDist[accountId;time;0.05;`SELL];
         action=3;
-        createMarketOrderEventsFromDist[accountId;time;0.05;`BUY];
+        .state.adapter.createMarketOrderEventsFromDist[accountId;time;0.05;`BUY];
         action=4;
-        createMarketOrderEventsFromDist[accountId;time;0.05;`SELL];
+        .state.adapter.createMarketOrderEventsFromDist[accountId;time;0.05;`SELL];
         action=5;
-        createFlattenEvents[accountId;time];
-        []];
+        .state.adapter.createFlattenEvents[accountId;time];
+        'INVALID_ACTION];
     };
 
 // SIMBLEBOX generates the set of actions that
@@ -199,13 +207,13 @@ adapters[`DISCRETE]     :{[action;accountId]
 
 
 // TODO remove redundancy
-adapters[`MARKETMAKER]   :{[time;action] // TODO refactor to shorter
+.state.adapter.mapping[`MARKETMAKER]   :{[time;action] // TODO refactor to shorter
     a:action[0];
     aId:action[1];
     limitSize: 8;
     marketSize: 10;
-    makerFn:makerDelta[aId;time;limitSize];
-    takerFn:createMarketOrderEvent[aId;time;marketSize];
+    makerFn:.state.adapter.makerDelta[aId;time;limitSize];
+    takerFn:.state.adapter.createMarketOrderEvent[aId;time;marketSize];
     res: $[
         a=0;
         [0N]; // TODO derive config from account?
@@ -240,14 +248,14 @@ adapters[`MARKETMAKER]   :{[time;action] // TODO refactor to shorter
         a=15;
         makerFn[14;14];
         a=16;
-        createFlattenEvents[];
+        .state.adapter.createFlattenEvents[];
         a=17;
         takerFn[`BUY];
         a=18;
         takerFn[`SELL];
         a=19;
-        createCancelAllOrdersEvent[]; // TODO add more
-        [:0N]];
+        .state.adapter.createCancelAllOrdersEvent[]; // TODO add more
+        'INVALID_ACTION];
     
     :res;
     };
@@ -256,6 +264,6 @@ adapters[`MARKETMAKER]   :{[time;action] // TODO refactor to shorter
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter.
-Adapt :{[adapterType; time; actions]
-    :adapters[adapterType] each actions;
+.state.adapter.Adapt :{[adapterType; time; actions]
+    :.state.adapter.mapping[adapterType] each actions;
     };
