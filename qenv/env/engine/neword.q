@@ -204,6 +204,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
             ]];
   
         trds:[];
+        .pipe.event.AddTradeEvent[trds;time];
 
         if[isagnt;[
 
