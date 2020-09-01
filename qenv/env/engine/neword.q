@@ -202,17 +202,18 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
                 .account.IncSelfFill[accountId;count[sflls];sum[sflls`filled]]];
             .account.ApplyFill[account;instrument;side] flls;
             ]];
-        
-
   
+        trds:[];
+
+        if[isagnt;
+    
+        ];    
+
+
     ];[
 
     ]];
     
-    if[isagnt;
-    
-        ];    
-
     };
 
 // Process New Orders
