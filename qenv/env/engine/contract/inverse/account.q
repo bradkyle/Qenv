@@ -50,7 +50,7 @@ InitMargin       :{[]
 // state this function will derive the approximate price point at which 
 // the account will be liquidated.
 LiquidationPrice :{[a;iB;iL;iS;ins]
-    sB:iB[`isignum];
+    sB:iB[`isignum]; // TODO check
 
     sum[(a`balance),((iB;iL;iS)`maintMarginReq)]
 
@@ -66,7 +66,7 @@ LiquidationPrice :{[a;iB;iL;iS;ins]
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the price point at which the account
 // will become bankrupt.
-BankruptcyPrice  :{[account;iB;iL;iS;ins]
+BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
     x:prd[iB`isignum`amt];
     :(prd[x,iB[`avgPrice]];
     -((-/)prd[(iL;iS)`amt`avgPrice]))

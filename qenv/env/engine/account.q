@@ -118,9 +118,7 @@ Deposit  :{[deposited;time;accountId]
     / account[`available]:.account.Available[acc]; // TODO
     / account[`initMarginReq`maintMarginReq]
 
-    ![`.account.Account;
-        enlist (=;`accountId;accountId);
-        0b;acc];
+    .account.Account,:acc;
 
     :.account.AddAccountUpdateEvent[acc;time];
     };
@@ -217,11 +215,12 @@ IncSelfFill    :{
 ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qty]
 
     // Common derivations
-    fee: $[isMaker;acc[`activeMakerFee];acc[`activeTakerFee]];
-    cost:qty*fee;
-    markprice:ins[`markPrice];
+    ck:instrument`contractType;        
 
-    $[]
+    $[
+        ck=0;[];
+        
+    ];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
