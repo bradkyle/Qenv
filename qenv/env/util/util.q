@@ -90,6 +90,11 @@
 
 .util.NullRow:{
     $[type[x]=11h;[
-    (enlist value (0!(get x))@-1)]
-    ];[(enlist value (0!(get x))@-1)]]};
+    (value (0!(get x))@-1)]
+    ];[(value (0!(get x))@-1)]]};
+    };
+
+.util.ZRow  :{
+    r:.util.NullRow[x];
+    t:abs type'[r];
     };
