@@ -192,6 +192,17 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
 
         // Make order updates
+        flls:[];
+
+        if[count[flls]>0;[
+            if[accountId in flls[`paccountId];[
+
+
+
+            ]];
+            
+            
+            ]];
         
   
     ];[
