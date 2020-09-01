@@ -195,6 +195,8 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];};
 
+
+
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
@@ -218,12 +220,36 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
     };
 
 
+// Main Public Funding Function
+// ---------------------------------------------------------------------------------------->
+
+ApplyFunding : {[i;time]
+    // TODO validate instrument exists
+    k:i`contractType;      
+
+    // TODO derive risk buffer
+    ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i))
+
+    // TODO change to vector conditional?
+    res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
+
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
+
+    .pipe.event.AddAccountEvent[res[0];time];
+    .pipe.event.AddInventoryEvent[res[1];time];
+    };
+
+
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
-UpdateMarkPrice : {[intrument;time]
+UpdateMarkPrice : {[i;time]
     // TODO validate instrument exists
-    k:instrument`contractType;      
+    k:i`contractType;      
 
     // TODO derive risk buffer
     ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
