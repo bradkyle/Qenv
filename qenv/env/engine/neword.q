@@ -188,8 +188,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
         // above. They should not overlap.
-        partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]);
-        fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]);
+        partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
+        fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
         
   
     ];[
