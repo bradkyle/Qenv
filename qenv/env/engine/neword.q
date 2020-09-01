@@ -149,8 +149,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     state[`tgt]:(-/)state`qty`rp;
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()]
 
-    $[count odrs>0;[
-        state:{}[lj[neg[side]1!state;1!0!odrs]]; 
+    $[count[odrs]>0;[
+        state:{$[]}[neg[side];lj[1!state;1!0!odrs]]; 
         
     // TODO check if count orders>0
 
