@@ -200,17 +200,15 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         if[count[mflls]>0;[
             if[isagnt and (account[`accountId] in mflls[`accountId]);
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
-            .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
-            ]];
+                .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
+                ]];
   
-        trds:[];
-        .pipe.event.AddTradeEvent[trds;time];
+        .pipe.event.AddTradeEvent[[];time]; // TODO derive trades
 
-        if[isagnt;[
+        if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        ]];    
-
-
+        .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
+        ![`.order.OrderBook;enlist(<=;`vqty;0);0;`symbol$()];
     ];[
 
     ]];
