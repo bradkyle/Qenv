@@ -6,8 +6,14 @@
 // TODO house state in its own process
 // TODO prioritized experience replay
 // TODO train test split with batches of given length (Hindsight experience replay/teacher student curriculum)
+
+// COMMON COUNTERS
+// =====================================================================================>
 maxLvls:20;
 DefaultInstrumentId:0;
+.state.clOrdCount:0;
+.state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
+
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -21,14 +27,14 @@ DefaultInstrumentId:0;
 // The following tables maintain a local state buffer 
 // representative of what the agent will see when
 // interacting with a live exchange. 
-AccountEventHistory: (
+.state.AccountEventHistory: (
     [accountId : `long$(); time : `datetime$()]
     balance             : `long$();
     available           : `long$();
     frozen              : `long$();
     maintMargin         : `long$());
-accountCols:cols .state.AccountEventHistory;
-CurrentAccount: `accountId xkey .state.AccountEventHistory;
+.state.accountCols:cols .state.AccountEventHistory;
+.state.CurrentAccount: `accountId xkey .state.AccountEventHistory;
 
 // INVENTORY
 // ----------------------------------------------------------------------------------------------->
@@ -37,24 +43,21 @@ CurrentAccount: `accountId xkey .state.AccountEventHistory;
 // positions (Inventory) each agent has held and
 // subsequently provides agent specific details
 // therin
-InventoryEventHistory: ( // TODO change side to long 1,2,3
+.state.InventoryEventHistory: ( // TODO change side to long 1,2,3
     [accountId:  `long$();side: `long$();time : `datetime$()]
     amt                 :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
     unrealizedPnl       :  `long$());
-inventoryCols:cols .state.InventoryEventHistory;
-CurrentInventory: `accountId`side xkey .state.InventoryEventHistory;
+.state.inventoryCols:cols .state.InventoryEventHistory;
+.state.CurrentInventory: `accountId`side xkey .state.InventoryEventHistory;
 
 
 // Return all open positions for an account
-getOpenPositions              :{[aId]
-    :(select from .state.InventoryEventHistory where accountId=accountId);
-    };
+.state.openInventory :{?[`.state.CurrentInventory;]};
 
-getOpenPositionAmtBySide           :{[aId]
-    :select sum currentQty by side from .state.InventoryEventHistory where accountId=aId;
-    };
+// Return the amt of each inventory by side for account
+.state.amtBySide     :{?[`.state.CurrentInventory;]};
 
 // ORDERS
 // ----------------------------------------------------------------------------------------------->
@@ -91,7 +94,7 @@ getOpenPositionAmtBySide           :{[aId]
 /    isClose:10#0b;
 /    trigger:10#`NIL);
 
-OrderEventHistory: (
+.state.OrderEventHistory: (
     [
         orderId:`long$();
         time:`datetime$()
@@ -108,30 +111,17 @@ OrderEventHistory: (
     reduce          :   `boolean$();
     trigger         :   `long$(); // TODO change to long
     execInst        :   `long$()); // TODO change to long
-
-ordCols:cols .state.OrderEventHistory;
-CurrentOrders: `orderId xkey .state.OrderEventHistory;
-clOrdCount:0;
+.state.ordCols:cols .state.OrderEventHistory;
+.state.CurrentOrders: `orderId xkey .state.OrderEventHistory;
 
 // Get the current qtys at each order level
 // .util.cond.isActiveAccountOrder
-getCurrentOrderQtysByPrice        :{[accountId;numAskLvls;numBidLvls] // TODO shorten
-    :exec sum leaves by price from .state.OrderEventHistory 
-        where accountId=accountId, state=`NEW`PARTIALLYFILLED, otype=`LIMIT;
-    };
+.state.ordQtyByPrice :{?[`.order.CurrentOrders]};
 
-getLvlOQtysByPrice  :{[aId;s] // TODO shorted
-    :select dlt:sum leaves by price from .state.OrderEventHistory 
-        where accountId=aId, status in `NEW`PARTIALFILLED, side=s, leaves>0;
-    };
+// Get the sum of the outstanding order qtys for each
+// level by price
+.state.lvlQtyByPrice :{?[`.order.CurrentOrders]};
 
-
-getOrders   :{ // TODO shorten
-    select qty:sum leaves by price from .state.OrderEventHistory 
-        where accountId=x, status in `NEW`PARTIALFILLED, side=`BUY, leaves>0;    
-    };
-
-genNextClOrdId  :{.state.clOrdCount+:1;:.state.clOrdCount};
 
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
