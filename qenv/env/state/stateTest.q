@@ -88,7 +88,7 @@ genRandomState      :{[x;y;z] // TODO add max time
 
             invn:`time`intime`kind`cmd`datum!(t x;t x;x#7;x#1;flip[(
                 x?til 3;
-                x?0,1;
+                x?til 2;
                 t x;
                 sz x;
                 sz x;
@@ -158,8 +158,8 @@ genRandomState      :{[x;y;z] // TODO add max time
                 flip[sg]
             );
 
-            .state.InsertResultantEvents[x];
-            / x
+            / .state.InsertResultantEvents[x];
+            x
     };
 
 

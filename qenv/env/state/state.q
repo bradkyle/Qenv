@@ -214,7 +214,7 @@ InsertResultantEvents :{
         r:x`datum;
         $[
             k=0;[
-                .state.DepthEventHistory,:r;
+                / .state.DepthEventHistory,:r;
                 .state.CurrentDepth,:r;
             ]; // DEPTH
             k=1;[.state.TradeEventHistory,:r]; // TRADE
@@ -223,16 +223,16 @@ InsertResultantEvents :{
             k=4;[.state.FundingEventHistory,:r]; // FUNDING
             k=5;[.state.SettlementHistory,:r]; // SETTLEMENT
             k=6;[
-                .state.AccountEventHistory,:r;
-                .state.CurrentAccount,:r; // TODO make better
+                / .state.AccountEventHistory,:r;
+                .state.CurrentAccount,:r; 
             ]; // ACCOUNT
             k=7;[
                 .state.InventoryEventHistory,:r;
                 .state.CurrentInventory,:r;
             ]; // INVENTORY
             k=8;[
-                .state.OrderEventHistory,:r;
-                .state.CurrentOrders,:r;
+                / .state.OrderEventHistory,:r;
+                .state.CurrentOrders,:r; 
             ]; // ORDER
             k=9;[.state.PriceLimitHistory,:r]; // PRICELIMIT
             k=16;[.state.SignalEventHistory,:r]; // SIGNAL

@@ -58,9 +58,9 @@ asksizefracs:asksizes%sumasksizes;
 /
 Last Trades Features:
     - last trades sizes
-    - last trades sides (0=`SHORT; 1=`LONG)
+    - last trades sides (0=`SHORT; 1=`LONG) // ROOT = TRADE
 \
-lastprice: exec last price from .state.TradeEventHistory;
+lastprice:last[.state.TradeEventHistory]`price;
 buys:select[5;>time] price, size from .state.TradeEventHistory where side=`BUY;
 sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL;
 / sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL; todo both candle
@@ -72,7 +72,7 @@ Mark Price Features
     - -5#mark price
     - -5#basis
 \
-markprice:last .state.MarkEventHistory;
+markprice:last[.state.MarkEventHistory]`markprice;
 basis:lastprice-markprice;
 
 /
@@ -81,7 +81,7 @@ Funding Features
     - next funding price
     - funding time countdown
 \
-
+markprice:ls
 
 /
 Order Features
@@ -91,13 +91,7 @@ Order Features
     - order price list
 \
 
-// TODO move to util
-isActiveLimit:{:((>;`leaves;0);
-               (in;`status;enlist[`NEW`PARTIALFILLED]);
-               (in;`price;x); // TODO CONDITIONAL
-               (~;`otype;`LIMIT))};
-
-/ ?[.state.CurrentOrders;isActiveLimit[bidprices];0b;`price`leaves!`price`leaves];
+/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices];0b;`price];
 
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL);
 exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[ap], otype=`LIMIT, status in `NEW`PARTIALFILLED, side=`SELL)
@@ -106,15 +100,15 @@ exec leaves from 0^(select leaves from .state.CurrentOrders where price in raze[
 Account Features
     - last balance
     - last available
-    - last maintMargin
-\
+    - last maintMargin 
 
-/
 Inventory Features
     - last unrealized Pnl
     - last realizedPnl
     - last avgPrice
 \
+(select by accountId from .state.CurrentAccount 
+    uj Piv[0!select by accountId,side from .state.CurrentInventory;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl])
 
 /
 Liquidation Features
