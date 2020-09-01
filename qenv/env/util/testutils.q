@@ -65,7 +65,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeOrderBooks      :{[cl;vl]
+.util.testutils.makeOrderBook      :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.order.OrderBook;cl;vl]
     };
 
@@ -275,8 +275,8 @@ dozc:{x+y}[doz];
 
     };
 
-.util.testutils.genRandomDepths        :{
-    0^.util.testutils.makeOrders[
+.util.testutils.genRandomOrderBook    :{
+    0^.util.testutils.makeOrderBook[
         `price`side`size`vqty;
         ({(1000-x;$[(x<25);-1;1];100;100)}'[til[50]])]
     };
