@@ -90,8 +90,19 @@
             ]];
     };
 
-.util.testutils.checkAccounts       :{
-
+// TODO test account
+// Checks that the .order.Order table matches the orders
+// that are provided.
+/  @param x (Events/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.checkAccount       :{
+        eAcc:$[type[x]=99h;x;.util.testutils.makeAccounts[x;z]]
+        if[count[eAcc]>0;[
+            rAcc:.account.Account;
+            .qt.A[count];=;count[rAcc];"event count";y]; // TODO check
+            .qt.A[(y#0!rAcc);~;(y#0!eAcc);"event";y]; // TODO check
+            ]];
     };
 
 .util.testutils.checkInventory      :{
