@@ -216,25 +216,20 @@
     :inventory                  
     };
 
-// Checks if an account's positionType is HEDGED
-/  @param   x (Account) The account that is being checked.
-/  @return    (boolean) Is hedged.
-ishedged:{x[`positionType]=`HEDGED};
-
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
 .inverse.account.ApplyFill               :{[a;iB;iL;iS;fill]
 
-    $[ishedged[a];
-        [
+    k:a`positionType;
+    $[k=0;[
             $[reduce;
                 redFill[price;qty;a;];
                 incFill[price;qty;a;];
             ];
-        ];
-        [
+      ];
+      k=1;[
             // TODO should be neg?
             namt:abs[inventory[`amt]+neg[qty]]; // TODO fix
             $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
@@ -243,8 +238,7 @@ ishedged:{x[`positionType]=`HEDGED};
                 crsFill[price;namt;a;iB];
                 incFill[price;qty;a;iB]
             ];
-        ];
-    ];
+      ];'INVALID_POSITION_TYPE];
 
     // Common logic // TODO make aplicable to active inventory
     i[`realizedPnl]-:cost;
