@@ -36,6 +36,8 @@ DefaultInstrumentId:0;
 .state.accountCols:cols .state.AccountEventHistory;
 .state.CurrentAccount: `accountId xkey .state.AccountEventHistory;
 
+// TODO liqudiation price?
+
 // INVENTORY
 // ----------------------------------------------------------------------------------------------->
 
@@ -51,7 +53,6 @@ DefaultInstrumentId:0;
     unrealizedPnl       :  `long$());
 .state.inventoryCols:cols .state.InventoryEventHistory;
 .state.CurrentInventory: `accountId`side xkey .state.InventoryEventHistory;
-
 
 // Return all open positions for an account
 .state.openInventory :{?[`.state.CurrentInventory;]};
@@ -90,7 +91,6 @@ DefaultInstrumentId:0;
 // level by price
 .state.lvlQtyByPrice :{?[`.order.CurrentOrders]};
 
-
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
 
@@ -103,7 +103,7 @@ DefaultInstrumentId:0;
     [price:`long$();time:`datetime$()]
     side:`long$(); // change side to long
     size:`int$());
-.state.depthCols:cols DepthEventHistory;
+.state.depthCols:cols .state.DepthEventHistory;
 .state.CurrentDepth: `price xkey .state.DepthEventHistory;
 
 .state.lvlPrices     :{?[]};
@@ -123,7 +123,7 @@ DefaultInstrumentId:0;
     size            :   `long$();
     price           :   `long$();
     side            :   `long$()); // TODO change side to long
-.state.tradeCols:cols TradeEventHistory;
+.state.tradeCols:cols .state.TradeEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -131,7 +131,7 @@ DefaultInstrumentId:0;
 .state.MarkEventHistory: (
     [time            :   `datetime$()]
     markprice        :   `long$());
-.state.markCols:cols MarkEventHistory;
+.state.markCols:cols .state.MarkEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -140,7 +140,7 @@ DefaultInstrumentId:0;
     [time            :   `datetime$()]
     fundingrate      :   `long$();
     fundingtime      :   `datetime$());
-.state.fundingCols:cols FundingEventHistory;
+.state.fundingCols:cols .state.FundingEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
@@ -150,15 +150,14 @@ DefaultInstrumentId:0;
     size            :   `long$();
     price           :   `long$();
     side            :   `long$()); // todo change side to long
-.state.liquidationCols:cols LiquidationEventHistory;
+.state.liquidationCols:cols .state.LiquidationEventHistory;
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
 // and indicators etc.
 .state.SignalEventHistory: (
     [sigid:`long$(); time:`datetime$()]
-    sigvalue        :   `float$()
-    );
+    sigvalue        :   `float$());
 
 .state.InsertEvents :{
     {
