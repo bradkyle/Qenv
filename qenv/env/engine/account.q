@@ -195,13 +195,33 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];};
 
+// Main Public Fill Function
+// ---------------------------------------------------------------------------------------->
 
+// Convert to matrix/batch/array oriented
+AdjustOrderMargin       :{[a; i; side; time; reduce; ismaker; price; qty]
+
+    // Common derivations
+    k:i`contractType;      
+    fill:(side;time;reduce;ismaker;qty);  
+
+    // TODO change to vector conditional?
+    res:$[k=0;.linear.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          k=1;.inverse.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill]];
+
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
+
+    .pipe.event.AddAccountEvent[res[0];time];
+    .pipe.event.AddInventoryEvent[res[1];time];
+    };
 
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
+ApplyFill           :{[a; i; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
     k:i`contractType;      
@@ -223,7 +243,7 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 // Main Public Funding Function
 // ---------------------------------------------------------------------------------------->
 
-ApplyFunding : {[i;time]
+ApplyFunding        : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
@@ -247,7 +267,7 @@ ApplyFunding : {[i;time]
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
-UpdateMarkPrice : {[i;time]
+UpdateMarkPrice     : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
