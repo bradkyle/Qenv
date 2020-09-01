@@ -142,7 +142,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         ?[`.order.OrderBook;enlist(=;`side;1);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];
         ();
         0b;
-        `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;150)))];
+        `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
 
 
     state:uj[?[`.order.OrderBook;enlist(=;`side;neg[side]);0b;()];
