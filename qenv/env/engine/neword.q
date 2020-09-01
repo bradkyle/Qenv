@@ -139,10 +139,9 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
     state:![
-        ?[`.order.OrderBook;enlist(=;`side;1);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];
-        ();
-        0b;
-        `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
+        ?[`.order.OrderBook;
+          enlist(=;`side;1);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];();0b;
+          `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
 
     state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
     state:state[where (state`rp)>0]
