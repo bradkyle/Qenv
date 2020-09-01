@@ -53,7 +53,152 @@ Master  :{:(.engine.Engine@0)}
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessMarkUpdateEvent :{[event]
+ProcessDepthUpdateEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessNewTradeEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessMarkUpdateEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessSettlementEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessFundingEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessLiquidationEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessOrderEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessNewPriceLimitEvents :{[event]
+    instrumentId:.engine.Master[][`instrumentId];
+    .instrument.UpdateMarkPrice[];
+    .account.UpdateMarkPrice[];
+    .order.UpdateMarkPrice[];
+
+    // Apply liquidations
+    .account.Liquidate[ins;time]'[.account.GetInsolvent[]];
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+ProcessInstrumentEvents :{[event]
     instrumentId:.engine.Master[][`instrumentId];
     .instrument.UpdateMarkPrice[];
     .account.UpdateMarkPrice[];
