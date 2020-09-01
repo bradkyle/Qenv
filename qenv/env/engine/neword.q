@@ -152,13 +152,6 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
     $[count[odrs]>0;[
         state:{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;1!0!odrs]]; 
         
-    // TODO check if count orders>0
-
-        // TODO move into state
-
-        // Order differently based on price
-        state:$[x=`BUY;`price xasc y;`price xdesc y]; // TODO move into above
-
         // Pad state into a matrix
         // for faster operations
         poffset:PadM[state`offset]; // TODO move into one invocation
