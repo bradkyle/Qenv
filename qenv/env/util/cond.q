@@ -1,6 +1,6 @@
 
 
-// Common Conditionals
+// Order Conditionals
 // -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -32,6 +32,9 @@ isActiveStop:{:((>;`size;0);
                (in;`otype;enlist[`STOP_MARKET`STOP_LIMIT]))};
 
 
+// Account Conditionals
+// -------------------------------------------------------------->
+
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
@@ -44,3 +47,14 @@ hasOpenPosition:{:((>;`netLongPosition;0);
                    (>;`netShortPosition;0); // TODO CONDITIONAL
                    (>;`openBuyQty;0); // TODO CONDITIONAL
                    (>;`openSellQty;0))};
+
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+isInsolvent:{:((<;`available;`maintMarginReq))};

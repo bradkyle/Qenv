@@ -221,9 +221,6 @@ IncSelfFill    :{
                 (+;`selfFillVolume;z)
             )];};
 
-dcMrg   :{`long(x*y)};
-dcCnt   :{`long(x*y)};
-
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
@@ -243,12 +240,6 @@ ApplyFill     :{[account; instrument; side; time; reduceOnly; isMaker; price; qt
     ![`.account.Inventory;((=;`accountId;accountId);(=;`side;iside));0b;i]; // change to amend
 
     };
-
-
-// Liquidation And MarkPrice updates
-// -------------------------------------------------------------->
-
-GetInsolvent    :{[select from x where available<maintMarginReq]};
 
 
 // UpdateMarkPrice
