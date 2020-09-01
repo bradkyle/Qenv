@@ -203,13 +203,13 @@ IncSelfFill    :{
 ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
-    ck:instrument`contractType;      
+    k:instrument`contractType;      
     fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
-    res:$[ck=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];
-          ck=1;.inverse.account.ApplyFill[a;iB;iL;iS;fill];
-          ck=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill]];
+    res:$[k=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];
+          k=1;.inverse.account.ApplyFill[a;iB;iL;iS;fill];
+          k=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill]];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -225,15 +225,16 @@ ApplyFill     :{[a; i; side; time; reduce; ismaker; price; qty]
 
 UpdateMarkPrice : {[intrument;time]
     // TODO validate instrument exists
+    k:instrument`contractType;      
 
     // TODO derive risk buffer
     ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
                 lj (select sum unrealizedPnl by accountId from i))
 
     // TODO change to vector conditional?
-    res:$[ck=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          ck=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          ck=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
+    res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i]];
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
