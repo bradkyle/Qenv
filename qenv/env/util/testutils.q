@@ -90,12 +90,12 @@ dozc:{x+y}[doz];
 /  @param x (Instrument/List) The instrument that is to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.uti.testutils.checkDepth           :{
-        eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]]
-        if[count[eBook]>0;[
-            rBook:.order.OrderBook;
-            .qt.A[count];=;count[rBook];"orderBook lvl count";y]; // TODO check
-            .qt.A[(y#0!rBook);~;(y#0!eBook);"ordersBook";y]; // TODO check
+.uti.testutils.checkInstrument         :{
+        eIns:$[type[x]=99h;x;.util.testutils.makeInstruments[x;z]]
+        if[count[eIns]>0;[
+            rIns:.instrument.Instrument;
+            .qt.A[count];=;count[rIns];"instrument count";y]; // TODO check
+            .qt.A[(y#0!rIns);~;(y#0!eIns);"instrument";y]; // TODO check
             ]];
     };
 
