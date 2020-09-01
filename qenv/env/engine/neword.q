@@ -75,41 +75,43 @@ ProcessDepth        :{[]
 
     
     odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
+    $[count[odrs]>0;[
+        // TODO uj new event
+        // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
+        state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
+        ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
 
+        dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
+        nqty: last'[size];
+        poffset:PadM[offset];
+        pleaves:PadM[leaves];
+        porderId:PadM[orderId];
+        paccountId:PadM[accountId];
+        pprice:PadM[oprice];
+        maxN:max count'[offset];
+        numLvls:count[offset];
 
-    // TODO uj new event
-    // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-    state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
-       ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
+        tgt: last'[size]; 
+        dneg:sum'[{x where[x<0]}'[dlts]];
+        shft:pleaves+poffset;
 
-    dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
-    nqty: last'[size];
-    poffset:PadM[offset];
-    pleaves:PadM[leaves];
-    porderId:PadM[orderId];
-    paccountId:PadM[accountId];
-    pprice:PadM[oprice];
-    maxN:max count'[offset];
-    numLvls:count[offset];
+        nagentQty: flip PadM[raze'[(
+            poffset[;0]; 
+            Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];
+            Clip[qty-max'[shft]]
+            )]]; // TODO what qty is this referring to
+        mnoffset: (0,'-1_'(shft));
 
-    tgt: last'[size]; 
-    dneg:sum'[{x where[x<0]}'[dlts]];
-    shft:pleaves+poffset;
+        offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
 
-    nagentQty: flip PadM[raze'[(
-        poffset[;0]; 
-        Clip[poffset[;1_(til first maxN)] - shft[;-1_(til first maxN)]];
-        Clip[qty-max'[shft]]
-        )]]; // TODO what qty is this referring to
-    mnoffset: (0,'-1_'(shft));
-
-    offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
-
-    noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
-    nshft: pleaves+noffset;
-    nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
-    vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
-
+        noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
+        nshft: pleaves+noffset;
+        nvqty: sum'[raze'[flip[raze[enlist(tgt;pleaves)]]]]
+        vqty: {?[x>y;x;y]}'[mxshft;nvqty] // todo take into account mxnshift
+    .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
+    ];[.order.OrderBook,:last'[nxt`price`side`qty`qty]]]; // TODO fix
+    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all 
+    .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
 
