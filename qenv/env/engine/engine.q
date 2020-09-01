@@ -33,8 +33,6 @@ Engine:(
     eventCount                  : `long$()
     );
 
-Master  :{:(.engine.Engine@0)}
-
 // Ingress Queue, Egress Queue
 
 
