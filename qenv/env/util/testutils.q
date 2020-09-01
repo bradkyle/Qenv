@@ -43,7 +43,7 @@ dozc:{x+y}[doz];
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeDefaultsRecord  :{[ref;cl;vl]
     r:.util.NullRowDict[ref];
-    r[cl]:vl;
+    r[cl]:vl; // TODO make length invariant
     r};
 
 // Checks that the .order.Order table matches the orders
