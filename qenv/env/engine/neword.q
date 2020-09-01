@@ -154,8 +154,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
         
         // Pad state into a matrix
         // for faster operations
-        padcols:(
-            `offset`size`leaves`reduce`orderId,
+        padcols:(`offset`size`leaves`reduce`orderId, // TODO make constant?
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM[state padcols];
 
