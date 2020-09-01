@@ -1,5 +1,5 @@
 
-
+\l util.q
 l: `long$x
 z:.z.z;
 sc:{x+(`second$y)};
@@ -129,7 +129,7 @@ dozc:{x+y}[doz];
         eOrd:$[type[x]=99h;x;.util.testutils.makeOrders[x;z]]
         if[count[eOrd]>0;[
             rOrd: select from .order.Order where clId in eOrd[`clId];
-            .qt.A[count];=;count[rOrd];"order count";y]; // TODO check
+            .qt.A[count[eOrd];=;count[rOrd];"order count";y]; // TODO check
             .qt.A[(y#0!rOrd);~;(y#0!eOrd);"orders";y]; // TODO check
             ]];
     };
@@ -144,7 +144,7 @@ dozc:{x+y}[doz];
         eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]]
         if[count[eBook]>0;[
             rBook:.order.OrderBook;
-            .qt.A[count];=;count[rBook];"orderBook lvl count";y]; // TODO check
+            .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";y]; // TODO check
             .qt.A[(y#0!rBook);~;(y#0!eBook);"ordersBook";y]; // TODO check
             ]];
     };
@@ -158,7 +158,7 @@ dozc:{x+y}[doz];
         eIns:$[type[x]=99h;x;.util.testutils.makeInstruments[x;z]]
         if[count[eIns]>0;[
             rIns:.instrument.Instrument;
-            .qt.A[count];=;count[rIns];"instrument count";y]; // TODO check
+            .qt.A[count[eIns];=;count[rIns];"instrument count";y]; // TODO check
             .qt.A[(y#0!rIns);~;(y#0!eIns);"instrument";y]; // TODO check
             ]];
     };
@@ -172,7 +172,7 @@ dozc:{x+y}[doz];
         eEvents:$[type[x]=99h;x;.util.testutils.makeEvents[x;z]]
         if[count[eEvents]>0;[
             rEvents:.pipe.event.Event;
-            .qt.A[count];=;count[rEvents];"event count";y]; // TODO check
+            .qt.A[count[eEvents];=;count[rEvents];"event count";y]; // TODO check
             .qt.A[(y#0!rEvents);~;(y#0!eEvents);"event";y]; // TODO check
             ]];
     };
@@ -187,7 +187,7 @@ dozc:{x+y}[doz];
         eAcc:$[type[x]=99h;x;.util.testutils.makeAccounts[x;z]]
         if[count[eAcc]>0;[
             rAcc:.account.Account;
-            .qt.A[count];=;count[rAcc];"account count";y]; // TODO check
+            .qt.A[count[eAcc];=;count[rAcc];"account count";y]; // TODO check
             .qt.A[(y#0!rAcc);~;(y#0!eAcc);"account";y]; // TODO check
             ]];
     };
@@ -201,7 +201,7 @@ dozc:{x+y}[doz];
         eInv:$[type[x]=99h;x;.util.testutils.makeInvounts[x;z]]
         if[count[eInv]>0;[
             rInv:.account.Inventory;
-            .qt.A[count];=;count[rInv];"inventory count";y]; // TODO check
+            .qt.A[count[eInv];=;count[rInv];"inventory count";y]; // TODO check
             .qt.A[(y#0!rInv);~;(y#0!eInv);"inventory";y]; // TODO check
             ]];
     };
@@ -213,12 +213,12 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.checkLiquidation       :{
-        eInv:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]]
-        if[count[eInv]>0;[
-            rInv:.account.Account;
-            .qt.A[count];=;count[rInv];"liqudidation count";y]; // TODO check
-            .qt.A[(y#0!rInv);~;(y#0!eInv);"liquidation";y]; // TODO check
-            ]];
+        eLiq:$[type[x]=99h;x;.util.testutils.makeLiquidation[x;z]]
+        if[count[eLiq]>0;[
+            rLiq:.liqudidation.Liquidation;
+            .qt.A[count[eLiq];=;count[rLiq];"liqudidation count";y]; // TODO check
+            .qt.A[(y#0!rLiq);~;(y#0!eLiq);"liquidation";y]; // TODO check
+            ];
     };
 
 

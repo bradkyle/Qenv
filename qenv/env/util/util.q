@@ -84,15 +84,16 @@
     ];[x+:1;x]]};
 
 .util.ColTypes:{
-    if[type[x]=11h;[x:get x];
-    type'[value ((0!(get x))@-1)]};
+    if[type[x]=11h;x:get x];
+    type'[value ((0!(get x))@-1)]
+    };
 
 .util.NullRow:{
-    if[type[x]=11h;[x:get x];
+    if[type[x]=11h;x:get x];
     (value (0!(get x))@-1)
     };
 
 .util.NullRowDict:{
-    if[type[x]=11h;[x:get x];
-    cols[x]!(value (0!(get x))@-1)]
+    if[type[x]=11h;x:get x];
+    cols[x]!(value (0!(get x))@-1)
     };
