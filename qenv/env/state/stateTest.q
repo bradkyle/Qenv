@@ -188,58 +188,58 @@ test:.qt.Unit[
                 (z;`ACCOUNT;1;.state.accountCols!(0;0;0;0;0;0));
                 (z;`ACCOUNT;1;.state.accountCols!(0;0;0;0;0;0));
 
-                (z;`INVENTORY;1;.state.inventoryCols!(0;`LONG;z;0;1000;10;0));
-                (z;`INVENTORY;1;.state.inventoryCols!(1;`LONG;z;0;1000;10;0));
-                (z;`INVENTORY;1;.state.inventoryCols!(0;`SHORT;z;0;1000;10;0));
-                (z;`INVENTORY;1;.state.inventoryCols!(1;`SHORT;z;0;1000;10;0));
-                (z;`INVENTORY;1;.state.inventoryCols!(0;`BOTH;z;0;1000;10;0));
-                (z;`INVENTORY;1;.state.inventoryCols!(1;`BOTH;z;0;1000;10;0));
+                (z;`INVENTORY;1;(0;`LONG;z;0;1000;10;0));
+                (z;`INVENTORY;1;(1;`LONG;z;0;1000;10;0));
+                (z;`INVENTORY;1;(0;`SHORT;z;0;1000;10;0));
+                (z;`INVENTORY;1;(1;`SHORT;z;0;1000;10;0));
+                (z;`INVENTORY;1;(0;`BOTH;z;0;1000;10;0));
+                (z;`INVENTORY;1;(1;`BOTH;z;0;1000;10;0));
 
-                (z;`ORDER;1;.state.ordCols!(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(1;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(2;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(3;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(0;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(1;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(2;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(3;z;0;`BUY;`LIMIT;1000;1000;0;0;0;0;0b;`NIL;`NIL));
 
-                (z;`ORDER;1;.state.ordCols!(4;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(5;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(6;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
-                (z;`ORDER;1;.state.ordCols!(7;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(4;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(5;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(6;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
+                (z;`ORDER;1;(7;z;0;`SELL;`LIMIT;1001;1000;0;0;0;0;0b;`NIL;`NIL));
 
-                (z;0;1;.state.depthCols!(10001;z;`BUY;1000));
-                (z;0;1;.state.depthCols!(10002;z;`BUY;1000));
-                (z;0;1;.state.depthCols!(10003;z;`BUY;1000));
-                (z;0;1;.state.depthCols!(10004;z;`BUY;1000));
-                (z;0;1;.state.depthCols!(10005;z;`BUY;1000));
+                (z;0;1;(10001;z;`BUY;1000));
+                (z;0;1;(10002;z;`BUY;1000));
+                (z;0;1;(10003;z;`BUY;1000));
+                (z;0;1;(10004;z;`BUY;1000));
+                (z;0;1;(10005;z;`BUY;1000));
                 
-                (z;0;1;.state.depthCols!(10006;z;`SELL;1000));
-                (z;0;1;.state.depthCols!(10007;z;`SELL;1000));
-                (z;0;1;.state.depthCols!(10008;z;`SELL;1000));
-                (z;0;1;.state.depthCols!(10009;z;`SELL;1000));
-                (z;0;1;.state.depthCols!(10010;z;`SELL;1000));
+                (z;0;1;(10006;z;`SELL;1000));
+                (z;0;1;(10007;z;`SELL;1000));
+                (z;0;1;(10008;z;`SELL;1000));
+                (z;0;1;(10009;z;`SELL;1000));
+                (z;0;1;(10010;z;`SELL;1000));
 
-                (z;1;0;.state.tradeCols!(0;z;1000;1000;`BUY));
-                (z;1;0;.state.tradeCols!(1;z;1000;1000;`BUY));
-                (z;1;0;.state.tradeCols!(2;z;1000;1000;`BUY));
-                (z;1;0;.state.tradeCols!(3;z;1000;1000;`BUY));
-                (z;1;0;.state.tradeCols!(4;z;1000;1000;`BUY));
+                (z;1;0;(0;z;1000;1000;`BUY));
+                (z;1;0;(1;z;1000;1000;`BUY));
+                (z;1;0;(2;z;1000;1000;`BUY));
+                (z;1;0;(3;z;1000;1000;`BUY));
+                (z;1;0;(4;z;1000;1000;`BUY));
 
-                (z;1;0;.state.tradeCols!(5;z;1000;1000;`SELL));
-                (z;1;0;.state.tradeCols!(6;z;1000;1000;`SELL));
-                (z;1;0;.state.tradeCols!(7;z;1000;1000;`SELL));
-                (z;1;0;.state.tradeCols!(8;z;1000;1000;`SELL));
-                (z;1;0;.state.tradeCols!(9;z;1000;1000;`SELL));
+                (z;1;0;(5;z;1000;1000;`SELL));
+                (z;1;0;(6;z;1000;1000;`SELL));
+                (z;1;0;(7;z;1000;1000;`SELL));
+                (z;1;0;(8;z;1000;1000;`SELL));
+                (z;1;0;(9;z;1000;1000;`SELL));
 
-                (z;`MARK;1;.state.markCols!(z;1000));
-                (z;`MARK;1;.state.markCols!(z;1000));
-                (z;`MARK;1;.state.markCols!(z;1000));
+                (z;`MARK;1;(z;1000));
+                (z;`MARK;1;(z;1000));
+                (z;`MARK;1;(z;1000));
 
-                (z;`FUNDING;1;.state.fundingCols!(z;1;z));
-                (z;`FUNDING;1;.state.fundingCols!(z;1;z));
-                (z;`FUNDING;1;.state.fundingCols!(z;1;z));
+                (z;`FUNDING;1;(z;1;z));
+                (z;`FUNDING;1;(z;1;z));
+                (z;`FUNDING;1;(z;1;z));
 
-                (z;`LIQUIDATION;1;.state.liquidationCols!(0;z;1000;1000;`BUY));
-                (z;`LIQUIDATION;1;.state.liquidationCols!(1;z;1000;1000;`BUY));
-                (z;`LIQUIDATION;1;.state.liquidationCols!(2;z;1000;1000;`BUY))
+                (z;`LIQUIDATION;1;(0;z;1000;1000;`BUY));
+                (z;`LIQUIDATION;1;(1;z;1000;1000;`BUY));
+                (z;`LIQUIDATION;1;(2;z;1000;1000;`BUY))
             );
             til[10]
         ))
@@ -265,8 +265,8 @@ test:.qt.Unit[
     (
         ("Should correctly insert depth events into both current depth and depth event history";(
             (
-                (z;`ACCOUNT;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`ACCOUNT;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`ACCOUNT;1;(0;0;0;0;0;0));
+                (z;`ACCOUNT;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.DepthEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0));
@@ -274,40 +274,40 @@ test:.qt.Unit[
             )));
         ("Should correctly insert trade events into trade event history";(
             (
-                (z;1;0;.state.tradeCols!(0;z;1000;1000;`SELL));
-                (z;1;0;.state.tradeCols!(0;z;1000;1000;`SELL))
+                (z;1;0;(0;z;1000;1000;`SELL));
+                (z;1;0;(0;z;1000;1000;`SELL))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )));
         ("Should correctly mark price updates into trade event history";(
             (
-                (z;`MARK;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`MARK;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`MARK;1;(0;0;0;0;0;0));
+                (z;`MARK;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.MarkEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )));
         ("Should correctly insert funding events into funding event history";(
             (
-                (z;`FUNDING;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`FUNDING;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`FUNDING;1;(0;0;0;0;0;0));
+                (z;`FUNDING;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )));
         ("Should correctly insert liquidation events into liquidation event history";(
             (
-                (z;`LIQUIDATION;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`LIQUIDATION;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`LIQUIDATION;1;(0;0;0;0;0;0));
+                (z;`LIQUIDATION;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             ))); 
         ("Should correctly insert account events from different accounts, different times";(
             (
-                (z;`ACCOUNT;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`ACCOUNT;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`ACCOUNT;1;(0;0;0;0;0;0));
+                (z;`ACCOUNT;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
@@ -322,24 +322,24 @@ test:.qt.Unit[
             )));
         ("Should correctly insert new orders into current orders and order event history";(
             (
-                (z;`ORDER;0;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`ORDER;0;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`ORDER;0;(0;0;0;0;0;0));
+                (z;`ORDER;0;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )));
         ("Should correctly update existing orders with order updates in current orders ";(
             (
-                (z;`ORDER;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`ORDER;1;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`ORDER;1;(0;0;0;0;0;0));
+                (z;`ORDER;1;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )));
         ("Should correctly update current orders to filled ";(
             (
-                (z;`ORDER;`DELETE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(0;0;0;0;0;0));
-                (z;`ORDER;`DELETE;`accountId`balance`frozen`available`realizedPnl`maintMargin!(1;0;0;0;0;0))
+                (z;`ORDER;`DELETE;(0;0;0;0;0;0));
+                (z;`ORDER;`DELETE;(1;0;0;0;0;0))
             );
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
