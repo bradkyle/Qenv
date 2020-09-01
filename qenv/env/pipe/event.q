@@ -139,22 +139,22 @@ POSITIONSIDE    : (0;1;2;3;4);
 // TODO move to global
 // The events table acts as a buffer for all events that occur within
 // the given environment step, this allows for unilateral event post/pre
-// processing after the environment state has progressed i.e. adding lag
-// adding "dropout" and randomization etc. it has the added benifit of 
+// processing after the environment state has progressed i.e. .pipe.event.Adding lag
+// .pipe.event.Adding "dropout" and randomization etc. it has the .pipe.event.Added benifit of 
 // simplifying (removing) nesting/recursion within the engine. 
 // Drawbacks may include testability?
 // The events table is used exclusively within the engine and is not used
 // by for example the state.
 // Acts like a kafka queue/pubsub.
 eventCount:0;
-Events  :( // TODO add failure to table
+Events  :( // TODO .pipe.event.Add failure to table
     time        :`datetime$();
     cmd         :`long$();
     kind        :`long$();
     datum       :());
 
-// Adds an event to the Events table.
-AddEvent   : {[time;cmd;kind;datum] // TODO Add better validation
+// .pipe.event.Adds an event to the Events table.
+.pipe.event.AddEvent   : {[time;cmd;kind;datum] // TODO .pipe.event.Add better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
         $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
         $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
@@ -167,7 +167,7 @@ AddEvent   : {[time;cmd;kind;datum] // TODO Add better validation
 // a agent/account Id and its respective
 // vector target distribution and/or adapter
 // that conforms to a generaliseable dictionary 
-AddFailure   : {[time;kind;msg]
+.pipe.event.AddFailure   : {[time;kind;msg]
         if[not (type time)~15h; 'INVALID_TIME]; //TODO fix
         if[not (kind in .event.ERRCODES); 'INVALID_ERRORCODE];
         .event.Events,:(time;3;15;datum);
@@ -176,7 +176,7 @@ AddFailure   : {[time;kind;msg]
 // Retrieves all events from the Events table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the events (As a table?)
-PopEvents               :{
+.pipe.event.PopEvents               :{
         e: .event.Event;
         delete from `.event.Events;
         e
@@ -195,74 +195,78 @@ ECOLS                   :`time`cmd`kind`datum;
 /*******************************************************
 / Private Creation Utils
 
-AddPlaceOrderEvent     :{[order;time]
+.pipe.event.AddPlaceOrderEvent     :{[order;time]
 
         };
 
-AddPlaceBatchEvent     :{[orders;time]
+.pipe.event.AddPlaceBatchEvent     :{[orders;time]
 
         };
 
-AddCancelOrderEvent    :{[order;time]
+.pipe.event.AddCancelOrderEvent    :{[order;time]
 
         };
 
-AddCancelBatchEvent    :{[orders;time]
+.pipe.event.AddCancelBatchEvent    :{[orders;time]
 
         };
 
-AddCancelAllEvent      :{[order;time]
+.pipe.event.AddCancelAllEvent      :{[order;time]
 
         };
 
-AddAmendOrderEvent     :{[order;time]
+.pipe.event.AddAmendOrderEvent     :{[order;time]
 
         };
 
-AddWithdrawEvent       :{[withdraw;time]
+.pipe.event.AddWithdrawEvent       :{[withdraw;time]
 
         };
 
-AddDepositEvent        :{[deposit;time]
+.pipe.event.AddDepositEvent        :{[deposit;time]
 
         };
 
 /*******************************************************
 / MarketData event Construction
 
-AddDepthEvent          :{[depth;time]
+.pipe.event.AddDepthEvent          :{[depth;time]
 
         };
 
-AddTradeEvent          :{[trade;time]
+.pipe.event.AddTradeEvent          :{[trade;time]
 
         };
 
-AddMarkEvent           :{[mark;time]
+.pipe.event.AddMarkEvent           :{[mark;time]
 
         };
 
-AddFundingEvent        :{[funding;time]
+.pipe.event.AddFundingEvent        :{[funding;time]
 
         };
 
-AddOrderUpdateEvent    :{[order;time]
+.pipe.event.AddOrderCancelEvent    :{[order;time]
 
         };
 
-AddNewOrderEvent       :{[order;time]
+.pipe.event.AddOrderUpdateEvent    :{[order;time]
 
         };
 
-AddAccountEvent        :{[account;time]
+.pipe.event.AddNewOrderEvent       :{[order;time]
 
         };
 
-AddInventoryEvent      :{[account;time]
+.pipe.event.AddAccountEvent        :{[account;time]
 
         };
 
-AddFailureEvent        :{[failure;time]
+.pipe.event.AddInventoryEvent      :{[account;time]
+
+        };
+
+.pipe.event.AddFailureEvent        :{[failure;time]
 
         };
 

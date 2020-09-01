@@ -225,7 +225,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
     };
 
-// Process Trades/Market Orders
+// Process New Orders
 // -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -237,13 +237,18 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
 NewOrder            :{[i;o;a;time]
-    ot:o`type;
-    $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
-      k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
-      k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
-      k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
-      'INVALID_ORDER_TYPE];
+    k:o`type;
+    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
+          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
+          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
+          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+          'INVALID_ORDER_TYPE];
+    .pipe.event.AddNewOrderEvent[res;time];
     };
+
+
+// Process Amend Orders
+// -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -253,9 +258,18 @@ NewOrder            :{[i;o;a;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-AmendOrder          :{
-
+AmendOrder          :{[i;o;a;time]
+    k:o`type;
+    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
+          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
+          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
+          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+          'INVALID_ORDER_TYPE];
+    .pipe.event.AddOrderUpdateEvent[res;time];
     };
+
+// Process Cancel Orders
+// -------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -265,8 +279,14 @@ AmendOrder          :{
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-CancelOrder         :{
-
+CancelOrder         :{[i;o;a;time]
+    k:o`type;
+    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
+          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
+          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
+          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+          'INVALID_ORDER_TYPE];
+    .pipe.event.AddOrderCancelEvent[res;time];
     };
 
 
