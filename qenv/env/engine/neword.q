@@ -196,7 +196,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime]
 
         if[count[flls]>0;[
             if[account[`accountId] in flls[`accountId];
-                .account.IncSelfFill[]];
+                .account.IncSelfFill[accountId;count[sflls];sum[sflls`filled]]];
             fllfn:.account.ApplyFill[account;instrument;side];            
             fllfn flls;
             ]];
