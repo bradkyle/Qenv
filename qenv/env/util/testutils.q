@@ -366,7 +366,7 @@ dozc:{x+y}[doz];
     .state.LiquidationEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
          `liqid`time`size`price`side;
-        {(x;(snz rand 1000);first[1?100 200 300];floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 50]];
+        {(x;(snz rand 1000);first[1?100 200 300];floor[1000-(rand 50)];$[(x<250);-1;1])}'[til 500]];
     .state.SignalEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
          `sigid`time`sigvalue;
