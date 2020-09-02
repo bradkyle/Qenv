@@ -76,12 +76,13 @@
         c
     }[I[;0];I J;J:where 1<>count'[I:value G]]/:\:[t v;value F]};
 
-// Inc and ret
-.util.IncRet:{
-    $[type[x]=11h;[
-        v:get[x]+1;
-        (x set v);get[v];
-    ];[x+:1;x]]};
+// Inc and ret // TODO
+/ .util.IncRet:{
+/     $[type[x]=11h;[
+/         v:get[x]+1;
+/         (x set v);
+/         :get[v];
+/     ];[(x+:1);x]]};
 
 .util.ColTypes:{
     if[type[x]=11h;x:get x];

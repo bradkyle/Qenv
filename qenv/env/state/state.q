@@ -12,7 +12,7 @@
 maxLvls:20;
 DefaultInstrumentId:0;
 .state.clOrdCount:0;
-.state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
+/ .state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
 
 // Singleton State and Lookback Buffers
 // =====================================================================================>
@@ -132,7 +132,7 @@ DefaultInstrumentId:0;
 // and indicators etc.
 .state.FundingEventHistory: (
     [time            :   `datetime$()]
-    fundingrate      :   `long$();
+    fundingrate      :   `float$();
     fundingtime      :   `datetime$());
 .state.fundingCols:cols .state.FundingEventHistory;
 

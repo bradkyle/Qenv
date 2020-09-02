@@ -1,6 +1,8 @@
 
 \l util.q
-l: `long$x
+\d .tu
+
+l: `long$
 z:.z.z;
 sc:{x+(`second$y)};
 sn:{x-(`second$y)};
@@ -310,7 +312,7 @@ dozc:{x+y}[doz];
             floor[1000-(x%3)];$[(x<25);-1;1];100;
             (((x+2) mod 3)*110);
             0b;
-            z;0;1;100)
+            .tz;0;1;100)
         }'[til[50]])]
     };
 
@@ -331,40 +333,41 @@ dozc:{x+y}[doz];
 // Random State Generation
 // -------------------------------------------------------------->
 
-.util.testutils.genRandomState      :{
-    (.util.testutils.makeDefaultsRecords[
+// TODO make defaults to events
+.util.testutils.setUniformState      :{
+    .state.CurrentAccount,:.util.testutils.makeDefaultsRecords[
         `.state.CurrentAccount;
         `accountId`time`balance`available;
-        {(x;z;10;10)}'[til 5]];
-     .util.testutils.makeDefaultsRecords[
+        {(x;.tu.z;10;10)}'[til 5]];
+    .state.CurrentInventory,:.util.testutils.makeDefaultsRecords[
         `.state.CurrentInventory;
         `accountId`side`amt`realizedPnl`avgPrice`unrealizedPnl;
         {((x mod 5);(x mod 3);0;0;0;0)}'[til 15]];
-     .util.testutils.makeDefaultsRecords[
+    .state.CurrentOrders,:.util.testutils.makeDefaultsRecords[
          `.state.CurrentOrders;
          `orderId`accountId`side`otype`price`leaves`status`reduce;
         {(x;(x mod 5);$[(x<250);-1;1];1;floor[1000-(x%10)];100;0;(1h$first[1?(1 0)]))}'[til 500]];
-     .util.testutils.makeDefaultsRecords[
+    .state.CurrentDepth,:.util.testutils.makeDefaultsRecords[
          `.state.CurrentDepth;
          `price`time`side`size;
-        {(floor[1000-(x%2)];z;$[(x<50);-1;1];100)}'[til 100]];
-     .util.testutils.makeDefaultsRecords[
+        {(floor[1000-(x%2)];.tu.z;$[(x<50);-1;1];100)}'[til 100]];
+    .state.TradeEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.TradeEventHistory;
          `tid`time`size`price`side;
-        {(x;(snz rand 10000);100;floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 10000]];
-     .util.testutils.makeDefaultsRecords[
+        {(x;(.tu.snz rand 10000);100;floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 10000]];
+    .state.MarkEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.MarkEventHistory;
          `time`markprice;
         {(snz rand 10000;floor[1000-(x%2)])}'[til 1000]];
-     .util.testutils.makeDefaultsRecords[
+    .state.FundingEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.FundingEventHistory;
          `time`fundingrate`fundingtime;
         {((snz rand 10000);first[1?0.001 0.002 0.003];(snz rand 1000))}'[til 50]];
-     .util.testutils.makeDefaultsRecords[
+    .state.LiquidationEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
          `liqid`time`size`price`side;
         {(x;(snz rand 1000);first[1?100 200 300];floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 50]];
-     .util.testutils.makeDefaultsRecords[
+    .state.SignalEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
          `sigid`time`sigvalue;
         {(rand 50;(snz rand 5000);rand 1f)}'[til 5000]])
