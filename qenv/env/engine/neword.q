@@ -167,8 +167,8 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-NewOrder            :{[i;o;a;time]
-    k:o`type;
+NewOrder            :{[i;a;o;time]
+    k:o[;6];
     res:$[k=0;  [.order.MarketOrder[x]]; // MARKET ORDER
           k=1;  [.order.LimitOrder[x]]; // LIMIT ORDER
           k=2;  [.order.StopOrder[x]]; // STOP_MARKET_ORDER
@@ -190,10 +190,10 @@ NewOrder            :{[i;o;a;time]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 AmendOrder          :{[i;o;a;time]
-    k:o`type;
-    res:$[k=1;  [.engine.LIMIT[x]]; // LIMIT ORDER
-          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
-          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+    k:o[;6];
+    res:$[k=1;  [.engine.LimitOrder[x]]; // LIMIT ORDER
+          k=2;  [.engine.StopOrder[x]]; // STOP_MARKET_ORDER
+          k=3;  [.engine.StopOrder[x]]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
     .pipe.event.AddOrderUpdateEvent[res;time];
     };
@@ -210,11 +210,15 @@ AmendOrder          :{[i;o;a;time]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 CancelOrder         :{[i;o;a;time]
-    k:o`type;
-    res:$[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // MARKET ORDER
-          k=1;  [.engine.ProcessNewTradeEvents[x]]; // LIMIT ORDER
-          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
-          k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
+    res:$[k=1;  [
+            .engine.ProcessNewTradeEvents[x]
+         ]; // LIMIT ORDER
+          k=2;  [
+              .engine.ProcessMarkUpdateEvents[x]
+          ]; // STOP_MARKET_ORDER
+          k=3;  [
+              .engine.ProcessMarkUpdateEvents[x]
+          ]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
     .pipe.event.AddOrderCancelEvent[res;time];
     };
