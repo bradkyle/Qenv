@@ -3,7 +3,9 @@
 l: `long$x
 z:.z.z;
 sc:{x+(`second$y)};
+sn:{x-(`second$y)};
 sz:sc[z];
+snz:sn[z];
 dts:{(`date$x)+(`second$x)};
 dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
@@ -308,7 +310,7 @@ dozc:{x+y}[doz];
             floor[1000-(x%3)];$[(x<25);-1;1];100;
             (((x+2) mod 3)*110);
             0b;
-            .z.z;0;1;100)
+            z;0;1;100)
         }'[til[50]])]
     };
 
@@ -333,7 +335,7 @@ dozc:{x+y}[doz];
     (.util.testutils.makeDefaultsRecords[
         `.state.CurrentAccount;
         `accountId`time`balance`available;
-        {(x;.z.z;10;10)}'[til 5]];
+        {(x;z;10;10)}'[til 5]];
      .util.testutils.makeDefaultsRecords[
         `.state.CurrentInventory;
         `accountId`side`amt`realizedPnl`avgPrice`unrealizedPnl;
@@ -345,27 +347,27 @@ dozc:{x+y}[doz];
      .util.testutils.makeDefaultsRecords[
          `.state.CurrentDepth;
          `price`time`side`size;
-        {(floor[1000-(x%2)];.z.z;$[(x<50);-1;1];100)}'[til 100]];
+        {(floor[1000-(x%2)];z;$[(x<50);-1;1];100)}'[til 100]];
      .util.testutils.makeDefaultsRecords[
          `.state.TradeEventHistory;
          `tid`time`size`price`side;
-        {(x;(.z.z-(sc rand 10000));100;floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 10000]];
+        {(x;(snz rand 10000);100;floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 10000]];
      .util.testutils.makeDefaultsRecords[
          `.state.MarkEventHistory;
          `time`markprice;
-        {(.z.z;floor[1000-(x%2)])}'[til 1000]];
+        {(snz rand 10000;floor[1000-(x%2)])}'[til 1000]];
      .util.testutils.makeDefaultsRecords[
          `.state.FundingEventHistory;
          `time`fundingrate`fundingtime;
-        {((.z.z-(sc rand 10000));first[1?0.001 0.002 0.003];(.z.z-(sc rand 10000)))}'[til 50]];
+        {((snz rand 10000);first[1?0.001 0.002 0.003];(snz rand 1000))}'[til 50]];
      .util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
          `liqid`time`size`price`side;
-        {(x;(.z.z-(sc rand 10000));first[1?100 200 300];floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 50]];
+        {(x;(snz rand 1000);first[1?100 200 300];floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 50]];
      .util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
          `sigid`time`sigvalue;
-        {(rand 50;(.z.z-(sc rand 5000));rand 1f)}'[til 5000]])
+        {(rand 50;(snz rand 5000);rand 1f)}'[til 5000]])
     };
 
 
