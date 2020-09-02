@@ -5,22 +5,22 @@ functionality.
 \
 // .stateTest.genRandomState[100000;.z.z;250];
 
-c : (`long$())!(); // TODO change to subset of supported types.
+/ c : (`long$())!(); // TODO change to subset of supported types.
 
-operatorCount:0;
-Operators:(
-    [operatorId : `long$()]
-    ref         :`symbol$();
-    tab         :`symbol$();
-    deps        :();
-    func        :();
-    isroot      :`boolean();
-    inputshape  :`long$();
-    outputshape :`long$());
+/ operatorCount:0;
+/ Operators:(
+/     [operatorId : `long$()]
+/     ref         :`symbol$();
+/     tab         :`symbol$();
+/     deps        :();
+/     func        :();
+/     isroot      :`boolean();
+/     inputshape  :`long$();
+/     outputshape :`long$());
 
-Register:{[table;deps;func]
+/ Register:{[table;deps;func]
 
-    };
+/     };
 
 /
 CurrentOrderBook Features:                      
@@ -69,38 +69,26 @@ CurrentOrderBook Features:
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
 
-            invn:?[.state.CurrentInventory;();`accountId`side!`accountId`side;()];
-}
+            // TODO where in ids
+            invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
+            acc:0^(?[.state.CurrentAccount;();0b;()]);
+    };
   
-/
-Account Features
-    - last balance
-    - last available
-    - last maintMargin 
-
-Inventory Features
-    - last unrealized Pnl
-    - last realizedPnl
-    - last avgPrice
-\
-(select by accountId from .state.CurrentAccount 
-    uj Piv[0!select by accountId,side from .state.CurrentInventory;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]);
-
 /
 Liquidation Features
     - liquidation prices
     - 
     - last avgPrice
 \
-shortliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`BUY;
-longliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`SELL;
+/ shortliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`BUY;
+/ longliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=`SELL;
 
 / 
 Signal Feautures
     - avg sigvalue
     - last sigvalue
 \
-signal:select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory;
+/ signal:select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory;
 
 /
 Feature Forecasters TODO iceberg detection!
