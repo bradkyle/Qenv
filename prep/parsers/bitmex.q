@@ -11,10 +11,10 @@ bookParser:{[rows]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
-        :(20#"Z"$time;20#u[`utc_time];((10#`SELL),(10#`BUY));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
+        :(20#(.pipe.bitmex.uid+:1);20#"Z"$time;20#u[`utc_time];((10#-1),(10#1));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
     x:derive each rows;
-    x:flip `time`intime`side`price`size!raze each flip x; 
+    x:flip `uid`time`intime`side`price`size!raze each flip x; 
     x:update dlt:{1_deltas x}size by price, side from x; // TODO insufficient approximation
     x:x where[x[`dlt]<>0]; 
     cx:count x;
