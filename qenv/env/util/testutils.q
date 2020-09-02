@@ -333,31 +333,31 @@ dozc:{x+y}[doz];
     (.util.testutils.makeDefaultsRecords[
         `.state.CurrentAccount;
         `accountId`time`balance`available;
-        {()}'[til 5]];
+        {(x;.z.z;10;10)}'[til 5]];
      .util.testutils.makeDefaultsRecords[
         `.state.CurrentInventory;
         `accountId`side`amt`realizedPnl`avgPrice`unrealizedPnl;
-        {()}'[til 15]];
+        {((x mod 5);(x mod 3);0;0;0;0)}'[til 15]];
      .util.testutils.makeDefaultsRecords[
          `.state.CurrentOrders;
          `orderId`accountId`side`otype`price`leaves`status`reduce;
-        {()}'[til 100]];
+        {(x;(x mod 5);$[(x<250);-1;1];1;floor[1000-(x%10)];100;0;(1h$first[1?(1 0)]))}'[til 500]];
      .util.testutils.makeDefaultsRecords[
          `.state.CurrentDepth;
          `price`time`side`size;
-        {()}'[til 100]];
+        {(floor[1000-(x%2)];.z.z;$[(x<50);-1;1];100)}'[til 100]];
      .util.testutils.makeDefaultsRecords[
          `.state.TradeEventHistory;
          `tid`time`size`price`side;
-        {()}'[til 10000]];
+        {(x;(.z.z-(sc rand 10000));100;floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 10000]];
      .util.testutils.makeDefaultsRecords[
          `.state.MarkEventHistory;
          `time`markprice;
-        {()}'[til 1000]];
+        {(.z.z;floor[1000-(x%2)])}'[til 1000]];
      .util.testutils.makeDefaultsRecords[
          `.state.FundingEventHistory;
          `time`fundingrate`fundingtime;
-        {()}'[til 50]];
+        {((.z.z-(sc rand 10000));first[1?0.001 0.002 0.003])}'[til 50]];
      .util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
          `liqid`time`size`price`side;
