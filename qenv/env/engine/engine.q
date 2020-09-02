@@ -34,7 +34,9 @@ Engine:(
     );
 
 // Ingress Queue, Egress Queue
+.engine.getInstrument   :{
 
+    };
 
 // TODO add randomization based upon current probability 
 // of order being placed due to overload etc.
@@ -51,8 +53,8 @@ Engine:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessDepthUpdateEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
+.engine.ProcessDepthUpdateEvents :{[event]
+    instrument:.engine.getInstrument[];
     
     };
 
@@ -64,87 +66,8 @@ ProcessDepthUpdateEvents :{[event]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessNewTradeEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessMarkUpdateEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessSettlementEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessFundingEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessLiquidationEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessOrderEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
-    
-    };
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-ProcessNewPriceLimitEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
+.engine.ProcessNewTradeEvents :{[event]
+    instrument:.engine.getInstrument[];
     
     };
 
@@ -157,8 +80,76 @@ ProcessNewPriceLimitEvents :{[event]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessWithdrawEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
+.engine.ProcessMarkUpdateEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessSettlementEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessFundingEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessLiquidationEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessOrderEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessNewPriceLimitEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
     
     };
 
@@ -171,12 +162,28 @@ ProcessWithdrawEvents :{[event]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessDepositEvents :{[event]
-    instrument:.engine.Master[][`instrumentId];
+.engine.ProcessWithdrawEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
     
     };
 
-/ Public Event Processing logic (Writes)
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessDepositEvents :{[event]
+    instrument:.engine.getInstrument[];
+    
+    
+    };
+
+/ Public Event .engine.Processing logic (Writes)
 / -------------------------------------------------------------------->
 
 
@@ -189,19 +196,19 @@ ProcessDepositEvents :{[event]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessEvents :{ // WRITE EVENTS
+.engine.ProcessEvents :{ // WRITE EVENTS
     {
         k:x`kind;
-        $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // DEPTH
-          k=1;  [.engine.ProcessNewTradeEvents[x]]; // TRADE
-          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // MARK
-          k=3;  [.engine.ProcessSettlementEvents[x]]; // SETTLEMENT
-          k=4;  [.engine.ProcessFundingEvents[x]]; // FUNDING
-          k=5;  [.engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
-          k=8;  [.engine.ProcessOrderEvents[x]]; // ORDER
-          k=9;  [.engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
-          k=10; [.engine.ProcessWithdrawEvents[x]]; // WITHDRAW
-          k=10; [.engine.ProcessDepositEvents[x]]; // DEPOSIT
+        $[k=0;  [.engine..engine.ProcessDepthUpdateEvents[x]]; // DEPTH
+          k=1;  [.engine..engine.ProcessNewTradeEvents[x]]; // TRADE
+          k=2;  [.engine..engine.ProcessMarkUpdateEvents[x]]; // MARK
+          k=3;  [.engine..engine.ProcessSettlementEvents[x]]; // SETTLEMENT
+          k=4;  [.engine..engine.ProcessFundingEvents[x]]; // FUNDING
+          k=5;  [.engine..engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
+          k=8;  [.engine..engine.ProcessOrderEvents[x]]; // ORDER
+          k=9;  [.engine..engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
+          k=10; [.engine..engine.ProcessWithdrawEvents[x]]; // WITHDRAW
+          k=10; [.engine..engine.ProcessDepositEvents[x]]; // DEPOSIT
           'INVALID_EVENT_KIND];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
     // TODO pop events
@@ -217,7 +224,7 @@ ProcessEvents :{ // WRITE EVENTS
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Info    :{[aids] 
+.engine.Info    :{[aids] 
         :(
             select from .account.Account where accountId in aids;
             select from .account.Inventory where accountId in aids; 
@@ -236,7 +243,7 @@ Info    :{[aids]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Reset   :{[config]
+.engine.Reset   :{[config]
     .util.table.dropAll[(`.order.Order`.order.OrderBook,
                 `.instrument.Instrument`.account.Account,
                 `.inventory.Inventory`.event.Event)];
