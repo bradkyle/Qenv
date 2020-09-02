@@ -2,6 +2,8 @@
 / )s:string[til[count[sig]]]
 / ){`$("sig",x)}'[s] // change sig lbl sig_1_1 etc.
 / ){`$("bd",x)}'[string[til[5]]]
+/ ){`$("blq_",x)}'[string[cols liq@1]]
+/ ){`$("slq_",x)}'[string[cols liq@-1]]
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
@@ -40,8 +42,14 @@
             funding:last[.state.FundingEventHistory]`fundingrate;
 
             // Liquidation Features // TODO ohlcs
-            bliq:select avg:price, size from .state.LiquidationEventHistory where side=1, time>(max[time]-`minute$5);
-            sliq:select avg:price, size from .state.LiquidationEventHistory where side=-1, time>(max[time]-`minute$5);
+            liq:select 
+                avp:avg price, 
+                avs:avg size, 
+                hs:max size, 
+                ls:min size, 
+                lp:min price, 
+                hp:max price by side from .state.LiquidationEventHistory where time>(max[time]-`minute$5);
+            
 
             //Signal Features
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
@@ -65,6 +73,8 @@
 
             fea[.obs.sigCols]:sig;
             fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
+            fea[.obs.bliqCols]:value[liq@1];
+            fea[.obs.sliqCols]:value[liq@-1]; 
     };
   
 
