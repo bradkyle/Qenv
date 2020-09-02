@@ -211,12 +211,12 @@ AmendOrder          :{[i;o;a;time]
 /  @return (Inventory) The new updated inventory
 CancelOrder         :{[i;o;a;time]
     res:$[k=1;  [
-            .engine.ProcessNewTradeEvents[x]
-         ]; // LIMIT ORDER
-          k=2;  [
-              .engine.ProcessMarkUpdateEvents[x]
-          ]; // STOP_MARKET_ORDER
-          k=3;  [
+                // Limit order changes state of book
+                .engine.ProcessNewTradeEvents[x]
+         ]; 
+          (k in (1,2));[
+              // Stop orders do not modify state of 
+              // the orderbook.
               .engine.ProcessMarkUpdateEvents[x]
           ]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
