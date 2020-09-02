@@ -288,7 +288,9 @@ dozc:{x+y}[doz];
     };
 
 .util.testutils.genMarks        :{
-
+    0^.util.testutils.makeAccounts[
+        `accountId`balance`available;
+        ({(x;100;100)}'[til[3]])]
     };
 
 .util.testutils.genInstrument           :{
@@ -310,8 +312,9 @@ dozc:{x+y}[doz];
     };
 
 
-.util.testutils.genEvent        :{
-
+.util.testutils.genEvents        :{
+    
+    .util.testutils.makeEvents[`time`intime`kind`cmd`datum;()]
     };
 
 // Random Engine Generation
