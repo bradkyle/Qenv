@@ -68,6 +68,8 @@ CurrentOrderBook Features:
             // TODO add accountId
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
+
+            invn:?[.state.CurrentInventory;();`accountId`side!`accountId`side;()];
 }
   
 /
