@@ -195,7 +195,7 @@ NewOrder            :{[i;a;o;time]
 /  @return (Inventory) The new updated inventory
 AmendOrder          :{[i;o;a;time]
     k:o[;6];
-    res:$[k=1;[
+    $[k=1;[
                // Limit order changes state of book
               .engine.ProcessNewTradeEvents[x]
          ]; 
@@ -205,7 +205,6 @@ AmendOrder          :{[i;o;a;time]
               .order.Order,:o;
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE];
-    .pipe.event.AddOrderUpdateEvent[res;time];
     };
 
 // Process Cancel Orders
@@ -220,19 +219,19 @@ AmendOrder          :{[i;o;a;time]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 CancelOrder         :{[i;o;a;time]
-    res:$[k=1;[
-               // Limit order changes state of book
-              .engine.ProcessNewTradeEvents[x];
-         ]; 
-         (k in (1,2));[
-              // Stop orders do not modify state of 
-              // the orderbook.
-              ![`.order.Order;
-                enlist(in;`orderId;o`orderId);0b;`symbol$()];
-                .pipe.event.AddOrderCancelEvent[o;o`time];
-         ]; // STOP_LIMIT_ORDER
-         'INVALID_ORDER_TYPE];
-    .pipe.event.AddOrderCancelEvent[res;time];
+    k:o[;6];
+    $[k=1;[
+            // Limit order changes state of book
+            .engine.ProcessNewTradeEvents[x];
+        ]; 
+        (k in (1,2));[
+            // Stop orders do not modify state of 
+            // the orderbook.
+            ![`.order.Order;
+            enlist(in;`orderId;o`orderId);0b;`symbol$()];
+            .pipe.event.AddOrderCancelEvent[o;o`time];
+        ]; // STOP_LIMIT_ORDER
+        'INVALID_ORDER_TYPE];
     };
 
 
