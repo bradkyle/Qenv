@@ -1,9 +1,13 @@
 
-/ ){`$("sig",x)}'[s]
+/ )s:string[til[count[sig]]]
+/ ){`$("sig",x)}'[s] // change sig lbl sig_1_1 etc.
+/ ){`$("bd",x)}'[string[til[5]]]
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
 .obs.derive: { // TODO make faster?
+
+            // Depth Features
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
             bids:select[-5;<price] price, size from .state.CurrentDepth where side=1; // price ascending bids
             bestask:min asks;
@@ -23,36 +27,44 @@
             bidsizefracs:bidsizes%sumbidsizes;
             asksizefracs:asksizes%sumasksizes;
 
+            // Last Trade Features
             lastprice:last[.state.TradeEventHistory]`price;
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); 
 
+            // Mark Price Features
             markprice:last[.state.MarkEventHistory]`markprice;
             basis:lastprice-markprice;
 
+            // Funding Features
             funding:last[.state.FundingEventHistory]`fundingrate;
 
+            // Liquidation Features
             bliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=1;
             sliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=-1;
 
-            //Todo signal
+            //Signal Features
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
             sig:raze value[sig]`sigvalue;
 
-            // TODO add accountId
+            //Current Orders Features
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
-
             bord:.util.Piv[0!bord;`accountId;`price;`leaves];
             aord:.util.Piv[0!aord;`accountId;`price;`leaves];
 
-            // TODO where in ids
+            // Inventory Features (add conditional accountId)
             invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
             invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl];
 
+            // Account Features
             acc:0^(?[.state.CurrentAccount;();enlist[`accountId]!enlist[`accountId];`balance`available`frozen`maintMargin!`balance`available`frozen`maintMargin]);
 
-            fea:0!((uj) over (acc;invn;aord;bord))
+            // Join Features by account
+            fea:0!((uj) over (acc;invn;aord;bord));
+
+            fea[.obs.sigCols]:sig;
+            fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
     };
   
 
