@@ -169,8 +169,12 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 /  @return (Inventory) The new updated inventory
 NewOrder            :{[i;a;o;time]
     k:o[;6];
-    res:$[k=0;  [.order.MarketOrder[x]]; // MARKET ORDER
-          k=1;  [.order.LimitOrder[x]]; // LIMIT ORDER
+    res:$[k=0;  [
+
+          ]; // MARKET ORDER
+          k=1;  [
+                
+          ]; // LIMIT ORDER
           (k in (1,2));[
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
