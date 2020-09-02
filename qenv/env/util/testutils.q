@@ -267,31 +267,27 @@ dozc:{x+y}[doz];
 // Make random event utils
 // -------------------------------------------------------------->
 
-.util.testutils.genRandomKind          :{
-    $[];
-    };
-
-.util.testutils.genRandomTrades        :{
+.util.testutils.genTrades        :{
 
     };
 
-.util.testutils.genRandomOrderBook    :{
+.util.testutils.genOrderBook    :{
     0^.util.testutils.makeOrderBook[
         `price`side`size`vqty;
         ({(1000-x;$[(x<25);-1;1];100;100)}'[til[50]])]
     };
 
-.util.testutils.genRandomInventory     :{
+.util.testutils.genInventory     :{
 
     };
 
-.util.testutils.genRandomAccount       :{
+.util.testutils.genAccount       :{
     0^.util.testutils.makeAccounts[
         `accountId`balance`available;
         ({(x;100;100)}'[til[3]])]
     };
 
-.util.testutils.genRandomMarks        :{
+.util.testutils.genMarks        :{
 
     };
 
@@ -301,7 +297,7 @@ dozc:{x+y}[doz];
         ({(x;1;100)}'[til 2])]
     };   
 
-.util.testutils.genRandomOrders        :{
+.util.testutils.genOrders        :{
        .util.testutils.makeOrders[
         `orderId`accountId`instrumentId`price`side`leaves`offset`reduce`time`status`otype`size;
         ({(x;(`.account.Account!$[(x mod 2)=0;0;1]);
@@ -314,7 +310,7 @@ dozc:{x+y}[doz];
     };
 
 
-.util.testutils.genRandomEvent        :{
+.util.testutils.genEvent        :{
 
     };
 
