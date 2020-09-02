@@ -36,53 +36,39 @@ CurrentOrderBook Features:
     - asksizefracs                               
 \
 / use < for ascending, > for descending
-asks:select[-5;>price] price, size from .state.CurrentDepth where side=`SELL; // price descending asks
-bids:select[-5;<price] price, size from .state.CurrentDepth where side=`BUY; // price ascending bids
-bestask:min asks;
-bestbid:min bids;
-asksizes:asks`size;
-askprices:asks`price;
-sumasksizes:sum asksizes;
-bidsizes:bids`size;
-bidprices:bids`price;
-sumbidsizes:sum bidsizes;
-bestbidsize:bestbid`size;
-bestasksize:bestask`size;
-bestaskprice:bestask`price;
-bestbidprice:bestbid`price;
-midprice:avg[bestaskprice,bestbidprice];
-spread:(-/)(bestaskprice,bestbidprice);
-bidsizefracs:bidsizes%sumbidsizes;
-asksizefracs:asksizes%sumasksizes;
+.obs.derive: {
+            asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
+            bids:select[-5;<price] price, size from .state.CurrentDepth where side=1; // price ascending bids
+            bestask:min asks;
+            bestbid:max bids;
+            asksizes:asks`size;
+            askprices:asks`price;
+            sumasksizes:sum asksizes;
+            bidsizes:bids`size;
+            bidprices:bids`price;
+            sumbidsizes:sum bidsizes;
+            bestbidsize:bestbid`size;
+            bestasksize:bestask`size;
+            bestaskprice:bestask`price;
+            bestbidprice:bestbid`price;
+            midprice:avg[bestaskprice,bestbidprice];
+            spread:(-/)(bestaskprice,bestbidprice);
+            bidsizefracs:bidsizes%sumbidsizes;
+            asksizefracs:asksizes%sumasksizes;
 
-/
-Last Trades Features:
-    - last trades sizes
-    - last trades sides (0=`SHORT; 1=`LONG) // ROOT = TRADE
-\
-lastprice:last[.state.TradeEventHistory]`price;
-buys:select[5;>time] price, size from .state.TradeEventHistory where side=`BUY;
-sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL;
-/ sells:select[5;>time] price, size from .state.TradeEventHistory where side=`SELL; todo both candle
+            lastprice:last[.state.TradeEventHistory]`price;
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1;
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1;
 
-/
-Mark Price Features
-    - last mark price
-    - last basis
-    - -5#mark price
-    - -5#basis
-\
-markprice:last[.state.MarkEventHistory]`markprice;
-basis:lastprice-markprice;
+            markprice:last[.state.MarkEventHistory]`markprice;
+            basis:lastprice-markprice;
 
-/
-Funding Features
-    - current funding price
-    - next funding price
-    - funding time countdown
-\
-funding:last[.state.FundingEventHistory]`fundingrate;
+            funding:last[.state.FundingEventHistory]`fundingrate;
 
+
+
+}
+  
 /
 Order Features
     - one hot level has orders
