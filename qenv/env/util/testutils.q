@@ -357,15 +357,15 @@ dozc:{x+y}[doz];
      .util.testutils.makeDefaultsRecords[
          `.state.FundingEventHistory;
          `time`fundingrate`fundingtime;
-        {((.z.z-(sc rand 10000));first[1?0.001 0.002 0.003])}'[til 50]];
+        {((.z.z-(sc rand 10000));first[1?0.001 0.002 0.003];(.z.z-(sc rand 10000)))}'[til 50]];
      .util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
          `liqid`time`size`price`side;
-        {()}'[til 50]];
+        {(x;(.z.z-(sc rand 10000));first[1?100 200 300];floor[1000-(rand 50)];$[(x<5000);-1;1])}'[til 50]];
      .util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
          `sigid`time`sigvalue;
-        {()}'[til 5000]])
+        {(rand 50;(.z.z-(sc rand 5000));rand 1f)}'[til 5000]])
     };
 
 
