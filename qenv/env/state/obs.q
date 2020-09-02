@@ -1,7 +1,8 @@
 
 
 / use < for ascending, > for descending // TODO fills
-.obs.derive: {
+// TODO max lookback time
+.obs.derive: { // TODO make faster?
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
             bids:select[-5;<price] price, size from .state.CurrentDepth where side=1; // price ascending bids
             bestask:min asks;
