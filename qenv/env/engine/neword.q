@@ -202,7 +202,7 @@ AmendOrder          :{[i;o;a;time]
          (k in (1,2));[
               // Stop orders do not modify state of 
               // the orderbook.
-              .engine.ProcessMarkUpdateEvents[x]
+              .order.Order,:o;
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE];
     .pipe.event.AddOrderUpdateEvent[res;time];
@@ -227,7 +227,9 @@ CancelOrder         :{[i;o;a;time]
          (k in (1,2));[
               // Stop orders do not modify state of 
               // the orderbook.
-              .engine.ProcessMarkUpdateEvents[x]
+              ![`.order.Order;
+                enlist(in;`orderId;o`orderId);0b;`symbol$()];
+                .pipe.event.AddOrderCancelEvent[o;o`time];
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE];
     .pipe.event.AddOrderCancelEvent[res;time];
