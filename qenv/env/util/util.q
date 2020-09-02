@@ -60,6 +60,7 @@
         };
 
 // Pivots a given table 
+// TODO move to C!
 .util.Piv:{[t;k;p;v]
     f:{[v;P]`${raze "_" sv x} each string raze P,'/:v};
     v:(),v; 
