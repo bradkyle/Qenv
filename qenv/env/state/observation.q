@@ -65,8 +65,9 @@ CurrentOrderBook Features:
 
             funding:last[.state.FundingEventHistory]`fundingrate;
 
-
-
+            // TODO add accountId
+            bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
+            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
 }
   
 /
@@ -78,7 +79,8 @@ Order Features
 \
 
 // TODO filling
-// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]
+// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]
+// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]
 / ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;0];0b;`price]; // SELLS
 / ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;1];0b;`price]; // BUYS
 
