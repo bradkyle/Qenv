@@ -191,8 +191,7 @@ NewOrder            :{[i;o;a;time]
 /  @return (Inventory) The new updated inventory
 AmendOrder          :{[i;o;a;time]
     k:o`type;
-    res:$[k=0;  [.engine.MarketOrder[x]]; // MARKET ORDER
-          k=1;  [.engine.LIMIT[x]]; // LIMIT ORDER
+    res:$[k=1;  [.engine.LIMIT[x]]; // LIMIT ORDER
           k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_MARKET_ORDER
           k=3;  [.engine.ProcessMarkUpdateEvents[x]]; // STOP_LIMIT_ORDER
           'INVALID_ORDER_TYPE];
