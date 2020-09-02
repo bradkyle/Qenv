@@ -171,9 +171,13 @@ NewOrder            :{[i;a;o;time]
     k:o[;6];
     res:$[k=0;  [.order.MarketOrder[x]]; // MARKET ORDER
           k=1;  [.order.LimitOrder[x]]; // LIMIT ORDER
-          k=2;  [.order.StopOrder[x]]; // STOP_MARKET_ORDER
-          k=3;  [.order.StopOrder[x]]; // STOP_LIMIT_ORDER
-          'INVALID_ORDER_TYPE];
+          (k in (1,2));[
+              // Stop orders do not modify state of 
+              // the orderbook and thus can be inserted
+              // as such.
+              .order.Order,:o;
+         ]; // STOP_LIMIT_ORDER
+         'INVALID_ORDER_TYPE]; 
     .pipe.event.AddNewOrderEvent[res;time];
     };
 
