@@ -39,9 +39,9 @@
             // Funding Features
             funding:last[.state.FundingEventHistory]`fundingrate;
 
-            // Liquidation Features
-            bliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=1;
-            sliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=-1;
+            // Liquidation Features // TODO ohlcs
+            bliq:select avg:price, size from .state.LiquidationEventHistory where side=1, time>(max[time]-`minute$5);
+            sliq:select avg:price, size from .state.LiquidationEventHistory where side=-1, time>(max[time]-`minute$5);
 
             //Signal Features
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
