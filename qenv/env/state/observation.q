@@ -78,6 +78,7 @@ Order Features
 \
 
 // TODO filling
+// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;bidprices;til[5]];`accountId;`price`leaves!`price`leaves]
 / ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;0];0b;`price]; // SELLS
 / ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;1];0b;`price]; // BUYS
 
