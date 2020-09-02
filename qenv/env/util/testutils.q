@@ -370,7 +370,7 @@ dozc:{x+y}[doz];
     .state.SignalEventHistory,:.util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
          `sigid`time`sigvalue;
-        {(rand 50;(snz rand 5000);rand 1f)}'[til 5000]])
+        {(rand 50;(snz rand 5000);rand 1f)}'[til 5000]];
     };
 
 
