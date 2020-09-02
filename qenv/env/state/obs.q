@@ -34,6 +34,20 @@
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
 
+            // OHLC candles
+            ohlc:0!select 
+                num:count size, 
+                high:max price, 
+                low: min price, 
+                open: first price, 
+                close: last price, 
+                volume: sum size, 
+                msize: avg size, 
+                hsize: max size,
+                time: max time, 
+                lsize: min size 
+                by (1 xbar `minute$time) from .state.TradeEventHistory where time>(max[time]-`minute$20);
+
             // Mark Price Features
             markprice:last[.state.MarkEventHistory]`markprice;
             basis:lastprice-markprice;
@@ -50,12 +64,11 @@
                 lp:min price, 
                 hp:max price by side from .state.LiquidationEventHistory where time>(max[time]-`minute$5);
             
-
             //Signal Features
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
             sig:raze value[sig]`sigvalue;
 
-            //Current Orders Features
+            //Current Orders Features // todo grp by side?
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
             bord:.util.Piv[0!bord;`accountId;`price;`leaves];
