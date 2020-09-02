@@ -5,6 +5,10 @@
 / ){`$("blq_",x)}'[string[cols liq@1]]
 / ){`$("slq_",x)}'[string[cols liq@-1]]
 
+.obs.sliqCols:`slq_avp`slq_avs`slq_hs`slq_ls`slq_lp`slq_hp;
+.obs.bliqCols:`blq_avp`blq_avs`blq_hs`blq_ls`blq_lp`blq_hp;
+.obs.depthCols:
+
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
 .obs.derive: { // TODO make faster?
@@ -34,7 +38,7 @@
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
 
-            // OHLC candles
+            // OHLC candles 0.10 ms
             ohlc:0!select 
                 num:count size, 
                 high:max price, 
