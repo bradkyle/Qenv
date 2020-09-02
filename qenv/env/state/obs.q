@@ -1,4 +1,5 @@
 
+/ ){`$("sig",x)}'[s]
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
@@ -36,16 +37,22 @@
 
             //Todo signal
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
+            sig:raze value[sig]`sigvalue;
 
             // TODO add accountId
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
-            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
+            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
+
+            bord:.util.Piv[0!bord;`accountId;`price;`leaves];
+            aord:.util.Piv[0!aord;`accountId;`price;`leaves];
 
             // TODO where in ids
             invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
-            acc:0^(?[.state.CurrentAccount;();0b;()]);
+            invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl];
 
-            
+            acc:0^(?[.state.CurrentAccount;();enlist[`accountId]!enlist[`accountId];`balance`available`frozen`maintMargin!`balance`available`frozen`maintMargin]);
+
+            fea:0!((uj) over (acc;invn;aord;bord))
     };
   
 
