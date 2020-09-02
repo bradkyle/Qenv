@@ -222,7 +222,7 @@ AmendOrder          :{[i;o;a;time]
 CancelOrder         :{[i;o;a;time]
     res:$[k=1;[
                // Limit order changes state of book
-              .engine.ProcessNewTradeEvents[x]
+              .engine.ProcessNewTradeEvents[x];
          ]; 
          (k in (1,2));[
               // Stop orders do not modify state of 
