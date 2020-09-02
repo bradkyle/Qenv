@@ -57,8 +57,8 @@ CurrentOrderBook Features:
             asksizefracs:asksizes%sumasksizes;
 
             lastprice:last[.state.TradeEventHistory]`price;
-            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1;
-            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1;
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1; // TODO configurable depth
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1; // TODO configurable depth
 
             markprice:last[.state.MarkEventHistory]`markprice;
             basis:lastprice-markprice;
@@ -70,20 +70,6 @@ CurrentOrderBook Features:
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
 }
   
-/
-Order Features
-    - one hot level has orders
-    - order leaves by level
-    - order leaves list
-    - order price list
-\
-
-// TODO filling
-// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]
-// ?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]
-/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;0];0b;`price]; // SELLS
-/ ?[.state.CurrentOrders;.cond.isActiveLimit[bidprices;1];0b;`price]; // BUYS
-
 /
 Account Features
     - last balance
