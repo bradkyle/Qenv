@@ -22,8 +22,8 @@
             asksizefracs:asksizes%sumasksizes;
 
             lastprice:last[.state.TradeEventHistory]`price;
-            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1; // TODO configurable depth
-            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1; // TODO configurable depth
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); // TODO configurable depth
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); // TODO configurable depth
 
             markprice:last[.state.MarkEventHistory]`markprice;
             basis:lastprice-markprice;
@@ -38,7 +38,7 @@
             sliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=-1;
 
             //Todo signal
-            // select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory) where sigid in (til 5)
+            // select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5)
             sig:select[>time] -5#sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where sigid in (til 5);
 
             // TODO where in ids
