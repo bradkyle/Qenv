@@ -25,7 +25,6 @@ ProcessDepth        :{[] //TODO fix and test
 
         state[`tgt]: last'[state`size]; // TODO change to next? 
         
-
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
                 // Pad state into a matrix
