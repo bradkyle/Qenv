@@ -22,24 +22,23 @@
             asksizefracs:asksizes%sumasksizes;
 
             lastprice:last[.state.TradeEventHistory]`price;
-            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); // TODO configurable depth
-            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); // TODO configurable depth
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); 
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); 
 
             markprice:last[.state.MarkEventHistory]`markprice;
             basis:lastprice-markprice;
 
             funding:last[.state.FundingEventHistory]`fundingrate;
 
-            // TODO add accountId
-            bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
-            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
-
             bliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=1;
             sliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=-1;
 
             //Todo signal
-            // select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5)
-            sig:select[>time] -5#sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where sigid in (til 5);
+            sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
+
+            // TODO add accountId
+            bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
+            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
 
             // TODO where in ids
             invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
