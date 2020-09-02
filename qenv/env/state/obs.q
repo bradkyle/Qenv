@@ -29,8 +29,8 @@
 
             // Last Trade Features
             lastprice:last[.state.TradeEventHistory]`price;
-            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); 
-            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); 
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
 
             // Mark Price Features
             markprice:last[.state.MarkEventHistory]`markprice;
