@@ -1,6 +1,6 @@
 
 
-/ use < for ascending, > for descending
+/ use < for ascending, > for descending // TODO fills
 .obs.derive: {
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
             bids:select[-5;<price] price, size from .state.CurrentDepth where side=1; // price ascending bids
@@ -38,10 +38,13 @@
             sliq:select[5;>time] price, size from .state.LiquidationEventHistory where side=-1;
 
             //Todo signal
+            sig:select[>time] -5#sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where sigid in (til 5);
 
             // TODO where in ids
             invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
             acc:0^(?[.state.CurrentAccount;();0b;()]);
+
+            
     };
   
 
