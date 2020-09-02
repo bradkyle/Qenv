@@ -7,7 +7,7 @@ priceMultiplier:100;
 // DEPTHS
 // TODO detect hidden/iceberg orders
 bookParser:{[rows]
-    derive:{[u]
+    deriveBook:{[u]
         time:u[`resp][`data][`timestamp]; // should use this as ingress time
         a:flip u[`resp][`data][`asks][0];
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
