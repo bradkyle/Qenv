@@ -14,7 +14,6 @@ DefaultInstrumentId:0;
 .state.clOrdCount:0;
 .state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
 
-
 // Singleton State and Lookback Buffers
 // =====================================================================================>
 // The lookback buffers attempt to build a realistic representation of what the
@@ -64,10 +63,7 @@ DefaultInstrumentId:0;
 // ----------------------------------------------------------------------------------------------->
 
 .state.OrderEventHistory: (
-    [
-        orderId:`long$();
-        time:`datetime$()
-    ]
+    [orderId:`long$();time:`datetime$()]
     accountId       :   `long$();
     side            :   `long$(); // TODO change to long
     otype           :   `long$(); // TODO change to long
@@ -110,7 +106,6 @@ DefaultInstrumentId:0;
 
 // TODO add error handling
 .state.priceAtLvl     :{?[]};
-
 
 // Non-Essential Datums
 // ----------------------------------------------------------------------------------------------->

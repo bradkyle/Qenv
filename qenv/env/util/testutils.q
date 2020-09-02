@@ -328,10 +328,21 @@ dozc:{x+y}[doz];
 // Random State Generation
 // -------------------------------------------------------------->
 
-.util.testutils.genRandomState      :{
 
+.util.testutils.genRandomState      :{
+    (.util.testutils.makeDefaultsRecords[`.state.CurrentAccount;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.CurrentOrders;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.TradeEventHistory;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.MarkEventHistory;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.FundingEventHistory;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.LiquidationEventHistory;cl;vl];
+    .util.testutils.makeDefaultsRecords[`.state.SignalEventHistory;cl;vl])
     };
 
+
+.util.testutils.genRandomStateH      :{
+    .util.testutils.makeDefaultsRecords[`.state.AccountEventHistory;cl;vl]
+    };
 
 // Table Setup logic
 // -------------------------------------------------------------->
