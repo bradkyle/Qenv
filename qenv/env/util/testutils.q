@@ -335,35 +335,35 @@ dozc:{x+y}[doz];
         vl];
      .util.testutils.makeDefaultsRecords[
         `.state.CurrentInventory;
-        `accountId`time`balance`available;
+        `accountId`side`amt`realizedPnl`avgPrice`unrealizedPnl;
         vl];
      .util.testutils.makeDefaultsRecords[
          `.state.CurrentOrders;
-         cl;
+         `orderId`accountId`side`otype`price`leaves`status`reduce;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.CurrentDepth;
-         cl;
+         `price`time`side`size;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.TradeEventHistory;
-         cl;
+         `tid`time`size`price`side;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.MarkEventHistory;
-         cl;
+         `time`markprice;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.FundingEventHistory;
-         cl;
+         `time`fundingrate`fundingtime;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.LiquidationEventHistory;
-         cl;
+         `liqid`time`size`price`side;
          vl];
      .util.testutils.makeDefaultsRecords[
          `.state.SignalEventHistory;
-         cl;
+         `sigid`time`sigvalue;
          vl])
     };
 

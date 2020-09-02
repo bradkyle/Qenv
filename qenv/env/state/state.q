@@ -69,7 +69,6 @@ DefaultInstrumentId:0;
     otype           :   `long$(); // TODO change to long
     price           :   `long$();
     leaves          :   `long$();
-    filled          :   `long$();
     limitprice      :   `long$(); / multiply by 100
     stopprice       :   `long$(); / multiply by 100
     status          :   `long$();
