@@ -12,7 +12,7 @@
 // check if flip is right
 // TODO rate limit, return order and time, make sure ingress events in order
 // TODO supported event types
-Engine:(
+.engine.Engine:(
     [engineId                   :`long$()];
     instrumentId                : `.instrument.Instrument();
     isConfigured                : `boolean$();
@@ -133,7 +133,7 @@ Engine:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessOrderEvents :{[event]
+.engine.ProcessNewPriceLimitEvents :{[event] // 
     instrument:.engine.getInstrument[];
     
     
@@ -147,12 +147,11 @@ Engine:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewPriceLimitEvents :{[event]
+.engine.ProcessOrderEvents :{[event] // Requires accountId
     instrument:.engine.getInstrument[];
     
     
     };
-
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -163,7 +162,7 @@ Engine:(
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[event]
-    instrument:.engine.getInstrument[];
+    instrument:.engine.getInstrument[]; // Requires accountId
     
     
     };
@@ -177,7 +176,7 @@ Engine:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepositEvents :{[event]
+.engine.ProcessDepositEvents :{[event] // Requires accountId
     instrument:.engine.getInstrument[];
     
     
@@ -254,6 +253,7 @@ Engine:(
     
     // Instantiate the given set 
     // of accounts.
+    // TODO loop over config
     a:.account.NewAccount[config[`account]];
 
     // TODO set accountId
