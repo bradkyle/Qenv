@@ -194,10 +194,7 @@ DefaultInstrumentId:0;
 // a lookback buffer of aggregated features
 // over which normalization can be done before
 // passing the observations to the agent.
-.state.FeatureBuffer   :(
-    [step:`long$(); accountId:`long$()]
-    balance:`float()
-    );
+.state.FeatureBuffer   :();
 
 // Agent specific observation functions
 // --------------------------------------------------->
