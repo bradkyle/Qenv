@@ -113,12 +113,12 @@ DefaultInstrumentId:0;
 .state.depthCols:cols .state.DepthEventHistory;
 .state.CurrentDepth: `price xkey .state.DepthEventHistory;
 
-.state.lvlPrices            :{?[]};
+.state.derivelvlPrices            :{?[]};
 
 // TODO add error handling
-.state.priceAtLvl           :{?[]};
+.state.derivePriceAtLvl           :{?[]};
 
-.state.deriveBucketedPrices :{};
+.state.deriveBucketedPrices       :{};
 
 // Non-Essential Datums
 // ----------------------------------------------------------------------------------------------->

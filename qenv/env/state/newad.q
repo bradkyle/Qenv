@@ -13,3 +13,20 @@
 .state.adapter.logBucketOrders      :{
 
     };
+
+
+// Stop Event Utilities
+// ---------------------------------------------------------------------------------------->
+
+// Naive stop placement
+
+
+// Uniform staggered stop placement
+
+
+// Exponential stop placement
+
+
+// ATR stop placement 
+
+

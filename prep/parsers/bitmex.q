@@ -13,7 +13,7 @@ bookParser:{[rows]
         b:flip u[`resp][`data][`bids][0]; // should use utctime as egress time.
         :(20#(.pipe.bitmex.uid+:1);20#"Z"$time;20#u[`utc_time];((10#-1),(10#1));`int$((a[0],b[0])*100);`int$(a[1],b[1]));
     };
-    x:derive each rows;
+    x:deriveBook each rows;
     x:flip `uid`time`intime`side`price`size!raze each flip x; 
     x:update dlt:{1_deltas x}size by price, side from x; // TODO insufficient approximation
     x:x where[x[`dlt]<>0]; 
@@ -23,9 +23,13 @@ bookParser:{[rows]
     };
 
 // TRADES zzss TODO check many
+// q)x: deriveTrade each .Q.ind[trade;til 100000]
+/ )flip `time`intime`side`price`size!raze each flip x
+// q)    deriveTrade:{d:x[`resp][`data];:("Z"$d[`timestamp]; count[d]#x[`utc_time];?[(`$d[`side])~`Sell;count[d]#-1;count[d]#1]; `int$(d[`price]*100); `int$d[`size])};
+// q)x:flip `time`intime`side`price`tsize!raze each flip x
 tradeParser:{[rows] // todo fix
-    derive:{d:x[`resp][`data];:("Z"$d[`timestamp]; count[d]#x[`utc_time]; upper `$d[`side]; `int$(d[`price]*100); `int$d[`size])};
-    x: derive each rows;
+    deriveTrade:{d:x[`resp][`data];:("Z"$d[`timestamp]; count[d]#x[`utc_time];?[(`$d[`side])=`Sell;count[d]#-1;count[d]#1]; `int$(d[`price]*100); `int$d[`size])};
+    x: deriveTrade each rows;
     x:flip raze each flip x;
     cx:count x;
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));

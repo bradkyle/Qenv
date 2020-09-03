@@ -1,4 +1,47 @@
+\l account.q
+\l instrument.q
+\d .order
 
+BAM:();
+orderCount:0;
+
+// TODO change price type to int, longs etc.
+// TODO allow for data derived i.e. exchange market orders. 
+// TODO move offset into seperate table?
+Order: (
+    [price:`long$(); orderId:`long$()]
+    clId            : `long$();
+    instrumentId    : `.instrument.Instrument$();
+    accountId       : `.account.Account$();
+    side            : `long$();
+    otype           : `long$();
+    offset          : `long$();
+    timeinforce     : `long$();
+    size            : `long$(); / multiply by 100
+    leaves          : `long$();
+    filled          : `long$();
+    limitprice      : `long$(); / multiply by 100
+    stopprice       : `long$(); / multiply by 100
+    status          : `long$();
+    time            : `datetime$();
+    reduce          : `boolean$();
+    trigger         : `long$();
+    execInst        : `long$());
+
+
+// OrderBook
+// =====================================================================================>
+
+// Instantiate a singleton class of Orderbook
+// qtys: represent the different level quantities at their given prices
+// the events will be generated using the sum of the quantities and the 
+// orderbook sizes at each price.
+// TODO add hidden/Iceberg qty
+OrderBook:(
+    [price      :`long$()]
+    side        :`long$(); 
+    qty         :`long$();
+    vqty      :`long$());
 
 // Process Depth update
 // -------------------------------------------------------------->
@@ -169,12 +212,12 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 /  @return (Inventory) The new updated inventory
 NewOrder            :{[i;a;o;time]
     k:o[;6];
-    res:$[k=0;  [
+    res:$[k=0;[ // MARKET ORDER
 
-          ]; // MARKET ORDER
-          k=1;  [
+          ]; 
+          k=1;[ // LIMIT ORDER
                 
-          ]; // LIMIT ORDER
+          ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted

@@ -3,5 +3,6 @@
 // =====================================================================================>
 
 GetDones    :{[aids; minBalance]
-
+    // Check if balance is below requred thresh = True
+    // Check if 
     };
