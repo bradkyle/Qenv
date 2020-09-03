@@ -6,6 +6,7 @@
 / ){`$("slq_",x)}'[string[cols liq@-1]]
 / )raze{5#x}'[til[5]], )25#til[5]
 
+.state.lookback:30;
 .obs.sliqCols:`slq_avp`slq_avs`slq_hs`slq_ls`slq_lp`slq_hp;
 .obs.bliqCols:`blq_avp`blq_avs`blq_hs`blq_ls`blq_lp`blq_hp;
 .obs.bdfCols:{`$("bdf",x)}'[string[til[5]]];
@@ -151,7 +152,7 @@ Feature Forecasters TODO iceberg detection!
 
 .obs.GetObservations :{[step;aIds]
     fea:.obs.derive[step;aIds];
-    $[(step=0 or count[.state.FeatureBuffer]<(.state.lookback*count[aIds]);[
+    $[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
             
         ];[
             .state.FeatureBuffer,:fea;
