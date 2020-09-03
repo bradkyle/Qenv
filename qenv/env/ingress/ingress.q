@@ -38,3 +38,7 @@ Episode :(
 
 
     };
+
+    csi:count[.env.StepIndex];
+        nevents:flip[.env.EventBatch@idx];
+        idx:.env.StepIndex@step;

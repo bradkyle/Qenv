@@ -57,18 +57,17 @@ Info        :{[aIds;step]
 // ids have been included into the ids parameter
 // TODO validation
 Reset    :{[config]
-    
+    .env.CONF:.config.Config[config];
     // Reset the Engine and 
     // the current state and 
     // return obs
-    .engine.Reset[config];
-    .state.Reset[config];
-
+    .engine.Reset[.env.CONF];
+    .state.Reset[.env.CONF];
     
     // Derive the initial state from the
     // engine and derive deposit events etc.
-    aevents:.env.SetupEvents[config];
-    nevents:.ingress.Start[config];
+    aevents:.env.SetupEvents[.env.CONF];
+    nevents:.ingress.Start[.env.CONF];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
     .env.CurrentStep:0;
@@ -102,32 +101,26 @@ Reset    :{[config]
 Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
-    csi:count[.env.StepIndex];
     // Advances the current state of the environment
-    $[.env.CurrentStep<csi;[    
-        idx:.env.StepIndex@step;
-        nevents:flip[.env.EventBatch@idx];
-        / feature:FeatureBatch@thresh; // TODO feature batch with noisy offsets
-        // should add a common offset to actions before inserting them into
-        // the events.
-        tme:$[type idx~15h;idx;exec first time from nevents];
-        // TODO should add offset to action events!!!.
-        // TODO should add random withraws, deposits outages etc.
-        aevents:.adapter.Adapt[.env.ADPT;idx;actions];
-        xevents:.engine.ProcessEvents[(nevents,aevents)];
-        // TODO should add offset to resultant events!!!
-        .state.InsertResultantEvents[xevents];
+    nevents:.ingress.GetNextEvents[step];
 
-        aIds:actions[;1];
-        naids:count[ads];
-        obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
-        rwd:.rew.GetRewards[step; 100; aIds];
-        dns:$[((step+1)<count[.env.StepIndex]); 
-                .state.GetDones[aIds; 0];
-                flip[(aIds;naIds#1b)]];
-        ifo:.env.Info[aIds;step];
+    / feature:FeatureBatch@thresh; // TODO feature batch with noisy offsets
+    // should add a common offset to actions before inserting them into
+    // the events.
+    tme:$[type idx~15h;idx;exec first time from nevents];
+    // TODO should add offset to action events!!!.
+    // TODO should add random withraws, deposits outages etc.
+    aevents:.adapter.Adapt[.env.ADPT;idx;actions];
+    xevents:.engine.ProcessEvents[(nevents,aevents)];
+    // TODO should add offset to resultant events!!!
+    .state.InsertResultantEvents[xevents];
 
-        .env.CurrentStep+:1;
-        :(obs;rwd;dns;ifo);
-    ];'INVALID_STEP];
+    aIds:actions[;1]; // Get the account ID's
+    obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
+    rwd:.rew.GetRewards[step; 100; aIds];
+    dns:.dns.GetDones[]; // TODO move to env and create better!
+    ifo:.env.Info[aIds;step];
+
+    .env.CurrentStep+:1;
+    :(obs;rwd;dns;ifo);
     };
