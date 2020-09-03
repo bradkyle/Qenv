@@ -158,11 +158,10 @@ Feature Forecasters TODO iceberg detection!
 // features into the Feature buffer. It then calls .ml.minmax scaler
 // to normalize the given features (FOR EACH ACCOUNT) such that the
 // observations can be passed back to the agents etc.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
+/  @param step     (Long) The current environment step
+/  @param aIds     (Long) The accountIds for which to get observations.
+/  @return         (List) The normalized observation vector for each 
+/                         account
 .obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
     $[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
