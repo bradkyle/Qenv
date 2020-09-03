@@ -227,7 +227,9 @@
         :(
             select from .account.Account where accountId in aids;
             select from .account.Inventory where accountId in aids; 
-            .engine.Engine@0;
+            .engine.Engine;
+            .order.Order; // TODO get accoutn
+            .instrument.Instrument
         );
     };
 
