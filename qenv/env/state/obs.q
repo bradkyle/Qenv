@@ -136,7 +136,7 @@
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
             fea[`step]:step;
-            {raze'[x]}'[0f^`float$(fea)] // TODO make better?
+            {raze'[x]}'[fea] // TODO make better?
     };
   
 // TODO join fea set
@@ -151,12 +151,7 @@ Feature Forecasters TODO iceberg detection!
         low,open,close,volume,msize,hsize) -> midPrice;
 \
 
-
-.obs.AddLookBackRow :{[fea;lookback;step] 
-    fea[`step]:step-lookback;
-    .state.FeatureBuffer,:{raze'[x]}'[{c:(cols[x] except `accountId`step);x[c]+:x[c]*({rand 0.0001}'[til count[x[c]]]);x}'[fea]];
-    };
-
+ 
 // GetObs derives a feature vector from the current state which it
 // then fills and removes inf etc from.
 // it then checks if the state Feature Buffer has been initialized
@@ -170,13 +165,16 @@ Feature Forecasters TODO iceberg detection!
 /  @return         (List) The normalized observation vector for each 
 /                         account
 / cols[fea] except `accountId
-.obs.GetObs :{[step;aIds]
+.obs.GetObs :{[step;lookback;aIds]
     fea:.obs.derive[step;aIds];
     if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)
-            {x[`step]:y;x:`accountId`step xkey x;.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til .obs.lookback];
+            // backwards (randomized fill of buffer)
+            {x[`step]-:y;x:`accountId`step xkey x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
     ]];
+    fea:`accountId`step xkey fea;
+    fea:0f^`float$(fea);
     .state.FeatureBuffer,:fea;
     :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     };
