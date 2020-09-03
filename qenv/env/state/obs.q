@@ -136,7 +136,7 @@
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
             fea[`step]:step;
-            0f^`float$(fea)
+            {raze'[x]}'[0f^`float$(fea)] // TODO make better?
     };
   
 // TODO join fea set
@@ -150,6 +150,12 @@ Feature Forecasters TODO iceberg detection!
     - SVN(bidsizes,asksizes,bidprices,askprices,high,
         low,open,close,volume,msize,hsize) -> midPrice;
 \
+
+
+.obs.AddLookBackRow :{[fea;lookback;step] 
+    fea[`step]:step-lookback;
+    .state.FeatureBuffer,:{raze'[x]}'[{c:(cols[x] except `accountId`step);x[c]+:x[c]*({rand 0.0001}'[til count[x[c]]]);x}'[fea]];
+    };
 
 // GetObs derives a feature vector from the current state which it
 // then fills and removes inf etc from.
@@ -166,14 +172,20 @@ Feature Forecasters TODO iceberg detection!
 / cols[fea] except `accountId
 .obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
-    // TODO add noise to features (if training?)
-    if[(step=0 or count[.state.FeatureBuffer]<(count[aIds]));[
-            .state.FeatureBuffer:2!(flip (`accountId`step,cols[fea])!());
+    if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
+            // If the env is on the first step then generate a lookback buffer (with decreasing noise?)
+            {x[`step]:y;x:`accountId`step xkey x;.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til .obs.lookback];
     ]];
     .state.FeatureBuffer,:fea;
+    :first last'[flip'[.ml.minmaxscaler'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]];
     };
 
+
+/ q).ml.minmaxscaler[raze'[ first value `accountId xgroup (flip (c!(0!.state.FeatureBuffer)[c]))]]
 / )f1:first `accountId xgroup (flip (c!(0!.state.FeatureBuffer)[c]))
 / .ml.minmaxscaler[raze'[f1]]
 // q)o:0^`float$(first[`accountId xgroup .state.FeatureBuffer][c])
 // last flip 0f^.ml.minmaxscaler[o]
+// q).state.FeatureBuffer,:{x+:x*({rand 0.0001}'[til count[x]]);x}'[fea]
+// q)first last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
+// q)first [{raze'[x]}'[{c:(cols[x] except `accountId`step);x[c]+:x[c]*({rand 0.0001}'[til count[x[c]]]);x}'[fea]]]
