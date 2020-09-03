@@ -8,6 +8,7 @@
 .obs.sliqCols:`slq_avp`slq_avs`slq_hs`slq_ls`slq_lp`slq_hp;
 .obs.bliqCols:`blq_avp`blq_avs`blq_hs`blq_ls`blq_lp`blq_hp;
 .obs.depthCols:();
+.obs.sigCols:();
 .obs.ohlcCols:(`num`high`low`open`close`volume`msize`hsize,
                `lsize`sma10`sma20`ema12`ema26`macd`rsi`mfi,
                `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
@@ -113,7 +114,7 @@
             fea:0!((uj) over (acc;invn;aord;bord));
 
             fea[.obs.sigCols]:sig;
-            fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
+            / fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
             fea[.obs.bliqCols]:value[liq@1];
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
