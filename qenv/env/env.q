@@ -36,37 +36,8 @@ Env  :(
         numAgentSteps       : `long$();
         accountIds          : ());
 
-WINDOWKIND :  `TEMPORAL`EVENTCOUNT`THRESHCOUNT`TRADECOUNT`PRICECHANGE;   
-
-BATCHSELECTMETHOD :`CHRONOLOGICAL`RANDOM`CURRICULUM; 
-
-// TODO episodes
-Episode :(
-        [episodeId               :`long$()]
-        batchIdx                 :`long$();
-        batchStart               :`datetime$();
-        batchEnd                 :`datetime$();                        
-        rewardTotal              :`float$();
-        returnQuoteTotal         :`float$();
-        returnBaseTotal          :`float$()
-    );
-
-.env.EventPath:`path;
-.env.EventSource:`events;
-.env.UseFeatures:0b;
-.env.MaxEpisodes:1000;
-.env.RewardKind:0;
-
-.env.CurrentEpisde:0;
 .env.CurrentStep:0; // The current step of the environment.
-.env.PrimeBatchNum:0; // How many events are used to prime the engine with state.
-
-.env.ADPT:`.adapter.ADAPTERTYPE$`MARKETMAKER;
-.env.WindowKind:`.env.WINDOWKIND$`TEMPORAL;
-.env.BatchSelectMethod:`.env.BATCHSELECTMETHOD$`CHRONOLOGICAL;
-.env.BatchInterval:`minute$5;
-.env.BatchSize: 50;
-
+.env.CONF:();
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
@@ -93,24 +64,13 @@ Reset    :{[config]
     .engine.Reset[config];
     .state.Reset[config];
 
-    // Loads the next set of events from 
-    // HDB into memory
-    .env.GenNextEpisode[]; // TODO check that length is greater than config
     
     // Derive the initial state from the
     // engine and derive deposit events etc.
     aevents:.env.SetupEvents[config];
-
-    // Insert a set of initial events indicative of the state 
-    // before the first step into the state buffer for "Priming"
-    nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive from config
+    nevents:.ingress.Start[config];
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
-
-    // Set the current Event batch to exclude the event batches
-    // used in the priming of the state.
-    .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
-    .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
     .env.CurrentStep:0;
 
     :.obs.GetObs[
