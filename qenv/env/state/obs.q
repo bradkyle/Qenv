@@ -150,7 +150,20 @@ Feature Forecasters TODO iceberg detection!
         low,open,close,volume,msize,hsize) -> midPrice;
 \
 
-.obs.GetObservations :{[step;aIds]
+// GetObs derives a feature vector from the current state which it
+// then fills and removes inf etc from.
+// it then checks if the state Feature Buffer has been initialized
+// with the respective feature columns, or else it initializes it.
+// when the feature buffer is set up it will proceed to upsert the 
+// features into the Feature buffer. It then calls .ml.minmax scaler
+// to normalize the given features (FOR EACH ACCOUNT) such that the
+// observations can be passed back to the agents etc.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
     $[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
             
