@@ -108,7 +108,10 @@ Reset    :{[config]
 
     // TODO analytics log reset
 
-    :(obs);
+    :.obs.GetObs[
+        .env.CurrentStep;
+        .env.CONF`lookback;
+        .env.CONF`accountIds];
     };
 
 

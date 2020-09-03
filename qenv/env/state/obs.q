@@ -26,7 +26,7 @@
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
-.obs.derive: {[step;aIds] // TODO make faster?
+.obs.derive: {[step;aIds] // TODO make faster? // TODO fill values with blanks (0f), make faster
 
             // Depth Features
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
@@ -115,7 +115,7 @@
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
             bord:.util.Piv[0!bord;`accountId;`price;`leaves];
-            aord:.util.Piv[0!aord;`accountId;`price;`leaves];
+            aord:.util.Piv[0!aord;`accountId;`price;`leaves]; // TODO change to num rather
 
             // Inventory Features (add conditional accountId)
             invn:0^(?[.state.CurrentInventory;();`accountId`side!`accountId`side;()]);
@@ -164,7 +164,7 @@ Feature Forecasters TODO iceberg detection!
 /  @param aIds     (Long) The accountIds for which to get observations.
 /  @return         (List) The normalized observation vector for each 
 /                         account
-/ cols[fea] except `accountId
+/ cols[fea] except `accountId // TODO make more efficient, move to C etc
 .obs.GetObs :{[step;lookback;aIds]
     fea:.obs.derive[step;aIds];
     if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
