@@ -19,7 +19,8 @@
 .obs.auxDCols:(`midprice`spread`sumasks`sumbids);
 
 // TODO bid orders at exponential intervals!, 
-// TODO place orders at exponential intervals!
+// TODO place orders at exponential intervals! 
+// TODO cancel orders outside of bounds
 
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
@@ -109,7 +110,7 @@
             sig:select -5#sigvalue by sigid from (select last sigvalue by 1 xbar `minute$time,sigid from .state.SignalEventHistory where time>(max[time]-`minute$5)) where sigid in (til 5);
             sig:raze value[sig]`sigvalue;
 
-            //Current Orders Features // todo grp by side?
+            //Current Orders Features // todo grp by side? Grouping by increasing bucket spread mirroring the adapter action placement.
             bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
             aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
             bord:.util.Piv[0!bord;`accountId;`price;`leaves];
