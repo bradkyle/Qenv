@@ -16,7 +16,7 @@
 .obs.ohlcCols:(`num`high`low`open`close`volume`msize`hsize,
                `lsize`sma10`sma20`ema12`ema26`macd`rsi`mfi,
                `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
-.obs.auxDCols:();
+.obs.auxDCols:(`midprice`spread`sumasks`sumbids);
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
@@ -41,6 +41,7 @@
             spread:(-/)(bestaskprice,bestbidprice);
             bidsizefracs:bidsizes%sumbidsizes;
             asksizefracs:asksizes%sumasksizes;
+            depthfrac:sumbidsizes%sumasksizes;
 
             // Last Trade Features
             lastprice:last[.state.TradeEventHistory]`price;
