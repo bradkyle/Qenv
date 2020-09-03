@@ -153,14 +153,14 @@ Step    :{[actions]
         // TODO should add offset to resultant events!!!
         .state.InsertResultantEvents[xevents];
 
-        aids:actions[;1];
-        naids:count[aids];
-        obs:.state.GetObservations[aids; 100; step];
-        rwd:.state.GetRewards[aids; 100; step];
+        aIds:actions[;1];
+        naids:count[ads];
+        obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
+        rwd:.state.GetRewards[aIds; 100; step];
         dns:$[((step+1)<count[.env.StepIndex]); 
-                .state.GetDones[aids; 0];
-                flip[(aids;naids#1b)]];
-        ifo:.env.Info[aids;step];
+                .state.GetDones[aIds; 0];
+                flip[(aIds;naIds#1b)]];
+        ifo:.env.Info[aIds;step];
 
         .env.CurrentStep+:1;
         :(obs;rwd;dns;ifo);
