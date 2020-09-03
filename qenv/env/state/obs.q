@@ -7,7 +7,10 @@
 
 .obs.sliqCols:`slq_avp`slq_avs`slq_hs`slq_ls`slq_lp`slq_hp;
 .obs.bliqCols:`blq_avp`blq_avs`blq_hs`blq_ls`blq_lp`blq_hp;
-.obs.depthCols:
+.obs.depthCols:();
+.obs.ohlcCols:(`num`high`low`open`close`volume`msize`hsize,
+               `lsize`sma10`sma20`ema12`ema26`macd`rsi`mfi,
+               `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
