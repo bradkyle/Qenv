@@ -25,6 +25,7 @@ environment agent state.
 \
 
 // TODO create functionality for requesting state when there is none
+// TODO get out of bounds orders!
 
 // Event Creation Utilities
 // --------------------------------------------------->
@@ -54,6 +55,7 @@ environment agent state.
 
 // TODO add logic for reducing order count when neccessary
 // TODO testing
+// G
 // @aid: accountId
 // @lvls: levels ascending from spread
 // @sizes: target sizes
