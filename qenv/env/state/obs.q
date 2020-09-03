@@ -173,11 +173,12 @@ Feature Forecasters TODO iceberg detection!
 .obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
     if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
-            // If the env is on the first step then generate a lookback buffer (with decreasing noise?)
+            // If the env is on the first step then generate 
+            // a lookback buffer (TODO with decreasing noise?)
             {x[`step]:y;x:`accountId`step xkey x;.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til .obs.lookback];
     ]];
     .state.FeatureBuffer,:fea;
-    :first last'[flip'[.ml.minmaxscaler'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]];
+    :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     };
 
 
