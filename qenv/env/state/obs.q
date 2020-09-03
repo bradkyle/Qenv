@@ -18,6 +18,7 @@
                `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
 .obs.auxDCols:(`midprice`spread`sumasks`sumbids);
 
+// TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
 .obs.derive: { // TODO make faster?
@@ -141,7 +142,9 @@ Feature Forecasters TODO iceberg detection!
         low,open,close,volume,msize,hsize) -> midPrice;
 \
 
-GetObservations :{[]
+.obs.GetObservations :{[]
+    fea:.obs.derive[];
+    .state.FeatureBuffer,:fea;
     $[
 
     ]};
