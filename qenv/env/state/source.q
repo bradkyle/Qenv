@@ -26,6 +26,7 @@ firstDay:{`datetime$((select first date from events)[`date])};
 PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
 // Returns the next batch from the
+// Only select from features/ resultant state where state<step time!!
 
 // Batches are synonymous with episode // TODO train test split
 // TODO test next
