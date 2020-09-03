@@ -26,6 +26,7 @@ environment agent state.
 
 // TODO create functionality for requesting state when there is none
 // TODO get out of bounds orders!
+// TOOD dynamic bucketing of orders
 
 // Event Creation Utilities
 // --------------------------------------------------->

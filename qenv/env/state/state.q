@@ -86,6 +86,18 @@ DefaultInstrumentId:0;
 // level by price
 .state.lvlQtyByPrice :{?[`.order.CurrentOrders]};
 
+// Derive the sum of the leaves qty/outstanding qty of
+// orders for each price bucket provided for a specified
+// agent. i.e.
+// e.g. exponent price buckets:(0,1);(2,4),(5,10),(11,22)
+// e.g. uniform price buckets:(0,1);(2,3),(4,5),(5,6)
+.state.deriveBucketedQty  :{};
+
+// Derive the set of limit orders that have drifted 
+// outside of the observation bounds of the agent 
+// such that they can be for instance cancelled.
+.state.outBoundsOrders    :{};
+
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
 
@@ -101,10 +113,12 @@ DefaultInstrumentId:0;
 .state.depthCols:cols .state.DepthEventHistory;
 .state.CurrentDepth: `price xkey .state.DepthEventHistory;
 
-.state.lvlPrices     :{?[]};
+.state.lvlPrices            :{?[]};
 
 // TODO add error handling
-.state.priceAtLvl     :{?[]};
+.state.priceAtLvl           :{?[]};
+
+.state.deriveBucketedPrices :{};
 
 // Non-Essential Datums
 // ----------------------------------------------------------------------------------------------->
