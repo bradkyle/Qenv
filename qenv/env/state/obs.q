@@ -16,7 +16,7 @@
 .obs.sigCols:{`$x}'[raze'[flip(25#enlist"sig_";string[raze{5#x}'[til[5]]];"_";string[25#til[5]])]];
 .obs.ohlcCols:(`num`high`low`open`close`volume`msize`hsize,
                `lsize`sma10`sma20`ema12`ema26`macd`rsi`mfi,
-               `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
+               `avtp`cci`sma`sd`up`down`EMV`ROC);
 .obs.auxDCols:(`midprice`spread`sumasks`sumbids);
 
 // TODO bid orders at exponential intervals!, 
@@ -136,9 +136,10 @@
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
             fea[`step]:step;
-            fea
+            0f^`float$(fea)
     };
   
+// TODO join fea set
 
 /
 Feature Forecasters TODO iceberg detection!
@@ -165,10 +166,14 @@ Feature Forecasters TODO iceberg detection!
 / cols[fea] except `accountId
 .obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
-    if[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
+    // TODO add noise to features (if training?)
+    if[(step=0 or count[.state.FeatureBuffer]<(count[aIds]));[
             .state.FeatureBuffer:2!(flip (`accountId`step,cols[fea])!());
     ]];
     .state.FeatureBuffer,:fea;
     };
 
-// last flip 0^.ml.minmaxscaler[o]
+/ )f1:first `accountId xgroup (flip (c!(0!.state.FeatureBuffer)[c]))
+/ .ml.minmaxscaler[raze'[f1]]
+// q)o:0^`float$(first[`accountId xgroup .state.FeatureBuffer][c])
+// last flip 0f^.ml.minmaxscaler[o]
