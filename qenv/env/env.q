@@ -87,26 +87,31 @@ Info        :{[aIds;step]
 // TODO validation
 Reset    :{[config]
     
-    res:.engine.Reset[config];
-    res:.state.Reset[config];
+    // Reset the Engine and 
+    // the current state and 
+    // return obs
+    .engine.Reset[config];
+    .state.Reset[config];
 
     // Loads the next set of events from 
     // HDB into memory
     .env.GenNextEpisode[]; // TODO check that length is greater than config
     
+    // Derive the initial state from the
+    // engine and derive deposit events etc.
     aevents:.env.SetupEvents[config];
+
+    // Insert a set of initial events indicative of the state 
+    // before the first step into the state buffer for "Priming"
     nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive from config
     xevents:.engine.ProcessEvents[(nevents,aevents)];
     .state.InsertResultantEvents[xevents];
 
-    aids:(.env.Env@0)`accountIds;
-    obs:.state.GetObservations[aids; 100; 0];
+    // Set the current Event batch to exclude the event batches
+    // used in the priming of the state.
     .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
     .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
-
     .env.CurrentStep:0;
-
-    // TODO analytics log reset
 
     :.obs.GetObs[
         .env.CurrentStep;
@@ -156,7 +161,7 @@ Step    :{[actions]
         aIds:actions[;1];
         naids:count[ads];
         obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
-        rwd:.state.GetRewards[aIds; 100; step];
+        rwd:.rew.GetRewards[step; 100; aIds];
         dns:$[((step+1)<count[.env.StepIndex]); 
                 .state.GetDones[aIds; 0];
                 flip[(aIds;naIds#1b)]];
