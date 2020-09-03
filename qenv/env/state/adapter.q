@@ -87,7 +87,10 @@ environment agent state.
     :reqs;
     };
 
-// TODO Pricing schemas not based on other orders placed in book 
+// TODO Pricing schemas not based on other orders placed in book
+// (2 xexp til 10) clip at 1, then derive price
+// floor[(2 xlog (1+til 10))*4] 
+// floor[10%(1.5*(1+til 10))]%10
 
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
