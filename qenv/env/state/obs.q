@@ -151,10 +151,9 @@ Feature Forecasters TODO iceberg detection!
 
 .obs.GetObservations :{[step;aIds]
     fea:.obs.derive[step;aIds];
-    .state.FeatureBuffer,:fea;
     $[(step=0 or count[.state.FeatureBuffer]<(.state.lookback*count[aIds]);[
-
+            
         ];[
-
+            .state.FeatureBuffer,:fea;
         ]];
     };
