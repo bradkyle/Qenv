@@ -195,7 +195,7 @@ DefaultInstrumentId:0;
 // over which normalization can be done before
 // passing the observations to the agent.
 .state.FeatureBuffer   :(
-    [step:`long$(); accountId:`datetime$()]
+    [step:`long$(); accountId:`long$()]
     );
 
 // Agent specific observation functions

@@ -21,7 +21,7 @@
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
-.obs.derive: { // TODO make faster?
+.obs.derive: {[step;aIds] // TODO make faster?
 
             // Depth Features
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
@@ -48,6 +48,8 @@
             lastprice:last[.state.TradeEventHistory]`price;
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
+            
+            // TODO hourly?
 
             // OHLC candles 0.10 ms/1000 (1 minute)
             ohlc:0!select 
@@ -105,8 +107,8 @@
             sig:raze value[sig]`sigvalue;
 
             //Current Orders Features // todo grp by side?
-            bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
-            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;til[5]];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
+            bord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[1;bidprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]];
+            aord:?[.state.CurrentOrders;.util.cond.isActiveAccLimit[-1;askprices;aIds];`accountId`price!`accountId`price;enlist[`leaves]!enlist[(sum;`leaves)]]; // get i instead of price
             bord:.util.Piv[0!bord;`accountId;`price;`leaves];
             aord:.util.Piv[0!aord;`accountId;`price;`leaves];
 
@@ -128,6 +130,7 @@
             fea[.obs.bliqCols]:value[liq@1];
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
+            fea[`step]:step;
             fea
     };
   
@@ -142,8 +145,8 @@ Feature Forecasters TODO iceberg detection!
         low,open,close,volume,msize,hsize) -> midPrice;
 \
 
-.obs.GetObservations :{[]
-    fea:.obs.derive[];
+.obs.GetObservations :{[step;aIds]
+    fea:.obs.derive[step;aIds];
     .state.FeatureBuffer,:fea;
     $[
 
