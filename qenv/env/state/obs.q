@@ -18,6 +18,9 @@
                `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
 .obs.auxDCols:(`midprice`spread`sumasks`sumbids);
 
+// TODO bid orders at exponential intervals!, 
+// TODO place orders at exponential intervals!
+
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
