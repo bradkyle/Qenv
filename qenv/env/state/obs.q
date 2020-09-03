@@ -8,11 +8,15 @@
 
 .obs.sliqCols:`slq_avp`slq_avs`slq_hs`slq_ls`slq_lp`slq_hp;
 .obs.bliqCols:`blq_avp`blq_avs`blq_hs`blq_ls`blq_lp`blq_hp;
-.obs.depthCols:();
-.obs.sigCols:();
+.obs.bdfCols:{`$("bdf",x)}'[string[til[5]]];
+.obs.adfCols:{`$("adf",x)}'[string[til[5]]];
+.obs.bdpCols:{`$("bdp",x)}'[string[til[5]]];
+.obs.adpCols:{`$("adp",x)}'[string[til[5]]];
+.obs.sigCols:{`$x}'[raze'[flip(25#enlist"sig_";string[raze{5#x}'[til[5]]];"_";string[25#til[5]])]];
 .obs.ohlcCols:(`num`high`low`open`close`volume`msize`hsize,
                `lsize`sma10`sma20`ema12`ema26`macd`rsi`mfi,
                `avtp`cci`sma`sd`up`down`EMV`ROC`sC`sk`x);
+.obs.auxDCols:();
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
@@ -43,7 +47,7 @@
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
 
-            // OHLC candles 0.10 ms (1 minute)
+            // OHLC candles 0.10 ms/1000 (1 minute)
             ohlc:0!select 
                 num:count size, 
                 high:max price, 
@@ -115,10 +119,14 @@
             fea:0!((uj) over (acc;invn;aord;bord));
 
             fea[.obs.sigCols]:sig;
-            / fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
+            fea[.obs.bdfCols]:bidsizefracs;
+            fea[.obs.adfCols]:asksizefracs;
+            fea[.obs.bdpCols]:bidprices;
+            fea[.obs.adpCols]:askprices;
             fea[.obs.bliqCols]:value[liq@1];
             fea[.obs.sliqCols]:value[liq@-1]; 
             fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
+            fea
     };
   
 
