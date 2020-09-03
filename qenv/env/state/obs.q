@@ -38,7 +38,7 @@
             buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
             sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
 
-            // OHLC candles 0.10 ms
+            // OHLC candles 0.10 ms (1 minute)
             ohlc:0!select 
                 num:count size, 
                 high:max price, 
@@ -48,9 +48,30 @@
                 volume: sum size, 
                 msize: avg size, 
                 hsize: max size,
-                time: max time, 
                 lsize: min size 
                 by (1 xbar `minute$time) from .state.TradeEventHistory where time>(max[time]-`minute$20);
+
+            ohlc:update 
+                sma10:mavg[10;close], // TODO impl C
+                sma20:mavg[20;close], 
+                ema12:ema[2%13;close], 
+                ema26:ema[2%27;close], 
+                macd:macd[close] 
+                from ohlc;
+
+            ohlc:update rsi:rsiMain[close;14] from ohlc;
+
+            ohlc:update mfi:mfiMain[high;low;close;6;volume], avtp:avg(high;low;close) from ohlc;
+
+            ohlc:update cci:CCI[high;low;close;14] from ohlc;
+
+            ohlc:update sma:mavg[20;avtp],sd:mdev[20;avtp] from ohlc;
+
+            ohlc:update up:sma+2*sd,down:sma-2*sd from ohlc;
+
+            ohlc:update EMV:emv[high;low;volume;1000000;14] from ohlc;
+
+            ohlc:update ROC:roc[close;10] from ohlc;
 
             // Mark Price Features
             markprice:last[.state.MarkEventHistory]`markprice;
@@ -92,6 +113,7 @@
             fea[.obs.depthCols]:(bidsizefracs,asksizefracs);
             fea[.obs.bliqCols]:value[liq@1];
             fea[.obs.sliqCols]:value[liq@-1]; 
+            fea[.obs.ohlcCols]:last[ohlc][.obs.ohlcCols];
     };
   
 

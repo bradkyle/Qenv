@@ -87,6 +87,8 @@ environment agent state.
     :reqs;
     };
 
+// TODO Pricing schemas not based on other orders placed in book 
+
 // Creates a set of events neccessary to transition
 // the current positions to closed positions using
 // market orders for a specific agent
