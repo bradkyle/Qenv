@@ -162,11 +162,11 @@ Feature Forecasters TODO iceberg detection!
 /  @param aIds     (Long) The accountIds for which to get observations.
 /  @return         (List) The normalized observation vector for each 
 /                         account
+/ cols[fea] except `accountId
 .obs.GetObs :{[step;aIds]
     fea:.obs.derive[step;aIds];
-    $[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
-            
-        ];[
-            .state.FeatureBuffer,:fea;
-        ]];
+    if[(step=0 or count[.state.FeatureBuffer]<(count[aIds]);[
+            .state.FeatureBuffer:2!(flip (`accountId`step,cols[fea])!());
+    ]];
+    .state.FeatureBuffer,:fea;
     };

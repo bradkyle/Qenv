@@ -196,6 +196,7 @@ DefaultInstrumentId:0;
 // passing the observations to the agent.
 .state.FeatureBuffer   :(
     [step:`long$(); accountId:`long$()]
+    balance:`float()
     );
 
 // Agent specific observation functions
