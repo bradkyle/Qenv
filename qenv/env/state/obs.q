@@ -28,6 +28,8 @@
 // TODO max lookback time
 .obs.derive: {[step;aIds] // TODO make faster? // TODO fill values with blanks (0f), make faster
 
+            // TODO order flow calculation, book activity etc.
+
             // Depth Features
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
             bids:select[-5;<price] price, size from .state.CurrentDepth where side=1; // price ascending bids

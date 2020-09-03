@@ -106,6 +106,9 @@ ProcessDepth        :{[] //TODO fix and test
     .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
+// Process Iceberg
+// -------------------------------------------------------------->
+
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
