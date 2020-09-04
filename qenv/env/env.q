@@ -102,25 +102,46 @@ Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
     // Advances the current state of the environment
-    nevents:.ingress.GetNextEvents[step];
 
-    / feature:FeatureBatch@thresh; // TODO feature batch with noisy offsets
-    // should add a common offset to actions before inserting them into
-    // the events.
-    tme:$[type idx~15h;idx;exec first time from nevents];
-    // TODO should add offset to action events!!!.
-    // TODO should add random withraws, deposits outages etc.
-    aevents:.adapter.Adapt[.env.ADPT;idx;actions];
-    xevents:.engine.ProcessEvents[(nevents,aevents)];
-    // TODO should add offset to resultant events!!!
+    // The adapter takes a given action set and creates
+    // the set of events that need to transpire to anneal
+    // to this target. The events are then inserted into
+    // the pipeline in such a manner that preserves the 
+    // temporal coherence of macro actions and the delay
+    // in time between the agent and the exchange.
+    .adapter.Adapt[.env.ADPT;idx;actions];
+
+    // Based upon initial configuration set in .env.Reset
+    // this function derives the set of events at the given
+    // step that should be executed by the engine.
+    // This also allows for longer temporal steps and larger
+    // batch sizes for faster overall processing speed.
+    nevents:.ingress.GetIngressEvents[step];
+
+    // The engine processes the set of events
+    // provided by the pipeline and inserts a set
+    // of resultant events thereafter. 
+    .engine.ProcessEvents[nevents];
+    
+    // Based upon initial configuration set in .env.Reset
+    // this function derives the set of events at the given
+    // step that should be inserted into the local state.
+    // This also allows for longer temporal steps and larger
+    // batch sizes for faster overall processing speed.
+    xevents:.ingress.GetEngressEvents[step];
+    
+    // Events are inserted back into the state such that
+    // a set of features can be derived therin
     .state.InsertResultantEvents[xevents];
 
+    // Final aggregated state derivation is performed
+    // inorder to derive the observations, dones and 
+    // rewards that are to be sent back to the agent.
     aIds:actions[;1]; // Get the account ID's
     obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
     rwd:.rew.GetRewards[step; 100; aIds];
     dns:.dns.GetDones[]; // TODO move to env and create better!
-    ifo:.env.Info[aIds;step];
 
     .env.CurrentStep+:1;
-    :(obs;rwd;dns;ifo);
+    :(obs;rwd;dns);
     };
