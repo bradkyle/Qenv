@@ -42,4 +42,8 @@ q)x:delete intime,uid,side from x
 q)x:`time xasc ((select fll:sum size by price,time from trd where side=1) uj (select by price,time from bask))
 q)bask:select from (delete from (flip `uid`time`intime`side`price`size!flip raze'[raze'[book]]) where type'[side]=101h) where side=-1, price=(min;price) fby time
 
-// select first depth before and after trade at given trade price level
+// select first depth before and after trade at given trade price level, 
+// if the level has decreased less than the given trade amount than the 
+// amount of iceberg/hidden orders at that level is proportional to the 
+// difference between the trade amount and the delta that occured at the
+// level.
