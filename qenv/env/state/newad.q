@@ -46,13 +46,24 @@
 // ---------------------------------------------------------------------------------------->
 
 // Naive stop placement
+.state.adapter.naiveStops   :{
 
+    };
 
 // Uniform staggered stop placement
+.state.adapter.uniStops     :{
 
+    };   
 
 // Exponential stop placement
+.state.adapter.expStops     :{
 
+    };
+
+// Exponential stop placement
+.state.adapter.logStops   :{
+
+    };
 
 // ATR stop placement 
 
