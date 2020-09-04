@@ -200,16 +200,16 @@
 .engine.ProcessEvents :{ // WRITE EVENTS
     {
         k:x`kind;
-        $[k=0;  [.engine.ProcessDepthUpdateEvents[x]]; // DEPTH
-          k=1;  [.engine.ProcessNewTradeEvents[x]]; // TRADE
-          k=2;  [.engine.ProcessMarkUpdateEvents[x]]; // MARK
-          k=3;  [.engine.ProcessSettlementEvents[x]]; // SETTLEMENT
-          k=4;  [.engine.ProcessFundingEvents[x]]; // FUNDING
-          k=5;  [.engine.ProcessLiquidationEvents[x]]; // LIQUIDATION
-          k=8;  [.engine.ProcessOrderEvents[x]]; // ORDER
-          k=9;  [.engine.ProcessNewPriceLimitEvents[x]]; // PRICELIMIT
-          k=10; [.engine.ProcessWithdrawEvents[x]]; // WITHDRAW
-          k=10; [.engine.ProcessDepositEvents[x]]; // DEPOSIT
+        $[k=0; .engine.ProcessDepthUpdateEvents[x];     // DEPTH
+          k=1; .engine.ProcessNewTradeEvents[x];        // TRADE
+          k=2; .engine.ProcessMarkUpdateEvents[x];      // MARK
+          k=3; .engine.ProcessSettlementEvents[x];      // SETTLEMENT
+          k=4; .engine.ProcessFundingEvents[x];         // FUNDING
+          k=5; .engine.ProcessLiquidationEvents[x];     // LIQUIDATION
+          k=8; .engine.ProcessOrderEvents[x];           // ORDER
+          k=9; .engine.ProcessNewPriceLimitEvents[x];   // PRICELIMIT
+          k=10;.engine.ProcessWithdrawEvents[x];        // WITHDRAW
+          k=10;.engine.ProcessDepositEvents[x];         // DEPOSIT
           'INVALID_EVENT_KIND];
     }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
     // TODO pop events
