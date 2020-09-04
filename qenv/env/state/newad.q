@@ -14,6 +14,8 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,2)
+// Orders are then placed at the foremost marketable 
+// limit price in the bucket
 .state.adapter.uniBucketOrders      :{[]
 
     };
@@ -27,6 +29,8 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,1)
+// Orders are then placed at the foremost marketable 
+// limit price in the bucket
 .state.adapter.expBucketOrders      :{[]
 
     };
@@ -40,6 +44,8 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,4)
+// Orders are then placed at the foremost marketable 
+// limit price in the bucket
 .state.adapter.logBucketOrders      :{[]
 
     };
@@ -74,10 +80,16 @@
 // Temporal Limit Utilities (used in macro actions)
 // ---------------------------------------------------------------------------------------->
 
-.state.adapter.createUniTemporalMarketOrders      :{
+.state.adapter.createUniTemporalLimitOrders      :{
 
     };
 
+.state.adapter.createRandTemporalLimitOrders     :{
+
+    };
+
+// Temporal Market Utilities (used in macro actions)
+// ---------------------------------------------------------------------------------------->
 
 .state.adapter.createUniTemporalMarketOrders      :{
 
@@ -88,7 +100,14 @@
     };
 
 
-// Temporal Market Utilities (used in macro actions)
+// Flattening Utils
 // ---------------------------------------------------------------------------------------->
 
-.state.
+.state.adapter.createFlattenSideOrders             :{
+
+    };
+
+
+.state.adapter.createFlattenAllOrders             :{
+
+    };
