@@ -66,7 +66,7 @@ GenNextEpisode    :{
         ];
     (.env.WindowKind=`.env.WINDOWKIND$`THRESHCOUNT);
         ['NOTIMPLEMENTED];
-    ['INVALID_WINDOWING_METHOD]];
+    'INVALID_WINDOWING_METHOD];
 
       // TODO insert feature batch.
       // TODO upsert new episode with event count etc.

@@ -53,8 +53,8 @@
 
             // Last Trade Features
             lastprice:last[.state.TradeEventHistory]`price;
-            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); 
-            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); 
+            buys:select[5;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$1); // todo remove
+            sells:select[5;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$1); // todo remove
             
             // TODO hourly?
 

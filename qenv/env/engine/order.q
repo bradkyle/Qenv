@@ -41,7 +41,8 @@ OrderBook:(
     [price      :`long$()]
     side        :`long$(); 
     qty         :`long$();
-    vqty      :`long$());
+    hqty        :`long$();
+    vqty      :`long$()); // TODO hQty: hidden qty
 
 // Process Depth update
 // -------------------------------------------------------------->
