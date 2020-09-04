@@ -202,6 +202,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
     ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
     ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
     .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
+    // TODO update last price
     };
 
 // Process New Orders

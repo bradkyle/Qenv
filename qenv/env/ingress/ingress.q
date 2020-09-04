@@ -34,6 +34,12 @@ nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive fro
 .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
 .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
+
+
+
+
+
+
 .ingress.Reset  :{[]
 
 

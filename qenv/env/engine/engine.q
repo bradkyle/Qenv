@@ -151,7 +151,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessLiquidationEvents :{[event]
     instrument:.engine.getInstrument[];
-    
+    .liquidation.ProcessLiquidation[];
     
     };
 
@@ -165,7 +165,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[event] // 
     instrument:.engine.getInstrument[];
-    
+    .order.UpdatePriceLimits[];
     
     };
 
@@ -208,7 +208,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepositEvents :{[event] // Requires accountId
     instrument:.engine.getInstrument[];
-    
+    .account.Deposit[];
     
     };
 
