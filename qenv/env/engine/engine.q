@@ -56,6 +56,15 @@
 .engine.ProcessDepthUpdateEvents :{[event]
     instrument:.engine.getInstrument[];
     
+    lt:exec last time from event;
+    event:flip event;
+    $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
+    $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
+
+    nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+
+    .order.ProcessDepth[];
+
     };
 
 // Process New Iceberg event?
@@ -71,6 +80,12 @@
 .engine.ProcessNewTradeEvents :{[event]
     instrument:.engine.getInstrument[];
     
+    d:event`datum;
+
+    // TODO derive from account
+
+    .order.ProcessTrade[instrument]'[d`account`side`fill`reduce`time];
+
     };
 
 
@@ -84,6 +99,18 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[event]
     instrument:.engine.getInstrument[];
+    d:event`datum;
+    instrument[`markPrice]:last[d]; // Derive the last mark price from the event
+    .instrument.Instrument,:instrument;
+
+    // Essentially find the deltas in the mark price provided
+    // and derive a change in the unrealized pnl, triggering
+    // liquidations where neccessary
+    .account.UpdateMarkPrice[instrument;d;event`time];
+
+    // Where appliccable trigger stop orders 
+    // TODO add a delay in placement of orders
+    .order.UpdateMarkPrice[instrument;d;event`time];
     
     };
 
@@ -110,7 +137,8 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessFundingEvents :{[event]
     instrument:.engine.getInstrument[];
-    
+
+    .account.ApplyFunding[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -165,7 +193,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[event]
     instrument:.engine.getInstrument[]; // Requires accountId
-    
+    .account.Withdraw[];
     
     };
 
@@ -197,7 +225,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessEvents :{ // WRITE EVENTS
+.engine.ProcessEvents :{ // WRITE EVENTS TODO remove liquidation events?
     {
         k:x`kind;
         $[k=0; .engine.ProcessDepthUpdateEvents[x];     // DEPTH
