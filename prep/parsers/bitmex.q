@@ -3,6 +3,7 @@
 
 sizeMultiplier:1;
 priceMultiplier:100;
+.pipe.bitmex.uid:0;
 
 // DEPTHS
 // TODO detect hidden/iceberg orders

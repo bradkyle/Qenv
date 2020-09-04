@@ -1,8 +1,9 @@
 \d .okex
 
-sizeMultiplier:1;
-priceMultiplier:100;
-tab:7;
+.okex.sizeMultiplier:1;
+.okex.priceMultiplier:100;
+.okex.tab:7;
+.pipe.okex.uid:0;
 
 bookParser:{[ob]
     deriveBook:{[u]
@@ -14,16 +15,16 @@ bookParser:{[ob]
         ca:count[a];
         cb:count[b];
         cab:ca+cb; 
-        $[(ca>0) and (cb>0);
-          :((.pipe.okex.uid+:1);cab#time;cab#u[`utc_time];((ca#`SELL),(cb#`BUY));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
+        :$[(ca>0) and (cb>0);
+          (cab#(.pipe.okex.uid+:1);cab#time;cab#u[`utc_time];((ca#-1),(cb#1));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
           ca>0;
-          :((.pipe.okex.uid+:1);ca#time;ca#u[`utc_time];(ca#`SELL);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
+          (cab#(.pipe.okex.uid+:1);ca#time;ca#u[`utc_time];(ca#-1);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
           cb>0;
-          :((.pipe.okex.uid+:1);cb#time;cb#u[`utc_time];(cb#`BUY);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
+          (cab#(.pipe.okex.uid+:1);cb#time;cb#u[`utc_time];(cb#1);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
         ];   
     };
-    x:deriveBook each ob;
-    x:flip `time`intime`side`price`size!raze each flip x;
+    x:deriveBook each (`time xasc ob);
+    x:flip `uid`time`intime`side`price`size!raze each flip x;
     / `.okex.tab set x;
     x:delete from x where[(type each exec size from x)=101h];
     x:update dlt:{1_deltas x}size by price, side from `time xasc x;
@@ -36,9 +37,9 @@ bookParser:{[ob]
 tradeParser:{[u]
     deriveTrade:{
         d:x[`resp][`data][0]; 
-        :("Z"$d[`timestamp]; x[`utc_time];$[d[`side]~"sell"; `SELL; `BUY];`int$(("F"$d[`price])*.okex.priceMultiplier);`int$(("F"$d[`size])*.okex.sizeMultiplier));
+        :("Z"$d[`timestamp]; x[`utc_time];$[d[`side]~"sell"; -1; 1];`int$(("F"$d[`price])*.okex.priceMultiplier);`int$(("F"$d[`size])*.okex.sizeMultiplier));
     };
-    x: deriveTrade each u;
+    x: deriveTrade each (`time xasc u);
     x:flip raze each flip x;
     cx:count x;
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
