@@ -16,11 +16,11 @@ bookParser:{[ob]
         cb:count[b];
         cab:ca+cb; 
         :$[(ca>0) and (cb>0);
-          (cab#(.pipe.okex.uid+:1);cab#time;cab#u[`utc_time];((ca#-1),(cb#1));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
+          (cab#time;cab#u[`utc_time];((ca#-1),(cb#1));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
           ca>0;
-          (cab#(.pipe.okex.uid+:1);ca#time;ca#u[`utc_time];(ca#-1);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
+          (ca#time;ca#u[`utc_time];(ca#-1);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
           cb>0;
-          (cab#(.pipe.okex.uid+:1);cb#time;cb#u[`utc_time];(cb#1);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
+          (cb#time;cb#u[`utc_time];(cb#1);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
         ];   
     };
     x:deriveBook each (`time xasc ob);

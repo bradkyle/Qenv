@@ -38,6 +38,8 @@ q)x:(select fll:sum size by price,time from trd where side=1) uj (select by pric
 
 q)x:update f:{sums(((<>) prior x) and ((x <> 0) and not[null[x]]))}fll from `time xasc x
 
+x:update f:{sum(<>) prior x}size from
+
 q)x:delete intime,uid,side from x
 q)x:`time xasc ((select fll:sum size by price,time from trd where side=1) uj (select by price,time from bask))
 q)bask:select from (delete from (flip `uid`time`intime`side`price`size!flip raze'[raze'[book]]) where type'[side]=101h) where side=-1, price=(min;price) fby time
