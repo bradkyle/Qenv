@@ -5,7 +5,7 @@ priceMultiplier:100;
 tab:7;
 
 bookParser:{[ob]
-    derive:{[u]
+    deriveBook:{[u]
         r:u[`resp];
         d:first r[`data];
         time:"Z"$d[`timestamp];
@@ -15,14 +15,14 @@ bookParser:{[ob]
         cb:count[b];
         cab:ca+cb; 
         $[(ca>0) and (cb>0);
-          :(cab#time;cab#u[`utc_time];((ca#`SELL),(cb#`BUY));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
+          :((.pipe.okex.uid+:1);cab#time;cab#u[`utc_time];((ca#`SELL),(cb#`BUY));`int$((a[;0],b[;0])*.okex.priceMultiplier);`int$((a[;1],b[;1])));
           ca>0;
-          :(ca#time;ca#u[`utc_time];(ca#`SELL);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
+          :((.pipe.okex.uid+:1);ca#time;ca#u[`utc_time];(ca#`SELL);`int$(a[;0]*.okex.priceMultiplier);`int$(a[;1]));
           cb>0;
-          :(cb#time;cb#u[`utc_time];(cb#`BUY);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
+          :((.pipe.okex.uid+:1);cb#time;cb#u[`utc_time];(cb#`BUY);`int$(b[;0]*.okex.priceMultiplier);`int$(b[;1]));
         ];   
     };
-    x:derive each ob;
+    x:deriveBook each ob;
     x:flip `time`intime`side`price`size!raze each flip x;
     / `.okex.tab set x;
     x:delete from x where[(type each exec size from x)=101h];
@@ -34,11 +34,11 @@ bookParser:{[ob]
 
 // TODO check many
 tradeParser:{[u]
-    derive:{
+    deriveTrade:{
         d:x[`resp][`data][0]; 
         :("Z"$d[`timestamp]; x[`utc_time];$[d[`side]~"sell"; `SELL; `BUY];`int$(("F"$d[`price])*.okex.priceMultiplier);`int$(("F"$d[`size])*.okex.sizeMultiplier));
     };
-    x: derive each u;
+    x: deriveTrade each u;
     x:flip raze each flip x;
     cx:count x;
     :flip `time`intime`kind`cmd`datum!(x[;0];x[;1];cx#`TRADE;cx#`NEW;(x[;2+til 3]));
