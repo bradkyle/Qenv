@@ -108,9 +108,6 @@ ProcessDepth        :{[] //TODO fix and test
     .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
-// Process Iceberg
-// -------------------------------------------------------------->
-
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
@@ -314,3 +311,7 @@ ExecuteStop         :{[instrument;time;stop]
 CheckStopOrders   :{[instrument;time]
     ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
     };
+
+
+// Apply Price Limits
+// -------------------------------------------------------------->

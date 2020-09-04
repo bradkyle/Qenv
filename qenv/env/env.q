@@ -57,7 +57,7 @@ Info        :{[aIds;step]
 // ids have been included into the ids parameter
 // TODO validation
 Reset    :{[config]
-    .env.CONF:.config.Config[config];
+    .env.CONF:.config.ParseConfig[config];
     // Reset the Engine and 
     // the current state and 
     // return obs

@@ -4,6 +4,6 @@
 // and then validates the values contained therin
 // before returning a parsed representation to the
 // environment
-Config      :{[config]
+.config.ParseConfig      :{[config]
 
     };

@@ -294,3 +294,6 @@ UpdateMarkPrice     : {[i;mp;time]
     .pipe.event.AddInventoryEvent[res[1];time];
     };
 
+
+// Apply Settlement
+// ---------------------------------------------------------------------------------------->

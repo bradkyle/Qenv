@@ -35,10 +35,17 @@ nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive fro
 .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
 
+// This finds the events store and loads a 
+// batch of events into memory for rapid processsing
+// if the event batch index has not been set it derives 
+// this, if the configuration specifies that the 
+.ingress.Start  :{[]
 
+    };
 
+.ingress.GetNextEvents  :{[]
 
-
+    };
 
 .ingress.Reset  :{[]
 

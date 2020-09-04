@@ -84,7 +84,7 @@ Egress  :.event.Event; // Events being sent back from the engine
 // Retrieves all Event from the Event table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the Event (As a table?)
-.pipe.event.PopEvents               :{
+.pipe.event.GetIngressEvents               :{
         e: .pipe.event.Event;
         ![`.pipe.event.Event;();0b;`symbol$()]
         e};
@@ -100,7 +100,7 @@ Egress  :.event.Event; // Events being sent back from the engine
 
 
 /*******************************************************
-/ Private Creation Utils
+/ Ingress Private Creation Utils
 
 .pipe.event.AddPlaceOrderEvent     :{[order;time] // TODO make valid for multiple
         .pipe.event.AddEvent[time;0;8;order];
@@ -181,3 +181,9 @@ Egress  :.event.Event; // Events being sent back from the engine
         .pipe.event.AddEvent[time;0;15;failure]; // TODO        
         };
 
+/*******************************************************
+/ Add batch ingress events
+
+
+/*******************************************************
+/ Add batch egress events

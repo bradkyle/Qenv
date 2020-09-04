@@ -143,6 +143,8 @@
 .engine.ProcessFundingEvents :{[event]
     instrument:.engine.getInstrument[];
 
+    //  Apply funding the the open agent 
+    // positions/inventory 
     .account.ApplyFunding[];
     };
 
