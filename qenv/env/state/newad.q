@@ -2,6 +2,9 @@
 // TODO smaller ping orders and hidden orders!
 
 
+// Bucketed Limit Order Creation
+// ---------------------------------------------------------------------------------------->
+
 // Generates a set of order levels according to
 // a uniform distribution of buckets throughout the
 // orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
@@ -11,7 +14,7 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,2)
-.state.adapter.uniBucketOrders      :{
+.state.adapter.uniBucketOrders      :{[]
 
     };
 
@@ -24,7 +27,7 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,1)
-.state.adapter.expBucketOrders      :{
+.state.adapter.expBucketOrders      :{[]
 
     };
 
@@ -37,12 +40,12 @@
 // state therin.
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,4)
-.state.adapter.logBucketOrders      :{
+.state.adapter.logBucketOrders      :{[]
 
     };
 
 
-// Stop Event Utilities
+// Stop Creation
 // ---------------------------------------------------------------------------------------->
 
 // Naive stop placement
@@ -61,10 +64,31 @@
     };
 
 // Exponential stop placement
-.state.adapter.logStops   :{
+.state.adapter.logStops     :{
 
     };
 
 // ATR stop placement 
 
 
+// Temporal Limit Utilities (used in macro actions)
+// ---------------------------------------------------------------------------------------->
+
+.state.adapter.createUniTemporalMarketOrders      :{
+
+    };
+
+
+.state.adapter.createUniTemporalMarketOrders      :{
+
+    };
+
+.state.adapter.createRandTemporalMarketOrders     :{
+
+    };
+
+
+// Temporal Market Utilities (used in macro actions)
+// ---------------------------------------------------------------------------------------->
+
+.state.
