@@ -58,6 +58,9 @@ Event  :( // TODO .pipe.event.Add failure to table
     kind        :`long$();
     datum       :());
 
+Ingress :.event.Event; // Events being sent to the engine
+Egress  :.event.Event; // Events being sent back from the engine
+
 // .pipe.event.Adds an event to the Event table.
 .pipe.event.AddEvent   : {[time;cmd;kind;datum] // TODO .pipe.event.Add better validation
         $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //

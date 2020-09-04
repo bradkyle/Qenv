@@ -125,6 +125,11 @@
 .engine.ProcessSettlementEvents :{[event]
     instrument:.engine.getInstrument[];
     
+    // Apply settlement to the given accounts
+    // and their respective inventories, this 
+    // would reset realized pnl into the balance
+    .account.ApplySettlement[];
+
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory

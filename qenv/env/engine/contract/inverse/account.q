@@ -19,7 +19,7 @@
 // unrealized pnl that the inventory has incurred.
 .inverse.account.UnrealizedPnl    :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
     :$[all[(amt,avgPrice,markPrice,faceValue)>0];
-        (((faceValue%markPrice)-(faceValue%avgPrice))*(amt*isignum)) // TODO change 1e8 to multiplier
+        (((faceValue%markPrice)-(faceValue%avgPrice))*(amt*isignum)) // TODO change 1e8 to multiplier and switch mark price and avgPrice
         ;0];
     };
 

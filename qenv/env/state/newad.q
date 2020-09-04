@@ -15,7 +15,7 @@
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,2)
 // Orders are then placed at the foremost marketable 
-// limit price in the bucket
+// limit price in the bucket.
 .state.adapter.uniBucketOrders      :{[]
 
     };
@@ -30,7 +30,7 @@
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,1)
 // Orders are then placed at the foremost marketable 
-// limit price in the bucket
+// limit price in the bucket.
 .state.adapter.expBucketOrders      :{[]
 
     };
@@ -45,7 +45,7 @@
 // Buckets can thereafter be referenced simply by a 
 // given action mapping i.e. 1: (0,4)
 // Orders are then placed at the foremost marketable 
-// limit price in the bucket
+// limit price in the bucket.
 .state.adapter.logBucketOrders      :{[]
 
     };
@@ -55,21 +55,33 @@
 // ---------------------------------------------------------------------------------------->
 
 // Naive stop placement
+// Simply places a single stop order for each corresponding
+// position at a given loss fraction of the positions value
+// (unrealized pnl).
 .state.adapter.naiveStops   :{
-
+    // 1%avgprice
     };
 
 // Uniform staggered stop placement
+// Places a uniform set of for instance 5 stop orders at 
+// equidistant price points in relation to the current
+// mark price up to the final maximum loss fraction
 .state.adapter.uniStops     :{
 
     };   
 
 // Exponential stop placement
+// Places a set of stops that exponentially increase in
+// magnitude away from the current price to a given 
+// maximum loss fraction
 .state.adapter.expStops     :{
 
     };
 
-// Exponential stop placement
+// Logarithmic stop placement
+// Places a set of stops that logarithmically increase in
+// magnitude away from the current price to a given maximum
+// loss fraction.
 .state.adapter.logStops     :{
 
     };
@@ -80,10 +92,12 @@
 // Temporal Limit Utilities (used in macro actions)
 // ---------------------------------------------------------------------------------------->
 
+// 
 .state.adapter.createUniTemporalLimitOrders      :{
 
     };
 
+// 
 .state.adapter.createRandTemporalLimitOrders     :{
 
     };
@@ -91,10 +105,12 @@
 // Temporal Market Utilities (used in macro actions)
 // ---------------------------------------------------------------------------------------->
 
+// 
 .state.adapter.createUniTemporalMarketOrders      :{
 
     };
 
+// 
 .state.adapter.createRandTemporalMarketOrders     :{
 
     };
@@ -103,11 +119,22 @@
 // Flattening Utils
 // ---------------------------------------------------------------------------------------->
 
+// 
 .state.adapter.createFlattenSideOrders             :{
 
     };
 
-
+// 
 .state.adapter.createFlattenAllOrders             :{
+
+    };
+
+
+// Macro Action Utilities
+// ---------------------------------------------------------------------------------------->
+
+
+// 
+.state.adapter.generateMacroAction             :{
 
     };
