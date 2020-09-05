@@ -78,7 +78,7 @@ Reset    :{[config]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.ingress.GetEngressEvents[step];
+    xevents:.ingress.GetEngressEvents[-1];
 
     // Insert the first set of events into the state 
     // such that the initialz observations therin can
@@ -117,11 +117,6 @@ Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
     // Advances the current state of the environment
-
-    // Load historic data from hdb/memory where
-    // neccessary and insert into the ingress
-    // table 
-    .pipe.loader.StepEvents[];
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
