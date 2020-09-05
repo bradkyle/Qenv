@@ -118,20 +118,25 @@ Step    :{[actions]
     step:.env.CurrentStep;
     // Advances the current state of the environment
 
+    // Load historic data from hdb/memory where
+    // neccessary and insert into the ingress
+    // table 
+    .pipe.loader.StepEvents[];
+
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
     // to this target. The events are then inserted into
     // the pipeline in such a manner that preserves the 
     // temporal coherence of macro actions and the delay
     // in time between the agent and the exchange.
-    .adapter.Adapt[.env.ADPT;idx;actions];
+    .adapter.Adapt[.env.CONF`adapterType;idx;actions];
 
     // Based upon initial configuration set in .env.Reset
     // this function derives the set of events at the given
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.ingress.GetIngressEvents[step];
+    nevents:.pipe.ingress.GetIngressEvents[step];
 
     // The engine processes the set of events
     // provided by the pipeline and inserts a set
@@ -143,7 +148,7 @@ Step    :{[actions]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.ingress.GetEngressEvents[step];
+    xevents:.pipe.egress.GetEngressEvents[step];
     
     // Events are inserted back into the state such that
     // a set of features can be derived therin

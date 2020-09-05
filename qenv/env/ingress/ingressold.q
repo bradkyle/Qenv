@@ -26,7 +26,7 @@ Episode :(
 
 // Insert a set of initial events indicative of the state 
 // before the first step into the state buffer for "Priming"
-nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; //TODO derive from config
+nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; 
 
 
 // Set the current Event batch to exclude the event batches
