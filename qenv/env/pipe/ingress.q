@@ -13,12 +13,16 @@
 // deletes/drops them all before reverting the eventCount and
 // returning the Event (As a table?)
 .pipe.event.GetIngressEvents               :{
-        e: .pipe.event.Event;
-        ![`.pipe.event.Event;();0b;`symbol$()]
+        e: .pipe.ingress.Event;
+        ![`.pipe.ingress.Event;();0b;`symbol$()]
         e};
 
 .pipe.ingress.AddEvent              :{[event]
         .pipe.ingress.Event,:(time;cmd;kind;datum);
+    };
+
+.pipe.egress.AddBatch               :{[events]
+
     };
 
 /*******************************************************

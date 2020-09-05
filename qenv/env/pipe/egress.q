@@ -12,13 +12,17 @@
 // Retrieves all Event from the Event table and then
 // deletes/drops them all before reverting the eventCount and
 // returning the Event (As a table?)
-.pipe.event.GetEgressEvents               :{
-        e: .pipe.event.Event;
-        ![`.pipe.event.Event;();0b;`symbol$()]
+.pipe.egress.GetEgressEvents               :{
+        e: .pipe.egress.Event; // TODO better selection methodology
+        ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
         e};
 
 .pipe.egress.AddEvent              :{[event]
-        .pipe.ingress.Event,:(time;cmd;kind;datum);
+        .pipe.egress.Event,:(time;cmd;kind;datum);
+    };
+
+.pipe.egress.AddBatch               :{[events]
+
     };
 
 /*******************************************************
