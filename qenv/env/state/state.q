@@ -210,13 +210,6 @@ DefaultInstrumentId:0;
 // passing the observations to the agent.
 .state.FeatureBuffer   :();
 
-// Agent specific observation functions
-// --------------------------------------------------->
-
-PrimeFeatures   :{[]
-
-    };
-
 
 // Reset State
 // =====================================================================================>
@@ -232,7 +225,8 @@ Reset :{[config]
             `.state.TradeEventHistory,
             `.state.MarkEventHistory,
             `.state.FundingEventHistory,
-            `.state.LiquidationEventHistory)];
+            `.state.LiquidationEventHistory,
+            `.state.FeatureBuffer)];
 
     .state.FeatureBuffer:();
 

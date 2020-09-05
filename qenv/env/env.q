@@ -66,12 +66,27 @@ Reset    :{[config]
     
     // Derive the initial state from the
     // engine and derive deposit events etc.
-    aevents:.env.SetupEvents[.env.CONF];
-    nevents:.ingress.Start[.env.CONF];
-    xevents:.engine.ProcessEvents[(nevents,aevents)];
-    .state.InsertResultantEvents[xevents];
-    .env.CurrentStep:0;
+    nevents:.ingress.Reset[.env.CONF];
+    
+    // Process the first set of events produced
+    // by the ingress logic to form the initial
+    // reset obs seen by the agent.
+    .engine.ProcessEvents[nevents];
 
+    // Based upon initial configuration set in .env.Reset
+    // this function derives the set of events at the given
+    // step that should be inserted into the local state.
+    // This also allows for longer temporal steps and larger
+    // batch sizes for faster overall processing speed.
+    xevents:.ingress.GetEngressEvents[step];
+
+    // Insert the first set of events into the state 
+    // such that the initialz observations therin can
+    // be derived.
+    .state.InsertResultantEvents[xevents];
+    
+    // Reset the current step
+    .env.CurrentStep:0;
     :.obs.GetObs[
         .env.CurrentStep;
         .env.CONF`lookback;
