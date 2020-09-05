@@ -22,11 +22,11 @@
     };
 
 .pipe.egress.AddBatch               :{[events]
-
+        .pipe.ingress.Event,:events;
     };
 
 /*******************************************************
-/ Ingress Private Creation Utils
+/ Ingress Creation Utils
 
 .pipe.ingress.AddPlaceOrderEvent     :{[order;time] // TODO make valid for multiple
         .pipe.ingress.AddEvent[time;0;8;order];
@@ -64,8 +64,3 @@
         .pipe.ingress.AddEvent[time;0;11;deposit]; // TODO        
         };
 
-
-/*******************************************************
-/ Ingress Private Creation Utils
-
-.

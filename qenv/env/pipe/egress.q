@@ -17,12 +17,12 @@
         ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
         e};
 
-.pipe.egress.AddEvent              :{[event]
+.pipe.egress.AddEvent              :{[event] // TODO validate
         .pipe.egress.Event,:(time;cmd;kind;datum);
     };
 
-.pipe.egress.AddBatch               :{[events]
-
+.pipe.egress.AddBatch               :{[events] // TODO validate
+        .pipe.egress.Event,;events;
     };
 
 /*******************************************************
