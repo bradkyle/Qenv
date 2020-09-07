@@ -57,6 +57,7 @@ Info        :{[aIds;step]
         :(
             .engine.Info[];
             .state.Info[];
+            .pipe.Info[];
             .env.CurrentStep
         );
     };
