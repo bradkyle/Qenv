@@ -105,19 +105,6 @@ environment agent state.
         ]}[aId;time] each openQty);
     };  
 
-// Creates a set of order events that transition the current
-// open order events to a new set that satisfies the distribution
-// provided TODO make better.
-.state.adapter.createOrderEventsFromDist   :{[accountId;time;dist;side]
-    
-    };
-
-// Creates a set of market order events that satisfy the provided
-// distribution.
-.state.adapter.createMarketOrderEventsFromDist :{[]
-
-    };
-
 
 // Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->

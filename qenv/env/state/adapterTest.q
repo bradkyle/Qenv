@@ -217,7 +217,6 @@ test:.qt.Unit[
     };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for creating a new account"];
 
-
 test:.qt.Unit[
     ".state.adapter.addDeltaOrdersByBucket";
     {[c]
@@ -228,3 +227,39 @@ test:.qt.Unit[
     };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Global function for creating a new account"];
 
+
+// Action Adapter Mapping
+// ---------------------------------------------------------------------------------------->
+
+test:.qt.Unit[
+    ".state.adapter.mapping$DISCRETE";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for creating a new account"];
+
+
+test:.qt.Unit[
+    ".state.adapter.mapping$MARKETMAKER";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for creating a new account"];
+
+
+
+test:.qt.Unit[
+    ".state.adapter.Adapt";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for creating a new account"];
