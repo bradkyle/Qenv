@@ -48,6 +48,9 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     ];'BATCHINDEX_UNSET];
     };
 
+.pipe.createSetupEvents             :{
+
+    };
 
 // TODO event source
 // TODO random starting balance 
@@ -78,6 +81,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
         where time within value[nextBatch`start`end]);
 
     // Create starting balance etc.
+    .pipe.ingress.Event upsert .pipe.createSetupEvents[];
 
     };
 
