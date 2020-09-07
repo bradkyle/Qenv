@@ -91,13 +91,13 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
-.pipe.GetIngressEvents   :{
+.pipe.GetIngressEvents   :{[step] // TODO should select next batch according to config
     events:$[
 
         ];
     };
 
-.pipe.GetEgressEvents    :{
+.pipe.GetEgressEvents    :{[step]
     events:$[
 
         ];
