@@ -95,7 +95,7 @@ Reset    :{[config]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.ingress.GetEngressEvents[];
+    xevents:.ingress.GetEgressEvents[];
 
     // Insert the first set of events into the state 
     // such that the initialz observations therin can
@@ -161,7 +161,7 @@ Step    :{[actions]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.pipe.GetEngressEvents[];
+    xevents:.pipe.GetEgressEvents[];
     
     // Events are inserted back into the state such that
     // a set of features can be derived therin
