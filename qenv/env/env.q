@@ -75,10 +75,14 @@ Reset    :{[config]
     // return obs
     .engine.Reset[.env.CONF];
     .state.Reset[.env.CONF];
-    
-    // Derive the initial state from the
-    // engine and derive deposit events etc.
-    nevents:.pipe.Reset[.env.CONF];
+    .pipe.Reset[.env.CONF];
+
+    // Based upon initial configuration set in .env.Reset
+    // this function derives the set of events at the given
+    // step that should be executed by the engine.
+    // This also allows for longer temporal steps and larger
+    // batch sizes for faster overall processing speed.
+    nevents:.pipe.ingress.PopIngressEvents[];
     
     // Process the first set of events produced
     // by the ingress logic to form the initial

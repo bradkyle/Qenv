@@ -63,6 +63,8 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // TODO event source
 // TODO random starting balance 
 // Reset 
+// Derive the initial state from the
+// engine and derive deposit events etc
 .pipe.Reset       :{[config]
 
     .pipe.fwdSize:config`fwdSize; // The 
@@ -91,7 +93,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     // Create starting balance etc.
     .pipe.ingress.Event upsert .pipe.createSetupEvents[];
 
-    .pipe.Next[]
     };
 
 
