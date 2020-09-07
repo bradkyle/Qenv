@@ -91,32 +91,18 @@
 // ATR stop placement 
 
 
-// Temporal Limit Utilities (used in macro actions)
+// Temporal Order Utilities (used in macro actions)
 // ---------------------------------------------------------------------------------------->
 
 // 
-.state.adapter.createUniTemporalLimitOrders      :{
+.state.adapter.createUniTemporalOrders      :{
 
     };
 
 // 
-.state.adapter.createRandTemporalLimitOrders     :{
+.state.adapter.createRandTemporalOrders     :{
 
     };
-
-// Temporal Market Utilities (used in macro actions)
-// ---------------------------------------------------------------------------------------->
-
-// 
-.state.adapter.createUniTemporalMarketOrders      :{
-
-    };
-
-// 
-.state.adapter.createRandTemporalMarketOrders     :{
-
-    };
-
 
 // Flattening Utils
 // ---------------------------------------------------------------------------------------->
