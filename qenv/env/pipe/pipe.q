@@ -49,21 +49,28 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     };
 
 
+// TODO event source
+// TODO random starting balance 
 // Reset 
 .pipe.Reset       :{[config]
 
     .pipe.fwdSize:config`fwdSize; // The 
     .pipe.batchSize:config`batchSize; // The size of the batches in minutes
 
-    .Q.D // partitions
-    .Q.P
+    / .Q.D // partitions
+    / .Q.P
 
     if[not[`BatchIndex in key `.loader];[
         .pipe.BatchIndex:select i:max i, t:max time by .pipe.batchSize xbar `minute$time from .pipe.events;
     ]];
     // .Q.MAP??
     
-    nextBatch:$[];
+    k:config`batchKind;
+    nextBatch:$[
+        k=0;.pipe.getChronologicalIngressBatch[];
+        k=1;.pipe.getRandomIngressBatch[];
+        k=2;.pipe.getCurriculumIngressBatch[];
+        .pipe.getRandomIngressBatch[]];
 
     // TODO if not chronological 
     // delete all events from ingress events
@@ -76,8 +83,8 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     };
 
-
-.pipe.Ingress     :{[step]
+// TODO add random deposits/withdraws from the account
+.pipe.Next     :{[step]
 
 
     };
