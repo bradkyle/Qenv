@@ -134,11 +134,6 @@ Reset    :{[config]
 Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
-    // Advances the current state of the environment
-
-    // Get the next events from the hdb and insert
-    // them into the ingress table where necessary.
-    .pipe.Next[step];  
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
@@ -153,7 +148,7 @@ Step    :{[actions]
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.pipe.ingress.PopIngressEvents[];
+    nevents:.pipe.GetIngressEvents[];
 
     // The engine processes the set of events
     // provided by the pipeline and inserts a set
@@ -166,7 +161,7 @@ Step    :{[actions]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.pipe.egress.PopEngressEvents[];
+    xevents:.pipe.GetEngressEvents[];
     
     // Events are inserted back into the state such that
     // a set of features can be derived therin

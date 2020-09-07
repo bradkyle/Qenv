@@ -12,7 +12,7 @@
         .pipe.ingress.Event,:(time;cmd;kind;datum);
     };
 
-.pipe.egress.AddBatch               :{[events]
+.pipe.ingress.AddBatch               :{[events]
         .pipe.ingress.Event,:events;
     };
 
@@ -60,12 +60,14 @@
 / Pop Events
 
 // Selects all events that occurred 
-.pipe.egress.GetIngressEvents               :{
-        e: .pipe.egress.Event; // TODO better selection methodology
-        ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
+.pipe.ingress.GetIngressEvents               :{
+        e: .pipe.ingress.Event; // TODO better selection methodology
+        ![`.pipe.ingress.Event;();0b;`symbol$()] // Test this vs resest
         e};
 
 // Return the set of events that would have occured 
-.pipe.egress.PopIngressEvents               :{
+.pipe.ingress.PopIngressEvents               :{
+        // Select from the ingress table where 
 
+        e:select from .pipe.ingress.Event where time <= (time+x)
         };
