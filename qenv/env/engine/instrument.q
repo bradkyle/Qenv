@@ -132,11 +132,7 @@ NewInstrument            :{[instrument; time]
     `.instrument.Instrument upsert instrument;
     };
 
-
-UpdateMarkPrice : {[markPrice;instrumentId;time]
-    update markPrice:markPrice from `.instrument.Instrument where instrumentId=instrumentId;
-    };
-
+ 
 
 // TODO instrument logic/
 // Instrument Logic?
