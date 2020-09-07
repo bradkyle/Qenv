@@ -79,12 +79,16 @@ Reset    :{[config]
     .state.Reset[.env.CONF];
     .pipe.Reset[.env.CONF];
 
+    // Reset the current step
+    step:0;
+    .env.CurrentStep:step;
+
     // Based upon initial configuration set in .env.Reset
     // this function derives the set of events at the given
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.pipe.GetIngressEvents[];
+    nevents:.pipe.GetIngressEvents[step];
     
     // Process the first set of events produced
     // by the ingress logic to form the initial
@@ -96,15 +100,13 @@ Reset    :{[config]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.ingress.GetEgressEvents[];
+    xevents:.ingress.GetEgressEvents[step];
 
     // Insert the first set of events into the state 
     // such that the initialz observations therin can
     // be derived.
     .state.InsertResultantEvents[xevents];
     
-    // Reset the current step
-    .env.CurrentStep:0;
     :.obs.GetObs[
         .env.CurrentStep;
         .env.CONF`lookback;
@@ -149,7 +151,7 @@ Step    :{[actions]
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.pipe.GetIngressEvents[];
+    nevents:.pipe.GetIngressEvents[step];
 
     // The engine processes the set of events
     // provided by the pipeline and inserts a set
@@ -162,7 +164,7 @@ Step    :{[actions]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.pipe.GetEgressEvents[];
+    xevents:.pipe.GetEgressEvents[step];
     
     // Events are inserted back into the state such that
     // a set of features can be derived therin
