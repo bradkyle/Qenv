@@ -75,37 +75,29 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     // 
     / .pipe.ingress.Event:.event.Event;
-    / .pipe.egress.Event:.event.Event;
+    / .pipe.egress.Event:.event.Event; // nextbatch
 
-    .pipe.ingress.Event upsert (
-        select time, intime, kind, cmd, datum 
-        from .pipe.EventSource 
-        where time within value[nextBatch`start`end]);
+    .pipe.ingress.Event,:?[.pipe.EventSource;();0b;()];
 
 
     };
 
-// i<max num events
-// time<
-//  
-
-
-// select from .pipe.ingress.Event where 
-// select from .pipe.egress.Event where 
+// ()
+// () 
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .pipe.GetIngressEvents   :{[step] // TODO should select next batch according to config
     econd:$[];
-    events:?[.pipe.ingress.Event;econd;0b;()];
-    ![.pipe.ingress.Event;econd;0b;`symbol$()];
+    events:?[`.pipe.ingress.Event;econd;0b;()];
+    ![`.pipe.ingress.Event;econd;0b;`symbol$()];
 
     };
 
 .pipe.GetEgressEvents    :{[step]
     econd:$[];
-    events:?[.pipe.egress.Event;econd;0b;()];
-    ![.pipe.egress.Event;econd;0b;`symbol$()];
+    events:?[`.pipe.egress.Event;econd;0b;()];
+    ![`.pipe.egress.Event;econd;0b;`symbol$()];
 
 
     };
