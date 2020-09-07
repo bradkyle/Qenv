@@ -4,7 +4,6 @@
 .okex.tab:7;
 .pipe.okex.uid:0;
 
-
 deriveBook:{[u]
         r:u[`resp];
         d:first r[`data];
@@ -42,3 +41,10 @@ bok:flip `time`intime`side`price`size!raze each flip (deriveBook'[select from de
 // level had iceberg orders equal to the difference in magnitude 
 // between the expected size and the actual size (this can be randomized)
 // if necessary.
+
+trd:enlist[`intime] _ trd;
+bok:enlist[`intime] _ bok;
+trd[`side]:neg[trd`side];
+trd:`time`side`price`tsize xcol trd;
+
+x:bok uj trd;
