@@ -30,10 +30,8 @@ deriveTrade:{
 
 mxt:first[(min((select max utc_time from trade);(select max utc_time from depth)))`utc_time]
 
-
 trd:flip `time`intime`side`price`size!raze'[flip deriveTrade'[select from trade where utc_time>(mxt-`minute$30)]];
 bok:flip `time`intime`side`price`size!raze each flip (deriveBook'[select from depth where utc_time>(mxt-`minute$30)]);
-
 
 // Select the first prior depth level for a given trade prior to 
 // its time and and its price and the first depth level after its
