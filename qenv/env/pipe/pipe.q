@@ -86,13 +86,16 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // Event Cond Derivation Utils
 // ---------------------------------------------------------------------------------------->
 
-// enlist(Time <= Time + StepFreqTime)
-// enlist(Index <= Index + StepFreqIndex)
-// ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
+// 1) enlist(Time <= Time + StepFreqTime)
+// 2) enlist(Index <= Index + StepFreqIndex)
+// 3) ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
 getIngressCond  :{$[
 
     ]};
 
+// 1) enlist(Time <= Time + StepFreqTime)
+// 2)
+// 3)
 getEgressCond   :{$[
 
     ]};
