@@ -152,7 +152,8 @@ Step    :{[actions]
 
     // The engine processes the set of events
     // provided by the pipeline and inserts a set
-    // of resultant events thereafter. 
+    // of resultant events into the egress events 
+    // table in pipe thereafter. 
     .engine.ProcessEvents[nevents];
     
     // Based upon initial configuration set in .env.Reset
