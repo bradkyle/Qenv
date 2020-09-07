@@ -55,19 +55,3 @@
         .pipe.ingress.AddEvent[time;0;11;deposit]; // TODO        
         };
 
-
-/*******************************************************
-/ Pop Events
-
-// Selects all events that occurred 
-.pipe.ingress.GetIngressEvents               :{
-        e: .pipe.ingress.Event; // TODO better selection methodology
-        ![`.pipe.ingress.Event;();0b;`symbol$()] // Test this vs resest
-        e};
-
-// Return the set of events that would have occured 
-.pipe.ingress.PopIngressEvents               :{
-        // Select from the ingress table where 
-
-        e:select from .pipe.ingress.Event where time <= (time+x)
-        };

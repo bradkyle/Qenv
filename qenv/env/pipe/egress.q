@@ -59,17 +59,3 @@
         .pipe.egress.AddEvent[time;0;15;failure]; // TODO        
         };
 
-
-/*******************************************************
-/ Pop Events
-
-// Selects all events that occurred 
-.pipe.egress.GetEgressEvents               :{
-        e: .pipe.egress.Event; // TODO better selection methodology
-        ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
-        e};
-
-// Return the set of events that would have occured 
-.pipe.egress.PopEgressEvents               :{
-
-        };
