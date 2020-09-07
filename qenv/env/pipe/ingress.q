@@ -8,10 +8,9 @@
 
 .pipe.ingress.Event:.event.Event;
 
-
-// Retrieves all Event from the Event table and then
-// deletes/drops them all before reverting the eventCount and
-// returning the Event (As a table?)
+// Selects all events from the buffer where the 
+// time they occurred is less than the current 
+// step time
 .pipe.event.GetIngressEvents               :{
         e: .pipe.ingress.Event;
         ![`.pipe.ingress.Event;();0b;`symbol$()]

@@ -8,14 +8,15 @@
 
 .pipe.egress.Event:.event.Event;
 
-
-// Retrieves all Event from the Event table and then
-// deletes/drops them all before reverting the eventCount and
-// returning the Event (As a table?)
+// Selects all events that occurred 
 .pipe.egress.GetEgressEvents               :{
         e: .pipe.egress.Event; // TODO better selection methodology
         ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
         e};
+
+.pipe.egress.PopEgressEvents               :{
+
+        };
 
 .pipe.egress.AddEvent              :{[event] // TODO validate
         .pipe.egress.Event,:(time;cmd;kind;datum);
