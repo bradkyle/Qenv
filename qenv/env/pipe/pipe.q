@@ -57,9 +57,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     .pipe.fwdSize:config`fwdSize; // The 
     .pipe.batchSize:config`batchSize; // The size of the batches in minutes
 
-    / .Q.D // partitions
-    / .Q.P
-
     if[not[`BatchIndex in key `.loader];[
         .pipe.BatchIndex:select i:max i, t:max time by .pipe.batchSize xbar `minute$time from .pipe.events;
     ]];
@@ -80,6 +77,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
         from .pipe.EventSource 
         where time within value[nextBatch`start`end]);
 
+    // Create starting balance etc.
 
     };
 
