@@ -91,6 +91,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     // Create starting balance etc.
     .pipe.ingress.Event upsert .pipe.createSetupEvents[];
 
+    .pipe.Next[]
     };
 
 
