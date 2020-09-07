@@ -8,6 +8,7 @@
 
 .pipe.ingress.Event:.event.Event;
 
+// TODO strat i.e. time vs event count vs eventcount within time
 // Selects all events from the buffer where the 
 // time they occurred is less than the current 
 // step time
