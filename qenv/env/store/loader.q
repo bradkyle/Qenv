@@ -15,5 +15,5 @@
 
 
 .loader.Ingress     :{[config]
-    select from .store.events where 
+    select i:max i, t:max time by 30 xbar `minute$time from events
     };
