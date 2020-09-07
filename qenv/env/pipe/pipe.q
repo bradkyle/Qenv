@@ -51,6 +51,9 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     
     nextBatch:$[];
 
+    // TODO if not chronological 
+    // delete all events from ingress events
+
     .pipe.ingress.Event upsert (
         select time, intime, kind, cmd, datum 
         from .pipe.EventSource 
