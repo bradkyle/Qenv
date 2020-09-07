@@ -2,15 +2,17 @@
 // Reset 
 .loader.Reset       :{[config]
 
-    .loader.LookForwardSize:config`lookForwardSize;
-    .loader.batchSize:config`batchSize;
+    .loader.fwdSize:config`fwdSize; // The 
+    .loader.batchSize:config`batchSize; // The size of the batches in minutes
 
     .Q.D // partitions
     .Q.P
 
-    // Check if batch index has been set
-    select i:max i, t:max time by 30 xbar `minute$time from events;
+    // 
 
+    if[not[`BatchIndex in key `.loader];[
+        .loader.BatchIndex:select i:max i, t:max time by .loader.batchSize xbar `minute$time from .loader.events;
+    ]];
     // .Q.MAP??
 
 
