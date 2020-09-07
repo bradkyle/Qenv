@@ -12,14 +12,14 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
 
 // 
-.pipe.getCurriculumIngressBatchEvents      :{
+.pipe.getCurriculumIngressBatch      :{
     $[[`BatchIndex in key `.loader];[
 
     ];'BATCHINDEX_UNSET];
     };
 
 // 
-.pipe.getChronologicalIngressBatchEvents  :{
+.pipe.getChronologicalIngressBatch  :{
     $[[`BatchIndex in key `.loader];[
         $[[`CurrentBatch in key `.loader];[
             .pipe.BatchIndex@(.pipe.CurrentBatch mod count[.pipe.BatchIndex])
@@ -28,7 +28,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     };
 
 // 
-.pipe.getRandomIngressBatchEvents         :{
+.pipe.getRandomIngressBatch         :{
     $[[`BatchIndex in key `.loader];[
         .pipe.BatchIndex@rand count[.pipe.BatchIndex]
     ];'BATCHINDEX_UNSET];
@@ -49,7 +49,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     ]];
     // .Q.MAP??
     
-    $[]
+    nextBatch:$[];
 
 
     };
