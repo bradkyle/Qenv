@@ -2,27 +2,11 @@
 
 
 test:.qt.Unit[
-    ".engine.AddEvent";
+    ".event.ValidateEvent";
     {[c]
         p:c[`params];
 
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+        .account.ProcessDepth[p[`event]];
 
-
-test:.qt.Unit[
-    ".engine.AddFailure";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
-
-
-test:.qt.Unit[
-    ".engine.PopEvent";
-    {[c]
-        p:c[`params];
-
-    };();({};{};defaultBeforeEach;defaultAfterEach);
-    "Global function for processing new orders"];
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for creating a new account"];
