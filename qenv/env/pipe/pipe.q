@@ -97,14 +97,14 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // of the agent action.
 .pipe.GetIngressEvents   :{[step] // TODO should select next batch according to config
     econd:$[];
-    events:?[.pipe.ingress.Event;];
+    events:?[.pipe.ingress.Event;econd;0b;()];
     ![.pipe.ingress.Event;econd;0b;`symbol$()];
 
     };
 
 .pipe.GetEgressEvents    :{[step]
     econd:$[];
-    events:?[.pipe.egress.Event;];
+    events:?[.pipe.egress.Event;econd;0b;()];
     ![.pipe.egress.Event;econd;0b;`symbol$()];
 
 
