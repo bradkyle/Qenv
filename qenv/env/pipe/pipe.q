@@ -48,10 +48,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     ];'BATCHINDEX_UNSET];
     };
 
-.pipe.createSetupEvents             :{
-
-    };
-
 // TODO event source
 // TODO random starting balance 
 // Reset 
@@ -105,34 +101,3 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
         ];
     };
-
-/*******************************************************
-/ Pop Events
-
-// Selects all events that occurred 
-.pipe.egress.GetEgressEvents               :{
-        e: .pipe.egress.Event; // TODO better selection methodology
-        ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
-        e};
-
-// Return the set of events that would have occured 
-.pipe.egress.PopEgressEvents               :{
-
-        };
-
-
-/*******************************************************
-/ Pop Events
-
-// Selects all events that occurred 
-.pipe.ingress.GetIngressEvents               :{
-        e: .pipe.ingress.Event; // TODO better selection methodology
-        ![`.pipe.ingress.Event;();0b;`symbol$()] // Test this vs resest
-        e};
-
-// Return the set of events that would have occured 
-.pipe.ingress.PopIngressEvents               :{
-        // Select from the ingress table where 
-
-        e:select from .pipe.ingress.Event where time <= (time+x)
-        };
