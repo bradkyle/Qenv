@@ -67,7 +67,7 @@ Reset    :{[config]
     
     // Derive the initial state from the
     // engine and derive deposit events etc.
-    nevents:.ingress.Reset[.env.CONF];
+    nevents:.loader.Reset[.env.CONF];
     
     // Process the first set of events produced
     // by the ingress logic to form the initial
@@ -118,6 +118,8 @@ Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
     // Advances the current state of the environment
+
+    .loader.Ingress[.env.CONF];
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
