@@ -269,6 +269,7 @@
             k=10;.engine.ProcessSignalEvents[x];         // SIGNAL
             'INVALID_EVENT_KIND];
         }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
+        .engine.WaterMark:newwm;
     ];'WATERMARK_HAS_PASSED];
     // TODO pop events
     };
