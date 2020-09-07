@@ -75,11 +75,10 @@ Reset    :{[config]
     // return obs
     .engine.Reset[.env.CONF];
     .state.Reset[.env.CONF];
-    .pipe.Reset[.env.CONF];
     
     // Derive the initial state from the
     // engine and derive deposit events etc.
-    nevents:.loader.Reset[.env.CONF];
+    nevents:.pipe.Reset[.env.CONF];
     
     // Process the first set of events produced
     // by the ingress logic to form the initial
@@ -132,7 +131,9 @@ Step    :{[actions]
     step:.env.CurrentStep;
     // Advances the current state of the environment
 
-    .loader.Ingress[.env.CONF]; // todo get current time then feed to 
+    // Get the next events from the hdb and insert
+    // them into the ingress table where necessary.
+    .pipe.Next[step];  
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
