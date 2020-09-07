@@ -3,6 +3,7 @@
 .okex.priceMultiplier:100;
 .okex.tab:7;
 .pipe.okex.uid:0;
+mode:{where max[c]=c:count each d:group x}
 
 deriveBook:{[u]
         r:u[`resp];
@@ -35,6 +36,8 @@ bok:{raze'[first'[x]]}'[bok]; / flip raze'[raze'[book]]
 delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
 bok:flip[cols[bok]!(flip raze'[raze'[{raze'[first'[x]]}'[bok]]])]
 bok:`time xasc bok;
+
+select sum size, by time,neg[side],price from trd; 
 
 delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
 
