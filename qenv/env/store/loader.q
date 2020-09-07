@@ -1,4 +1,18 @@
 
+
+.loader.getChronBatch       :{
+
+    };
+
+.loader.getCurriculumBatch  :{
+
+    };
+
+.loader.getRandomBatch      :{
+
+    };
+
+
 // Reset 
 .loader.Reset       :{[config]
 
