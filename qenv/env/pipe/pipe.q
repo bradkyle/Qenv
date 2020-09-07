@@ -86,8 +86,8 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     };
 
 
-// select from .pipe.ingress.Event
-// select from .pipe.egress.Event
+// select from .pipe.ingress.Event where 
+// select from .pipe.egress.Event where 
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
