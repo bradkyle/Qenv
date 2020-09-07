@@ -50,4 +50,4 @@ trd:`time`side`price`tsize xcol trd;
 x:bok uj trd;
 
 
-select from x where tsize>0;
+select tsize, prev[size] from x where tsize>0;
