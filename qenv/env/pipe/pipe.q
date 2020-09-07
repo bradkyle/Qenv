@@ -98,7 +98,9 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
         ];
     };
 
+.pipe.GetEgressEvents    :{
 
+    };
 
 /*******************************************************
 / Pop Events
