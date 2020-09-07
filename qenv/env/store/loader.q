@@ -2,15 +2,14 @@
 // TODO remove repeated logic
 
 // 
-.loader.getCurriculumBatch          :{
-
+.loader.getCurriculumIngressBatchEvents      :{
     $[[`BatchIndex in key `.loader];[
 
     ];'BATCHINDEX_UNSET];
     };
 
 // 
-.loader.getChronologicalBatch       :{
+.loader.getChronologicalIngressBatchEvents  :{
     $[[`BatchIndex in key `.loader];[
         $[[`CurrentBatch in key `.loader];[
             .loader.BatchIndex@(.loader.CurrentBatch mod count[.loader.BatchIndex])
@@ -19,7 +18,7 @@
     };
 
 // 
-.loader.getRandomBatch              :{
+.loader.getRandomIngressBatchEvents         :{
     $[[`BatchIndex in key `.loader];[
         .loader.BatchIndex@rand count[.loader.BatchIndex]
     ];'BATCHINDEX_UNSET];
@@ -35,12 +34,11 @@
     .Q.D // partitions
     .Q.P
 
-    // 
-
     if[not[`BatchIndex in key `.loader];[
         .loader.BatchIndex:select i:max i, t:max time by .loader.batchSize xbar `minute$time from .loader.events;
     ]];
     // .Q.MAP??
+
 
 
     };
