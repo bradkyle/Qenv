@@ -59,7 +59,7 @@ Event  :( // TODO .pipe.event.Add failure to table
     cmd         :`long$();
     kind        :`long$();
     datum       :());
-
+// TODO set table attributes
 
 // .pipe.event.Adds an event to the Event table.
 .pipe.event.ValidateEvent   : {[time;cmd;kind;datum] // TODO .pipe.event.Add better validation

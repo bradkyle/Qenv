@@ -36,6 +36,18 @@ Env  :(
         numAgentSteps       : `long$();
         accountIds          : ());
 
+// Episode is a table that is used to track 
+// the performance of all agents for a given
+// batch.
+Episode :(
+        [episodeId               :`long$()]
+        batchIdx                 :`long$();
+        batchStart               :`datetime$();
+        batchEnd                 :`datetime$();                        
+        rewardTotal              :`float$();
+        returnQuoteTotal         :`float$();
+        returnBaseTotal          :`float$());
+
 .env.CurrentStep:0; // The current step of the environment.
 .env.CONF:();
 
@@ -114,6 +126,7 @@ Reset    :{[config]
 // for each agent
 // TODO is done, buffering/historic replay etc.
 // TODO add noise events to input i.e. trades etc.
+// TODO if any done or no more from loader reset all?
 Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
