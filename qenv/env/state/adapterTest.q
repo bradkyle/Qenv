@@ -253,7 +253,6 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-
 test:.qt.Unit[
     ".state.adapter.Adapt";
     {[c]
