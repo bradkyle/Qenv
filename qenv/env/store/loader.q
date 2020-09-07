@@ -1,15 +1,21 @@
 
 
-.loader.getChronBatch       :{
+.loader.getChronologicalBatch       :{
+    if[not[`BatchIndex in key `.loader];[
 
+    ]];
     };
 
-.loader.getCurriculumBatch  :{
+.loader.getCurriculumBatch          :{
+    if[not[`BatchIndex in key `.loader];[
 
+    ]];
     };
 
-.loader.getRandomBatch      :{
+.loader.getRandomBatch              :{
+    if[not[`BatchIndex in key `.loader];[
 
+    ]];
     };
 
 
