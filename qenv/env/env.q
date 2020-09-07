@@ -79,7 +79,7 @@ Reset    :{[config]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.ingress.GetEngressEvents[-1];
+    xevents:.ingress.GetEngressEvents[];
 
     // Insert the first set of events into the state 
     // such that the initialz observations therin can
@@ -119,7 +119,7 @@ Step    :{[actions]
     step:.env.CurrentStep;
     // Advances the current state of the environment
 
-    .loader.Ingress[.env.CONF];
+    .loader.Ingress[.env.CONF]; // todo get current time then feed to 
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
@@ -134,7 +134,7 @@ Step    :{[actions]
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.pipe.ingress.GetIngressEvents[step];
+    nevents:.pipe.ingress.PopIngressEvents[];
 
     // The engine processes the set of events
     // provided by the pipeline and inserts a set
@@ -146,7 +146,7 @@ Step    :{[actions]
     // step that should be inserted into the local state.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    xevents:.pipe.egress.GetEngressEvents[step];
+    xevents:.pipe.egress.PopEngressEvents[];
     
     // Events are inserted back into the state such that
     // a set of features can be derived therin
