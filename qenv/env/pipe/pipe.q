@@ -52,14 +52,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     };
 
-
-
-.pipe.Next     :{[step]
-
-
-    };
-
-
 // TODO event source
 // TODO random starting balance 
 // Reset 
@@ -85,6 +77,10 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     // TODO if not chronological 
     // delete all events from ingress events
 
+    // 
+    / .pipe.ingress.Event:.event.Event;
+    / .pipe.egress.Event:.event.Event;
+
     .pipe.ingress.Event upsert (
         select time, intime, kind, cmd, datum 
         from .pipe.EventSource 
@@ -96,7 +92,12 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     };
 
 
+
+.pipe.Next     :{[step]
+
+
+    };
+
+
 .pipe.Reset   :{
-    .pipe.ingress.Event:.event.Event;
-    .pipe.egress.Event:.event.Event;
     };
