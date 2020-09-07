@@ -48,3 +48,6 @@ trd[`side]:neg[trd`side];
 trd:`time`side`price`tsize xcol trd;
 
 x:bok uj trd;
+
+
+select from x where tsize>0;
