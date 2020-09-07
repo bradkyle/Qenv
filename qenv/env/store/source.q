@@ -19,12 +19,6 @@ firstDay:{`datetime$((select first date from events)[`date])};
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 200i
 / 2020.07.26 2020.07.26T23:54:44.650 2020.07.26T23:54:44.708 TRADE NEW `BUY  993550i 4i
 
-// Probabalistic choice
-// @n: number of choices
-// @k: count of choices
-// @p: probability spread
-PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
-
 // Returns the next batch from the
 // Only select from features/ resultant state where state<step time!!
 
