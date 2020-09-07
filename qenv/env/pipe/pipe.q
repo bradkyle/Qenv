@@ -82,8 +82,9 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     };
 
-// ()
-// () 
+// enlist(<=;`time;)
+// enlist(<=;`i;)
+// ((<=;`i;);(<=;`time;)) 
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
