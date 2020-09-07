@@ -39,13 +39,14 @@
         .loader.BatchIndex:select i:max i, t:max time by .loader.batchSize xbar `minute$time from .loader.events;
     ]];
     // .Q.MAP??
-
+    
+    $[]
 
 
     };
 
 
-.loader.Ingress     :{[time]
+.loader.Ingress     :{[step]
 
 
     };
