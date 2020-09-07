@@ -63,6 +63,7 @@ Reset    :{[config]
     // return obs
     .engine.Reset[.env.CONF];
     .state.Reset[.env.CONF];
+    .pipe.Reset[.env.CONF];
     
     // Derive the initial state from the
     // engine and derive deposit events etc.

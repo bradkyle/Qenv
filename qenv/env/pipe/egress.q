@@ -14,6 +14,7 @@
         ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
         e};
 
+// Return the set of events that would have occured 
 .pipe.egress.PopEgressEvents               :{
 
         };
