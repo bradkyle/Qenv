@@ -220,7 +220,7 @@
     };
 
 
-/ Signal processing and randomization
+/ Extern Signal processing and randomization
 / -------------------------------------------------------------------->
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -231,10 +231,9 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepositEvents :{[event] // Requires accountId
-    instrument:.engine.getInstrument[];
-    .account.Deposit[];
-    
+.engine.ProcessSignalEvents :{[event] // Requires accountId
+
+
     };
 
 / Public Event .engine.Processing logic (Writes)
