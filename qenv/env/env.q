@@ -9,6 +9,7 @@
 
 \d .env
 
+// TODO heartbeats
 
 // TODO config order size, balance randomization prob, 
 Env  :(

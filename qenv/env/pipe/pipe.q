@@ -92,16 +92,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     };
 
 
-// Next checks if the current step has surpassed the 
-// water mark of the current event batch with respect'
-// to the configuration provided in the Reset function
-// 
-.pipe.Next     :{[step]
-
-
-    };
-
-
 /*******************************************************
 / Pop Events
 
