@@ -34,9 +34,9 @@ bok:flip `time`intime`side`price`size!raze each flip (deriveBook'[select from de
 bok:{raze'[first'[x]]}'[bok]; / flip raze'[raze'[book]]
 delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
 bok:flip[cols[bok]!(flip raze'[raze'[{raze'[first'[x]]}'[bok]]])]
+bok:`time xasc bok;
 
 delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
-(delete from bok where type'[side]<>6h or type'[price]<>6h)
 
 // Select the first prior depth level for a given trade prior to 
 // its time and and its price and the first depth level after its
