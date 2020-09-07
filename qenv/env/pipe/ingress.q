@@ -8,15 +8,6 @@
 
 .pipe.ingress.Event:.event.Event;
 
-// TODO strat i.e. time vs event count vs eventcount within time
-// Selects all events from the buffer where the 
-// time they occurred is less than the current 
-// step time
-.pipe.event.GetIngressEvents               :{
-        e: .pipe.ingress.Event;
-        ![`.pipe.ingress.Event;();0b;`symbol$()]
-        e};
-
 .pipe.ingress.AddEvent              :{[event]
         .pipe.ingress.Event,:(time;cmd;kind;datum);
     };
@@ -64,3 +55,17 @@
         .pipe.ingress.AddEvent[time;0;11;deposit]; // TODO        
         };
 
+
+/*******************************************************
+/ Pop Events
+
+// Selects all events that occurred 
+.pipe.egress.GetIngressEvents               :{
+        e: .pipe.egress.Event; // TODO better selection methodology
+        ![`.pipe.egress.Event;();0b;`symbol$()] // Test this vs resest
+        e};
+
+// Return the set of events that would have occured 
+.pipe.egress.PopIngressEvents               :{
+
+}

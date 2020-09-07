@@ -1,21 +1,28 @@
 
+// TODO remove repeated logic
 
-.loader.getChronologicalBatch       :{
-    if[not[`BatchIndex in key `.loader];[
-
-    ]];
-    };
-
+// 
 .loader.getCurriculumBatch          :{
-    if[not[`BatchIndex in key `.loader];[
 
-    ]];
+    $[[`BatchIndex in key `.loader];[
+
+    ];'BATCHINDEX_UNSET];
     };
 
-.loader.getRandomBatch              :{
-    if[not[`BatchIndex in key `.loader];[
+// 
+.loader.getChronologicalBatch       :{
+    $[[`BatchIndex in key `.loader];[
+        $[[`CurrentBatch in key `.loader];[
+            .loader.BatchIndex@(.loader.CurrentBatch mod count[.loader.BatchIndex])
+        ];'CURRENTBATCH_UNSET];
+    ];'BATCHINDEX_UNSET];
+    };
 
-    ]];
+// 
+.loader.getRandomBatch              :{
+    $[[`BatchIndex in key `.loader];[
+        .loader.BatchIndex@rand count[.loader.BatchIndex]
+    ];'BATCHINDEX_UNSET];
     };
 
 
