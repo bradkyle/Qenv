@@ -42,4 +42,5 @@ bok:flip `time`intime`side`price`size!raze each flip (deriveBook'[select from de
 // then there was naively no iceberg order there before the trade
 // if the change in size was smaller than the trade size then the
 // level had iceberg orders equal to the difference in magnitude 
-// between the expected size and the 
+// between the expected size and the actual size (this can be randomized)
+// if necessary.
