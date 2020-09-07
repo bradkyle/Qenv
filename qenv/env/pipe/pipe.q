@@ -82,11 +82,12 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
         from .pipe.EventSource 
         where time within value[nextBatch`start`end]);
 
-    // Create starting balance etc.
-    .pipe.ingress.Event upsert .pipe.createSetupEvents[];
 
     };
 
+
+// select from .pipe.ingress.Event
+// select from .pipe.egress.Event
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
