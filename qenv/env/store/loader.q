@@ -8,12 +8,16 @@
     .Q.D // partitions
     .Q.P
 
+    // Check if batch index has been set
+    select i:max i, t:max time by 30 xbar `minute$time from events;
+
     // .Q.MAP??
 
 
     };
 
 
-.loader.Ingress     :{[config]
-    select i:max i, t:max time by 30 xbar `minute$time from events
+.loader.Ingress     :{[time]
+
+
     };
