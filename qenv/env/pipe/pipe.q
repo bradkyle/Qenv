@@ -52,6 +52,14 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     };
 
+
+
+.pipe.Next     :{[step]
+
+
+    };
+
+
 // TODO event source
 // TODO random starting balance 
 // Reset 
@@ -82,12 +90,6 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     // Create starting balance etc.
     .pipe.ingress.Event upsert .pipe.createSetupEvents[];
-
-    };
-
-// TODO add random deposits/withdraws from the account
-.pipe.Next     :{[step]
-
 
     };
 
