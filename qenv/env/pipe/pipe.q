@@ -93,7 +93,7 @@ getIngressCond  :{$[
 
     ]};
 
-// 1) enlist(Time <= Time + StepFreqTime)
+// 1) enlist(Time <= ((Time + StepFreqTime)-))
 // 2)
 // 3)
 getEgressCond   :{$[
