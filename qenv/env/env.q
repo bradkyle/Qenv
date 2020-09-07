@@ -83,7 +83,7 @@ Reset    :{[config]
     // step that should be executed by the engine.
     // This also allows for longer temporal steps and larger
     // batch sizes for faster overall processing speed.
-    nevents:.pipe.ingress.PopIngressEvents[];
+    nevents:.pipe.GetIngressEvents[];
     
     // Process the first set of events produced
     // by the ingress logic to form the initial
