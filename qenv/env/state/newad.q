@@ -1,6 +1,8 @@
 
 // TODO smaller ping orders and hidden orders!
-
+// Allow for strategies like bursts on market orders
+// constant sniffers etc.
+// create iceberg orders etc.
 
 // Bucketed Limit Order Creation
 // ---------------------------------------------------------------------------------------->

@@ -48,6 +48,8 @@ OrderBook:(
 // Process Depth update
 // -------------------------------------------------------------->
 
+// TODO uniform decrease / increase of hidden order qty with updates
+// that don't represent this?
 // TODO move to C for increased speed.
 // TODO make functionality for representing hidden/iceberg orders!!!
 // Inc Fill is used when the fill is to be added to the given inventory

@@ -37,9 +37,11 @@ delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
 bok:flip[cols[bok]!(flip raze'[raze'[{raze'[first'[x]]}'[bok]]])]
 bok:`time xasc bok;
 
-select sum size, by time,neg[side],price from trd; 
+trd:select sum size, by time,neg[side],price from trd; 
 
-delete from `bok where type'[price]<>7h or type'[size]<>7h or type'[side]<>7h
+gpy:{first select from bok where price=x, time>y, side=z};
+gny:{first select from bok where price=x, time<y, side=z};
+x:{(gpy[x`price;x`time;x`side];gny[x`price;x`time;x`side])}'trd
 
 // Select the first prior depth level for a given trade prior to 
 // its time and and its price and the first depth level after its
