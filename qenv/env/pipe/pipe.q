@@ -82,6 +82,14 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 
     };
 
+getIngressCond  :{
+
+    };
+
+getEgressCond   :{
+
+    };
+
 // enlist(<=;`time;)
 // enlist(<=;`i;)
 // ((<=;`i;);(<=;`time;)) 
