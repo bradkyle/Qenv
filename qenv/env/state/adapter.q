@@ -118,49 +118,6 @@ environment agent state.
 
     };
 
-// Stop Event Utilities
-// ---------------------------------------------------------------------------------------->
-// Should use the expected next state inventory
-// to derive a set of stops that serve to protect
-// the inventory from wild swings in the price and
-// subsequently the unrealized pnl.
-
-// Creates a set of stop orders that oppose the 
-// current position accoutding to a certain loss
-// fraction, if the current orders that are open
-// do not have correct price, size they are either
-// cancelled or amended depending on the configuration.
-.state.adapter.createNaiveStops  :{[aId;loss;time]
-    openInv:.state.getOpenPositions[aId];
-    {
-        0n;
-    }[aId;loss;time] each openInv;
-    };
-
-// Creates the set of stop orders that oppose the
-// current position according to a certain loss fraction
-// 
-.state.adapter.createStaggeredStops  :{[aId;loss;num;time]
-    openInv:.state.getOpenPositions[aId];
-    {
-        0n;
-    }[aId;loss;time] each openInv;
-    };
-
-// Creates a set of stop orders that oppose the 
-// current position accoutding to a certain loss
-// fraction, if the current orders that are open
-// do not have correct price, size they are either
-// cancelled or amended depending on the configuration.
-.state.adapter.createExpStaggeredStops  :{[aId;loss;num;time]
-    openInv:.state.getOpenPositions[aId];
-    {
-        0n;
-    }[aId;loss;time] each openInv;
-    };
-
-
-
 
 // Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->

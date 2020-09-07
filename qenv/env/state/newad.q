@@ -55,6 +55,10 @@
 
 // Stop Creation
 // ---------------------------------------------------------------------------------------->
+// Should use the expected next state inventory
+// to derive a set of stops that serve to protect
+// the inventory from wild swings in the price and
+// subsequently the unrealized pnl.
 
 // Naive stop placement
 // Simply places a single stop order for each corresponding
@@ -122,18 +126,9 @@
 // ---------------------------------------------------------------------------------------->
 
 
-// 
-.state.adapter.generateMacroAction             :{
 
-    };
-
-
-
-// Macro Action Utilities
+// General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
-
-
-
 
 
 
