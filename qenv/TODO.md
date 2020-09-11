@@ -22,3 +22,5 @@ Run pipeline and engine in different process
 // FINISH loader, write tests, run training
 
 // TODO change ingress to egress and visa versa
+
+// TODO route all traffic through private computer.
