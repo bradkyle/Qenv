@@ -39,13 +39,13 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
-        .util.testutils.setupDepth[];
-        .util.testutils.setupOrders[];
+        .util.testutils.setupDepth[p`cDepth];
+        .util.testutils.setupOrders[p`cOrd];
 
         .order.ProcessDepth[p[`event]];
 
-        .util.testutils.checkDepth[];
-        .util.testutils.checkOrders[];
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils.checkOrders[p[`eOrd];c];
 
     };
     {[p] 
@@ -342,8 +342,8 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
-        .util.testutils.setupDepth[];
-        .util.testutils.setupOrders[];
+        .util.testutils.setupDepth[p`cDepth];
+        .util.testutils.setupOrders[p`cOrd];
 
         m:p[`mocks];
 
@@ -362,8 +362,8 @@ dozc:{x+y}[doz];
         .util.testutils.checkMock[mck4;m[3]];
         .util.testutils.checkMock[mck5;m[4]];
 
-        .util.testutils.checkDepth[];
-        .util.testutils.checkOrders[];
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils.checkOrders[p[`eOrd];c];
 
     };
     {[p]
