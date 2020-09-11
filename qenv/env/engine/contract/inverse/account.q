@@ -162,7 +162,7 @@
     inventory[`amt`totalEntry]+:qty;
 
     // derive execCost
-    inventory[`execCost]+: .account.execCost[
+    inventory[`execCost]+: .inverse.account.execCost[
         price;
         qty]; 
 

@@ -1,4 +1,6 @@
 
-.util.Require     :{
+.util.Require     :{[reqs]
+    {
 
+    }[]'[reqs];
     };

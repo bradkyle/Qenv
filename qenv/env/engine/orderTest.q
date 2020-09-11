@@ -1,3 +1,17 @@
+
+
+
+.util.Require[(
+    ("order.q";".order"); 
+    ("liquidation.q";".liquidation"); 
+    ("instrument.q";".instrument"); 
+    ("account.q";".account"); 
+    ("/env/pipe/event.q";".pipe.event");
+    ("/env/pipe/ingress.q";"..pipe.ingress"); 
+    ("/env/pipe/egress.q";".pipe.egress"); 
+    ("/env/pipe/pipe.q";".pipe") 
+    )]; 
+
 l: `long$
 z:.z.z;
 sc:{x+(`second$y)};

@@ -9,6 +9,7 @@
 \d .engine
 
 // TODO move validation into engine
+// TODO add slight noise to trades and orderbook updates
 .engine.WaterMark:0n;
 
 // TODO dropped response etc.
