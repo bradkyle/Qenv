@@ -1,4 +1,7 @@
+from python_json_config import ConfigBuilder
 
-
-def Validate():
-    pass
+def Validate(conf):
+    builder = ConfigBuilder()
+    
+    
+    return builder.parse_config(conf)
