@@ -1,29 +1,29 @@
 \d .instrument
 
-instrumentCount:0;
+.instrument.instrumentCount:0;
 
 // TODO logic mappings per CONTRACTTYPE
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
 
-NewRiskTier             :{[tier]
+.instrument.NewRiskTier             :{[tier]
     :flip[`mxamt`mmr`imr`maxlev!flip[tier]]
     };
 
-NewRiskProcedural       :{[baseRL;step;maintM;initM;maxLev;numTier]
+.instrument.NewRiskProcedural       :{[baseRL;step;maintM;initM;maxLev;numTier]
     :flip[`mxamt`mmr`imr`maxlev!(baseRL+(step*til numTier);
     maintM+(maintM*til numTier);
     initM+(maintM*til numTier);
     numTier#maxLev)];
     };
 
-NewFeeTier              :{[tier]
+.instrument.NewFeeTier              :{[tier]
     :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
 
 // TODO fix
-NewFlatFee              :{[tier]
+.instrument.NewFlatFee              :{[tier]
     :flip[`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit!flip[tier]];
     };
 
@@ -34,7 +34,7 @@ NewFlatFee              :{[tier]
 // TODO people online, bots online
 // TODO long fraction, short fraction, historic data
 // TODO apply premium
-Instrument: (
+.instrument.Instrument: (
     [instrumentId           : `long$()];
     state                   : `long$();
     quoteAsset              : `symbol$();
@@ -80,9 +80,9 @@ Instrument: (
     feeTiers                : ();
     riskTiers               : ());
 
-mandCols:();
+.instrument.mandCols:();
 
-defaultRiskTier:.instrument.NewRiskTier[(
+.instrument.defaultRiskTier:.instrument.NewRiskTier[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f;
         1000000     0.01     0.02     50f;
@@ -95,7 +95,7 @@ defaultRiskTier:.instrument.NewRiskTier[(
         500000000   0.25     1.0      1f
     )];
 
-defaultFeeTier: .instrument.NewFeeTier[(
+.instrument.defaultFeeTier: .instrument.NewFeeTier[(
         50      0.0006    0.0006    0  0 600f;
         500     0.00054   0.0006    0  0 600f;
         1500    0.00048   0.0006    0  0 600f;
@@ -108,12 +108,12 @@ defaultFeeTier: .instrument.NewFeeTier[(
     )];
 
 // Defaults approximate the values seen with bitmex XBTUSD
-defaults:{:( // TODO redo
+.instrument.defaults:{:( // TODO redo
     (instrumentCount+:1),`ONLINE,`QUOTE,`BASE,`UNDERLYING,1,100,0,0.5,10,1,0f,0f,
     (`timespan$(`minute$480)),0,0,0f,1e6f,0f,0,0f,0b,1b,0b,0b,0b,1e6f,0f,1f,1e5f,0f,
     25f,`COMPLETE,`INVERSE,0f,100,0,0,0,0,0,0,0N,0N)
     };
-allCols:cols Instrument;
+.instrument.allCols:cols Instrument;
 
 // Instrument CRUD Logic
 // -------------------------------------------------------------->

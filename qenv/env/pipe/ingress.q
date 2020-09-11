@@ -1,12 +1,10 @@
 
-.util.Require["/env/pipe/";enlist("event.q";".pipe.event")]; 
-
 // All events being pushed into the engine are 
 // stored here, selections based upon temporal 
 // offsets representing delays in compute etc.
 // can be 
 
-.pipe.ingress.Event:.event.Event;
+.pipe.ingress.Event:.pipe.event.Event;
 
 .pipe.ingress.AddEvent              :{[event]
         .pipe.ingress.Event,:(time;cmd;kind;datum);

@@ -1,12 +1,10 @@
 
-.util.Require["/env/pipe/";enlist("event.q";".pipe.event")]; 
-
 // All events returning from the engine are 
 // stored here, selections based upon temporal 
 // offsets representing delays in compute etc.
 // can be 
 
-.pipe.egress.Event:.event.Event;
+.pipe.egress.Event:.pipe.event.Event;
 
 .pipe.egress.AddEvent              :{[event] // TODO validate
         .pipe.egress.Event,:(time;cmd;kind;datum);

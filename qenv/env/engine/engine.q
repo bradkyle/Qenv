@@ -1,12 +1,4 @@
 
-.util.Require["/env/engine/";(
-    ("instrument.q";".instrument"); 
-    ("account.q";".account"); 
-    ("order.q";".order");
-    ("liquidation.q";".liquidation")
-    )]; 
-
-\d .engine
 
 // TODO move validation into engine
 // TODO add slight noise to trades and orderbook updates

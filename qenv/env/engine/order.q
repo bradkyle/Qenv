@@ -1,19 +1,11 @@
 
-.util.Require["/env/engine/";(
-    ("instrument.q";".instrument"); 
-    ("account.q";".account") 
-    )]; 
-
-\d .order
-
-BAM:();
-orderCount:0;
+.order.orderCount:0;
 
 // TODO randomize placement of hidden orders.
 // TODO change price type to int, longs etc.
 // TODO allow for data derived i.e. exchange market orders. 
 // TODO move offset into seperate table?
-Order: (
+.order.Order: (
     [price:`long$(); orderId:`long$()]
     clId            : `long$();
     instrumentId    : `.instrument.Instrument$();
@@ -42,7 +34,7 @@ Order: (
 // the events will be generated using the sum of the quantities and the 
 // orderbook sizes at each price.
 // TODO add hidden/Iceberg qty
-OrderBook:(
+.order.OrderBook:(
     [price      :`long$()]
     side        :`long$(); 
     qty         :`long$();
@@ -65,7 +57,7 @@ OrderBook:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
+.order.ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
     odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
     $[count[odrs]>0;[
         // TODO uj new event
@@ -132,7 +124,7 @@ ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO fix and test
+.order.ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO fix and test
     nside:neg[side];
     isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders
@@ -224,7 +216,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-ProcessOrder            :{[i;a;o;time] 
+.order.ProcessOrder            :{[i;a;o;time] 
     k:o[;6];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
@@ -258,7 +250,7 @@ ProcessOrder            :{[i;a;o;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ExecuteStop         :{[instrument;time;stop]
+.order.ExecuteStop         :{[instrument;time;stop]
     // Add the order to the ingress pipeline in order to represent
     // the time it would take for the order to execute (stop orders are
     // a brokerage function)
@@ -275,7 +267,7 @@ ExecuteStop         :{[instrument;time;stop]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-CheckStopOrders   :{[instrument;time]
+.order.CheckStopOrders   :{[instrument;time]
     .order.ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
     };
 
@@ -291,7 +283,7 @@ CheckStopOrders   :{[instrument;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ApplyPriceLimits   :{[instrument;time]
+.order.ApplyPriceLimits   :{[instrument;time]
     
 
     };

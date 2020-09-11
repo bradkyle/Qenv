@@ -1,14 +1,5 @@
 
-
-.util.Require["/env/engine/";(
-    ("instrument.q";".instrument"); 
-    ("account.q";".account"); 
-    ("order.q";".order") 
-    )]; 
-
-\d .liquidation
-
-Liquidation :(
+.liquidation.Liquidation :(
 
     );
 
@@ -22,7 +13,7 @@ Liquidation :(
 / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
 / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
 
-ForceCancel :{[a;time]
+.liquidation.ForceCancel :{[a;time]
     .order.CancelAllOrders[a;time];
     :(exec from .account.Account where accountId=a[`accountId])
     };
@@ -35,7 +26,7 @@ ForceCancel :{[a;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-Liquidate :{[a;iB;iL;iS;i;time]
+.liquidation.Liquidate :{[a;iB;iL;iS;i;time]
     a:.liquidation.ForceCancel[a;time];
     if[sum[a`available`maintMarginReq]<0;[
 

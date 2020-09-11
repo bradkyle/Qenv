@@ -1,10 +1,9 @@
-\d .event
 
 // TODO setup in seperate process?
 
 /*******************************************************
 / error kind enumerations
-ERRCODES :(
+.pipe.event.ERRCODES :(
         
         );
 
@@ -13,7 +12,7 @@ ERRCODES :(
 / event enumerations
 
 // USING MANUAL LIST FOR REFERENCABILITY 
-EVENTKIND:(
+.pipe.event.EVENTKIND:(
         0; // DEPTH
         1; // TRADE
         2; // MARK
@@ -34,7 +33,7 @@ EVENTKIND:(
         );
 
 / `NEW:0,`UPDATE:1,`DELETE:2,`FAILED:3
-EVENTCMD      : (0;1;2;3;4);
+.pipe.event.EVENTCMD      : (0;1;2;3;4);
 
 
 /*******************************************************
@@ -53,8 +52,8 @@ EVENTCMD      : (0;1;2;3;4);
 // The Event table is used exclusively within the engine and is not used
 // by for example the state.
 // Acts like a kafka queue/pubsub.
-eventCount:0;
-Event  :( // TODO .pipe.event.Add failure to table
+.pipe.event.eventCount:0;
+.pipe.event.Event  :( // TODO .pipe.event.Add failure to table
     time        :`datetime$();
     cmd         :`long$();
     kind        :`long$();
