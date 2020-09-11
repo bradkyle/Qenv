@@ -347,7 +347,7 @@ dozc:{x+y}[doz];
             ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
             (); // Current Orders
             (1;`SELL;100;0b;0b;0N;z); // Fill Execution
-            ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
+            ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddOrderUpdateEvent Mock
             (0b;0;()); // Expected IncSelfFill Mock
@@ -360,7 +360,7 @@ dozc:{x+y}[doz];
             ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
             (); // Current Orders
             (1;`SELL;1500;0b;0b;0N;z); // Fill Execution
-            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddOrderUpdateEvent Mock
             (0b;0;()); // Expected IncSelfFill Mock
@@ -371,7 +371,23 @@ dozc:{x+y}[doz];
             )); // Expected AddTradeEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
-        ))
+        ));
+        ("orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (1;`SELL;1500;0b;0b;0N;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (0b;0;()); // Expected ApplyFill Mock
+            (1b;2;(
+                ((-1;999;500);z);
+                ((-1;1000;1000);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
     );
     .util.testutils.defaultHooks;
     "Process trades from the historical data or agent orders",
