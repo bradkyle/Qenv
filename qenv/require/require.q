@@ -31,6 +31,7 @@
 
     };
 
+// TODO naive implementation make better
 // Constructs the dependency tree of modules, loading root modules i.e. modules
 // on which the majority depend on and work up the dependency tree, creating
 // a ordered list of modules to load in sequence.
@@ -41,11 +42,16 @@
     mods:();
 
     walk:{
+        ms:();
+
         p:key x;
         qfiles:p where[{all[".q" in string[x]]}'[p]];
         mfiles:qfiles where[{all["mod" in string[x]]}'[qfiles]];
         dirs:p where[{all[not["." in string[x]]}'[p]]];
-
+        
+        // TODO count before
+        ms,:walk'[];
+        :ms;
         };
 
     };
