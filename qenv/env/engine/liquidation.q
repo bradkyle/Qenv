@@ -1,7 +1,7 @@
 
 .liquidation.Liquidation :(
     [liquidationId          :`long$()]
-
+     inventory:             : ();
     );
 
 / https://www.bitmex.com/app/liquidationExamples
@@ -21,18 +21,26 @@
     :(exec from .account.Account where accountId=a[`accountId])
     };
 
+// Temporarily blocks the account's ability to trade
+// as is seen with the FTX exchange
 .liquidation.PauseAccount       :{
 
     };
 
+// Trades the given opposing positions with eachother
+// to reduce exposure as seen with huobi.
 .liquidation.SelfTrade          :{
 
     };
 
+// Takes over the inventory and returns the resultant
+// inventory with the fee being removed.
 .liquidation.TakeOverWithFee    :{
 
     };
 
+// Takes over the inventory completely without returning
+// it, essentially the entire inventory has been lost.
 .liquidation.TakeOverTotally    :{
 
     };
