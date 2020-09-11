@@ -49,6 +49,8 @@
     $[0 in key[.instrument.Instrument];:.instrument.Instrument@0;'UNSET_PRIMARY_INSTRUMENT]; // TODO check
     };
 
+// TODO get account, get order etc.
+
 // TODO add randomization based upon current probability 
 // of order being placed due to overload etc.
 // TODO check within max and min orders, run validation etc.
@@ -94,9 +96,7 @@
     d:events`datum;
 
     // TODO derive from account
-
     .order.ProcessTrade[instrument]'[d`account`side`fill`reduce`time];
-
     };
 
 
