@@ -68,6 +68,8 @@
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
 // TODO validation
+/  @param config     (JSON) A json string containing the env config 
+/  @return          (List/Vector) The first observation for each agent
 .env.Reset    :{[config]
     .env.CONF:.config.ParseConfig[config];
     // Reset the Engine and 
@@ -118,6 +120,10 @@
 
 // step rate i.e. by number of events, by interval, by number of events within interval, by number of events outside interval. 
 
+// TODO is done, buffering/historic replay etc.
+// TODO add noise events to input i.e. trades etc.
+// TODO if any done or no more from loader reset all?
+// TODO add environment episode details/invocations.
 // batching/episodes and episode randomization/replay buffer.
 // Loads events into memory such that they can be more rapidly stepped over
 // moving this to a seperate process will increase the speed even further. 
@@ -129,9 +135,10 @@
 // It will thereafter advance the state and return
 // the next observations, rewards, done and info
 // for each agent
-// TODO is done, buffering/historic replay etc.
-// TODO add noise events to input i.e. trades etc.
-// TODO if any done or no more from loader reset all?
+/  @param actions     (Tuple[Action;AgentId]) A List of tuples containing 
+/                     agent id and their respective actions (Long)
+/  @return          (Tuple[Observation;Reward;Dones]) Returns a tuple of 
+/                    agentId, observation, reward, dones for each agent.
 .env.Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
