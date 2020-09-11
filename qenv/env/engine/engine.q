@@ -50,6 +50,7 @@
     };
 
 // TODO get account, get order etc.
+// TODO error handling
 
 // TODO add randomization based upon current probability 
 // of order being placed due to overload etc.
