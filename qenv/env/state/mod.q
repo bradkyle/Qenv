@@ -2,23 +2,23 @@
 // Code Modules
 // ---------------------------------------------------------------------------------------->
 
-.require.Mod[bp;".state";"";( 
+.require.M[bp;".state";"";( 
     ".util";
     ".util.cond";
     ".util.table")];
 
-.require.Mod[bp;".state.obs";"";( 
+.require.M[bp;".state.obs";"";( 
     ".state";
     ".util";
     ".util.indicators";
     ".util.cond")];
 
-.require.Mod[bp;".state.rew";"";( 
+.require.M[bp;".state.rew";"";( 
     ".state";
     ".util";
     ".util.cond")];
 
-.require.Mod[bp;".state.adapter";"";( 
+.require.M[bp;".state.adapter";"";( 
     ".state";
     ".util";
     ".util.cond")];
@@ -27,7 +27,7 @@
 // TestModules
 // ---------------------------------------------------------------------------------------->
 
-.require.UnitMod[bp;".state.test";"accountTest.q";(
+.require.UM[bp;".state.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -35,14 +35,14 @@
     ".pipe.egress")];
 
 
-.require.UnitMod[bp;".state.obs.test";"accountTest.q";(
+.require.UM[bp;".state.obs.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
     ".quanto.account";
     ".pipe.egress")];
 
-.require.UnitMod[bp;".state.rew.test";"accountTest.q";(
+.require.UM[bp;".state.rew.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -50,7 +50,7 @@
     ".pipe.egress")];
 
 
-.require.UnitMod[bp;".state.adapter.test";"accountTest.q";(
+.require.UM[bp;".state.adapter.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";

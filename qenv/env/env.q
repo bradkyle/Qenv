@@ -7,12 +7,10 @@
 
 // TODO hooks system
 
-\d .env
-
 // TODO heartbeats
 
 // TODO config order size, balance randomization prob, 
-Env  :(
+.env.Env  :(
         [envId               :`long$()]
         initialBalance      : `float$();
         rebalanceHigh       : `float$();
@@ -40,7 +38,7 @@ Env  :(
 // Episode is a table that is used to track 
 // the performance of all agents for a given
 // batch.
-Episode :(
+.env.Episode :(
         [episodeId               :`long$()]
         batchIdx                 :`long$();
         batchStart               :`datetime$();
@@ -54,7 +52,7 @@ Episode :(
 
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
-Info        :{[aIds;step]
+.env.Info        :{[aIds;step]
         :(
             .engine.Info[];
             .state.Info[];
@@ -70,7 +68,7 @@ Info        :{[aIds;step]
 // Resets the state for all agents for whom 
 // ids have been included into the ids parameter
 // TODO validation
-Reset    :{[config]
+.env.Reset    :{[config]
     .env.CONF:.config.ParseConfig[config];
     // Reset the Engine and 
     // the current state and 
@@ -134,7 +132,7 @@ Reset    :{[config]
 // TODO is done, buffering/historic replay etc.
 // TODO add noise events to input i.e. trades etc.
 // TODO if any done or no more from loader reset all?
-Step    :{[actions]
+.env.Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
 

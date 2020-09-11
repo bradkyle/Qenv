@@ -1,6 +1,6 @@
 
 
-
+\d .env.test
 
 .qt.Unit[
     ".env.Info";

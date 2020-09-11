@@ -1,2 +1,2 @@
 
-.require.Require["./"]
+.require.Require["./";`CODE];
