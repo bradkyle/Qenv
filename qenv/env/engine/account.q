@@ -257,6 +257,7 @@
 // Main Public Funding Function
 // ---------------------------------------------------------------------------------------->
 
+// Applies funding to all accounts with open positions
 .account.ApplyFunding        : {[i;fr;ft;time]
     // TODO validate instrument exists
     k:i`contractType;      
@@ -282,6 +283,7 @@
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
+// Updates the mark price of all accounts
 .account.UpdateMarkPrice     : {[i;mp;time]
     // TODO validate instrument exists
     k:i`contractType;      
@@ -307,6 +309,7 @@
 // Apply Settlement
 // ---------------------------------------------------------------------------------------->
 
+// Applies a given settlement to all accounts
 .account.ApplySettlement     : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
