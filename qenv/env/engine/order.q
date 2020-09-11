@@ -258,7 +258,7 @@ ExecuteStop         :{[instrument;time;stop]
     // a brokerage function)
     .pipe.ingress.AddPlaceOrderEvent[stop;time];
     .pipe.egress.AddOrderUpdateEvent[stop;time];
-    ![];
+    ![`.order.Order;enlist(=;`orderId;stop`orderId);0;`symbol$()];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
