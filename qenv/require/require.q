@@ -16,7 +16,7 @@
 /  @param mpath     (String) the path from the mod.q file to the file of the module 
 /  @param mdeps    (List[String/Symvol]) The list of module dependencies this module has.
 .rq.M        :{[mname; mpath; mdeps]
-
+    .rq.Mod,:();
     };
 
 // Require Unit Test Module
@@ -28,7 +28,7 @@
 /  @param mpath     (String) the path from the mod.q file to the file of the module 
 /  @param mdeps    (List[String/Symvol]) The list of module dependencies this module has.
 .rq.UM       :{[mname; mpath; mdeps]
-
+    .rq.Mod,:();
     };
 
 // TODO naive implementation make better
@@ -42,15 +42,14 @@
     mods:();
 
     walk:{
-        ms:();
 
-        p:key x;
+        p:key y;
         qfiles:p where[{all[".q" in string[x]]}'[p]];
         mfiles:qfiles where[{all["mod" in string[x]]}'[qfiles]];
         dirs:p where[{all[not["." in string[x]]}'[p]]];
         
         // TODO count before
-        $[ms,:(.z.s'[])];
+        $[count[dirs]>0;:(.z.s[x]'[ny]);:x];
         };
 
     };
