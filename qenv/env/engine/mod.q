@@ -2,17 +2,17 @@
 // Code Modules
 // ----------------------------------------------------------->
 
-.require.M[bp;".instrument";"";(
+.rq.M[bp;".instrument";"";(
     ".util")];
 
-.require.M[bp;".account";"";(
+.rq.M[bp;".account";"";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
     ".quanto.account";
     ".pipe.egress")];
 
-.require.M[bp;".order";"";(
+.rq.M[bp;".order";"";(
     ".account";
     ".instrument";
     ".util";
@@ -20,7 +20,7 @@
     ".pipe.ingress";
     ".pipe.egress")];
 
-.require.M[bp;".liquidation";"";(
+.rq.M[bp;".liquidation";"";(
     ".account";
     ".instrument";
     ".order";
@@ -28,7 +28,7 @@
     ".util.cond";
     ".pipe.egress")];
 
-.require.M[bp;".engine";"";(
+.rq.M[bp;".engine";"";(
     ".account";
     ".instrument";
     ".liquidation";
@@ -42,17 +42,17 @@
 // Unit Test Modules
 // ----------------------------------------------------------->
 
-.require.UM[bp;".instrument.test";"instrumentTest.q";(
+.rq.UM[bp;".instrument.test";"instrumentTest.q";(
     ".util")];
 
-.require.UM[bp;".account.test";"accountTest.q";(
+.rq.UM[bp;".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
     ".quanto.account";
     ".pipe.egress")];
 
-.require.UM[bp;".order.test";"orderTest.q";(
+.rq.UM[bp;".order.test";"orderTest.q";(
     ".account";
     ".instrument";
     ".util";
@@ -60,7 +60,7 @@
     ".pipe.ingress";
     ".pipe.egress")];
 
-.require.UM[bp;".liquidation.test";"liquidationTest.q";(
+.rq.UM[bp;".liquidation.test";"liquidationTest.q";(
     ".account";
     ".instrument";
     ".order";
@@ -68,7 +68,7 @@
     ".util.cond";
     ".pipe.egress")];
 
-.require.UM[bp;".engine.test";"engineTest.q";(
+.rq.UM[bp;".engine.test";"engineTest.q";(
     ".account";
     ".instrument";
     ".liquidation";

@@ -1,17 +1,17 @@
 
 // TODO c modules, Python modules, J Modules, C++ modules, Rust Modules, Extern Q modules, extern Tests
 
-.require.Mod      :(
+.rq.Mod      :(
 
     );
 
 // Require code module
-.require.M        :{
+.rq.M        :{
 
     };
 
 // Require Unit Test Module
-.require.UM       :{
+.rq.UM       :{
 
     };
 

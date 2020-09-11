@@ -3,7 +3,7 @@
 // Code Modules
 // ----------------------------------------------------------->
 
-.require.M[bp;".inverse.account";"";(
+.rq.M[bp;".inverse.account";"";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -14,7 +14,7 @@
 // Unit Test Modules
 // ----------------------------------------------------------->
 
-.require.UM[bp;".inverse.account.test";"";(
+.rq.UM[bp;".inverse.account.test";"";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";

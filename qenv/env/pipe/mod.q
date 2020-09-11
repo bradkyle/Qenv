@@ -4,18 +4,18 @@
 // Code Modules
 // ----------------------------------------------------------->
 
-.require.M[bp;".pipe.event";"";(
+.rq.M[bp;".pipe.event";"";(
     ".util")];
 
-.require.M[bp;".pipe.common";"";()];
+.rq.M[bp;".pipe.common";"";()];
 
-.require.M[bp;".pipe.ingress";"";(
+.rq.M[bp;".pipe.ingress";"";(
     ".pipe.event")];
 
-.require.M[bp;".pipe.egress";"";(
+.rq.M[bp;".pipe.egress";"";(
     ".pipe.event")];
 
-.require.M[bp;".pipe";"";(
+.rq.M[bp;".pipe";"";(
     ".pipe.event";
     ".pipe.ingress";
     ".pipe.egress";
@@ -27,7 +27,7 @@
 // ----------------------------------------------------------->
 
 
-.require.UM[bp;".account.test";"accountTest.q";(
+.rq.UM[bp;".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -35,7 +35,7 @@
     ".pipe.egress")];
 
 
-.require.UM[bp;".account.test";"accountTest.q";(
+.rq.UM[bp;".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
