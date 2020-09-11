@@ -356,11 +356,11 @@ dozc:{x+y}[doz];
         a:p[`args];
         .order.ProcessTrade[];
 
-        .util.testutils.checkMock[mck1;];
-        .util.testutils.checkMock[mck2;];
-        .util.testutils.checkMock[mck3;];
-        .util.testutils.checkMock[mck4;];
-        .util.testutils.checkMock[mck5;];
+        .util.testutils.checkMock[mck1;m[0]];
+        .util.testutils.checkMock[mck2;m[1]];
+        .util.testutils.checkMock[mck3;m[2]];
+        .util.testutils.checkMock[mck4;m[3]];
+        .util.testutils.checkMock[mck5;m[4]];
 
         .util.testutils.checkDepth[];
         .util.testutils.checkOrders[];
