@@ -15,7 +15,7 @@
 // Unit Test Modules
 // ----------------------------------------------------------->
 
-.require.Mod[bp;".inverse.account.test";"";(
+.require.UnitMod[bp;".inverse.account.test";"";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
