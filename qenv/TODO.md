@@ -24,3 +24,11 @@ Run pipeline and engine in different process
 // TODO change ingress to egress and visa versa
 
 // TODO route all traffic through private computer.
+
+// d if there’s ever a severe failure, we have a separate program which does nothing but cancel-all-orders, positions
+
+// The brokers use (buggy) software (too).
+
+I've had to change my code to protect their system from malfunctioning. I've repaired an API SDK for a broker. I've even seen a broker that had their simple math wrong.
+
+It's better to have your own error checking.
