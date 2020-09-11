@@ -1,6 +1,8 @@
 
 .util.Require     :{[reqs]
+    basePath:getenv `BP;
+    currentPath:.z.f;
     {
 
-    }[]'[reqs];
+    }[basePath;currentPath]'[reqs];
     };
