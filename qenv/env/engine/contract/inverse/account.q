@@ -67,7 +67,7 @@
     sum[(a`balance),((iB;iL;iS)`maintMarginReq)]
 
     x:prd[iB`isignum`amt];
-    :(prd[x,iB[`avgPrice]];
+    :(prd[x,iB[`avgPrice]]
     -((-/)prd[(iL;iS)`amt`avgPrice]))
         %(sum[prd[(iB;iL;iS)`amt`mmr]]-sum[x;(-/)(iB;iS)]);
 
@@ -80,7 +80,7 @@
 // will become bankrupt.
 .inverse.account.BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
     x:prd[iB`isignum`amt];
-    :(prd[x,iB[`avgPrice]];
+    :(prd[x,iB[`avgPrice]]
     -((-/)prd[(iL;iS)`amt`avgPrice]))
         %(sum[prd[(iB;iL;iS)`amt`imr]]-sum[x;(-/)(iB;iS)]);
     };
@@ -234,7 +234,7 @@
             namt:abs[inventory[`amt]+neg[qty]]; // TODO fix
             $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
                 redFill[price;qty;a;iB];
-              ((iB[`amt]*namt)<0); 
+              ((iB[`amt]*namt)<0)); 
                 crsFill[price;namt;a;iB];
                 incFill[price;qty;a;iB]
             ];

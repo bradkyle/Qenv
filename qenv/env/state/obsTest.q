@@ -132,7 +132,7 @@
             );
             til[10]
         ));
-    );({};{};defaultBeforeEach;defaultAfterEach);
+    );.util.testutils.defaultStateHooks;
     "Generates a vector representation of the current state"];
 
 
@@ -143,5 +143,5 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Global function for creating a new account"];

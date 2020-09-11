@@ -2,9 +2,9 @@
 // THIS FILE REPRESENTS THE LOGIC PERTAINING TO THE ACCOUNT OF AN INSTRUMENT
 
 .util.Require["/env/engine/";(
-    ("./contract/inverse/account.q";".inverse.account"); 
-    ("./contract/linear/account.q";".linear.account"); 
-    ("./contract/quanto/account.q";".quanto.account") 
+    ("contract/inverse/account.q";".inverse.account"); 
+    ("contract/linear/account.q";".linear.account"); 
+    ("contract/quanto/account.q";".quanto.account") 
     )]; 
 
 \d .account

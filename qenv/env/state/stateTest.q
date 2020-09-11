@@ -14,7 +14,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Returns a given accounts open inventory"];
 
 
@@ -25,7 +25,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -39,7 +39,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -50,7 +50,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -61,7 +61,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -72,7 +72,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -83,7 +83,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -97,7 +97,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -108,7 +108,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -119,7 +119,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 
@@ -130,7 +130,7 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultStateHooks;
     "Derives the amount of open inventory by side for an account"];
 
 // Insert Events
@@ -229,5 +229,5 @@
             (
                 (`.account.AccountEventHistory;([accountId:0 1;time:2#z] balance:2#0;available:2#0;frozen:2#0;maintMargin:2#0))
             )))
-    );({};{};defaultBeforeEach;defaultAfterEach);
+    );.util.testutils.defaultStateHooks;
     "Global function for creating a new account"];

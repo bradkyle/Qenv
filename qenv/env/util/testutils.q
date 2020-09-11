@@ -261,26 +261,18 @@ dozc:{x+y}[doz];
     };
 
 // Default function that runs before each Unit test etc.
-.util.testutils.defaultBeforeEach     :{
-
-    };
+.util.testutils.defaultBeforeEach               :{};
 
 // Default function that runs after each Unit test etc.
-.util.testutils.defaultAfterEach      :{
+.util.testutils.defaultAfterEach                :{};
 
-    };    
+.util.testutils.defaultEngineHooks              :({};{};{};{});
 
-.util.testutils.defaultEngineHooks           :{
-    :({};{};{};{})
-    };
+.util.testutils.defaultStateHooks               :({};{};{};{});
 
-.util.testutils.defaultStateHooks           :{
-    :({};{};{};{})
-    };
+.util.testutils.defaultPipeHooks                :({};{};{};{});
 
-.util.testutils.defaultPipeHooks           :{
-    :({};{};{};{})
-    };
+.util.testutils.defaultContractHooks            :({};{};{};{});
 
 // Make random event utils
 // -------------------------------------------------------------->

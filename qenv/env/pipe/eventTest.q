@@ -13,5 +13,5 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    };();();.util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];

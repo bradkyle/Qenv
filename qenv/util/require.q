@@ -6,13 +6,15 @@
 .util.Require     :{[path;reqs]
     {
         ns:`$y[1];
-        show ns;
         $[not[ns in key[`]];[
             filePath:raze[(system["pwd"]),(enlist x),(enlist y[0])];
             $[.util.PathExists[filePath];[
                 system ("l ", filePath);
                 show ("Successfully loaded ",filePath," ...");
-            ];'INVALID_PATH];
+            ];[
+                show ("Path ",filePath," is invalid ...");
+                'INVALID_PATH
+            ]];
         ];
         [
             show ("Namespace ", ns, " already loaded ...");
