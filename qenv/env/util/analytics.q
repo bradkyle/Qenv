@@ -22,9 +22,6 @@
 // Current Step
 // Batch Details
 
-.util.analytics.logToBatch              :{
-
-    };
 
 // 
 .util.analytics.logStepInfo             :{
@@ -33,5 +30,15 @@
 
 // 
 .util.analytics.logStepInfoRemote       :{
+
+    };
+
+// 
+.util.analytics.logToBatch              :{
+
+    };
+
+// 
+.util.analytics.sendBatch               :{
 
     };
