@@ -201,8 +201,10 @@ createBucketIcebergOrdersDynamicSize                    :{[]
 
     };
 
-// Action Adapter Mapping
+// Action Adapter Mapping // TODO convert to batch
 // ---------------------------------------------------------------------------------------->
+
+.state.adapter.mapping : (`.state.adapter.ADAPTERTYPE$())!();
 
 // DISCRETE ACTIONS
 
@@ -220,3 +222,16 @@ createBucketIcebergOrdersDynamicSize                    :{[]
 
 
 // UNIBUCKET
+
+
+
+// Main Adapt Function
+// ---------------------------------------------------------------------------------------->
+
+// Converts a scalar action representing a target state
+// to which the agent will effect a transition into
+// its representative amalgamation of events by way
+// of an adapter.
+.state.adapter.Adapt :{[adapterType; time; actions]
+    :.state.adapter.mapping[adapterType] each actions;
+    };
