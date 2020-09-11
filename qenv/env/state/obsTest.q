@@ -2,7 +2,7 @@
 
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".obs.derive";
     {[c]
         p:c[`params];
@@ -136,7 +136,7 @@ test:.qt.Unit[
     "Generates a vector representation of the current state"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".obs.GetObs";
     {[c]
         p:c[`params];

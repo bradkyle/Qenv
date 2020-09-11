@@ -1,6 +1,6 @@
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".state.rews.GetRewards";
     {[c]
         p:c[`params];
