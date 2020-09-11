@@ -345,17 +345,22 @@ dozc:{x+y}[doz];
         .util.testutils.setupDepth[];
         .util.testutils.setupOrders[];
 
+        m:p[`mocks];
+
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
         mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+        mck4: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+        mck5: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
 
-        .order.ProcessTrade[p[`event]];
+        a:p[`args];
+        .order.ProcessTrade[];
 
-        .util.testutils.checkMock[];
-        .util.testutils.checkMock[];
-        .util.testutils.checkMock[];
-        .util.testutils.checkMock[];
-        .util.testutils.checkMock[];
+        .util.testutils.checkMock[mck1;];
+        .util.testutils.checkMock[mck2;];
+        .util.testutils.checkMock[mck3;];
+        .util.testutils.checkMock[mck4;];
+        .util.testutils.checkMock[mck5;];
 
         .util.testutils.checkDepth[];
         .util.testutils.checkOrders[];
