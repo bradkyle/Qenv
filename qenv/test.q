@@ -24,6 +24,11 @@
 \l ./env/configTest.q
 \l ./env/envTest.q
 
+// Integration Tests
+\l ./test/integration.q 
+
+// Benchmark Tests
+\l ./test/benchmark.q
 
 .qt.RunTests[];
 
