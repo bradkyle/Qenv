@@ -34,7 +34,6 @@
     eventCount                  : `long$()
     );
 
-// Ingress Queue, Egress Queue
 .engine.getInstrument   :{
 
     };
@@ -236,6 +235,7 @@
 
     };
 
+
 / Public Event .engine.Processing logic (Writes)
 / -------------------------------------------------------------------->
 
@@ -324,5 +324,6 @@
     .account.NewInventory[config[`bothInventory]];
 
     // TODO update engine
+    .engine.NewEngine[config`engine];
 
     };
