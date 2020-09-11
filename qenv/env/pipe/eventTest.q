@@ -1,7 +1,7 @@
 
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".event.ValidateEvent";
     {[c]
         p:c[`params];
