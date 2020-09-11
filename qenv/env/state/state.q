@@ -1,4 +1,3 @@
-\d .state
 
 // State specifically represents a set of events that are derived from the engine
 // TODO max history size
@@ -9,8 +8,8 @@
 
 // COMMON COUNTERS
 // =====================================================================================>
-maxLvls:20;
-DefaultInstrumentId:0;
+.state.maxLvls:20;
+.state.DefaultInstrumentId:0;
 .state.clOrdCount:0;
 / .state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
 
@@ -235,7 +234,7 @@ DefaultInstrumentId:0;
 
 // TODO persist episode state
 
-Reset :{[config]
+.state.Reset :{[config]
     .util.table.dropAll[(`.state.AccountEventHistory,
             `.state.InventoryEventHistory,
             `.state.OrderEventHistory,

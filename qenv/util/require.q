@@ -4,8 +4,8 @@
     };
 
 .util.Require     :{[path;reqs]
-    {
-        ns:`$y[1];
+    {   
+        ns:`$(last("." vs y[1]));
         $[not[ns in key[`]];[
             filePath:raze[(system["pwd"]),(enlist x),(enlist y[0])];
             $[.util.PathExists[filePath];[
@@ -17,7 +17,7 @@
             ]];
         ];
         [
-            show ("Namespace ", ns, " already loaded ...");
+            show ("Namespace ", string[ns], " already loaded ...");
         ]];
  
     }[path]'[reqs];

@@ -1,15 +1,7 @@
 / \l inventory.q
 // THIS FILE REPRESENTS THE LOGIC PERTAINING TO THE ACCOUNT OF AN INSTRUMENT
-
-.util.Require["/env/engine/";(
-    ("contract/inverse/account.q";".inverse.account"); 
-    ("contract/linear/account.q";".linear.account"); 
-    ("contract/quanto/account.q";".quanto.account") 
-    )]; 
-
-\d .account
-
-accountCount:0;
+ 
+.account.accountCount:0;
 
 // TODO executions
 
@@ -23,7 +15,7 @@ accountCount:0;
 // TODO is suspended, state etc.
 // TODO ownFillCount, requestCount
 // TODO margin call price
-Account: (
+.account.Account: (
             [accountId          : `long$()]
             balance             : `long$(); 
             frozen              : `long$();
@@ -66,8 +58,8 @@ Account: (
             leverage            : `long$();
             monthVolume         : `long$());
 
-mandCols:();
-allCols:cols Account;
+.account.mandCols:();
+.account.allCols:cols Account;
 
 // Account CRUD Logic
 // -------------------------------------------------------------->
@@ -75,7 +67,7 @@ allCols:cols Account;
 // Generates a new account with default 
 // values and inserts it into the account 
 // table. // TODO gen events. // TODO change to event?
-NewAccount :{[account;time]
+.account.NewAccount :{[account;time]
     if[any null account[mandCols]; :0b];
     // Replace null values with their respective defailt values
     // TODO dynamic account type checking
@@ -91,8 +83,8 @@ NewAccount :{[account;time]
 
 // TODO derive avg price, total entry, exec cost, gross open premium etc.
 
-OrderLoss:{(sum[x`openSellLoss`openBuyLoss] | 0)};
-Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
+.account.OrderLoss:{(sum[x`openSellLoss`openBuyLoss] | 0)};
+.account.Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
 
 
 // Balance Management
@@ -100,7 +92,7 @@ Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 
 
 // Adds a given amount to the accounts balance.
 // Update available/withdrawable etc. // TODO validate arguments?
-Deposit  :{[deposited;time;accountId]
+.account.Deposit  :{[deposited;time;accountId]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     // Account: available, liquidationprice, bankruptcyprice, depositCount
     acc:exec from  .account.Account where accountId=accountId;
@@ -130,7 +122,7 @@ Deposit  :{[deposited;time;accountId]
 /  @param accountId (Long) The id of the account to withdraw from
 /  @throws InvalidAccountId accountId was not found.
 /  @throws InsufficientMargin account has insufficient margin for withdraw
-Withdraw       :{[withdrawn;time;accountId]
+.account.Withdraw       :{[withdrawn;time;accountId]
     acc:exec from  .account.Account where accountId=accountId;
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
 
@@ -158,10 +150,10 @@ Withdraw       :{[withdrawn;time;accountId]
 /*******************************************************
 / Inventory 
 
-inventoryCount:0;
+.account.inventoryCount:0;
 // TODO posState
 // TODO liqudation price
-Inventory: (
+.account.Inventory: (
     [
         accountId    :  `.account.Account$();
         side         :  `long$()
@@ -181,7 +173,7 @@ Inventory: (
     fillCount                :  `long$());
 
 / default:  // TODO validation here
-NewInventory : {[inventory;time] 
+.account.NewInventory : {[inventory;time] 
     if[any null inventory[`accountId`side]; :0b];
     inventory:Sanitize[inventory;DefaultInventory[];cols Inventory];
     .logger.Debug["inventory validated and decorated"];
@@ -195,7 +187,7 @@ NewInventory : {[inventory;time]
 // @x : unique account id
 // @y : self filled count
 // @z : amount that is self filled
-IncSelfFill    :{
+.account.IncSelfFill    :{
         ![`.account.Account;
             enlist (=;`accountId;x);
             0b;`selfFillCount`selfFillVolume!(
@@ -214,7 +206,7 @@ IncSelfFill    :{
 /  @param side   (Long) The side of the margin delta.
 /  @param time (datetime) The time at which this update is taking place.
 /  @return (Inventory) The new updated inventory
-AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
+.account.AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
     k:i`contractType;      
@@ -237,7 +229,7 @@ AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-ApplyFill           :{[a; i; side; time; fill]
+.account.ApplyFill           :{[a; i; side; time; fill]
 
     // Common derivations
     k:i`contractType;      
@@ -260,7 +252,7 @@ ApplyFill           :{[a; i; side; time; fill]
 // Main Public Funding Function
 // ---------------------------------------------------------------------------------------->
 
-ApplyFunding        : {[i;fr;ft;time]
+.account.ApplyFunding        : {[i;fr;ft;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
@@ -285,7 +277,7 @@ ApplyFunding        : {[i;fr;ft;time]
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
-UpdateMarkPrice     : {[i;mp;time]
+.account.UpdateMarkPrice     : {[i;mp;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
@@ -310,7 +302,7 @@ UpdateMarkPrice     : {[i;mp;time]
 // Apply Settlement
 // ---------------------------------------------------------------------------------------->
 
-ApplySettlement     : {[i;time]
+.account.ApplySettlement     : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
