@@ -6,7 +6,7 @@
 
 .rq.modcount :0;
 .rq.Mod      :(
-    [mId    :   `long$()]
+    [mId    :   `symbol$()]
     kind    :  `.rq.MODKIND$();
     state   :  `.rq.MODSTATE$();
     path    :  `symbol$();
@@ -63,7 +63,7 @@
 /  @param mpath     (String/Symbol) The paths of modules to be excluded
 /  @param mkinds    (.rq.MODKIND) The mkinds of modules to be excluded.
 .rq.Exclude  :{[mnames;mpaths;mkinds]
-
+    update state:`.rq.MODSTATE$`EXCLUDED where (mId in mnames) or (path in mpaths) or (kind in mkinds);
     };   
 
 
