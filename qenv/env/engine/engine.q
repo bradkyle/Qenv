@@ -1,9 +1,8 @@
-\cd /env/engine
 
-\l instrument.q 
-\l account.q 
-\l order.q
-\l liquidation.q 
+.util.Require("instrument.q"); 
+.util.Require("account.q"); 
+.util.Require("order.q");
+.util.Require("liquidation.q"); 
 
 \d .engine
 
