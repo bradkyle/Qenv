@@ -219,10 +219,10 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 NewOrder            :{[i;a;o;time]
     k:o[;6];
     res:$[k=0;[ // MARKET ORDER
-
+            .order.ProcessTrade[];
           ]; 
           k=1;[ // LIMIT ORDER
-                
+            .order.Order,:o;
           ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
@@ -250,7 +250,7 @@ AmendOrder          :{[i;o;a;time]
     k:o[;6];
     $[k=1;[
                // Limit order changes state of book
-              .engine.ProcessNewTradeEvents[x]
+              
          ]; 
          (k in (1,2));[
               // Stop orders do not modify state of 
