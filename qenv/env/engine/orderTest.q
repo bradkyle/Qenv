@@ -1,8 +1,3 @@
-\l order.q
-\l ../util
-\l ../../quantest/
-\cd ../env/engine
-
 l: `long$
 z:.z.z;
 sc:{x+(`second$y)};

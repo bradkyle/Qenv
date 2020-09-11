@@ -1,6 +1,10 @@
+\cd ./env/engine
+
 \l instrument.q 
-\l event.q
+\l account.q 
 \l order.q
+\l liquidation.q 
+
 \d .engine
 
 // TODO move validation into engine
@@ -12,7 +16,7 @@
 // represents the offset in milliseconds
 // check if flip is right
 // TODO rate limit, return order and time, make sure ingress events in order
-// TODO supported event types
+// TODO supported events types
 .engine.Engine:(
     [engineId                   :`long$()];
     instrumentId                : `.instrument.Instrument();
@@ -56,18 +60,18 @@
 .engine.ProcessDepthUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
     
-    lt:exec last time from event;
-    event:flip event;
-    $[not (type event[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
-    $[not (type event[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
+    lt:exec last time from events;
+    events:flip events;
+    $[not (type events[`time])~15h;[.logger.Err["Invalid events time"]; :0b];]; //todo erroring
+    $[not (type events[`intime])~15h;[.logger.Err["Invalid events intime"]; :0b];]; // todo erroring
 
-    nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from event);
+    nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from events);
 
     .order.ProcessDepth[];
 
     };
 
-// Process New Iceberg event?
+// Process New Iceberg events?
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -80,7 +84,7 @@
 .engine.ProcessNewTradeEvents :{[events]
     instrument:.engine.getInstrument[];
     
-    d:event`datum;
+    d:events`datum;
 
     // TODO derive from account
 
@@ -99,18 +103,18 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
-    d:event`datum;
-    instrument[`markPrice]:last[d]; // Derive the last mark price from the event
+    d:events`datum;
+    instrument[`markPrice]:last[d]; // Derive the last mark price from the events
     .instrument.Instrument,:instrument;
 
     // Essentially find the deltas in the mark price provided
     // and derive a change in the unrealized pnl, triggering
     // liquidations where neccessary
-    .account.UpdateMarkPrice[instrument;d;event`time];
+    .account.UpdateMarkPrice[instrument;d;events`time];
 
     // Where appliccable trigger stop orders 
     // TODO add a delay in placement of orders
-    .order.UpdateMarkPrice[instrument;d;event`time];
+    .order.UpdateMarkPrice[instrument;d;events`time];
     
     };
 
@@ -307,7 +311,7 @@
 .engine.Reset   :{[config]
     .util.table.dropAll[(`.order.Order`.order.OrderBook,
                 `.instrument.Instrument`.account.Account,
-                `.inventory.Inventory`.event.Event)];
+                `.inventory.Inventory)];
 
     // Instantiate instrument with 
     // given config.

@@ -1,5 +1,13 @@
 
+\l quantest
+\cd ../
+
+\l ./env/util
+\cd ../../
+
 // Basal Engine Unit Tests
+\l ./env/engine/engine.q
+
 \l ./env/engine/instrumentTest.q
 \l ./env/engine/accountTest.q
 \l ./env/engine/orderTest.q
