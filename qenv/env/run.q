@@ -1,2 +1,2 @@
 
-.util.Require["./"]
+.require.Require["./"]

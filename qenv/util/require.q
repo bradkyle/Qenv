@@ -1,9 +1,9 @@
 
-.util.PathExists  :{[path]
+.require.PathExists  :{[path]
     $[type[path]=10h;(count[key hsym[` $path]]>0);'PATH_SHOULD_BE_STRING]
     };
 
-.util.SimpReq     :{[path;reqs]
+.require.SimpReq     :{[path;reqs]
     {   
         ns:`$(last("." vs y[1]));
         $[not[ns in key[`]];[
@@ -23,10 +23,10 @@
     }[path]'[reqs];
     };
 
-.util.Init    :{[]
+.require.Init    :{[]
 
     };
 
-.util.Load       :{
+.require.Load       :{
 
     };

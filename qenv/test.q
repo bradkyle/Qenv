@@ -5,7 +5,7 @@
 \l quantest
 \cd ../
 
-.util.RequireWithTests["./env/"];
+.require.RequireWithTests["./env/"];
 
 .qt.RunTests[];
 
