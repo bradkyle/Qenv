@@ -22,8 +22,7 @@
 
     };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Derives the amount of open inventory by side for an account"];
-
-
+    
 
 .qt.Unit[
     ".env.Step";
