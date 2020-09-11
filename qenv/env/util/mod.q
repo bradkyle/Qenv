@@ -1,8 +1,8 @@
 
-.util.Mod[bp;".util";"";()];
-.util.Mod[bp;".util.cond";"";()];
-.util.Mod[bp;".util.error";"";()];
-.util.Mod[bp;".util.indicators";"";()];
-.util.Mod[bp;".util.logger";"";()];
-.util.Mod[bp;".util.table";"";()];
-.util.Mod[bp;".util.testutils";"";()];
+.require.Mod[bp;".util";"";()];
+.require.Mod[bp;".util.cond";"";()];
+.require.Mod[bp;".util.error";"";()];
+.require.Mod[bp;".util.indicators";"";()];
+.require.Mod[bp;".util.logger";"";()];
+.require.Mod[bp;".util.table";"";()];
+.require.Mod[bp;".util.testutils";"";()];

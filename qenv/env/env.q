@@ -107,7 +107,7 @@ Reset    :{[config]
     // be derived.
     .state.InsertResultantEvents[xevents];
     
-    :.obs.GetObs[
+    :.state.obs.GetObs[
         .env.CurrentStep;
         .env.CONF`lookback;
         .env.CONF`accountIds];
@@ -174,9 +174,9 @@ Step    :{[actions]
     // inorder to derive the observations, dones and 
     // rewards that are to be sent back to the agent.
     aIds:actions[;1]; // Get the account ID's
-    obs:.obs.GetObs[step; .env.CONF`lookback; aIds];
-    rwd:.rew.GetRewards[step; 100; aIds];
-    dns:.dns.GetDones[]; // TODO move to env and create better!
+    obs:.state.obs.GetObs[step; .env.CONF`lookback; aIds];
+    rwd:.state.rew.GetRewards[step; 100; aIds];
+    dns:.state.dns.GetDones[]; // TODO move to env and create better!
 
     .env.CurrentStep+:1;
     :(obs;rwd;dns);

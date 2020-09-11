@@ -3,11 +3,11 @@
 // Code Modules
 // ---------------------------------------------------------------------------------------->
 
-.util.Mod[bp;".config";"";(
+.require.Mod[bp;".config";"";(
 
     )];
 
-.util.Mod[bp;".env";"env.q";(
+.require.Mod[bp;".env";"env.q";(
     ".state";
     ".adapter";
     ".state.obs";
@@ -21,7 +21,7 @@
 // TestModules
 // ---------------------------------------------------------------------------------------->
 
-.util.UnitMod[bp;".config.test";"accountTest.q";(
+.require.UnitMod[bp;".config.test";"configTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -29,7 +29,7 @@
     ".pipe.egress")];
 
 
-.util.UnitMod[bp;".env.test";"accountTest.q";(
+.require.UnitMod[bp;".env.test";"envTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
