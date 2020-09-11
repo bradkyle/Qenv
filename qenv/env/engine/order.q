@@ -220,17 +220,22 @@ ProcessOrder            :{[i;a;o;time]
     k:o[;6];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
+            // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
                 .order.Order,:o;
+                // TODO add events
           ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
               .order.Order,:o;
+              // TODO add events
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE]; 
+    // delete all orders
+    ![`.order.OrderBook;.util.cond.invalOrd[];0;`symbol$()];
     };
 
 // Process Trades/Market Orders
