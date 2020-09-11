@@ -260,8 +260,8 @@ ApplyFunding        : {[i;fr;ft;time]
     k:i`contractType;      
 
     // TODO derive risk buffer
-    ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i))
+    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i));
 
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.ApplyFunding[a;iB;iL;iS;i];
@@ -285,8 +285,8 @@ UpdateMarkPrice     : {[i;mp;time]
     k:i`contractType;      
 
     // TODO derive risk buffer
-    ((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i))
+    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i));
 
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];

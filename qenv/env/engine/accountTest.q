@@ -1,7 +1,7 @@
 
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.NewAccount";
     {[c]
         p:c[`params];
@@ -12,7 +12,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.Deposit";
     {[c]
         p:c[`params];
@@ -24,7 +24,7 @@ test:.qt.Unit[
 
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.Withdraw";
     {[c]
         p:c[`params];
@@ -35,7 +35,7 @@ test:.qt.Unit[
     "Global function for adding account withdraws"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.NewInventory";
     {[c]
         p:c[`params];
@@ -46,7 +46,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.AdjustOrderMargin";
     {[c]
         p:c[`params];
@@ -57,7 +57,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.ApplyFill";
     {[c]
         p:c[`params];
@@ -68,7 +68,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.ApplyFunding";
     {[c]
         p:c[`params];
@@ -79,7 +79,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.UpdateMarkPrice";
     {[c]
         p:c[`params];
@@ -90,7 +90,7 @@ test:.qt.Unit[
     "Global function for creating a new account"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".account.ApplySettlement";
     {[c]
         p:c[`params];
