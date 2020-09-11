@@ -24,6 +24,9 @@
 // TODO cancel orders outside of bounds
 // TODO executions.
 
+// TODO xgboost predictor etc.
+// TODO longer term candlestic features
+// TODO executions
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
