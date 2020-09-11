@@ -3,8 +3,19 @@
 // Code Modules
 // ---------------------------------------------------------------------------------------->
 
-.util.Mod[bp;".config";"";()];
-.util.Mod[bp;".env";"";()];
+.util.Mod[bp;".config";"";(
+
+    )];
+
+.util.Mod[bp;".env";"env.q";(
+    ".state";
+    ".adapter";
+    ".state.obs";
+    ".state.rew";
+    ".state.dns";
+    ".pipe";
+    ".engine";
+    ".config")];
 
 
 // TestModules
