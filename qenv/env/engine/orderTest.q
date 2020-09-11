@@ -483,15 +483,144 @@ dozc:{x+y}[doz];
             (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#999 998;4#z); // Current Orders
             (`.instrument.Instrument!0;`SELL;1200;0b;1b;`.account.Account!0;z);  // Fill Execution
             ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(1000 1200, 7#1000)); // Expected Depth
-            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#1000 999;4#`NEW;4#z); // Expected Orders
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#999 998;4#`NEW;4#z); // Expected Orders
             (0b;0;()); // Expected AddOrderUpdateEvent Mock
             (0b;0;()); // Expected IncSelfFill Mock
-            (1b;1; // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
-                enlist(`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;200)
-            ); // Expected ApplyFill Mock
-            (1b;1; // AddTradeEvent: side size price
-                enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
+            (1b;2;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;999;200);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;2;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;999;200);z);
+                ((`.order.ORDERSIDE$`SELL;1000;1000);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook has agent orders, trade fills agent order, trade execution > agent order offset, fill is agent";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1450;0b;1b;`.account.Account!0;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(4#0);((3#0),50);4#1000 999;(3#`FILLED),`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (1b;1;enlist(`.account.Account!0;4;2300)); // Expected IncSelfFill Mock
+            (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;999;50);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;1000;800);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;999;450);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;9;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;200);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z); // TODO make sure is sorted correctly
+                ((`.order.ORDERSIDE$`SELL;1000;500);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;200);z);
+                ((`.order.ORDERSIDE$`SELL;999;50);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook has agent orders, trade doesn't fill agent order, trade execution < agent order offset, fill is not agent";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;50;0b;0b;0N;z);  // Fill Execution
+            ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(950,9#1000);vqty:(1150 1200, 8#1000)); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(50 100 350 400);(4#100);4#1000 999;4#`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (0b;0;()); // Expected ApplyFill Mock
+            (1b;1; // AddTradeEvent: side size price 
+                enlist((`.order.ORDERSIDE$`SELL;1000;50);z)
             ); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(4#0);((3#0),50);4#1000 999;(3#`FILLED),`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;999;50);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;1000;800);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;1b;0b;999;450);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;1b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;9;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;200);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z); // TODO make sure is sorted correctly
+                ((`.order.ORDERSIDE$`SELL;1000;500);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;200);z);
+                ((`.order.ORDERSIDE$`SELL;999;50);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("SELL: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(4#0);((3#0),50);4#1000 999;(3#`FILLED),`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;999;50);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;0b;1b;1000;800);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;1b;0b;999;450);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;1b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;9;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z);
+                ((`.order.ORDERSIDE$`SELL;1000;200);z);
+                ((`.order.ORDERSIDE$`SELL;1000;100);z); // TODO make sure is sorted correctly
+                ((`.order.ORDERSIDE$`SELL;1000;500);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;100);z);
+                ((`.order.ORDERSIDE$`SELL;999;200);z);
+                ((`.order.ORDERSIDE$`SELL;999;50);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
+            ((10#`SELL);1000+til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((til[4];4#1;4#1;4#`SELL;4#`LIMIT;((2#100),(2#400));4#100;4#1000 1001;4#z); // Current Orders
+            (`.instrument.Instrument!0;`BUY;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
+            ([price:1001+til 9] side:(9#`.order.ORDERSIDE$`SELL);qty:(550,(8#1000));vqty:(750,(8#1000)));  // Expected Depth
+            (til[4];4#1;4#1;4#`SELL;4#`LIMIT;(4#0);((3#0),50);4#1000 1001;(3#`FILLED),`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;1b;1001;50);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;1b;1000;800);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;1b;0b;1001;450);
+                (`.account.Account!1;`.instrument.Instrument!0;`.order.ORDERSIDE$`BUY;z;1b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;9;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`BUY;1000;100);z);
+                ((`.order.ORDERSIDE$`BUY;1000;100);z);
+                ((`.order.ORDERSIDE$`BUY;1000;200);z);
+                ((`.order.ORDERSIDE$`BUY;1000;100);z); // TODO make sure is sorted correctly
+                ((`.order.ORDERSIDE$`BUY;1000;500);z);
+                ((`.order.ORDERSIDE$`BUY;1001;100);z);
+                ((`.order.ORDERSIDE$`BUY;1001;100);z);
+                ((`.order.ORDERSIDE$`BUY;1001;200);z);
+                ((`.order.ORDERSIDE$`BUY;1001;50);z)
+            )); // Expected AddTradeEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
         ));
