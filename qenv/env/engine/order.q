@@ -117,6 +117,7 @@ ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
 // TODO move to C for increased speed.
 // TODO add junk order to taker, hidden to taker etc.
 // TODO add iceberg/hidden logic
+// TODO add execution event type
 // Constructs matrix representation of trades that need to take place 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit

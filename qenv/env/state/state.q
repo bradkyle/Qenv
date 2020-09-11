@@ -126,6 +126,18 @@ DefaultInstrumentId:0;
 
 .state.derivePriceAtBucket        :{?[]};
 
+
+// Maintains a set of historic trade events
+// that could be used to create ohlc features
+// and indicators etc.
+.state.ExecutionEventHistory: (
+    [eid:`long$(); time:`datetime$()]
+    accountId       :   `long$();
+    size            :   `long$();
+    price           :   `long$();
+    side            :   `long$()); // TODO change side to long
+.state.execCols:cols .state.ExecutionEventHistory;
+
 // Non-Essential Datums
 // ----------------------------------------------------------------------------------------------->
 

@@ -239,7 +239,7 @@
 / Public Event .engine.Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-// TODO instrument, execution, leverage
+// TODO instrument, leverage
 // TODO events after watermark
 // TODO probabalistic rejection of events
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -264,8 +264,8 @@
             k=8; .engine.ProcessOrderEvents[x];           // ORDER
             k=9; .engine.ProcessNewPriceLimitEvents[x];   // PRICELIMIT
             k=10;.engine.ProcessWithdrawEvents[x];        // WITHDRAW
-            k=10;.engine.ProcessDepositEvents[x];         // DEPOSIT
-            k=10;.engine.ProcessSignalEvents[x];         // SIGNAL
+            k=11;.engine.ProcessDepositEvents[x];         // DEPOSIT
+            k=16;.engine.ProcessSignalEvents[x];         // SIGNAL
             'INVALID_EVENT_KIND];
         }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
         .engine.WaterMark:newwm;
