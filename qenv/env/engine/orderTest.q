@@ -197,86 +197,97 @@ dozc:{x+y}[doz];
             (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#(0 200));4#100;(2#1001),(2#998);4#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes past order level (within final spread)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
+            (
+                ((4#`BUY),(4#`SELL));
+                ((999 998 997 997),(999 998 999 998));
+                ((0 0 0 1000),(1000 1000 0 0));
+                (sc[z] 0 0 0 1 0 0 1 1)
+            ); // Depth Update
+            ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:0,(8#1000);vqty:(300,(8#1000))); // Expected Depth
+            (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("differing update prices by time, crosses order spread during update (best price increases during update) finishes past order level (within final spread)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
+            (
+                ((4#`SELL),(4#`BUY));
+                ((1000 1001 1002 1002),(1000 1001 1000 1001));
+                ((0 0 0 1000),(1000 1000 0 0));
+                (sc[z] 0 0 0 1 0 0 1 1)
+            ); // Depth Update
+            ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:9#((5#1000),0);vqty:9#((5#1000),300)); // Expected Depth
+            (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes past order level (past final spread)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
+            (
+                ((4#`BUY),(2#`SELL));
+                ((999 998 997 997),(999 998));
+                ((0 0 0 1000),(1000 1000));
+                (sc[z] 0 0 0 1 0 0)
+            ); // Depth Update
+            ([price:((998-til 4),(1000+til 5))] side:(4#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:0,(8#1000);vqty:(300,(8#1000))); // Expected Depth
+            (til[4];4#1;4#1;((2#`BUY),(2#`SELL));4#`LIMIT;(0 200 100 400);4#100;(2#998),(2#1001);4#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("differing update prices by time, crosses order spread during update (best price increases during update) finishes past order level (past final spread)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
+            (
+                ((4#`SELL),(2#`BUY));
+                ((1000 1001 1002 1002),(1000 1001));
+                ((0 0 0 1000),(1000 1000));
+                (sc[z] 0 0 0 1 0 0)
+            ); // Depth Update
+            ([price:((999-til 5),(1001+til 4))] side:(5#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:9#((5#1000),0);vqty:9#((5#1000),300));  // Expected Depth
+            (til[4];4#1;4#1;((2#`SELL),(2#`BUY));4#`LIMIT;(0 200 100 400);4#100;(2#1001),(2#998);4#z);  // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;(8#100 400);8#100;((4#1001 1002),(4#998 997));8#z); // Current Orders
+            (
+                ((5#`SELL),(5#`BUY));
+                ((1000 1001 10002 1001 1002),(999 998 997 997 998));
+                ((0 0 0 1000 1000),(0 0 0 1000 1000));
+                (sc[z] 0 0 0 1 1 0 0 0 1 1)
+            );  // Depth Update
+            ([price:((998-til 4),(1001+til 4))] side:(4#`.order.ORDERSIDE$`BUY),(4#`.order.ORDERSIDE$`SELL);qty:(8#1000);vqty:(8#(1200,(3#1000)))); // Expected Depth
+            (til[8];8#1;8#1;((4#`SELL),(4#`BUY));8#`LIMIT;((8#0 200 100 400));8#100;((4#1001 1002),(4#998 997));8#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("many levels with many orders at same offset interval, price is removed across all levels partially (900)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (til[20];20#1;20#1;((10#`SELL),(10#`BUY));20#`LIMIT;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
+            (
+                ((20#`BUY),(20#`SELL));
+                ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
+                (40#900 1000);
+                (sc[z] (40#0 1))
+            ); // Depth Update
+            ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:(10#1200)); // Expected Depth
+            (til[20];20#1;20#1;((10#`SELL),(10#`BUY));20#`LIMIT;(20#75 350);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Expected Orders
             () // Expected Events
         ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
+        ("many levels with many orders at same offset interval, price is removed across all levels fully (1000)";(
+            (((10#`BUY),(10#`SELL));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (til[20];20#1;20#1;((10#`SELL),(10#`BUY));20#`LIMIT;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
+            (
+                ((20#`BUY),(20#`SELL));
+                ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
+                (40#0 1000);
+                (sc[z] (40#0 1))
+            );  // Depth Update
+            ([price:((999-til 5),(1000+til 5))] side:(5#`.order.ORDERSIDE$`BUY),(5#`.order.ORDERSIDE$`SELL);qty:(10#1000);vqty:(10#1200)); // Expected Depth
+            (til[20];20#1;20#1;((10#`SELL),(10#`BUY));20#`LIMIT;(20#0 200);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Expected Orders
             () // Expected Events
-        ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            () // Expected Events
-        ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            () // Expected Events
-        ));
-        ("simple update no agent orders or previous depth both";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            () // Expected Events
-        ));
+        ))
     );
     .util.testutils.defaultHooks;
     "Given a depth update which consists of a table of time,side,price",
