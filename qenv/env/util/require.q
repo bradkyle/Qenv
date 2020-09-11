@@ -1,8 +1,9 @@
-.util.Require     :{[reqs]
+.util.Require     :{[path;reqs]
     basePath:getenv `BP;
     {
         show x;
-        show string[y];
+        show y;
+        show z;
         show 99#"=";
-    }[basePath]'[reqs];
+    }[basePath;path]'[reqs];
     };

@@ -1,4 +1,8 @@
 
+.util.Require["/env/state/";(
+    ("state.q";".state"); 
+    ("adapter.q";".state.adapter")
+    )]; 
 
 // Bucketed Limit Order Creation
 // ---------------------------------------------------------------------------------------->
