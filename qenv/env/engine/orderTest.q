@@ -315,7 +315,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ))
     );
-    .util.testutils.defaultHooks;
+    .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
     "size update the orderbook and the individual order offsets/iceberg",
     "orders where necessary"];
@@ -652,7 +652,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ))
     );
-    .util.testutils.defaultHooks;
+    .util.testutils.defaultEngineHooks;
     "Process trades from the historical data or agent orders",
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
@@ -668,7 +668,7 @@ test:.qt.Unit[
     };
     {};
     ();
-    .util.testutils.defaultHooks;
+    .util.testutils.defaultEngineHooks;
     "Global function for processing new orders"];
 
 test:.qt.Unit[
@@ -681,7 +681,7 @@ test:.qt.Unit[
     };
     {};
     ();
-    .util.testutils.defaultHooks;
+    .util.testutils.defaultEngineHooks;
     "Global function for triggering stop orders"];
 
 
@@ -695,5 +695,5 @@ test:.qt.Unit[
     };
     {};
     ();
-    .util.testutils.defaultHooks;
+    .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];

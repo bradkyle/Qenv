@@ -270,10 +270,17 @@ dozc:{x+y}[doz];
 
     };    
 
-.util.testutils.defaultHooks           :{
+.util.testutils.defaultEngineHooks           :{
     :({};{};{};{})
     };
 
+.util.testutils.defaultStateHooks           :{
+    :({};{};{};{})
+    };
+
+.util.testutils.defaultPipeHooks           :{
+    :({};{};{};{})
+    };
 
 // Make random event utils
 // -------------------------------------------------------------->
