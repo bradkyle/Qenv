@@ -54,7 +54,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepthUpdateEvents :{[event]
+.engine.ProcessDepthUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
     
     lt:exec last time from event;
@@ -78,7 +78,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewTradeEvents :{[event]
+.engine.ProcessNewTradeEvents :{[events]
     instrument:.engine.getInstrument[];
     
     d:event`datum;
@@ -98,7 +98,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessMarkUpdateEvents :{[event]
+.engine.ProcessMarkUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
     d:event`datum;
     instrument[`markPrice]:last[d]; // Derive the last mark price from the event
@@ -123,7 +123,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessSettlementEvents :{[event]
+.engine.ProcessSettlementEvents :{[events]
     instrument:.engine.getInstrument[];
     
     // Apply settlement to the given accounts
@@ -141,7 +141,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessFundingEvents :{[event]
+.engine.ProcessFundingEvents :{[events]
     instrument:.engine.getInstrument[];
 
     //  Apply funding the the open agent 
@@ -157,7 +157,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessLiquidationEvents :{[event]
+.engine.ProcessLiquidationEvents :{[events]
     instrument:.engine.getInstrument[];
     .liquidation.ProcessLiquidation[];
     
@@ -171,7 +171,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewPriceLimitEvents :{[event] // 
+.engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
     .order.UpdatePriceLimits[];
     
@@ -185,7 +185,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessOrderEvents :{[event] // Requires accountId
+.engine.ProcessOrderEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
     
     };
@@ -198,7 +198,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessWithdrawEvents :{[event]
+.engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
     .account.Withdraw[];
     
@@ -213,7 +213,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepositEvents :{[event] // Requires accountId
+.engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
     .account.Deposit[];
     
@@ -231,7 +231,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessSignalEvents :{[event] // Requires accountId
+.engine.ProcessSignalEvents :{[events] // Requires accountId
 
 
     };

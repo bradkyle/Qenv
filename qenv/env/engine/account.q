@@ -201,7 +201,14 @@ IncSelfFill    :{
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
-// Convert to matrix/batch/array oriented
+// TODO Convert to matrix/batch/array oriented
+// Adjusts the amount of margin that is allocated to the limit orders
+// of an agent and throws an error in the event of an insufficiency.
+/  @param i     (Instrument) The instrument that the order belongs to
+/  @param a   (Account) The account that thte order belongs to
+/  @param side   (Long) The side of the margin delta.
+/  @param time (datetime) The time at which this update is taking place.
+/  @return (Inventory) The new updated inventory
 AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
@@ -297,3 +304,20 @@ UpdateMarkPrice     : {[i;mp;time]
 
 // Apply Settlement
 // ---------------------------------------------------------------------------------------->
+
+ApplySettlement     : {[i;time]
+    // TODO validate instrument exists
+    k:i`contractType;      
+
+    // TODO change to vector conditional?
+    res:$[k=0;.linear.account.ApplySettlement[a;iB;iL;iS;i];
+          k=1;.inverse.account.ApplySettlement[a;iB;iL;iS;i];
+          k=3;.quanto.account.ApplySettlement[a;iB;iL;iS;i];
+          'INVALID_CONTRACT_TYPE];
+
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
+
+    .pipe.event.AddAccountEvent[res[0];time];
+    .pipe.event.AddInventoryEvent[res[1];time];
+    };

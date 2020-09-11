@@ -659,7 +659,7 @@ dozc:{x+y}[doz];
 
 
 test:.qt.Unit[
-    ".order.NewOrder";
+    ".order.ProcessOrder";
     {[c]
         p:c[`params];
 
@@ -670,35 +670,6 @@ test:.qt.Unit[
     ();
     .util.testutils.defaultHooks;
     "Global function for processing new orders"];
-
-
-test:.qt.Unit[
-    ".order.AmendOrder";
-    {[c]
-        p:c[`params];
-
-        .order.ProcessTrade[p[`event]];
-
-    };
-    {};
-    ();
-    .util.testutils.defaultHooks;
-    "Global function for amending orders"];
-
-
-test:.qt.Unit[
-    ".order.CancelOrder";
-    {[c]
-        p:c[`params];
-
-        .order.ProcessTrade[p[`event]];
-
-    };
-    {};
-    ();
-    .util.testutils.defaultHooks;
-    "Global function for cancelling orders"];
-
 
 test:.qt.Unit[
     ".order.ExecStop";
