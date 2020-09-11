@@ -152,7 +152,8 @@
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
-// 
+// Bins a given quantity into an appropriate amount given the current
+// balance/available balance and the amount given as a bin size.
 staticOrderSizeStepper                                  :{[]
 
     };
@@ -224,15 +225,13 @@ createBucketIcebergOrdersDynamicSize                    :{[]
 .state.adapter.UniBucketAdapter                         :{};
 
 
-
-
 // Main Adapt Function
 // ---------------------------------------------------------------------------------------->
 
 // Converts a scalar action representing a target state
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
-// of an adapter.
+// of an adapter. // TODO pair with state account repr
 .state.adapter.Adapt :{[adapterType; time; actions]
-    :.state.adapter.mapping[adapterType] each actions;
+        {}'[];
     };
