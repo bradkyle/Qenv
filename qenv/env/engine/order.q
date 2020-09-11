@@ -253,7 +253,12 @@ ProcessOrder            :{[i;a;o;time]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ExecuteStop         :{[instrument;time;stop]
+    // Add the order to the ingress pipeline in order to represent
+    // the time it would take for the order to execute (stop orders are
+    // a brokerage function)
     .pipe.ingress.AddPlaceOrderEvent[stop;time];
+    .pipe.egress.AddOrderUpdateEvent[stop;time];
+    ![];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
