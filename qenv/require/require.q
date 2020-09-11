@@ -2,6 +2,7 @@
 // TODO c modules, Python modules, J Modules, C++ modules, Rust Modules, Extern Q modules, extern Tests
 
 .rq.MODKIND: `CODE`UNIT`INTEGRATION`BENCH`EXTERN;
+.rq.MODSTATE: `LOADED`READY`EXCLUDED;
 
 .rq.Mod      :(
 
@@ -30,11 +31,20 @@
 
     };
 
+// Constructs the dependency tree of modules, loading root modules i.e. modules
+// on which the majority depend on and work up the dependency tree, creating
+// a ordered list of modules to load in sequence.
+/  @param ipath     (String/Symbol) The initial path from which to find mod.q files
+/  @param mkinds    (.rq.MODKIND) The allowed module kinds that should be loaded.
 .rq.Require  :{[ipath; mkinds]
 
     };
 
-.rq.Exclude  :{
+// Excludes a set of modules based on specified attributes
+/  @param mname     (String/Symbol) The names of modules to be excluded.
+/  @param mpath     (String/Symbol) The paths of modules to be excluded
+/  @param mkinds    (.rq.MODKIND) The mkinds of modules to be excluded.
+.rq.Exclude  :{[mnames;mpaths;mkinds]
 
     };   
 
