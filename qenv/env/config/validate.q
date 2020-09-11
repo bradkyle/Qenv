@@ -5,4 +5,5 @@
 
 .config.validate.init[];
 
-.config.validate.Validate[];
+.config.validate.ValidateV1[];
+.config.validate.ValidateV2[];

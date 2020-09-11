@@ -3,7 +3,7 @@ import json
 
 # uses python-json-config
 # https://pypi.org/project/python-json-config/
-def Validatev1(conf):
+def ValidateV1(conf):
     from python_json_config import ConfigBuilder
     builder = ConfigBuilder()
     
@@ -14,7 +14,7 @@ def Validatev1(conf):
 
 # uses json-cfg
 # https://pypi.org/project/json-cfg/
-def Validatev2(conf):
+def ValidateV2(conf):
     import datetime
     import jsoncfg
     from jsoncfg import JSONValueMapper

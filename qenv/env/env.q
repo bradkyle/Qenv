@@ -109,8 +109,8 @@
     
     :.state.obs.GetObs[
         .env.CurrentStep;
-        .env.CONF`lookback;
-        .env.CONF`accountIds];
+        .env.CONF`lookback; // TODO make better
+        .env.CONF`accountIds]; // TODO make better
     };
 
 
@@ -149,7 +149,7 @@
     // the pipeline in such a manner that preserves the 
     // temporal coherence of macro actions and the delay
     // in time between the agent and the exchange.
-    .adapter.Adapt[.env.CONF`adapterType;idx;actions];
+    .adapter.Adapt[.env.CONF`adapterType;idx;actions]; // TODO make better
 
     // Based upon initial configuration set in .env.Reset
     // this function derives the set of events at the given
@@ -179,7 +179,7 @@
     // inorder to derive the observations, dones and 
     // rewards that are to be sent back to the agent.
     aIds:actions[;1]; // Get the account ID's
-    obs:.state.obs.GetObs[step; .env.CONF`lookback; aIds];
+    obs:.state.obs.GetObs[step; .env.CONF`lookback; aIds]; // TODO make better
     rwd:.state.rew.GetRewards[step; 100; aIds];
     dns:.state.dns.GetDones[]; // TODO move to env and create better!
 
