@@ -204,24 +204,25 @@ createBucketIcebergOrdersDynamicSize                    :{[]
 // Action Adapter Mapping // TODO convert to batch
 // ---------------------------------------------------------------------------------------->
 
-.state.adapter.mapping : (`.state.adapter.ADAPTERTYPE$())!();
 
 // DISCRETE ACTIONS
-
+.state.adapter.DiscreteAdapter           :{};
 
 // TENLEVEL
-
+.state.adapter.TenLevelAdapter           :{};
 
 // FIVELEVEL
-
+.state.adapter.FiveLevelAdapter          :{};
 
 // EXPBUCKET
-
+.state.adapter.ExpBucketAdapter          :{};
 
 // LOGBUCKET
-
+.state.adapter.LogBucketAdapter          :{};
 
 // UNIBUCKET
+.state.adapter.UniBucketAdapter          :{};
+
 
 
 
