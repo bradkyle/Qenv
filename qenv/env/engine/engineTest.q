@@ -1,13 +1,4 @@
 
-
-.util.Require["/env/engine/";(
-    ("engine.q";".engine"); 
-    ("instrument.q";".instrument"); 
-    ("account.q";".account"); 
-    ("order.q";".order"); 
-    ("liquidation.q";".engine")
-    )]; 
-
 .qt.Unit[
     ".engine.getInstrument";
     {[c]

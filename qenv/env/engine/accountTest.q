@@ -1,8 +1,4 @@
 
-.util.Require["/env/engine/";(
-    ("account.q";".account"); 
-    ("order.q";".order")
-    )]; 
 
 .qt.Unit[
     ".account.NewAccount";
