@@ -24,6 +24,9 @@
 // TODO cancel orders outside of bounds
 // TODO executions.
 
+// TODO hourly/30 minute signals
+// TODO 
+
 // TODO xgboost predictor etc.
 // TODO longer term candlestic features
 // TODO executions

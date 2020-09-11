@@ -4,6 +4,10 @@
 // constant sniffers etc.
 // create iceberg orders etc.
 
+
+// Iceberg Limit Order Creation
+// ---------------------------------------------------------------------------------------->
+
 // Bucketed Limit Order Creation
 // ---------------------------------------------------------------------------------------->
 
@@ -98,12 +102,18 @@
 // Temporal Order Utilities (used in macro actions)
 // ---------------------------------------------------------------------------------------->
 
-// 
+// Creates a set of uniform orders placed in future
+// time i.e. given a step of 1s it will add a 
+// order to the pipe ingress queue every 2 seconds
+// with the total amount being specified and a look
+// forward period thus the amount is derived.
 .state.adapter.createUniTemporalOrders      :{
 
     };
 
-// 
+// Creates a set of orders at a random interval and
+// at a random amount such that the total target amount
+// becomes replete within a given time period
 .state.adapter.createRandTemporalOrders     :{
 
     };
@@ -111,13 +121,33 @@
 // Flattening Utils
 // ---------------------------------------------------------------------------------------->
 
-// 
-.state.adapter.createFlattenSideOrders             :{
+// Creates the set of market orders that will serve to 
+// flatten the current active amount of the given inventory.
+.state.adapter.createFlattenSideMarketOrders             :{
 
     };
 
-// 
-.state.adapter.createFlattenAllOrders             :{
+// Creates the set of market orders that will serve to 
+// flatten the current active amount of all inventories for
+// a given account.
+.state.adapter.createFlattenAllMarketOrders             :{
+
+    };
+
+// Creates the set of limit orders that will serve to 
+// flatten the current active amount of the given inventory.
+// it will be assumed that the orders will be placed at the
+// best price/bucket.
+.state.adapter.createFlattenSideLimitOrders             :{
+
+    };
+
+// Creates the set of limit orders that will serve to 
+// flatten the current active amount of all inventories for
+// a given account.
+// it will be assumed that the orders will be placed at the
+// best price/bucket.
+.state.adapter.createFlattenAllLimitOrders             :{
 
     };
 
