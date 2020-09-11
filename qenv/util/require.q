@@ -3,7 +3,7 @@
     $[type[path]=10h;(count[key hsym[` $path]]>0);'PATH_SHOULD_BE_STRING]
     };
 
-.util.Require     :{[path;reqs]
+.util.SimpReq     :{[path;reqs]
     {   
         ns:`$(last("." vs y[1]));
         $[not[ns in key[`]];[
@@ -24,5 +24,9 @@
     };
 
 .util.Init    :{[]
+
+    };
+
+.util.Load       :{
 
     };
