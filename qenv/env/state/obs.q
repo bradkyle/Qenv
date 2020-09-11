@@ -22,6 +22,7 @@
 // TODO bid orders at exponential intervals!, 
 // TODO place orders at exponential intervals! 
 // TODO cancel orders outside of bounds
+// TODO executions.
 
 // TODO fractional differentiation
 / use < for ascending, > for descending // TODO fills

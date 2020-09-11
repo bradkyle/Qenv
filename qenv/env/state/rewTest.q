@@ -1,7 +1,5 @@
 
 
-
-
 test:.qt.Unit[
     ".state.rews.GetRewards";
     {[c]

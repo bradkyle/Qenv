@@ -309,11 +309,7 @@ ApplySettlement     : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
-    // TODO change to vector conditional?
-    res:$[k=0;.linear.account.ApplySettlement[a;iB;iL;iS;i];
-          k=1;.inverse.account.ApplySettlement[a;iB;iL;iS;i];
-          k=3;.quanto.account.ApplySettlement[a;iB;iL;iS;i];
-          'INVALID_CONTRACT_TYPE];
+    // TODO logic for settlement
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
