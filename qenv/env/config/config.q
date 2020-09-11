@@ -5,12 +5,11 @@
 // before returning a parsed representation to the
 // environment
 .config.ParseConfig      :{[conf]
+
+    // Use Python validator
+    conf:.config.validation.Validate[conf];
+
     // Parse Config from json 
-    conf:.j.k[raze conf];
-
-    // Validation
-    // todo json schema
-    // todo python json config
-
+    .j.k[raze conf]
     };
 
