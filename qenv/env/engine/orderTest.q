@@ -339,8 +339,139 @@ dozc:{x+y}[doz];
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
-    ();
+    {[p]
+    
+    };
+    (
+        ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+           (1;`SELL;100;0b;0b;0N;z); // Fill Execution
+            ([price:(1000+til 10)] side:(10#-1);qty:(10#1000);vqty:(10#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+        ("simple update no agent orders or previous depth both";(
+            (); // Current Depth
+            (); // Current Orders
+            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Fill Execution
+            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
+            (); // Expected Orders
+            () // Expected Events
+        ));
+    );
     .util.testutils.defaultHooks;
     "Process trades from the historical data or agent orders",
     "size update the orderbook and the individual order offsets/iceberg",
@@ -355,7 +486,7 @@ test:.qt.Unit[
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
+    {};
     ();
     .util.testutils.defaultHooks;
     "Global function for processing new orders"];
