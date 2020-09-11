@@ -1,4 +1,4 @@
-\cd ./env/engine
+\cd /env/engine
 
 \l instrument.q 
 \l account.q 

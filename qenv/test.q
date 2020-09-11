@@ -1,4 +1,6 @@
 
+`BP setenv "/home/thorad/Core/Projects/Qenv/qenv" 
+
 \l quantest
 \cd ../
 
