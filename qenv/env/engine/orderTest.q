@@ -373,17 +373,90 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
-            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
             (); // Current Orders
-            (1;`SELL;1500;0b;0b;0N;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (`.instrument.Instrument!0;`SELL;1500;0b;1b;`.account.Account!0;z); // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;2;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;999;500);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;2;( // side size price
+                ((`.order.ORDERSIDE$`SELL;999;500);z);
+                ((`.order.ORDERSIDE$`SELL;1000;1000);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook does not have agent orders, trade was not made by an agent, trade is smaller than best qty";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (); // Current Orders
+            (`.instrument.Instrument!0;`SELL;200;0b;0b;0N;z);  // Fill Execution
+            ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(800,9#1000);vqty:(800,9#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;2;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;999;500);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1000)
+            )); // Expected ApplyFill Mock
+            (1b;1; // AddTradeEvent: side size price
+                enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
+            ); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1200;0b;0b;0N;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(800,8#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddOrderUpdateEvent Mock
             (0b;0;()); // Expected IncSelfFill Mock
             (0b;0;()); // Expected ApplyFill Mock
-            (1b;2;(
-                ((-1;999;500);z);
-                ((-1;1000;1000);z)
+            (1b;2;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;999;200);z);
+                ((`.order.ORDERSIDE$`SELL;1000;1000);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook does not have agent orders, trade was made by an agent, trade is smaller than best qty";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (); // Current Orders
+            (`.instrument.Instrument!0;`SELL;200;0b;1b;`.account.Account!0;z);   // Fill Execution
+            ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(800,9#1000);vqty:(800,9#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;1; // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
+                enlist(`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;200)
+            ); // Expected ApplyFill Mock
+            (1b;1; // AddTradeEvent: side size price
+                enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
+            ); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1200;0b;1b;`.account.Account!0;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(800,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;2;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;1000);
+                (`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;999;200)
+            )); // Expected ApplyFill Mock
+            (1b;2;( // AddTradeEvent: side size price
+                ((`.order.ORDERSIDE$`SELL;1000;1000);z);
+                ((`.order.ORDERSIDE$`SELL;999;200);z)
             )); // Expected AddTradeEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
