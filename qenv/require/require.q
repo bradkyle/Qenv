@@ -41,6 +41,10 @@
     mods:();
 
     walk:{
+        p:key x;
+        qfiles:p where[{all[".q" in string[x]]}'[p]];
+        mfiles:qfiles where[{all["mod" in string[x]]}'[qfiles]];
+        dirs:p where[{all[not["." in string[x]]}'[p]]];
 
         };
 
