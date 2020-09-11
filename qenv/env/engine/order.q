@@ -287,6 +287,5 @@ CheckStopOrders   :{[instrument;time]
 /  @return (Inventory) The new updated inventory
 ApplyPriceLimits   :{[instrument;time]
     
-    
 
     };
