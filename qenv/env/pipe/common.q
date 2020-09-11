@@ -31,17 +31,6 @@
         );
 
 // USING MANUAL LIST FOR REFERENCABILITY 
-.pipe.common.ORDERSTATUS:(
-        0; // NEW
-        1; // PARTIAL
-        2; // FILLED
-        3; // UNTRIGGERED
-        4; // TRIGGERED
-        5; // FAILED
-        6 // CANCELLED
-        );
-
-// USING MANUAL LIST FOR REFERENCABILITY 
 .pipe.common.TIMEINFORCE:(
         0; // NIL
         1; // GOODTILCANCEL
