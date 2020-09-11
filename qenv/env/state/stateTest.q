@@ -1,8 +1,124 @@
 
 
+.qt.Unit[
+    ".state.openInventory";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Returns a given accounts open inventory"];
 
 
-test:.qt.Unit[
+.qt.Unit[
+    ".state.amtBySide";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+// Orders
+// ----------------------------------------------------------------------------------------------------------------->
+
+.qt.Unit[
+    ".state.ordQtyByPrice";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.lvlQtyByPrice";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.deriveBucketedQty";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.outBoundsOrders";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+// Depth
+// ----------------------------------------------------------------------------------------------------------------->
+
+.qt.Unit[
+    ".state.deriveLvlPrices";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.derivePriceAtLvl";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.deriveBucketedPrices";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Unit[
+    ".state.derivePriceAtBucket";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+// Insert Events
+// ----------------------------------------------------------------------------------------------------------------->
+
+.qt.Unit[
     ".state.InsertResultantEvents";
     {[c]
         p:c[`params];

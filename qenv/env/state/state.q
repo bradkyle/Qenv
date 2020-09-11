@@ -120,6 +120,8 @@ DefaultInstrumentId:0;
 
 .state.deriveBucketedPrices       :{};
 
+.state.derivePriceAtBucket        :{?[]};
+
 // Non-Essential Datums
 // ----------------------------------------------------------------------------------------------->
 
