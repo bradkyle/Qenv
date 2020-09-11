@@ -342,7 +342,23 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
+        .util.testutils.setupDepth[];
+        .util.testutils.setupOrders[];
+
+        mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
+        mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
+        mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+
         .order.ProcessTrade[p[`event]];
+
+        .util.testutils.checkMock[];
+        .util.testutils.checkMock[];
+        .util.testutils.checkMock[];
+        .util.testutils.checkMock[];
+        .util.testutils.checkMock[];
+
+        .util.testutils.checkDepth[];
+        .util.testutils.checkOrders[];
 
     };
     {[p]
