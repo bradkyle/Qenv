@@ -285,6 +285,8 @@ CheckStopOrders   :{[instrument;time]
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ApplyPriceLimits   :{[instrument;pl;time]
-    .order.ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
+ApplyPriceLimits   :{[instrument;time]
+    
+    
+
     };
