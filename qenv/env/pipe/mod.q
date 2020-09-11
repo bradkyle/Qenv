@@ -4,18 +4,18 @@
 // Code Modules
 // ----------------------------------------------------------->
 
-.rq.M[bp;".pipe.event";"";(
+.rq.M[".pipe.event";"";(
     ".util")];
 
-.rq.M[bp;".pipe.common";"";()];
+.rq.M[".pipe.common";"";()];
 
-.rq.M[bp;".pipe.ingress";"";(
+.rq.M[".pipe.ingress";"";(
     ".pipe.event")];
 
-.rq.M[bp;".pipe.egress";"";(
+.rq.M[".pipe.egress";"";(
     ".pipe.event")];
 
-.rq.M[bp;".pipe";"";(
+.rq.M[".pipe";"";(
     ".pipe.event";
     ".pipe.ingress";
     ".pipe.egress";
@@ -27,7 +27,7 @@
 // ----------------------------------------------------------->
 
 
-.rq.UM[bp;".account.test";"accountTest.q";(
+.rq.UM[".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -35,7 +35,7 @@
     ".pipe.egress")];
 
 
-.rq.UM[bp;".account.test";"accountTest.q";(
+.rq.UM[".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";

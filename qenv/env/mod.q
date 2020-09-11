@@ -3,11 +3,11 @@
 // Code Modules
 // ---------------------------------------------------------------------------------------->
 
-.rq.M[bp;".config";"";(
+.rq.M[".config";"";(
 
     )];
 
-.rq.M[bp;".env";"env.q";(
+.rq.M[".env";"env.q";(
     ".state";
     ".adapter";
     ".state.obs";
@@ -21,7 +21,7 @@
 // TestModules
 // ---------------------------------------------------------------------------------------->
 
-.rq.UM[bp;".config.test";"configTest.q";(
+.rq.UM[".config.test";"configTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
@@ -29,7 +29,7 @@
     ".pipe.egress")];
 
 
-.rq.UM[bp;".env.test";"envTest.q";(
+.rq.UM[".env.test";"envTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
