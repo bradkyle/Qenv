@@ -5,9 +5,6 @@
 // create iceberg orders etc.
 
 
-// Iceberg Limit Order Creation
-// ---------------------------------------------------------------------------------------->
-
 // Bucketed Limit Order Creation
 // ---------------------------------------------------------------------------------------->
 
@@ -151,7 +148,6 @@
 
     };
 
-
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
 
@@ -160,7 +156,23 @@
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
+// 
 
+createLevelLimitOrdersStaticSize                        :{
+
+    };
+
+createLevelLimitOrdersDynamicSize                       :{
+
+    };
+
+createBucketLimitOrdersStaticSize                        :{
+
+    };
+
+createBucketLimitOrdersDynamicSize                       :{
+
+    };
 
 // Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->
