@@ -461,6 +461,40 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
         ));
+        ("orderbook has agent orders, lvl1 size > qty, trade doesn't fill agent order, trade execution < agent order offset, fill is agent";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#1000 999;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;200;0b;1b;`.account.Account!0;z);  // Fill Execution
+            ([price:1000-til 10] side:(10#`.order.ORDERSIDE$`BUY);qty:(800,9#1000);vqty:(1000 1200, 8#1000)); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#1000 999;4#`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;1; // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
+                enlist(`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;200)
+            ); // Expected ApplyFill Mock
+            (1b;1; // AddTradeEvent: side size price
+                enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
+            ); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook has agent orders, lvl1 size < qty, trade doesn't fill agent order, trade execution < agent order offset, fill is agent";(
+            ((10#`BUY);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;((2#400),(2#600));4#100;4#999 998;4#z); // Current Orders
+            (`.instrument.Instrument!0;`SELL;1200;0b;1b;`.account.Account!0;z);  // Fill Execution
+            ([price:999-til 9] side:(9#`.order.ORDERSIDE$`BUY);qty:(800,8#1000);vqty:(1000 1200, 7#1000)); // Expected Depth
+            (til[4];4#1;4#1;4#`BUY;4#`LIMIT;(200 400 400 600);4#100;4#1000 999;4#`NEW;4#z); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;1; // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty 
+                enlist(`.account.Account!0;`.instrument.Instrument!0;`.order.ORDERSIDE$`SELL;z;0b;0b;1000;200)
+            ); // Expected ApplyFill Mock
+            (1b;1; // AddTradeEvent: side size price
+                enlist((`.order.ORDERSIDE$`SELL;1000;200);z)
+            ); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
     );
     .util.testutils.defaultHooks;
     "Process trades from the historical data or agent orders",
