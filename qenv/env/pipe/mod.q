@@ -21,3 +21,24 @@
     ".pipe.egress";
     ".util";
     ".util.cond")];
+
+
+// Unit Test Modules
+// ----------------------------------------------------------->
+
+
+.util.UnitMod[bp;".account.test";"accountTest.q";(
+    ".instrument";    
+    ".inverse.account";
+    ".linear.account";
+    ".quanto.account";
+    ".pipe.egress")];
+
+
+.util.UnitMod[bp;".account.test";"accountTest.q";(
+    ".instrument";    
+    ".inverse.account";
+    ".linear.account";
+    ".quanto.account";
+    ".pipe.egress")];
+
