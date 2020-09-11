@@ -1,5 +1,9 @@
-\l account.q
-\l instrument.q
+
+.util.Require[(
+    ("instrument.q";".instrument"); 
+    ("account.q";".account") 
+    )]; 
+
 \d .order
 
 BAM:();

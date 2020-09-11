@@ -1,8 +1,10 @@
 
-.util.Require("instrument.q"); 
-.util.Require("account.q"); 
-.util.Require("order.q");
-.util.Require("liquidation.q"); 
+.util.Require[(
+    ("instrument.q";".instrument"); 
+    ("account.q";".account"); 
+    ("order.q";".order");
+    ("liquidation.q";".liquidation")
+    )]; 
 
 \d .engine
 
