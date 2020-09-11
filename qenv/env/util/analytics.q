@@ -22,6 +22,10 @@
 // Current Step
 // Batch Details
 
+.util.analytics.logToBatch              :{
+
+    };
+
 // 
 .util.analytics.logStepInfo             :{
 
