@@ -234,6 +234,11 @@ createBucketIcebergOrdersDynamicSizeByDelta             :{[]
 
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
+// Macro actions are useful when it is assumed that the agent has an effect on what
+// the market percieves. .i.e. if there is 1000 market sell orders taking place
+// this might indicate others to sell as well perhaps playing into an iceberg limit
+// order. This behavior is obviousely complex and as such should be relegated to later
+// stages of development.
 
 // Creates a set of actions dispersed in time that represent
 // a macro action
@@ -241,7 +246,7 @@ createBucketIcebergOrdersDynamicSizeByDelta             :{[]
 
     };
 
-// Action Adapter Mapping // TODO convert to batch
+// Action Adapter Mapping // TODO convert to batch, descriptions
 // ---------------------------------------------------------------------------------------->
 
 
@@ -263,6 +268,14 @@ createBucketIcebergOrdersDynamicSizeByDelta             :{[]
 // UNIBUCKET                
 .state.adapter.UniBucketAdapter                         :{};
 
+// EXPBUCKET                
+.state.adapter.ExpBucketAdapterWithIcebergs             :{};
+
+// LOGBUCKET                
+.state.adapter.LogBucketAdapterWithIcebergs             :{};
+
+// UNIBUCKET                
+.state.adapter.UniBucketAdapterWithIcebergs             :{};
 
 // Main Adapt Function
 // ---------------------------------------------------------------------------------------->
