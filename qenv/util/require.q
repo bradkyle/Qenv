@@ -6,11 +6,11 @@
             filePath:raze[(system["pwd"]),(enlist x),(enlist y[0])];
             $[;
                 system ("l ", filePath);
-                show "Successfully loaded ",filePath," ...";
+                show ("Successfully loaded ",filePath," ...");
             ];
         ];
         [
-            show "Namespace ", ns, " already loaded ..."
+            show ("Namespace ", ns, " already loaded ...");
         ]];
  
     }[path]'[reqs];
