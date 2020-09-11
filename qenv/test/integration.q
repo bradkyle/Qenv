@@ -2,21 +2,38 @@
 // Integration
 
 .qt.Integration[
-    ".engine.ProcessDepth, .engine.ProcessTrade";
+    ".engine.ProcessEvents";
     {[c]
         p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
+        .engine.ProcessEvents[];
+        .util.testutils.checkDepth[];
+        .util.testutils.checkOrders[];
+        .util.testutils.checkInstrument[];
+        .util.testutils.checkAccount[];
+        .util.testutils.checkInventory[];
+        .util.testutils.checkLiquidation[];
+        .util.testutils.checkIngressEvents[];
+        .util.testutils.checkEngressEvents[];
 
     };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Derives the amount of open inventory by side for an account"];
 
+
 .qt.Integration[
-    ".engine.Proce";
+    ".adapter.Adapt";
     {[c]
         p:c[`params];
+        .state.adapter.Adapt[];
 
-        .account.ProcessDepth[p[`event]];
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Derives the amount of open inventory by side for an account"];
+
+
+.qt.Integration[
+    ".env.Step";
+    {[c]
+        p:c[`params];
+        .env.Step[];
 
     };();();({};{};defaultBeforeEach;defaultAfterEach);
     "Derives the amount of open inventory by side for an account"];

@@ -1,4 +1,5 @@
-from gym import Env, spaces
+import gym
+from gym import spaces
 from qpython import qconnection
 import numpy as np
 import json
@@ -8,7 +9,7 @@ class SimpleAgent():
         super().__init__(*args, **kwargs)
 
 
-class MultiAgentEnv():
+class MultiAgentEnv(gym.Env):
     '''
     A multi-agent environment consists of some number of Agents.
     '''
