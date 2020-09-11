@@ -148,12 +148,6 @@
 
     };
 
-// Macro Action Utilities
-// ---------------------------------------------------------------------------------------->
-
-.state.adapter.constructMacroAction                    :{
-
-    };
 
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
@@ -197,5 +191,32 @@ createBucketIcebergOrdersDynamicSize                    :{[]
 
     };
 
+
+// Macro Action Utilities
+// ---------------------------------------------------------------------------------------->
+
+// Creates a set of actions dispersed in time that represent
+// a macro action
+.state.adapter.constructMacroAction                    :{
+
+    };
+
 // Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->
+
+// DISCRETE ACTIONS
+
+
+// TENLEVEL
+
+
+// FIVELEVEL
+
+
+// EXPBUCKET
+
+
+// LOGBUCKET
+
+
+// UNIBUCKET
