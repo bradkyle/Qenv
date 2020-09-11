@@ -31,6 +31,10 @@
         .pipe.egress.AddEvent[time;1;2;mark]; // TODO        
         };
 
+.pipe.egress.AddSettlementEvent           :{[mark;time]
+        .pipe.egress.AddEvent[time;1;2;mark]; // TODO        
+        };
+
 .pipe.egress.AddFundingEvent        :{[funding;time]
         .pipe.egress.AddEvent[time;0;4;funding]; // TODO        
         };
@@ -46,6 +50,15 @@
 .pipe.egress.AddOrderCreatedEvent       :{[order;time]
         .pipe.egress.AddEvent[time;0;8;order]; // TODO        
         };
+
+.pipe.egress.AddLiquidationEvent       :{[order;time]
+        .pipe.egress.AddEvent[time;0;8;order]; // TODO        
+        };
+
+.pipe.egress.AddPriceLimitEvent       :{[order;time]
+        .pipe.egress.AddEvent[time;0;8;order]; // TODO        
+        };
+
 
 .pipe.egress.AddAccountEvent        :{[account;time]
         .pipe.egress.AddEvent[time;1;6;account]; // TODO        

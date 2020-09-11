@@ -117,7 +117,7 @@ Deposit  :{[deposited;time;accountId]
     .account.Account,:acc;
 
     // TODO add update event
-    .pipe.event.AddAccountEvent[acc;time];
+    .pipe.egress.AddAccountEvent[acc;time];
     };
 
 
@@ -146,7 +146,7 @@ Withdraw       :{[withdrawn;time;accountId]
         / account[`available]:.account.Available[acc]; // TODO
 
         .account.Account,:acc;
-        .pipe.event.AddAccountEvent[acc;time];    
+        .pipe.egress.AddAccountEvent[acc;time];    
         
         ];'InsufficientMargin];  
     };
@@ -229,8 +229,8 @@ AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
 
-    .pipe.event.AddAccountEvent[res[0];time];
-    .pipe.event.AddInventoryEvent[res[1];time];
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
     };
 
 // Main Public Fill Function
@@ -252,8 +252,8 @@ ApplyFill           :{[a; i; side; time; fill]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
 
-    .pipe.event.AddAccountEvent[res[0];time];
-    .pipe.event.AddInventoryEvent[res[1];time];
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
     };
 
 
@@ -277,8 +277,8 @@ ApplyFunding        : {[i;fr;ft;time]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
 
-    .pipe.event.AddAccountEvent[res[0];time];
-    .pipe.event.AddInventoryEvent[res[1];time];
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
     };
 
 
@@ -302,8 +302,8 @@ UpdateMarkPrice     : {[i;mp;time]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
 
-    .pipe.event.AddAccountEvent[res[0];time];
-    .pipe.event.AddInventoryEvent[res[1];time];
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
     };
 
 
@@ -319,6 +319,6 @@ ApplySettlement     : {[i;time]
     .account.Account,:res[0];
     .account.Inventory,:res[1];
 
-    .pipe.event.AddAccountEvent[res[0];time];
-    .pipe.event.AddInventoryEvent[res[1];time];
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
     };

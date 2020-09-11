@@ -123,6 +123,7 @@
     // TODO add a delay in placement of orders
     .order.UpdateMarkPrice[instrument;d;events`time];
     
+    .pipe.egress.AddMarkEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -141,6 +142,7 @@
     // would reset realized pnl into the balance
     .account.ApplySettlement[];
 
+    .pipe.egress.AddSettlementEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -157,6 +159,8 @@
     //  Apply funding the the open agent 
     // positions/inventory 
     .account.ApplyFunding[];
+
+    .pipe.egress.AddFundingEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -168,9 +172,8 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessLiquidationEvents :{[events]
-    instrument:.engine.getInstrument[];
-    .liquidation.ProcessLiquidation[];
-    
+    // TODO check    
+    .pipe.egress.AddLiquidationEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -184,7 +187,7 @@
 .engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
     .order.UpdatePriceLimits[];
-    
+    .pipe.egress.AddPriceLimitEvent[];    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -197,6 +200,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessOrderEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
+    // TODO do validation here
     
     };
 
@@ -211,7 +215,6 @@
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
     .account.Withdraw[];
-    
     };
 
 
@@ -226,7 +229,6 @@
 .engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
     .account.Deposit[];
-    
     };
 
 
@@ -242,8 +244,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessSignalEvents :{[events] // Requires accountId
-
-
+    .pipe.egress.AddBatch[events]; // TODO add noise/dropout/randomization
     };
 
 
