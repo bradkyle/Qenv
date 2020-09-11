@@ -37,6 +37,12 @@
 /  @param ipath     (String/Symbol) The initial path from which to find mod.q files
 /  @param mkinds    (.rq.MODKIND) The allowed module kinds that should be loaded.
 .rq.Require  :{[ipath; mkinds]
+    dirs:();
+    mods:();
+
+    walk:{
+
+        };
 
     };
 
