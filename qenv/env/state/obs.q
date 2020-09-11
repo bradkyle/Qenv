@@ -31,6 +31,8 @@
 // TODO longer term candlestic features
 // TODO executions
 // TODO fractional differentiation
+// TODO strategies signals
+
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
 .obs.derive: {[step;aIds] // TODO make faster? // TODO fill values with blanks (0f), make faster
