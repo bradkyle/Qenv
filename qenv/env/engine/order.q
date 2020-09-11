@@ -236,8 +236,8 @@ ProcessOrder            :{[i;a;o;time]
               // TODO add events
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE]; 
-    // delete all orders
-    ![`.order.OrderBook;.util.cond.invalOrd[];0;`symbol$()];
+    // Prune engine orders to increase speed
+    ![`.order.OrderBook;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
 // Process Trades/Market Orders
@@ -253,7 +253,7 @@ ProcessOrder            :{[i;a;o;time]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 ExecuteStop         :{[instrument;time;stop]
-
+    .pipe.ingress.AddPlaceOrderEvent[stop;time];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
