@@ -159,36 +159,75 @@ staticOrderSizeStepper                                  :{[]
     };
 
 
-// 
-createLevelLimitOrdersStaticSize                        :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createLevelLimitOrdersStaticSizeByDelta                 :{[]
 
     };
 
-createLevelLimitOrdersDynamicSize                       :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createLevelLimitOrdersDynamicSizeByDelta                :{[]
 
     };
 
-createBucketLimitOrdersStaticSize                       :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createBucketLimitOrdersStaticSizeByDelta                :{[]
 
     };
 
-createBucketLimitOrdersDynamicSize                      :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createBucketLimitOrdersDynamicSizeByDelta               :{[]
 
     };
 
-createLevelIcebergOrdersStaticSize                      :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createLevelIcebergOrdersStaticSizeByDelta               :{[]
 
     };
 
-createLevelIcebergOrdersDynamicSize                     :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createLevelIcebergOrdersDynamicSizeByDelta              :{[]
 
     };
 
-createBucketIcebergOrdersStaticSize                     :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createBucketIcebergOrdersStaticSizeByDelta              :{[]
 
     };
 
-createBucketIcebergOrdersDynamicSize                    :{[]
+// Derives the delta between the current outstanding/leaves
+// order quantity at a given price level and the static target
+// "desired" order quantity at that price level and generates
+// the set of amend/new/cancel order requests that need to take
+// place in order to ameliarate the difference.
+createBucketIcebergOrdersDynamicSizeByDelta             :{[]
 
     };
 
