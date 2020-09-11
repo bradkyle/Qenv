@@ -156,37 +156,41 @@
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
+staticOrderSizeStepper                                  :{[]
+
+    };
+
+
 // 
-
-createLevelLimitOrdersStaticSize                        :{
-
-    };
-
-createLevelLimitOrdersDynamicSize                       :{
+createLevelLimitOrdersStaticSize                        :{[]
 
     };
 
-createBucketLimitOrdersStaticSize                        :{
+createLevelLimitOrdersDynamicSize                       :{[]
 
     };
 
-createBucketLimitOrdersDynamicSize                       :{
+createBucketLimitOrdersStaticSize                       :{[]
 
     };
 
-createLevelIcebergOrdersStaticSize                        :{
+createBucketLimitOrdersDynamicSize                      :{[]
 
     };
 
-createLevelIcebergOrdersDynamicSize                       :{
+createLevelIcebergOrdersStaticSize                      :{[]
 
     };
 
-createBucketIcebergOrdersStaticSize                        :{
+createLevelIcebergOrdersDynamicSize                     :{[]
 
     };
 
-createBucketIcebergOrdersDynamicSize                       :{
+createBucketIcebergOrdersStaticSize                     :{[]
+
+    };
+
+createBucketIcebergOrdersDynamicSize                    :{[]
 
     };
 
