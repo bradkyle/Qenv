@@ -4,9 +4,13 @@
 .rq.MODKIND: `CODE`UNIT`INTEGRATION`BENCH`EXTERN;
 .rq.MODSTATE: `LOADED`READY`EXCLUDED;
 
+.rq.modcount :0;
 .rq.Mod      :(
-
-    );
+    [mId    :   `long$()]
+    kind    :  `.rq.MODKIND$();
+    state   :  `.rq.MODSTATE$();
+    path    :  `symbol$();
+    deps    :  ());
 
 // Adds a code module to the Module table such that a dependency tree
 // can be constructed and the modules can be loaded in order thereafter
