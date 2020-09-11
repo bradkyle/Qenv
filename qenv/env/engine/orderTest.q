@@ -39,7 +39,13 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
+        .util.testutils.setupDepth[];
+        .util.testutils.setupOrders[];
+
         .order.ProcessDepth[p[`event]];
+
+        .util.testutils.checkDepth[];
+        .util.testutils.checkOrders[];
 
     };
     {[p] 
@@ -598,7 +604,7 @@ dozc:{x+y}[doz];
         ));
         ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
             ((10#-1);1000+til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
-            ((til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;4#1000 1001;4#z); // Current Orders
+            (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;4#1000 1001;4#z); // Current Orders
             (`.instrument.Instrument!0;1;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
             ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000)));  // Expected Depth
             (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);4#1000 1001;(3#2),0;4#z); // Expected Orders
@@ -623,7 +629,7 @@ dozc:{x+y}[doz];
             )); // Expected AddTradeEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
-        ));
+        ))
     );
     .util.testutils.defaultHooks;
     "Process trades from the historical data or agent orders",
