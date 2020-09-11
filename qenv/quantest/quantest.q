@@ -1,4 +1,3 @@
-\l qunit.q
 system "d .qt";
 \c 4000 4000
 

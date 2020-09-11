@@ -60,7 +60,7 @@ OrderBook:(
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-ProcessDepth        :{[] //TODO fix and test
+ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
     odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
     $[count[odrs]>0;[
         // TODO uj new event
@@ -81,6 +81,7 @@ ProcessDepth        :{[] //TODO fix and test
                 (state padcols):.util.PadM'[state padcols];
 
                 shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
+                mxshft:max'[shft];
                 mnoffset: (0,'-1_'(shft));
 
                 // Derive the non agent qtys that
@@ -98,10 +99,10 @@ ProcessDepth        :{[] //TODO fix and test
                 
                 // Calculate the new vis qty
                 nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
-                mxshft:max'[nshft];
-                nvqty: {?[x>y;x;y]}'[mxshft;nvqty];
+                mxnshft:max'[nshft];
+                nvqty: {?[x>y;x;y]}'[mxnshft;nvqty];
 
-                vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+                vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
             ]];
         .order.Order,:(); // TODO update orders
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
