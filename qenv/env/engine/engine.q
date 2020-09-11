@@ -44,8 +44,9 @@
 // only uses one instrument, this function returns the
 // primary instance of Instrument for which all actions
 // relate and are configured by.
+/  @return (Instrument) The primary instance of instrument
 .engine.getInstrument   :{
-
+    $[0 in key[.instrument.Instrument];:.instrument.Instrument@0;'UNSET_PRIMARY_INSTRUMENT]; // TODO check
     };
 
 // TODO add randomization based upon current probability 
