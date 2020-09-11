@@ -56,6 +56,7 @@ OrderBook:(
 // that don't represent this?
 // TODO move to C for increased speed.
 // TODO make functionality for representing hidden/iceberg orders!!!
+// TODO what happens when orderbook jumps such that the orders are no longer valid, increment the occurance of this! Perhaps randomize?
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
