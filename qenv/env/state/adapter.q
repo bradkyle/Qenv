@@ -174,5 +174,21 @@ createBucketLimitOrdersDynamicSize                       :{
 
     };
 
+createLevelIcebergOrdersStaticSize                        :{
+
+    };
+
+createLevelIcebergOrdersDynamicSize                       :{
+
+    };
+
+createBucketIcebergOrdersStaticSize                        :{
+
+    };
+
+createBucketIcebergOrdersDynamicSize                       :{
+
+    };
+
 // Action Adapter Mapping
 // ---------------------------------------------------------------------------------------->
