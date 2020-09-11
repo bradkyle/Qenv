@@ -222,7 +222,9 @@ NewOrder            :{[i;a;o;time]
             .order.ProcessTrade[];
           ]; 
           k=1;[ // LIMIT ORDER
-            .order.Order,:o;
+            if [.account.AdjustOrderMargin[];[
+                .order.Order,:o;
+            ]];
           ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
