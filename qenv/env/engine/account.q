@@ -202,7 +202,7 @@ IncSelfFill    :{
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
-AdjustOrderMargin       :{[a; i; side; time; reduce; ismaker; price; qty]
+AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
 
     // Common derivations
     k:i`contractType;      

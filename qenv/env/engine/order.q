@@ -216,15 +216,13 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-NewOrder            :{[i;a;o;time]
+ProcessOrder            :{[i;a;o;time] 
     k:o[;6];
     res:$[k=0;[ // MARKET ORDER
-            .order.ProcessTrade[];
+            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
           ]; 
           k=1;[ // LIMIT ORDER
-            if [.account.AdjustOrderMargin[];[
                 .order.Order,:o;
-            ]];
           ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
@@ -233,62 +231,7 @@ NewOrder            :{[i;a;o;time]
               .order.Order,:o;
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE]; 
-    .pipe.event.AddNewOrderEvent[res;time];
     };
-
-
-// Process Amend Orders
-// -------------------------------------------------------------->
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-AmendOrder          :{[i;o;a;time]
-    k:o[;6];
-    $[k=1;[
-               // Limit order changes state of book
-              
-         ]; 
-         (k in (1,2));[
-              // Stop orders do not modify state of 
-              // the orderbook.
-              .order.Order,:o;
-         ]; // STOP_LIMIT_ORDER
-         'INVALID_ORDER_TYPE];
-    };
-
-// Process Cancel Orders
-// -------------------------------------------------------------->
-
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-CancelOrder         :{[i;o;a;time]
-    k:o[;6];
-    $[k=1;[
-            // Limit order changes state of book
-            .engine.ProcessNewTradeEvents[x];
-        ]; 
-        (k in (1,2));[
-            // Stop orders do not modify state of 
-            // the orderbook.
-            ![`.order.Order;
-            enlist(in;`orderId;o`orderId);0b;`symbol$()];
-            .pipe.event.AddOrderCancelEvent[o;o`time];
-        ]; // STOP_LIMIT_ORDER
-        'INVALID_ORDER_TYPE];
-    };
-
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
