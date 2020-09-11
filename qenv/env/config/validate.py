@@ -13,5 +13,11 @@ def Validatev1(conf):
 
 def Validatev2(conf):
     # https://pypi.org/project/json-cfg/
+    import datetime
+    import jsoncfg
+    from jsoncfg import JSONValueMapper
+    from jsoncfg.value_mappers import require_integer
+    
+    conf = json.loads(conf)
 
     return 
