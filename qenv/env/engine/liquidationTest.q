@@ -1,6 +1,6 @@
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".liquidation.Liquidate";
     {[c]
         p:c[`params];

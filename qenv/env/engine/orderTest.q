@@ -697,6 +697,3 @@ test:.qt.Unit[
     ();
     .util.testutils.defaultHooks;
     "Global function for checking stop orders"];
-
-
-.qt.RunTests[];

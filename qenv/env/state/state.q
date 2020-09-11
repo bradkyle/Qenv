@@ -212,6 +212,7 @@ DefaultInstrumentId:0;
                 .state.CurrentOrders,:r; 
             ]; // ORDER
             k=9;[.state.PriceLimitHistory,:r]; // PRICELIMIT
+            k=13;[.state.ExecutionEventHistory,:r]; // PRICELIMIT
             k=16;[.state.SignalEventHistory,:r]; // SIGNAL
             'INVALID_EVENT_KIND
         ];
@@ -240,6 +241,7 @@ Reset :{[config]
             `.state.OrderEventHistory,
             `.state.CurrentDepth,
             `.state.DepthEventHistory,
+            `.state.ExecutionEventHistory,
             `.state.TradeEventHistory,
             `.state.MarkEventHistory,
             `.state.FundingEventHistory,

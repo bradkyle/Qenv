@@ -2,7 +2,7 @@
 
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".instrument.NewInstrument";
     {[c]
         p:c[`params];
