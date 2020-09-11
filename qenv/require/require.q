@@ -50,8 +50,7 @@
         dirs:p where[{all[not["." in string[x]]}'[p]]];
         
         // TODO count before
-        ms,:walk'[];
-        :ms;
+        $[ms,:(.z.s'[])];
         };
 
     };
