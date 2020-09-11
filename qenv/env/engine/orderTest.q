@@ -680,7 +680,7 @@ test:.qt.Unit[
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
+    {};
     ();
     .util.testutils.defaultHooks;
     "Global function for amending orders"];
@@ -694,7 +694,7 @@ test:.qt.Unit[
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
+    {};
     ();
     .util.testutils.defaultHooks;
     "Global function for cancelling orders"];
@@ -708,7 +708,7 @@ test:.qt.Unit[
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
+    {};
     ();
     .util.testutils.defaultHooks;
     "Global function for triggering stop orders"];
@@ -722,7 +722,7 @@ test:.qt.Unit[
         .order.ProcessTrade[p[`event]];
 
     };
-    ();
+    {};
     ();
     .util.testutils.defaultHooks;
     "Global function for checking stop orders"];
