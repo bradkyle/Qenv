@@ -108,7 +108,7 @@ ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`qty`qty]]]; // TODO fix
     ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
-    .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     };
 
 
@@ -185,7 +185,7 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
         .order.Order,:(); // update where partial
         ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
-        .pipe.event.AddOrderUpdateEvent[]; // Emit events for all 
+        .pipe.egress.AddOrderUpdateEvent[]; // Emit events for all 
 
         // Make order updates
         mflls:[];
@@ -196,14 +196,14 @@ ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO 
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
   
-        .pipe.event.AddTradeEvent[[];time]; // TODO derive trades
+        .pipe.egress.AddTradeEvent[[];time]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
     ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
-    .pipe.event.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
     // TODO update last price
     };
 
@@ -256,9 +256,9 @@ ExecuteStop         :{[instrument;time;stop]
     // Add the order to the ingress pipeline in order to represent
     // the time it would take for the order to execute (stop orders are
     // a brokerage function)
-    .pipe.ingress.AddPlaceOrderEvent[stop;time];
-    .pipe.egress.AddOrderUpdateEvent[stop;time];
-    ![`.order.Order;enlist(=;`orderId;stop`orderId);0;`symbol$()];
+    .pipe.ingress.AddPlaceOrderEvent[stop;time]; // TODO add delay
+    .pipe.egress.AddOrderUpdateEvent[stop;time]; 
+    ![`.order.Order;enlist(=;`orderId;stop`orderId);0;`symbol$()]; // Delete order from local orderBook
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -270,7 +270,7 @@ ExecuteStop         :{[instrument;time;stop]
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 CheckStopOrders   :{[instrument;time]
-    ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
+    .order.ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
     };
 
 
