@@ -86,6 +86,10 @@
 .account.OrderLoss:{(sum[x`openSellLoss`openBuyLoss] | 0)};
 .account.Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
 
+.account.IsAccountInsolvent         :{
+
+    };
+
 
 // Balance Management
 // -------------------------------------------------------------->

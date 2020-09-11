@@ -1,14 +1,14 @@
 
 // Derives the execCost which is the cumulative sum of the product of
 // the fillQty and price of entering into a position.
-.inverse.account.ExecCost         :{[price;qty]
+.inverse.account.ExecCost               :{[price;qty]
     :(floor[1e8%price]*abs[qty]);
     };
 
 // Given the total entry and the exec cost of the given Inventory
 // this function will derive the average price at which the inventory
 // was opened at/ entered into.
-.inverse.account.AvgPrice         :{[isignum;execCost;totalEntry]
+.inverse.account.AvgPrice               :{[isignum;execCost;totalEntry]
     :$[all[(totalEntry,execCost)>0];[
         p:execCost%totalEntry;
         $[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier
@@ -17,7 +17,7 @@
 
 // Given the current Inventory state, this function will derive the
 // unrealized pnl that the inventory has incurred.
-.inverse.account.UnrealizedPnl    :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
+.inverse.account.UnrealizedPnl          :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
     :$[all[(amt,avgPrice,markPrice,faceValue)>0];
         (((faceValue%markPrice)-(faceValue%avgPrice))*(amt*isignum)) // TODO change 1e8 to multiplier and switch mark price and avgPrice
         ;0];
@@ -26,7 +26,7 @@
 // Given the current Inventory state, this function will derive the
 // resultant pnl that will be realized when a given amount is added
 // back to the balance.
-.inverse.account.RealizedPnl      :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
+.inverse.account.RealizedPnl            :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
     :$[all[(fillQty,avgPrice,fillPrice,faceValue)>0];
         (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum)) // TODO change 1e8 to multiplier
         ;0];
@@ -34,34 +34,34 @@
 
 // Derive the maintenence margin i.e. the amount of margin required to
 // keep the specified inventory open. 
-.inverse.account.MaintMarginReq      :{[]
+.inverse.account.MaintMarginReq         :{[]
 
     };
 
 // Derives the initial margin that is reserved for a given inventory 
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
-.inverse.account.InitMarginReq       :{[]
+.inverse.account.InitMarginReq          :{[]
 
     };
 
 // Derive the maintenence margin i.e. the amount of margin required to
 // keep the specified inventory open. 
-.inverse.account.MaintMargin      :{[]
+.inverse.account.MaintMargin            :{[]
 
     };
 
 // Derives the initial margin that is reserved for a given inventory 
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
-.inverse.account.InitMargin       :{[]
+.inverse.account.InitMargin             :{[]
 
     };
 
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the approximate price point at which 
 // the account will be liquidated.
-.inverse.account.LiquidationPrice :{[a;iB;iL;iS;ins]
+.inverse.account.LiquidationPrice       :{[a;iB;iL;iS;ins]
     sB:iB[`isignum]; // TODO check
 
     sum[(a`balance),((iB;iL;iS)`maintMarginReq)]
@@ -78,7 +78,7 @@
 // Given the rules provided by the instrument and the account's current
 // state this function will derive the price point at which the account
 // will become bankrupt.
-.inverse.account.BankruptcyPrice  :{[account;iB;iL;iS;ins] // TODO check
+.inverse.account.BankruptcyPrice        :{[account;iB;iL;iS;ins] // TODO check
     x:prd[iB`isignum`amt];
     :(prd[x,iB[`avgPrice]]
     -((-/)prd[(iL;iS)`amt`avgPrice]))
@@ -92,7 +92,7 @@
 // Common logic for setting the shared state values of the given account
 // and its BOTH,LONG,SHORT inventory aswell as its respective orders.
 // TODO move upward
-.inverse.account.rectifyState        :{
+.inverse.account.rectifyState           :{
 
     };
 

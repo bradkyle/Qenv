@@ -1,5 +1,6 @@
 
 .liquidation.Liquidation :(
+    [liquidationId          :`long$()]
 
     );
 
@@ -12,10 +13,28 @@
 / https://www.binance.com/en/support/faq/360033525271
 / https://binance.zendesk.com/hc/en-us/articles/360033525271-Liquidation
 / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
+/ https://help.bybit.com/hc/en-us/articles/360039261334-How-to-calculate-Liquidation-Price-Inverse-Contract-
+/ https://help.bybit.com/hc/en-us/articles/360039261474-Liquidation-process-Inverse-Contract-
 
-.liquidation.ForceCancel :{[a;time]
+.liquidation.ForceCancel        :{[a;time]
     .order.CancelAllOrders[a;time];
     :(exec from .account.Account where accountId=a[`accountId])
+    };
+
+.liquidation.PauseAccount       :{
+
+    };
+
+.liquidation.SelfTrade          :{
+
+    };
+
+.liquidation.TakeOverWithFee    :{
+
+    };
+
+.liquidation.TakeOverTotally    :{
+
     };
 
 // Enacts liquidation of a specified account/inventory pair 
@@ -28,7 +47,7 @@
 /  @return (Inventory) The new updated inventory
 .liquidation.Liquidate :{[a;iB;iL;iS;i;time]
     a:.liquidation.ForceCancel[a;time];
-    if[sum[a`available`maintMarginReq]<0;[
+    if[.account.IsAccountInsolvent[a];[
 
         ]];
     };

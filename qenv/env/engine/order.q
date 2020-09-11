@@ -238,6 +238,10 @@
     ![`.order.OrderBook;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
+.order.CancelAllOrders         :{[a]
+
+    };
+
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
 

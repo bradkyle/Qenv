@@ -1,4 +1,5 @@
 
+# randomize liquidation, temporal offsets, max order count, etc.
 
 BINANCE_MM_1 = {
         "name":"binance_mm_combined",
