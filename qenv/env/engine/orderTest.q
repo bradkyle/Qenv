@@ -1,13 +1,6 @@
 
 
 
-.util.Require["/env/engine/";(
-    ("order.q";".order"); 
-    ("liquidation.q";".liquidation"); 
-    ("instrument.q";".instrument"); 
-    ("account.q";".account")
-    )]; 
-
 l: `long$
 z:.z.z;
 sc:{x+(`second$y)};
@@ -38,6 +31,9 @@ dozc:{x+y}[doz];
 // TODO differing level order counts
 // TODO check events created correctly.
 // TODO max num levels
+
+// TODO process depth // process trade Integration check
+// TODO hidden/iceberg orders orders 
 
 .qt.Unit[
     ".order.ProcessDepth";

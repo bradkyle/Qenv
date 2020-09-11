@@ -1,5 +1,6 @@
 
 // Code Modules
+// ----------------------------------------------------------->
 
 .util.Mod[bp;".instrument";"";(
     ".util")];
@@ -39,18 +40,19 @@
     ".pipe.egress")];
 
 // Unit Test Modules
+// ----------------------------------------------------------->
 
-.util.UnitMod[bp;".instrument.test";"";(
+.util.UnitMod[bp;".instrument.test";"instrumentTest.q";(
     ".util")];
 
-.util.UnitMod[bp;".account.test";"";(
+.util.UnitMod[bp;".account.test";"accountTest.q";(
     ".instrument";    
     ".inverse.account";
     ".linear.account";
     ".quanto.account";
     ".pipe.egress")];
 
-.util.UnitMod[bp;".order.test";"";(
+.util.UnitMod[bp;".order.test";"orderTest.q";(
     ".account";
     ".instrument";
     ".util";
@@ -58,7 +60,7 @@
     ".pipe.ingress";
     ".pipe.egress")];
 
-.util.UnitMod[bp;".liquidation.test";"";(
+.util.UnitMod[bp;".liquidation.test";"liquidationTest.q";(
     ".account";
     ".instrument";
     ".order";
@@ -66,7 +68,7 @@
     ".util.cond";
     ".pipe.egress")];
 
-.util.UnitMod[bp;".engine.test";"";(
+.util.UnitMod[bp;".engine.test";"engineTest.q";(
     ".account";
     ".instrument";
     ".liquidation";
