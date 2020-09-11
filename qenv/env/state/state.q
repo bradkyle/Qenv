@@ -98,6 +98,10 @@ DefaultInstrumentId:0;
 // such that they can be for instance cancelled.
 .state.outBoundsOrders    :{};
 
+
+// Generates the next unique client order id
+.state.genNextClOrdId    :{};
+
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
 
