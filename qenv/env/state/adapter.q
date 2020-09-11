@@ -151,11 +151,14 @@
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
 
+.state.adapter.constructMacroAction                    :{
 
+    };
 
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
+// 
 staticOrderSizeStepper                                  :{[]
 
     };
