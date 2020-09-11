@@ -134,7 +134,7 @@
 
 
 .qt.Unit[
-    ".instrument.NewInstrument";
+    ".engine.ProcessEvents";
     {[c]
         p:c[`params];
 
@@ -145,7 +145,18 @@
 
 
 .qt.Unit[
-    ".instrument.NewInstrument";
+    ".engine.Info";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };();();({};{};defaultBeforeEach;defaultAfterEach);
+    "Global function for creating a new account"];
+
+
+.qt.Unit[
+    ".engine.Reset";
     {[c]
         p:c[`params];
 
