@@ -40,6 +40,10 @@
     eventCount                  : `long$()
     );
 
+// Because the Environment for all practical purposes
+// only uses one instrument, this function returns the
+// primary instance of Instrument for which all actions
+// relate and are configured by.
 .engine.getInstrument   :{
 
     };
