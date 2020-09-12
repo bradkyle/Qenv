@@ -59,7 +59,7 @@
             monthVolume         : `long$());
 
 .account.mandCols:();
-.account.allCols:cols Account;
+.account.allCols:cols .account.Account;
 
 // Account CRUD Logic
 // -------------------------------------------------------------->

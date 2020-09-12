@@ -1,10 +1,19 @@
-\l ./contract/inverse/account.q 
-\l ./contract/linear/account.q 
-\l ./contract/quanto/account.q 
+
+
+/ \cd ../../quantest/
+/ \l quantest.q 
+/ \cd ../env/engine/
+
+\l ../util 
+\cd ../engine/
+
+\l instrument.q
+/ \l ./contract/inverse/account.q 
+/ \pwd
+/ \l ./contract/linear/account.q 
+/ \l ./contract/quanto/account.q 
 \l account.q
 \l order.q
-
-\d .order.test
 
 l: `long$
 z:.z.z;
