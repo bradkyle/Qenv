@@ -36,7 +36,8 @@ dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
 dozc:{x+y}[doz];
 
-
+.order.test.defaultAccount:0;
+.order.test.defaultInstrument:();
 
 // TODO check orders event by time
 // TODO depth update does not match order update
@@ -70,8 +71,8 @@ dozc:{x+y}[doz];
         m:p`mocks;
         mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
 
-        a:p`args; // instrument;nxt;time
-        .order.ProcessDepth[];
+        // instrument;nxt
+        .order.ProcessDepth[.order.test.defaultInstrument;p`nxt];
 
         .util.testutils.checkMock[mck1;m[0];c];
 
@@ -79,7 +80,7 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     };
-    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];enlist p[5];p[3];p[4])};
+    {[p] :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(p[0];p[1];p[2];enlist p[5];p[3];p[4])};
     (
         ("simple update no agent orders or previous depth one side";(
             (); // Current Depth
@@ -407,10 +408,11 @@ dozc:{x+y}[doz];
         mck5: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
-        a:p[`args];
-        .order.ProcessTrade[];
-        show m;
-        show 99#"-";
+        .order.ProcessTrade[
+            .order.test.defaultInstrument;
+            .order.test.defaultAccount;
+            p`td];
+
         .util.testutils.checkMock[mck1;m[0];c];  // Expected AddOrderUpdateEvent Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected IncSelfFill Mock
         .util.testutils.checkMock[mck3;m[2];c];  // Expected ApplyFill Mock
@@ -421,7 +423,7 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     }; // TOOD derive from 
-    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_10#p);p[3];p[4])};
+    {[p] :`cDepth`cOrd`td`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_10#p);p[3];p[4])};
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth

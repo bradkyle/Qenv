@@ -63,7 +63,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.order.ProcessDepth        :{[instrument;nxt;time] //TODO fix and test
+.order.ProcessDepth        :{[instrument;nxt] //TODO fix and test
     odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
     $[count[odrs]>0;[
         // TODO uj new event
@@ -130,7 +130,8 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;side;fillQty;reduce;fillTime] // TODO fix and test
+.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test
+    / side;fillQty;reduce;fillTime
     nside:neg[side];
     isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders
