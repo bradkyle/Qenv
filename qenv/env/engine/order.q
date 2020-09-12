@@ -126,8 +126,9 @@
 
                 .order.test.nagentQty:nagentQty;
 
-                // Derive the deltas in the agent order offsets as the 
-                // 
+                // Derive the deltas in the agent order offsets as if there
+                // were a uniform distribution of cancellations throughout
+                // the queue.
                 offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
 
                 .order.test.offsetdlts:offsetdlts;
