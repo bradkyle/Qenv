@@ -41,11 +41,26 @@
     hqty        :`long$();
     vqty      :`long$()); // TODO hQty: hidden qty
 
+/ Bitmex
 / A buy Limit Order for 10 contracts with a Limit Price of 100 will be submitted to the market. 
 / Only a bid for 1 contract will be visible to other traders. If someone submits a sell Order 
 / for 3 contracts at 100 then 3 contracts will be executed from this order. After that, 
 / another bid for 1 contract will appear at 100 to other traders. As such, there will now be 
 / 7 contracts left remaining, with 1 only visible.
+
+// OKEX
+/ The system will automatically place an iceberg order. 
+/ The amount of each order will be the single order average. 
+/ The order price will be the latest buy price* (1-price variance). 
+/ Once the order completely filled, a new order will be placed. 
+/ When the last market price exceeds 2*(order variance), the previous order would be cancelled 
+/ and a new one will be placed.
+
+/ When the amount traded equals the total order amount, the iceberg trade has been filled. 
+/ When the last market price exceeds the highest buy price of 20,000 US Dollars, the iceberg 
+/ order would be temporarily halted.
+
+/ After the price falls down to 20,000 US Dollars, the iceberg order would be recommenced.
 
 // Process Depth update
 // -------------------------------------------------------------->
