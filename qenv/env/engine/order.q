@@ -251,9 +251,11 @@
           ]; 
           k=1;[ // LIMIT ORDER
                 // TODO add events
-                $[;[
-                    
-                ];.order.Order,:o]
+                $[(() or ());
+                  .order.ProcessTrade[
+                        i;a;o`side;o`size;o`reduce;time
+                   ];
+                   .order.Order,:o];
 
           ]; 
           (k in (1,2));[
