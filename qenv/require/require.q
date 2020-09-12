@@ -91,14 +91,18 @@
 
     // Build dependency graph from modules
     // ------------------------------------------------------------------>
-    mds:();
+    mds:?[`.rq.Mod;((=;`state;`.rq.MODSTATE$`READY);());0b;()];
+
+    // Recursively walk up mods deriving 
+    {
+
+    }'[mds];
 
     // Load all modules in order of increasing dependency of prior
     // ------------------------------------------------------------------>
 
-    // Sort dependencies
-
-    // Load by order
+    // TODO logging
+    {system ("l ", x)}'[met]; 
 
     };
 
