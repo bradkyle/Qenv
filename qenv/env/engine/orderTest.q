@@ -1277,13 +1277,60 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
-        .order.ProcessTrade[p[`event]];
+        .util.testutils.setupDepth[p`cDepth];
+        .util.testutils.setupOrders[p`cOrd];
 
+        m:p[`mocks];
+
+        mck1: .qt.M[`.pipe.ingress.AddPlaceOrderEvent;{[a;b]};c];
+        mck2: .qt.M[`.pipe.egress.AddOrderUpdateEvent;{[a;b]};c];
+
+        .order.ProcessOrder[
+            .order.test.defaultInstrument;
+            .order.test.defaultAccount;
+            p`o];
+
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected AddPlaceOrderEvent Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderUpdateEvent Mock
+
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils.checkOrders[p[`eOrd];c];
     };
-    {};
-    ();
+    {[p] 
+        // TODO account for one record
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        bookCols:`side`price`qty;
+
+        :`cDepth`cOrd`o`mocks`eDepth`eOrd!(
+            p[0];
+            p[1];
+            p[2];
+            (5_10#p);
+            p[3]; // TODO shorten parameterization
+            p[4]);
+    };
+    (
+        ("Amend stop limit order to zero, should remove order from .order.Order";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;1500;0b;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddPlaceOrderEvent Mock
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+        ));
+        ("Amend stop market order to zero, should remove order from .order.Order";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;1500;0b;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddPlaceOrderEvent Mock
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+        ))
+    );
     .util.testutils.defaultEngineHooks;
-    "Global function for triggering stop orders"];
+    "Global function for placing stop orders back into event pipe and removing when triggered"];
 
 
 .qt.Unit[
