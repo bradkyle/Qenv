@@ -34,6 +34,7 @@
 // TODO strategies signals
 // TODO different observation derivation methods
 // TODO flatten 5m 15m 30m candles etc. for longer trend indication.
+// TODO add longer trend candle predictors for hour, 15 min, 30 min etc trained on historical data
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
