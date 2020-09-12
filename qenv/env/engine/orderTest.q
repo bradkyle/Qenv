@@ -1309,13 +1309,13 @@ dozc:{x+y}[doz];
         ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
         bookCols:`side`price`qty;
 
-        :`cDepth`cOrd`o`mocks`eDepth`eOrd!(
-            p[0];
-            p[1];
+        :`cDepth`cOrd`td`mocks`eDepth`eOrd!(
+            .util.testutils.makeOrderBook[bookCols;flip p[0]];
+            .util.testutils.makeOrders[ordCols;flip p[1]];
             p[2];
             (5_10#p);
             p[3]; // TODO shorten parameterization
-            p[4]);
+            .util.testutils.makeOrders[ordCols;flip p[4]]);
     };
     (
         ("Place new post only limit order, no previous depth or agent orders should update depth";(
