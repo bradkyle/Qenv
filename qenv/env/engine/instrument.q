@@ -3,6 +3,7 @@
 .instrument.instrumentCount:0;
 
 // TODO logic mappings per CONTRACTTYPE
+// TODO move defaults to util.defaults
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->
