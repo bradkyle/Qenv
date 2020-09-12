@@ -123,8 +123,8 @@
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
             ]];
         .order.Order,:(); // TODO update orders
-        .order.OrderBook,:(state`price`side`tgt`hqty`vqty); // TODO fix here
-    ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtqty]]]; // TODO fix
+        .order.OrderBook,:(state`price`side`tgt`hqty`iqty`vqty); // TODO fix here
+    ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
     // Delete all out of bounds depths, depths that are empty 
     // i.e. where vqty + hqty = 0
@@ -170,6 +170,7 @@
 
     // TODO make better
     state[`hqty]:state`qty;
+    state[`iqty]:state`qty;
 
     .order.test.state:state;
 
@@ -231,8 +232,8 @@
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        .order.OrderBook,:flip(state`price`side`tgt`hqty`vqty); // TODO fix here
-    ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`vqty)]]]; // TODO fix
+        .order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty); // TODO fix here
+    ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)]]]; // TODO fix
     
     
     // Delete all out of bounds depths, depths that are empty 
