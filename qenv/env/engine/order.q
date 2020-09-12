@@ -258,6 +258,7 @@
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
 .order.ProcessOrder            :{[i;a;o] 
+    // TODO validation?
     k:o[`otype];
     show k;
     res:$[k=0;[ // MARKET ORDER
@@ -266,19 +267,25 @@
           ]; 
           k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
+                $[();
+                    [
 
-                // TODO left over order, limit order placed as taker in other side book.
-                // If the order crosses the bid/ask spread
-                // i.e. 
-                // sell order <= best bid  
-                // buy order >= best ask 
-                // process the order as a trade.
-                $[((i`bestBidPrice)>0) or ((i`bestAskPrice)>0);
-                  .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-                  [
-                      o[`orderId]:(.order.orderCount+:1);
-                      .order.Order,:o;
-                  ]];
+                    ];
+                    [ 
+                        // TODO left over order, limit order placed as taker in other side book.
+                        // If the order crosses the bid/ask spread
+                        // i.e. 
+                        // sell order <= best bid  
+                        // buy order >= best ask 
+                        // process the order as a trade.
+                        $[((i`bestBidPrice)>0) or ((i`bestAskPrice)>0);
+                        .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                        [
+                            o[`orderId]:(.order.orderCount+:1);
+                            .order.Order,:o;
+                        ]];
+                    ]
+                ];
 
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
