@@ -408,7 +408,8 @@ dozc:{x+y}[doz];
 
         a:p[`args];
         .order.ProcessTrade[];
-
+        show m;
+        show 99#"-";
         .util.testutils.checkMock[mck1;m[0];c];  // Expected AddOrderUpdateEvent Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected IncSelfFill Mock
         .util.testutils.checkMock[mck3;m[2];c];  // Expected ApplyFill Mock
@@ -419,7 +420,7 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     }; // TOOD derive from 
-    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_9#p);p[3];p[4])};
+    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_10#p);p[3];p[4])};
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
