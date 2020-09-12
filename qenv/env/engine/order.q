@@ -258,7 +258,8 @@
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
 .order.ProcessOrder            :{[i;a;o] 
-    k:o[;6];
+    k:o[`otype];
+    show k;
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
             // TODO add events
