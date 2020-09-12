@@ -116,7 +116,7 @@
                 mnoffset: (0,'-1_'(shft));
 
                 // Derive the non agent qtys that
-                // make up the orderbook
+                // make up the orderbook // TODO add hqty, iqty to this.
                 nagentQty: flip .util.PadM[ // TODO check
                     raze'[(
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
