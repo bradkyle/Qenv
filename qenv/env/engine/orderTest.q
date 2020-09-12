@@ -36,8 +36,8 @@ dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
 dozc:{x+y}[doz];
 
-.order.test.defaultAccount:0;
-.order.test.defaultInstrument:();
+.order.test.defaultAccount:.util.testutils.makeAccounts[];
+.order.test.defaultInstrument:.util.testutils.makeInstruments[];
 
 // TODO check orders event by time
 // TODO depth update does not match order update

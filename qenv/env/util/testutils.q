@@ -13,6 +13,7 @@ dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
 dozc:{x+y}[doz];
 
+// TODO fix comments
 // TODO pipe utils, ingress, egress etc.
 
 // Mock generation and checking utils
