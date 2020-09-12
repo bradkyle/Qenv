@@ -1336,8 +1336,20 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
-        .order.ProcessTrade[p[`event]];
+        .util.testutils.setupDepth[p`cDepth];
+        .util.testutils.setupOrders[p`cOrd];
 
+        m:p[`mocks];
+
+        mck1: .qt.M[`.order.ExecuteStop;{[a;b]};c];
+
+        a:p`args;
+        .order.CheckStopOrders[.order.test.defaultInstrument;a`time];
+
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected ExecuteStop Mock
+
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils.checkOrders[p[`eOrd];c];
     };
     {[p] 
         // TODO account for one record
