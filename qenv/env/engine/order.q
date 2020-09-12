@@ -265,7 +265,7 @@
 
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
-               // IF the order is present, amend order, if amended to 0 remove
+              // IF the order is present, amend order, if amended to 0 remove
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
