@@ -390,11 +390,7 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     };
-    {[p]
-        :`args`cDepth`cOrd`mocks`eDepth`eOrd!(
-            
-        );
-    };
+    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_9#p);p[3];p[4])};
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
