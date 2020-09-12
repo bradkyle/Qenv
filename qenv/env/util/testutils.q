@@ -140,8 +140,9 @@ dozc:{x+y}[doz];
 .util.testutils._checkOrders         :{[cl;vl;case] // TODO if provided orders are not table
         $[count[vl]>0;[
             eOrd:$[type[vl] in (99 98h);vl;.util.testutils.makeOrders[vl;cl]];
-            cl:$[count[cl]>0;cl;cols[eOrd]];
             if[count[eOrd]>0;[
+                cl:$[count[cl]>0;cl;cols[eOrd]];
+                .order.test.eOrd:eOrd;
                 rOrd: select from .order.Order where clId in eOrd[`clId];
                 .qt.A[count[eOrd];=;count[rOrd];"order count";case]; // TODO check
                 .qt.A[(cl#0!rOrd);~;(cl#0!eOrd);"orders";case]; // TODO check
@@ -158,8 +159,8 @@ dozc:{x+y}[doz];
 .util.testutils._checkDepth           :{[cl;vl;case]
         $[count[vl]>0;[
             eBook:$[type[vl]=99h;vl;.util.testutils.makeOrderBook[vl;cl]];
-            cl:$[count[cl]>0;cl;cols[eBook]];
             if[count[eBook]>0;[
+                cl:$[count[cl]>0;cl;cols[eBook]];
                 rBook:.order.OrderBook;
                 .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";case]; // TODO check
                 .qt.A[(cl#0!rBook);~;(cl#0!eBook);"ordersBook";case]; // TODO check

@@ -404,6 +404,7 @@ dozc:{x+y}[doz];
 // TOOD test instrument/account doesn't exist
 // TODO test erroring
 // TODO iceberg/hidden order logic
+// TODO hidden orders from agent, hidden orders from data.
 
 .qt.Unit[
     ".order.ProcessTrade";
