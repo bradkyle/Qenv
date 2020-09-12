@@ -41,6 +41,12 @@
     hqty        :`long$();
     vqty      :`long$()); // TODO hQty: hidden qty
 
+/ A buy Limit Order for 10 contracts with a Limit Price of 100 will be submitted to the market. 
+/ Only a bid for 1 contract will be visible to other traders. If someone submits a sell Order 
+/ for 3 contracts at 100 then 3 contracts will be executed from this order. After that, 
+/ another bid for 1 contract will appear at 100 to other traders. As such, there will now be 
+/ 7 contracts left remaining, with 1 only visible.
+
 // Process Depth update
 // -------------------------------------------------------------->
 
@@ -235,7 +241,7 @@
          ]; // STOP_LIMIT_ORDER
          'INVALID_ORDER_TYPE]; 
     // Prune engine orders to increase speed
-    ![`.order.OrderBook;.util.cond.EnginePruneOrd[];0;`symbol$()];
+    ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
 .order.CancelAllOrders         :{[a]

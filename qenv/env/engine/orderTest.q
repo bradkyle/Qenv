@@ -709,25 +709,43 @@ dozc:{x+y}[doz];
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
 
-// TOOD place limit order, 
+// TOOD place limit order, stop order, market order
 // TODO Cancel limit order, stop market order, stop limit order
-// TODO place market order
-// TODO place limit participate don't initiate
+// TODO place limit participate don't initiate (post only)
 // TODO place iceberg/hidden order
-// 
+// TODO commenting
+// TODO orderbook update, order update
 
 test:.qt.Unit[
     ".order.ProcessOrder";
     {[c]
         p:c[`params];
 
-        .order.ProcessTrade[p[`event]];
+        .order.ProcessOrder[p[`event]];
 
     };
     {};
     ();
     .util.testutils.defaultEngineHooks;
     "Global function for processing new orders"];
+
+
+test:.qt.Unit[
+    ".order.CancelAllOrders";
+    {[c]
+        p:c[`params];
+
+        .order.CancelAllOrders[p[`event]];
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Global function for processing new orders"];
+
+// TODO mock place order event
+// TODO mock order update event
+// 
 
 test:.qt.Unit[
     ".order.ExecStop";
