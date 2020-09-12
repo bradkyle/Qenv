@@ -222,7 +222,7 @@
     / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
     / .order.test.OB:.order.OrderBook;
     // Return the orderbook update to the egress pipe
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; 
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; // TODO remove for partial book updates
 
     // TODO update last price
     };
