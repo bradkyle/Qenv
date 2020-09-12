@@ -276,8 +276,8 @@
                 $[((i`bestBidPrice)>0) or ((i`bestAskPrice)>0);
                   .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                   [
+                      o[`orderId]:(.order.orderCount+:1);
                       .order.Order,:o;
-                      
                   ]];
 
           ]; 
