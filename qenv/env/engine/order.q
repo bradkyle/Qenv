@@ -86,6 +86,7 @@
         state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
         ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
 
+        .order.test.state:state;
         dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
 
         state[`tgt]: last'[state`size]; // TODO change to next? 

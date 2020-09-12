@@ -270,6 +270,10 @@ dozc:{x+y}[doz];
             `.state.LiquidationEventHistory)];
     };
 
+
+.util.testutils.defaultAccounts:.util.testutils.genAccount[];
+.util.testutils.defaultInstrument:.util.testutils.genInstrument[];
+
 // Default function that runs before each Unit test etc.
 .util.testutils.defaultBeforeEach               :{};
 
@@ -279,6 +283,8 @@ dozc:{x+y}[doz];
 .util.testutils.defaultEngineHooks              :(
     {
         .util.testutils.resetEngineTables[];
+        .account.Account,:.util.testutils.defaultAccounts;
+        .instrument.Instrument,:.util.testutils.defaultInstrument;
     };
     {
         .util.testutils.resetEngineTables[];
@@ -404,13 +410,18 @@ dozc:{x+y}[doz];
 
 
 .util.testutils.setupOrderbook      :{
-
+    
+    .order.OrderBook,:(0^x);
     };
 
 .util.testutils.setupDepth:.util.testutils.setupOrderbook;
 
 .util.testutils.setupOrders         :{
-
+    .order.Order,:{
+        x[`accountId]:`.account.Account!(x[`accountId]);
+        x[`instrumentId]:`.instrument.Instrument!(x[`instrumentId]);
+        x[`reduce]:`boolean$(x[`reduce]);
+        x}(0^x);
     };
 
 .util.testutils.setupAccount        :{

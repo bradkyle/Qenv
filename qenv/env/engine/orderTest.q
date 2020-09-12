@@ -37,8 +37,6 @@ dtz:{dts[sc[x;y]]}[z]
 doz:`date$z;
 dozc:{x+y}[doz];
 
-.order.test.defaultAccount:first .util.testutils.genAccount[];
-.order.test.defaultInstrument:first .util.testutils.genInstrument[];
 
 // TODO check orders event by time
 // TODO depth update does not match order update
@@ -65,9 +63,10 @@ dozc:{x+y}[doz];
     ".order.ProcessDepth";
     {[c]
         p:c[`params];
-
-        .util.testutils.setupDepth[p`cDepth];
-        .util.testutils.setupOrders[p`cOrd];
+        .order.test.OB:p`cDepth;
+        .order.test.O:p`cOrd;
+        .util.testutils.setupDepth[0^p`cDepth];
+        .util.testutils.setupOrders[0^p`cOrd];
 
         m:p`mocks;
         mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
@@ -85,7 +84,11 @@ dozc:{x+y}[doz];
         // TODO account for one record
         ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
         bookCols:`side`price`qty;
-        nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
+        nxt:$[
+            count[p[2]]=4;`side`price`nxtqty`time!p[2];
+            count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];
+            count[p[2]]=6;`side`price`nxtqty`nxthqty`nxtiqty`time!p[2];
+            'INVALID_NXT];
 
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
             .util.testutils.makeOrderBook[bookCols;flip p[0]];
