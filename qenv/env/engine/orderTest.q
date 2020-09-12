@@ -66,15 +66,19 @@ dozc:{x+y}[doz];
         .util.testutils.setupDepth[p`cDepth];
         .util.testutils.setupOrders[p`cOrd];
 
-        .order.ProcessDepth[p[`event]];
+        m:p[`mocks];
+        mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
+
+        a:p`args;
+        .order.ProcessDepth[];
+
+        .util.testutils.checkMock[mck1;m[0]];
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     };
-    {[p] 
-
-    };
+    {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_9#p);p[3];p[4])};
     (
         ("simple update no agent orders or previous depth one side";(
             (); // Current Depth
@@ -389,7 +393,7 @@ dozc:{x+y}[doz];
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils.checkOrders[p[`eOrd];c];
 
-    };
+    }; // TOOD derive from 
     {[p] :`cDepth`cOrd`args`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_9#p);p[3];p[4])};
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
