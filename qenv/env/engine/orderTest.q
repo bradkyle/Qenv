@@ -1299,4 +1299,18 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
+
+.qt.Unit[
+    ".order.ApplyPriceLimits";
+    {[c]
+        p:c[`params];
+
+        .order.ProcessTrade[p[`event]];
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Global function for checking stop orders"];
+
 .qt.RunTests[];
