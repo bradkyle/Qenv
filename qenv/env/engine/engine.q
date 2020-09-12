@@ -1,4 +1,5 @@
 
+// TODO random placement of hidden/iceberg orders 
 
 // TODO move validation into engine
 // TODO add slight noise to trades and orderbook updates
