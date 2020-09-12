@@ -60,7 +60,7 @@ dozc:{x+y}[doz];
 // TODO process depth // process trade Integration check
 // TODO hidden/iceberg orders orders 
 
-.qt.Unit[
+.qt.SkpBesTest[.qt.Unit[
     ".order.ProcessDepth";
     {[c]
         p:c[`params];
@@ -74,9 +74,10 @@ dozc:{x+y}[doz];
         .order.ProcessDepth[.util.testutils.defaultInstrument;p`nxt];
 
         / .util.testutils.checkMock[mck1;m[0];c];
-
+        .order.test.O3:.order.Order;
+        .order.test.O4:p[`eOrd];
         .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils.checkOrders[p[`eOrd];c];
+        .util.testutils._checkOrders[(`orderId`side`otype`offset`leaves`price`time);p[`eOrd];c];
 
     };
     {[p] 
@@ -388,7 +389,7 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
     "size update the orderbook and the individual order offsets/iceberg",
-    "orders where necessary"];
+    "orders where necessary"]];
 
 
 // TODO no liquidity

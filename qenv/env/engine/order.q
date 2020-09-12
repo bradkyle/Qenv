@@ -25,7 +25,7 @@
     reduce          : `boolean$();
     trigger         : `long$();
     execInst        : `long$());
-
+.order.ordCols:cols .order.Order;
 
 // OrderBook
 // =====================================================================================>
@@ -43,6 +43,7 @@
     hqty        :`long$(); // hidden qty
     iqty        :`long$(); // iceberg qty
     vqty      :`long$()); // Visible qty
+.order.bookCols:cols .order.OrderBook;
 
 / Bitmex
 / A buy Limit Order for 10 contracts with a Limit Price of 100 will be submitted to the market. 
@@ -96,6 +97,7 @@
         .order.test.dlts:dlts;
 
         state[`tgt]: last'[state`size]; // TODO change to next? 
+        nqty:last'[nxt`qty];
         
         dneg:sum'[{x where[x<0]}'[dlts]];
         .order.test.dneg:dneg;
@@ -136,20 +138,27 @@
 
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:state[`leaves]+noffset;
+                .order.test.noffset:noffset;
                 
                 // Calculate the new vis qty
                 nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
                 mxnshft:max'[nshft];
-                nvqty: {?[x>y;x;y]}'[mxnshft;nvqty];
+                .order.test.mxnshft:mxnshft;
+                .order.test.nvqty:nvqty;
 
-                vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
+                // Derive the new visible quantity
+                nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
+                .order.test.nvqty2:nvqty;
 
-                .order.Order,:flip(`orderId`offset!(raze'[state`orderId`offset][;where[msk]])); 
+                .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
                 .order.state.O2:.order.Order;
+
+                .order.OrderBook,:(.order.bookCols!(state`price;side;nqty;nhqty;niqty;nvqty));
+            ];[
+                state[`bside]:first'[distinct'[state[`side]]];
+                .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; 
             ]];
-        state[`bside]:first'[distinct'[state[`side]]];
-        .order.test.state3:state;
-        .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; // TODO fix here
+        // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
     // Delete all out of bounds depths, depths that are empty 
