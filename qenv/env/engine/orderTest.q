@@ -8,6 +8,10 @@
 \l testutils.q 
 \cd ../engine/
 
+\cd ../pipe
+\l pipe.q 
+\cd ../engine
+
 \l instrument.q
 / \l ./contract/inverse/account.q 
 / \pwd
@@ -364,10 +368,10 @@ dozc:{x+y}[doz];
         m:p[`mocks];
 
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
-        mck2: .qt.M[`.order.AddTradeEvent;{[a;b]};c];
+        mck2: .qt.M[`.pipe.egress.AddTradeEvent;{[a;b]};c];
         mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
-        mck4: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
-        mck5: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+        mck5: .qt.M[`.pipe.egress.AddOrderUpdateEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
         a:p[`args];
         .order.ProcessTrade[];
