@@ -266,26 +266,19 @@
           ]; 
           k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
-                $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]]; // TODO check
+                // TODO left over order, limit order placed as taker in other side book.
+                // If the order crosses the bid/ask spread
+                // i.e. 
+                // sell order <= best bid  
+                // buy order >= best ask 
+                // process the order as a trade.
+                $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
+                    ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
+                    .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                     [
-                        
-                    ];
-                    [ 
-                        // TODO left over order, limit order placed as taker in other side book.
-                        // If the order crosses the bid/ask spread
-                        // i.e. 
-                        // sell order <= best bid  
-                        // buy order >= best ask 
-                        // process the order as a trade.
-                        $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
-                           ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
-                            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-                            [
-                                o[`orderId]:(.order.orderCount+:1);
-                                .order.Order,:o;
-                            ]];
-                    ]
-                ];
+                        o[`orderId]:(.order.orderCount+:1);
+                        .order.Order,:o;
+                    ]];
 
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
@@ -320,15 +313,8 @@
           ]; 
           k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
-                $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]]; // TODO check
-                    [
-                        
-                    ];
-                    [ 
-                        // TODO Error order not found
-                    ]
-                ];
-
+                 // TODO check
+                  
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove

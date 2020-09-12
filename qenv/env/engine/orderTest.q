@@ -1273,7 +1273,7 @@ dozc:{x+y}[doz];
 // TODO amend to cross spread stop order
 
 .qt.Unit[
-    ".order.ProcessOrder";
+    ".order.NewOrder";
     {[c]
         p:c[`params];
         .order.test.OB:p`cDepth;
@@ -1289,7 +1289,7 @@ dozc:{x+y}[doz];
         mck4: .qt.M[`.pipe.egress.AddOrderCancellledEvent;{[a;b]};c];
         mck5: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
-        .order.ProcessOrder[
+        .order.NewOrder[
             .order.test.defaultInstrument;
             .order.test.defaultAccount;
             p`o];
@@ -1674,7 +1674,7 @@ dozc:{x+y}[doz];
 
 
 .qt.Unit[
-    ".order.ProcessOrder";
+    ".order.AmendOrder";
     {[c]
         p:c[`params];
         .order.test.OB:p`cDepth;
@@ -1690,7 +1690,7 @@ dozc:{x+y}[doz];
         mck4: .qt.M[`.pipe.egress.AddOrderCancellledEvent;{[a;b]};c];
         mck5: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
-        .order.ProcessOrder[
+        .order.AmendOrder[
             .order.test.defaultInstrument;
             .order.test.defaultAccount;
             p`o];
