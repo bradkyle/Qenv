@@ -301,9 +301,7 @@
 / Upper limit; for liquidation of long positions, if the liquidation price is lower than the 
 / lower limit price, the system will place the selling orders at lower limit.
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
+// Should remove all orders outside the price limits? 
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
