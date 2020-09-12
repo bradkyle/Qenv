@@ -784,12 +784,11 @@ dozc:{x+y}[doz];
             (-1;100;0b;z); // Order Placed
             ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
             (); // Expected Orders
-            (0b;0;()); // Expected AddOrderUpdateEvent Mock
-            (0b;0;()); // Expected IncSelfFill Mock
-            (0b;0;()); // Expected ApplyFill Mock
-            (1b;1;enlist((-1;1000;100);z)); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected ProcessTrade Mock
+            (0b;0;()); // Expected AddOrderCreatedEvent Mock
+            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was not made by an agent trade is larger than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
@@ -797,15 +796,11 @@ dozc:{x+y}[doz];
             (-1;1500;0b;z); // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
             (); // Expected Orders
-            (0b;0;()); // Expected AddOrderUpdateEvent Mock
-            (0b;0;()); // Expected IncSelfFill Mock
-            (0b;0;()); // Expected ApplyFill Mock
-            (1b;2;(
-                ((-1;999;500);z);
-                ((-1;1000;1000);z)
-            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected ProcessTrade Mock
+            (0b;0;()); // Expected AddOrderCreatedEvent Mock
+            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
         ))
     );
     .util.testutils.defaultEngineHooks;
