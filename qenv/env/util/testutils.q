@@ -410,18 +410,22 @@ dozc:{x+y}[doz];
 
 
 .util.testutils.setupOrderbook      :{
-    
-    .order.OrderBook,:(0^x);
+    if[count[x]>0;[.order.OrderBook,:(0^x)]];
     };
 
 .util.testutils.setupDepth:.util.testutils.setupOrderbook;
 
 .util.testutils.setupOrders         :{
-    .order.Order,:{
-        x[`accountId]:`.account.Account!(x[`accountId]);
-        x[`instrumentId]:`.instrument.Instrument!(x[`instrumentId]);
-        x[`reduce]:`boolean$(x[`reduce]);
-        x}(0^x);
+    if[count[x]>0;[
+        .order.Order,:{
+            show .account.Account;
+            show x[`accountId];
+            show x;
+            x[`accountId]:(`.account.Account!(x[`accountId]));
+            x[`instrumentId]:(`.instrument.Instrument!(x[`instrumentId]));
+            x[`reduce]:`boolean$(x[`reduce]);
+            x}(0^x);
+        ]];
     };
 
 .util.testutils.setupAccount        :{

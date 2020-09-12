@@ -440,11 +440,11 @@ dozc:{x+y}[doz];
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils.checkOrders[p[`eOrd];c];
 
-    }; // TOOD derive from 
+    }; // TOOD derive from // TODO derive orderbook, orders
     {[p] :`cDepth`cOrd`td`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_10#p);p[3];p[4])};
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (-1;100;0b;z); // Fill Execution
             ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
@@ -457,7 +457,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was not made by an agent trade is larger than first level";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (-1;1500;0b;z); // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
