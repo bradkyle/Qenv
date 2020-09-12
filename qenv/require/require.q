@@ -43,6 +43,7 @@
     .rq.Mod,:(mname;(.rq.modcount+:1);`.rq.MODKIND$`UNIT;`.rq.MODSTATE$`READY;mpath;mdeps);
     };
 
+// TODO if directory walk if mod.q simple load
 // TODO naive implementation make better
 // Constructs the dependency tree of modules, loading root modules i.e. modules
 // on which the majority depend on and work up the dependency tree, creating
