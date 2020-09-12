@@ -251,6 +251,8 @@
             // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
+                // IF the order is present, amend order, if amended to 0 remove
+
                 // TODO left over order, limit order placed as taker in other side book.
                 // If the order crosses the bid/ask spread
                 // i.e. 
@@ -263,6 +265,7 @@
 
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
+               // IF the order is present, amend order, if amended to 0 remove
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
