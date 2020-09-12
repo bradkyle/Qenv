@@ -36,6 +36,20 @@
 // TODO flatten 5m 15m 30m candles etc. for longer trend indication.
 // TODO add longer trend candle predictors for hour, 15 min, 30 min etc trained on historical data
 
+// XGBOOST
+// https://towardsdatascience.com/forecasting-stock-prices-using-xgboost-a-detailed-walk-through-7817c1ff536a
+// https://medium.com/@hsahu/stock-prediction-with-xgboost-a-technical-indicators-approach-5f7e5940e9e3
+// https://www.kaggle.com/mtszkw/using-xgboost-for-stock-trend-prices-prediction
+// https://medium.com/swlh/stock-price-prediction-xgboost-1fce6cbd24d7
+// https://www.datacamp.com/community/news/forecasting-markets-using-extreme-gradient-boosting-xgboost-dpiwyu0ag65
+// http://gonzalopla.com/predicting-stock-exchange-prices-with-machine-learning/
+
+// Prophet
+// https://towardsdatascience.com/time-series-forecasting-predicting-stock-prices-using-facebooks-prophet-model-9ee1657132b5
+
+// LSTM
+// https://www.datacamp.com/community/tutorials/lstm-python-stock-market
+
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
 .obs.derive: {[step;aIds] // TODO make faster? // TODO fill values with blanks (0f), make faster
