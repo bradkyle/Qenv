@@ -100,6 +100,7 @@
         dneg:sum'[{x where[x<0]}'[dlts]];
         .order.test.dneg:dneg;
         if[count[dneg]>0;[
+                msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
                 // Pad state into a matrix
                 // for faster operations
                 padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
@@ -143,9 +144,11 @@
 
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
 
-                .order.Order,:(); // TODO update orders
+                .order.Order,:flip(`orderId`offset!(raze'[state`orderId`offset][;where[msk]])); // TODO update orders
             ]];
-        .order.OrderBook,:(state`price`side`tgt`hqty`iqty`vqty); // TODO fix here
+        state[`bside]:first'[distinct'[state[`side]]];
+        .order.test.state3:state;
+        .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
     // Delete all out of bounds depths, depths that are empty 
