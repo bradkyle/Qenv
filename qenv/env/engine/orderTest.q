@@ -1341,7 +1341,19 @@ dozc:{x+y}[doz];
         .order.ProcessTrade[p[`event]];
 
     };
-    {};
+    {[p] 
+        // TODO account for one record
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        bookCols:`side`price`qty;
+
+        :`cDepth`cOrd`o`mocks`eDepth`eOrd!(
+            p[0];
+            p[1];
+            p[2];
+            (5_10#p);
+            p[3]; // TODO shorten parameterization
+            p[4]);
+    };
     ();
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
