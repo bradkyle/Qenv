@@ -180,6 +180,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
+    .instrument.UpdatePriceLimits[instrument;]; // TODO derive price limti
     .order.UpdatePriceLimits[];
     .pipe.egress.AddPriceLimitEvent[];    
     };

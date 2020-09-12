@@ -61,6 +61,7 @@
     capped                  : `boolean$();
     hasLiquidityBuy         : `boolean$();
     hasLiquiditySell        : `boolean$();
+    usePriceLimits          : `boolean$();
     maxPrice                : `long$();
     minPrice                : `long$();
     upricelimit             : `long$();
