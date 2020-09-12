@@ -35,11 +35,12 @@
 // orderbook sizes at each price.
 // TODO add hidden/Iceberg qty
 .order.OrderBook:(
-    [price      :`long$()]
-    side        :`long$(); 
-    qty         :`long$();
-    hqty        :`long$();
-    vqty      :`long$()); // TODO hQty: hidden qty
+    [price      :`long$()]  // price
+    side        :`long$();  // side
+    qty         :`long$(); // data qty
+    hqty        :`long$(); // hidden qty
+    iqty        :`long$(); // iceberg qty
+    vqty      :`long$()); // Visible qty
 
 / Bitmex
 / A buy Limit Order for 10 contracts with a Limit Price of 100 will be submitted to the market. 
@@ -55,11 +56,9 @@
 / Once the order completely filled, a new order will be placed. 
 / When the last market price exceeds 2*(order variance), the previous order would be cancelled 
 / and a new one will be placed.
-
 / When the amount traded equals the total order amount, the iceberg trade has been filled. 
 / When the last market price exceeds the highest buy price of 20,000 US Dollars, the iceberg 
 / order would be temporarily halted.
-
 / After the price falls down to 20,000 US Dollars, the iceberg order would be recommenced.
 
 // Process Depth update
