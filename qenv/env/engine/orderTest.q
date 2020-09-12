@@ -84,7 +84,6 @@ dozc:{x+y}[doz];
         // TODO account for one record
         ordcols:`clId`instrumentId`accountId`side`otype`offset`size`price;
 
-
         nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
         
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
