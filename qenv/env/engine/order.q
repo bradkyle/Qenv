@@ -251,7 +251,7 @@
             // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
-                // TODO left over order
+                // TODO left over order, limit order placed as taker in other side book.
                 // If the order crosses the bid/ask spread
                 // i.e. 
                 // sell order <= best bid  
@@ -262,13 +262,12 @@
                   .order.Order,:o];
 
           ]; 
-          (k in (1,2));[
+          (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
               .order.Order,:o;
-              // TODO add events
-         ]; // STOP_LIMIT_ORDER
+         ]; 
          'INVALID_ORDER_TYPE]; 
     // Prune engine orders to increase speed
     ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
