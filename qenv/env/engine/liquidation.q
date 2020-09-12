@@ -15,6 +15,7 @@
 / https://help.ftx.com/hc/en-us/articles/360027668712-Liquidations
 / https://help.bybit.com/hc/en-us/articles/360039261334-How-to-calculate-Liquidation-Price-Inverse-Contract-
 / https://help.bybit.com/hc/en-us/articles/360039261474-Liquidation-process-Inverse-Contract-
+/ https://help.bybit.com/hc/en-us/articles/900000389743-Introduction-to-Mutual-Insurance
 
 .liquidation.ForceCancel        :{[a;time]
     .order.CancelAllOrders[a;time];

@@ -44,15 +44,34 @@
 .rq.Require  :{[ipath; mkinds]
     dirs:();
     mods:();
+    .rq.basePath:ipath;
 
+    // Recursive function that
+    // walks up the tree of directories to find all
+    // mod files
     walk:{
-
+        // List all files in the 
+        // directory
         p:key y;
+
+        // Derive all q files from directory
         qfiles:p where[{all[".q" in string[x]]}'[p]];
+        
+        // Find all mod files in directory
         mfiles:qfiles where[{all["mod" in string[x]]}'[qfiles]];
+        
+        // Get all sub directories in the directory // TODO naive
         dirs:p where[{all[not["." in string[x]]}'[p]]];
         
-        // TODO count before
+        ny:0;
+        nz:0;
+
+        // if there are any subdirectories in the
+        // current directory loop through all of them
+        // providing the absolute path to them and 
+        // append the results to x, if no more subdirectories
+        // exist, return x (the resultant absolute paths to mod 
+        // all mod files)  
         $[count[dirs]>0;:(.z.s[x]'[ny]);:x];
         };
 
