@@ -139,7 +139,7 @@ dozc:{x+y}[doz];
 /  @param z (List[String]) The params that are being checked 
 .util.testutils._checkOrders         :{[cl;vl;case] // TODO if provided orders are not table
         $[count[vl]>0;[
-            eOrd:$[type[vl]=99h;vl;.util.testutils.makeOrders[vl;cl]];
+            eOrd:$[type[vl] in (99 98h);vl;.util.testutils.makeOrders[vl;cl]];
             cl:$[count[cl]>0;cl;cols[eOrd]];
             if[count[eOrd]>0;[
                 rOrd: select from .order.Order where clId in eOrd[`clId];
