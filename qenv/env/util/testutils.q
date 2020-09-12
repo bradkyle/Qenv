@@ -75,7 +75,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrderBook      :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.order.OrderBook;cl;vl]
+    $[count[vl]>0;.util.testutils.makeDefaultsRecords[`.order.OrderBook;cl;vl];()]
     };
 
 
@@ -85,7 +85,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeOrders          :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.order.Order;cl;vl]
+    $[count[vl]>0;.util.testutils.makeDefaultsRecords[`.order.Order;cl;vl];()]
     };
 
 

@@ -82,18 +82,17 @@ dozc:{x+y}[doz];
     };
     {[p] 
         // TODO account for one record
-        ordcols:`clId`instrumentId`accountId`side`otype`offset`size`price;
-
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        bookCols:`side`price`qty;
         nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
-        
+
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
-            p[0];
-            p[1];
+            .util.testutils.makeOrderBook[bookCols;flip p[0]];
+            .util.testutils.makeOrders[ordCols;flip p[1]];
             nxt;
             enlist p[5];
-            p[3];
-            p[4]
-        );
+            p[3]; // TODO shorten parameterization
+            .util.testutils.makeOrders[ordCols;flip p[4]]);
     };
     (
         ("simple update no agent orders or previous depth one side";(
@@ -133,7 +132,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("all OrderBook levels should be removed where the remaining qty<=0 and no agent orders exist";(
-            ((10#-1);(raze flip 2 5#(1000+til 5));10#100;(10#z,(z+`second$5))); // Current Depth
+            ((10#-1);(raze flip 2 5#(1000+til 5));10#100); // Current Depth
             (); // Current Orders
             ((10#-1);(raze flip 2 5#(1000+til 5));((2#0),(8#100));(10#z,(z+`second$5))); // Depth Update
             ([price:(1001+til 4)] side:(4#-1);qty:(4#100);vqty:(4#100)); // Expected Depth
@@ -142,7 +141,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("1 buy order at best level, previous depth greater than updates";(
-            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Current Depth
+            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100); // Current Depth
             (til[2];2#1;2#1;2#-1;2#1;100 400;2#100;2#1000;2#z); // Current Orders
             ((10#-1);(raze flip 2 5#(1000+til 5));10#1000;(10#z,(z+`second$5))); // Depth Update
             ([price:((1000+til 5))] side:(5#-1);qty:(5#1000);vqty:(1200,4#1000)); // Expected Depth
@@ -151,7 +150,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("1 buy order at best level, previous depth greater than differing updates";(
-            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Current Depth
+            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100); // Current Depth
             (til[2];2#1;2#1;2#-1;2#1;100 400;2#100;2#1000;2#z); // Current Orders
             ((10#-1);(raze flip 2 5#(1000+til 5));(10#1050 1000);(10#z,(z+`second$5))); // Depth Update
             ([price:((1000+til 5))] side:(5#-1);qty:(5#1000);vqty:(1200,4#1000)); // Expected Depth
@@ -160,7 +159,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("1 buy order at best level, previous depth greater than differing updates (3 updates) 2 dec 1 inc";(
-            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100;(10#z,(z+`second$5))); // Current Depth
+            ((10#-1);(raze flip 2 5#(1000+til 5));10#1100); // Current Depth
             (til[2];2#1;2#1;2#-1;2#1;100 400;2#100;2#1000;2#z); // Current Orders
             ((9#-1);(raze flip 3#{(1000+x;1000+x;1000+x)}til 3);(9#1050 1000 1100);(9#z,(z+`second$5))); // Depth Update
             ([price:((1000+til 5))] side:(5#-1);qty:(5#1100);vqty:(1300,4#1100)); // Expected Depth
@@ -169,7 +168,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("buy and sell orders at best level, previous depth greater than differing updates (3 updates) 2 dec 1 inc";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#999),(2#1000);4#z); // Current Orders
             (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));(20#1000 1100);(20#z,(z+`second$5))); // Depth Update
             ([price:((999-til 5),(1000+til 5))] side:(5#1),(5#-1);qty:(10#1100);vqty:10#(1300,4#1100)); // Expected Depth
@@ -178,7 +177,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("check that depth update where zero is removed and only one update is processed per side";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1100); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (-11;1000 999;0 0;(z,z));  // Depth Update
             ([price:((998-til 4),(1001+til 4))] side:(4#1),(4#-1);qty:(8#1100);vqty:(8#1100)); // Expected Depth
@@ -187,7 +186,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time doesn't cross spread (best price decreases during update)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (
                 ((4#1),(2#-1));
@@ -201,7 +200,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time doesn't cross spread (best price increases during update)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((4#-1),(2#1));
@@ -215,7 +214,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes at original";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (
                 ((6#1),(4#-1));
@@ -229,7 +228,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price increases during update) finishes at original";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((6#-1),(4#1));
@@ -243,7 +242,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes at order level";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (
                 ((5#1),(4#-1));
@@ -257,7 +256,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price increases during update) finishes at order level";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000);  // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((5#-1),(4#1));
@@ -271,7 +270,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, repletes order spread during update, finishes at both order levels";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((5#-1),(5#1));
@@ -285,7 +284,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes past order level (within final spread)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (
                 ((4#1),(4#-1));
@@ -299,7 +298,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price increases during update) finishes past order level (within final spread)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000);  // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((4#-1),(4#1));
@@ -313,7 +312,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price decreases during update) finishes past order level (past final spread)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#1),(2#-1));4#1;(4#100 400);4#100;(2#998),(2#1001);4#z); // Current Orders
             (
                 ((4#1),(2#-1));
@@ -327,7 +326,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, crosses order spread during update (best price increases during update) finishes past order level (past final spread)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[4];4#1;4#1;((2#-1),(2#1));4#1;(4#100 400);4#100;(2#1001),(2#998);4#z); // Current Orders
             (
                 ((4#-1),(2#1));
@@ -341,7 +340,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000);  // Current Depth
             (til[8];8#1;8#1;((4#-1),(4#1));8#1;(8#100 400);8#100;((4#1001 1002),(4#998 997));8#z); // Current Orders
             (
                 ((5#-1),(5#1));
@@ -355,7 +354,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("many levels with many orders at same offset interval, price is removed across all levels partially (900)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5))); // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000); // Current Depth
             (til[20];20#1;20#1;((10#-1),(10#1));20#1;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
             (
                 ((20#1),(20#-1));
@@ -369,7 +368,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("many levels with many orders at same offset interval, price is removed across all levels fully (1000)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;(20#z,(z+`second$5)));  // Current Depth
+            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000);  // Current Depth
             (til[20];20#1;20#1;((10#-1),(10#1));20#1;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
             (
                 ((20#1),(20#-1));
@@ -469,7 +468,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (`.instrument.Instrument!0;-1;1500;0b;1b;`.account.Account!0;z); // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
@@ -488,7 +487,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was not made by an agent, trade is smaller than best qty";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (`.instrument.Instrument!0;-1;200;0b;0b;0N;z);  // Fill Execution
             ([price:1000-til 10] side:(10#1);qty:(800,9#1000);vqty:(800,9#1000)); // Expected Depth
@@ -506,7 +505,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was not made by an agent, trade is larger than best qty";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (`.instrument.Instrument!0;-1;1200;0b;0b;0N;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(800,8#1000);vqty:(800,8#1000)); // Expected Depth
@@ -522,7 +521,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was made by an agent, trade is smaller than best qty";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (`.instrument.Instrument!0;-1;200;0b;1b;`.account.Account!0;z);   // Fill Execution
             ([price:1000-til 10] side:(10#1);qty:(800,9#1000);vqty:(800,9#1000)); // Expected Depth
@@ -539,7 +538,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook does not have agent orders, trade was made by an agent, trade is larger than best qty";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (); // Current Orders
             (`.instrument.Instrument!0;-1;1200;0b;1b;`.account.Account!0;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(800,8#1000);vqty:(800,8#1000)); // Expected Depth
@@ -558,7 +557,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook has agent orders, lvl1 size > qty, trade doesn't fill agent order, trade execution < agent order offset, fill is agent";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#400),(2#600));4#100;4#1000 999;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;200;0b;1b;`.account.Account!0;z);  // Fill Execution
             ([price:1000-til 10] side:(10#1);qty:(800,9#1000);vqty:(1000 1200, 8#1000)); // Expected Depth
@@ -575,7 +574,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook has agent orders, lvl1 size < qty, trade doesn't fill agent order, trade execution < agent order offset, fill is agent";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#400),(2#600));4#100;4#999 998;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;1200;0b;1b;`.account.Account!0;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(800,8#1000);vqty:(1000 1200, 7#1000)); // Expected Depth
@@ -594,7 +593,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook has agent orders, trade fills agent order, trade execution > agent order offset, fill is agent";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;1450;0b;1b;`.account.Account!0;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
@@ -622,7 +621,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook has agent orders, trade doesn't fill agent order, trade execution < agent order offset, fill is not agent";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;50;0b;0b;0N;z);  // Fill Execution
             ([price:1000-til 10] side:(10#1);qty:(950,9#1000);vqty:(1150 1200, 8#1000)); // Expected Depth
@@ -637,7 +636,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
@@ -665,7 +664,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("SELL: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#1);1000-til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#1;4#1;((2#100),(2#400));4#100;4#1000 999;4#z); // Current Orders
             (`.instrument.Instrument!0;-1;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
             ([price:999-til 9] side:(9#1);qty:(550,(8#1000));vqty:(750,(8#1000))); // Expected Depth
@@ -693,7 +692,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
-            ((10#-1);1000+til 10;10#1000;(10#z,(z+`second$5))); // Current Depth
+            ((10#-1);1000+til 10;10#1000); // Current Depth
             (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;4#1000 1001;4#z); // Current Orders
             (`.instrument.Instrument!0;1;1450;1b;1b;`.account.Account!1;z);  // Fill Execution
             ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000)));  // Expected Depth
