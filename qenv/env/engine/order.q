@@ -137,7 +137,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test
+.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
     show type side;
     show side;
@@ -244,7 +244,7 @@
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-.order.ProcessOrder            :{[i;a;o;time] 
+.order.ProcessOrder            :{[i;a;o] 
     k:o[;6];
     res:$[(k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];

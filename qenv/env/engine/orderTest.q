@@ -738,11 +738,56 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
-        .order.ProcessOrder[p[`event]];
+        mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
+        mck2: .qt.M[`.pipe.egress.AddTradeEvent;{[a;b]};c];
+        mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
+        mck5: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
+
+        .order.ProcessOrder[
+            .order.test.defaultInstrument;
+            .order.test.defaultAccount;
+            p`o];
+
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected AddOrderUpdateEvent Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected IncSelfFill Mock
+        .util.testutils.checkMock[mck3;m[2];c];  // Expected ApplyFill Mock
+        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddTradeEvent Mock
+        .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
     };
     {};
-    ();
+    (
+        ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;100;0b;z); // Fill Execution
+            ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (0b;0;()); // Expected ApplyFill Mock
+            (1b;1;enlist((-1;1000;100);z)); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ));
+        ("orderbook does not have agent orders, trade was not made by an agent trade is larger than first level";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;1500;0b;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (0b;0;()); // Expected ApplyFill Mock
+            (1b;2;(
+                ((-1;999;500);z);
+                ((-1;1000;1000);z)
+            )); // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected AddDepthEvent Mock
+            () // Expected Events
+        ))
+    );
     .util.testutils.defaultEngineHooks;
     "Global function for processing new orders"];
 
