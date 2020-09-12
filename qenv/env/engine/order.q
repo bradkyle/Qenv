@@ -257,7 +257,7 @@
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-.order.ProcessOrder            :{[i;a;o] 
+.order.NewOrder            :{[i;a;o] 
     // TODO validation?
     k:o[`otype];
     show k;
@@ -301,6 +301,47 @@
     / ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
+// Process New Orders
+// -------------------------------------------------------------->
+
+// Process Order modifies a given order to either cancel or 
+// order.
+/  @param i     (Instrument) The instrument for which this order is placed
+/  @param o     (Order) The order that is being placed.
+/  @param a    (Account) The account to which this order belongs.
+/  @param time (datetime) The time at which this order was placed.
+/  @return (Inventory) The new updated inventory
+.order.AmendOrder            :{[i;a;o] 
+    // TODO validation?
+    k:o[`otype];
+    show k;
+    res:$[k=0;[ // MARKET ORDER
+            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+            // TODO add events
+          ]; 
+          k=1;[ // LIMIT ORDER
+                // IF the order is present, amend order, if amended to 0 remove
+                $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]]; // TODO check
+                    [
+                        
+                    ];
+                    [ 
+                        // TODO Error order not found
+                    ]
+                ];
+
+          ]; 
+          (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
+              // IF the order is present, amend order, if amended to 0 remove
+              // Stop orders do not modify state of 
+              // the orderbook and thus can be inserted
+              // as such.
+              .order.Order,:o;
+         ]; 
+         'INVALID_ORDER_TYPE]; 
+    // Prune engine orders to increase speed
+    / ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
+    };
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
