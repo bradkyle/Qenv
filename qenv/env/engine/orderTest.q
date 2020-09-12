@@ -788,7 +788,7 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
             (0b;0;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddDepthEvent Mock
         ));
         ("orderbook does not have agent orders, trade was not made by an agent trade is larger than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
@@ -800,7 +800,7 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
             (0b;0;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddDepthEvent Mock
         ))
     );
     .util.testutils.defaultEngineHooks;
