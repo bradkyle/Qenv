@@ -296,7 +296,6 @@
 
 / Open long or close short position: Order would be rejected if the order price sent is higher than the price limit,. 
 / Open short or close long position: Order would be blocked if the order price sent is lower than the price limit.
-
 / The above rules also apply to the liquidation price. For liquidation of short positions, 
 / if the liquidation price is higher than the higher limit, the system will place the buying orders at the 
 / Upper limit; for liquidation of long positions, if the liquidation price is lower than the 
