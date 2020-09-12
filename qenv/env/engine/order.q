@@ -261,7 +261,7 @@
     k:o[`otype];
     show k;
     res:$[k=0;[ // MARKET ORDER
-            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
+            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
             // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
@@ -273,8 +273,8 @@
                 // sell order <= best bid  
                 // buy order >= best ask 
                 // process the order as a trade.
-                $[(() or ());
-                  .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
+                $[((i`bestBidPrice) or (i`bestAskPrice));
+                  .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                   .order.Order,:o];
 
           ]; 
@@ -287,7 +287,7 @@
          ]; 
          'INVALID_ORDER_TYPE]; 
     // Prune engine orders to increase speed
-    ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
+    / ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
 
