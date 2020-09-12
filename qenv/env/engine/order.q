@@ -63,9 +63,9 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order qty
-    show nxt[1];
-    odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt[1]];0b;()];
+.order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
+    odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
+    .order.test.NXT:nxt;
     $[count[odrs]>0;[
         // TODO uj new event
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
@@ -109,10 +109,10 @@
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
             ]];
         .order.Order,:(); // TODO update orders
-        .order.OrderBook,:(state 0 1 2 3 4); // TODO fix here
-    ];[.order.OrderBook,:last'[nxt 0 1 2 3 4]]]; // TODO fix
-    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
+        .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
+    ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtqty]]]; // TODO fix
+    ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()]; // Delete all out of bounds depths
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; // TODO add snapshot update?
     };
 
 

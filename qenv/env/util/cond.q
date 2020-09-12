@@ -151,16 +151,19 @@
 // OrderBook Conditionals
 // -------------------------------------------------------------->
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
+// 
+/  @param price     :
 /  @return (Inventory) The new updated inventory
-.util.cond.depthBounds:{:((>;`netLongPosition;0);
+.util.cond.bookUpdBounds:{:((>;`netLongPosition;0);
                    (>;`netShortPosition;0); // TODO CONDITIONAL
                    (>;`openBuyQty;0); // TODO CONDITIONAL
                    (>;`openSellQty;0))};
 
+
+// 
+/  @param price     :
+/  @return (Inventory) The new updated inventory
+.util.cond.bookPrune:{:((>;`netLongPosition;0);
+                   (>;`netShortPosition;0); // TODO CONDITIONAL
+                   (>;`openBuyQty;0); // TODO CONDITIONAL
+                   (>;`openSellQty;0))};

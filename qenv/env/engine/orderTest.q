@@ -80,7 +80,11 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     };
-    {[p] :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(p[0];p[1];p[2];enlist p[5];p[3];p[4])};
+    {[p] 
+        // TODO account for one record
+        x:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
+        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(p[0];p[1];x;enlist p[5];p[3];p[4])
+    };
     (
         ("simple update no agent orders or previous depth one side";(
             (); // Current Depth
@@ -719,7 +723,7 @@ dozc:{x+y}[doz];
 // TODO commenting
 // TODO orderbook update, order update
 
-test:.qt.Unit[
+.qt.Unit[
     ".order.ProcessOrder";
     {[c]
         p:c[`params];
@@ -733,7 +737,7 @@ test:.qt.Unit[
     "Global function for processing new orders"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".order.CancelAllOrders";
     {[c]
         p:c[`params];
@@ -750,7 +754,7 @@ test:.qt.Unit[
 // TODO mock order update event
 // 
 
-test:.qt.Unit[
+.qt.Unit[
     ".order.ExecStop";
     {[c]
         p:c[`params];
@@ -764,7 +768,7 @@ test:.qt.Unit[
     "Global function for triggering stop orders"];
 
 
-test:.qt.Unit[
+.qt.Unit[
     ".order.CheckStopOrders";
     {[c]
         p:c[`params];
@@ -776,3 +780,5 @@ test:.qt.Unit[
     ();
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
+
+.qt.RunTests[];
