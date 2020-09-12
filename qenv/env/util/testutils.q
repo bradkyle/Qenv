@@ -163,7 +163,7 @@ dozc:{x+y}[doz];
                 cl:$[count[cl]>0;cl;cols[eBook]];
                 rBook:.order.OrderBook;
                 .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";case]; // TODO check
-                .qt.A[(cl#0!rBook);~;(cl#0!eBook);"ordersBook";case]; // TODO check
+                .qt.A[(cl#0!rBook);~;(cl#0!eBook);"orderBook";case]; // TODO check
             ]];
         ];[]];
     };
@@ -271,8 +271,6 @@ dozc:{x+y}[doz];
     };
 
 
-.util.testutils.defaultAccounts:.util.testutils.genAccount[];
-.util.testutils.defaultInstrument:.util.testutils.genInstrument[];
 
 // Default function that runs before each Unit test etc.
 .util.testutils.defaultBeforeEach               :{};
@@ -446,5 +444,9 @@ dozc:{x+y}[doz];
     };
 
 
-// Main Param Generation utils
+// More default utils
 // -------------------------------------------------------------->
+
+.util.testutils.defaultAccounts:.util.testutils.genAccount[];
+.util.testutils.defaultAccount:first .util.testutils.defaultAccounts;
+.util.testutils.defaultInstrument:.util.testutils.genInstrument[];

@@ -5,11 +5,12 @@
 // TODO change price type to int, longs etc.
 // TODO allow for data derived i.e. exchange market orders. 
 // TODO move offset into seperate table?
-.order.Order: (
-    [price:`long$(); orderId:`long$()]
+.order.Order: ( // TODO add sorting attr by price
+    [orderId        :`long$()]
     clId            : `long$();
     instrumentId    : `.instrument.Instrument$();
     accountId       : `.account.Account$();
+    price           : `long$();
     side            : `long$();
     otype           : `long$();
     offset          : `long$();
@@ -28,6 +29,7 @@
 
 // OrderBook
 // =====================================================================================>
+/ ?[t;c;b;a;n;(g;cn)]     /select up to n records sorted by g on cn
 
 // Instantiate a singleton class of Orderbook
 // qtys: represent the different level quantities at their given prices
@@ -48,6 +50,7 @@
 / for 3 contracts at 100 then 3 contracts will be executed from this order. After that, 
 / another bid for 1 contract will appear at 100 to other traders. As such, there will now be 
 / 7 contracts left remaining, with 1 only visible.
+
 
 // OKEX
 / The system will automatically place an iceberg order. 
@@ -78,26 +81,35 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
-    odrs:?[.order.Order;.util.cond.isActiveLimitB[nxt`price];0b;()];
+    odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()];
     .order.test.NXT:nxt;
+    .order.test.ODRS:odrs;
+    .order.test.O:.order.Order;
+    .order.test.OB:.order.OrderBook;
     $[count[odrs]>0;[
         // TODO uj new event
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:uj[?[`.order.OrderBook;(=;`side;nside);0b;()]; // TODO grouping
-        ?[`.order.Order;.util.cond.isActiveLimit[();nside];0b;()];`price;()]; // TODO grouping
+        state:0!uj[`price xgroup ?[`.order.OrderBook;();0b;()];`price xgroup odrs]; // TODO grouping
 
         .order.test.state:state;
-        dlts:1_'(deltas'[raze'[flip[raze[enlist(qty;size)]]]]);
+        dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
+        .order.test.dlts:dlts;
 
         state[`tgt]: last'[state`size]; // TODO change to next? 
         
         dneg:sum'[{x where[x<0]}'[dlts]];
+        .order.test.dneg:dneg;
         if[count[dneg]>0;[
                 // Pad state into a matrix
                 // for faster operations
                 padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
                     `accountId`instrumentId`price`status);
                 (state padcols):.util.PadM'[state padcols];
+                .order.test.state2:state;
+
+                maxN:max count'[state`offset];
+                tmaxN:til maxN;
+                numLvls:count[state`offset];
 
                 shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
                 mxshft:max'[shft];
@@ -112,9 +124,16 @@
                         .util.Clip[state[`qty]-mxshft] // TODO change?
                     )]];
 
+                .order.test.nagentQty:nagentQty;
+
+                // Derive the deltas in the agent order offsets as the 
+                // 
                 offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
-                noffset: {?[x>y;x;y]}'[mnoffset;poffset + offsetdlts];
-                nshft:sum[state`leaves;noffset];
+
+                .order.test.offsetdlts:offsetdlts;
+
+                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
+                nshft:state[`leaves]+noffset;
                 
                 // Calculate the new vis qty
                 nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
@@ -172,8 +191,6 @@
     // TODO make better
     state[`hqty]:state`qty;
     state[`iqty]:state`qty;
-
-    .order.test.state:state;
 
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;`price xgroup odrs]]; 
@@ -259,7 +276,6 @@
 .order.NewOrder            :{[i;a;o] 
     // TODO validation?
     k:o[`otype];
-    show k;
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
             // TODO add events
@@ -306,7 +322,6 @@
 .order.AmendOrder            :{[i;a;o] 
     // TODO validation?
     k:o[`otype];
-    show k;
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
             // TODO add events
