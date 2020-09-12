@@ -153,6 +153,8 @@
     state[`tgt]:(-/)state`qty`rp;
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
 
+    .order.test.state:state;
+
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;`price xgroup odrs]]; 
         msk:count'[state`orderId];
@@ -211,10 +213,17 @@
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
-    ];[.order.OrderBook,:(state`price`side`tgt`vqty)]]; // TODO fix
-    ![`.order.OrderBook;.util.cond.bookBounds[];0;`symbol$()]; // Delete all out of bounds depths
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookBoundsO[];0b;()];time]; // TODO add snapshot update?
+        .order.OrderBook,:(state`price`side`tgt`hqty`vqty); // TODO fix here
+    ];if[count[state]>0;[.order.OrderBook,:(state`price`side`tgt`hqty`vqty)]]]; // TODO fix
+    
+    
+    // Delete all out of bounds depths, depths that are empty 
+    // i.e. where vqty + hqty = 0
+    / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
+    / .order.test.OB:.order.OrderBook;
+    // Return the orderbook update to the egress pipe
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; 
+
     // TODO update last price
     };
 
