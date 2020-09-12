@@ -111,8 +111,13 @@
         .order.Order,:(); // TODO update orders
         .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtqty]]]; // TODO fix
-    ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()]; // Delete all out of bounds depths
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; // TODO add snapshot update?
+
+    // Delete all out of bounds depths, depths that are empty 
+    // i.e. where vqty + hqty = 0
+    ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()]; 
+
+    // Return the orderbook update to the egress pipe
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; 
     };
 
 
