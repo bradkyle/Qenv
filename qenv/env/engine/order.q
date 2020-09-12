@@ -139,9 +139,6 @@
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
 .order.ProcessTrade        :{[instrument;account;td] // TODO fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
-    show type side;
-    show side;
-    show 99#"-";
     nside:neg[side];
     isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders

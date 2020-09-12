@@ -732,6 +732,9 @@ dozc:{x+y}[doz];
 // TODO place iceberg/hidden order
 // TODO commenting
 // TODO orderbook update, order update
+// TODO amend to different price/
+// TODO amend to cross spread
+// TODO amend to cross spread stop order
 
 .qt.Unit[
     ".order.ProcessOrder";
