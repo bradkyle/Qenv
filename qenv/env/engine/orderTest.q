@@ -82,8 +82,19 @@ dozc:{x+y}[doz];
     };
     {[p] 
         // TODO account for one record
-        x:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
-        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(p[0];p[1];x;enlist p[5];p[3];p[4])
+        ordcols:`clId`instrumentId`accountId`side`otype`offset`size`price;
+
+
+        nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
+        
+        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
+            p[0];
+            p[1];
+            nxt;
+            enlist p[5];
+            p[3];
+            p[4]
+        );
     };
     (
         ("simple update no agent orders or previous depth one side";(
