@@ -49,7 +49,7 @@
 
 // Process Depth update
 // -------------------------------------------------------------->
-
+// TODO update best bid + best ask
 // TODO uniform decrease / increase of hidden order qty with updates
 // that don't represent this?
 // TODO move to C for increased speed.
@@ -123,6 +123,7 @@
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
+// TODO udpate best bid + best ask
 // TODO move to C for increased speed.
 // TODO add junk order to taker, hidden to taker etc.
 // TODO add iceberg/hidden logic
@@ -250,12 +251,15 @@
             // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
-                // TODO add events
+                // TODO left over order
+                // If the order crosses the bid/ask spread
+                // i.e. 
+                // sell order <= best bid  
+                // buy order >= best ask 
+                // process the order as a trade.
                 $[(() or ());
-                  .order.ProcessTrade[
-                        i;a;o`side;o`size;o`reduce;time
-                   ];
-                   .order.Order,:o];
+                  .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
+                  .order.Order,:o];
 
           ]; 
           (k in (1,2));[
