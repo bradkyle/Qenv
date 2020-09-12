@@ -1273,7 +1273,7 @@ dozc:{x+y}[doz];
 // 
 
 .qt.Unit[
-    ".order.ExecStop";
+    ".order.ExecuteStop";
     {[c]
         p:c[`params];
 
@@ -1285,10 +1285,8 @@ dozc:{x+y}[doz];
         mck1: .qt.M[`.pipe.ingress.AddPlaceOrderEvent;{[a;b]};c];
         mck2: .qt.M[`.pipe.egress.AddOrderUpdateEvent;{[a;b]};c];
 
-        .order.ProcessOrder[
-            .order.test.defaultInstrument;
-            .order.test.defaultAccount;
-            p`o];
+        a:p`args;
+        .order.ExecuteStop[.order.test.defaultInstrument;a`time;a`o];
 
         .util.testutils.checkMock[mck1;m[0];c];  // Expected AddPlaceOrderEvent Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderUpdateEvent Mock
