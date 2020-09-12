@@ -1,4 +1,5 @@
 
+// TODO commenting
 
 // Order Conditionals
 // -------------------------------------------------------------->
@@ -20,18 +21,16 @@
                 (>;`leaves;0))}; // TODO improve performance
 
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
+// Determines if 
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .util.cond.isActiveAccLimitB:{:(
-                (=;`otype;1);
-                (in;`status;(0 1));
-                (in;`accountId;z); 
+                (=;`otype;1); // is Limit order
+                (in;`status;(0 1)); // is New or partially filled
+                (in;`accountId;z); // 
                 (in;`price;y); 
                 (>;`leaves;0))}; // TODO improve performance
 
@@ -51,18 +50,14 @@
                 (in;`price;y); 
                 (>;`leaves;0))}; // TODO improve performance
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
+// Efficiently collects the set of orders that conform to the given 
+// conditionals, used to get all active orders on both sides of the 
+// orderbook.
+/  @param x (List(Long)) list of prices to which the order must conform
 .util.cond.isActiveLimitB:{:(
                 (=;`otype;1);
-                (in;`status;(0 1));
-                (in;`price;y); 
+                (in;`status;(0 1));  // is New or partially filled
+                (in;`price;x);  // is in price levels
                 (>;`leaves;0))}; // TODO improve performance
 
 // Inc Fill is used when the fill is to be added to the given inventory

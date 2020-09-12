@@ -71,7 +71,7 @@ dozc:{x+y}[doz];
         m:p`mocks;
         mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
 
-        // instrument;nxt
+        // instrument;nxt:(side;price;qty;hqty;time)
         .order.ProcessDepth[.order.test.defaultInstrument;p`nxt];
 
         .util.testutils.checkMock[mck1;m[0];c];
