@@ -33,7 +33,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.uil.testutils.checkMockParams      :{
+.uil.testutils.checkMock           :{
 
     };
 

@@ -6,6 +6,7 @@
 
 \cd ../util
 \l testutils.q 
+\l cond.q
 \cd ../engine/
 
 \cd ../pipe
@@ -66,7 +67,7 @@ dozc:{x+y}[doz];
         .util.testutils.setupDepth[p`cDepth];
         .util.testutils.setupOrders[p`cOrd];
 
-        m:p[`mocks];
+        m:p`mocks;
         mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
 
         a:p`args;
