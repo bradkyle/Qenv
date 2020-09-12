@@ -138,6 +138,9 @@
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
 .order.ProcessTrade        :{[instrument;account;td] // TODO fix and test
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
+    show type side;
+    show side;
+    show 99#"-";
     nside:neg[side];
     isagnt:not[null[account]];
     // Join the opposing side of the orderbook with the current agent orders
@@ -152,6 +155,9 @@
     state:state[where (state`rp)>0];
     state[`tgt]:(-/)state`qty`rp;
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
+
+    // TODO make better
+    state[`hqty]:state`qty;
 
     .order.test.state:state;
 
@@ -213,8 +219,8 @@
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        .order.OrderBook,:(state`price`side`tgt`hqty`vqty); // TODO fix here
-    ];if[count[state]>0;[.order.OrderBook,:(state`price`side`tgt`hqty`vqty)]]]; // TODO fix
+        .order.OrderBook,:flip(state`price`side`tgt`hqty`vqty); // TODO fix here
+    ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`vqty)]]]; // TODO fix
     
     
     // Delete all out of bounds depths, depths that are empty 

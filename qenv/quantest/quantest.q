@@ -611,8 +611,7 @@ AAll  :{[actual;expected;msg;case] // TODO add reasons
                 ]
             ];
         ]]);
-    
-    state:$[failFlag;`FAIL;`PASS];
+    state:$[all[failFlag];`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`alleq;expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
