@@ -781,7 +781,7 @@ dozc:{x+y}[doz];
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
             (); // Current Orders
-            (-1;100;0b;z); // Fill Execution
+            (-1;100;0b;z); // Order Placed
             ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddOrderUpdateEvent Mock
