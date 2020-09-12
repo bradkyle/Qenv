@@ -56,7 +56,7 @@ dozc:{x+y}[doz];
 /  @param vl (List[List[Any]]) The list of lists to populate with. 
 .util.testutils.makeDefaultsRecords  :{[ref;cl;vl] // TODO inter with actual cols
     r:.util.NullRowDict[ref];
-    cvl:count[vl];
+    cvl:count[vl]; 
     :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];:rx];[r[cl]:vl;:r]]};
 
 // Checks that the .order.Order table matches the orders
@@ -417,10 +417,7 @@ dozc:{x+y}[doz];
 
 .util.testutils.setupOrders         :{
     if[count[x]>0;[
-        .order.Order,:{
-            show .account.Account;
-            show x[`accountId];
-            show x;
+        .order.Order,:{ 
             x[`accountId]:(`.account.Account!(x[`accountId]));
             x[`instrumentId]:(`.instrument.Instrument!(x[`instrumentId]));
             x[`reduce]:`boolean$(x[`reduce]);

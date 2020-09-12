@@ -444,20 +444,16 @@ dozc:{x+y}[doz];
     {[p] 
         // TODO account for one record
         ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        ordColsEx:`clId`instrumentId`accountId`side`otype`offset`leaves`price`status`time;
         bookCols:`side`price`qty;
-        nxt:$[
-            count[p[2]]=4;`side`price`nxtqty`time!p[2];
-            count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];
-            count[p[2]]=6;`side`price`nxtqty`nxthqty`nxtiqty`time!p[2];
-            'INVALID_NXT];
 
         :`cDepth`cOrd`td`mocks`eDepth`eOrd!(
             .util.testutils.makeOrderBook[bookCols;flip p[0]];
             .util.testutils.makeOrders[ordCols;flip p[1]];
-            nxt;
+            p[2];
             (5_10#p);
             p[3]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols;flip p[4]]);
+            .util.testutils.makeOrders[ordColsEx;flip p[4]]);
     };
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
