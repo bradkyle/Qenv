@@ -307,26 +307,3 @@
     .order.ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
     };
 
-
-// Apply Price Limits
-// -------------------------------------------------------------->
-
-// https://www.okex.com/academy/en/v-usdt-delivery-contracts-price-limits/
-
-/ Open long or close short position: Order would be rejected if the order price sent is higher than the price limit,. 
-/ Open short or close long position: Order would be blocked if the order price sent is lower than the price limit.
-/ The above rules also apply to the liquidation price. For liquidation of short positions, 
-/ if the liquidation price is higher than the higher limit, the system will place the buying orders at the 
-/ Upper limit; for liquidation of long positions, if the liquidation price is lower than the 
-/ lower limit price, the system will place the selling orders at lower limit.
-
-// Should remove all orders outside the price limits? 
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-.order.ApplyPriceLimits   :{[instrument;time]
-    
-
-    };
