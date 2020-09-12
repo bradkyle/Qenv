@@ -1,10 +1,11 @@
 
 
-/ \cd ../../quantest/
-/ \l quantest.q 
-/ \cd ../env/engine/
+\cd ../../quantest/
+\l quantest.q 
+\cd ../env/engine/
 
-\l ../util 
+\cd ../util
+\l testutils.q 
 \cd ../engine/
 
 \l instrument.q

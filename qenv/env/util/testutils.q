@@ -150,7 +150,7 @@ dozc:{x+y}[doz];
 /  @param x (OrderBook/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.uti.testutils.checkDepth           :{
+.util.testutils.checkDepth           :{
         eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]];
         if[count[eBook]>0;[
             rBook:.order.OrderBook;
@@ -164,7 +164,7 @@ dozc:{x+y}[doz];
 /  @param x (Instrument/List) The instrument that is to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.uti.testutils.checkInstrument         :{
+.util.testutils.checkInstrument         :{
         eIns:$[type[x]=99h;x;.util.testutils.makeInstruments[x;z]];
         if[count[eIns]>0;[
             rIns:.instrument.Instrument;
@@ -390,6 +390,8 @@ dozc:{x+y}[doz];
 .util.testutils.setupOrderbook      :{
 
     };
+
+.util.testutils.setupDepth:.util.testutils.setupOrderbook;
 
 .util.testutils.setupOrders         :{
 
