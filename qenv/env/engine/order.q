@@ -250,8 +250,7 @@
 // Process New Orders
 // -------------------------------------------------------------->
 
-// Process Order modifies a given order to either cancel or 
-// order.
+// New Order Adds an order to the orderbook.
 /  @param i     (Instrument) The instrument for which this order is placed
 /  @param o     (Order) The order that is being placed.
 /  @param a    (Account) The account to which this order belongs.
@@ -304,8 +303,8 @@
 // Process New Orders
 // -------------------------------------------------------------->
 
-// Process Order modifies a given order to either cancel or 
-// order.
+// Amend Order modifies a given order.
+// Takes the place of cancel logic when an order amount is amended to zero.
 /  @param i     (Instrument) The instrument for which this order is placed
 /  @param o     (Order) The order that is being placed.
 /  @param a    (Account) The account to which this order belongs.
