@@ -154,12 +154,11 @@
 // 
 /  @param price     :
 /  @return (Inventory) The new updated inventory
-.util.cond.bookUpdBounds:{:((>;`netShortPosition;0))};
+.util.cond.bookUpdBounds:{:((>;`qty;0);(>=;`vqty;0))}; // TODO update this 
 
 
-// 
+// TODO update this 
 /  @param price     :
 /  @return (Inventory) The new updated inventory
 .util.cond.bookPrune:{:((<=;`vqty;0);
-                   (<=;`hqty;0);  
-                   ())}; // COnd based upon max bid price, max ask price
+                   (<=;`hqty;0))}; // COnd based upon max bid price, max ask price

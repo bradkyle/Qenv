@@ -109,13 +109,13 @@
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
             ]];
         .order.Order,:(); // TODO update orders
-        .order.OrderBook,:(state`price`side`tgt`vqty); // TODO fix here
+        .order.OrderBook,:(state`price`side`tgt`hqty`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtqty]]]; // TODO fix
 
     // Delete all out of bounds depths, depths that are empty 
     // i.e. where vqty + hqty = 0
-    ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()]; 
-
+    / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
+    / .order.test.OB:.order.OrderBook;
     // Return the orderbook update to the egress pipe
     .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; 
     };

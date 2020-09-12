@@ -104,6 +104,7 @@
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
 
+// TODO simulate out of sync depth udates
 // Maintains a historic record of depth snapshots
 // with the amount of levels stored dependent upon
 // the config for the specified from the engine 
