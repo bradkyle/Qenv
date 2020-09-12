@@ -273,9 +273,12 @@
                 // sell order <= best bid  
                 // buy order >= best ask 
                 // process the order as a trade.
-                $[((i`bestBidPrice) or (i`bestAskPrice));
+                $[((i`bestBidPrice)>0) or ((i`bestAskPrice)>0);
                   .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-                  .order.Order,:o];
+                  [
+                      .order.Order,:o;
+                      
+                  ]];
 
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
