@@ -28,13 +28,14 @@ dozc:{x+y}[doz];
     };       
 
 
+// TODO add additional logic
 // Checks that the .order.Order table matches the orders
 // that are provided.
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.uil.testutils.checkMock           :{
-
+.util.testutils.checkMock           :{
+        .qt.MA[x;y[0];y[1];y[2];z];
     };
 
 

@@ -512,7 +512,7 @@ ASSERTIONKIND:  (`TRUE;      / place a new order
                 `THAT /
                 );
 
-assertId:-1;
+assertId:0;
 Assertion   :(
     [assertId      : `long$()]
     testId         : `.qt.Test$();
@@ -525,8 +525,6 @@ Assertion   :(
     expected       : ()
     );
 
-
-
 // Assert that the relation between expected and actual value holds
 // @param actual An object representing the actual result value
 // @param expected An object representing the expected value
@@ -537,7 +535,7 @@ A   :{[actual;relation;expected;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
     failFlag::not .[relation; (actual; expected); 0b];
     state:$[failFlag;`FAIL;`PASS];
-    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;str relation;expected);
+    ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;enlist actual;str relation;enlist expected);
     `.qt.Assertion upsert ass;
     :{.qt.Assertion@x}.qt.assertId;
     };
@@ -626,10 +624,8 @@ AAll  :{[actual;expected;msg;case] // TODO add reasons
 MA      :{[mId;called;numCalls;calledWith;case]
         m:.qt.Mock@mId;
         t:string[m[`targetPath]];
-
         .qt.A[m[`called];=;called;t," called";case];
         .qt.A[m[`numCalls];=;numCalls;t, " numCalls";case];
-
         if[count[calledWith]>0;[
             .qt.AAll[exec invokedWith from .qt.Invocation where mockId=mId;calledWith;t," invokedWith";case];
         ]];
