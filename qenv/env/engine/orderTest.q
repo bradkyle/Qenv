@@ -738,6 +738,11 @@ dozc:{x+y}[doz];
     {[c]
         p:c[`params];
 
+        .util.testutils.setupDepth[p`cDepth];
+        .util.testutils.setupOrders[p`cOrd];
+
+        m:p[`mocks];
+
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.pipe.egress.AddTradeEvent;{[a;b]};c];
         mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
@@ -755,8 +760,23 @@ dozc:{x+y}[doz];
         .util.testutils.checkMock[mck4;m[3];c];  // Expected AddTradeEvent Mock
         .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils.checkOrders[p[`eOrd];c];
     };
-    {};
+    {[p] 
+        // TODO account for one record
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        bookCols:`side`price`qty;
+        nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
+
+        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
+            .util.testutils.makeOrderBook[bookCols;flip p[0]];
+            .util.testutils.makeOrders[ordCols;flip p[1]];
+            nxt;
+            enlist p[5];
+            p[3]; // TODO shorten parameterization
+            .util.testutils.makeOrders[ordCols;flip p[4]]);
+    };
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
