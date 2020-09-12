@@ -137,8 +137,8 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.checkOrders         :{ // TODO if provided orders are not table
-        eOrd:$[type[x]=99h;x;.util.testutils.makeOrders[x;z]];
+.util.testutils._checkOrders         :{[cl;vl] // TODO if provided orders are not table
+        eOrd:$[type[vl]=99h;vl;.util.testutils.makeOrders[vl;cl]];
         if[count[eOrd]>0;[
             rOrd: select from .order.Order where clId in eOrd[`clId];
             .qt.A[count[eOrd];=;count[rOrd];"order count";y]; // TODO check
@@ -146,20 +146,22 @@ dozc:{x+y}[doz];
             ]];
     };
 
+.util.testutils.checkOrders:.util.testutils._checkOrders[()];
 
 // Checks that the .order.OrderBook table matches the OrderBook
 // that are provided.
 /  @param x (OrderBook/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.checkDepth           :{
-        eBook:$[type[x]=99h;x;.util.testutils.makeOrderBook[x;z]];
+.util.testutils._checkDepth           :{[cl;vl]
+        eBook:$[type[vl]=99h;vl;.util.testutils.makeOrderBook[vl;cl]];
         if[count[eBook]>0;[
             rBook:.order.OrderBook;
             .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";y]; // TODO check
             .qt.A[(y#0!rBook);~;(y#0!eBook);"ordersBook";y]; // TODO check
             ]];
     };
+.util.testutils.checkDepth:.util.testutils._checkDepth[()];
 
 // Checks that the .instrument.Instrument table matches the Instrument
 // that are provided.

@@ -74,7 +74,7 @@ dozc:{x+y}[doz];
         // instrument;nxt:(side;price;qty;hqty;time)
         .order.ProcessDepth[.order.test.defaultInstrument;p`nxt];
 
-        .util.testutils.checkMock[mck1;m[0];c];
+        / .util.testutils.checkMock[mck1;m[0];c];
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils.checkOrders[p[`eOrd];c];
