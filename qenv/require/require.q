@@ -75,6 +75,8 @@
         $[count[dirs]>0;:(.z.s[x]'[ny]);:x];
         };
 
+    mpaths:walk[.rq.basePath];
+
     };
 
 // Excludes a set of modules based on specified attributes
