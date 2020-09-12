@@ -163,7 +163,6 @@
 // 
 /  @param price     :
 /  @return (Inventory) The new updated inventory
-.util.cond.bookPrune:{:((>;`netLongPosition;0);
-                   (>;`netShortPosition;0); // TODO CONDITIONAL
-                   (>;`openBuyQty;0); // TODO CONDITIONAL
-                   (>;`openSellQty;0))};
+.util.cond.bookPrune:{:((<=;`vqty;0);
+                   (<=;`hqty;0);  
+                   ())}; // COnd based upon max bid price, max ask price
