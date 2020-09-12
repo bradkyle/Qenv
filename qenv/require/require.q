@@ -76,7 +76,7 @@
         };
 
     mpaths:walk[.rq.basePath];
-
+    {system ("l ", x)}'[mpaths]; // TODO error handling
     };
 
 // Excludes a set of modules based on specified attributes
