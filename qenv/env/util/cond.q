@@ -154,10 +154,7 @@
 // 
 /  @param price     :
 /  @return (Inventory) The new updated inventory
-.util.cond.bookUpdBounds:{:((>;`netLongPosition;0);
-                   (>;`netShortPosition;0); // TODO CONDITIONAL
-                   (>;`openBuyQty;0); // TODO CONDITIONAL
-                   (>;`openSellQty;0))};
+.util.cond.bookUpdBounds:{:((>;`netShortPosition;0))};
 
 
 // 
