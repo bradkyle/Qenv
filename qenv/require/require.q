@@ -6,7 +6,7 @@
 
 .rq.modcount :0;
 .rq.Mod      :(
-    [mId    :   `symbol$()]
+    [mname    :   `symbol$(); mId: `long$()]
     kind    :  `.rq.MODKIND$();
     state   :  `.rq.MODSTATE$();
     path    :  `symbol$();
@@ -20,7 +20,11 @@
 /  @param mpath     (String) the path from the mod.q file to the file of the module 
 /  @param mdeps    (List[String/Symvol]) The list of module dependencies this module has.
 .rq.M        :{[mname; mpath; mdeps]
-    .rq.Mod,:();
+    // validate mndame
+    // validate mpath
+    // validate mdeps
+    
+    .rq.Mod,:(mname;(.rq.modcount+:1);`.rq.MODKIND$`CODE;`.rq.MODSTATE$`READY;mpath;mdeps);
     };
 
 // Require Unit Test Module
@@ -32,7 +36,8 @@
 /  @param mpath     (String) the path from the mod.q file to the file of the module 
 /  @param mdeps    (List[String/Symvol]) The list of module dependencies this module has.
 .rq.UM       :{[mname; mpath; mdeps]
-    .rq.Mod,:();
+
+    .rq.Mod,:(mname;(.rq.modcount+:1);`.rq.MODKIND$`UNIT;`.rq.MODSTATE$`READY;mpath;mdeps);
     };
 
 // TODO naive implementation make better
