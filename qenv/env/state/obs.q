@@ -32,6 +32,8 @@
 // TODO executions
 // TODO fractional differentiation
 // TODO strategies signals
+// TODO different observation derivation methods
+// TODO flatten 5m 15m 30m candles etc. for longer trend indication.
 
 / use < for ascending, > for descending // TODO fills
 // TODO max lookback time
