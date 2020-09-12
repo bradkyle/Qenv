@@ -1317,7 +1317,7 @@ dozc:{x+y}[doz];
             ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddPlaceOrderEvent Mock
-            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()) // Expected AddOrderUpdateEvent Mock
         ));
         ("Amend stop market order to zero, should remove order from .order.Order";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
@@ -1326,7 +1326,7 @@ dozc:{x+y}[doz];
             ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected AddPlaceOrderEvent Mock
-            (0b;0;()); // Expected AddOrderUpdateEvent Mock
+            (0b;0;()) // Expected AddOrderUpdateEvent Mock
         ))
     );
     .util.testutils.defaultEngineHooks;
