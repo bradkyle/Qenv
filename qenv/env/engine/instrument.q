@@ -44,11 +44,10 @@
     faceValue               : `long$();
     maxLeverage             : `long$();
     minLeverage             : `long$();
-    tickSize                : `float$();
     priceMultiplier         : `long$();
     sizeMultiplier          : `long$();
-    markPrice               : `float$();
-    lastPrice               : `float$();
+    markPrice               : `long$();
+    lastPrice               : `long$();
     fundingInterval         : `timespan$();
     totalVolume             : `long$();
     volume24h               : `long$();
@@ -66,20 +65,20 @@
     minPrice                : `long$();
     upricelimit             : `long$();
     lpricelimit             : `long$();
-    lotSize                 : `float$(); 
-    maxOrderSize            : `float$();
-    minOrderSize            : `float$();
-    junkOrderSize           : `float$();
+    lotSize                 : `long$(); 
+    maxOrderSize            : `long$();
+    minOrderSize            : `long$();
+    junkOrderSize           : `long$();
     liquidationStrat        : `long$();
     contractType            : `long$();
-    insuranceFee            :  `float$();
-    maxOpenOrders           : `int$(); // The default maximum number of orders that an agent can have open.
+    maxOpenOrders           : `long$(); // The default maximum number of orders that an agent can have open.
     numLiquidations         : `long$();
     numAccountLiquidations  : `long$();
     numPositionLiquidations : `long$();
     numBankruptcies         : `long$();
     numForcedCancellations  : `long$();
     riskBuffer              : `long$();
+    tickSize                : `float$();
     feeTiers                : ();
     riskTiers               : ());
 
