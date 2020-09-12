@@ -245,13 +245,16 @@
 /  @return (Inventory) The new updated inventory
 .order.ProcessOrder            :{[i;a;o;time] 
     k:o[;6];
-    res:$[k=0;[ // MARKET ORDER
+    res:$[(k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;time];
             // TODO add events
           ]; 
           k=1;[ // LIMIT ORDER
-                .order.Order,:o;
                 // TODO add events
+                $[;[
+                    
+                ];.order.Order,:o]
+
           ]; 
           (k in (1,2));[
               // Stop orders do not modify state of 
