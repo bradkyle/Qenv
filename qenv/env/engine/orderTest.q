@@ -441,7 +441,24 @@ dozc:{x+y}[doz];
         .util.testutils.checkOrders[p[`eOrd];c];
 
     }; // TOOD derive from // TODO derive orderbook, orders
-    {[p] :`cDepth`cOrd`td`mocks`eDepth`eOrd!(p[0];p[1];p[2];(5_10#p);p[3];p[4])};
+    {[p] 
+        // TODO account for one record
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        bookCols:`side`price`qty;
+        nxt:$[
+            count[p[2]]=4;`side`price`nxtqty`time!p[2];
+            count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];
+            count[p[2]]=6;`side`price`nxtqty`nxthqty`nxtiqty`time!p[2];
+            'INVALID_NXT];
+
+        :`cDepth`cOrd`td`mocks`eDepth`eOrd!(
+            .util.testutils.makeOrderBook[bookCols;flip p[0]];
+            .util.testutils.makeOrders[ordCols;flip p[1]];
+            nxt;
+            (5_10#p);
+            p[3]; // TODO shorten parameterization
+            .util.testutils.makeOrders[ordCols;flip p[4]]);
+    };
     (
         ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
             ((10#1);1000-til 10;10#1000); // Current Depth
