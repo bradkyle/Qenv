@@ -276,7 +276,13 @@ dozc:{x+y}[doz];
 // Default function that runs after each Unit test etc.
 .util.testutils.defaultAfterEach                :{};
 
-.util.testutils.defaultEngineHooks              :({};{};{};{});
+.util.testutils.defaultEngineHooks              :(
+    {
+        .util.testutils.resetEngineTables[];
+    };
+    {
+        .util.testutils.resetEngineTables[];
+    };{};{});
 
 .util.testutils.defaultStateHooks               :({};{};{};{});
 

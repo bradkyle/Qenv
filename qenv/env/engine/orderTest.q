@@ -5,6 +5,7 @@
 \cd ../env/engine/
 
 \cd ../util
+\l table.q
 \l testutils.q 
 \l cond.q
 \cd ../engine/
