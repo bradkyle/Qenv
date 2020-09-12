@@ -1305,7 +1305,7 @@ dozc:{x+y}[doz];
     };
     {[p] 
         // TODO account for one record
-        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
+        ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time;
         bookCols:`side`price`qty;
 
         :`cDepth`cOrd`o`mocks`eDepth`eOrd!(
@@ -1320,7 +1320,7 @@ dozc:{x+y}[doz];
         ("Place new post only limit order, no previous depth or agent orders should update depth";(
             (); // Current Depth
             (); // Current Orders
-            (-1;100;0b;z); // Order Placed
+            (1;1;1;1;1;100;100;1000;0b;z); // Order Placed
             ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
