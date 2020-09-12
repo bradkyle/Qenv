@@ -142,8 +142,9 @@
                 nvqty: {?[x>y;x;y]}'[mxnshft;nvqty];
 
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
+
+                .order.Order,:(); // TODO update orders
             ]];
-        .order.Order,:(); // TODO update orders
         .order.OrderBook,:(state`price`side`tgt`hqty`iqty`vqty); // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
