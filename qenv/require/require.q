@@ -36,6 +36,9 @@
 /  @param mpath     (String) the path from the mod.q file to the file of the module 
 /  @param mdeps    (List[String/Symvol]) The list of module dependencies this module has.
 .rq.UM       :{[mname; mpath; mdeps]
+    // validate mndame
+    // validate mpath
+    // validate mdeps
 
     .rq.Mod,:(mname;(.rq.modcount+:1);`.rq.MODKIND$`UNIT;`.rq.MODSTATE$`READY;mpath;mdeps);
     };
@@ -47,8 +50,9 @@
 /  @param ipath     (String/Symbol) The initial path from which to find mod.q files
 /  @param mkinds    (.rq.MODKIND) The allowed module kinds that should be loaded.
 .rq.Require  :{[ipath; mkinds]
-    dirs:();
-    mods:();
+
+    // Load Modules into Scope
+    // ------------------------------------------------------------------>
     .rq.basePath:ipath;
 
     // Recursive function that
@@ -82,6 +86,19 @@
 
     mpaths:walk[.rq.basePath];
     {system ("l ", x)}'[mpaths]; // TODO error handling
+
+
+    // Build dependency graph from modules
+    // ------------------------------------------------------------------>
+    mds:();
+
+    // Load all modules in order of increasing dependency of prior
+    // ------------------------------------------------------------------>
+
+    // Sort dependencies
+
+    // Load by order
+
     };
 
 // Excludes a set of modules based on specified attributes
