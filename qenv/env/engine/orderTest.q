@@ -9,6 +9,10 @@
 \cd ../engine/
 
 \cd ../pipe
+\l common.q
+\l event.q 
+\l egress.q
+\l ingress.q 
 \l pipe.q 
 \cd ../engine
 
@@ -370,7 +374,7 @@ dozc:{x+y}[doz];
         mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
         mck2: .qt.M[`.pipe.egress.AddTradeEvent;{[a;b]};c];
         mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
-        mck5: .qt.M[`.pipe.egress.AddOrderUpdateEvent;{[a;b]};c];
+        mck5: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
         a:p[`args];

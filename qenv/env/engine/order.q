@@ -183,7 +183,7 @@
         fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
         .order.Order,:(); // update where partial
         ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
-        .pipe.egress.AddOrderUpdateEvent[]; // Emit events for all 
+        .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
 
         // Make order updates
         mflls:[];
