@@ -760,22 +760,21 @@ dozc:{x+y}[doz];
         .util.testutils.checkMock[mck4;m[3];c];  // Expected AddOrderCancellledEvent Mock
         .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
-        .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils.checkOrders[p[`eOrd];c];
+        / .util.testutils.checkDepth[p[`eDepth];c];
+        / .util.testutils.checkOrders[p[`eOrd];c];
     };
     {[p] 
         // TODO account for one record
         ordCols:`clId`instrumentId`accountId`side`otype`offset`size`price`time;
         bookCols:`side`price`qty;
-        nxt:$[count[p[2]]=4;`side`price`nxtqty`time!p[2];count[p[2]]=5;`side`price`nxtqty`nxthqty`time!p[2];'INVALID_NXT];
 
-        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
-            .util.testutils.makeOrderBook[bookCols;flip p[0]];
-            .util.testutils.makeOrders[ordCols;flip p[1]];
-            nxt;
-            enlist p[5];
+        :`cDepth`cOrd`o`mocks`eDepth`eOrd!(
+            p[0];
+            p[1];
+            p[2];
+            (5_10#p);
             p[3]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols;flip p[4]]);
+            p[4]);
     };
     (
         ("Place new post only limit order, no previous depth or agent orders should update depth";(
@@ -969,10 +968,10 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
-        ));
+        ))
     );
     .util.testutils.defaultEngineHooks;
-    "Global function for processing new orders"];
+    "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
 
 // TODO mock place order event
