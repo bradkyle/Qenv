@@ -743,21 +743,21 @@ dozc:{x+y}[doz];
 
         m:p[`mocks];
 
-        mck1: .qt.M[`.account.ApplyFill;{[a;b;c;d;e;f;g;h]};c];
-        mck2: .qt.M[`.pipe.egress.AddTradeEvent;{[a;b]};c];
-        mck3: .qt.M[`.account.IncSelfFill;{[a;b;c]};c];
-        mck5: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
-        mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
+        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c]};c];
+        mck2: .qt.M[`.pipe.egress.AddOrderCreatedEvent;{[a;b]};c];
+        mck3: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddOrderCancellledEvent;{[a;b]};c];
+        mck5: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
         .order.ProcessOrder[
             .order.test.defaultInstrument;
             .order.test.defaultAccount;
             p`o];
 
-        .util.testutils.checkMock[mck1;m[0];c];  // Expected AddOrderUpdateEvent Mock
-        .util.testutils.checkMock[mck2;m[1];c];  // Expected IncSelfFill Mock
-        .util.testutils.checkMock[mck3;m[2];c];  // Expected ApplyFill Mock
-        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddTradeEvent Mock
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected ProcessTrade Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderCreatedEvent Mock
+        .util.testutils.checkMock[mck3;m[2];c];  // Expected AddOrderUpdatedEvent Mock
+        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddOrderCancellledEvent Mock
         .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
         .util.testutils.checkDepth[p[`eDepth];c];
