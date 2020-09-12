@@ -144,7 +144,8 @@
 
                 vqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
 
-                .order.Order,:flip(`orderId`offset!(raze'[state`orderId`offset][;where[msk]])); // TODO update orders
+                .order.Order,:flip(`orderId`offset!(raze'[state`orderId`offset][;where[msk]])); 
+                .order.state.O2:.order.Order;
             ]];
         state[`bside]:first'[distinct'[state[`side]]];
         .order.test.state3:state;
