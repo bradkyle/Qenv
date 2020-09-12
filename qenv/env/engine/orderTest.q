@@ -747,19 +747,6 @@ dozc:{x+y}[doz];
     "Global function for processing new orders"];
 
 
-.qt.Unit[
-    ".order.CancelAllOrders";
-    {[c]
-        p:c[`params];
-
-        .order.CancelAllOrders[p[`event]];
-
-    };
-    {};
-    ();
-    .util.testutils.defaultEngineHooks;
-    "Global function for processing new orders"];
-
 // TODO mock place order event
 // TODO mock order update event
 // 

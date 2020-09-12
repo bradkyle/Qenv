@@ -236,8 +236,7 @@
 // Process New Orders
 // -------------------------------------------------------------->
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
+// Process Order modifies a given order to either cancel or 
 // order.
 /  @param i     (Instrument) The instrument for which this order is placed
 /  @param o     (Order) The order that is being placed.
@@ -266,9 +265,6 @@
     ![`.order.Order;.util.cond.EnginePruneOrd[];0;`symbol$()];
     };
 
-.order.CancelAllOrders         :{[a]
-
-    };
 
 // Process Trades/Market Orders
 // -------------------------------------------------------------->
