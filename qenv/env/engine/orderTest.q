@@ -778,8 +778,8 @@ dozc:{x+y}[doz];
             .util.testutils.makeOrders[ordCols;flip p[4]]);
     };
     (
-        ("orderbook does not have agent orders, trade was not made by an agent trade is smaller than first level";(
-            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+        ("Place new post only limit order, no previous depth or agent orders should update depth";(
+            (); // Current Depth
             (); // Current Orders
             (-1;100;0b;z); // Order Placed
             ([price:1000-til 10] side:(10#1);qty:(900,9#1000);vqty:(900,9#1000)); // Expected Depth
@@ -788,9 +788,9 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
             (0b;0;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;()) // Expected AddDepthEvent Mock
+            (0b;0;())  // Expected AddDepthEvent Mock
         ));
-        ("orderbook does not have agent orders, trade was not made by an agent trade is larger than first level";(
+        ("Place new post only limit order, previous depth, no agent orders should update depth";(
             ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
             (); // Current Orders
             (-1;1500;0b;z); // Fill Execution
@@ -800,8 +800,32 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
             (0b;0;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;()) // Expected AddDepthEvent Mock
-        ))
+            (0b;0;())  // Expected AddDepthEvent Mock
+        ));
+        ("Place new post only limit order, previous depth, agent orders should update depth";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;1500;0b;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected ProcessTrade Mock
+            (0b;0;()); // Expected AddOrderCreatedEvent Mock
+            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+            (0b;0;())  // Expected AddDepthEvent Mock
+        ));
+        ("Place new post only limit order, previous depth, agent orders should update depth";(
+            ((10#1);1000-til 10;10#1000;(10#z,(z+`second$1))); // Current Depth
+            (); // Current Orders
+            (-1;1500;0b;z); // Fill Execution
+            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+            (); // Expected Orders
+            (0b;0;()); // Expected ProcessTrade Mock
+            (0b;0;()); // Expected AddOrderCreatedEvent Mock
+            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+            (0b;0;())  // Expected AddDepthEvent Mock
+        ));
     );
     .util.testutils.defaultEngineHooks;
     "Global function for processing new orders"];
