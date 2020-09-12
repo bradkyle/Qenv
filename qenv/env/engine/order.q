@@ -267,9 +267,9 @@
           ]; 
           k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
-                $[();
+                $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
                     [
-
+                        
                     ];
                     [ 
                         // TODO left over order, limit order placed as taker in other side book.
@@ -278,12 +278,13 @@
                         // sell order <= best bid  
                         // buy order >= best ask 
                         // process the order as a trade.
-                        $[((i`bestBidPrice)>0) or ((i`bestAskPrice)>0);
-                        .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-                        [
-                            o[`orderId]:(.order.orderCount+:1);
-                            .order.Order,:o;
-                        ]];
+                        $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
+                           ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
+                            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                            [
+                                o[`orderId]:(.order.orderCount+:1);
+                                .order.Order,:o;
+                            ]];
                     ]
                 ];
 
