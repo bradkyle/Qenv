@@ -70,7 +70,7 @@ dozc:{x+y}[doz];
         m:p`mocks;
         mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
 
-        a:p`args;
+        a:p`args; // instrument;nxt;time
         .order.ProcessDepth[];
 
         .util.testutils.checkMock[mck1;m[0];c];
@@ -389,6 +389,7 @@ dozc:{x+y}[doz];
 // TODO benchmarking
 // TOOD test instrument/account doesn't exist
 // TODO test erroring
+// TODO iceberg/hidden order logic
 
 .qt.Unit[
     ".order.ProcessTrade";
