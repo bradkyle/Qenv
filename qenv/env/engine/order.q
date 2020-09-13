@@ -357,7 +357,14 @@
     res:$[k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
                  // TODO check
-                  
+                co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
+                $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
+                    [
+
+                    ];
+                    [
+                        
+                    ]];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
