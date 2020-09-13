@@ -372,6 +372,9 @@
                             // visible and hidden quantity at the level
                             o[`offset]:sum[ob`vqty`hqty`iqty];
 
+                            // 
+                            ob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
+
 
                             // Adjust the offsets of all orders > offset at level
                             // and update orderbook.
@@ -380,6 +383,10 @@
                         [
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];                            
 
+                            // Get all orders above the order in the order queue
+                            od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
+                            od[`offset]-:co[`size];
+                            
                             // Adjust order offset
                             dlt:o[`size]-co[`size];
 
