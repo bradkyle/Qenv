@@ -27,7 +27,7 @@
     {};
     ();
     .util.testutils.defaultEngineHooks;
-    "Global function for creating a new account"];
+    "Global function for checking if account is insolvent"];
 
 .qt.Unit[
     ".account.Deposit";
