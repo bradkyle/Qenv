@@ -10,7 +10,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -24,7 +23,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -39,7 +37,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -53,7 +50,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -71,7 +67,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -84,7 +79,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -98,7 +92,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -112,7 +105,6 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
@@ -125,8 +117,6 @@
     ".account.ApplySettlement";
     {[c]
         p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
 
     };
     {};
