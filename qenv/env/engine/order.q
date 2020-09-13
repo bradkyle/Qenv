@@ -313,6 +313,9 @@
                     .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                     [
                         o[`orderId]:(.order.orderCount+:1);
+
+                        // get the orderbook lj orders at price.
+
                         .order.Order,:o;
                     ]];
 
