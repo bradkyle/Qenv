@@ -92,6 +92,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.linear.account.ApplyFill;{[a;b;c;d;e]};c];
+        mck2: .qt.M[`.inverse.account.ApplyFill;{[a;b;c;d;e]};c];
+        mck3: .qt.M[`.quanto.account.ApplyFill;{[a;b;c;d;e]};c];
+        mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
     };
     {};
@@ -105,6 +110,12 @@
         p:c[`params];
 
 
+        mck1: .qt.M[`.linear.account.ApplyFunding;{[a;b;c;d;e]};c];
+        mck2: .qt.M[`.inverse.account.ApplyFunding;{[a;b;c;d;e]};c];
+        mck3: .qt.M[`.quanto.account.ApplyFunding;{[a;b;c;d;e]};c];
+        mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
+
     };
     {};
     ();
@@ -116,6 +127,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.linear.account.UpdateMarkPrice;{[a;b;c;d;e]};c];
+        mck2: .qt.M[`.inverse.account.UpdateMarkPrice;{[a;b;c;d;e]};c];
+        mck3: .qt.M[`.quanto.account.UpdateMarkPrice;{[a;b;c;d;e]};c];
+        mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
     };
     {};
