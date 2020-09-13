@@ -33,7 +33,7 @@
     ".account.Deposit";
     {[c]
         p:c[`params];
-
+        mck1: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
 
     };
     {};
