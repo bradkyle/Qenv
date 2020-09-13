@@ -213,3 +213,58 @@
 
 // TakeOverPosition Functionality
 // ---------------------------------------------------------------------------------------->
+
+
+// Deposit
+// ---------------------------------------------------------------------------------------->
+
+// Adds a given amount to the accounts balance.
+// Update available/withdrawable etc. // TODO validate arguments?
+.account.Deposit  :{[i;a;deposited;time]
+    // TODO more expressive and complete upddate statement accounting for margin etc.
+    // Account: available, liquidationprice, bankruptcyprice, depositCount
+
+    acc[`balance]-:deposited;
+    acc[`depositAmount]+:deposited;
+    acc[`depositCount]+:1;
+    acc[`withdrawable]+:deposited;
+    / account[`available]:.account.Available[acc]; // TODO
+    / account[`initMarginReq`maintMarginReq]
+
+
+    // TODO add update event
+    acc
+    };
+
+
+// Withdraw
+// ---------------------------------------------------------------------------------------->
+
+// Checks that a given account has enough available balance to
+// withdraw a given amount and then executes a withdrawal
+// updating balance,withdrawCount and withdrawAmount
+// Update available/withdrawable etc
+/  @param withdrawn (Long) The amount that is to be withdrawn
+/  @param time (datetime) The time of the withdraw event
+/  @param accountId (Long) The id of the account to withdraw from
+/  @throws InvalidAccountId accountId was not found.
+/  @throws InsufficientMargin account has insufficient margin for withdraw
+.account.Withdraw       :{[i;a;withdrawn;time]
+    // Account: available, liquidationprice, bankruptcyprice, withdrawCount
+
+    if[not[count[acc]>0];'INVALID_ACCOUNTID];
+
+    $[withdrawn < acc[`withdrawable];[
+        // TODO more expressive and complete upddate statement accounting for margin etc.
+
+        acc[`balance]-:withdrawn;
+        acc[`withdrawAmount]+:withdrawn;
+        acc[`withdrawCount]+:1;
+        acc[`withdrawable]-:withdrawn;
+        / account[`available]:.account.Available[acc]; // TODO
+
+        // TODO update liquidation price 
+        
+        ];'InsufficientMargin];  
+        acc
+    };
