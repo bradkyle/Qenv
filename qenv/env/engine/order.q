@@ -373,7 +373,7 @@
 
                         ]];
                 ];[
-
+                    // Cancel order and update orderbook subsequently
                 ]];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
