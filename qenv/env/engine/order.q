@@ -384,8 +384,8 @@
 
                             nob[`vqty]+:o`displayqty;
 
-                            // Adjust the offsets of all orders > offset at level
-                            // and update orderbook.
+                            .order.Order,:((),o,od);
+                            .order.OrderBook,:ob;
 
                         ];
                         [   // If the order reduces in size it does not affect the placement in the queue
@@ -408,7 +408,7 @@
                             ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
                             ob[`vqty]
 
-                            .order.Order,:o;
+                            .order.Order,:((),o,od);
                             .order.OrderBook,:ob;
                         ]];
 
