@@ -366,8 +366,9 @@
 
                     // Get all orders above the order in the order queue at the price level
                     cod:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
-                    $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
-                        [
+
+                    $[((o[`leaves]>co[`leaves]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
+                        [ // If the order should be replaced in the order queue.
                             nob:$[(o[`price]<>co[`price]);?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];cob];
                             // considering the order is being replaced in the queue 
                             // amend all orders above the order to reflect the change
@@ -376,24 +377,23 @@
                             
                             // Reset the order offset to the sum of the 
                             // visible and hidden quantity at the level
-                            o[`offset]:sum[ob`vqty`hqty`iqty];
+                            o[`offset]:sum[nob`vqty`hqty`iqty];
 
-                            
-
-                            // 
+                            // set the new orderbook qty to the  
                             nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
 
+                            nob[`vqty]+:o`displayqty;
 
                             // Adjust the offsets of all orders > offset at level
                             // and update orderbook.
 
                         ];
-                        [
+                        [ // If the order reduces in size it does not affect the order in the orderbook
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];                            
 
-                            // Get all orders above the order in the order queue
-                            od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
-                            od[`offset]-:co[`size];
+                            dlt: o[`size] - co[`size];
+
+                            od[`offset]+:dlt;
 
                             // Adjust order offset
                             dlt:o[`size]-co[`size];
