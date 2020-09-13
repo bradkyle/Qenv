@@ -360,25 +360,28 @@
                 $[sum[o`leaves`size]>0;[
                     // Get the current state of the order.
                     co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
+                    
+                    // Get the current state of the order book at the given price level. 
                     cob:?[`.order.OrderBook;enlist(=;`price;c`price);0b;()];
 
-
                     // Get all orders above the order in the order queue at the price level
-                    od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
+                    cod:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
                     $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [
-                            // Reset order offset
-                            ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
-
-                            // Get all orders above the order in the order queue
-                            od[`offset]-:co[`size];
+                            nob:$[(o[`price]<>co[`price]);?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];cob];
+                            // considering the order is being replaced in the queue 
+                            // amend all orders above the order to reflect the change
+                            // in offset.
+                            cod[`offset]-:co[`size];
                             
                             // Reset the order offset to the sum of the 
                             // visible and hidden quantity at the level
                             o[`offset]:sum[ob`vqty`hqty`iqty];
 
+                            
+
                             // 
-                            ob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
+                            nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
 
 
                             // Adjust the offsets of all orders > offset at level
