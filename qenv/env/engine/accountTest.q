@@ -1,5 +1,10 @@
 
 
+
+// Account Management
+// -------------------------------------------------------------->
+/*******************************************************
+
 .qt.Unit[
     ".account.NewAccount";
     {[c]
@@ -7,7 +12,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
 
@@ -18,7 +26,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for adding account deposits"];
 
 
@@ -30,19 +41,11 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for adding account withdraws"];
-
-
-.qt.Unit[
-    ".account.NewInventory";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultEngineHooks
-    "Global function for creating a new account"];
 
 
 .qt.Unit[
@@ -52,9 +55,29 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
+
+// Inventory Management
+// -------------------------------------------------------------->
+/*******************************************************
+
+.qt.Unit[
+    ".account.NewInventory";
+    {[c]
+        p:c[`params];
+
+        .account.ProcessDepth[p[`event]];
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Global function for creating a new account"];
 
 .qt.Unit[
     ".account.ApplyFill";
@@ -63,7 +86,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
 
@@ -74,7 +100,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
 
@@ -85,7 +114,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
 
@@ -96,5 +128,8 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultEngineHooks
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
