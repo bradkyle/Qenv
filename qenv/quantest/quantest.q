@@ -256,12 +256,12 @@ SkpBef    :{[case]
 
 SkpBes     :{[case]
     c:$[type[case]~98h;case[`caseId];case];
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where caseId<>x;y}[c];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not caseId in ((),x);y}[c];
     };
 
 SkpBesTest     :{[test]
     c:$[(type[test]~98h)or(type[test]~99h);test[`testId];test];
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where testId<>x;y}[c];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not testId in ((),x);y}[c];
     };
 
 Warn        :{[case]
@@ -654,11 +654,11 @@ Revert  :{
 \d .
 
 NxtTestFail :{
-    :last select from .qt.Assertion where state=`FAIL, testId=x;
+    :last select from .qt.Assertion where state=`FAIL, testId in (),x;
     };
 
 NxtCaseFail :{
-    :last select from .qt.Assertion where state=`FAIL, caseId=x;
+    :last select from .qt.Assertion where state=`FAIL, caseId in (),x;
     };
 
 NxtFail :{

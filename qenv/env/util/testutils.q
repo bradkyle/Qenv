@@ -143,7 +143,7 @@ dozc:{x+y}[doz];
             if[count[eOrd]>0;[
                 cl:$[count[cl]>0;cl;cols[eOrd]];
                 .order.test.eOrd:eOrd;
-                rOrd: select from .order.Order where orderId in eOrd[`orderId];
+                rOrd: select from .order.Order where orderId in first'[eOrd[`orderId]];
                 .qt.A[count[rOrd];=;count[eOrd];"order count";case]; // TODO check
                 .qt.A[(cl#0!rOrd);~;(cl#0!eOrd);"orders";case]; // TODO check
                 ]];

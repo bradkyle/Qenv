@@ -299,6 +299,7 @@
     (o`instrumentId`accountId):(
         `.instrument.Instrument!o[`instrumentId];
         `.account.Account!o[`accountId]);
+    .order.test.ob:.order.OrderBook;
     k:o[`otype];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
@@ -321,23 +322,26 @@
                         // the level.
                         o[`orderId]:(.order.orderCount+:1);
                         o[`leaves]:o[`size];
+                        o[`displayqty]^:o[`leaves];
 
                         // get the orderbook price level
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
-                        
+                        .order.test.ob0:ob;
                         // Fill orderbook where neccessary
-                        (ob`price`side`vqty`iqty)^:(o`price;o`side;0;0)
-
+                        (ob`price`side)^:(o`price;o`side);
+                        .order.test.ob11:ob;
+                        ob:0^ob;
                         // TODO if order is hidden update ob
                         ob[`vqty]+:o[`leaves];
-                        ob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
-
+                        ob[`iqty]+:0^((-/)o`leaves`displayqty); // TODO check
+                        .order.test.ob1:ob;
                         .order.test.o:o;
                         .order.Order,:o;
                         .order.OrderBook,:ob;
                     ]];
-
+                    .order.test.O:.order.Order;
+                    .order.test.ob2:.order.OrderBook;
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
