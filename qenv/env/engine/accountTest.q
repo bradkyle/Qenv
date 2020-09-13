@@ -19,6 +19,18 @@
 
 
 .qt.Unit[
+    ".account.IsAccountInsolvent";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Global function for creating a new account"];
+
+.qt.Unit[
     ".account.Deposit";
     {[c]
         p:c[`params];
