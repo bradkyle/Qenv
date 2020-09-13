@@ -58,6 +58,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.linear.account.AdjustOrderMargin;{[a;b;c;d;e]};c];
+        mck2: .qt.M[`.inverse.account.AdjustOrderMargin;{[a;b;c;d;e]};c];
+        mck3: .qt.M[`.quanto.account.AdjustOrderMargin;{[a;b;c;d;e]};c];
+        mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
+        mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
     };
     {};
