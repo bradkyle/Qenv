@@ -388,15 +388,22 @@
                             // and update orderbook.
 
                         ];
-                        [ // If the order reduces in size it does not affect the order in the orderbook
+                        [   // If the order reduces in size it does not affect the placement in the queue
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];                            
 
+                            // Derive the delta in size of the order
                             dlt: o[`size] - co[`size];
 
+                            // Update the offset to represent the decrease
+                            // in magnitude of the order
                             od[`offset]+:dlt;
 
                             // Adjust order offset
                             dlt:o[`size]-co[`size];
+
+                            // Because the price of the order has not been changed
+                            // merely update the same level of the orderbook.
+                            ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty))
 
                             // Adjust the offsets of all orders > offset at level
                             // and update orderbook.
