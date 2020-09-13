@@ -325,9 +325,9 @@
 
 .account._ApplySettlement    :{[i;mp;time;a]
     invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
-    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+    :$[k=0;.linear.account.ApplySettlement[a;iB;iL;iS;i];
+        k=1;.inverse.account.ApplySettlement[a;iB;iL;iS;i];
+        k=3;.quanto.account.ApplySettlement[a;iB;iL;iS;i];
         'INVALID_CONTRACT_TYPE];
     };
 
