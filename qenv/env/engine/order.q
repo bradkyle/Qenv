@@ -15,15 +15,18 @@
     otype           : `long$();
     offset          : `long$();
     timeinforce     : `long$();
-    size            : `long$(); / multiply by 100
+    size            : `long$(); / multiply by 100 etc
     leaves          : `long$();
     filled          : `long$();
-    limitprice      : `long$(); / multiply by 100
-    stopprice       : `long$(); / multiply by 100
+    limitprice      : `long$(); / multiply by 100 etc
+    stopprice       : `long$(); / multiply by 100 etc
     status          : `long$();
     time            : `datetime$();
     reduce          : `boolean$();
     trigger         : `long$();
+    displayqty      : `long$(); // for iceberg/hidden orders
+    pricevar        : `long$(); // for iceberg/hidden orders
+    avgamt          : `long$(); // for iceberg/hidden orders
     execInst        : `long$());
 .order.ordCols:cols .order.Order;
 
