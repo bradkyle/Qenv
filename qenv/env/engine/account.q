@@ -286,8 +286,9 @@
     k:i`contractType;      
 
     // TODO derive risk buffer
-    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i));
+    acc:(select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
+    inv:(select from .account.Inventory where accountId in acc[`accountId]);
+
 
     // TODO change to vector conditional?
     res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
@@ -306,12 +307,21 @@
 // Apply Settlement
 // ---------------------------------------------------------------------------------------->
 
+/ OKEx adopts the Daily Settlement Procedure to settle futures trades at 08:00 (UTC) 
+/ every day. All profit and loss will be calculated and transferred to users’ 
+/ futures account balance, so that they can freely move their funds in and out of 
+/ their account before Friday. 
+/ a daily settlement process (at UTC 08:00) moves Unrealized PnL into Realized PnL,
+/ increasing flexibility of capital utilization. // TODO check mechanism
+
 // Applies a given settlement to all accounts
 .account.ApplySettlement     : {[i;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
     // TODO logic for settlement
+    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
+                lj (select sum unrealizedPnl by accountId from i));
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
