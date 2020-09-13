@@ -317,6 +317,7 @@
                         // get the orderbook lj orders at price.
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
                         / od:?[`.order.Order;enlist(=;`price;o`price);0b;()];
+                        o[`offset]:sum[ob`vqty`hqty`iqty];
 
                         .order.Order,:o;
                     ]];
