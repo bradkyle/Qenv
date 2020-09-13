@@ -85,7 +85,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
-    odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()];
+    odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     .order.test.NXT:nxt;
     .order.test.ODRS:odrs;
     .order.test.O:.order.Order;
@@ -315,6 +315,8 @@
                         o[`orderId]:(.order.orderCount+:1);
 
                         // get the orderbook lj orders at price.
+                        ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
+                        / od:?[`.order.Order;enlist(=;`price;o`price);0b;()];
 
                         .order.Order,:o;
                     ]];
