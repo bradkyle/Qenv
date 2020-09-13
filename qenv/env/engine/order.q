@@ -322,7 +322,7 @@
 
                         // TODO if order is hidden update ob
                         ob[`vqty]+:o[`leaves];
-                        ob[`iqty]+:((-\)o`leaves`displayqty); // TODO check
+                        ob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
 
                         .order.Order,:o;
                         .order.OrderBook,:ob;
@@ -354,11 +354,7 @@
 .order.AmendOrder            :{[i;a;o] 
     // TODO validation?
     k:o[`otype];
-    res:$[k=0;[ // MARKET ORDER
-            .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-            // TODO add events
-          ]; 
-          k=1;[ // LIMIT ORDER
+    res:$[k=1;[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
                  // TODO check
                   
