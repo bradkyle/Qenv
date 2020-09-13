@@ -60,7 +60,7 @@ dozc:{x+y}[doz];
 // TODO process depth // process trade Integration check
 // TODO hidden/iceberg orders orders 
 
-.qt.SkpBesTest[.qt.Unit[
+.qt.Unit[
     ".order.ProcessDepth";
     {[c]
         p:c[`params];
@@ -389,7 +389,7 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
     "size update the orderbook and the individual order offsets/iceberg",
-    "orders where necessary"]];
+    "orders where necessary"];
 
 
 // TODO no liquidity

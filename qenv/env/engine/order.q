@@ -313,13 +313,19 @@
                     .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                     [
                         o[`orderId]:(.order.orderCount+:1);
+                        o[`leaves]:o[`size];
 
                         // get the orderbook lj orders at price.
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
                         / od:?[`.order.Order;enlist(=;`price;o`price);0b;()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
 
+                        // TODO if order is hidden update ob
+                        ob[`vqty]+:o[`leaves];
+                        ob[`iqty]+:((-\)o`leaves`displayqty); // TODO check
+
                         .order.Order,:o;
+                        .order.OrderBook,:ob;
                     ]];
 
           ]; 
