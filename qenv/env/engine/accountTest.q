@@ -17,7 +17,6 @@
     .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
-
 .qt.Unit[
     ".account.IsAccountInsolvent";
     {[c]
@@ -42,8 +41,6 @@
     .util.testutils.defaultEngineHooks;
     "Global function for adding account deposits"];
 
-
-
 .qt.Unit[
     ".account.Withdraw";
     {[c]
@@ -55,7 +52,6 @@
     ();
     .util.testutils.defaultEngineHooks;
     "Global function for adding account withdraws"];
-
 
 .qt.Unit[
     ".account.AdjustOrderMargin";
@@ -98,7 +94,6 @@
     .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
-
 .qt.Unit[
     ".account.ApplyFunding";
     {[c]
@@ -111,7 +106,6 @@
     .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
 
-
 .qt.Unit[
     ".account.UpdateMarkPrice";
     {[c]
@@ -123,7 +117,6 @@
     ();
     .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
-
 
 .qt.Unit[
     ".account.ApplySettlement";
