@@ -296,23 +296,25 @@
 /  @return (Inventory) The new updated inventory
 .order.NewOrder            :{[i;a;o] 
     // TODO validation?
+    (o`instrumentId`accountId):(
+        `.instrument.Instrument!o[`instrumentId];
+        `.account.Account!o[`accountId]);
     k:o[`otype];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
             // TODO add events
           ]; 
-          k=1;[ // LIMIT ORDER
+          (k in (1,4,5));[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
                 // TODO left over order, limit order placed as taker in other side book.
                 // If the order crosses the bid/ask spread
-                // i.e. 
-                // sell order <= best bid  
-                // buy order >= best ask 
+                // sell order <= best bid or buy order >= best ask 
                 // process the order as a trade. 
-
                 $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
                     ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
-                    .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                    [
+                        .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                    ];
                     [
                         // Becuase the order is placed at the back of the queue
                         // no change in the offsets of the other orders occurs at 
@@ -321,14 +323,17 @@
                         o[`leaves]:o[`size];
 
                         // get the orderbook price level
-                        ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
-                        / od:?[`.order.Order;enlist(=;`price;o`price);0b;()];
+                        ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
+                        
+                        // Fill orderbook where neccessary
+                        (ob`price`side`vqty`iqty)^:(o`price;o`side;0;0)
 
                         // TODO if order is hidden update ob
                         ob[`vqty]+:o[`leaves];
                         ob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
 
+                        .order.test.o:o;
                         .order.Order,:o;
                         .order.OrderBook,:ob;
                     ]];

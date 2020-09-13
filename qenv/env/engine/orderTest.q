@@ -1321,10 +1321,11 @@ dozc:{x+y}[doz];
             .util.testutils.makeOrders[ordCols;flip p[5]]);
     };
     (
-        ("Place new post only limit order, no previous depth or agent orders should update depth";(
+        ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             (); // Current Depth
-            (); ();
-            `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Order Placed
+            (); // Current Orders 
+            `bestAskPrice`bestBidPrice!(1000;999); // Current Instrument
+            `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;999;0b;z); // Order Placed
             ([price:enlist(1000)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(100)); // Expected Depth
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
