@@ -162,36 +162,6 @@
                 (+;`selfFillVolume;z)
             )];};
 
-// AdjustOrderMargin
-// ---------------------------------------------------------------------------------------->
-
-// TODO Convert to matrix/batch/array oriented
-// Adjusts the amount of margin that is allocated to the limit orders
-// of an agent and throws an error in the event of an insufficiency.
-/  @param i     (Instrument) The instrument that the order belongs to
-/  @param a   (Account) The account that thte order belongs to
-/  @param side   (Long) The side of the margin delta.
-/  @param time (datetime) The time at which this update is taking place.
-/  @return (Inventory) The new updated inventory
-.account.AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
-
-    // Common derivations
-    k:i`contractType;      
-    fill:(side;time;reduce;ismaker;qty);  
-
-    // TODO change to vector conditional?
-    res:$[k=0;.linear.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          k=1;.inverse.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          'INVALID_CONTRACT_TYPE];
-
-    .account.Account,:res[0];
-    .account.Inventory,:res[1];
-
-    .pipe.egress.AddAccountEvent[res[0];time];
-    .pipe.egress.AddInventoryEvent[res[1];time];
-    };
-
 // Inventory Management
 // -------------------------------------------------------------->
 
@@ -228,13 +198,47 @@
     `.account.Inventory upsert inventory; // TODO check if successful
     };
 
+.account.GetInventoryOfAccount     :{[a]
+    ?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()]
+    };
 
+// AdjustOrderMargin
+// ---------------------------------------------------------------------------------------->
+
+// TODO Convert to matrix/batch/array oriented
+// Adjusts the amount of margin that is allocated to the limit orders
+// of an agent and throws an error in the event of an insufficiency.
+/  @param i     (Instrument) The instrument that the order belongs to
+/  @param a   (Account) The account that thte order belongs to
+/  @param side   (Long) The side of the margin delta.
+/  @param time (datetime) The time at which this update is taking place.
+/  @return (Inventory) The new updated inventory
+.account.AdjustOrderMargin       :{[i; a; side; time; reduce; ismaker; price; qty]
+    invn:.account.GetInventoryOfAccount[a];
+
+    // Common derivations
+    k:i`contractType;      
+    fill:(side;time;reduce;ismaker;qty);  
+
+    // TODO change to vector conditional?
+    res:$[k=0;.linear.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          k=1;.inverse.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+          'INVALID_CONTRACT_TYPE];
+
+    .account.Account,:res[0];
+    .account.Inventory,:res[1];
+
+    .pipe.egress.AddAccountEvent[res[0];time];
+    .pipe.egress.AddInventoryEvent[res[1];time];
+    };
 
 // Main Public Fill Function
 // ---------------------------------------------------------------------------------------->
 
 // Convert to matrix/batch/array oriented
 .account.ApplyFill           :{[a; i; side; time; fill]
+    invn:.account.GetInventoryOfAccount[a];
 
     // Common derivations
     k:i`contractType;      
@@ -263,7 +267,7 @@
 // ---------------------------------------------------------------------------------------->
 
 .account._ApplyFunding  :{[i;mp;time;a]
-    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    invn:.account.GetInventoryOfAccount[a];
     :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
         k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
         k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
@@ -293,7 +297,7 @@
 // ---------------------------------------------------------------------------------------->
 
 .account._UpdateMarkPrice    :{[i;mp;time;a]
-    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    invn:.account.GetInventoryOfAccount[a];
     :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
         k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
         k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
@@ -324,7 +328,7 @@
 
 
 .account._ApplySettlement    :{[i;mp;time;a]
-    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    invn:.account.GetInventoryOfAccount[a];
     :$[k=0;.linear.account.ApplySettlement[a;iB;iL;iS;i];
         k=1;.inverse.account.ApplySettlement[a;iB;iL;iS;i];
         k=3;.quanto.account.ApplySettlement[a;iB;iL;iS;i];
