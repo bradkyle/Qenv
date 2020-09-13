@@ -1335,7 +1335,7 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
-        ("Place new post only limit order, previous depth, no agent orders should update depth";(
+        ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(100)); // Current Depth
             (); 
             `bestAskPrice`bestBidPrice!(1000;999);
@@ -1348,7 +1348,7 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
-        ("Place new post only limit order, previous depth, multiple agent orders should update depth";(
+        ("Place new buy post only limit order, previous depth, multiple agent orders should update depth";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Current Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
