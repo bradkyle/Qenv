@@ -360,10 +360,11 @@
                 co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
                 $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                     [
-
+                        // Reset order offset
+                        // 
                     ];
                     [
-                        
+
                     ]];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
