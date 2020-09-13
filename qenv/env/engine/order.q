@@ -383,7 +383,7 @@
     // the time it would take for the order to execute (stop orders are
     // a brokerage function)
     .pipe.ingress.AddPlaceOrderEvent[stop;time]; // TODO add delay
-    .pipe.egress.AddOrderUpdateEvent[stop;time]; 
+    .pipe.egress.AddOrderUpdateEvent[stop;time]; // TODO update status to TRIGGERED
     ![`.order.Order;enlist(=;`orderId;stop`orderId);0;`symbol$()]; // Delete order from local orderBook
     };
 
