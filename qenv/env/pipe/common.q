@@ -46,6 +46,15 @@
         3 // INDEX
         );
 
+
+// USING MANUAL LIST FOR REFERENCABILITY 
+.pipe.common.EXECINST:(
+        0; // NIL
+        1; // PARTICIPATEDONTINITIATE
+        2; // ALLORNONE
+        3 // REDUCEONLY
+        );
+
 /*******************************************************
 / INSTRUMENT ENUMERATIONS
 

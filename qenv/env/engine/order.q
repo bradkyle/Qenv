@@ -304,7 +304,7 @@
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
             // TODO add events
           ]; 
-          (k in (1,4,5));[ // LIMIT ORDER
+          (k in (1,4,5));[ // LIMIT ORDER // TODO allow for hidden orders to be dispersed
                 // IF the order is present, amend order, if amended to 0 remove
                 // Assumes best bid and ask price are constantly updated.
                 // TODO left over order, limit order placed as taker in other side book.
@@ -322,7 +322,7 @@
                         // the level.
                         o[`orderId]:(.order.orderCount+:1);
                         o[`leaves]:o[`size];
-                        o[`displayqty]^:o[`leaves];
+                        o[`displayqty]:o[`leaves]^o[`displayqty];
                         // get the orderbook price level
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
@@ -330,7 +330,7 @@
                         (ob`price`side)^:(o`price;o`side);
                         ob:0^ob;
                         // TODO if order is hidden update ob
-                        ob[`vqty]+:o[`leaves];
+                        ob[`vqty]+:o[`displayqty];
                         ob[`iqty]+:0^((-/)o`leaves`displayqty); // TODO check
                         .order.Order,:o;
                         .order.OrderBook,:ob;
