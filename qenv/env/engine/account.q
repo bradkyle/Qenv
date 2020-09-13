@@ -221,9 +221,9 @@
     fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
-    res:$[k=0;.linear.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          k=1;.inverse.account.AdjustOrderMargin[a;iB;iL;iS;fill];
-          k=3;.quanto.account.AdjustOrderMargin[a;iB;iL;iS;fill];
+    res:$[k=0;.linear.account.AdjustOrderMargin[a;invn[0];invn[1];invn[2];fill];
+          k=1;.inverse.account.AdjustOrderMargin[a;invn[0];invn[1];invn[2];fill];
+          k=3;.quanto.account.AdjustOrderMargin[a;invn[0];invn[1];invn[2];fill];
           'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
@@ -245,9 +245,9 @@
     / fill:(side;time;reduce;ismaker;qty);  
 
     // TODO change to vector conditional?
-    res:$[k=0;.linear.account.ApplyFill[a;iB;iL;iS;fill];
-          k=1;.inverse.account.ApplyFill[a;iB;iL;iS;fill];
-          k=3;.quanto.account.ApplyFill[a;iB;iL;iS;fill];
+    res:$[k=0;.linear.account.ApplyFill[a;invn[0];invn[1];invn[2];fill];
+          k=1;.inverse.account.ApplyFill[a;invn[0];invn[1];invn[2];fill];
+          k=3;.quanto.account.ApplyFill[a;invn[0];invn[1];invn[2];fill];
           'INVALID_CONTRACT_TYPE];
 
     .account.Account,:res[0];
@@ -268,9 +268,9 @@
 
 .account._ApplyFunding  :{[i;mp;time;a]
     invn:.account.GetInventoryOfAccount[a];
-    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+    :$[k=0;.linear.account.ApplyFunding[a;invn[0];invn[1];invn[2];i];
+        k=1;.inverse.account.ApplyFunding[a;invn[0];invn[1];invn[2];i];
+        k=3;.quanto.account.ApplyFunding[a;invn[0];invn[1];invn[2];i];
         'INVALID_CONTRACT_TYPE];
     };
 
@@ -298,9 +298,9 @@
 
 .account._UpdateMarkPrice    :{[i;mp;time;a]
     invn:.account.GetInventoryOfAccount[a];
-    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+    :$[k=0;.linear.account.UpdateMarkPrice[a;invn[0];invn[1];invn[2];i];
+        k=1;.inverse.account.UpdateMarkPrice[a;invn[0];invn[1];invn[2];i];
+        k=3;.quanto.account.UpdateMarkPrice[a;invn[0];invn[1];invn[2];i];
         'INVALID_CONTRACT_TYPE];
     };
 
@@ -329,9 +329,9 @@
 
 .account._ApplySettlement    :{[i;mp;time;a]
     invn:.account.GetInventoryOfAccount[a];
-    :$[k=0;.linear.account.ApplySettlement[a;iB;iL;iS;i];
-        k=1;.inverse.account.ApplySettlement[a;iB;iL;iS;i];
-        k=3;.quanto.account.ApplySettlement[a;iB;iL;iS;i];
+    :$[k=0;.linear.account.ApplySettlement[a;invn[0];invn[1];invn[2];i];
+        k=1;.inverse.account.ApplySettlement[a;invn[0];invn[1];invn[2];i];
+        k=3;.quanto.account.ApplySettlement[a;invn[0];invn[1];invn[2];i];
         'INVALID_CONTRACT_TYPE];
     };
 
