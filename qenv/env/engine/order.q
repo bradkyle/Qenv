@@ -299,7 +299,6 @@
     (o`instrumentId`accountId):(
         `.instrument.Instrument!o[`instrumentId];
         `.account.Account!o[`accountId]);
-    .order.test.ob:.order.OrderBook;
     k:o[`otype];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
@@ -307,6 +306,7 @@
           ]; 
           (k in (1,4,5));[ // LIMIT ORDER
                 // IF the order is present, amend order, if amended to 0 remove
+                // Assumes best bid and ask price are constantly updated.
                 // TODO left over order, limit order placed as taker in other side book.
                 // If the order crosses the bid/ask spread
                 // sell order <= best bid or buy order >= best ask 
@@ -323,25 +323,22 @@
                         o[`orderId]:(.order.orderCount+:1);
                         o[`leaves]:o[`size];
                         o[`displayqty]^:o[`leaves];
-
                         // get the orderbook price level
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
-                        .order.test.ob0:ob;
                         // Fill orderbook where neccessary
                         (ob`price`side)^:(o`price;o`side);
-                        .order.test.ob11:ob;
                         ob:0^ob;
                         // TODO if order is hidden update ob
                         ob[`vqty]+:o[`leaves];
                         ob[`iqty]+:0^((-/)o`leaves`displayqty); // TODO check
-                        .order.test.ob1:ob;
-                        .order.test.o:o;
                         .order.Order,:o;
                         .order.OrderBook,:ob;
+
+                        .pipe.egress.AddOrderCreatedEvent[o;o`time];
+                        .pipe.egress.AddDepthEvent[();o`time]; // TODO remove for partial book updates
+
                     ]];
-                    .order.test.O:.order.Order;
-                    .order.test.ob2:.order.OrderBook;
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove

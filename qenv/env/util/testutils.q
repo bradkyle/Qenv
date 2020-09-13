@@ -57,7 +57,7 @@ dozc:{x+y}[doz];
 .util.testutils.makeDefaultsRecords  :{[ref;cl;vl] // TODO inter with actual cols
     r:.util.NullRowDict[ref];
     cvl:count[vl]; 
-    :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];:rx];[r[cl]:vl;:r]]};
+    :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];:rx];[r[cl]:first[vl];:r]]};
 
 // Checks that the .order.Order table matches the orders
 // that are provided.
@@ -143,9 +143,12 @@ dozc:{x+y}[doz];
             if[count[eOrd]>0;[
                 cl:$[count[cl]>0;cl;cols[eOrd]];
                 .order.test.eOrd:eOrd;
-                rOrd: select from .order.Order where orderId in first'[eOrd[`orderId]];
+                eord:.[0!;enlist eOrd;eOrd];
+                if[count[eOrd]>count[first eOrd];eOrd:enlist eOrd]; // TODO fix bad
+                rOrd: select from .order.Order where orderId in ((),eOrd[`orderId]);
+                .order.test.rOrd:rOrd;
                 .qt.A[count[rOrd];=;count[eOrd];"order count";case]; // TODO check
-                .qt.A[(cl#0!rOrd);~;(cl#0!eOrd);"orders";case]; // TODO check
+                .qt.A[(cl#0!rOrd);~;(cl#eOrd);"orders";case]; // TODO check
                 ]];
             ];[]];
     };
@@ -422,6 +425,7 @@ dozc:{x+y}[doz];
             x[`reduce]:`boolean$(x[`reduce]);
             x}(0^x);
         ]];
+        .order.orderCount:count .order.Order;
     };
 
 .util.testutils.setupAccount        :{

@@ -74,8 +74,6 @@ dozc:{x+y}[doz];
         .order.ProcessDepth[.util.testutils.defaultInstrument;p`nxt];
 
         / .util.testutils.checkMock[mck1;m[0];c];
-        .order.test.O3:.order.Order;
-        .order.test.O4:p[`eOrd];
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils._checkOrders[(`orderId`side`otype`offset`leaves`price`time);p[`eOrd];c];
 
@@ -1274,24 +1272,23 @@ dozc:{x+y}[doz];
 // TODO amend to cross spread
 // TODO amend to cross spread stop order
 
+// TODO Check mock called with correct
 .qt.Unit[
     ".order.NewOrder";
     {[c]
         p:c[`params];
+        delete from `.order.Order;
+        delete from `.order.OrderBook; // TODO make general
         .util.testutils.setupDepth[p`cDepth];
         .util.testutils.setupOrders[p`cOrd];
-
         m:p[`mocks];
 
         mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f]};c];
         mck2: .qt.M[`.pipe.egress.AddOrderCreatedEvent;{[a;b]};c];
-        mck3: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
-        mck4: .qt.M[`.pipe.egress.AddOrderCancellledEvent;{[a;b]};c];
-        mck5: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
+        mck3: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
 
         ins:.util.testutils.defaultInstrument;    
         if[count[p[`cIns]]>0;ins^:(p[`cIns])];
-
         .order.NewOrder[
             ins;
             .util.testutils.defaultAccount;
@@ -1299,9 +1296,7 @@ dozc:{x+y}[doz];
 
         .util.testutils.checkMock[mck1;m[0];c];  // Expected ProcessTrade Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderCreatedEvent Mock
-        .util.testutils.checkMock[mck3;m[2];c];  // Expected AddOrderUpdatedEvent Mock
-        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddOrderCancellledEvent Mock
-        .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
+        .util.testutils.checkMock[mck3;m[2];c];  // Expected AddDepthEvent Mock
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils._checkOrders[
@@ -1314,14 +1309,14 @@ dozc:{x+y}[doz];
 
         :`cDepth`cOrd`cIns`o`mocks`eDepth`eOrd!(
             p[0];
-            .util.testutils.makeOrders[ordCols;flip p[1]];
+            .util.testutils.makeOrders[ordCols;p[1]];
             p[2];
             p[3];
-            (6_11#p);
+            (6_9#p);
             p[4]; // TODO shorten parameterization
-            flip(ordCols!flip[p[5]]));
+            .util.testutils.makeOrders[ordCols;p[5]]);
     };
-    (
+    ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             (); // Current Depth
             (); // Current Orders 
@@ -1330,10 +1325,8 @@ dozc:{x+y}[doz];
             ([price:enlist(999)] side:enlist(1);qty:enlist(0);hqty:enlist(0);iqty:enlist(0);vqty:enlist(100)); // Expected Depth
             enlist(1;1;1;1;1;1;0;100;100;100;999;0b;z); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;()); // Expected AddOrderCreatedEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(100)); // Current Depth
@@ -1341,51 +1334,59 @@ dozc:{x+y}[doz];
             `bestAskPrice`bestBidPrice!(1000;999);
            `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;999;0b;z); // Order Placed
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(200)); // Expected Depth
-            enlist(1;1;1;1;1;1;0;100;100;100;999;0b;z); // Expected Orders 
+            enlist(1;1;1;1;1;1;100;100;100;100;999;0b;z); // Expected Orders 
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;()); // Expected AddOrderCreatedEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         ));
         ("Place new buy post only limit order, previous depth, multiple agent orders should update depth";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Current Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (1;1;1;1;1;1;120;100;100;100;999;0b;z)
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z)
             ); // Current Orders 
             `bestAskPrice`bestBidPrice!(1000;999);
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
+           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(3;1;1;1;1;100;100;999;0b;z); // Fill Execution
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Expected Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;300;100;100;100;999;0b;z)
+            ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;()); // Expected AddOrderCreatedEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         ));
-        ("Place new post only limit order, previous depth, agent orders should update depth";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
+        ("Place new buy post only limit order, previous depth, multiple agent orders should update depth (best price-1 level) (not on occupied level)";(
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Current Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z)
+            ); 
+            `bestAskPrice`bestBidPrice!(1000;999);
+           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(3;1;1;1;1;100;100;998;0b;z); // Fill Execution
+            ([price:(999 998)] side:(1 1);qty:(100 0);hqty:(0 0);iqty:(0 0);vqty:(300 100)); // Expected Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;0;100;100;100;998;0b;z)
+            ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;()); // Expected AddOrderCreatedEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         ));
-        ("Sell: Place new post only limit order crosses spread, previous depth, should not invoke processTrade";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+        ("Place new buy post only limit order crosses spread, previous depth, should not invoke processTrade";(
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Current Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z)
+            ); 
+           `bestAskPrice`bestBidPrice!(1000;999);
+           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(3;1;1;1;1;100;100;1000;0b;z); // Fill Execution
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
             (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
+            (1b;1;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new post only limit order crosses spread, previous depth, should not invoke processTrade";(
@@ -1396,8 +1397,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Sell: Place new limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1408,8 +1407,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1420,8 +1417,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         //
@@ -1433,8 +1428,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new iceberg post only limit order, previous depth, no agent orders should update depth";(
@@ -1445,8 +1438,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new iceberg post only limit order, previous depth, agent orders should update depth";(
@@ -1457,8 +1448,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new iceberg post only limit order, previous depth, agent orders should update depth";(
@@ -1469,8 +1458,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Sell: Place new iceberg post only limit order crosses spread, previous depth, should not invoke processTrade";(
@@ -1481,8 +1468,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new iceberg post only limit order crosses spread, previous depth, should not invoke processTrade";(
@@ -1493,8 +1478,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Sell: Place new iceberg limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1505,8 +1488,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new iceberg limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1517,8 +1498,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         //
@@ -1530,8 +1509,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new hidden post only limit order, previous depth, no agent orders should update depth";(
@@ -1542,8 +1519,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new hidden post only limit order, previous depth, agent orders should update depth";(
@@ -1554,8 +1529,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new hidden post only limit order, previous depth, agent orders should update depth";(
@@ -1566,8 +1539,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Sell: Place new hidden post only limit order crosses spread, previous depth, should not invoke processTrade";(
@@ -1578,8 +1549,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new hidden post only limit order crosses spread, previous depth, should not invoke processTrade";(
@@ -1590,8 +1559,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Sell: Place new limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1602,8 +1569,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Buy: Place new limit order crosses spread, previous depth, should invoke processTrade";(
@@ -1614,8 +1579,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         //
@@ -1627,8 +1590,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new market order with price, should ignore price";(
@@ -1639,8 +1600,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new market order with price, should ignore price";(
@@ -1651,8 +1610,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new stop market order with invalid stop price";(
@@ -1663,8 +1620,6 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Place new stop limit order with invalid stop price";(
@@ -1675,15 +1630,13 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ))
     );
     .util.testutils.defaultEngineHooks;
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
-.qt.SkpBes[(62,63,64)];
+.qt.SkpBes[(60 + til[7])];
 
 .qt.Unit[
     ".order.AmendOrder";
@@ -1737,8 +1690,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
@@ -1749,8 +1702,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend limit order to zero, should remove order from .order.Order, should update offsets, depth etc.";(
@@ -1761,8 +1714,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend iceberg limit order, smaller than previous, should update offsets, depth etc.";(
@@ -1773,8 +1726,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend iceberg limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
@@ -1785,8 +1738,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend iceberg limit order to zero, should remove order from .order.Order, should update offsets, depth etc.";(
@@ -1797,8 +1750,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend hidden limit order, smaller than previous, should update offsets, depth etc.";(
@@ -1809,8 +1762,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend hidden limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
@@ -1821,8 +1774,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend hidden limit order to zero, should remove order from .order.Order, should update offsets, depth etc.";(
@@ -1833,8 +1786,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend stop limit order to zero, should remove order from .order.Order";(
@@ -1845,8 +1798,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ));
         ("Amend stop market order to zero, should remove order from .order.Order";(
@@ -1857,8 +1810,8 @@ dozc:{x+y}[doz];
             (); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+
+
             (0b;0;())  // Expected AddDepthEvent Mock
         ))
     );
