@@ -450,4 +450,5 @@ dozc:{x+y}[doz];
 
 .util.testutils.defaultAccounts:.util.testutils.genAccount[];
 .util.testutils.defaultAccount:first .util.testutils.defaultAccounts;
-.util.testutils.defaultInstrument:.util.testutils.genInstrument[];
+.util.testutils.defaultInstruments:.util.testutils.genInstrument[];
+.util.testutils.defaultInstrument:first .util.testutils.defaultInstruments;

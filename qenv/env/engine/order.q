@@ -287,6 +287,7 @@
 // Process New Orders
 // -------------------------------------------------------------->
 
+// TODO add place time
 // New Order Adds an order to the orderbook.
 /  @param i     (Instrument) The instrument for which this order is placed
 /  @param o     (Order) The order that is being placed.
@@ -307,11 +308,15 @@
                 // i.e. 
                 // sell order <= best bid  
                 // buy order >= best ask 
-                // process the order as a trade.
+                // process the order as a trade. 
+
                 $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
                     ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
                     .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                     [
+                        // Becuase the order is placed at the back of the queue
+                        // no change in the offsets of the other orders occurs at 
+                        // the level.
                         o[`orderId]:(.order.orderCount+:1);
                         o[`leaves]:o[`size];
 
@@ -365,7 +370,7 @@
 
                 // IF the order is present, amend order, if amended to 0 remove
                 $[sum[o`leaves`size]>0;[
-                    // Get the current state of the order. // TODO simplify
+                    // Get the current state of the order. // TODO simplify into change in price and side, change in size
                     $[((o[`leaves]>co[`leaves]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [ // If the order should be replaced in the order queue.
 
@@ -376,15 +381,18 @@
                             
                             // Reset the order offset to the sum of the 
                             // visible and hidden quantity at the level
-                            o[`offset]:sum[nob`vqty`hqty`iqty];
-
                             nob:()
                             if[o[`price] <> co[`price];[
                                 nob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
+
+                                o[`offset]:sum[nob`vqty`hqty`iqty];
+
                                 // set the new orderbook qty to the  
-                                nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check
-    
+                                nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check    
                                 nob[`vqty]+:o`displayqty;
+
+                            ];[
+                                o[`offset]:sum[ob`vqty`hqty`iqty];
                             ]];
 
                             .order.Order,:((),o,nod);
@@ -421,8 +429,8 @@
                     .order.OrderBook,:ob;
                 ]];
                 // TODO dependent on visible delta
-                .pipe.egress.AddDepthEvent[time];
-                .pipe.ingress.AddOrderUpdatedEvent[o;time];
+                .pipe.egress.AddDepthEvent[ob;o`time]; // TODO
+                .pipe.ingress.AddOrderUpdatedEvent[o;o`time];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
