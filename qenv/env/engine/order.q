@@ -365,6 +365,11 @@
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
 
                             dlt:o[`size]-co[`size];
+
+                            // Get all orders above the order in the order queue
+                            od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
+
+                            od[`offset]-:dlt;
                             
                             o[`offset]:sum[ob`vqty`hqty`iqty];
 
