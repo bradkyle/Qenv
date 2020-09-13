@@ -361,9 +361,13 @@
                 $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                     [
                         // Reset order offset
-                        // 
+                        // Adjust the offsets of all orders > offset at level
+                        // and update orderbook.
                     ];
                     [
+                        // Adjust order offset
+                        // Adjust the offsets of all orders > offset at level
+                        // and update orderbook.
 
                     ]];
           ]; 
