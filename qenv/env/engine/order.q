@@ -43,9 +43,9 @@
     [price      :`long$()]  // price
     side        :`long$();  // side
     qty         :`long$(); // data qty
-    hqty        :`long$(); // hidden qty
-    iqty        :`long$(); // iceberg qty
-    vqty      :`long$()); // Visible qty
+    hqty        :`long$(); // hidden qty  (only for data depth updates)
+    iqty        :`long$(); // iceberg qty (only for agent orders)
+    vqty      :`long$()); // Visible qty (including order qty)
 .order.bookCols:cols .order.OrderBook;
 
 / Bitmex
@@ -394,6 +394,8 @@
                             // Derive the delta in size of the order
                             dlt: o[`size] - co[`size];
 
+                            // Adjust the offsets of all orders > offset at level
+                            // and update orderbook.
                             // Update the offset to represent the decrease
                             // in magnitude of the order
                             od[`offset]+:dlt;
@@ -403,11 +405,11 @@
 
                             // Because the price of the order has not been changed
                             // merely update the same level of the orderbook.
-                            ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty))
+                            ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
+                            ob[`vqty]
 
-                            // Adjust the offsets of all orders > offset at level
-                            // and update orderbook.
-
+                            .order.Order,:o;
+                            .order.OrderBook,:ob;
                         ]];
 
                     
