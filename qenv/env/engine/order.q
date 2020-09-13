@@ -358,14 +358,19 @@
                 // IF the order is present, amend order, if amended to 0 remove
                  // TODO check
                 $[sum[o`leaves`size]>0;[
+                    // Get the current state of the order.
                     co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
+                    cob:?[`.order.OrderBook;enlist(=;`price;c`price);0b;()];
+
+
+                    // Get all orders above the order in the order queue at the price level
+                    od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
                     $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [
                             // Reset order offset
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
 
                             // Get all orders above the order in the order queue
-                            od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
                             od[`offset]-:co[`size];
                             
                             // Reset the order offset to the sum of the 
@@ -386,7 +391,7 @@
                             // Get all orders above the order in the order queue
                             od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
                             od[`offset]-:co[`size];
-                            
+
                             // Adjust order offset
                             dlt:o[`size]-co[`size];
 
@@ -394,6 +399,8 @@
                             // and update orderbook.
 
                         ]];
+
+                    
                 ];[
                     // Cancel order and update orderbook subsequently
                 ]];
