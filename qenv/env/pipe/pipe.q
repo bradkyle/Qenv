@@ -2,7 +2,7 @@
 
 // TODO move to pipe
 // TODO remove repeated logic
-
+// TOOD cross validation batching
 
 // Probabalistic choice
 // @n: number of choices

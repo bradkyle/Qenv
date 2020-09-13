@@ -88,10 +88,12 @@
     .order.test.O:.order.Order;
     .order.test.OB:.order.OrderBook;
     $[count[odrs]>0;[
+        ob:0!(?[`.order.OrderBook;();0b;()]);
+        .order.test.ob:ob;
         // TODO uj new event
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:0!uj[`price xgroup ?[`.order.OrderBook;();0b;()];`price xgroup odrs]; // TODO grouping
-
+        state:0!uj[`price xgroup ob;`price xgroup odrs]; // TODO grouping
+        state[`bside]:ob[`side];
         .order.test.state:state;
         dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
         .order.test.dlts:dlts;
@@ -149,11 +151,11 @@
                 // Derive the new visible quantity
                 nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
                 .order.test.nvqty2:nvqty;
-
+                .order.test.x:(.order.bookCols!(state`price;state`bside;nvqty;nvqty;nvqty;nvqty));
                 .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
                 .order.state.O2:.order.Order;
 
-                .order.OrderBook,:(.order.bookCols!(state`price;side;nqty;nhqty;niqty;nvqty));
+                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`bside;nvqty;nvqty;nvqty;nvqty))];
             ];[
                 state[`bside]:first'[distinct'[state[`side]]];
                 .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; 
