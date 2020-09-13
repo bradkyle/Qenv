@@ -118,51 +118,7 @@
     };
     {};
     (
-        ("No funding occurs";(
-            (); // Current Depth
-            (); // Current Orders
-            ((10#-1);1000+til 10;10#1000;10#z); // Depth Update
-            ([price:(1000+til 10)] side:(10#-1);qty:(10#1000);vqty:(10#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
-        ));
-        ("Negative funding occurs with hedged long position";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
-        ));
-        ("Negative funding occurs with hedged short position";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
-        ));
-        ("Positive funding occurs with hedged long position";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
-        ));
-        ("Positive funding occurs with hedged short position";(
-            (); // Current Depth
-            (); // Current Orders
-            (((10#-1),(10#1));((1000+til 10),(999-til 10));20#1000;20#z); // Depth Update
-            ([price:(((1000+til 10),(999-til 10)))] side:((10#-1),(10#1));qty:(20#1000);vqty:(20#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
-        ));
+        
     );
     .util.testutils.defaultEngineHooks;
     "Global function for creating a new account"];
