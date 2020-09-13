@@ -315,7 +315,7 @@
                         o[`orderId]:(.order.orderCount+:1);
                         o[`leaves]:o[`size];
 
-                        // get the orderbook lj orders at price.
+                        // get the orderbook price level
                         ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
                         / od:?[`.order.Order;enlist(=;`price;o`price);0b;()];
                         o[`offset]:sum[ob`vqty`hqty`iqty];
@@ -362,6 +362,13 @@
                     $[((o[`size]>co[`size]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [
                             // Reset order offset
+                            ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
+
+                            dlt:o[`size]-co[`size];
+                            
+                            o[`offset]:sum[ob`vqty`hqty`iqty];
+
+
                             // Adjust the offsets of all orders > offset at level
                             // and update orderbook.
 
