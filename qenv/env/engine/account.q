@@ -142,7 +142,8 @@
         / account[`available]:.account.Available[acc]; // TODO
 
         .account.Account,:acc;
-        .pipe.egress.AddAccountEvent[acc;time];    
+        .pipe.egress.AddAccountEvent[acc;time]; 
+        // TODO update liquidation price   
         
         ];'InsufficientMargin];  
     };

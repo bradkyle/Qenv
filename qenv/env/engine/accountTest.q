@@ -45,6 +45,7 @@
     ".account.Withdraw";
     {[c]
         p:c[`params];
+        mck1: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
 
 
     };
@@ -108,7 +109,6 @@
     ".account.ApplyFunding";
     {[c]
         p:c[`params];
-
 
         mck1: .qt.M[`.linear.account.ApplyFunding;{[a;b;c;d;e]};c];
         mck2: .qt.M[`.inverse.account.ApplyFunding;{[a;b;c;d;e]};c];
