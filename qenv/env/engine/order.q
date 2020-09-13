@@ -353,23 +353,24 @@
 /  @return (Inventory) The new updated inventory
 .order.AmendOrder            :{[i;a;o] 
     // TODO validation?
+    co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
+
     k:o[`otype];
     res:$[k=1;[ // LIMIT ORDER
+                ob:?[`.order.OrderBook;enlist(=;`price;c`price);0b;()]; 
                 // IF the order is present, amend order, if amended to 0 remove
                  // TODO check
                 $[sum[o`leaves`size]>0;[
                     // Get the current state of the order.
-                    co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
                     
                     // Get the current state of the order book at the given price level. 
-                    cob:?[`.order.OrderBook;enlist(=;`price;c`price);0b;()];
 
                     // Get all orders above the order in the order queue at the price level
                     cod:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
 
                     $[((o[`leaves]>co[`leaves]) or (o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [ // If the order should be replaced in the order queue.
-                            nob:$[(o[`price]<>co[`price]);?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];cob];
+                            nob:$[(o[`price]<>co[`price]);?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];ob];
                             // considering the order is being replaced in the queue 
                             // amend all orders above the order to reflect the change
                             // in offset.
@@ -384,12 +385,11 @@
 
                             nob[`vqty]+:o`displayqty;
 
-                            .order.Order,:((),o,od);
-                            .order.OrderBook,:ob;
+                            .order.Order,:((),o,nod);
+                            .order.OrderBook,:nob;
 
                         ];
                         [   // If the order reduces in size it does not affect the placement in the queue
-                            ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];                            
 
                             // Derive the delta in size of the order
                             dlt: o[`size] - co[`size];
@@ -415,6 +415,12 @@
                     
                 ];[
                     // Cancel order and update orderbook subsequently
+                    ob[`iqty]-:((-/)co`leaves`displayqty); // TODO check
+                    ob[`vqty]-:co[`leaves];
+
+                    ![`.order.Order;enlist(=;`orderId;o`orderId);0;`symbol$()]; // Simpler drop
+
+                    .order.OrderBook,:ob;
                 ]];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
