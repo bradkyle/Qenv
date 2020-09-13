@@ -364,12 +364,11 @@
                             // Reset order offset
                             ob:?[`.order.OrderBook;enlist(=;`price;o`price);0b;()];
 
-                            dlt:o[`size]-co[`size];
 
                             // Get all orders above the order in the order queue
                             od:?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
 
-                            od[`offset]-:dlt;
+                            od[`offset]-:co[`size];
                             
                             o[`offset]:sum[ob`vqty`hqty`iqty];
 
@@ -380,6 +379,9 @@
                         ];
                         [
                             // Adjust order offset
+
+                            dlt:o[`size]-co[`size];
+
                             // Adjust the offsets of all orders > offset at level
                             // and update orderbook.
 
