@@ -285,6 +285,7 @@ dozc:{x+y}[doz];
         .instrument.Instrument,:.util.testutils.defaultInstrument;
     };
     {
+        .qt.RestoreMocks[];
         .util.testutils.resetEngineTables[];
     };{};{});
 

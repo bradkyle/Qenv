@@ -64,6 +64,7 @@
         mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
+        .account.AdjustOrderMargin[];
     };
     {};
     ();
@@ -98,6 +99,8 @@
         mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
+        .account.ApplyFill[];
+
     };
     {};
     ();
@@ -115,6 +118,7 @@
         mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
+        .account.ApplyFunding[];
     };
     {};
     (
@@ -134,6 +138,7 @@
         mck5: .qt.M[`.pipe.egress.AddAccountEvent;{[a;b]};c];
         mck4: .qt.M[`.pipe.egress.AddInventoryEvent;{[a;b]};c];
 
+        .account.UpdateMarkPrice[];
     };
     {};
     ();
@@ -145,6 +150,7 @@
     {[c]
         p:c[`params];
 
+        .account.ApplySettlement[];
     };
     {};
     ();
