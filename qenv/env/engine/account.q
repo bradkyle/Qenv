@@ -90,6 +90,9 @@
 
     };
 
+.account.GetInMarketAccounts:{
+    (select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0)
+    };
 
 // Balance Management
 // -------------------------------------------------------------->
@@ -251,8 +254,21 @@
     };
 
 
+
+// Multiple Account Update Functionality
+// ========================================================================================>
+
+
 // Main Public Funding Function
 // ---------------------------------------------------------------------------------------->
+
+.account._ApplyFunding  :{[i;mp;time;a]
+    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        'INVALID_CONTRACT_TYPE];
+    };
 
 // Applies funding to all accounts with open positions
 .account.ApplyFunding        : {[i;fr;ft;time]
@@ -260,14 +276,10 @@
     k:i`contractType;      
 
     // TODO derive risk buffer
-    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i));
+    acc:.account.GetInMarketAccounts[];
 
-    // TODO change to vector conditional?
-    res:$[k=0;.linear.account.ApplyFunding[a;iB;iL;iS;i];
-          k=1;.inverse.account.ApplyFunding[a;iB;iL;iS;i];
-          k=3;.quanto.account.ApplyFunding[a;iB;iL;iS;i];
-          'INVALID_CONTRACT_TYPE];
+    // TODO peach operation?
+    res:(),(.account._ApplyFunding[i;mp;time]'[acc]);
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -280,21 +292,24 @@
 // Update Mark Price
 // ---------------------------------------------------------------------------------------->
 
+.account._UpdateMarkPrice    :{[i;mp;time;a]
+    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        'INVALID_CONTRACT_TYPE];
+    };
+
 // Updates the mark price of all accounts
 .account.UpdateMarkPrice     : {[i;mp;time]
     // TODO validate instrument exists
     k:i`contractType;      
 
     // TODO derive risk buffer
-    acc:(select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0);
-    inv:(select from .account.Inventory where accountId in acc[`accountId]);
+    acc:.account.GetInMarketAccounts[];
 
-
-    // TODO change to vector conditional?
-    res:$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
-          'INVALID_CONTRACT_TYPE];
+    // TODO peach operation?
+    res:(),(.account._UpdateMarkPrice[i;mp;time]'[acc]);
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
@@ -306,6 +321,15 @@
 
 // Apply Settlement
 // ---------------------------------------------------------------------------------------->
+
+
+.account._ApplySettlement    :{[i;mp;time;a]
+    invn:?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()];
+    :$[k=0;.linear.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=1;.inverse.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        k=3;.quanto.account.UpdateMarkPrice[a;iB;iL;iS;i];
+        'INVALID_CONTRACT_TYPE];
+    };
 
 / OKEx adopts the Daily Settlement Procedure to settle futures trades at 08:00 (UTC) 
 / every day. All profit and loss will be calculated and transferred to users’ 
@@ -320,8 +344,9 @@
     k:i`contractType;      
 
     // TODO logic for settlement
-    xyz:((select from .account.Account where sum[netLongPosition,netShortPosition,openBuyQty,openSellQty]>0) 
-                lj (select sum unrealizedPnl by accountId from i));
+    acc:.account.GetInMarketAccounts[];
+
+    res:(),(.account._ApplySettlement[i;mp;time]'[acc]);
 
     .account.Account,:res[0];
     .account.Inventory,:res[1];
