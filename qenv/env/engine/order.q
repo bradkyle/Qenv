@@ -354,7 +354,7 @@
 .order.AmendOrder            :{[i;a;o] 
     // TODO validation?
     co:first ?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
-
+    // TODO fill current order with next order
     k:o[`otype];
     res:$[k=1;[ // LIMIT ORDER
                 // Get the current state of the order book at the given price level. 
@@ -421,7 +421,8 @@
                     .order.OrderBook,:ob;
                 ]];
                 // TODO dependent on visible delta
-                .pipe.egress.AddDepthEvent[];
+                .pipe.egress.AddDepthEvent[time];
+                .pipe.ingress.AddOrderUpdatedEvent[o;time];
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
