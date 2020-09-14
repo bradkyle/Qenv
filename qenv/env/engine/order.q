@@ -367,7 +367,7 @@
                     $[((o[`side]<>co[`side]) or (o[`price]<>co[`price]));
                         [ // If the order should be replaced in the order queue when it is moved in orderbook.
                             nob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
-
+                            cod[`offset]-:co[`leaves];
 
                             o[`offset]:sum[nob`vqty`hqty`iqty];
 
@@ -384,8 +384,6 @@
                             // in offset.
                             o[`displayqty]:o`leaves;
                             
-                            cod[`offset]-:co[`leaves];
-
                             vdlt:(o[`leaves] - co[`leaves]);
                             dlt:vdlt+(o[`displayqty]-co[`displayqty]);
                             
@@ -393,7 +391,7 @@
                             // and update orderbook.
                             // Update the offset to represent the decrease
                             // in magnitude of the order
-                            cod[`offset]+:dlt;
+                            cod[`offset]-:co[`leaves];
 
                             // Because the price of the order has not been changed
                             // merely update the same level of the orderbook.
