@@ -79,17 +79,18 @@
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
+
 
 // Orders increasing at a given depth when the price no longer exists i.e. the
 // price has been overtaken by the opposing side means that there was an inflow of
 // orders at that price (after realistically applicable) in this instance it is assumed
 // that the inflow would be post only and thus they are disregarded.
 
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
     odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
