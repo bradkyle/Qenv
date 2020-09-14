@@ -344,108 +344,111 @@
 /  @param o     (Order) The order that is being placed.
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
-/  @return (Inventory) The new updated inventory
+/  @return (Inventory) The new updated inventory // TODO if update price to past best bid/ask ProcessTrade
 .order.AmendOrder            :{[i;a;o] // TODO add time 
     // TODO validation?
     co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
     // TODO fill current order with next order
     if[not null[o`size];[o[`leaves]:o[`size];o[`size]:co[`size]]];
-    .order.test.o1:o;
-    .order.test.co1:co;
     o:co,o;
     k:o[`otype];
     res:$[(k in (1,4,5));[ // LIMIT ORDER
                 // Get the current state of the order book at the given price level. 
-                ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
+                cob:?[`.order.OrderBook;enlist(=;`price;co`price);();()];
 
                 // Get all orders above the order in the order queue at the price level
-                cod:0!?[`.order.Order;((=;`price;o`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
+                cod:0!?[`.order.Order;((=;`price;co`price);(<>;`orderId;co`orderId);(>;`offset;co`offset));0b;()];
 
                 // IF the order is present, amend order, if amended to 0 remove
+                // Get the current state of the order. // TODO simplify into change in price and side, change in size
                 $[sum[o`leaves`size]>0;[
-                    // Get the current state of the order. // TODO simplify into change in price and side, change in size
-                    $[((o[`side]<>co[`side]) or (o[`price]<>co[`price]));
-                        [ // If the order should be replaced in the order queue when it is moved in orderbook.
-                            nob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
-                            cod[`offset]-:co[`leaves];
+                        // Cancel order and update orderbook subsequently
+                        cob[`iqty]-:((-/)co`leaves`displayqty); // TODO check
+                        cob[`vqty]-:co[`leaves];
 
-                            o[`offset]:sum[nob`vqty`hqty`iqty];
+                        ![`.order.Order;enlist(=;`orderId;o`orderId);0;`symbol$()]; // Simpler drop
 
-                                // set the new orderbook qty to the  
-                            nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check    
-                            nob[`vqty]+:o`displayqty;
+                        .order.OrderBook,:cob;
+                        .pipe.egress.AddOrderCancelledEvent[o;o`time];
+                        
+                    ];
+                    ((o[`side]<>co[`side]) or (o[`price]<>co[`price]));
+                    [ // If the order should be replaced in the order queue when it is moved in orderbook.
+                        nob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
+                        cod[`offset]-:co[`leaves];
 
-                        ];  
-                      (o[`leaves]>co[`leaves]);
-                        [ // If the order should be replaced in the order queue when it is made larger.
+                        (nob`price`side)^:(o`price;o`side);
+                        nob:0^nob;
+                        o[`offset]:sum[nob`vqty`hqty`iqty];
 
-                            // considering the order is being replaced in the queue 
-                            // amend all orders above the order to reflect the change
-                            // in offset.
-                            o[`displayqty]:o`leaves;
-                            
-                            vdlt:(o[`leaves] - co[`leaves]);
-                            dlt:vdlt+(o[`displayqty]-co[`displayqty]);
-                            
-                            // Adjust the offsets of all orders > offset at level
-                            // and update orderbook.
-                            // Update the offset to represent the decrease
-                            // in magnitude of the order
-                            cod[`offset]-:co[`leaves];
+                            // set the new orderbook qty to the  
+                        nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check    
+                        nob[`vqty]+:o`displayqty;
 
-                            // Because the price of the order has not been changed
-                            // merely update the same level of the orderbook.
-                            ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
-                            ob[`vqty]+:vdlt;
+                        cob[`vqty]-:co[`displayqty];
+                        cob[`iqty]-:((-/)co`leaves`displayqty);
 
-                            // Reset the order offset to the sum of the 
-                            // visible and hidden quantity at the level
-                            o[`offset]:(ob[`vqty]-(o[`leaves]))+sum[ob`hqty`iqty];
-
-                            .order.test.o:o;
-                            .order.test.cod:cod;
-                            .order.test.ob:ob;
-
-                            .order.Order,:(o,cod);
-                            .order.OrderBook,:ob;
-                        ];
-                        [   // If the order reduces in size it does not affect the placement in the queue
-
-                            // Derive the delta in size of the order
-                            vdlt:(o[`leaves] - co[`leaves]);
-                            dlt:vdlt+(o[`displayqty]-co[`displayqty]);
-
-                            o[`displayqty]:min[o`leaves`displayqty];
-
-                            // Adjust the offsets of all orders > offset at level
-                            // and update orderbook.
-                            // Update the offset to represent the decrease
-                            // in magnitude of the order
-                            cod[`offset]+:dlt;
-
-                            // Because the price of the order has not been changed
-                            // merely update the same level of the orderbook.
-                            ob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
-                            ob[`vqty]+:vdlt;
-
-                            .order.Order,:((),o,cod);
-                            .order.OrderBook,:ob;
-                        ]];
+                        .order.Order,:(o,cod); // TODO test
+                        .order.OrderBook,:(cob;nob);
                         .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+                    ];  
+                    (o[`leaves]>co[`leaves]);
+                    [ // If the order should be replaced in the order queue when it is made larger.
+
+                        // considering the order is being replaced in the queue 
+                        // amend all orders above the order to reflect the change
+                        // in offset.
+                        o[`displayqty]:o`leaves;
+                        
+                        vdlt:(o[`leaves] - co[`leaves]);
+                        dlt:vdlt+(o[`displayqty]-co[`displayqty]);
+                        
+                        // Adjust the offsets of all orders > offset at level
+                        // and update orderbook.
+                        // Update the offset to represent the decrease
+                        // in magnitude of the order
+                        cod[`offset]-:co[`leaves];
+
+                        // Because the price of the order has not been changed
+                        // merely update the same level of the orderbook.
+                        cob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
+                        cob[`vqty]+:vdlt;
+
+                        // Reset the order offset to the sum of the 
+                        // visible and hidden quantity at the level
+                        o[`offset]:(cob[`vqty]-(o[`leaves]))+sum[cob`hqty`iqty];
+
+                        .order.Order,:(o,cod); // TODO check
+                        .order.OrderBook,:cob;
+                        .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+
+                    ];
+                    [   // If the order reduces in size it does not affect the placement in the queue
+
+                        // Derive the delta in size of the order
+                        vdlt:(o[`leaves] - co[`leaves]);
+                        dlt:vdlt+(o[`displayqty]-co[`displayqty]);
+
+                        o[`displayqty]:min[o`leaves`displayqty];
+
+                        // Adjust the offsets of all orders > offset at level
+                        // and update orderbook.
+                        // Update the offset to represent the decrease
+                        // in magnitude of the order
+                        cod[`offset]+:dlt;
+
+                        // Because the price of the order has not been changed
+                        // merely update the same level of the orderbook.
+                        cob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
+                        cob[`vqty]+:vdlt;
+
+                        .order.Order,:(o,cod); // TODO check
+                        .order.OrderBook,:cob;
+                        .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+                    ]];
                     
-                ];[
-                    // Cancel order and update orderbook subsequently
-                    ob[`iqty]-:((-/)co`leaves`displayqty); // TODO check
-                    ob[`vqty]-:co[`leaves];
-
-                    ![`.order.Order;enlist(=;`orderId;o`orderId);0;`symbol$()]; // Simpler drop
-
-                    .order.OrderBook,:ob;
-                    .pipe.egress.AddOrderCancelledEvent[o;o`time];
-
-                ]];
                 // TODO dependent on visible delta
-                .pipe.egress.AddDepthEvent[ob;o`time]; // TODO
+                .pipe.egress.AddDepthEvent[cob;o`time]; // TODO
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
