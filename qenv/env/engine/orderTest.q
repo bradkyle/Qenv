@@ -1782,7 +1782,7 @@ dozc:{x+y}[doz];
             ); // Current Orders 
             `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
            `orderId`clId`size`time!(1;1;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
             (
                 (2;2;1;1;1;1;20;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;130;100;100;100;999;0b;z)
@@ -1801,7 +1801,7 @@ dozc:{x+y}[doz];
             ); // Current Orders 
             `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
            `orderId`clId`size`time!(2;2;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;130;100;100;100;999;0b;z)
@@ -1820,7 +1820,7 @@ dozc:{x+y}[doz];
             ); // Current Orders 
             `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
            `orderId`clId`size`time!(3;3;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z)

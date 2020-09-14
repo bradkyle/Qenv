@@ -361,7 +361,7 @@
 
                 // IF the order is present, amend order, if amended to 0 remove
                 // Get the current state of the order. // TODO simplify into change in price and side, change in size
-                $[sum[o`leaves`size]>0;[
+                $[not[sum[o`leaves`size]>0];[
                         // Cancel order and update orderbook subsequently
                         cob[`iqty]-:((-/)co`leaves`displayqty); // TODO check
                         cob[`vqty]-:co[`leaves];
@@ -421,7 +421,6 @@
                         .order.Order,:(o,cod); // TODO check
                         .order.OrderBook,:cob;
                         .pipe.egress.AddOrderUpdatedEvent[o;o`time];
-
                     ];
                     [   // If the order reduces in size it does not affect the placement in the queue
 
