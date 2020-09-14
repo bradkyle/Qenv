@@ -199,6 +199,8 @@
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
     .order.test.O:.order.Order;
     
+    // Hidden order qty i.e. derived from data is always at the front of the queue
+
     .order.test.odrs:odrs;
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!state;`price xgroup odrs]]; 
