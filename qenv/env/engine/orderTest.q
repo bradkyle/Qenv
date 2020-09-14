@@ -1271,7 +1271,7 @@ dozc:{x+y}[doz];
 // TODO amend to different price/
 // TODO amend to cross spread
 // TODO amend to cross spread stop order
-
+// TODO validation and stop orders
 // TODO Check mock called with correct
 .qt.Unit[
     ".order.NewOrder";
@@ -1525,53 +1525,14 @@ dozc:{x+y}[doz];
             (0b;0;())  // Expected AddDepthEvent Mock
         ));  
         //
-        ("Place new market order simple";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
+        ("Place new buy market order, no previous depth or agent orders should update depth";(
+            (); // Current Depth
+            (); // Current Orders 
+            (); // Current Instrument
+            `clId`instrumentId`accountId`side`otype`size`reduce`time!(1;1;1;1;0;100;0b;z); // Order Placed
+            (); // Expected Depth
             (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
-        ));
-        ("Place new market order with price, should ignore price";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
-        ));
-        ("Place new market order with price, should ignore price";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
-        ));
-        ("Place new stop market order with invalid stop price";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderCreatedEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
-        ));
-        ("Place new stop limit order with invalid stop price";(
-            ((10#1);1000-til 10;10#1000); // Current Depth
-            (); ();
-           `clId`instrumentId`accountId`side`otype`offset`size`price`reduce`time!(1;1;1;1;1;100;100;1000;0b;z); // Fill Execution
-            ([price:999-til 9] side:(9#1);qty:(500,8#1000);vqty:(500,8#1000)); // Expected Depth
-            (); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
+            (1b;1;()); // Expected ProcessTrade Mock
             (0b;0;()); // Expected AddOrderCreatedEvent Mock
             (0b;0;())  // Expected AddDepthEvent Mock
         ))

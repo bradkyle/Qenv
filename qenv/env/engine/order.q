@@ -176,7 +176,7 @@
 
 
 // Process Trades/Market Orders
-// -------------------------------------------------------------->
+// --------------------------------------------------------------> // Price limits merely stipulate maximum market order price
 // TODO udpate best bid + best ask
 // TODO move to C for increased speed.
 // TODO add junk order to taker, hidden to taker etc.
@@ -287,7 +287,7 @@
 // Process New Orders
 // -------------------------------------------------------------->
 
-// TODO add place time
+// TODO add place time // TODO validation
 // New Order Adds an order to the orderbook.
 /  @param i     (Instrument) The instrument for which this order is placed
 /  @param o     (Order) The order that is being placed.
@@ -302,7 +302,6 @@
     k:o[`otype];
     res:$[k=0;[ // MARKET ORDER
             .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
-            // TODO add events
           ]; 
           (k in (1,4,5));[ // LIMIT ORDER // TODO allow for hidden orders to be dispersed
                 // IF the order is present, amend order, if amended to 0 remove
