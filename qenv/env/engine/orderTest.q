@@ -1768,7 +1768,68 @@ dozc:{x+y}[doz];
             (1b;1;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
             (1b;1;())  // Expected AddDepthEvent Mock
-        ))
+        ));
+        // Amend to zero (Cancellation)
+        ("Amend limit order (first in queue) to zero, different price same side, should update offsets, depth etc.";(
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
+            ); // Current Orders 
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+           `orderId`clId`size`time!(1;1;110;z); // Fill Execution
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            (
+                (1;1;1;1;1;1;300;100;110;110;999;0b;z);
+                (2;2;1;1;1;1;20;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
+            ); // Expected Orders
+            (0b;0;()); // Expected ProcessTrade Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
+        )); 
+        ("Amend limit order (second in queue) to zero, different price same side, should update offsets, depth etc.";(
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
+            ); // Current Orders 
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+           `orderId`clId`size`time!(2;2;110;z); // Fill Execution
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;300;100;110;110;999;0b;z);
+                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
+            ); // Expected Orders
+            (0b;0;()); // Expected ProcessTrade Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
+        )); 
+        ("Amend limit order (last in queue) to zero, different price same side, should update offsets, depth etc.";(
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
+            ); // Current Orders 
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+           `orderId`clId`size`time!(3;3;110;z); // Fill Execution
+            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            (
+                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (3;3;1;1;1;1;300;100;110;110;999;0b;z)
+            ); // Expected Orders
+            (0b;0;()); // Expected ProcessTrade Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
+            (0b;0;()); // Expected AddOrderCancellledEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
+        ));
         / ("Amend limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
         /     ((10#1);1000-til 10;10#1000); // Current Depth
         /     (); ();
