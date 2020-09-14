@@ -201,6 +201,10 @@
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
+    // Iceberg orders placed by agents have a 
+    // typical offset and function like normal orders
+    // except they aren't visible.
+
     .order.test.odrs:odrs;
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!state;`price xgroup odrs]]; 
@@ -230,8 +234,7 @@
 
         // Derive the non agent qtys that
         // make up the orderbook
-        nagentQty: flip .util.PadM[ // TODO check
-            raze'[(
+        nagentQty: flip .util.PadM[raze'[(
                 0^state[`offset][;0]; // Use the first offset as the first non agent qty
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                 .util.Clip[state[`qty]-mxshft]
