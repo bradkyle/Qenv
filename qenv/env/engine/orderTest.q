@@ -1716,9 +1716,9 @@ dozc:{x+y}[doz];
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;998;1b;1b);
            `orderId`clId`size`time!(1;1;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:(999)] side:(1);qty:(100);hqty:(0);iqty:(0);vqty:(410)); // Expected Depth
             (
                 (1;1;1;1;1;1;300;100;110;110;999;0b;z);
                 (2;2;1;1;1;1;20;100;100;100;999;0b;z);
@@ -1736,9 +1736,9 @@ dozc:{x+y}[doz];
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;998;1b;1b);
            `orderId`clId`size`time!(2;2;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:(999)] side:(1);qty:(100);hqty:(0);iqty:(0);vqty:(410)); // Expected Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
                 (2;2;1;1;1;1;300;100;110;110;999;0b;z);
@@ -1756,9 +1756,9 @@ dozc:{x+y}[doz];
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
+            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;998;1b;1b);
            `orderId`clId`size`time!(3;3;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
+            ([price:(999)] side:(1);qty:(100);hqty:(0);iqty:(0);vqty:(410)); // Expected Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z);
