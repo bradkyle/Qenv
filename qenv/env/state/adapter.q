@@ -3,7 +3,10 @@
 // Allow for strategies like bursts on market orders
 // constant sniffers etc.
 // create iceberg orders etc.
-// TODO increasing distribution, decreasing distribution, flat distribution, (bucketed/levelled)
+// TODO increasing distribution (exp, log, normal)
+// TODO decreasing distribution (exp, log, normal)
+// TODO flat distribution   
+// TODO (bucketed/levelled)
 
 
 // Bucketed Limit Order Creation
