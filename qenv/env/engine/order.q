@@ -348,6 +348,7 @@
     // TODO validation?
     co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
     // TODO fill current order with next order
+    
     o:o^co;
     k:o[`otype];
     res:$[(k in (1,4,5));[ // LIMIT ORDER

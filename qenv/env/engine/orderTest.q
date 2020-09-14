@@ -1540,7 +1540,7 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
-
+// TODO test filled amt
 .qt.Unit[
     ".order.AmendOrder";
     {[c]
@@ -1595,7 +1595,7 @@ dozc:{x+y}[doz];
            `orderId`clId`size`time!(1;1;10;z); // Fill Execution
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Expected Depth
             (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
+                (1;1;1;1;1;1;10;100;10;10;999;0b;z);
                 (2;2;1;1;1;1;30;100;100;100;999;0b;z);
                 (3;3;1;1;1;1;140;100;100;100;999;0b;z)
             ); // Expected Orders
@@ -1616,7 +1616,7 @@ dozc:{x+y}[doz];
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Expected Depth
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
+                (2;2;1;1;1;1;120;100;10;10;999;0b;z);
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
@@ -1637,7 +1637,7 @@ dozc:{x+y}[doz];
             (
                 (1;1;1;1;1;1;10;100;100;100;999;0b;z);
                 (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
+                (3;3;1;1;1;1;230;100;10;10;999;0b;z)
             ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
             (1b;1;()); // Expected AddOrderUpdatedEvent Mock
