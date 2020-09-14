@@ -1565,8 +1565,10 @@ dozc:{x+y}[doz];
         .util.testutils.checkMock[mck3;m[2];c];  // Expected AddOrderCancellledEvent Mock
         .util.testutils.checkMock[mck4;m[3];c];  // Expected AddDepthEvent Mock
 
-        / .util.testutils.checkDepth[p[`eDepth];c];
-        / .util.testutils.checkOrders[p[`eOrd];c];
+        .util.testutils.checkDepth[p[`eDepth];c];
+        .util.testutils._checkOrders[
+            (`orderId`clId`side`otype`offset`size`leaves`displayqty`price`reduce`time);
+            p[`eOrd];c];
     };
     {[p] 
         // TODO account for one record
@@ -1598,9 +1600,9 @@ dozc:{x+y}[doz];
                 (3;3;1;1;1;1;140;100;100;100;999;0b;z)
             ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         )); 
         ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
@@ -1618,9 +1620,9 @@ dozc:{x+y}[doz];
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         )); 
         ("Amend limit order (last in queue), smaller than previous, should update offsets, depth etc.";(
             ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
@@ -1638,9 +1640,9 @@ dozc:{x+y}[doz];
                 (3;3;1;1;1;1;230;100;100;100;999;0b;z)
             ); // Expected Orders
             (0b;0;()); // Expected ProcessTrade Mock
-            (0b;0;()); // Expected AddOrderUpdatedEvent Mock
+            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
             (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (0b;0;())  // Expected AddDepthEvent Mock
+            (1b;1;())  // Expected AddDepthEvent Mock
         )) 
         / ("Amend limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
         /     ((10#1);1000-til 10;10#1000); // Current Depth
