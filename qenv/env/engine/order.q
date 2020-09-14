@@ -123,7 +123,6 @@
                         .util.Clip[state[`qty]-mxshft] // TODO change?
                     )]];
 
-
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
                 // the queue.
@@ -174,29 +173,35 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;td;fillfn] // TODO fix and test, change instrument to i, account to a
+.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
     nside:neg[side];
-    isagnt:not[null[account]];
+    isagnt:count[account]>0;
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
-    state:![
-        ?[`.order.OrderBook;
-          enlist(=;`side;nside);0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))];();0b;
-          `price`side`qty`vqty`rp!(`price;`side;`qty;`vqty;(-;(-;`svqty;(:':;`svqty));(-;`svqty;fillQty)))];
-
+    state:?[`.order.OrderBook;
+            enlist(=;`side;nside);0b;
+            `price`side`qty`iqty`hqty`vqty`svqty!(`price;`side;`qty;`iqty;`hqty;`vqty;(+\;`vqty))];
+    .order.test.state0:state;
+    .order.test.OB1:.order.OrderBook;
+    thresh:sums[state[`qty]];
+    rp:(thresh-prev[thresh])-(thresh-fillQty);
+    state[`thresh]:thresh;
+    .order.test.state:state;
+    .order.test.rp:rp;
+    .order.test.thresh:thresh;
     // Derive the amount that will be replaced per level
-    state[`rp]:min[fillQty,first[state]`vqty]^(state`rp);
+    rp1:min[fillQty,first[state]`vqty]^rp;
+    state[`rp]:rp1;
+    .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
     state[`tgt]:(-/)state`qty`rp;
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
-
-    // TODO make better
-    state[`hqty]:state`qty;
-    state[`iqty]:state`qty;
-
+    .order.test.O:.order.Order;
+    
+    .order.test.odrs:odrs;
     $[count[odrs]>0;[
-        state:0!{$[x>0;desc[y];asc[y]]}[neg[side];lj[1!state;`price xgroup odrs]]; 
+        state:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!state;`price xgroup odrs]]; 
         msk:count'[state`orderId];
 
         // Pad state into a matrix
@@ -204,7 +209,7 @@
         padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM'[state padcols];
-
+        .order.test.pstate:state;
         // Useful counts 
         maxN:max count'[state`offset];
         tmaxN:til maxN;
@@ -215,7 +220,8 @@
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
         noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]; // TODO faster
-
+        nshft:nleaves+noffset;
+        
         // Calculate the new vis qty
         nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
 
@@ -227,24 +233,31 @@
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                 .util.Clip[state[`qty]-mxshft]
             )]];
-        / nfilled: psize - nleaves; // New amount that is filled
+        nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
-        // above. They should not overlap.
-        partfilled:`boolean$(raze[(sums'[poffset]<=rp)-(nshft<=rp)]); // todo mask
-        fullfilled: `boolean$(raze[(poffset<=rp)and(nshft<=rp)]); // todo mask 
-        .order.Order,:(); // update where partial
-        ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
+        // above. They should not overlap.f
+        partfilled:`boolean$(raze[(sums'[state`offset]<=state[`rp])-(nshft<=state[`rp])]); // todo mask
+        fullfilled: `boolean$(raze[(state[`offset]<=state[`rp])and(nshft<=state[`rp])]); // todo mask
+
+        .order.test.nleaves:nleaves;
+        .order.test.noffset:noffset;
+        .order.test.msk:msk;
+        .order.test.state1:state;
+        // TODO update with displayqty
+        .order.Order,:flip(`orderId`offset`leaves!((raze[state`orderId];raze[noffset];raze[nleaves])[;where[msk]]));  // update where partial
+        / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
-
         // Make order updates
-        mflls:[];
-
+        mflls:flip(`accountId`price`qty`reduce!((raze[state`accountId];raze[state`price];raze[nfilled];raze[state[`reduce]])[;where[msk]]));
+        .order.test.mflls:mflls;
+        .order.test.zec:(account[`accountId] in mflls[`accountId]);
+        .order.test.isagnt:isagnt;
         if[count[mflls]>0;[
-            if[isagnt and (account[`accountId] in mflls[`accountId]);
+            if[(isagnt and (account[`accountId] in mflls[`accountId]));
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
@@ -253,7 +266,10 @@
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        .order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty); // TODO fix here
+        state[`bside]:first'[distinct'[state[`side]]];
+
+        .order.test.obi:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];
+        .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];  // TODO fix here
     ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)]]]; // TODO fix
     
     

@@ -14,7 +14,7 @@
 /  @return (Inventory) The new updated inventory
 .util.cond.isActiveAccLimit:{:(
                 (=;`side;x);
-                (=;`otype;1);
+                (in;`otype;(1 4 5));
                 (in;`status;(0 1));
                 (in;`price;y); 
                 (in;`accountId;z); 
@@ -45,7 +45,7 @@
 /  @return (Inventory) The new updated inventory
 .util.cond.isActiveLimit:{:(
                 (=;`side;x);
-                (=;`otype;1);
+                (in;`otype;(1 4 5));
                 (in;`status;(0 1));
                 (in;`price;y); 
                 (>;`leaves;0))}; // TODO improve performance
