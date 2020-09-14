@@ -84,6 +84,12 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
+
+// Orders increasing at a given depth when the price no longer exists i.e. the
+// price has been overtaken by the opposing side means that there was an inflow of
+// orders at that price (after realistically applicable) in this instance it is assumed
+// that the inflow would be post only and thus they are disregarded.
+
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
     odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
@@ -223,15 +229,17 @@
 
         // Calculate new shifts and max shifts
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
-        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
         noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]; // TODO faster
         nshft:nleaves+noffset;
+        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
+
+        .order.test.nleaves:nleaves; // TODO move down
         
         // Calculate the new vis qty
-        nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+        nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         .order.test.nvqty:nvqty;
-
+        .order.test.nshft:nshft;
         // Derive the non agent qtys that
         // make up the orderbook
         nagentQty: flip .util.PadM[raze'[(
@@ -239,10 +247,15 @@
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                 .util.Clip[state[`qty]-mxshft]
             )]];
+        .order.test.nagentQty:nagentQty;
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+        state[`vqty]:.util.Clip[vqty];
         .order.test.vqty:vqty;
+        .order.test.mxshft:mxshft;
+        .order.test.accdlts:accdlts;
+        .order.test.nfilled:nfilled;
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -277,8 +290,10 @@
         state[`bside]:first'[distinct'[state[`side]]];
 
         .order.test.obi:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];
-
         .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];  // TODO fix here
+
+        delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
+
     ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)]]]; // TODO fix
     
     
