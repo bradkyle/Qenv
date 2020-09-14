@@ -202,7 +202,7 @@
     .order.test.odrs:odrs;
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!state;`price xgroup odrs]]; 
-        msk:count'[state`orderId];
+        msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
 
         // Pad state into a matrix
         // for faster operations
@@ -224,6 +224,7 @@
         
         // Calculate the new vis qty
         nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+        .order.test.nvqty:nvqty;
 
         // Derive the non agent qtys that
         // make up the orderbook
@@ -236,6 +237,7 @@
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+        .order.test.vqty:vqty;
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -248,7 +250,8 @@
         .order.test.msk:msk;
         .order.test.state1:state;
         // TODO update with displayqty
-        .order.Order,:flip(`orderId`offset`leaves!((raze[state`orderId];raze[noffset];raze[nleaves])[;where[msk]]));  // update where partial
+        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[nleaves]]);
+        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[nleaves]])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
@@ -269,6 +272,7 @@
         state[`bside]:first'[distinct'[state[`side]]];
 
         .order.test.obi:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];
+
         .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];  // TODO fix here
     ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)]]]; // TODO fix
     

@@ -4,6 +4,7 @@
 
 // TODO logic mappings per CONTRACTTYPE
 // TODO move defaults to util.defaults
+// TODO allowed order types
 
 // Inventory CRUD Logic
 // -------------------------------------------------------------->

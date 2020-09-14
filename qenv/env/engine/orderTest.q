@@ -438,7 +438,7 @@ dozc:{x+y}[doz];
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils._checkOrders[
-            (`orderId`clId`side`otype`offset`leaves`displayqty`price`reduce`time);
+            (`orderId`side`otype`offset`leaves`displayqty`price`reduce`time);
             p[`eOrd];c];
 
     }; // TOOD derive from // TODO derive orderbook, orders
@@ -904,7 +904,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
-            ((10#-1);1000-til 10;10#1000;10#0;10#0;10#1000); // Current Depth
+            ((10#-1);1000+til 10;10#1000;10#0;10#0;10#1000); // Current Depth
             (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;4#100;4#1000 1001;4#z); // Current Orders
             (1;1450;1b;z);  // Fill Execution
             ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000)));  // Expected Depth
@@ -1265,6 +1265,7 @@ dozc:{x+y}[doz];
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
 
+.qt.SkpBes[47];
 .qt.RunTests[];
 /
 
