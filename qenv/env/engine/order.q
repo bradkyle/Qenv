@@ -174,7 +174,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test, change instrument to i, account to a
+.order.ProcessTrade        :{[instrument;account;td;fillfn] // TODO fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
     nside:neg[side];
     isagnt:not[null[account]];

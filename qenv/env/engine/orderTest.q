@@ -407,7 +407,7 @@ dozc:{x+y}[doz];
 // TODO test erroring
 // TODO iceberg/hidden order logic
 // TODO hidden orders from agent, hidden orders from data.
-
+// TODO drifts out of book bounds
 .qt.Unit[
     ".order.ProcessTrade";
     {[c]
@@ -436,7 +436,9 @@ dozc:{x+y}[doz];
         .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
         .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils.checkOrders[p[`eOrd];c];
+        .util.testutils._checkOrders[
+            (`orderId`clId`side`otype`offset`leaves`displayqty`price`reduce`time);
+            p[`eOrd];c];
 
     }; // TOOD derive from // TODO derive orderbook, orders
     {[p] 
@@ -1261,6 +1263,9 @@ dozc:{x+y}[doz];
     "Process trades from the historical data or agent orders",
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
+
+.qt.RunTests[];
+/
 
 // TOOD place limit order, stop order, market order
 // TODO Cancel limit order, stop market order, stop limit order
