@@ -311,12 +311,13 @@
                 // If the order crosses the bid/ask spread
                 // sell order <= best bid or buy order >= best ask 
                 // process the order as a trade. 
-                $[(((o[`side]<0) and (i[`bestBidPrice]>=o[`price])) or 
-                    ((o[`side]>0) and (i[`bestAskPrice]<=o[`price])));
+                $[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or 
+                    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]); // check postonly
                     [
                         .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
                     ];
                     [
+                        .order.test.o:o;
                         // Becuase the order is placed at the back of the queue
                         // no change in the offsets of the other orders occurs at 
                         // the level.
