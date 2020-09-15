@@ -207,7 +207,7 @@
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
-    state[`tgt]:.util.Clip[(-/)flip[state`qty`rp]];
+    state[`tgt]:.util.Clip[(-/)state`qty`rp];
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
     .order.test.O:.order.Order;
     
