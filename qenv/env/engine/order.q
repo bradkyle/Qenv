@@ -86,8 +86,8 @@
 // orders at that price (after realistically applicable) in this instance it is assumed
 // that the inflow would be post only and thus they are disregarded.
 // Because hidden orders are derived from trades that have occurred and not through explicit
-// data, it is principly added to the front of the queue during an update.
-
+// data, it is principly added to the front of the queue during an update,  and thus
+// all offsets are increased at the price level accordingly.
 
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
