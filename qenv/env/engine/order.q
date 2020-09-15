@@ -260,23 +260,24 @@
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
-                .util.Clip[state[`qty]-mxshft] // last qty - maximum shift
+                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
             )]];
         .order.test.nagentQty:nagentQty;
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
 
         // TODO
-        voqty:(-/)state`vqty`qty; // Current Visible state order qty
-        state[`tgt]:.util.Clip[(-/)state`qty`rp];
-        nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
-        vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
-        .order.test.nvqty:nvqty;
+        / voqty:(-/)state`vqty`qty; // Current Visible state order qty
+        / state[`tgt]:.util.Clip[(-/)state`qty`rp];
+        / nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
+        / vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+        / .order.test.nvqty:nvqty;
 
-        nagentQtyRp:(nagentQty-state[`rp]);
-        nagentQtyCount:count[nagentQtyRp[0]];
-        state[`tgt]:sum'[.util.Clip[[;1+til[ncount]]]];
-        state[`hqty]:.util.Clip[(-/)state`hqty`rp];
+        rp:state`rp;
+        nagentQtyCount:count[nagentQty[0]];
+        nagentQtyRp:(sums'[nagentQty]-rp;
+        state[`tgt]:(sum'[1_'nagentQtyRp]);
+        state[`hqty]:.util.Clip[nagentQtyRp[;0]];
         state[`iqty]:sum'[nleaves-ndisplayqty];
         state[`vqty]:state[`tgt]+sum[ndisplayqty];
         / state[`qty]:state[`tgt];
