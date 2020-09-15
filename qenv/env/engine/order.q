@@ -254,7 +254,6 @@
         .order.test.nleaves:nleaves; // TODO move down
         
         // Calculate the new vis qty
-        .order.test.nvqty:nvqty;
         .order.test.nshft:nshft;
         // Derive the non agent qtys that
         // make up the orderbook
@@ -270,6 +269,7 @@
         // TODO
         nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+        .order.test.nvqty:nvqty;
 
         state[`hqty]:.util.Clip[(-/)state`hqty`rp];
         state[`iqty]:sum'[nleaves-ndisplayqty];
