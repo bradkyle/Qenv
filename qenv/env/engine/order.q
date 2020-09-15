@@ -220,11 +220,13 @@
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM'[state padcols];
         .order.test.pstate:state;
+        
         // Useful counts 
         maxN:max count'[state`offset];
         tmaxN:til maxN;
         numLvls:count[state`offset];
 
+        // TODO new display qty
         // Calculate new shifts and max shifts
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
         noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
