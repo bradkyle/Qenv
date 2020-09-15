@@ -257,15 +257,17 @@
         // Derive the non agent qtys that
         // make up the orderbook
         nagentQty: flip .util.PadM[raze'[(
-                0^state[`offset][;0]; // Use the first offset as the first non agent qty
-                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^nshft[;-1_(tmaxN)]]; //
-                .util.Clip[state[`qty]-mxshft]
+                0^state[`hqty]; // hidden qty
+                0^(state[`offset][;0] - 0^state[`hqty]); // first offset
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^nshft[;-1_(tmaxN)]]; // middle offset + shft
+                .util.Clip[state[`qty]-mxshft] // last qty - maximum shift
             )]];
         .order.test.nagentQty:nagentQty;
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
 
         // TODO
+        voqty:(-/)state`vqty`qty; // Current Visible state order qty
         state[`tgt]:.util.Clip[(-/)state`qty`rp];
         nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
