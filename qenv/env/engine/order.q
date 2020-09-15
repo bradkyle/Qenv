@@ -45,7 +45,7 @@
     qty         :`long$(); // data qty
     hqty        :`long$(); // hidden qty  (only for data depth updates)
     iqty        :`long$(); // iceberg qty (only for agent orders)
-    vqty      :`long$()); // Visible qty (including order qty)
+    vqty      :`long$()); // Visible qty (including order qty)=(qty+displayqty)
 .order.bookCols:cols .order.OrderBook;
 
 / Bitmex
@@ -208,6 +208,8 @@
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
     state[`tgt]:.util.Clip[(-/)state`qty`rp];
+
+    // TODO select by offset aswell
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
     .order.test.O:.order.Order;
     
@@ -216,6 +218,8 @@
     // Iceberg orders placed by agents have a 
     // typical offset and function like normal orders
     // except they aren't visible.
+
+    // TODO count orders where filled >0;
 
     .order.test.odrs:odrs;
     $[count[odrs]>0;[
