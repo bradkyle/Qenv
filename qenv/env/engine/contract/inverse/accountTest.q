@@ -6,7 +6,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.ExecCost[];
+        res:.inverse.account.ExecCost[];
     };
     {[p]
     
@@ -21,7 +21,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.AvgPrice[];
+        res:.inverse.account.AvgPrice[];
     };
     {[p]
     
@@ -38,7 +38,7 @@
         p:c[`params];
 
 
-        .inverse.account.UnrealizedPnl[];
+        res:.inverse.account.UnrealizedPnl[];
     };
     {[p]
     
@@ -53,7 +53,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.RealizedPnl[];
+        res:.inverse.account.RealizedPnl[];
     };
     {[p]
     
@@ -68,8 +68,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.MaintMarginReq[];
-
+        res:.inverse.account.MaintMarginReq[];
     };
     {[p]
     
@@ -84,8 +83,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.InitMarginReq[];
-
+        res:.inverse.account.InitMarginReq[];
     };
     {[p]
     
@@ -100,8 +98,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.MaintMargin[];
-
+        res:.inverse.account.MaintMargin[];
     };
     {[p]
     
@@ -116,8 +113,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.InitMargin[];
-
+        res:.inverse.account.InitMargin[];
     };
     {[p]
     
@@ -132,8 +128,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.LiquidationPrice[];
-
+        res:.inverse.account.LiquidationPrice[];
     };
     {[p]
     
@@ -148,8 +143,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.BankruptcyPrice[];
-
+        res:.inverse.account.BankruptcyPrice[];
     };
     {[p]
     
@@ -166,8 +160,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.AdjustOrderMargin[];
-
+        res:.inverse.account.AdjustOrderMargin[];
     };
     {[p]
     
@@ -182,8 +175,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.incFill[];
-
+        res:.inverse.account.incFill[];
     };
     {[p]
     
@@ -198,8 +190,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.redFill[];
-
+        res:.inverse.account.redFill[];
     };
     {[p]
     
@@ -214,8 +205,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.crsFill[];
-
+        res:.inverse.account.crsFill[];
     };
     {[p]
     
@@ -230,7 +220,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.ApplyFill[];
+        res:.inverse.account.ApplyFill[];
 
     };
     {[p]
@@ -245,7 +235,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.UpdateMarkPrice[];
+        res:.inverse.account.UpdateMarkPrice[];
 
     };
     {[p]
@@ -260,7 +250,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.Deposit[];
+        res:.inverse.account.Deposit[];
         
     };
     {[p]
@@ -276,7 +266,7 @@
     {[c]
         p:c[`params];
 
-        .inverse.account.Withdraw[];
+        res:.inverse.account.Withdraw[];
         
     };
     {[p]
