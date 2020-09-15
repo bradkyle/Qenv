@@ -293,7 +293,7 @@
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        state[`bside]:first'[distinct'[state[`side]]];
+        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
         .order.test.obi:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];
         .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];  // TODO fix here
