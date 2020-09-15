@@ -79,13 +79,10 @@
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
-
-
 // Orders increasing at a given depth when the price no longer exists i.e. the
 // price has been overtaken by the opposing side means that there was an inflow of
 // orders at that price (after realistically applicable) in this instance it is assumed
 // that the inflow would be post only and thus they are disregarded.
-
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
@@ -245,14 +242,14 @@
         // make up the orderbook
         nagentQty: flip .util.PadM[raze'[(
                 0^state[`offset][;0]; // Use the first offset as the first non agent qty
-                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^nshft[;-1_(tmaxN)]]; //
                 .util.Clip[state[`qty]-mxshft]
             )]];
         .order.test.nagentQty:nagentQty;
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
-        state[`vqty]:.util.Clip[vqty];
+        state[`vqty]:.order.test.pstate[`tgt]+sum[.util.Clip[.order.test.nleaves]];
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
         .order.test.accdlts:accdlts;
