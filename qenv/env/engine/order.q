@@ -155,6 +155,10 @@
                 state[`bside]:first'[distinct'[state[`side]]];
                 .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; 
             ]];
+
+            // TODO update hqty!
+
+
         // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
@@ -207,9 +211,6 @@
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
-
-
-    state
 
     // TODO select by offset aswell
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
