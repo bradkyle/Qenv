@@ -249,6 +249,10 @@
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
+
+        nhqty:0;
+        niqty:0;
+
         state[`vqty]:.order.test.pstate[`tgt]+sum[.util.Clip[.order.test.nleaves]];
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
