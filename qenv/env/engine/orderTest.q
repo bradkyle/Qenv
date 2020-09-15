@@ -935,7 +935,7 @@ dozc:{x+y}[doz];
             ((10#-1);1000+til 10;10#1000;((10 20),(8#10));((180 160),(8#0));10#1000); // Current Depth
             (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;((2#10),(2#20));4#1000 1001;4#z); // Current Orders
             (1;1450;1b;z);  // Fill Execution
-            ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));hqty:(9#0);iqty:(9#0);vqty:(600,(8#1000)));  // Expected Depth
+            ([price:1001+til 9] side:(9#-1);qty:(740,(8#1000));hqty:(0,(8#10));iqty:(80,(8#0));vqty:(760,(8#1000)));  // Expected Depth
             (til[4];4#1;4#1;4#-1;4#1;((3#0),140);((3#0),100);((3#0),20);4#1000 1001;(3#2),0;4#z); // Expected Orders
             (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
                 (`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;1b;1001;50);
