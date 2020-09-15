@@ -210,7 +210,6 @@
 
 
     state
-    state[`tgt]:.util.Clip[(-/)state`qty`rp];
 
     // TODO select by offset aswell
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
@@ -267,6 +266,7 @@
         accdlts: state[`leaves] - nleaves; // The new Account deltas
 
         // TODO
+        state[`tgt]:.util.Clip[(-/)state`qty`rp];
         nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
         .order.test.nvqty:nvqty;
