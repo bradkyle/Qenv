@@ -230,8 +230,8 @@
         // Calculate new shifts and max shifts
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
         noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
-        nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]; // TODO faster
-        ndisplayqty:{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves];
+        nleaves: .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
+        ndisplayqty:.util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
 
         nshft:nleaves+noffset;
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
@@ -257,7 +257,7 @@
         nhqty:0;
         niqty:0;
 
-        state[`vqty]:.order.test.pstate[`tgt]+sum[.util.Clip[.order.test.nleaves]];
+        state[`vqty]:.order.test.pstate[`tgt]+sum[nleaves];
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
         .order.test.accdlts:accdlts;
@@ -274,8 +274,8 @@
         .order.test.msk:msk;
         .order.test.state1:state;
         // TODO update with displayqty
-        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[ndisplayqty]]);
-        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[ndisplayqty]])[;where[msk]]));  // update where partial
+        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[nleaves];raze[ndisplayqty]);
+        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[nleaves];raze[ndisplayqty])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
