@@ -248,7 +248,7 @@
         ndisplayqty:.util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
 
         nshft:nleaves+noffset;
-        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
+        mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
 
         .order.test.nleaves:nleaves; // TODO move down
         
@@ -259,7 +259,7 @@
         nagentQty: flip .util.PadM[raze'[(
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
-                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^nshft[;-1_(tmaxN)]]; // middle offset + shft
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
                 .util.Clip[state[`qty]-mxshft] // last qty - maximum shift
             )]];
         .order.test.nagentQty:nagentQty;
@@ -273,16 +273,18 @@
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
         .order.test.nvqty:nvqty;
 
+        
+        state[`tgt]:sum'[.util.Clip[nagentQty-state[`rp]]];
         state[`hqty]:.util.Clip[(-/)state`hqty`rp];
         state[`iqty]:sum'[nleaves-ndisplayqty];
         state[`vqty]:state[`tgt]+sum[ndisplayqty];
-        state[`qty]:state[`tgt];
+        / state[`qty]:state[`tgt];
 
         // TODO check
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
         .order.test.accdlts:accdlts;
-        .order.test.nfilled:nfilled;
+        .order.test.nfilled:nfilled; // TODO fix
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
