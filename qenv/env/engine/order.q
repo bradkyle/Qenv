@@ -274,8 +274,8 @@
         .order.test.msk:msk;
         .order.test.state1:state;
         // TODO update with displayqty
-        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[nleaves]]);
-        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[nleaves]])[;where[msk]]));  // update where partial
+        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[ndisplayqty]]);
+        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[.util.Clip[nleaves]];raze[.util.Clip[ndisplayqty]])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
