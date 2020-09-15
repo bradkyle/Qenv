@@ -1321,7 +1321,7 @@ dozc:{x+y}[doz];
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
 
-.qt.SkpBes[(46 47 48)];
+.qt.SkpBes[46];
 .qt.RunTests[];
 /
 
