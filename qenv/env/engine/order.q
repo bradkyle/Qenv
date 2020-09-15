@@ -199,6 +199,7 @@
     state[`thresh]:thresh;
     .order.test.state:state;
     .order.test.rp:rp;
+    .order.test.aqty:aqty;
     .order.test.thresh:thresh;
     .order.test.thresh1:thresh1;
     // Derive the amount that will be replaced per level
@@ -206,7 +207,7 @@
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
-    state[`tgt]:.util.Clip[(-/)state`qty`rp];
+    state[`tgt]:.util.Clip[(-/)flip[state`qty`rp]];
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
     .order.test.O:.order.Order;
     
