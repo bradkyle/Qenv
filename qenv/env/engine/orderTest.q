@@ -932,7 +932,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
-            ((10#-1);1000+til 10;10#1000;((10 20),(8#10));((180 160),(8#0));10#1000); // Current Depth
+            ((10#-1);1000+til 10;((2#800),(8#1000));((10 20),(8#10));((180 160),(8#0));10#1000); // Current Depth
             (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;((2#10),(2#20));4#1000 1001;4#z); // Current Orders
             (1;1450;1b;z);  // Fill Execution
             ([price:1001+til 9] side:(9#-1);qty:(740,(8#1000));hqty:(0,(8#10));iqty:(80,(8#0));vqty:(760,(8#1000)));  // Expected Depth

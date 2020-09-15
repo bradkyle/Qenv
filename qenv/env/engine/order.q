@@ -265,7 +265,7 @@
         state[`hqty]:.util.Clip[(-/)state`hqty`rp];
         state[`iqty]:sum'[nleaves-ndisplayqty];
         state[`vqty]:state[`tgt]+sum[ndisplayqty];
-        state[`qty]:state[`tgt]
+        state[`qty]:state[`tgt];
 
         // TODO check
         .order.test.vqty:vqty;
