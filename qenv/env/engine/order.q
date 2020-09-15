@@ -183,17 +183,17 @@
     isagnt:count[account]>0;
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
-    state:?[`.order.OrderBook;
-            enlist(=;`side;nside);0b;
-            `price`side`qty`iqty`hqty`vqty`svqty!(`price;`side;`qty;`iqty;`hqty;`vqty;(+\;`vqty))];
+    state:0!?[`.order.OrderBook;enlist(=;`side;nside);0b;()];
     .order.test.state0:state;
     .order.test.OB1:.order.OrderBook;
-    thresh:sums[state[`qty]];
+    thresh1:sums[state[`qty]];
+    thresh:sums[(+/).order.test.state0[`iqty`hqty`vqty]];
     rp:(thresh-prev[thresh])-(thresh-fillQty);
     state[`thresh]:thresh;
     .order.test.state:state;
     .order.test.rp:rp;
     .order.test.thresh:thresh;
+    .order.test.thresh1:thresh1;
     // Derive the amount that will be replaced per level
     rp1:min[fillQty,first[state]`vqty]^rp;
     state[`rp]:rp1;
