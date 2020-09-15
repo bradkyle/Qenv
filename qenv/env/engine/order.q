@@ -255,7 +255,7 @@
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
         nhqty:0;
-        niqty:0;
+        niqty:sum'[nleaves-ndisplayqty];
 
         state[`vqty]:.order.test.pstate[`tgt]+sum[nleaves];
         .order.test.vqty:vqty;
