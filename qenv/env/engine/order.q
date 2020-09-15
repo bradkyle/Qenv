@@ -220,7 +220,7 @@
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM'[state padcols];
         .order.test.pstate:state;
-        
+
         // Useful counts 
         maxN:max count'[state`offset];
         tmaxN:til maxN;
@@ -231,6 +231,8 @@
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
         noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves: {?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]; // TODO faster
+        ndisplayqty:{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves];
+
         nshft:nleaves+noffset;
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
 
