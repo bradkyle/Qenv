@@ -1,13 +1,18 @@
 
-
+\l account.q
 
 .qt.Unit[
     ".inverse.account.ExecCost";
     {[c]
         p:c[`params];
 
-
-    };();();.util.testutils.defaultContractHooks
+        .inverse.account.ExecCost[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -16,11 +21,14 @@
     {[c]
         p:c[`params];
 
-
+        .inverse.account.AvgPrice[];
     };
-    {};
+    {[p]
+    
+    
+    };
     ();
-    .util.testutils.defaultContractHooks
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -30,7 +38,13 @@
         p:c[`params];
 
 
-    };();();.util.testutils.defaultContractHooks
+        .inverse.account.UnrealizedPnl[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -39,8 +53,13 @@
     {[c]
         p:c[`params];
 
-
-    };();();.util.testutils.defaultContractHooks
+        .inverse.account.RealizedPnl[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -49,8 +68,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.MaintMarginReq[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -59,8 +84,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.InitMarginReq[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -69,8 +100,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.MaintMargin[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -79,8 +116,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.InitMargin[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -89,8 +132,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.LiquidationPrice[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -99,8 +148,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.BankruptcyPrice[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 // TODO simplify rectify state
@@ -111,8 +166,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.AdjustOrderMargin[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -121,8 +182,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.incFill[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -131,8 +198,30 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.redFill[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
+    ".inverse.account.crsFill";
+    {[c]
+        p:c[`params];
+
+        .inverse.account.crsFill[];
+
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 
@@ -141,8 +230,14 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.ApplyFill[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 .qt.Unit[
@@ -150,15 +245,43 @@
     {[c]
         p:c[`params];
 
+        .inverse.account.UpdateMarkPrice[];
 
-    };();();.util.testutils.defaultContractHooks
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
 .qt.Unit[
-    ".inverse.account.ApplyFunding";
+    ".inverse.account.Deposit";
     {[c]
         p:c[`params];
 
+        .inverse.account.Deposit[];
+        
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
 
-    };();();.util.testutils.defaultContractHooks
+
+.qt.Unit[
+    ".inverse.account.Withdraw";
+    {[c]
+        p:c[`params];
+
+        .inverse.account.Withdraw[];
+        
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];

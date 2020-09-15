@@ -326,7 +326,7 @@
 
 // Adds a given amount to the accounts balance.
 // Update available/withdrawable etc. // TODO validate arguments?
-.account.Deposit  :{[i;a;deposited;time]
+.inverse.account.Deposit  :{[i;a;deposited;time]
     // TODO more expressive and complete upddate statement accounting for margin etc.
     // Account: available, liquidationprice, bankruptcyprice, depositCount
 
@@ -355,7 +355,7 @@
 /  @param accountId (Long) The id of the account to withdraw from
 /  @throws InvalidAccountId accountId was not found.
 /  @throws InsufficientMargin account has insufficient margin for withdraw
-.account.Withdraw       :{[i;a;withdrawn;time]
+.inverse.account.Withdraw       :{[i;a;withdrawn;time]
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
 
     if[not[count[acc]>0];'INVALID_ACCOUNTID];
