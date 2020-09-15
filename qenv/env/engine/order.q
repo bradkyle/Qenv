@@ -187,7 +187,8 @@
     .order.test.state0:state;
     .order.test.OB1:.order.OrderBook;
     thresh1:sums[state[`qty]];
-    thresh:sums[(+/).order.test.state0[`iqty`hqty`vqty]];
+    aqty:state[`iqty`hqty`vqty];
+    thresh:sums[(+/)aqty];
     rp:(thresh-prev[thresh])-(thresh-fillQty);
     state[`thresh]:thresh;
     .order.test.state:state;
@@ -195,7 +196,7 @@
     .order.test.thresh:thresh;
     .order.test.thresh1:thresh1;
     // Derive the amount that will be replaced per level
-    rp1:min[fillQty,first[state]`vqty]^rp;
+    rp1:min[fillQty,first[aqty]]^rp;
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
