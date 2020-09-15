@@ -158,7 +158,6 @@
 
             // TODO update hqty!
 
-
         // TODO fix here
     ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
 
