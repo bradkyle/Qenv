@@ -187,8 +187,8 @@
     .order.test.state0:state;
     .order.test.OB1:.order.OrderBook;
     thresh1:sums[state[`qty]];
-    aqty:state[`iqty`hqty`vqty];
-    thresh:sums[(+/)aqty];
+    aqty:sum[state[`iqty`hqty`vqty]];
+    thresh:sums[aqty];
     rp:(thresh-prev[thresh])-(thresh-fillQty);
     state[`thresh]:thresh;
     .order.test.state:state;
@@ -200,7 +200,7 @@
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
-    state[`tgt]:(-/)state`qty`rp;
+    state[`tgt]:.util.Clip[(-/)state`qty`rp];
     odrs:?[.order.Order;.util.cond.isActiveLimit[nside;state`price];0b;()];
     .order.test.O:.order.Order;
     
@@ -255,11 +255,11 @@
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
-        nhqty:.util.Clip[(-/)state`hqty`rp];
-        niqty:sum'[nleaves-ndisplayqty];
+        state[`hqty]:.util.Clip[(-/)state`hqty`rp];
+        state[`iqty]:sum'[nleaves-ndisplayqty];
 
         // TODO check
-        state[`vqty]:.order.test.pstate[`tgt]+sum[nleaves];
+        state[`vqty]:.order.test.pstate[`tgt]+sum[ndisplayqty];
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
         .order.test.accdlts:accdlts;
