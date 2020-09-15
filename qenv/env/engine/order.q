@@ -126,7 +126,7 @@
 
                 // Derive the non agent qtys that
                 // make up the orderbook // TODO add hqty, iqty to this.
-                nagentQty: flip .util.PadM[ // TODO check
+                notAgentQty: flip .util.PadM[ // TODO check
                     raze'[(
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
@@ -136,7 +136,7 @@
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
                 // the queue.
-                offsetdlts: -1_'(floor[(nagentQty%(sum'[nagentQty]))*dneg]);
+                offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:state[`leaves]+noffset;
@@ -243,26 +243,31 @@
         // TODO new display qty
         // Calculate new shifts and max shifts
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
-        noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
-        nleaves: .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
-        ndisplayqty:.util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
-
-        nshft:nleaves+noffset;
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
-
-        .order.test.nleaves:nleaves; // TODO move down
         
-        // Calculate the new vis qty
-        .order.test.nshft:nshft;
         // Derive the non agent qtys that
         // make up the orderbook
-        nagentQty: flip .util.PadM[raze'[(
+        notAgentQty: flip .util.PadM[raze'[(
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
                 .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
             )]];
-        .order.test.nagentQty:nagentQty;
+        .order.test.notAgentQty:notAgentQty;
+
+        noffset: .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
+        nleaves: .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
+        ndisplayqty:.util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
+
+        nshft:nleaves+noffset;
+        nmxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
+
+        .order.test.nleaves:nleaves; // TODO move down
+        
+        // Calculate the new vis qty
+        .order.test.nshft:nshft;
+
+
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
 
@@ -274,16 +279,15 @@
         / .order.test.nvqty:nvqty;
 
         rp:state`rp;
-        nagentQtyCount:count[nagentQty[0]];
-        nagentQtyRp:(sums'[nagentQty]-rp;
-        state[`tgt]:(sum'[1_'nagentQtyRp]);
-        state[`hqty]:.util.Clip[nagentQtyRp[;0]];
+        notAgentQtyRp:(sums'[notAgentQty])-rp;
+        state[`tgt]:.util.Clip[(sum'[1_'notAgentQtyRp])];
+        state[`hqty]:.util.Clip[notAgentQtyRp[;0]];
         state[`iqty]:sum'[nleaves-ndisplayqty];
         state[`vqty]:state[`tgt]+sum[ndisplayqty];
         / state[`qty]:state[`tgt];
 
         // TODO check
-        .order.test.vqty:vqty;
+        / .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
         .order.test.accdlts:accdlts;
         .order.test.nfilled:nfilled; // TODO fix
