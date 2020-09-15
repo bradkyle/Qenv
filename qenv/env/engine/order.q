@@ -207,6 +207,9 @@
     state[`rp]:rp1;
     .order.test.rp1:rp1;
     state:state[where (state`rp)>0];
+
+
+    state
     state[`tgt]:.util.Clip[(-/)state`qty`rp];
 
     // TODO select by offset aswell
@@ -251,7 +254,6 @@
         .order.test.nleaves:nleaves; // TODO move down
         
         // Calculate the new vis qty
-        nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         .order.test.nvqty:nvqty;
         .order.test.nshft:nshft;
         // Derive the non agent qtys that
@@ -264,6 +266,9 @@
         .order.test.nagentQty:nagentQty;
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
+
+        // TODO
+        nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
         state[`hqty]:.util.Clip[(-/)state`hqty`rp];
