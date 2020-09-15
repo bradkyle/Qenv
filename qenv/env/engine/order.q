@@ -273,8 +273,8 @@
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
         .order.test.nvqty:nvqty;
 
-        
-        state[`tgt]:sum'[.util.Clip[nagentQty-state[`rp]]];
+        ncount:count[[1_'.order.test.nagentQty][0]];
+        state[`tgt]:sum'[.util.Clip[(nagentQty-state[`rp])[;1+til[ncount]]]];
         state[`hqty]:.util.Clip[(-/)state`hqty`rp];
         state[`iqty]:sum'[nleaves-ndisplayqty];
         state[`vqty]:state[`tgt]+sum[ndisplayqty];
