@@ -254,9 +254,10 @@
         accdlts: state[`leaves] - nleaves; // The new Account deltas
         vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
 
-        nhqty:0;
+        nhqty:.util.Clip[(-/)state`hqty`rp];
         niqty:sum'[nleaves-ndisplayqty];
 
+        // TODO check
         state[`vqty]:.order.test.pstate[`tgt]+sum[nleaves];
         .order.test.vqty:vqty;
         .order.test.mxshft:mxshft;
