@@ -60,6 +60,10 @@
 
 .state.getLiquidationPrice      :{};
 
+.state.getPriceByLossAmt        :{};
+
+.state.getPriceByLossFraction   :{};
+
 // ORDERS
 // ----------------------------------------------------------------------------------------------->
 
