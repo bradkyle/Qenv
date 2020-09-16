@@ -55,6 +55,8 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // engine and derive deposit events etc
 .pipe.Reset       :{[config]
 
+    / .pipe.CONF;
+
     .pipe.fwdSize:config`fwdSize; // The 
     .pipe.batchSize:config`batchSize; // The size of the batches in minutes
 
@@ -119,9 +121,4 @@ getEgressCond   :{$[x=0;();x=1;();x=3;()]};
     events:?[`.pipe.egress.Event;econd;0b;()];
     ![`.pipe.egress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
     events
-    };
-
-//
-.pipe.Reset              :{[config]
-
     };

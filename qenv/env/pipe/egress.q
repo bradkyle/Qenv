@@ -7,10 +7,12 @@
 .pipe.egress.Event:.pipe.event.Event;
 
 .pipe.egress.AddEvent              :{[event] // TODO validate
+        .pipe.event.eventCount+:count[event];
         .pipe.egress.Event,:(time;cmd;kind;datum);
     };
 
 .pipe.egress.AddBatch               :{[events] // TODO validate
+        .pipe.event.eventCount+:count[events];        
         .pipe.egress.Event,;events;
     };
 
