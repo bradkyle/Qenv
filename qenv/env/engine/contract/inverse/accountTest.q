@@ -180,7 +180,11 @@
     {[p]
     
     };
-    ();
+    (
+        ();
+        ();
+        ()
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
