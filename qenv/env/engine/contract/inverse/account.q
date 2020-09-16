@@ -345,5 +345,5 @@
         // TODO update liquidation price 
         
         ];'InsufficientMargin];  
-        a
+    a
     };
