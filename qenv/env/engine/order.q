@@ -175,7 +175,9 @@
             // TODO update hqty!
 
         // TODO fix here
-    ];[.order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty]]]; // TODO fix
+    ];[
+        .order.OrderBook,:last'[nxt`price`side`nxtqty`nxthqty`nxtiqty`nxtqty];
+    ]]; // TODO fix
 
     // Delete all out of bounds depths, depths that are empty 
     // i.e. where vqty + hqty = 0
