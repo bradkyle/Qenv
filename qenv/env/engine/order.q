@@ -270,7 +270,7 @@
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
         niqty:          sum'[nleaves-ndisplayqty];
-        nqty:           state[`vqty]-((ndisplayqty-state[`displayqty])+(rp-(;
+        nqty:           state[`vqty]-((ndisplayqty-state[`displayqty])+(rp));
         nvqty:          nqty+sum'[ndisplayqty];
         nshft:          nleaves+noffset;
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price

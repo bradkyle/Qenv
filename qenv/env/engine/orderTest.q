@@ -390,6 +390,11 @@ dozc:{x+y}[doz];
     "orders where necessary"];
 
 
+/ .qt.SkpBes[(46,47,48)];
+/ .qt.SkpBes[46];
+.qt.RunTests[];
+/
+
 // TODO no liquidity
 // TODO add order update events!!!!
 // TODO agent trade fills entire price level
@@ -1321,10 +1326,6 @@ dozc:{x+y}[doz];
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
 
-.qt.SkpBes[(46,47,48)];
-/ .qt.SkpBes[46];
-.qt.RunTests[];
-/
 
 // TOOD place limit order, stop order, market order
 // TODO Cancel limit order, stop market order, stop limit order
