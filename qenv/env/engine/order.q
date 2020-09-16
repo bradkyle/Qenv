@@ -262,11 +262,12 @@
         niqty:          sum'[nleaves-ndisplayqty];
         nvqty:          0;
 
-        nshft:nleaves+noffset;
-        nmxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
+        nshft:          nleaves+noffset;
+        nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
 
         .order.test.nleaves:nleaves; // TODO move down
-        
+        .order.test.ndisplayqty:ndisplayqty;
+
         // Calculate the new vis qty
         .order.test.nshft:nshft;
 
