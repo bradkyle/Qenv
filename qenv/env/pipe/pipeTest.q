@@ -98,8 +98,8 @@
 
         res:.pipe._GetEgressEvents[a[0];a[1]];
 
-        .util.testutils.checkEvents[p[`eRes];c];        
-        .util.testutils.checkEvents[p[`eEvents];c];        
+        .qt.A[res;~;p[`eRes];"res";case];
+        .qt.A[.pipe.egress.Event;~;p[`eEvents];"egress events";case];
         .pipe.CONF:();
     };
     {[p]
