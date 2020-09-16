@@ -106,7 +106,9 @@
 
         state[`tgt]: last'[state`size]; // TODO change to next? 
         nqty:last'[nxt`qty];
-        nhqty:0;
+        nhqty:sum'[nxt`hqty];
+        .order.test.nhqty:nhqty;
+        .order.test.nqty:nqty;
         
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
@@ -141,7 +143,11 @@
                 // the queue.
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
-                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
+                .order.test.offsetdlts:offsetdlts;
+                .order.test.dneg:dneg;
+                .order.test.state:state;
+
+                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + 1_'offsetdlts];
                 nshft:state[`leaves]+noffset;
                 
                 // Calculate the new vis qty
