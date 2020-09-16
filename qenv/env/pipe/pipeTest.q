@@ -98,12 +98,13 @@
 
         res:.pipe._GetEgressEvents[a[0];a[1]];
 
-
+        .util.testutils.checkEvents[p[`eRes];c];        
+        .util.testutils.checkEvents[p[`eEvents];c];        
         .pipe.CONF:();
     };
     {[p]
         :`events`pipeConf`step`windowkind!(
-            
+
         );
     };
     (
