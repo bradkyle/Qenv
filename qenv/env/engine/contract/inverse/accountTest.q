@@ -122,36 +122,6 @@
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
-
-.qt.Unit[
-    ".inverse.account.LiquidationPrice";
-    {[c]
-        p:c[`params];
-
-        res:.inverse.account.LiquidationPrice[];
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
-
-.qt.Unit[
-    ".inverse.account.BankruptcyPrice";
-    {[c]
-        p:c[`params];
-
-        res:.inverse.account.BankruptcyPrice[];
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
 // TODO simplify rectify state
 
 
@@ -165,7 +135,11 @@
     {[p]
     
     };
-    ();
+    (
+        ();
+        ();
+        ()
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -181,8 +155,10 @@
     
     };
     (
-        ();
-        ();
+        ("hedged:long_to_longer");
+        ("hedged:short_to_shorter");
+        ("combined:long_to_longer");
+        ("combined:short_to_shorter");
         ()
     );
     .util.testutils.defaultContractHooks;
@@ -230,7 +206,381 @@
     {[p]
     
     };
-    ();
+    (
+        ("hedged:long_to_longer";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:longer_to_long";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:long_to_flat";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:longer_to_flat";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:short_to_shorter";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:shorter_to_short";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:shorter_to_flat";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_longer";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:longer_to_long";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_flat";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:longer_to_short";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_shorter";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_shorter";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:shorter_to_short";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_long";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_longer";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_flat_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:long_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:short_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("hedged:long_to_flat_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_flat_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_short_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_short_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_long_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_long_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_flat_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:long_to_flat_rpl_-50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_flat_rpl_50";(
+            (); // Instrument
+            (); // Account
+            (); // Inventory
+            (); // Fill
+            (); // Expected Account
+            (); // Expected Inventory
+            (();(0b;0;())); // redFill Mock
+            (();(0b;0;())); // incFill Mock
+            (();(0b;0;())); // crsFill Mock
+            (0;(1b;1;())); // UnrealizedPnl Mock
+        ));
+        ("combined:short_to_flat_rpl_-50")
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
