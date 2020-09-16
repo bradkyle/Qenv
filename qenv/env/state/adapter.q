@@ -139,7 +139,7 @@
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
 .state.adapter.logarithmicBucketOrders                   :{[]
-
+    
     };
 
 
