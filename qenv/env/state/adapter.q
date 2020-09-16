@@ -240,56 +240,56 @@
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
-.state.increasingLinearDistribution                     :{
+.state.increasingLinearDistribution                     :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
-.state.decreasingLinearDistribution                     :{
+.state.decreasingLinearDistribution                     :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing exponential distribution of
 // qty for the given set of groups in order.
-.state.increasingExponentialDistribution                :{
+.state.increasingExponentialDistribution                :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing exponential distribution of
 // qty for the given set of groups in order.
-.state.decreasingExponentialDistribution                :{
+.state.decreasingExponentialDistribution                :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing logarithmic distribution of
 // qty for the given set of groups in order.
-.state.increasingLogarithmicDistribution                :{
+.state.increasingLogarithmicDistribution                :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing logarithmic distribution of
 // qty for the given set of groups in order.
-.state.decreasingLogarithmicDistribution                :{
+.state.decreasingLogarithmicDistribution                :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the normal distribution of
 // qty for the given set of groups in order.
-.state.normalDistribution                               :{
+.state.normalDistribution                               :{[]
 
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the flat distribution of
 // qty for the given set of groups in order.
-.state.flatDistribution                                 :{
+.state.flatDistribution                                 :{[]
 
     };
 
@@ -300,21 +300,21 @@
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
-.state.uniformalPriceDistribution                       :{
+.state.uniformalPriceDistribution                       :{[]
 
     };
 
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
 // orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-.state.exponentialPriceDistribution                     :{
+.state.exponentialPriceDistribution                     :{[]
 
     };
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
-.state.logarithmicPriceDistribution                     :{
+.state.logarithmicPriceDistribution                     :{[]
 
     };    
 
@@ -338,48 +338,93 @@
 
 
 // DISCRETE ACTIONS
-.state.adapter.DiscreteAdapter                          :{
-
+.state.adapter.DiscreteAdapter                          :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // TENLEVEL             
-.state.adapter.TenLevelAdapter                          :{
-
+.state.adapter.TenLevelAdapter                          :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // FIVELEVEL                
-.state.adapter.FiveLevelAdapter                         :{
-
+.state.adapter.FiveLevelAdapter                         :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // EXPBUCKET                
-.state.adapter.ExpBucketAdapter                         :{
-
+.state.adapter.ExpBucketAdapter                         :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // LOGBUCKET                
-.state.adapter.LogBucketAdapter                         :{
-
+.state.adapter.LogBucketAdapter                         :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // UNIBUCKET                
-.state.adapter.UniBucketAdapter                         :{
-
+.state.adapter.UniBucketAdapter                         :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // EXPBUCKET                
-.state.adapter.ExpBucketAdapterWithIcebergs             :{
-
+.state.adapter.ExpBucketAdapterWithIcebergs             :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // LOGBUCKET                
-.state.adapter.LogBucketAdapterWithIcebergs             :{
-
+.state.adapter.LogBucketAdapterWithIcebergs             :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // UNIBUCKET                
-.state.adapter.UniBucketAdapterWithIcebergs             :{
-
+.state.adapter.UniBucketAdapterWithIcebergs             :{[accountId;a]
+        $[a=0;[];
+          a=1;[];
+          a=2;[];
+          a=3;[];
+          a=4;[];
+          'INVALID_ACTION];
     };
 
 // Main Adapt Function
