@@ -141,7 +141,7 @@
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
                 // the queue.
-                hiddendlts:0;
+                hiddendlts: 0;
 
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
@@ -150,14 +150,16 @@
                 .order.test.state:state;
 
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + 1_'offsetdlts];
-                nshft:state[`leaves]+noffset;
+                nshft:   state[`leaves]+noffset;
 
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
                 
                 // Calculate the new vis qty
-                nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
                 mxnshft:max'[nshft];
+                .order.test.mxnshft:mxnshft;
+                .order.test.nvqty:nvqty;
 
                 // Derive the new visible quantity
                 nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
