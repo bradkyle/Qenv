@@ -627,19 +627,35 @@
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
-
 .qt.Unit[
     ".inverse.account.ApplyFunding";
     {[c]
         p:c[`params];
 
-        res:.inverse.account.Deposit[];
+        res:.inverse.account.ApplyFunding[];
         
     };
     {[p]
     
     };
-    ();
+    (
+        ("No inventory, no funding occurs hedged";());
+        ("No inventory, no funding occurs combined";());
+        ("Positive Funding occurs hedged long position";());
+        ("Negative Funding occurs hedged long position";());
+        ("Positive Funding occurs hedged short position";());
+        ("Negative Funding occurs hedged short position";());
+        ("Negative Funding occurs with split hedged short(0.50)/long(0.50) position";());
+        ("Positive Funding occurs with split hedged long(0.50)/short(0.50) position";());
+        ("Negative Funding occurs with split hedged short(0.75)/long(0.25) position";());
+        ("Negative Funding occurs with split hedged long(0.25)/short(0.75) position";());
+        ("Positive Funding occurs with split hedged short(0.75)/long(0.25) position";());
+        ("Positive Funding occurs with split hedged long(0.25)/short(0.75) position";());
+        ("Negative Funding occurs combined short position";());
+        ("Positive Funding occurs combined short position";());
+        ("Negative Funding occurs combined long position";());
+        ("Positive Funding occurs combined long position";())
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -654,7 +670,30 @@
     {[p]
     
     };
-    ();
+    (
+        ("deposit valid amt without positions";());
+        ("deposit valid amt with combined short position";());
+        ("deposit valid amt with combined long position";());
+        ("deposit valid amt with hedged short position";());
+        ("deposit valid amt with hedged long position";());
+        ("deposit valid amt with split hedged short(0.50)/long(0.50) position";());
+        ("deposit valid amt with split hedged long(0.50)/short(0.50) position";());
+        ("deposit valid amt with split hedged short(0.75)/long(0.25) position";());
+        ("deposit valid amt with split hedged long(0.25)/short(0.75) position";());
+        ("deposit valid amt with split hedged short(0.75)/long(0.25) position";());
+        ("deposit valid amt with split hedged long(0.25)/short(0.75) position";());
+        ("deposit invalid amt without positions";());
+        ("deposit invalid amt with combined short position";());
+        ("deposit invalid amt with combined long position";());
+        ("deposit invalid amt with hedged short position";());
+        ("deposit invalid amt with hedged long position";());
+        ("deposit invalid amt with split hedged short(0.50)/long(0.50) position";());
+        ("deposit invalid amt with split hedged long(0.50)/short(0.50) position";());
+        ("deposit invalid amt with split hedged short(0.75)/long(0.25) position";());
+        ("deposit invalid amt with split hedged long(0.25)/short(0.75) position";());
+        ("deposit invalid amt with split hedged short(0.75)/long(0.25) position";());
+        ("deposit invalid amt with split hedged long(0.25)/short(0.75) position";())
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -670,6 +709,29 @@
     {[p]
     
     };
-    ();
+    (
+        ("withdraw sufficient balance without positions";());
+        ("withdraw sufficient balance with combined short position";());
+        ("withdraw sufficient balance with combined long position";());
+        ("withdraw sufficient balance with hedged short position";());
+        ("withdraw sufficient balance with hedged long position";());
+        ("withdraw sufficient balance with split hedged short(0.50)/long(0.50) position";());
+        ("withdraw sufficient balance with split hedged long(0.50)/short(0.50) position";());
+        ("withdraw sufficient balance with split hedged short(0.75)/long(0.25) position";());
+        ("withdraw sufficient balance with split hedged long(0.25)/short(0.75) position";());
+        ("withdraw sufficient balance with split hedged short(0.75)/long(0.25) position";());
+        ("withdraw sufficient balance with split hedged long(0.25)/short(0.75) position";());
+        ("withdraw insufficient balance without positions";());
+        ("withdraw insufficient balance with combined short position";());
+        ("withdraw insufficient balance with combined long position";());
+        ("withdraw insufficient balance with hedged short position";());
+        ("withdraw insufficient balance with hedged long position";());
+        ("withdraw insufficient balance with split hedged short(0.50)/long(0.50) position";());
+        ("withdraw insufficient balance with split hedged long(0.50)/short(0.50) position";());
+        ("withdraw insufficient balance with split hedged short(0.75)/long(0.25) position";());
+        ("withdraw insufficient balance with split hedged long(0.25)/short(0.75) position";());
+        ("withdraw insufficient balance with split hedged short(0.75)/long(0.25) position";());
+        ("withdraw insufficient balance with split hedged long(0.25)/short(0.75) position";())
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
