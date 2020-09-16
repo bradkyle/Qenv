@@ -149,6 +149,9 @@
 
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + 1_'offsetdlts];
                 nshft:state[`leaves]+noffset;
+
+                .order.test.noffset:noffset;
+                .order.test.nshft:nshft;
                 
                 // Calculate the new vis qty
                 nvqty: sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
