@@ -61,7 +61,14 @@
     {[p]
     
     };
-    ();
+    (
+        ("";(
+
+        ));
+        ("";(
+
+        ))
+    );
     .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
@@ -175,29 +182,35 @@
         );
     };
     (
-        ("Get all events with";(
-            ();
+        ("Get all events that have passed";(
+             (
+                ();
+                ();
+                ();
+                ();
+                ();
+                ()
+            );
             ();
             1;
-            0
+            0;
+            ();
+            ()
         ));
         ("";(
-            ();
-            ();
-            1;
-            1
-        ));
-        ("";(
-            ();
-            ();
-            1;
-            2
-        ));
-        ("";(
-            ();
+             (
+                ();
+                ();
+                ();
+                ();
+                ();
+                ()
+            );
             ();
             1;
-            3
+            0;
+            ();
+            ()
         ))
     );
     .util.testutils.defaultPipeHooks;
