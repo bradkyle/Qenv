@@ -287,6 +287,11 @@
 
     // TODO this is subtracted from the margin?
 
+    a[`longFundingCost]:0;
+    a[`shortFundingCost]:0;
+    a[`totalFundingCost]:0;
+    a[`realizedPnl]:0;
+
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
     a
