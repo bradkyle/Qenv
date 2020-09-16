@@ -113,6 +113,7 @@ getEgressCond   :{$[x=0;();x=1;();x=3;()]};
     events
     };
 
+//
 .pipe.GetEgressEvents    :{[step]
     econd:.pipe.getEgressCond[windowkind];
     events:?[`.pipe.egress.Event;econd;0b;()];
@@ -120,6 +121,7 @@ getEgressCond   :{$[x=0;();x=1;();x=3;()]};
     events
     };
 
-.pipe.Reset              :{[]
+//
+.pipe.Reset              :{[config]
 
     };
