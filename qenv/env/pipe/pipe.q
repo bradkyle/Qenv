@@ -4,6 +4,8 @@
 // TODO remove repeated logic
 // TOOD cross validation batching
 
+.pipe.CONF:();
+
 // Probabalistic choice
 // @n: number of choices
 // @k: count of choices

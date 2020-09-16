@@ -92,13 +92,20 @@
     ".pipe.GetEgressEvents";
     {[c]
         p:c[`params];
+        .util.testutils.setupEvents[0^p`cEvents];
+
+        .pipe.CONF:p`pipeConf;
+
+
 
         a:p`args;
         res:.pipe._GetEgressEvents[a[0];a[1]];
 
+
+        .pipe.CONF:();
     };
     {[p]
-    
+        :`events`
     };
     (
         ();
