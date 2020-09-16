@@ -67,38 +67,6 @@
 
 
 .qt.Unit[
-    ".pipe.getIngressCond";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultPipeHooks;
-    "Global function for creating a new account"];
-
-
-.qt.Unit[
-    ".pipe.getEgressCond";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultPipeHooks;
-    "Global function for creating a new account"];
-
-
-.qt.Unit[
     ".pipe.GetIngressEvents";
     {[c]
         p:c[`params];
@@ -109,7 +77,12 @@
     {[p]
     
     };
-    ();
+    (
+        ();
+        ();
+        ();
+        ()
+    );
     .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
@@ -125,6 +98,11 @@
     {[p]
     
     };
-    ();
+    (
+        ();
+        ();
+        ();
+        ()
+    );
     .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
