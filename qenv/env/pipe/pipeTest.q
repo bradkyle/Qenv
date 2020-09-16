@@ -86,10 +86,32 @@
         );
     };
     (
-        ("GetIngressEvents: windowkind 1, ");
-        ();
-        ();
-        ()
+        ("Get all events with within the current time and 5 seconds in future";(
+            ();
+            ();
+            1;
+            0
+        ));
+        ("Get all events within the current step event count and 20 event count window";(
+            ();
+            ();
+            1;
+            1
+        ));
+        (("Get all events within the current step event count and 20 event count window,",
+         "max 5 seconds:(no events after window thresh step event count)");(
+            ();
+            ();
+            1;
+            2
+        ));
+        (("Get all events within the current step event count and 20 event count window,",
+         "max 5 seconds:(5 events after window thresh step event count)");(
+            ();
+            ();
+            1;
+            2
+        ))
     );
     .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
@@ -115,7 +137,7 @@
         );
     };
     (
-        ("";(
+        ("Get all events with";(
             ();
             ();
             1;
