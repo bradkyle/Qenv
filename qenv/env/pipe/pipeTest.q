@@ -86,14 +86,15 @@
         );
     };
     (
-        ("Get all events with within the current time and 5 seconds in future";(
+        (("Get all events within the current step time and 5 seconds in the future",
+         "1 event outside of window");(
             (
                 ();
                 ();
                 ();
                 ();
                 ();
-                ();
+                ()
             );
             ();
             1;
@@ -101,8 +102,16 @@
             ();
             ()
         ));
-        ("Get all events within the current step event count and 5 event count window";(
-            ();
+        (("Get all events within the current step time and 5 events in the future",
+         "1 event outside of window");(
+            (
+                ();
+                ();
+                ();
+                ();
+                ();
+                ()
+            );
             ();
             1;
             1;
@@ -111,7 +120,14 @@
         ));
         (("Get all events within the current step event count and 20 event count window,",
          "max 5 seconds:(no events after window thresh step event count)");(
-            ();
+            (
+                ();
+                ();
+                ();
+                ();
+                ();
+                ()
+            );
             ();
             1;
             2;
@@ -119,8 +135,15 @@
             ()
         ));
         (("Get all events within the current step event count and 20 event count window,",
-         "max 5 seconds:(5 events after window thresh step event count)");(
-            ();
+         "max 5 seconds:(1 event after window thresh step event count)");(
+            (
+                ();
+                ();
+                ();
+                ();
+                ();
+                ()
+            );
             ();
             1;
             2;
