@@ -17,6 +17,7 @@
 // TODO margin call price
 .account.Account: (
             [accountId          : `long$()]
+            cantrade            : `boolean$(); 
             balance             : `long$(); 
             frozen              : `long$();
             maintMargin         : `long$();

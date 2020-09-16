@@ -25,8 +25,15 @@
 // Temporarily blocks the account's ability to trade
 // as is seen with the FTX exchange
 .liquidation.PauseAccount       :{
-
+    update cantrade:0b from `.account.Account where accountId=a[`accountId];
     };
+
+// Temporarily blocks the account's ability to trade
+// as is seen with the FTX exchange
+.liquidation.UnPauseAccount     :{
+    update cantrade:1b from `.account.Account where accountId=a[`accountId];
+    };
+
 
 // Trades the given opposing positions with eachother
 // to reduce exposure as seen with huobi.
