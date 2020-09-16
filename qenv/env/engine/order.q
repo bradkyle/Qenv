@@ -126,8 +126,7 @@
 
                 // Derive the non agent qtys that
                 // make up the orderbook // TODO add hqty, iqty to this.
-                notAgentQty: flip .util.PadM[ // TODO check
-                    raze'[(
+                notAgentQty: flip .util.PadM[raze'[(
                         0^state[`hqty]; // hidden qty
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
@@ -262,9 +261,11 @@
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
         niqty:          sum'[nleaves-ndisplayqty];
         nvqty:          0;
-
+        nqty:           0;
         nshft:          nleaves+noffset;
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
+        nfilled:        state[`size] - nleaves; // New amount that is filled
+        accdlts:        state[`leaves] - nleaves; // The new Account deltas
 
         .order.test.nleaves:nleaves; // TODO move down
         .order.test.ndisplayqty:ndisplayqty;
@@ -272,8 +273,6 @@
         // Calculate the new vis qty
         .order.test.nshft:nshft;
  
-        nfilled: state[`size] - nleaves; // New amount that is filled
-        accdlts: state[`leaves] - nleaves; // The new Account deltas
 
         // TODO
         / voqty:(-/)state`vqty`qty; // Current Visible state order qty
