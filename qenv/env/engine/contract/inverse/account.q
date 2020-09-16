@@ -63,7 +63,7 @@
 
 // Common logic for setting the shared state values of the given account
 // and its BOTH,LONG,SHORT inventory aswell as its respective orders.
-// TODO move upward
+// TODO move upward1
 .inverse.account.rectifyState           :{
 
     };

@@ -53,10 +53,12 @@
 .state.CurrentInventory: `accountId`side xkey .state.InventoryEventHistory;
 
 // Return all open positions for an account
-.state.openInventory :{?[`.state.CurrentInventory;]};
+.state.openInventory            :{?[`.state.CurrentInventory;]};
 
 // Return the amt of each inventory by side for account
-.state.amtBySide     :{?[`.state.CurrentInventory;]};
+.state.amtBySide                :{?[`.state.CurrentInventory;]};
+
+.state.getLiquidationPrice      :{};
 
 // ORDERS
 // ----------------------------------------------------------------------------------------------->
