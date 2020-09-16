@@ -7,10 +7,14 @@
 .pipe.ingress.Event:.pipe.event.Event;
 
 .pipe.ingress.AddEvent              :{[event]
+        .pipe.event.eventCount+:count[event];
         .pipe.ingress.Event,:(time;cmd;kind;datum);
     };
 
 .pipe.ingress.AddBatch               :{[events]
+        ecount:count[events];
+        events[`eid]:.pipe.event.eventCount + til ecount;
+        .pipe.event.eventCount+:ecount;        
         .pipe.ingress.Event,:events;
     };
 

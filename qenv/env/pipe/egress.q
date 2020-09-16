@@ -12,8 +12,10 @@
     };
 
 .pipe.egress.AddBatch               :{[events] // TODO validate
-        .pipe.event.eventCount+:count[events];        
-        .pipe.egress.Event,;events;
+        ecount:count[events];
+        events[`eid]:.pipe.event.eventCount + til ecount;
+        .pipe.event.eventCount+:ecount;        
+        .pipe.egress.Event,:events;
     };
 
 /*******************************************************

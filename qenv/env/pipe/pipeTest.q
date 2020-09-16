@@ -70,13 +70,20 @@
     ".pipe.GetIngressEvents";
     {[c]
         p:c[`params];
+        .pipe.ingress.AddBatch[`time`cmd`kind`datum!p[`events]];
 
-        a:p`args;
-        res:.pipe._GetIngressEvents[a[0];a[1]];
+        .pipe.CONF:p`pipeConf;
 
+        res:.pipe._GetIngressEvents[p[`step];p[`windowkind]];
+
+        .qt.A[res;~;p[`eRes];"res";case];
+        .qt.A[.pipe.egress.Event;~;p[`eEvents];"egress events";case];
+        .pipe.CONF:();
     };
     {[p]
-    
+        :`events`pipeConf`step`windowkind!(
+
+        );
     };
     (
         ("GetIngressEvents: windowkind 1, ");
@@ -92,11 +99,11 @@
     ".pipe.GetEgressEvents";
     {[c]
         p:c[`params];
-        .util.testutils.setupEvents[0^p`cEvents];
+        .pipe.egress.AddBatch[`time`cmd`kind`datum!p[`events]];
 
         .pipe.CONF:p`pipeConf;
 
-        res:.pipe._GetEgressEvents[a[0];a[1]];
+        res:.pipe._GetEgressEvents[p[`step];p[`windowkind]];
 
         .qt.A[res;~;p[`eRes];"res";case];
         .qt.A[.pipe.egress.Event;~;p[`eEvents];"egress events";case];
@@ -108,10 +115,30 @@
         );
     };
     (
-        ();
-        ();
-        ();
-        ()
+        ("";(
+            ();
+            ();
+            1;
+            0
+        ));
+        ("";(
+            ();
+            ();
+            1;
+            1
+        ));
+        ("";(
+            ();
+            ();
+            1;
+            2
+        ));
+        ("";(
+            ();
+            ();
+            1;
+            3
+        ))
     );
     .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
