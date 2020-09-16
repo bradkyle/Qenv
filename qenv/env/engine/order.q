@@ -109,6 +109,7 @@
         nhqty:sum'[nxt`hqty];
         .order.test.nhqty:nhqty;
         .order.test.nqty:nqty;
+        .order.test.OBf:.order.OrderBook;
         
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
