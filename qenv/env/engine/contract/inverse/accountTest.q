@@ -615,6 +615,30 @@
     {[p]
     
     };
+    (
+        ();
+        ();
+        ();
+        ();
+        ();
+        ();
+        ()
+    );
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
+    ".inverse.account.ApplyFunding";
+    {[c]
+        p:c[`params];
+
+        res:.inverse.account.Deposit[];
+        
+    };
+    {[p]
+    
+    };
     ();
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
