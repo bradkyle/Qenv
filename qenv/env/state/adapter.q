@@ -193,14 +193,14 @@
 // order to the pipe ingress queue every 2 seconds
 // with the total amount being specified and a look
 // forward period thus the amount is derived.
-.state.adapter.createUniformTemporalOrders             :{[]
+.state.adapter.createUniformTemporalOrders              :{[]
 
     };
 
 // Creates a set of orders at a random interval and
 // at a random amount such that the total target amount
 // becomes replete within a given time period
-.state.adapter.createRandomTemporalOrders              :{[]
+.state.adapter.createRandomTemporalOrders               :{[]
 
     };
 
