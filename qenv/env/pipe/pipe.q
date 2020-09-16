@@ -107,7 +107,7 @@ getEgressCond   :{$[x=0;();x=1;();x=3;()]};
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .pipe.GetIngressEvents   :{[step] // TODO should select next batch according to config
-    econd:.pipe.getIngressCond[windowkind];
+    econd:.pipe.getIngressCond[.pipe.CONF`windowkind];
     events:?[`.pipe.ingress.Event;econd;0b;()];
     ![`.pipe.ingress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
     events
@@ -115,7 +115,7 @@ getEgressCond   :{$[x=0;();x=1;();x=3;()]};
 
 //
 .pipe.GetEgressEvents    :{[step]
-    econd:.pipe.getEgressCond[windowkind];
+    econd:.pipe.getEgressCond[.pipe.CONF`windowkind];
     events:?[`.pipe.egress.Event;econd;0b;()];
     ![`.pipe.egress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
     events
