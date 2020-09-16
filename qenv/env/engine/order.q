@@ -247,6 +247,7 @@
         
         // Derive the non agent qtys that
         // make up the orderbook
+        // The offset includes the hidden qty
 
         notAgentQty: flip .util.PadM[raze'[(
                 0^state[`hqty]; // hidden qty
@@ -258,7 +259,13 @@
 
         notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
 
-        nhqty:          .util.Clip[(-/)state`hqty`rp]
+        // The delta in the visual qty is equal to sum of the change in the open display qty
+        // and the total fill qty that isnt used to fill the hqty or iqty of the previous
+        // queue instantiation.
+        // The qty on the other hand is equal to the sum of the amount of the visual qty
+        // that isn't made up of the new displayqty. 
+
+        nhqty:          .util.Clip[(-/)state`hqty`rp];
         noffset:        .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
