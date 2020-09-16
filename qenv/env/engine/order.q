@@ -247,6 +247,7 @@
         
         // Derive the non agent qtys that
         // make up the orderbook
+
         notAgentQty: flip .util.PadM[raze'[(
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
@@ -272,6 +273,7 @@
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls]:(
             nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts
         );
+        .order.test.stateu:state;
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -289,8 +291,7 @@
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
-        mflls:flip(`accountId`price`qty`reduce!((raze[state`accountId`price`fills`reduce])[;where[msk]]));
-        
+        mflls:flip(`accountId`price`qty`reduce!((raze'[state`accountId`price`fills`reduce])[;where[msk]]));
         
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
