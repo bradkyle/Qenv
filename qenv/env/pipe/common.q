@@ -73,6 +73,15 @@
         3 // MAINTENENCE
         );
 
+/*******************************************************
+/ PIPE WINDOWING ENUMERATIONS
+
+// USING MANUAL LIST FOR REFERENCABILITY 
+.pipe.common.WINDOWKIND:(
+        0; // LINEAR
+        1; // INVERSE
+        2 // QUANTO
+        );
 
 /*******************************************************
 / ACCOUNT & INVENTORY ENUMERATIONS

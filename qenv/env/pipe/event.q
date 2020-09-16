@@ -54,6 +54,7 @@
 // Acts like a kafka queue/pubsub.
 .pipe.event.eventCount:0;
 .pipe.event.Event  :( // TODO .pipe.event.Add failure to table
+    [eid        :`long$()]
     time        :`datetime$();
     cmd         :`long$();
     kind        :`long$();
