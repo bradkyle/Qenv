@@ -7,6 +7,93 @@
 // TODO decreasing distribution (exp, log, normal) (bucketed/levelled)
 // TODO flat distribution   (bucketed/levelled)
 
+
+// Amount distribution logic
+// ---------------------------------------------------------------------------------------->
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing linear distribution of
+// qty for the given set of groups in order.
+.state.increasingLinearDistribution                     :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing linear distribution of
+// qty for the given set of groups in order.
+.state.decreasingLinearDistribution                     :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing exponential distribution of
+// qty for the given set of groups in order.
+.state.increasingExponentialDistribution                :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing exponential distribution of
+// qty for the given set of groups in order.
+.state.decreasingExponentialDistribution                :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing logarithmic distribution of
+// qty for the given set of groups in order.
+.state.increasingLogarithmicDistribution                :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing logarithmic distribution of
+// qty for the given set of groups in order.
+.state.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the normal distribution of
+// qty for the given set of groups in order.
+.state.normalDistribution                               :{[amt;num;lotsize]
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the flat distribution of
+// qty for the given set of groups in order.
+.state.flatDistribution                                 :{[amt;num;lotsize]
+
+    };
+
+
+// Price Distribution Utilities
+// ---------------------------------------------------------------------------------------->
+
+// Generates a set of buckets according to
+// a uniform distribution of price throughout the
+// orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
+.state.uniformalPriceDistribution                       :{[mxprice;mnprice;ticksize;num]
+
+    };
+
+// Generates a set of buckets according to
+// a exponential distribution of price throughout the
+// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
+.state.exponentialPriceDistribution                     :{[mxprice;mnprice;ticksize;num]
+
+    };
+
+// Generates a set of buckets according to
+// a uniform distribution of price throughout the
+// orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
+.state.logarithmicPriceDistribution                     :{[mxprice;mnprice;ticksize;num]
+
+    };    
+
+
+
 // Bucketed Limit Order Creation
 // ---------------------------------------------------------------------------------------->
 
@@ -67,7 +154,7 @@
 // Simply places a single stop order for each corresponding
 // position at a given loss fraction of the positions value
 // (unrealized pnl).
-.state.adapter.naiveStops                               :{[]
+.state.adapter.naiveStops                              :{[]
     // 1%avgprice
     };
 
@@ -75,7 +162,7 @@
 // Places a uniform set of for instance 5 stop orders at 
 // equidistant price points in relation to the current
 // mark price up to the final maximum loss fraction
-.state.adapter.uniStops                                 :{[]
+.state.adapter.uniformStops                            :{[]
 
     };   
 
@@ -83,7 +170,7 @@
 // Places a set of stops that exponentially increase in
 // magnitude away from the current price to a given 
 // maximum loss fraction
-.state.adapter.expStops                                 :{[]
+.state.adapter.exponentialStops                        :{[]
 
     };
 
@@ -91,7 +178,7 @@
 // Places a set of stops that logarithmically increase in
 // magnitude away from the current price to a given maximum
 // loss fraction.
-.state.adapter.logStops                                 :{[]
+.state.adapter.logarithmicStops                        :{[]
 
     };
 
@@ -106,14 +193,14 @@
 // order to the pipe ingress queue every 2 seconds
 // with the total amount being specified and a look
 // forward period thus the amount is derived.
-.state.adapter.createUniTemporalOrders                  :{[]
+.state.adapter.createUniformTemporalOrders             :{[]
 
     };
 
 // Creates a set of orders at a random interval and
 // at a random amount such that the total target amount
 // becomes replete within a given time period
-.state.adapter.createRandTemporalOrders                 :{[]
+.state.adapter.createRandomTemporalOrders              :{[]
 
     };
 
@@ -159,7 +246,6 @@
 .state.staticOrderSizeStepper                           :{[]
 
     };
-
 
 // Derives the delta between the current outstanding/leaves
 // order quantity at a given price level and the static target
@@ -234,91 +320,6 @@
     };
 
 
-// Amount distribution logic
-// ---------------------------------------------------------------------------------------->
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the increasing linear distribution of
-// qty for the given set of groups in order.
-.state.increasingLinearDistribution                     :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the decreasing linear distribution of
-// qty for the given set of groups in order.
-.state.decreasingLinearDistribution                     :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the increasing exponential distribution of
-// qty for the given set of groups in order.
-.state.increasingExponentialDistribution                :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the decreasing exponential distribution of
-// qty for the given set of groups in order.
-.state.decreasingExponentialDistribution                :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the increasing logarithmic distribution of
-// qty for the given set of groups in order.
-.state.increasingLogarithmicDistribution                :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the decreasing logarithmic distribution of
-// qty for the given set of groups in order.
-.state.decreasingLogarithmicDistribution                :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the normal distribution of
-// qty for the given set of groups in order.
-.state.normalDistribution                               :{[]
-
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the flat distribution of
-// qty for the given set of groups in order.
-.state.flatDistribution                                 :{[]
-
-    };
-
-
-// Price Distribution Utilities
-// ---------------------------------------------------------------------------------------->
-
-// Generates a set of buckets according to
-// a uniform distribution of price throughout the
-// orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
-.state.uniformalPriceDistribution                       :{[]
-
-    };
-
-// Generates a set of buckets according to
-// a exponential distribution of price throughout the
-// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-.state.exponentialPriceDistribution                     :{[]
-
-    };
-
-// Generates a set of buckets according to
-// a uniform distribution of price throughout the
-// orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
-.state.logarithmicPriceDistribution                     :{[]
-
-    };    
-
-
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
 // Macro actions are useful when it is assumed that the agent has an effect on what
@@ -329,7 +330,7 @@
 
 // Creates a set of actions dispersed in time that represent
 // a macro action
-.state.adapter.constructMacroAction                     :{
+.state.adapter.constructMacroAction                    :{[]
 
     };
 
