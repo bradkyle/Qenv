@@ -255,45 +255,23 @@
             )]];
         .order.test.notAgentQty:notAgentQty;
 
+        notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
+
         nhqty:          .util.Clip[(-/)state`hqty`rp]
         noffset:        .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
         niqty:          sum'[nleaves-ndisplayqty];
-        nvqty:          0;
-        nqty:           0;
+        nqty:           .util.Clip[(sum'[1_'notAgentQtyRp])];
+        nvqty:          nqty+sum'[ndisplayqty];
         nshft:          nleaves+noffset;
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
         nfilled:        state[`size] - nleaves; // New amount that is filled
         accdlts:        state[`leaves] - nleaves; // The new Account deltas
 
-        .order.test.nleaves:nleaves; // TODO move down
-        .order.test.ndisplayqty:ndisplayqty;
-
-        // Calculate the new vis qty
-        .order.test.nshft:nshft;
- 
-
-        // TODO
-        / voqty:(-/)state`vqty`qty; // Current Visible state order qty
-        / state[`tgt]:.util.Clip[(-/)state`qty`rp];
-        / nvqty: sum'[raze'[flip[raze[enlist(state[`tgt],nleaves)]]]];
-        / vqty: ?[mxshft>nvqty;mxshft;nvqty]; // The new visible quantity
-        / .order.test.nvqty:nvqty;
-
-        rp:state`rp;
-        notAgentQtyRp:(sums'[notAgentQty])-rp;
-        state[`tgt]:.util.Clip[(sum'[1_'notAgentQtyRp])];
-        state[`vqty]:state[`tgt]+sum[ndisplayqty];
-        state[`hqty]:hqty;
-        state[`iqty]:iqty;
-        / state[`qty]:state[`tgt];
-
-        // TODO check
-        / .order.test.vqty:vqty;
-        .order.test.mxshft:mxshft;
-        .order.test.accdlts:accdlts;
-        .order.test.nfilled:nfilled; // TODO fix
+        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls]:(
+            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts
+        );
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -306,12 +284,14 @@
         .order.test.msk:msk;
         .order.test.state1:state;
         // TODO update with displayqty
-        .order.test.zn:`orderId`offset`leaves`displayqty!(raze[state`orderId];raze[noffset];raze[nleaves];raze[ndisplayqty]);
-        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze[state`orderId];raze[noffset];raze[nleaves];raze[ndisplayqty])[;where[msk]]));  // update where partial
+        .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
+        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze'[state`orderId`offset`leaves`displayqty])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
-        mflls:flip(`accountId`price`qty`reduce!((raze[state`accountId];raze[state`price];raze[nfilled];raze[state[`reduce]])[;where[msk]]));
+        mflls:flip(`accountId`price`qty`reduce!((raze[state`accountId`price`fills`reduce])[;where[msk]]));
+        
+        
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
         .order.test.isagnt:isagnt;
