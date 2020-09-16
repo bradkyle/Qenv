@@ -81,7 +81,7 @@ dozc:{x+y}[doz];
     {[p] 
         // TODO account for one record
         ordCols:`orderId`instrumentId`accountId`side`otype`offset`leaves`price`time;
-        bookCols:`side`price`qty;
+        bookCols:`price`side`qty`hqty`iqty`vqty;
         nxt:$[
             count[p[2]]=4;`side`price`qty`time!p[2];
             count[p[2]]=5;`side`price`qty`hqty`time!p[2];
@@ -90,7 +90,7 @@ dozc:{x+y}[doz];
             'INVALID_NXT];
 
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
-            .util.testutils.makeOrderBook[bookCols;flip p[0]];
+            .util.testutils.makeOrderBook[count[p[0]]#bookCols;flip p[0]];
             .util.testutils.makeOrders[ordCols;flip p[1]];
             nxt;
             enlist p[5];
@@ -385,7 +385,7 @@ dozc:{x+y}[doz];
             () // Expected Events
         ));
         ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
-            (((10#1),(10#-1));(raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5));20#1000;((20,(9#10)),(20,(9#10)));(((2#80),(8#10)),((2#80),(8#10)));  // Current Depth
+            (((10#1),(10#-1));((raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5)));20#1000;((20,(9#10)),(20,(9#10)));(((2#80),(8#10)),((2#80),(8#10))));  // Current Depth
             (til[20];20#1;20#1;((10#-1),(10#1));20#1;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
             (
                 ((20#1),(20#-1));
