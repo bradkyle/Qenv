@@ -297,14 +297,23 @@
 // Price Distribution Utilities
 // ---------------------------------------------------------------------------------------->
 
+// Generates a set of buckets according to
+// a uniform distribution of price throughout the
+// orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
 .state.uniformalPriceDistribution                       :{
 
     };
 
+// Generates a set of buckets according to
+// a exponential distribution of price throughout the
+// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
 .state.exponentialPriceDistribution                     :{
 
     };
 
+// Generates a set of buckets according to
+// a uniform distribution of price throughout the
+// orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
 .state.logarithmicPriceDistribution                     :{
 
     };    
@@ -329,31 +338,49 @@
 
 
 // DISCRETE ACTIONS
-.state.adapter.DiscreteAdapter                          :{};
+.state.adapter.DiscreteAdapter                          :{
+
+    };
 
 // TENLEVEL             
-.state.adapter.TenLevelAdapter                          :{};
+.state.adapter.TenLevelAdapter                          :{
+
+    };
 
 // FIVELEVEL                
-.state.adapter.FiveLevelAdapter                         :{};
+.state.adapter.FiveLevelAdapter                         :{
+
+    };
 
 // EXPBUCKET                
-.state.adapter.ExpBucketAdapter                         :{};
+.state.adapter.ExpBucketAdapter                         :{
+
+    };
 
 // LOGBUCKET                
-.state.adapter.LogBucketAdapter                         :{};
+.state.adapter.LogBucketAdapter                         :{
+
+    };
 
 // UNIBUCKET                
-.state.adapter.UniBucketAdapter                         :{};
+.state.adapter.UniBucketAdapter                         :{
+
+    };
 
 // EXPBUCKET                
-.state.adapter.ExpBucketAdapterWithIcebergs             :{};
+.state.adapter.ExpBucketAdapterWithIcebergs             :{
+
+    };
 
 // LOGBUCKET                
-.state.adapter.LogBucketAdapterWithIcebergs             :{};
+.state.adapter.LogBucketAdapterWithIcebergs             :{
+
+    };
 
 // UNIBUCKET                
-.state.adapter.UniBucketAdapterWithIcebergs             :{};
+.state.adapter.UniBucketAdapterWithIcebergs             :{
+
+    };
 
 // Main Adapt Function
 // ---------------------------------------------------------------------------------------->
