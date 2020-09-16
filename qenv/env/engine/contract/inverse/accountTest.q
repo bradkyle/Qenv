@@ -190,15 +190,15 @@
         ("combined:longer_to_long");
         ("combined:shorter_to_short");
         // rpl + .25
-        ("hedged:long_to_longer");
-        ("hedged:short_to_shorter");
-        ("combined:long_to_longer");
-        ("combined:short_to_shorter");
+        ("hedged:longer_to_long");
+        ("hedged:shorter_to_short");
+        ("combined:longer_to_long");
+        ("combined:shorter_to_short");
         // rpl - .25
-        ("hedged:long_to_longer");
-        ("hedged:short_to_shorter");
-        ("combined:long_to_longer");
-        ("combined:short_to_shorter")
+        ("hedged:longer_to_long");
+        ("hedged:shorter_to_short");
+        ("combined:longer_to_long");
+        ("combined:shorter_to_short")
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
