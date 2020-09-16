@@ -58,15 +58,6 @@
 
     };
 
-// Rectify State Util
-// ---------------------------------------------------------------------------------------->
-
-// Common logic for setting the shared state values of the given account
-// and its BOTH,LONG,SHORT inventory aswell as its respective orders.
-// TODO move upward1
-.inverse.account.rectifyState           :{
-
-    };
 
 // Adjust Open Limit Order Margin
 // ---------------------------------------------------------------------------------------->
@@ -229,8 +220,7 @@
 
     a[`balance]-:cost;
     a[`totalCommission]+:cost;
-
-    :rectifyState[a;iB;iL;iS];  // TODO costly function remove 
+ 
     };
 
 
@@ -296,8 +286,7 @@
     // TODO this is subtracted from the margin?
 
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
-
-    :rectifyState[a;iB;iL;iS];
+ 
     };
 
 
@@ -311,16 +300,16 @@
     // TODO more expressive and complete upddate statement accounting for margin etc.
     // Account: available, liquidationprice, bankruptcyprice, depositCount
 
-    acc[`balance]-:deposited;
-    acc[`depositAmount]+:deposited;
-    acc[`depositCount]+:1;
-    acc[`withdrawable]+:deposited;
+    a[`balance]-:deposited;
+    a[`depositAmount]+:deposited;
+    a[`depositCount]+:1;
+    a[`withdrawable]+:deposited;
     / account[`available]:.account.Available[acc]; // TODO
     / account[`initMarginReq`maintMarginReq]
 
 
     // TODO add update event
-    acc
+    a
     };
 
 
@@ -344,14 +333,14 @@
     $[withdrawn < acc[`withdrawable];[
         // TODO more expressive and complete upddate statement accounting for margin etc.
 
-        acc[`balance]-:withdrawn;
-        acc[`withdrawAmount]+:withdrawn;
-        acc[`withdrawCount]+:1;
-        acc[`withdrawable]-:withdrawn;
+        a[`balance]-:withdrawn;
+        a[`withdrawAmount]+:withdrawn;
+        a[`withdrawCount]+:1;
+        a[`withdrawable]-:withdrawn;
         / account[`available]:.account.Available[acc]; // TODO
 
         // TODO update liquidation price 
         
         ];'InsufficientMargin];  
-        acc
+        a
     };
