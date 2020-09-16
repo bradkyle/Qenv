@@ -106,6 +106,7 @@
 
         state[`tgt]: last'[state`size]; // TODO change to next? 
         nqty:last'[nxt`qty];
+        nhqty:0;
         
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
@@ -132,6 +133,8 @@
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                         .util.Clip[state[`qty]-mxshft] // TODO change?
                     )]];
+
+                .order.test.notAgentQty:notAgentQty;
 
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
