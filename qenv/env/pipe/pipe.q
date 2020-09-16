@@ -90,14 +90,18 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // 2) enlist(Index <= Index + StepFreqIndex)
 // 3) ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
 getIngressCond  :{$[
-
+    x=0;();
+    x=1;();
+    x=3;()
     ]};
 
 // 1) enlist(Time <= ((Time + StepFreqTime)-Req time?))
 // 2)
 // 3)
 getEgressCond   :{$[
-
+    x=0;();
+    x=1;();
+    x=3;()
     ]};
 
 
@@ -114,13 +118,12 @@ getEgressCond   :{$[
     econd:.pipe.getIngressCond[windowkind];
     events:?[`.pipe.ingress.Event;econd;0b;()];
     ![`.pipe.ingress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
-
+    events
     };
 
 .pipe.GetEgressEvents    :{[step; windowkind]
     econd:.pipe.getEgressCond[windowkind];
     events:?[`.pipe.egress.Event;econd;0b;()];
     ![`.pipe.egress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
-
-
+    events
     };
