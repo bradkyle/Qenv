@@ -156,7 +156,7 @@
 
 // Bins a given quantity into an appropriate amount given the current
 // balance/available balance and the amount given as a bin size.
-staticOrderSizeStepper                                  :{[]
+.state.staticOrderSizeStepper                           :{[]
 
     };
 
@@ -166,7 +166,7 @@ staticOrderSizeStepper                                  :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createLevelLimitOrdersStaticSizeByDelta                 :{[]
+.state.createLevelLimitOrdersStaticSizeByDelta          :{[]
 
     };
 
@@ -175,7 +175,7 @@ createLevelLimitOrdersStaticSizeByDelta                 :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createLevelLimitOrdersDynamicSizeByDelta                :{[]
+.state.createLevelLimitOrdersDynamicSizeByDelta         :{[]
 
     };
 
@@ -184,7 +184,7 @@ createLevelLimitOrdersDynamicSizeByDelta                :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createBucketLimitOrdersStaticSizeByDelta                :{[]
+.state.createBucketLimitOrdersStaticSizeByDelta         :{[]
 
     };
 
@@ -193,7 +193,7 @@ createBucketLimitOrdersStaticSizeByDelta                :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createBucketLimitOrdersDynamicSizeByDelta               :{[]
+.state.createBucketLimitOrdersDynamicSizeByDelta        :{[]
 
     };
 
@@ -202,7 +202,7 @@ createBucketLimitOrdersDynamicSizeByDelta               :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createLevelIcebergOrdersStaticSizeByDelta               :{[]
+.state.createLevelIcebergOrdersStaticSizeByDelta        :{[]
 
     };
 
@@ -211,7 +211,7 @@ createLevelIcebergOrdersStaticSizeByDelta               :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createLevelIcebergOrdersDynamicSizeByDelta              :{[]
+.state.createLevelIcebergOrdersDynamicSizeByDelta       :{[]
 
     };
 
@@ -220,7 +220,7 @@ createLevelIcebergOrdersDynamicSizeByDelta              :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createBucketIcebergOrdersStaticSizeByDelta              :{[]
+.state.createBucketIcebergOrdersStaticSizeByDelta       :{[]
 
     };
 
@@ -229,10 +229,47 @@ createBucketIcebergOrdersStaticSizeByDelta              :{[]
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-createBucketIcebergOrdersDynamicSizeByDelta             :{[]
+.state.createBucketIcebergOrdersDynamicSizeByDelta      :{[]
 
     };
 
+
+// Aggregate General Order Placement Utilities
+// ---------------------------------------------------------------------------------------->
+
+.state.increasingLinearDistribution                       :{
+
+    };
+
+.state.decreasingLinearDistribution                       :{
+
+    };
+
+.state.increasingExponentialDistribution                  :{
+
+    };
+
+.state.decreasingExponentialDistribution                  :{
+
+    };
+
+.state.increasingLogarithmicDistribution                  :{
+
+    };
+
+.state.decreasingLogarithmicDistribution                  :{
+
+    };
+
+.state.normalDistribution                                 :{
+
+    };
+
+.state.flatDistribution                                   :{
+
+    };
+
+.state.
 
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
