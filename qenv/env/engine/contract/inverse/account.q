@@ -291,6 +291,8 @@
     a[`shortFundingCost]:0;
     a[`totalFundingCost]:0;
     a[`realizedPnl]:0;
+  
+    // TODO balance - realizedPnl
 
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
@@ -350,5 +352,21 @@
         // TODO update liquidation price 
         
         ];'InsufficientMargin];  
+    a
+    };
+
+
+// Withdraw
+// ---------------------------------------------------------------------------------------->
+
+// Moves realizedPnl into the balance and resets unrealizedPnl etc.?
+/  @param withdrawn (Long) The amount that is to be withdrawn
+/  @param time (datetime) The time of the withdraw event
+/  @param accountId (Long) The id of the account to withdraw from
+/  @throws InvalidAccountId accountId was not found.
+/  @throws InsufficientMargin account has insufficient margin for withdraw
+.inverse.account.ApplySettlement  :{[i;a;time]
+    // Account: available, liquidationprice, bankruptcyprice, withdrawCount
+    
     a
     };
