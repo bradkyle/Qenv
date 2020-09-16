@@ -85,7 +85,6 @@ dozc:{x+y}[doz];
         nxt:$[
             count[p[2]]=4;`side`price`qty`time!p[2];
             count[p[2]]=5;`side`price`qty`hqty`time!p[2];
-            count[p[2]]=6;`side`price`qty`hqty`iqty`time!p[2];
             'INVALID_NXT];
 
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
