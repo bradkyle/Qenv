@@ -10,7 +10,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -21,7 +26,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 .qt.Unit[
@@ -31,7 +41,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -42,7 +57,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -53,7 +73,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -64,7 +89,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -75,7 +105,12 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
 
 
@@ -86,5 +121,10 @@
 
         .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultPipeHooks;
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
     "Global function for creating a new account"];
