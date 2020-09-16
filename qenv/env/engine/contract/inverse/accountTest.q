@@ -185,16 +185,16 @@
     (
         ("hedged:longer_to_long";());
         ("hedged:shorter_to_short";());
-        ("combined:longer_to_long";());
-        ("combined:shorter_to_short";());
         ("hedged:longer_to_long rpl + 0.25";());
         ("hedged:shorter_to_short rpl + 0.25";());
-        ("combined:longer_to_long rpl + 0.25";());
-        ("combined:shorter_to_short rpl + 0.25";());
         ("hedged:longer_to_long rpl - 0.25";());
         ("hedged:shorter_to_short rpl - 0.25";());
+        ("combined:longer_to_long";());
+        ("combined:shorter_to_short";());
+        ("combined:longer_to_long rpl + 0.25";());
+        ("combined:shorter_to_short rpl + 0.25";());
         ("combined:longer_to_long rpl - 0.25";());
-        ("combined:shorter_to_short rpl - 0.25";());
+        ("combined:shorter_to_short rpl - 0.25";())
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -210,7 +210,16 @@
     {[p]
     
     };
-    ();
+    (
+        ("combined:longer_to_short";());
+        ("combined:shorter_to_long";());
+        ("combined:shorter_to_longer";());
+        ("combined:longer_to_shorter";());
+        ("combined:longer_to_short rpl + 0.25";());
+        ("combined:shorter_to_long rpl + 0.25";());
+        ("combined:longer_to_shorter rpl - 0.25";());
+        ("combined:shorter_to_longer rpl - 0.25";())
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
