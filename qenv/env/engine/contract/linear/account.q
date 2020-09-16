@@ -1,90 +1,4 @@
 
-liquidationPrice    :{[account;inventoryB;inventoryL;inventoryS;instrument]
-        bal:account[`balance]; // TODO change to margin?
-        tmm:0; 
-
-        rt:instrument[`riskTiers];
-        rb:instrument[`riskBuffer];
-        isinverse:(instrument[`contractType]=`INVERSE);
-
-        .qt.RT:rt;
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive Average price // change total entry to execQty
-        sB:inventoryB[`isignum];
-        epB:.account.avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry];isinverse];
-        epL: .account.avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry];isinverse];
-        epS: .account.avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry];isinverse];
-
-        $[isinverse;
-            [nvalB:amtB%epB;nvalS:amtS%epS;nvalL:amtL%epL];
-            [nvalB:amtB*epB;nvalS:amtS*epS;nvalL:amtS*epS]
-        ];
-
-        // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;nvalB); 0b; ()]; // TODO switch on leverage/amount etc.
-        lmL:first ?[rt;enlist(>;`mxamt;nvalL); 0b; ()];
-        lmS:first ?[rt;enlist(>;`mxamt;nvalS); 0b; ()];
-
-        // Maintenence margin rate
-        mmB:lmB[`mmr];
-        mmL:lmL[`mmr];
-        mmS:lmS[`mmr];
-
-        // Maintenece Amount
-        cumB: amtB*(mmB+rb);
-        cumL: amtL*(mmL+rb);
-        cumS: amtS*(mmS+rb);
- 
-        / .qt.BAM:(isinverse;rb;bal;tmm;amtB;amtL;amtS;lmB;lmL;lmS;mmB;mmL;mmS;cumB;cumL;cumS;sB;epB;epL;epS);
-
-        // TODO round to nearest long vs short etc.
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)+(amtL*epL)-(amtS*epS))
-            %((amtB*mmB)+(amtL*mmL)+(amtS*mmS)-(sB*amtB)+(amtL-amtS)));
-    };
-
-// The point at which the entirety of the inventories initial margin has been 
-// consumed. 
-bankruptcyPrice     :{[account;inventoryL;inventoryS;inventoryB;instrument]
-        bal:account[`balance];
-        tmm:0; 
-
-        rt:instrument[`riskTiers];
-
-        // Current Position
-        amtB:inventoryB[`amt];
-        amtL:inventoryL[`amt];
-        amtS:inventoryS[`amt];
-
-        // Derive risk limits
-        lmB:first ?[rt;enlist(>;`mxamt;amtB); 0b; ()]; // TODO move to instrument
-        lmL:first ?[rt;enlist(>;`mxamt;amtL); 0b; ()];
-        lmS:first ?[rt;enlist(>;`mxamt;amtS); 0b; ()];        
-
-        // Initial margin rate
-        imrB:lmB[`imr]; // TODO change this to the positions initial margin  
-        imrL:lmL[`imr]; // TODO change this to the positions initial margin
-        imrS:lmS[`imr]; // TODO change this to the positions initial margin
-
-        // Maintenece Amount
-        cumB: amtB*imrB;
-        cumL: amtL*imrL;
-        cumS: amtS*imrS;
-
-        // Derive Average price
-        sB:inventoryB[`isignum];
-        epB:avgPrice[sB;inventoryB[`execCost];inventoryB[`totalEntry]];
-        epL:avgPrice[1;inventoryL[`execCost];inventoryL[`totalEntry]];
-        epS:avgPrice[-1;inventoryS[`execCost];inventoryS[`totalEntry]];
-
-        :(((bal+tmm+cumB+cumL+cumS)-(sB*amtB*epB)-(amtL*epL)+(amtS*epS))
-            %((amtB*imrB)+(amtL*imrL)+(amtS*imrS)-(sB*amtB)-(amtL+amtS)));
-    };
 
 // Derives the execCost which is the cumulative sum of the product of
 // the fillQty and price of entering into a position.
@@ -128,20 +42,6 @@ MaintMargin      :{[]
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
 InitMargin       :{[]
-
-    };
-
-// Given the rules provided by the instrument and the account's current
-// state this function will derive the approximate price point at which 
-// the account will be liquidated.
-LiquidationPrice :{[]
-
-    };
-
-// Given the rules provided by the instrument and the account's current
-// state this function will derive the price point at which the account
-// will become bankrupt.
-BankruptcyPrice  :{[]
 
     };
 
