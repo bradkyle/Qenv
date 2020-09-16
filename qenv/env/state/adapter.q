@@ -21,7 +21,7 @@
 // given action mapping i.e. 1: (0,2)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.uniBucketOrders                          :{[]
+.state.adapter.uniformalBucketOrders                          :{[]
 
     };
 
@@ -36,7 +36,7 @@
 // given action mapping i.e. 1: (0,1)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.expBucketOrders                          :{[]
+.state.adapter.exponentialBucketOrders                          :{[]
 
     };
 
@@ -51,7 +51,7 @@
 // given action mapping i.e. 1: (0,4)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.logBucketOrders                          :{[]
+.state.adapter.logarithmicBucketOrders                          :{[]
 
     };
 
@@ -234,7 +234,7 @@
     };
 
 
-// Aggregate General Order Placement Utilities
+// Amount distribution logic
 // ---------------------------------------------------------------------------------------->
 
 // Given a total amount and the number of groups in which to distribute
@@ -292,6 +292,23 @@
 .state.flatDistribution                                 :{
 
     };
+
+
+// Price Distribution Utilities
+// ---------------------------------------------------------------------------------------->
+
+.state.uniformalPriceDistribution                       :{
+
+    };
+
+.state.exponentialPriceDistribution                     :{
+
+    };
+
+.state.logarithmicPriceDistribution                     :{
+
+    };    
+
 
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
