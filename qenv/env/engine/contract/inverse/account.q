@@ -221,6 +221,7 @@
     a[`balance]-:cost;
     a[`totalCommission]+:cost;
  
+    (a;(iB;iL;iS))    
     };
 
 
@@ -247,6 +248,7 @@
     a[`unrealizedPnl]:iB[`unrealizedPnl]+iL[`unrealizedPnl]+iS[`unrealizedPnl];
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
+    (a;(iB;iL;iS))
     };
 
 
@@ -287,6 +289,7 @@
 
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
+    a
     };
 
 
@@ -328,9 +331,9 @@
 .inverse.account.Withdraw       :{[i;a;withdrawn;time]
     // Account: available, liquidationprice, bankruptcyprice, withdrawCount
 
-    if[not[count[acc]>0];'INVALID_ACCOUNTID];
+    if[not[count[a]>0];'INVALID_ACCOUNTID];
 
-    $[withdrawn < acc[`withdrawable];[
+    $[withdrawn < a[`withdrawable];[
         // TODO more expressive and complete upddate statement accounting for margin etc.
 
         a[`balance]-:withdrawn;
