@@ -77,7 +77,7 @@
         res:.pipe._GetIngressEvents[p[`step];p[`windowkind]];
 
         .qt.A[res;~;p[`eRes];"res";case];
-        .qt.A[.pipe.egress.Event;~;p[`eEvents];"egress events";case];
+        .qt.A[.pipe.ingress.Event;~;p[`eEvents];"ingress events";case];
         .pipe.CONF:();
     };
     {[p]
