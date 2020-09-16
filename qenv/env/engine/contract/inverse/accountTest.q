@@ -159,12 +159,10 @@
         ("hedged:short_to_shorter");
         ("combined:long_to_longer");
         ("combined:short_to_shorter");
-        // rpl + .25
         ("hedged:long_to_longer");
         ("hedged:short_to_shorter");
         ("combined:long_to_longer");
         ("combined:short_to_shorter");
-        // rpl - .25
         ("hedged:long_to_longer");
         ("hedged:short_to_shorter");
         ("combined:long_to_longer");

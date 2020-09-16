@@ -192,7 +192,7 @@
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
 // 
-.inverse.account.ApplyFill               :{[a;iB;iL;iS;fill]
+.inverse.account.ApplyFill               :{[i;a;iB;iL;iS;fill]
 
     k:a`positionType;
     res:$[k=0;[ // TODO
@@ -243,14 +243,20 @@
 // is generally used with fair price marking. Assumes unrealizedPnl is already derived? 
 // TODO change openLoss to orderLoss TODO dry
 // @param markPrice (Long) The latest mark price of the instrument
-.inverse.account.UpdateMarkPrice         :{[markPrice;instrument;a]
+.inverse.account.UpdateMarkPrice         :{[markPrice;i;a;iB;iL;iS]
 
     a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0);
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+
+    iB[`unrealizedPnl]:0;
+    iL[`unrealizedPnl]:0;
+    iS[`unrealizedPnl]:0;
+
+    // TODO posMargin, markValue, maintMarginReq, initMarginReq
+    a[`unrealizedPnl]:iB[`unrealizedPnl]+iL[`unrealizedPnl]+iS[`unrealizedPnl];
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
-    :rectifyState[a;iB;iL;iS];
     };
 
 
@@ -283,9 +289,12 @@
 // TODO next funding rate and next funding time (funding time delta)
 // Update available withdrawable etc. // TODO move to instrumentTODO dry
 // @param markPrice (Long) The latest mark price of the instrument // TODO return updated values?
-.inverse.account.ApplyFunding        :{[fundingRate;instrument;account]
+.inverse.account.ApplyFunding        :{[fundingRate;i;a]
 
     account[`balance]:0;
+
+    // TODO this is subtracted from the margin?
+
     account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     :rectifyState[a;iB;iL;iS];
