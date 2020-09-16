@@ -21,7 +21,7 @@
 // given action mapping i.e. 1: (0,2)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.uniformalBucketOrders                          :{[]
+.state.adapter.uniformalBucketOrders                     :{[]
 
     };
 
@@ -36,7 +36,7 @@
 // given action mapping i.e. 1: (0,1)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.exponentialBucketOrders                          :{[]
+.state.adapter.exponentialBucketOrders                   :{[]
 
     };
 
@@ -51,7 +51,7 @@
 // given action mapping i.e. 1: (0,4)
 // Orders are then placed at the foremost marketable 
 // limit price in the bucket.
-.state.adapter.logarithmicBucketOrders                          :{[]
+.state.adapter.logarithmicBucketOrders                   :{[]
 
     };
 
@@ -67,7 +67,7 @@
 // Simply places a single stop order for each corresponding
 // position at a given loss fraction of the positions value
 // (unrealized pnl).
-.state.adapter.naiveStops                               :{
+.state.adapter.naiveStops                               :{[]
     // 1%avgprice
     };
 
@@ -75,7 +75,7 @@
 // Places a uniform set of for instance 5 stop orders at 
 // equidistant price points in relation to the current
 // mark price up to the final maximum loss fraction
-.state.adapter.uniStops                                 :{
+.state.adapter.uniStops                                 :{[]
 
     };   
 
@@ -83,7 +83,7 @@
 // Places a set of stops that exponentially increase in
 // magnitude away from the current price to a given 
 // maximum loss fraction
-.state.adapter.expStops                                 :{
+.state.adapter.expStops                                 :{[]
 
     };
 
@@ -91,7 +91,7 @@
 // Places a set of stops that logarithmically increase in
 // magnitude away from the current price to a given maximum
 // loss fraction.
-.state.adapter.logStops                                 :{
+.state.adapter.logStops                                 :{[]
 
     };
 
@@ -106,14 +106,14 @@
 // order to the pipe ingress queue every 2 seconds
 // with the total amount being specified and a look
 // forward period thus the amount is derived.
-.state.adapter.createUniTemporalOrders                  :{
+.state.adapter.createUniTemporalOrders                  :{[]
 
     };
 
 // Creates a set of orders at a random interval and
 // at a random amount such that the total target amount
 // becomes replete within a given time period
-.state.adapter.createRandTemporalOrders                 :{
+.state.adapter.createRandTemporalOrders                 :{[]
 
     };
 
@@ -122,14 +122,14 @@
 
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of the given inventory.
-.state.adapter.createFlattenSideMarketOrders            :{
+.state.adapter.createFlattenSideMarketOrders            :{[]
 
     };
 
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of all inventories for
 // a given account.
-.state.adapter.createFlattenAllMarketOrders             :{
+.state.adapter.createFlattenAllMarketOrders             :{[]
 
     };
 
@@ -137,7 +137,7 @@
 // flatten the current active amount of the given inventory.
 // it will be assumed that the orders will be placed at the
 // best price/bucket.
-.state.adapter.createFlattenSideLimitOrders             :{
+.state.adapter.createFlattenSideLimitOrders             :{[]
 
     };
 
@@ -146,7 +146,7 @@
 // a given account.
 // it will be assumed that the orders will be placed at the
 // best price/bucket.
-.state.adapter.createFlattenAllLimitOrders              :{
+.state.adapter.createFlattenAllLimitOrders              :{[]
 
     };
 
