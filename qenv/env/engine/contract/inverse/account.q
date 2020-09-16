@@ -281,11 +281,11 @@
 // @param markPrice (Long) The latest mark price of the instrument // TODO return updated values?
 .inverse.account.ApplyFunding        :{[fundingRate;i;a]
 
-    account[`balance]:0;
+    a[`balance]:0;
 
     // TODO this is subtracted from the margin?
 
-    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
     };
 
