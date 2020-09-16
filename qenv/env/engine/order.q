@@ -128,6 +128,7 @@
                 // make up the orderbook // TODO add hqty, iqty to this.
                 notAgentQty: flip .util.PadM[ // TODO check
                     raze'[(
+                        0^state[`hqty]; // hidden qty
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                         .util.Clip[state[`qty]-mxshft] // TODO change?
@@ -270,15 +271,7 @@
 
         // Calculate the new vis qty
         .order.test.nshft:nshft;
-
-        nnotAgentQty: flip .util.PadM[raze'[(
-                0^nhqty; // hidden qty
-                0^(noffset[;0] - 0^hqty); // first offset
-                .util.Clip[0^noffset[;1_(tmaxN)] - 0^nshft[;-1_(tmaxN)]]; // middle offset + shft
-                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
-            )]];
-        .order.test.nnotAgentQty:notAgentQty;        
-
+ 
         nfilled: state[`size] - nleaves; // New amount that is filled
         accdlts: state[`leaves] - nleaves; // The new Account deltas
 
