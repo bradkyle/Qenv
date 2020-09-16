@@ -237,39 +237,61 @@
 // Aggregate General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
-.state.increasingLinearDistribution                       :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing linear distribution of
+// qty for the given set of groups in order.
+.state.increasingLinearDistribution                     :{
 
     };
 
-.state.decreasingLinearDistribution                       :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing linear distribution of
+// qty for the given set of groups in order.
+.state.decreasingLinearDistribution                     :{
 
     };
 
-.state.increasingExponentialDistribution                  :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing exponential distribution of
+// qty for the given set of groups in order.
+.state.increasingExponentialDistribution                :{
 
     };
 
-.state.decreasingExponentialDistribution                  :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing exponential distribution of
+// qty for the given set of groups in order.
+.state.decreasingExponentialDistribution                :{
 
     };
 
-.state.increasingLogarithmicDistribution                  :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing logarithmic distribution of
+// qty for the given set of groups in order.
+.state.increasingLogarithmicDistribution                :{
 
     };
 
-.state.decreasingLogarithmicDistribution                  :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing logarithmic distribution of
+// qty for the given set of groups in order.
+.state.decreasingLogarithmicDistribution                :{
 
     };
 
-.state.normalDistribution                                 :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the normal distribution of
+// qty for the given set of groups in order.
+.state.normalDistribution                               :{
 
     };
 
-.state.flatDistribution                                   :{
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the flat distribution of
+// qty for the given set of groups in order.
+.state.flatDistribution                                 :{
 
     };
-
-.state.
 
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
