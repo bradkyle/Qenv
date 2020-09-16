@@ -217,6 +217,10 @@
         ("combined:longer_to_shorter";());
         ("combined:longer_to_short rpl + 0.25";());
         ("combined:shorter_to_long rpl + 0.25";());
+        ("combined:longer_to_short rpl - 0.25";());
+        ("combined:shorter_to_long rpl - 0.25";());
+        ("combined:longer_to_shorter rpl + 0.25";());
+        ("combined:shorter_to_longer rpl + 0.25";());
         ("combined:longer_to_shorter rpl - 0.25";());
         ("combined:shorter_to_longer rpl - 0.25";())
     );
