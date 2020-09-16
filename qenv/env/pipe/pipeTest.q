@@ -71,14 +71,15 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
+        a:p`args;
+        res:.pipe._GetIngressEvents[a[0];a[1]];
 
     };
     {[p]
     
     };
     (
-        ();
+        ("GetIngressEvents: windowkind 1, ");
         ();
         ();
         ()
@@ -92,7 +93,8 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
+        a:p`args;
+        res:.pipe._GetEgressEvents[a[0];a[1]];
 
     };
     {[p]
