@@ -9,7 +9,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Get the main engine instrument"];
 
 
 .qt.Unit[
@@ -22,7 +22,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of depth update events"];
 
 
 .qt.Unit[
@@ -35,7 +35,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of new trade eventss"];
 
 
 .qt.Unit[
@@ -48,7 +48,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of mark price update events"];
 
 
 .qt.Unit[
@@ -61,7 +61,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of settlement events"];
 
 
 .qt.Unit[
@@ -74,7 +74,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of funding events"];
 
 
 .qt.Unit[
@@ -87,7 +87,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of liquidation events"];
 
 
 .qt.Unit[
@@ -100,7 +100,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of new price limit events"];
 
 
 .qt.Unit[
@@ -113,7 +113,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of order events"];
 
 
 .qt.Unit[
@@ -126,7 +126,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a set of withdraw events"];
 
 
 .qt.Unit[
@@ -152,7 +152,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a batch of signal events"];
 
 
 .qt.Unit[
@@ -165,7 +165,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a batch of events"];
 
 
 .qt.Unit[
@@ -178,7 +178,7 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Get the current info for the engine"];
 
 
 .qt.Unit[
@@ -191,4 +191,4 @@
     };
     ();
     .util.testutils.defaultContractHooks;
-    " "];
+    "Reset the engine with different config"];

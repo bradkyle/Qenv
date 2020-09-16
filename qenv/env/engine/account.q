@@ -88,7 +88,7 @@
 .account.Available:{((x[`balance]-sum[x`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0)};
 
 .account.IsAccountInsolvent         :{
-
+    
     };
 
 .account.GetInMarketAccounts:{
