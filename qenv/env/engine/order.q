@@ -148,7 +148,7 @@
                 notAgentQty: flip .util.PadM[raze'[(
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
-                        .util.Clip[state[`qty]-mxshft] // TODO change?
+                        .util.Clip[sum[state`qty`hqty]-mxshft] // TODO change?
                     )]];
 
                 .order.test.notAgentQty:notAgentQty;
@@ -161,11 +161,14 @@
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
                 .order.test.state:state;
-
+                .order.test.shft:shft;
+                .order.test.tmaxN:tmaxN;
+                .order.test.mxshft:mxshft;
                 // Offset deltas are derived adn added to the current offset
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:   state[`leaves]+noffset;
                 
+                .order.test.prices:state`price;
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
                 .order.test.state1:state;
