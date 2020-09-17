@@ -127,6 +127,10 @@
 
                 shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
                 mxshft:max'[shft];
+
+                // The Minimum offset should be the minimum shft
+                // of the preceeding orders in the queue i.e. so
+                // they don't overlap
                 mnoffset: (0,'-1_'(shft));
 
                 // Derive the non agent qtys that
@@ -159,6 +163,8 @@
                 // Offset deltas are derived adn added to the current offset
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:   state[`leaves]+noffset;
+                nhqty:  state[`hqty] + hiddendlts;
+
 
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
