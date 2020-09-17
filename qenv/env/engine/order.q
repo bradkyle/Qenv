@@ -373,8 +373,8 @@
         delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
 
     ];if[count[state]>0;[
-    
-        .order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)
+        
+        .order.OrderBook,:flip .util.PadM[state`price`side`tgt`hqty`iqty`vqty];
         
     ]]]; // TODO fix
     
