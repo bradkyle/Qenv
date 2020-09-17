@@ -160,7 +160,7 @@
 
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
-                .order.test.state:state;
+                .order.test.state1:state;
                 .order.test.shft:shft;
                 .order.test.tmaxN:tmaxN;
                 .order.test.mxshft:mxshft;
@@ -171,7 +171,7 @@
                 .order.test.prices:state`price;
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
-                .order.test.state1:state;
+                .order.test.state2:state;
                 
                 // Calculate the new vis qty
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];

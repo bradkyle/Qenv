@@ -115,10 +115,10 @@ dozc:{x+y}[doz];
                 til[8];8#1;8#1; // orderId, accountId, instrumentId 
                 ((4#-1),(4#1)); // side
                 8#1; // side
-                (8#100 400); // offsets
+                ((4#100),(4#400)); // offsets
                 8#100; // leaves
                 8#100; // displayqty
-                ((4#1001 1002),(4#998 997)); // price
+                8#(1001 1002 998 997); // price
                 8#z // time
             ); 
             (   // Depth Update
@@ -140,7 +140,7 @@ dozc:{x+y}[doz];
                 til[8];8#1;8#1; // orderId, accountId, instrumentId 
                 ((4#-1),(4#1)); // side
                 8#1; // otype
-                ((8#0 200 100 400)); // offsets
+                (8#0 200 100 400); // offsets
                 8#100; // leaves
                 8#100; // displayqty
                 ((4#1001 1002),(4#998 997)); // price
