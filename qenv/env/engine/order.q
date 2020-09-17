@@ -335,8 +335,8 @@
         // above. They should not overlap.f
         // get fully filled and then set all others that dont conform to 
         // partially filled, by simple exclusion conditional.
-        nstatus:2*((sums[state[`offset]]<=state[`rp])and(nshft<=state[`rp])); // todo mask
-        nstatus+:1*((state[`offset]<=state[`rp])and not nstatus); // todo mask
+        nstatus:1*((state[`offset]<=state[`rp])and(nshft<=state[`rp])); // todo mask
+        nstatus+:2*((sums[state[`offset]]<=state[`rp])and not nstatus); // todo mask
 
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
             nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
