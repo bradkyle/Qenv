@@ -59,6 +59,7 @@ dozc:{x+y}[doz];
 
 // TODO process depth // process trade Integration check
 // TODO hidden/iceberg orders orders 
+// TODO replicate cases without hidden orders!
 
 .qt.Unit[
     ".order.ProcessDepth";
@@ -216,7 +217,7 @@ dozc:{x+y}[doz];
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
                 20#z // time
             ); 
-            (
+            ( // Depth Update
                 ((20#1),(20#-1));
                 ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
                 (40#900 1000);
@@ -263,7 +264,7 @@ dozc:{x+y}[doz];
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
                 20#z // time
             ); 
-            (
+            (  // Depth Update
                 ((4#-1),(2#1));
                 ((1000 1001 1002 1002),(1000 1001));
                 ((0 0 0 1000),(1000 1000));
@@ -286,6 +287,241 @@ dozc:{x+y}[doz];
                 20#100; // displayqty
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
                 20#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time, crosses order spread during update ",
+          "(best price decreases during update) finishes past order level (past final spread)");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200)
+            );  
+            (   // Current Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                (20#100 400); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (  // Depth Update
+                ((4#1),(2#-1));
+                ((999 998 997 997),(999 998));
+                ((0 0 0 1000),(1000 1000));
+                (sc[z] 0 0 0 1 0 0)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0))); // Encounters edge case here (crosses side spread thus removes hidden qty)
+                iqty:(10#0);
+                vqty:(10#1200)
+            ); 
+            (   // Expected Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                ((10#100 400),(10 210 0 200 0 200),(4#100 400)); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time, crosses order spread during update",
+          "(best price increases during update) finishes past order level (within final spread)");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200)
+            );  
+            (   // Current Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                (20#100 400); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (  // Depth Update
+                ((4#-1),(4#1));
+                ((1000 1001 1002 1002),(1000 1001 1000 1001));
+                ((0 0 0 1000),(1000 1000 0 0));
+                (sc[z] 0 0 0 1 0 0 1 1)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0))); // Encounters edge case here (crosses side spread thus removes hidden qty)
+                iqty:(10#0);
+                vqty:(10#1200)
+            ); 
+            (   // Expected Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                ((10 210 0 200 0 200),(14#100 400)); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time, crosses order spread during update ",
+          "(best price decreases during update) finishes past order level (past final spread)");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200)
+            );  
+            (   // Current Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                (20#100 400); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (  // Depth Update
+                ((4#1),(4#-1));
+                ((999 998 997 997),(999 998 999 998));
+                ((0 0 0 1000),(1000 1000 0 0));
+                (sc[z] 0 0 0 1 0 0 1 1)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0))); // Encounters edge case here (crosses side spread thus removes hidden qty)
+                iqty:(10#0);
+                vqty:(10#1200)
+            ); 
+            (   // Expected Orders
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                ((10#100 400),(10 210 0 200 0 200),(4#100 400)); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time, crosses order spread during update ",
+          "(best price decreases during update) finishes past order level (past final spread)");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200) // TODO update
+            );  
+            (   // Current Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (4#100 400); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#1001),(2#998); // price
+                4#z // time
+            ); 
+            (  // Depth Update
+                ((5#-1),(5#1));
+                ((1000 1001 1002 1001 1002),(999 998 997 998 997));
+                ((0 0 0 1000 1000),(0 0 0 1000 1000));
+                (sc[z] 0 0 0 1 1 0 0 0 1 1)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:10#(0,(4#1000)); // TODO update
+                hqty:10#(10,(4#0)); // Encounters edge case here where hidden qty could be replaced
+                iqty:(10#0);
+                vqty:10#(0,(1200 1000 1200 1200)) // Because depths were prev 1200 etc.
+            ); 
+            (   // Expected Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (4#(0 200)); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#1001),(2#998); // price
+                4#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time, crosses order spread during update",
+          "(best price decreases during update) finishes at order level");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200) // TODO update
+            );  
+            (   // Current Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (4#100 400); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#1001),(2#998); // price
+                4#z // time
+            ); 
+            (  // Depth Update
+                ((5#1),(4#-1));
+                ((999 998 997 997 998),(999 998 999 998));
+                ((0 0 0 1000 1000),(1000 1000 0 0));
+                (sc[z] 0 0 0 1 1 0 0 1 1)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:10#(0,(4#1000)); // TODO update
+                hqty:10#(10,(4#0)); // Encounters edge case here where hidden qty could be replaced
+                iqty:(10#0);
+                vqty:10#(0,(1200 1000 1200 1200)) // Because depths were prev 1200 etc.
+            ); 
+            (   // Expected Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (4#(0 200)); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#1001),(2#998); // price
+                4#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
