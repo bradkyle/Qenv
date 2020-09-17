@@ -232,7 +232,7 @@
 // Constructs matrix representation of trades that need to take place 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
+// order. // TODO implement for multiple orders
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
