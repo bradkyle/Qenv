@@ -37,7 +37,7 @@
 /  @param a  (Account) The account
 /  @return (Float) A float representing the fraction of initMarginRequired
 .inverse.account.MaintMarginReq          :{[i;a]
-    :7h$()
+    :(![i`riskTiers;enlist(>;`mxamt;amt); (); `mmr])+(i[`riskBuffer] | 0); // TODO derive
     };
 
 // Derives the initial margin that is reserved for a given inventory 
@@ -47,7 +47,7 @@
 /  @param a  (Account) The account
 /  @return (Float) A float representing the fraction of initMarginRequired
 .inverse.account.InitMarginReq           :{[i;a]
-    :7h$()
+    :(![i`riskTiers;enlist(>;`mxamt;amt); (); `imr])+(i[`riskBuffer] | 0);
     };
 
 
