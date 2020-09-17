@@ -187,7 +187,7 @@ dozc:{x+y}[doz];
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
                 ((10#-1),(10#1)); // `side
                 20#1; // otype
-                (20#0 200); // offset
+                20#((20 220),(8#0 200)); // offset (accounts for offset minimum of hidden order qty)
                 20#100; // leaves
                 20#100; // displayqty
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
