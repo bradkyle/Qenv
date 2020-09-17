@@ -196,7 +196,8 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
-        ("many levels with many orders at same offset interval, price is removed across all levels partially (900)";(
+        (("many levels with many orders at same offset interval, price is removed",
+          "across all levels partially (900) not hidden or iceberg");(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -215,12 +216,11 @@ dozc:{x+y}[doz];
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
                 20#z // time
             ); 
-            (   // Depth Update
+            (
                 ((20#1),(20#-1));
                 ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
-                (40#0 1000); // NQTY
-                ((10, (19#0)),(10, (19#0))); // NHQTY
-                (sc[z] (40#0 1)) // TIME
+                (40#900 1000);
+                (sc[z] (40#0 1))
             );  
             (   // Expected Depth
                 [price:((999-til 5),(1000+til 5))] 
