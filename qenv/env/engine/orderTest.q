@@ -1711,6 +1711,6 @@ dozc:{x+y}[doz];
     "Global function for checking stop orders"];
 
 /  .qt.SkpBes[9];
-.qt.SkpBesTest[1];
+.qt.SkpBesTest[0];
 / .qt.SkpBes[46];
 .qt.RunTests[];
