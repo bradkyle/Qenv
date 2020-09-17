@@ -195,11 +195,7 @@ nl:{neg l[x]}
     {[p]
     
     };
-    (
-        ();
-        ();
-        ()
-    );
+    ();
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -227,7 +223,7 @@ nl:{neg l[x]}
         ("hedged:long_to_longer";());
         ("hedged:short_to_shorter";());
         ("combined:long_to_longer";());
-        ("combined:short_to_shorter")
+        ("combined:short_to_shorter";())
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -673,7 +669,7 @@ nl:{neg l[x]}
             (();(0b;0;())); // crsFill Mock
             (0;(1b;1;())); // UnrealizedPnl Mock
         ));
-        ("combined:short_to_flat_rpl_-50")
+        ("combined:short_to_flat_rpl_-50";())
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -689,15 +685,7 @@ nl:{neg l[x]}
     {[p]
     
     };
-    (
-        ();
-        ();
-        ();
-        ();
-        ();
-        ();
-        ()
-    );
+    ();
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 

@@ -132,7 +132,7 @@
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
-    iv[`avgPrice]: .inverse.account.AvgPrice . iv`isignum`execCost`totalEntry;
+    iv[`avgPrice]: .inverse.account.AvgPrice . iv[`isignum`execCost`totalEntry];
 
     :iv
     };
@@ -188,7 +188,7 @@
       ];
       k=1;[
             // TODO should be neg?
-            namt:abs[iv[`amt]+neg[qty]]; // TODO fix
+            namt:abs[iB[`amt]+neg[qty]]; // TODO fix
             $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
                 .inverse.account.redFill[price;qty;a;iB];
               ((iB[`amt]*namt)<0)); 
@@ -233,7 +233,7 @@
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
 
-    (ib;iL;iS)[`unrealizedPnl]:.inverse.account.UnrealizedPnl[]; // TODO
+    / (ib;iL;iS)[`unrealizedPnl]):.inverse.account.UnrealizedPnl[]; // TODO
 
     // TODO posMargin, markValue, maintMarginReq, initMarginReq
     a[`unrealizedPnl]:sum[(ib;iL;iS)[`unrealizedPnl]];
