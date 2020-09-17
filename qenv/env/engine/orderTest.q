@@ -147,7 +147,7 @@ dozc:{x+y}[doz];
                 20#z
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
         ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
            (   // Expected Depth
@@ -191,7 +191,7 @@ dozc:{x+y}[doz];
                 20#z
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
-            () // Expected Events
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ))
     );
     .util.testutils.defaultEngineHooks;
