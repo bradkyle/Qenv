@@ -35,6 +35,7 @@
 // a given account given its 
 /  @param i  (Instrument) The current instrument
 /  @param a  (Account) The account
+/  @return (Float) A float representing the fraction of initMarginRequired
 .inverse.account.MaintMarginReq          :{[i;a]
     :7h$()
     };
@@ -44,6 +45,7 @@
 // inventory/position size divided by the selected margin.
 /  @param i  (Instrument) The current instrument
 /  @param a  (Account) The account
+/  @return (Float) A float representing the fraction of initMarginRequired
 .inverse.account.InitMarginReq           :{[i;a]
     :7h$()
     };
@@ -53,6 +55,7 @@
 // keep the specified inventory open. 
 /  @param i  (Instrument) The current instrument
 /  @param iv (Inventory) The given inventory
+/  @return (Long) The total maintenence margin that is required
 .inverse.account.MaintMargin            :{[i;a;iv]
     mmreq:.inverse.account.MaintMarginReq[i;a];
     :7h$()
@@ -63,6 +66,7 @@
 // inventory/position size divided by the selected margin.
 /  @param i  (Instrument) The current instrumentc
 /  @param iv (Inventory) The given inventory
+/  @return (Long) The total initial margin that is required
 .inverse.account.InitMargin             :{[i;a;iv]
     imreq:.inverse.account.InitMarginReq[i;a];
     :7h$()
