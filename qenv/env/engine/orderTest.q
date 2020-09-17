@@ -1527,7 +1527,7 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
- 
-.qt.SkpBesTest[1];
+ .qt.SkpBes[9];
+/ .qt.SkpBesTest[1];
 / .qt.SkpBes[46];
 .qt.RunTests[];

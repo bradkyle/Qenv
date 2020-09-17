@@ -330,16 +330,18 @@
         nfilled:        state[`size] - nleaves; // New amount that is filled
         accdlts:        state[`leaves] - nleaves; // The new Account deltas
 
-        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls]:(
-            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts
-        );
-        .order.test.stateu:state;
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
         // above. They should not overlap.f
-        partfilled:`boolean$(raze[(sums'[state`offset]<=state[`rp])-(nshft<=state[`rp])]); // todo mask
-        fullfilled: `boolean$(raze[(state[`offset]<=state[`rp])and(nshft<=state[`rp])]); // todo mask
+        fullfilled: (sums[state[`offset]]<=state[`rp])and(nshft<=state[`rp]); // todo mask
+        partfilled:(state[`offset]<=state[`rp])and(nshft<=state[`rp]); // todo mask
+
+
+        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls]:(
+            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts
+        );
+        .order.test.stateu:state;
 
         .order.test.ndisplayqty:ndisplayqty;
         .order.test.displaydlt:displaydlt;
@@ -352,6 +354,7 @@
         .order.test.state1:state;
         .order.test.partfilled:partfilled;
         .order.test.fullfilled:fullfilled; 
+        .order.test.nshft:nshft;
 
         // TODO update with displayqty // TODO make simpler
         .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
