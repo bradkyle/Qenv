@@ -96,6 +96,8 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
+    // TODO validation
+    
     odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
         ob:0^(0!(?[`.order.OrderBook;();0b;()]));
@@ -107,7 +109,7 @@
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
         .order.test.state:state;
-        state[`tgt]: last'[state`size]; // TODO change to next? 
+        state[`tgt]: last'[state`nqty]; // TODO change to next? 
         nqty:last'[nxt`qty];
         .order.test.OBf:.order.OrderBook;
 
@@ -164,10 +166,11 @@
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:   state[`leaves]+noffset;
                 nhqty:  state[`hqty] + hiddendlts;
-
-
+                
+                .order.test.nhqty:nhqty;
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
+                .order.test.state1:state;
                 
                 // Calculate the new vis qty
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];

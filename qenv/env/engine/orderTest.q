@@ -83,7 +83,9 @@ dozc:{x+y}[doz];
     };
     {[p] 
         // TODO account for one record
-        ordCols:`orderId`instrumentId`accountId`side`otype`offset`leaves`price`time;
+        ordCols:$[
+            count[p[2]]=9;`orderId`instrumentId`accountId`side`otype`offset`leaves`price`time;
+            count[p[2]]=10;`orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time];
         bookCols:`side`price`qty`hqty`iqty`vqty;
         nxt:$[
             count[p[2]]=4;`side`price`nqty`time!p[2];
