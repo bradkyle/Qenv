@@ -244,7 +244,7 @@ dozc:{x+y}[doz];
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
         (("differing update prices by time, crosses order spread during update",
-          "(best price increases during update) finishes past order level (past final spread)");(
+          "(best price increases during update) finishes past order level (past final spread) hidden qty");(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -279,9 +279,9 @@ dozc:{x+y}[doz];
             ); 
             (   // Expected Orders
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
-                ((10#-1),(10#1)); // `side
+                ((10#-1),(10#1)); // side
                 20#1; // otype
-                (20#75 350); // offset
+                (20#100 400); // offset
                 20#100; // leaves
                 20#100; // displayqty
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
