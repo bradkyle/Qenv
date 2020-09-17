@@ -104,14 +104,15 @@
         .order.test.ob:ob;
         // TODO uj new event
         .order.test.nxt:nxt;
+        nxt:flip nxt;
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:0!uj[lj[`side`price xgroup flip nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
+        state:0!uj[lj[`side`price xgroup nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
         .order.test.state:state;
         state[`tgt]: last'[state`nqty]; // TODO change to next? 
-        nqty:last'[nxt`qty];
         .order.test.OBf:.order.OrderBook;
+        .order.test.nqty:nqty;
 
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[

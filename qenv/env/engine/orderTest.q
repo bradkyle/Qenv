@@ -83,9 +83,11 @@ dozc:{x+y}[doz];
     };
     {[p] 
         // TODO account for one record
-        ordCols:$[
-            count[p[2]]=9;`orderId`instrumentId`accountId`side`otype`offset`leaves`price`time;
-            count[p[2]]=10;`orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time];
+        ordCols:{$[
+            count[x]=9;`orderId`instrumentId`accountId`side`otype`offset`leaves`price`time;
+            count[x]=10;`orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time;
+            ()]};
+
         bookCols:`side`price`qty`hqty`iqty`vqty;
         nxt:$[
             count[p[2]]=4;`side`price`nqty`time!p[2];
@@ -94,11 +96,11 @@ dozc:{x+y}[doz];
 
         :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
             .util.testutils.makeOrderBook[count[p[0]]#bookCols;flip p[0]];
-            .util.testutils.makeOrders[ordCols;flip p[1]];
+            .util.testutils.makeOrders[ordCols[p[1]];flip p[1]];
             nxt;
             enlist p[5];
             p[3]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols;flip p[4]]);
+            .util.testutils.makeOrders[ordCols[p[4]];flip p[4]]);
     };
     (
         ("simple update no agent orders or previous depth one side";(
