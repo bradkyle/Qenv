@@ -97,22 +97,25 @@
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
     odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
-        ob:0!(?[`.order.OrderBook;();0b;()]);
+        ob:0^(0!(?[`.order.OrderBook;();0b;()]));
+        .order.test.ob:ob;
         // TODO uj new event
+        .order.test.nxt:nxt;
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:0!uj[`price xgroup ob;`price xgroup odrs]; // TODO grouping
-        state[`bside]:ob[`side];
-        dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
+        state:0!uj[lj[`side`price xgroup flip nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
 
+        dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
+        .order.test.state:state;
         state[`tgt]: last'[state`size]; // TODO change to next? 
         nqty:last'[nxt`qty];
         nhqty:sum'[nxt`hqty];
         .order.test.nhqty:nhqty;
         .order.test.nqty:nqty;
         .order.test.OBf:.order.OrderBook;
-        
+
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
+                // Deltas in visqty etc 
                 msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
                 // Pad state into a matrix
                 // for faster operations
@@ -185,7 +188,7 @@
     / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
     / .order.test.OB:.order.OrderBook;
     // Return the orderbook update to the egress pipe
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; 
+    / .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];last[]; 
     };
 
 
