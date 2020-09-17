@@ -216,17 +216,17 @@ nl:{neg l[x]}
     
     };
     (
-        ("hedged:long_to_longer");
-        ("hedged:short_to_shorter");
-        ("combined:long_to_longer");
-        ("combined:short_to_shorter");
-        ("hedged:long_to_longer");
-        ("hedged:short_to_shorter");
-        ("combined:long_to_longer");
-        ("combined:short_to_shorter");
-        ("hedged:long_to_longer");
-        ("hedged:short_to_shorter");
-        ("combined:long_to_longer");
+        ("hedged:long_to_longer";());
+        ("hedged:short_to_shorter";());
+        ("combined:long_to_longer";());
+        ("combined:short_to_shorter";());
+        ("hedged:long_to_longer";());
+        ("hedged:short_to_shorter";());
+        ("combined:long_to_longer";());
+        ("combined:short_to_shorter";());
+        ("hedged:long_to_longer";());
+        ("hedged:short_to_shorter";());
+        ("combined:long_to_longer";());
         ("combined:short_to_shorter")
     );
     .util.testutils.defaultContractHooks;
