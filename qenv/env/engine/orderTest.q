@@ -113,19 +113,20 @@ dozc:{x+y}[doz];
                 vqty:(10#1200)
             );  
             (   // Current Orders
-                til[20];20#1;20#1;
-                ((10#-1),(10#1));
-                20#1;(20#100 400);
-                20#100;
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
-                20#z
+                til[20];20#1;20#1; // orderId, accountId, instrumentId 
+                ((10#-1),(10#1)); // side
+                20#1;(20#100 400); // offsets
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
             ); 
             (   // Depth Update
-                ((5#-1),(5#1));
-                ((1000 1001 10002 1001 1002),(999 998 997 997 998));
-                ((0 0 0 1000 1000),(0 0 0 1000 1000));
+                ((5#-1),(5#1)); // side
+                ((1000 1001 10002 1001 1002),(999 998 997 997 998)); // price
+                ((0 0 0 1000 1000),(0 0 0 1000 1000)); // NQTY
                 (10#0); // NHQTY
-                (sc[z] 0 0 0 1 1 0 0 0 1 1)
+                (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
             );  
             (   // Expected Depth
                 [price:((998-til 4),(1001+til 4))] 
@@ -136,15 +137,14 @@ dozc:{x+y}[doz];
                 vqty:(8#1000)
             ); 
             (   // Expected Orders
-                til[20];
-                20#1;
-                20#1;
-                ((10#-1),(10#1));
-                20#1;
-                (20#0 200);
-                20#100;
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
-                20#z
+                til[20];20#1;20#1; // orderId, accountId, instrumentId 
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                ((8#0 200 100 400)); // offsets
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
