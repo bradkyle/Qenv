@@ -164,6 +164,7 @@
                     )]];
 
                 .order.test.notAgentQty:notAgentQty;
+                .order.test.ob:.order.OrderBook;
 
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
@@ -200,12 +201,12 @@
                 state[`vqty]:nvqty;
                 .order.test.state3:state;
                 .order.test.obk:.order.OrderBook;
-                .order.OrderBook,:raze'[flip .util.PadM'[state`price`side`tgt`hqty`iqty`vqty]];
+                .order.OrderBook,:raze'[flip 0^.util.PadM'[state`price`side`tgt`hqty`iqty`vqty]];
+                .order.test.ob1:.order.OrderBook;
             ];[
                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                 .order.OrderBook,:raze'[flip .util.PadM'[state`price`side`tgt`hqty`iqty`vqty]];
             ]];
-
 
         // TODO fix here
     ];[

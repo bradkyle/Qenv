@@ -560,14 +560,14 @@ dozc:{x+y}[doz];
                 iqty:(10#0);
                 vqty:10#(0,(1200 1000 1200 1200)) // Because depths were prev 1200 etc.
             ); 
-            (   // Expected Orders
+            (   // Current Orders
                 til[4];4#1;4#1; // `orderId`instrumentId`accountId
                 ((2#-1),(2#1)); // side
                 4#1; // otype
-                (0 200 100 400); // offset
+                (4#100 400); // offset
                 4#100; // leaves
                 4#100; // displayqty
-                (2#998),(2#1001); // price
+                (2#998),(2#1001); // price Clearly missing logic here
                 4#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock

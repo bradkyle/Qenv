@@ -132,7 +132,7 @@
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
-    inventory[`avgPrice]: .account.avgPrice[
+    inventory[`avgPrice]: .inverse.account.AvgPrice[
         inventory[`isignum];
         inventory[`execCost];
         inventory[`totalEntry]];
@@ -151,7 +151,7 @@
 .inverse.account.redFill                 :{[price;qty;account;inventory]
 
     // When the inventory is being closed it realizes 
-    rpl:RealizedPnl[
+    rpl:.inverse.account.RealizedPnl[
         qty;
         price;
         isign;
@@ -173,8 +173,8 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
 .inverse.account.crsFill                 :{[price;namt;account;inventory]
-    inventory:redFill[price;inventory[`amt];account;inventory];
-    inventory:incFill[price;namt;account;inventory];
+    inventory:.inverse.account.redFill[price;inventory[`amt];account;inventory];
+    inventory:.inverse.account.incFill[price;namt;account;inventory];
     inventory[`isignum]:neg[inventory[`isignum]];  
     :inventory                  
     };
@@ -188,18 +188,18 @@
     k:a`positionType;
     res:$[k=0;[ // TODO
             $[reduce;
-                redFill[price;qty;a;];
-                incFill[price;qty;a;];
+                .inverse.account.redFill[price;qty;a;];
+                .inverse.account.incFill[price;qty;a;];
             ];
       ];
       k=1;[
             // TODO should be neg?
             namt:abs[inventory[`amt]+neg[qty]]; // TODO fix
             $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
-                redFill[price;qty;a;iB];
+                .inverse.account.redFill[price;qty;a;iB];
               ((iB[`amt]*namt)<0)); 
-                crsFill[price;namt;a;iB];
-                incFill[price;qty;a;iB]
+                .inverse.account.crsFill[price;namt;a;iB];
+                .inverse.account.incFill[price;qty;a;iB]
             ];
       ];'INVALID_POSITION_TYPE];
 
@@ -207,7 +207,7 @@
     i[`realizedPnl]-:cost;
     i[`fillCount]+:1;
     i[`tradeVolume]+:qty;
-    i[`unrealizedPnl]:UnrealizedPnl[
+    i[`unrealizedPnl]:.inverse.account.UnrealizedPnl[
         i[`amt];
         isign;
         i[`avgPrice];
