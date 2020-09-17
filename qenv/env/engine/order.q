@@ -164,13 +164,15 @@
                 .order.test.nshft:nshft;
                 
                 // Calculate the new vis qty
-                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`leaves)]]]];
+                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
                 mxnshft:max'[nshft];
                 .order.test.mxnshft:mxnshft;
                 .order.test.nvqty:nvqty;
 
-                // Derive the new visible quantity
-                nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
+                // TODO considering visible quantity doesn't change
+
+                // Derive the new visible quantity as 
+                / nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
                 .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
                 .order.state.O2:.order.Order;
 
