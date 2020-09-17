@@ -120,6 +120,36 @@ nl:{neg l[x]}
 /
 
 .qt.Unit[
+    ".inverse.account.InitMarginReq";
+    {[c]
+        p:c[`params];
+
+        res:.inverse.account.InitMarginReq[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
+    ".inverse.account.MaintMargin";
+    {[c]
+        p:c[`params];
+
+        res:.inverse.account.MaintMargin[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
     ".inverse.account.InitMargin";
     {[c]
         p:c[`params];
