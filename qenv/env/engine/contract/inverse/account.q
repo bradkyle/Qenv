@@ -24,7 +24,7 @@
 
 // Given the current Inventory state, this function will derive the
 // resultant pnl that will be realized when a given amount is added
-// back to the balance.
+// back to the balance. // TODO check multiplier is working?
 .inverse.account.RealizedPnl            :{[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier]
     :7h$($[all[(fillQty,avgPrice,fillPrice,faceValue)>0];
         (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum))*multiplier;0]);
@@ -69,7 +69,7 @@
 /  @return (Long) The total initial margin that is required
 .inverse.account.InitMargin             :{[i;a;iv]
     imreq:.inverse.account.InitMarginReq[i;a];
-    :7h$()
+    :7h$((iv[`amt]*imreq))
     };
 
 

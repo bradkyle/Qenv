@@ -135,6 +135,20 @@ nl:{neg l[x]}
 
 
 .qt.Unit[
+    ".inverse.account.MaintMarginReq";
+    {[c]
+        p:c[`params];
+
+        res:.inverse.account.MaintMarginReq[];
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultContractHooks;
+    "Function for deriving the exec cost from the qty and the price"];
+
+.qt.Unit[
     ".inverse.account.MaintMargin";
     {[c]
         p:c[`params];
@@ -164,6 +178,8 @@ nl:{neg l[x]}
     "Function for deriving the exec cost from the qty and the price"];
 
 // TODO simplify rectify state
+
+\
 
 
 .qt.Unit[
