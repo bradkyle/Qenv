@@ -525,6 +525,53 @@ dozc:{x+y}[doz];
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        ));
+        (("differing update prices by time doesn't cross spread",
+         "(best price increases during update)");(
+           (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200) // TODO update
+            );  
+            (   // Current Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (4#100 400); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#998),(2#1001); // price Clearly missing logic here
+                4#z // time
+            ); 
+            (  // Depth Update
+                ((4#-1),(2#1));
+                ((1000 1001 1001 1000),(1000 1000));
+                ((0 0 1000 1000),(1000 0));
+                (sc[z] 0 0 1 1 0 1)
+            );   
+            (   // Expected Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:10#(0,(4#1000)); // TODO update
+                hqty:10#(10,(4#0)); // Encounters edge case here where hidden qty could be replaced
+                iqty:(10#0);
+                vqty:10#(0,(1200 1000 1200 1200)) // Because depths were prev 1200 etc.
+            ); 
+            (   // Expected Orders
+                til[4];4#1;4#1; // `orderId`instrumentId`accountId
+                ((2#-1),(2#1)); // side
+                4#1; // otype
+                (0 200 100 400); // offset
+                4#100; // leaves
+                4#100; // displayqty
+                (2#998),(2#1001); // price
+                4#z // time
+            ); 
+            (0b;0;()); // Expected AddDepthEvent Mock
+            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ))
     );
     .util.testutils.defaultEngineHooks;

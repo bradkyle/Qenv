@@ -232,13 +232,13 @@
 // Constructs matrix representation of trades that need to take place 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
-// order. // TODO implement for multiple orders
+// order. // TODO implement for multiple orderss
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;td] // TODO fix and test, change instrument to i, account to a
+.order.ProcessTrade        :{[instrument;account;td] // TODO validation, fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
     nside:neg[side];
     isagnt:count[account]>0;
