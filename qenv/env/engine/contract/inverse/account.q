@@ -69,7 +69,7 @@
 /  @return (Long) The total initial margin that is required
 .inverse.account.InitMargin             :{[i;a;iv]
     imreq:.inverse.account.InitMarginReq[i;a];
-    :7h$((iv[`amt]*imreq))
+    :7h$((iv[`amt]*imreq)) // TODO check if amt or datum?
     };
 
 
@@ -77,26 +77,6 @@
 // ---------------------------------------------------------------------------------------->
 
 // TODO make shorter
-/ ppcprice:$[isnv;ppc[ins;price];price];
-/ ppcmark:$[isnv;ppc[ins;ins[`markPrice]];ins[`markPrice]];
-
-/ // returns the price premium/loss that is charged
-/ p:.account.premium[isignum;ins[`markPrice];price]; // TODO isinverse
-/ v:$[isnv;ppcprice*dlt;price*dlt]; // TODO size scale to long
-/ l:$[isnv;ppc[ins;p]*dlt;p*dlt];
-/ show l;
-
-/ $[(isignum>0) and (p>0);[ // TODO fix
-/     acc[`openBuyQty]+:dlt; 
-/     acc[`openBuyValue]+:`long$(price*dlt); // TODO check
-/     acc[`openBuyLoss]+:`long$(p*dlt);
-/ ];
-/ [
-/     acc[`openSellQty]+:dlt; 
-/     acc[`openSellValue]+:`long$(price*dlt);
-/     acc[`openSellLoss]+:`long$(p*dlt);
-/ ]];
-
 // AdjustOrderMargin interprets whether a given margin 
 // delta principly derived from either the placement/cancellation
 // of a limit order or the application of a order fill will exceed the
@@ -113,16 +93,19 @@
     // Derive the new premium that is to 
     premium: abs[min[0,(isign*(i[`markPrice]-price))]];
 
+    // TODO add new open order qty to calculations?
+
     a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
     a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0); // TODO convert to long
     a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
-    a[`initMargin]:.inverse.account.InitMargin[];
-    a[`maintMargin]:.inverse.account.MaintMargin[];
+    a[`initMargin]:.inverse.account.InitMargin[i;a;0];
+    a[`maintMargin]:.inverse.account.MaintMargin[i;a;0];
 
-    // Raises
-    $[a[`available]<a[`initMargin];'InsufficientMargin] // TODO check
+    // Raises an error if the current available margin is less 
+    // than the required amount, or else returns the updated account
+    $[a[`available]<a[`initMargin];'InsufficientMargin;a] // TODO check
     };
 
 
