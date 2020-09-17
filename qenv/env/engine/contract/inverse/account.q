@@ -277,10 +277,10 @@
     a[`balance]:0;
 
     // TODO this is subtracted from the margin?
-
-    a[`longFundingCost`shortFundingCost]:(a`netLongPosition`netShortPosition)*fundingRate;
+    fundingCostBySide:(a`netLongPosition`netShortPosition)*fundingRate;
+    a[`longFundingCost`shortFundingCost]+:fundingCostBySide;
     a[`totalFundingCost]:sum a[`longFundingCost`shortFundingCost];
-    a[`realizedPnl]:0;
+    a[`realizedPnl]+:(fundingCostBySide*i[`markPrice]);
   
     // TODO balance - realizedPnl
 
