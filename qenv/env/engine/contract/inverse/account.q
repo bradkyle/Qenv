@@ -87,11 +87,12 @@
 /  @throws InsufficientMargin account has insufficient margin for adjustment
 .inverse.account.AdjustOrderMargin       :{[i;a;price;delta;isign]
 
-    // Derive the new premium that is to 
+    // Derive the new premium  
     premium: abs[min[0,(isign*(i[`markPrice]-price))]];
 
     // TODO add new open order qty to calculations?
 
+    // Calculate the next available 
     a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
     a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0); // TODO convert to long
