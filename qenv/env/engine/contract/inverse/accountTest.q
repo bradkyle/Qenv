@@ -122,6 +122,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.InitMarginReq[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]
     
@@ -142,6 +143,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.MaintMarginReq[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]
     
@@ -161,6 +163,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.MaintMargin[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]
     
@@ -176,6 +179,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.InitMargin[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]
     
@@ -192,6 +196,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.AdjustOrderMargin[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]
     
@@ -208,6 +213,8 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.incFill[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
+
     };
     {[p]
     
@@ -236,6 +243,8 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.redFill[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
+
     };
     {[p]
     
@@ -264,6 +273,8 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.crsFill[];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
+
     };
     {[p]
     
@@ -299,6 +310,7 @@ nl:{neg l[x]}
         mck3: .qt.M[`.inverse.account.UnrealizedPnl;{[a;b;c;d;e;f]};c];
 
         res:.inverse.account.ApplyFill . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
 
         .util.testutils.checkcMock[mck1;m[0];c];  // redFill Mock
         .util.testutils.checkMock[mck2;m[1];c];  // incFill Mock
@@ -702,6 +714,7 @@ nl:{neg l[x]}
         mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
 
         res:.inverse.account.UpdateMarkPrice . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
 
     };
     {[p]
@@ -730,6 +743,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.ApplyFunding . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
         
     };
     {[p]
@@ -762,6 +776,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.Deposit . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
         
     };
     {[p]
@@ -800,7 +815,8 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.Withdraw[];
+        res:.inverse.account.Withdraw . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
         
     };
     {[p]
@@ -840,7 +856,8 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.ApplySettlement[];
+        res:.inverse.account.ApplySettlement . p`args;
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
         
     };
     {[p]
