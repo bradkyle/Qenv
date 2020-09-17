@@ -7,6 +7,12 @@
 
 // TODO hooks system
 
+// TODO random funding events per batch
+// TODO random settlement events per batch
+// TODO random markPrice events per batch
+// TODO random priceLimit events per batch
+// TODO random 
+
 // TODO heartbeats
 
 // TODO config order size, balance randomization prob, 
