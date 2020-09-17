@@ -23,12 +23,13 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.ExecCost[];
+        res:.inverse.account.ExecCost . p`args;
+        .qt.A[res;~;p[`eRes];"execCost";c];
     };
     {[p]  :`args`eRes!p; };
     (
-        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
-        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0))
+        ("ExecCost multiple entries";((0 0 1e8);0));
+        ("ExecCost single entry";((0 0 1e8);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -40,12 +41,12 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.AvgPrice . p`args;
-        .qt.A[res;~;p[`eRes];"unrealizedPnl";c];
+        .qt.A[res;~;p[`eRes];"avgPrice";c];
     };
     {[p]  :`args`eRes!p; };
     (
-        ("AvgPrice multiple entries";((0 0 0 0 0 0);0));
-        ("AvgPrice single entry";((0 0 0 0 0 0);0))
+        ("AvgPrice multiple entries";((0 0 0 1e8);0));
+        ("AvgPrice single entry";((0 0 0 1e8);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -290,8 +291,15 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.inverse.account.redFill;{[a;b;c;d;e;f]};c];
+        mck2: .qt.M[`.inverse.account.incFill;{[a;b;c;d;e;f]};c];
+        mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
+
         res:.inverse.account.ApplyFill[];
 
+        .util.testutils.checkcMock[mck1;m[0];c];  // redFill Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // incFill Mock
+        .util.testutils.checkMock[mck3;m[2];c];  // crsFill Mock
     };
     {[p]
     

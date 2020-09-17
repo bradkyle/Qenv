@@ -70,7 +70,6 @@
     :7h$((iv[`amt]*imreq)) // TODO check if amt or datum?
     };
 
-
 // Adjust Open Limit Order Margin
 // ---------------------------------------------------------------------------------------->
 
@@ -98,6 +97,7 @@
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0); // TODO convert to long
     a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
+    // Derive margin requirements
     a[`initMargin]:.inverse.account.InitMargin[i;a;0];
     a[`maintMargin]:.inverse.account.MaintMargin[i;a;0];
 
