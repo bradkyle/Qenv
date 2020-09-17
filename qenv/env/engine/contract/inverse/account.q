@@ -113,12 +113,16 @@
     // Derive the new premium that is to 
     premium: abs[min[0,(isign*(i[`markPrice]-price))]];
 
-    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0);
-    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0);
-    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
-    a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
+    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
+    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0); // TODO convert to long
+    a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
-    $[a[`available]<a[`maintMarginReq];'InsufficientMargin] // TODO check
+    a[`initMargin]:.inverse.account.InitMargin[];
+    a[`maintMargin]:.inverse.account.MaintMargin[];
+
+    // Raises
+    $[a[`available]<a[`initMargin];'InsufficientMargin] // TODO check
     };
 
 
