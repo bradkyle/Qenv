@@ -113,6 +113,12 @@
         state[`tgt]: last'[state`nqty]; // TODO change to next? 
         .order.test.OBf:.order.OrderBook;
 
+        // Derive the hidden dlts as merely the sum of detected
+        // hidden order quantities at each level, because they 
+        // are derived from trades, they can only be increased.
+        hiddendlts: sum'[state`nhqty];
+        state[`hqty]+: hiddendlts;
+
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
                 // Deltas in visqty etc 
@@ -148,11 +154,6 @@
 
                 .order.test.notAgentQty:notAgentQty;
 
-                // Derive the hidden dlts as merely the sum of detected
-                // hidden order quantities at each level, because they 
-                // are derived from trades, they can only be increased.
-                hiddendlts: sum'[state`nhqty];
-
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
                 // the queue.
@@ -165,9 +166,7 @@
                 // Offset deltas are derived adn added to the current offset
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:   state[`leaves]+noffset;
-                nhqty:  state[`hqty] + hiddendlts;
                 
-                .order.test.nhqty:nhqty;
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
                 .order.test.state1:state;
