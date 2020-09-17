@@ -158,11 +158,13 @@ dozc:{x+y}[doz];
                 iqty:(10#1000);
                 vqty:(10#1200)
             );  
-            (   // Current Orders : `orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time
-                til[20];20#1;20#1;
-                ((10#-1),(10#1));
-                20#1;(20#100 400);
-                20#100;
+            (   // Current Orders: `orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                (20#100 400); // offset
+                20#100; // leaves
+                20#100; // displayqty
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
                 20#z
             ); 
@@ -181,14 +183,15 @@ dozc:{x+y}[doz];
                 iqty:(10#1000);
                 vqty:(10#1200)
             ); 
-            (   // Expected Orders : `orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time
-                til[20];20#1;20#1;
-                ((10#-1),(10#1));
-                20#1;
-                (20#0 200);
-                20#100;
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
-                20#z
+            (   // Expected Orders: `side`otype`offset`leaves`displayqty`price`time
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // `side
+                20#1; // otype
+                (20#0 200); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // displayqty
+                20#z // 
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
