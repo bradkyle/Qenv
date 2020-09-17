@@ -92,7 +92,7 @@
 // all offsets are increased at the price level accordingly. Visual quantity should however
 // not increase as a result ?
 // TODO what happens when order is at the back of the queue and hidden qty increases?
-
+// TODO edge case
 
 // TODO validation.
 
@@ -199,11 +199,11 @@
                 .order.test.O2:.order.Order;
                 state[`vqty]:nvqty;
                 .order.test.state3:state;
-
-                .order.OrderBook,:raze'[flip .util.PadM'[.order.test.state3`price`side`tgt`hqty`iqty`vqty]];
+                .order.test.obk:.order.OrderBook;
+                .order.OrderBook,:raze'[flip .util.PadM'[state`price`side`tgt`hqty`iqty`vqty]];
             ];[
                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
-                .order.OrderBook,:raze'[flip .util.PadM'[.order.test.state3`price`side`tgt`hqty`iqty`vqty]];
+                .order.OrderBook,:raze'[flip .util.PadM'[state`price`side`tgt`hqty`iqty`vqty]];
             ]];
 
 

@@ -244,7 +244,7 @@ dozc:{x+y}[doz];
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
         (("differing update prices by time, crosses order spread during update",
-          "(best price increases during update) finishes past order level (past final spread) hidden qty");(
+          "(best price increases during update) finishes past order level (past final spread) with hidden qty");(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -273,7 +273,7 @@ dozc:{x+y}[doz];
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
-                hqty:((10, (4#0)),(10, (4#0)));
+                hqty:((10, (4#0)),(10, (4#0))); // Encounters edge case here (crosses side spread thus removes hidden qty)
                 iqty:(10#0);
                 vqty:(10#1200)
             ); 
