@@ -230,6 +230,8 @@
 // @param markPrice (Long) The latest mark price of the instrument
 .inverse.account.UpdateMarkPrice         :{[markPrice;i;a;iB;iL;iS]
 
+    // Derive the open order loss such taht it can be subtracted from 
+    // the availbable balance.
     a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO sign
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0); // TODO sign
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
