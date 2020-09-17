@@ -233,10 +233,10 @@
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
 
-    (ib,iL,iS)[`unrealizedPnl]
+    (ib,iL,iS)[`unrealizedPnl]:.inverse.account.UnrealizedPnl[];
 
     // TODO posMargin, markValue, maintMarginReq, initMarginReq
-    a[`unrealizedPnl]:iB[`unrealizedPnl]+iL[`unrealizedPnl]+iS[`unrealizedPnl];
+    a[`unrealizedPnl]:sum[(ib,iL,iS)[`unrealizedPnl]];
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     (a;(iB;iL;iS))
