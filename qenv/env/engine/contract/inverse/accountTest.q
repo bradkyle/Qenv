@@ -81,7 +81,6 @@ nl:{neg l[x]}
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
-
 //
 
 .qt.Unit[
@@ -91,9 +90,7 @@ nl:{neg l[x]}
         res:.inverse.account.RealizedPnl . p`args;
         .qt.A[res;~;p[`eRes];"realizedPnl";c];
     };
-    {[p]
-        :`args`eRes!p;
-    };
+    {[p] :`args`eRes!p; };
     (
         ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
         ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0));
@@ -217,10 +214,17 @@ nl:{neg l[x]}
 
     };
     {[p]
-    
+        
     };
     (
-        ("hedged:long_to_longer";());
+        ("hedged:long_to_longer";(
+            ( // Args
+                (); // Instrument
+                (); // Inventory
+                (); // dlt
+            ); 
+            () // Expected Inventory
+        ));
         ("hedged:short_to_shorter";());
         ("combined:long_to_longer";());
         ("combined:short_to_shorter";());
