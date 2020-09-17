@@ -714,7 +714,7 @@ nl:{neg l[x]}
         mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
 
         res:.inverse.account.UpdateMarkPrice . p`args;
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
+        .qt.A[res;~;p[`eRes];"funding";c];
 
     };
     {[p]
@@ -743,7 +743,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.ApplyFunding . p`args;
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
+        .qt.A[res;~;p[`eRes];"funding";c];
         
     };
     {[p]
@@ -776,7 +776,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.Deposit . p`args;
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
+        .qt.A[res;~;p[`eRes];"deposit";c];
         
     };
     {[p]
@@ -816,7 +816,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.Withdraw . p`args;
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
+        .qt.A[res;~;p[`eRes];"withdraw";c];
         
     };
     {[p]
@@ -857,7 +857,7 @@ nl:{neg l[x]}
         p:c[`params];
 
         res:.inverse.account.ApplySettlement . p`args;
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
+        .qt.A[res;~;p[`eRes];"settlement";c];
         
     };
     {[p]
