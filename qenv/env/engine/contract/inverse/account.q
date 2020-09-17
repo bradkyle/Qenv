@@ -274,16 +274,14 @@
 // @param markPrice (Long) The latest mark price of the instrument // TODO return updated values?
 .inverse.account.ApplyFunding        :{[fundingRate;i;a]
 
-    a[`balance]:0;
-
     // TODO this is subtracted from the margin?
     fundingCostBySide:(a`netLongPosition`netShortPosition)*fundingRate;
     a[`longFundingCost`shortFundingCost]+:fundingCostBySide;
     a[`totalFundingCost]:sum a[`longFundingCost`shortFundingCost];
-    a[`realizedPnl]+:(fundingCostBySide*i[`markPrice]);
-  
+    a[`realizedPnl]+:(fundingCostBySide*i[`markPrice]); // TODO round off
+    
     // TODO balance - realizedPnl
-
+    // withdrawable, frozen
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
     a
