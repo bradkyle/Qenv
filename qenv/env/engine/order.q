@@ -80,14 +80,20 @@
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
 
-// Hidden order logic
+// Order Inflow
 // Orders increasing at a given depth when the price no longer exists i.e. the
 // price has been overtaken by the opposing side means that there was an inflow of
 // orders at that price (after realistically applicable) in this instance it is assumed
 // that the inflow would be post only and thus they are disregarded.
+
+// Hidden order logic
 // Because hidden orders are derived from trades that have occurred and not through explicit
-// data, it is principly added to the front of the queue during an update,  and thus
-// all offsets are increased at the price level accordingly.
+// agent actions, it is principly added to the front of the queue during an update,  and thus
+// all offsets are increased at the price level accordingly. Visual quantity should however
+// not increase as a result ?
+// TODO what happens when order is at the back of the queue and hidden qty increases?
+
+
 // TODO validation.
 
 /  @param price     (Long) The price at which the fill is occuring
