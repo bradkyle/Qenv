@@ -126,22 +126,15 @@
     // Increase the total Entry and amt
     iv[`amt`totalEntry]+:qty;
 
-    // derive execCost
-    iv[`execCost]+: .inverse.account.execCost[
-        price;
-        qty]; 
+    // derive execCost 
+    iv[`execCost]+: .inverse.account.ExecCost[price;qty]; 
 
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
-    iv[`avgPrice]: .inverse.account.AvgPrice[
-        iv[`isignum];
-        iv[`execCost];
-        iv[`totalEntry]];
+    iv[`avgPrice]: .inverse.account.AvgPrice . iv`isignum`execCost`totalEntry;
 
-    // TODO unrealizedPnl
-
-    :inventory
+    :iv
     };
 
 // Red Fill is used when the fill is to be removed from the given inventory.
@@ -165,7 +158,7 @@
 
     if[abs[iv[`amt]]=0;iv[`avgPrice`execCost]:0];
 
-    :inventory
+    :iv
     };
 
 // Crs Fill is only ever used for combined inventory i.e. `POSITIONSIDE$`BOTH.
@@ -175,10 +168,10 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
 .inverse.account.crsFill                 :{[price;namt;account;iv]
-    inventory:.inverse.account.redFill[price;iv[`amt];account;iv];
-    inventory:.inverse.account.incFill[price;namt;account;iv];
+    iv:.inverse.account.redFill[price;iv[`amt];account;iv];
+    iv:.inverse.account.incFill[price;namt;account;iv];
     iv[`isignum]:neg[iv[`isignum]];  
-    :inventory                  
+    :iv                  
     };
 
 // ApplyFill applies a given execution to an account and its respective
@@ -257,7 +250,7 @@
 / //          unrealizedPnl, posMargin, initMargin, netLongPosition, 
 / //          netShortPosition, liquidationPrice, bankruptcyPrice
 / //          
-/ // Inventory: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
+/ // iv: amt, lastValue, markValue, realizedPnl, unrealizedPnl, 
 / //            posMargin, initMargin, entryValue, totalCost, totalEntry, 
 / //            execCost, maintMarginReq, initMarginReq, (isignum if both)
 / update balance:balance-((longValue*fundingRate)-(shortValue*fundingRate)), 
