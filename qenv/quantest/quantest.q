@@ -160,8 +160,8 @@ beforeHooks:{[x;y]}; // TODO convert to lambda
 afterHooks:{[x;y]}; // TODO convert to lambda
 
 runTest         :{[test]
-    cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
     .qt.beforeHooks[""];
+    cases:select from 0!.qt.Case where state=`READY, testId=test[`testId];
     test[`beforeAll][];
     test[`start]:.z.z;
     {runCase[x[0];x[1]]} each flip[(count[cases]#enlist test;cases)]; // TODO fix messy
@@ -181,11 +181,16 @@ RunTest :{[test]
     .qt.pntTest[exec from .qt.Test where testId=test[`testId]];
     };
 
-RunTests :{[]
+.qt._RunTests :{[vbs]
     runTest each select from 0!.qt.Test where state=`READY;
     show 99#"#";show (45#" "),"TEST";show 99#"#";
-    .qt.pntTest each 0!.qt.Test;
+    .qt.pntTest each 0!$[vbs;
+        .qt.Test;
+        select from ej[`testId;.qt.Test;select xc:count i by testId from .qt.Case where not state = `SKIP] where xc>0];
     };
+
+RunTestsV:{.qt._RunTests[1b]};
+RunTests:{.qt._RunTests[0b]};
 
 RunNsTests    :{[nsList;filter;only]
     dline["RUNNING TESTS"];
@@ -256,12 +261,12 @@ SkpBef    :{[case]
 
 SkpBes     :{[case]
     c:$[type[case]~98h;case[`caseId];case];
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not caseId in x;y}[c];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not[caseId in x];y}[c];
     };
 
 SkpBesTest     :{[test]
     c:$[(type[test]~98h)or(type[test]~99h);test[`testId];test];
-    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not testId in x;y}[c];
+    .qt.beforeHooks:{update state:`.qt.TESTSTATE$`SKIP from `.qt.Case where not[testId in x];y}[c];
     };
 
 Warn        :{[case]

@@ -496,7 +496,7 @@ dozc:{x+y}[doz];
                 (4#100 400); // offset
                 4#100; // leaves
                 4#100; // displayqty
-                (2#1001),(2#998); // price
+                (2#998),(2#1001); // price Clearly missing logic here
                 4#z // time
             ); 
             (  // Depth Update
@@ -517,10 +517,10 @@ dozc:{x+y}[doz];
                 til[4];4#1;4#1; // `orderId`instrumentId`accountId
                 ((2#-1),(2#1)); // side
                 4#1; // otype
-                (4#(0 200)); // offset
+                (0 200 100 400); // offset
                 4#100; // leaves
                 4#100; // displayqty
-                (2#1001),(2#998); // price
+                (2#998),(2#1001); // price
                 4#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
@@ -531,12 +531,6 @@ dozc:{x+y}[doz];
     "Given a depth update which consists of a table of time,side,price",
     "size update the orderbook and the individual order offsets/iceberg",
     "orders where necessary"];
-
-
-.qt.SkpAft[1];
-/ .qt.SkpBes[46];
-.qt.RunTests[];
-/
 
 // TODO no liquidity
 // TODO add order update events!!!!
@@ -1470,6 +1464,7 @@ dozc:{x+y}[doz];
     "orders and call Add Events/Fills etc. where necessary"];
 
 
+
 // TOOD place limit order, stop order, market order
 // TODO Cancel limit order, stop market order, stop limit order
 // TODO place limit participate don't initiate (post only)
@@ -2163,9 +2158,6 @@ dozc:{x+y}[doz];
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
 
-.qt.SkpBes[(60 + til[28])];
-
-
 // TODO mock place order event
 // TODO mock order update event
 // 
@@ -2288,4 +2280,6 @@ dozc:{x+y}[doz];
     "Global function for checking stop orders"];
 
  
+.qt.SkpBesTest[1];
+/ .qt.SkpBes[46];
 .qt.RunTests[];

@@ -322,7 +322,7 @@
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
         niqty:          sum'[nleaves-ndisplayqty];
-        nqty:           state[`vqty]-((ndisplayqty-state[`displayqty])+(rp));
+        nqty:           state[`vqty]-((ndisplayqty-state[`displayqty])+(state`rp));
         nvqty:          nqty+sum'[ndisplayqty];
         nshft:          nleaves+noffset;
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
@@ -361,7 +361,7 @@
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
   
-        .pipe.egress.AddTradeEvent[[];time]; // TODO derive trades
+        .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
@@ -372,7 +372,11 @@
 
         delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
 
-    ];if[count[state]>0;[.order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)]]]; // TODO fix
+    ];if[count[state]>0;[
+    
+        .order.OrderBook,:flip(state`price`side`tgt`hqty`iqty`vqty)
+        
+    ]]]; // TODO fix
     
     
     // Delete all out of bounds depths, depths that are empty 
@@ -380,7 +384,7 @@
     / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
     / .order.test.OB:.order.OrderBook;
     // Return the orderbook update to the egress pipe
-    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];time]; // TODO remove for partial book updates
+    .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];fillTime]; // TODO remove for partial book updates
 
     // TODO update last price
     };
