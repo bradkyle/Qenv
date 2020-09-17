@@ -714,8 +714,12 @@ nl:{neg l[x]}
         ("Mark price increases hedged short";());
         ("Mark price increases hedged 75 long/ 25 short";());
         ("Mark price increases hedged 25 short/ 75 short";());
-        ("Mark price decreases ";());
-        ("Positive Funding occurs combined long position";())
+        ("Mark price decreases combined long";());
+        ("Mark price decreases combined short";());
+        ("Mark price decreases hedged long";());
+        ("Mark price decreases hedged short";());
+        ("Mark price decreases hedged 75 long/ 25 short";());
+        ("Mark price decreases hedged 25 short/ 75 short";())
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
