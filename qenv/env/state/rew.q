@@ -12,7 +12,6 @@
 
 .state.rewards.GetRewards  :{[aids; windowsize; step] // TODO configurable window size
     
-    
     r:select 
         returns:0^1_deltas[balance], 
         rpnldlt:0^1_deltas[realizedPnl] 

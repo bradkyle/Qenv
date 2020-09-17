@@ -126,10 +126,10 @@ nl:{neg l[x]}
     
     };
     (
-        ("Minimum tier position size maint margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier position size maint margin req";((0 0 0 0 0 0);0));
-        ("Minimum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
+        ("Minimum tier position size init margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier position size init margin req";((0 0 0 0 0 0);0));
+        ("Minimum tier effective leverage init margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier effective leverage init margin req";((0 0 0 0 0 0);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -146,8 +146,10 @@ nl:{neg l[x]}
     
     };
     (
-        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
-        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0))
+        ("Minimum tier position size maint margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier position size maint margin req";((0 0 0 0 0 0);0));
+        ("Minimum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier effective leverage maint margin req";((0 0 0 0 0 0);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
