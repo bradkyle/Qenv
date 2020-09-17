@@ -25,10 +25,11 @@ nl:{neg l[x]}
 
         res:.inverse.account.ExecCost[];
     };
-    {[p]
-    
-    };
-    ();
+    {[p]  :`args`eRes!p; };
+    (
+        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
+        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0))
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -38,13 +39,14 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.AvgPrice[];
+        res:.inverse.account.AvgPrice . p`args;
+        .qt.A[res;~;p[`eRes];"unrealizedPnl";c];
     };
-    {[p]
-    
-    
-    };
-    ();
+    {[p]  :`args`eRes!p; };
+    (
+        ("AvgPrice multiple entries";((0 0 0 0 0 0);0));
+        ("AvgPrice single entry";((0 0 0 0 0 0);0))
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -56,9 +58,7 @@ nl:{neg l[x]}
         res:.inverse.account.UnrealizedPnl . p`args;
         .qt.A[res;~;p[`eRes];"unrealizedPnl";c];
     };
-    {[p]
-        :`args`eRes!p;
-    };
+    {[p]  :`args`eRes!p; };
     (
         ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
         ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0));
