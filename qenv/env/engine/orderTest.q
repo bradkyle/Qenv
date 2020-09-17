@@ -197,7 +197,7 @@ dozc:{x+y}[doz];
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
         (("many levels with many orders at same offset interval, price is removed",
-          "across all levels partially (900) not hidden or iceberg");(
+          "across all levels partially (900) not hidden or iceberg, no hidden update");(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -226,7 +226,7 @@ dozc:{x+y}[doz];
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
-                hqty:((20, (4#0)),(20, (4#0)));
+                hqty:((10, (4#0)),(10, (4#0)));
                 iqty:(10#0);
                 vqty:(10#1200)
             ); 
@@ -234,7 +234,7 @@ dozc:{x+y}[doz];
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
                 ((10#-1),(10#1)); // `side
                 20#1; // otype
-                (20#0 200); // offset
+                (20#75 350); // offset
                 20#100; // leaves
                 20#100; // displayqty
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price

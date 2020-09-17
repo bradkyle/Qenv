@@ -97,7 +97,8 @@
 /  @return (Inventory) The new updated inventory
 .order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
     // TODO validation
-    
+    // TODO offsets cannot be less than hidden qty
+
     odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
         ob:0^(0!(?[`.order.OrderBook;();0b;()]));
@@ -108,7 +109,7 @@
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
         state:0!uj[lj[`side`price xgroup nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
 
-        dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty;state`size)]]]]);
+        dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty`nqty)]]]]);
         .order.test.state:state;
         state[`tgt]: last'[state`nqty]; // TODO change to next? 
         .order.test.OBf:.order.OrderBook;
@@ -119,7 +120,7 @@
         if[count[state`nhqty]>0;state[`hqty]+:sum'[state`nhqty]];
 
         dneg:sum'[{x where[x<0]}'[dlts]];
-        if[count[dneg]>0;[
+        $[(count[dneg]>0);[
                 // Deltas in visqty etc 
                 msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
                 // Pad state into a matrix
@@ -137,7 +138,10 @@
 
                 // The Minimum offset should be the minimum shft
                 // of the preceeding orders in the queue i.e. so
-                // they don't overlap
+                // they don't overlap and provided there exists
+                // a hidden order qty it should represent this
+                // offset (hidden order qty derived from data)
+                // is always put at the front of the queue.
                 mnoffset: (0,'-1_'(shft));
 
                 // Derive the non agent qtys that
@@ -190,12 +194,9 @@
                 .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
             ];[
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
-
-                .order.test.state4:state;
                 .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
             ]];
 
-            // TODO update hqty!
 
         // TODO fix here
     ];[
