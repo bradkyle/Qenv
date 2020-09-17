@@ -88,6 +88,7 @@
 // Because hidden orders are derived from trades that have occurred and not through explicit
 // data, it is principly added to the front of the queue during an update,  and thus
 // all offsets are increased at the price level accordingly.
+// TODO validation.
 
 /  @param price     (Long) The price at which the fill is occuring
 /  @param qty       (Long) The quantity that is being filled.
@@ -133,8 +134,10 @@
 
                 // Derive the non agent qtys that
                 // make up the orderbook // TODO add hqty, iqty to this.
+                // HQTY is excluded from this because the hqty is derived
+                // from historic data and as such the nascent cancellations
+                // are functionally ignored.
                 notAgentQty: flip .util.PadM[raze'[(
-                        0^state[`hqty]; // hidden qty
                         0^state[`offset][;0]; // Use the first offset as the first non agent qty
                         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                         .util.Clip[state[`qty]-mxshft] // TODO change?
@@ -153,7 +156,8 @@
                 .order.test.dneg:dneg;
                 .order.test.state:state;
 
-                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + 1_'offsetdlts];
+                // Offset deltas are derived adn added to the current offset
+                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
                 nshft:   state[`leaves]+noffset;
 
                 .order.test.noffset:noffset;
