@@ -3,6 +3,7 @@
 // TODO random noise added to liquidation.
 // TODO move validation into engine
 // TODO add slight noise to trades and orderbook updates
+// TODO convert/multiply in engine
 .engine.WaterMark:0n;
 
 // TODO dropped response etc.
@@ -63,6 +64,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepthUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
+    // Convert/multiply 
     
     lt:exec last time from events;
     events:flip events;

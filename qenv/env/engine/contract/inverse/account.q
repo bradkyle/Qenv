@@ -11,7 +11,7 @@
 .inverse.account.AvgPrice               :{[isignum;execCost;totalEntry;multiplier]
     :$[all[(totalEntry,execCost)>0];[
         p:execCost%totalEntry;
-        $[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier
+        $[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier?
         ];0];
     };
 
@@ -108,16 +108,17 @@
 /  @param isign (Long) Either 1: Long, -1:Short 
 /  @return (Account) The input as a symbol
 /  @throws InsufficientMargin account has insufficient margin for adjustment
-.inverse.account.AdjustOrderMargin       :{[price;delta;markPrice;isign]
+.inverse.account.AdjustOrderMargin       :{[i;a;price;delta;isign]
 
-    premium: abs[min[0,(isign*(markPrice-price))]];
+    // Derive the new premium that is to 
+    premium: abs[min[0,(isign*(i[`markPrice]-price))]];
 
-    account[`openBuyLoss]:(min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]] | 0);
-    account[`openSellLoss]:(min[0,(markPrice*account[`openSellQty])-account[`openSellValue]] |0);
-    account[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
-    account[`available]:((account[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0);
+    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0);
+    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+    a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
-    $[account[`available]<account[`maintMarginReq];'InsufficientMargin] // TODO check
+    $[a[`available]<a[`maintMarginReq];'InsufficientMargin] // TODO check
     };
 
 
@@ -133,23 +134,23 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.inverse.account.incFill                 :{[price;qty;account;inventory]
+.inverse.account.incFill                 :{[price;qty;account;iv]
     
     // Increase the total Entry and amt
-    inventory[`amt`totalEntry]+:qty;
+    iv[`amt`totalEntry]+:qty;
 
     // derive execCost
-    inventory[`execCost]+: .inverse.account.execCost[
+    iv[`execCost]+: .inverse.account.execCost[
         price;
         qty]; 
 
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
-    inventory[`avgPrice]: .inverse.account.AvgPrice[
-        inventory[`isignum];
-        inventory[`execCost];
-        inventory[`totalEntry]];
+    iv[`avgPrice]: .inverse.account.AvgPrice[
+        iv[`isignum];
+        iv[`execCost];
+        iv[`totalEntry]];
 
     // TODO unrealizedPnl
 
@@ -162,20 +163,20 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-.inverse.account.redFill                 :{[price;qty;account;inventory]
+.inverse.account.redFill                 :{[price;qty;account;iv]
 
     // When the inventory is being closed it realizes 
     rpl:.inverse.account.RealizedPnl[
         qty;
         price;
         isign;
-        inventory[`avgPrice];
+        iv[`avgPrice];
         faceValue];
 
-    inventory[`amt]-:qty;
-    inventory[`realizedPnl]+:rpl;
+    iv[`amt]-:qty;
+    iv[`realizedPnl]+:rpl;
 
-    if[abs[inventory[`amt]]=0;inventory[`avgPrice`execCost]:0];
+    if[abs[iv[`amt]]=0;iv[`avgPrice`execCost]:0];
 
     :inventory
     };
@@ -186,10 +187,10 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-.inverse.account.crsFill                 :{[price;namt;account;inventory]
-    inventory:.inverse.account.redFill[price;inventory[`amt];account;inventory];
-    inventory:.inverse.account.incFill[price;namt;account;inventory];
-    inventory[`isignum]:neg[inventory[`isignum]];  
+.inverse.account.crsFill                 :{[price;namt;account;iv]
+    inventory:.inverse.account.redFill[price;iv[`amt];account;iv];
+    inventory:.inverse.account.incFill[price;namt;account;iv];
+    iv[`isignum]:neg[iv[`isignum]];  
     :inventory                  
     };
 
@@ -207,7 +208,7 @@
       ];
       k=1;[
             // TODO should be neg?
-            namt:abs[inventory[`amt]+neg[qty]]; // TODO fix
+            namt:abs[iv[`amt]+neg[qty]]; // TODO fix
             $[(reduce or (abs[i[`amt]]>abs[namt]); // TODO make sure sign is correct
                 .inverse.account.redFill[price;qty;a;iB];
               ((iB[`amt]*namt)<0)); 
@@ -326,8 +327,8 @@
     a[`depositAmount]+:deposited;
     a[`depositCount]+:1;
     a[`withdrawable]+:deposited;
-    / account[`available]:.account.Available[acc]; // TODO
-    / account[`initMarginReq`maintMarginReq]
+    / a[`available]:.account.Available[acc]; // TODO
+    / a[`initMarginReq`maintMarginReq]
 
 
     // TODO add update event
@@ -359,7 +360,7 @@
         a[`withdrawAmount]+:withdrawn;
         a[`withdrawCount]+:1;
         a[`withdrawable]-:withdrawn;
-        / account[`available]:.account.Available[acc]; // TODO
+        / a[`available]:.account.Available[acc]; // TODO
 
         // TODO update liquidation price 
         
