@@ -17,19 +17,17 @@
 
 // Given the current Inventory state, this function will derive the
 // unrealized pnl that the inventory has incurred.
-.inverse.account.UnrealizedPnl          :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
+.inverse.account.UnrealizedPnl          :{[amt;isignum;avgPrice;markPrice;faceValue;multiplier] // todo return multiplier val
     :7h$($[all[(amt,avgPrice,markPrice,faceValue)>0];
-        (((faceValue%avgPrice)-(faceValue%markPrice))*(amt*isignum)); // TODO change 1e8 to multiplier and switch mark price and avgPrice
-        0]);
+        (((faceValue%avgPrice)-(faceValue%markPrice))*(amt*isignum));0]);
     };
 
 // Given the current Inventory state, this function will derive the
 // resultant pnl that will be realized when a given amount is added
 // back to the balance.
-.inverse.account.RealizedPnl            :{[fillQty;fillPrice;isignum;avgPrice;faceValue]
-    :$[all[(fillQty,avgPrice,fillPrice,faceValue)>0];
-        (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum)) // TODO change 1e8 to multiplier
-        ;0];
+.inverse.account.RealizedPnl            :{[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier]
+    :7h$($[all[(fillQty,avgPrice,fillPrice,faceValue)>0];
+        (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum))*multiplier;0]);
     };
 
 // Derive the maintenence margin i.e. the amount of margin required to

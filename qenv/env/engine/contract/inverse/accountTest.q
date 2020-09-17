@@ -57,16 +57,16 @@
         :`args`eRes!p;
     };
     (
-        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0);0));
-        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0);0));
-        ("Zero args:Okex BTCUSDT inverse analog, faceValue 100";((0 0 0 0 0);0)); 
-        ("0.50 UPL short:Binance BTCUSDT analog, faceValue 1";((100 -1 100 50 1);0));
-        ("0.50 UPL short:Bitmex XBTUSD inverse analog, faceValue 1";((100 -1 100 50 1);0));
-        ("0.50 UPL short:Okex BTCUSDT inverse analog, faceValue 100";((100 -1 100 50 100);0)); 
-        ("0.50 UPL long:Binance BTCUSDT analog, faceValue 1";((100 1 100 200 1);0));
-        ("0.50 UPL long:Bitmex XBTUSD inverse analog, faceValue 1";((100 1 100 200 1);0));
-        ("0.50 UPL long:Okex BTCUSDT inverse analog, faceValue 100";((100 1 100 200 100);50)); 
-        ("Check Null amt";((0n 0 0 0 0);0))
+        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
+        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0));
+        ("Zero args:Okex BTCUSDT inverse analog, faceValue 100";((0 0 0 0 0 0);0)); 
+        ("0.50 UPL short:Binance BTCUSDT analog, faceValue 1";((200 -1 100 100 1 1e8);0));
+        ("0.50 UPL short:Bitmex XBTUSD inverse analog, faceValue 1";((200 -1 100 100 1 1e8);0));
+        ("0.50 UPL short:Okex BTCUSDT inverse analog, faceValue 100";((200 -1 100 100 100 1e8);0)); 
+        ("0.50 UPL long:Binance BTCUSDT analog, faceValue 1";((100 1 100 200 1 1e8);0));
+        ("0.50 UPL long:Bitmex XBTUSD inverse analog, faceValue 1";((100 1 100 200 1 1e8);5e8));
+        ("0.50 UPL long:Okex BTCUSDT inverse analog, faceValue 100";((100 1 100 200 100 1e8);50e9)); 
+        ("Check Null amt";((0n 0 0 0 0 0);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
