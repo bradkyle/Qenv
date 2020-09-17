@@ -412,7 +412,7 @@ dozc:{x+y}[doz];
     "orders where necessary"];
 
 
-/ .qt.SkpBes[(46,47,48)];
+.qt.SkpBes[16];
 / .qt.SkpBes[46];
 .qt.RunTests[];
 /

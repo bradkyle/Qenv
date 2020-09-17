@@ -112,7 +112,6 @@
         .order.test.state:state;
         state[`tgt]: last'[state`nqty]; // TODO change to next? 
         .order.test.OBf:.order.OrderBook;
-        .order.test.nqty:nqty;
 
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
@@ -184,12 +183,13 @@
                 // Derive the new visible quantity as 
                 / nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
                 .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
-                .order.state.O2:.order.Order;
+                .order.test.O2:.order.Order;
+                .order.test.state3:state;
 
-                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`bside;nvqty;nvqty;nvqty;nvqty))];
+                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;nvqty;nvqty;nvqty;nvqty))];
             ];[
-                state[`bside]:first'[distinct'[state[`side]]];
-                .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]]; 
+                .order.test.state4:state;
+                .order.OrderBook,:.util.PadM[raze'[flip[0^(state`price`side`tgt`hqty`iqty`vqty)]]]; 
             ]];
 
             // TODO update hqty!
