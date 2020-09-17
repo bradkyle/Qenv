@@ -181,7 +181,7 @@
 .inverse.account.ApplyFill               :{[i;a;iB;iL;iS;fill]
 
     k:a`positionType;
-    res:$[k=0;[ // TODO
+    iv:$[k=0;[ // TODO
             $[reduce;
                 .inverse.account.redFill[price;qty;a;];
                 .inverse.account.incFill[price;qty;a;]];
@@ -233,9 +233,7 @@
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
 
-    iB[`unrealizedPnl]:0;
-    iL[`unrealizedPnl]:0;
-    iS[`unrealizedPnl]:0;
+    (ib,iL,iS)[`unrealizedPnl]
 
     // TODO posMargin, markValue, maintMarginReq, initMarginReq
     a[`unrealizedPnl]:iB[`unrealizedPnl]+iL[`unrealizedPnl]+iS[`unrealizedPnl];
