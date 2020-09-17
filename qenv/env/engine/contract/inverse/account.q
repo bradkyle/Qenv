@@ -33,14 +33,18 @@
 
 // Derive the coefficient of maintenence margin that is required for
 // a given account given its 
-.inverse.account.MaintMarginReq         :{[]
+/  @param i  (Instrument) The current instrument
+/  @param a  (Account) The account
+.inverse.account.MaintMarginReq          :{[i;a]
     :7h$()
     };
 
 // Derives the initial margin that is reserved for a given inventory 
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
-.inverse.account.InitMarginReq          :{[]
+/  @param i  (Instrument) The current instrument
+/  @param a  (Account) The account
+.inverse.account.InitMarginReq           :{[i;a]
     :7h$()
     };
 
@@ -57,7 +61,7 @@
 // Derives the initial margin that is reserved for a given inventory 
 // which should not be confused with posMargin which stipulates the
 // inventory/position size divided by the selected margin.
-/  @param i  (Instrument) The current instrument
+/  @param i  (Instrument) The current instrumentc
 /  @param iv (Inventory) The given inventory
 .inverse.account.InitMargin             :{[i;a;iv]
     imreq:.inverse.account.InitMarginReq[i;a];
