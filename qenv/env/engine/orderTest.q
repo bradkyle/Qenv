@@ -103,8 +103,8 @@ dozc:{x+y}[doz];
             .util.testutils.makeOrders[ordCols[p[4]];flip p[4]]);
     };
     (
-       ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
-           (   // Expected Depth
+       ("differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
+           (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
@@ -150,7 +150,7 @@ dozc:{x+y}[doz];
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ));
         ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
-           (   // Expected Depth
+           (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
@@ -158,15 +158,15 @@ dozc:{x+y}[doz];
                 iqty:(10#1000);
                 vqty:(10#1200)
             );  
-            (   // Current Orders: `orderId`instrumentId`accountId`side`otype`offset`leaves`displayqty`price`time
+            (   // Current Orders
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
                 ((10#-1),(10#1)); // side
                 20#1; // otype
                 (20#100 400); // offset
                 20#100; // leaves
                 20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
-                20#z
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
             ); 
             (   // Depth Update
                 ((20#1),(20#-1));
@@ -183,15 +183,15 @@ dozc:{x+y}[doz];
                 iqty:(10#1000);
                 vqty:(10#1200)
             ); 
-            (   // Expected Orders: `side`otype`offset`leaves`displayqty`price`time
+            (   // Expected Orders
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
                 ((10#-1),(10#1)); // `side
                 20#1; // otype
                 (20#0 200); // offset
                 20#100; // leaves
                 20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // displayqty
-                20#z // 
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
