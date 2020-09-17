@@ -699,6 +699,8 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
+        mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
+
         res:.inverse.account.UpdateMarkPrice[];
 
     };
@@ -706,7 +708,10 @@ nl:{neg l[x]}
     
     };
     (
-        
+        ("Negative Funding occurs combined short position";());
+        ("Positive Funding occurs combined short position";());
+        ("Negative Funding occurs combined long position";());
+        ("Positive Funding occurs combined long position";())
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
@@ -819,3 +824,23 @@ nl:{neg l[x]}
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
+
+
+
+.qt.Unit[
+    ".inverse.account.ApplySettlement";
+    {[c]
+        p:c[`params];
+
+        res:.inverse.account.ApplySettlement[];
+        
+    };
+    {[p]
+    
+    };
+    (
+        ("withdraw sufficient balance without positions";());
+        ("withdraw sufficient balance with combined short position";())
+    );
+    .util.testutils.defaultContractHooks;
+    "Moves pnl to balance once a day"];
