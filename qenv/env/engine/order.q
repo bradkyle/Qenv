@@ -145,10 +145,10 @@
 
                 .order.test.notAgentQty:notAgentQty;
 
-                // Derive the deltas in the agent order offsets as if there
-                // were a uniform distribution of cancellations throughout
-                // the queue.
-                hiddendlts: 0;
+                // Derive the hidden dlts as merely the sum of detected
+                // hidden order quantities at each level, because they 
+                // are derived from trades, they can only be increased.
+                hiddendlts; sum'[state`nhqty];
 
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
