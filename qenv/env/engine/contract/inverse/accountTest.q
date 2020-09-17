@@ -1,4 +1,18 @@
 
+
+\cd ../../../../quantest/
+\l quantest.q 
+\cd ../env/engine/
+
+\l instrument.q
+\l account.q
+
+\cd ../util
+\l table.q
+\l testutils.q 
+\l cond.q
+\cd ../engine/contract/inverse/
+
 \l account.q
 
 .qt.Unit[
@@ -36,21 +50,30 @@
     ".inverse.account.UnrealizedPnl";
     {[c]
         p:c[`params];
-
-
-        res:.inverse.account.UnrealizedPnl[];
+        res:.inverse.account.UnrealizedPnl . p`args;
+        .qt.A[res;~;p[`eRes];"unrealizedPnl";c];
     };
     {[p]
-    
+        :`args`eRes!p;
     };
     (
-        ();
-        ();
-        ()
+        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0);0));
+        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0);0));
+        ("Zero args:Okex BTCUSDT inverse analog, faceValue 100";((0 0 0 0 0);0)); 
+        ("0.50 UPL short:Binance BTCUSDT analog, faceValue 1";((100 -1 100 50 1);0));
+        ("0.50 UPL short:Bitmex XBTUSD inverse analog, faceValue 1";((100 -1 100 50 1);0));
+        ("0.50 UPL short:Okex BTCUSDT inverse analog, faceValue 100";((100 -1 100 50 100);0)); 
+        ("0.50 UPL long:Binance BTCUSDT analog, faceValue 1";((100 1 100 200 1);0));
+        ("0.50 UPL long:Bitmex XBTUSD inverse analog, faceValue 1";((100 1 100 200 1);0));
+        ("0.50 UPL long:Okex BTCUSDT inverse analog, faceValue 100";((100 1 100 200 100);50)); 
+        ("Check Null amt";((0n 0 0 0 0);0))
     );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
+.qt.RunTests[];
+
+/
 
 .qt.Unit[
     ".inverse.account.RealizedPnl";

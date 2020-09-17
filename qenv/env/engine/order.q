@@ -1,6 +1,7 @@
 
 .order.orderCount:0;
 
+// TODO better / faster matrix operations
 // TODO randomize placement of hidden orders.
 // TODO change price type to int, longs etc.
 // TODO allow for data derived i.e. exchange market orders. 

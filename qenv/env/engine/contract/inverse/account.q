@@ -18,9 +18,9 @@
 // Given the current Inventory state, this function will derive the
 // unrealized pnl that the inventory has incurred.
 .inverse.account.UnrealizedPnl          :{[amt;isignum;avgPrice;markPrice;faceValue] // todo return multiplier val
-    :$[all[(amt,avgPrice,markPrice,faceValue)>0];
-        (((faceValue%markPrice)-(faceValue%avgPrice))*(amt*isignum)) // TODO change 1e8 to multiplier and switch mark price and avgPrice
-        ;0];
+    :7h$($[all[(amt,avgPrice,markPrice,faceValue)>0];
+        (((faceValue%avgPrice)-(faceValue%markPrice))*(amt*isignum)); // TODO change 1e8 to multiplier and switch mark price and avgPrice
+        0]);
     };
 
 // Given the current Inventory state, this function will derive the
@@ -189,8 +189,7 @@
     res:$[k=0;[ // TODO
             $[reduce;
                 .inverse.account.redFill[price;qty;a;];
-                .inverse.account.incFill[price;qty;a;];
-            ];
+                .inverse.account.incFill[price;qty;a;]];
       ];
       k=1;[
             // TODO should be neg?
@@ -199,8 +198,7 @@
                 .inverse.account.redFill[price;qty;a;iB];
               ((iB[`amt]*namt)<0)); 
                 .inverse.account.crsFill[price;namt;a;iB];
-                .inverse.account.incFill[price;qty;a;iB]
-            ];
+                .inverse.account.incFill[price;qty;a;iB]];
       ];'INVALID_POSITION_TYPE];
 
     // Common logic // TODO make aplicable to active inventory
