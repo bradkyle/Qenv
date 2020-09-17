@@ -550,6 +550,7 @@ dozc:{x+y}[doz];
 // TODO iceberg/hidden order logic
 // TODO hidden orders from agent, hidden orders from data.
 // TODO drifts out of book bounds
+// TODO no previous depth however previous orders.
 .qt.Unit[
     ".order.ProcessTrade";
     {[c]
@@ -580,7 +581,7 @@ dozc:{x+y}[doz];
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils._checkOrders[
-            (`orderId`side`otype`offset`leaves`displayqty`price`reduce`time);
+            (`orderId`side`otype`offset`leaves`displayqty`price`reduce`status`time);
             p[`eOrd];c];
 
     }; // TOOD derive from // TODO derive orderbook, orders
@@ -607,8 +608,8 @@ dozc:{x+y}[doz];
                  side:(10#-1);
                  qty:10#1000;
                  hqty:((10 20),(8#10));
-                 iqty:((180 160),(8#0));
-                 vqty:((1020 1040),(8#1000))
+                 iqty:((180 160),(8#0)); // TODO fix
+                 vqty:((1010 1020),(8#1000)) // TODO fix
             ); 
             (   // Current Orders  
                 til[4];4#1;4#1;4#-1;4#1; // 
@@ -629,7 +630,7 @@ dozc:{x+y}[doz];
             );  
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
                 til[4];4#1;4#1;4#-1;4#1;
-                ((3#0),160); // offset
+                ((3#0),150); // offset
                 ((3#0),100); // leaves
                 ((3#0),20); // displayqty
                 4#1000 1001; // price
@@ -664,8 +665,8 @@ dozc:{x+y}[doz];
                  side:(10#1);
                  qty:10#1000;
                  hqty:((10 20),(8#10));
-                 iqty:((180 160),(8#0));
-                 vqty:((1020 1040),(8#1000))
+                 iqty:((180 160),(8#0)); // TODO fix
+                 vqty:((1010 1020),(8#1000)) // TODO fix
             ); 
             (   // Current Orders  
                 til[4];4#1;4#1;4#1;4#1; // 
@@ -675,22 +676,22 @@ dozc:{x+y}[doz];
                 4#1000 999; // price
                 4#z // time
             ); 
-            (1;200;1b;z);  // Fill Execution Buy
+            (-1;200;1b;z);  // Fill Execution Buy
             ( // Current Depth  
                  [price:1000-til 10] 
                  side:(10#1);
-                 qty:(800,9#1000);
-                 hqty:((10 20),(8#10));
-                 iqty:((180 160),(8#0));
-                 vqty:(1000 1200, 8#1000)
+                 qty:(810,9#1000);
+                 hqty:((0 20),(8#10));
+                 iqty:((170 160),(8#0));
+                 vqty:(840 1020, 8#1000)
             ); 
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
-                til[4];4#1;4#1;4#-1;4#1;
-                ((3#0),160); // offset
-                ((3#0),100); // leaves
-                ((3#0),20); // displayqty
-                4#1000 1001; // price
-                (3#2),0; // status
+                til[4];4#1;4#1;4#1;4#1;
+                (200 400 400 600); // offset
+                (4#100); // leaves
+                (10 10 20 20); // displayqty
+                4#1000 999; // price
+                4#0; // status
                 4#z // time
             ); 
             (1b;1;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty

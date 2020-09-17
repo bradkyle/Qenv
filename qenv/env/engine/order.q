@@ -342,6 +342,7 @@
         fullfilled: `boolean$(raze[(state[`offset]<=state[`rp])and(nshft<=state[`rp])]); // todo mask
 
         .order.test.ndisplayqty:ndisplayqty;
+        .order.test.displaydlt:displaydlt;
         .order.test.niqty:niqty;
         .order.test.nleaves:nleaves;
         .order.test.noffset:noffset;
@@ -349,6 +350,9 @@
         .order.test.nqty:nqty;
         .order.test.msk:msk;
         .order.test.state1:state;
+        .order.test.partfilled:partfilled;
+        .order.test.fullfilled:fullfilled; 
+
         // TODO update with displayqty // TODO make simpler
         .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
 
