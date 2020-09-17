@@ -30,7 +30,6 @@
         (((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum))*multiplier;0]);
     };
 
-
 // Derive the coefficient of maintenence margin that is required for
 // a given account given its 
 /  @param i  (Instrument) The current instrument
@@ -49,7 +48,6 @@
 .inverse.account.InitMarginReq          :{[i;a]
     :(![i`riskTiers;enlist(>;`mxamt;amt); (); `imr])+(i[`riskBuffer] | 0);
     };
-
 
 // Derive the maintenence margin i.e. the amount of margin required to
 // keep the specified inventory open. 
