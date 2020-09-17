@@ -109,9 +109,6 @@
         .order.test.state:state;
         state[`tgt]: last'[state`size]; // TODO change to next? 
         nqty:last'[nxt`qty];
-        nhqty:sum'[nxt`hqty];
-        .order.test.nhqty:nhqty;
-        .order.test.nqty:nqty;
         .order.test.OBf:.order.OrderBook;
 
         dneg:sum'[{x where[x<0]}'[dlts]];
@@ -148,7 +145,7 @@
                 // Derive the hidden dlts as merely the sum of detected
                 // hidden order quantities at each level, because they 
                 // are derived from trades, they can only be increased.
-                hiddendlts; sum'[state`nhqty];
+                hiddendlts: sum'[state`nhqty];
 
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
