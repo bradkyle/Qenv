@@ -1046,7 +1046,7 @@ dozc:{x+y}[doz];
         /     (0b;0;()); // Expected AddDepthEvent Mock
         /     () // Expected Events
         / ));
-        / ("BUY: orderbook has agent orders, trade fills other agent order, trade execution > agent order offset, fill is agent (reduce only)";(
+        / ("";(
         /     ((10#-1);1000+til 10;10#1000;10#0;10#0;((1200 1200),(8#1000))); // Current Depth
         /     (til[4];4#1;4#1;4#-1;4#1;((2#100),(2#400));4#100;4#100;4#1000 1001;4#z); // Current Orders
         /     (1;1450;1b;z);  // Fill Execution
@@ -1074,9 +1074,9 @@ dozc:{x+y}[doz];
         /     (1b;1;()); // Expected AddDepthEvent Mock
         /     () // Expected Events
         / ));
-        (("BUY: orderbook has iceberg agent orders and hidden orders, trade fills other agent order,",
-         "trade execution > agent order offset, fill is agent (reduce only)");(
-             ( // Current Depth
+        (("BUY: orderbook has agent orders, trade fills other agent order, ",
+        "trade execution > agent order offset, fill is agent (reduce only)");(
+             ( // Current Depth  
                  [price:1000+til 10] 
                  side:(10#-1);
                  qty:10#1000;
@@ -1084,38 +1084,38 @@ dozc:{x+y}[doz];
                  iqty:((180 160),(8#0));
                  vqty:((1020 1040),(8#1000))
             ); 
-            (   // Current Orders
-                til[4];4#1;4#1;4#-1;4#1;
-                ((2#100),(2#400));
-                4#100;
-                ((2#10),(2#20));
-                4#1000 1001;
-                4#z
+            (   // Current Orders  
+                til[4];4#1;4#1;4#-1;4#1; // 
+                ((2#100),(2#400)); // offset
+                4#100; // leaves
+                ((2#10),(2#20)); // displayqty
+                4#1000 1001; // price
+                4#z // time
             ); 
-            (1;1450;1b;z);  // Fill Execution
-            (  // Expected Depth
+            (1;1450;1b;z);  // Fill Execution Buy
+            (  // Expected Depth ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000))); 
                 [price:1001+til 9] 
-                side:(9#-1);
-                qty:(740,(8#1000));
+                side:(9#-1); 
+                qty:(810,(8#1000));
                 hqty:(0,(8#10));
                 iqty:(80,(8#0));
-                vqty:(760,(8#1000))
+                vqty:(830,(8#1000))
             );  
-            (   // Expected Orders
+            (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
                 til[4];4#1;4#1;4#-1;4#1;
-                ((3#0),160);
-                ((3#0),100);
-                ((3#0),20);
-                4#1000 1001;
-                (3#2),0;
-                4#z
+                ((3#0),160); // offset
+                ((3#0),100); // leaves
+                ((3#0),20); // displayqty
+                4#1000 1001; // price
+                (3#2),0; // status
+                4#z // time
             ); 
             (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
                 (`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;1b;1001;50);
                 (`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;1b;1000;800);
                 (`.account.Account!1;`.instrument.Instrument!0;1;z;1b;0b;1001;450);
                 (`.account.Account!1;`.instrument.Instrument!0;1;z;1b;0b;1000;1000)
-            )); // Expected ApplyFill Mock
+            ));  // Expected ApplyFill Mock
             (1b;9;( // AddTradeEvent: side size price
                 ((1;1000;100);z);
                 ((1;1000;100);z);
@@ -1126,7 +1126,7 @@ dozc:{x+y}[doz];
                 ((1;1001;100);z);
                 ((1;1001;200);z);
                 ((1;1001;50);z)
-            )); // Expected AddTradeEvent Mock
+            ));  // Expected AddTradeEvent Mock
             (0b;0;()); // Expected IncSelfFill Mock
             (1b;1;()); // Expected AddOrderUpdateEvent Mock
             (1b;1;()) // Expected AddDepthEvent Mock
@@ -1153,10 +1153,10 @@ dozc:{x+y}[doz];
             (  // Expected Depth ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000))); 
                 [price:1001+til 9] 
                 side:(9#-1); 
-                qty:(740,(8#1000));
+                qty:(810,(8#1000));
                 hqty:(0,(8#10));
                 iqty:(80,(8#0));
-                vqty:(760,(8#1000))
+                vqty:(830,(8#1000))
             );  
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
                 til[4];4#1;4#1;4#-1;4#1;
