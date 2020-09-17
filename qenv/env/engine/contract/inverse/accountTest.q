@@ -291,18 +291,31 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        mck1: .qt.M[`.inverse.account.redFill;{[a;b;c;d;e;f]};c];
-        mck2: .qt.M[`.inverse.account.incFill;{[a;b;c;d;e;f]};c];
-        mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
+        m:p`mocks;
 
-        res:.inverse.account.ApplyFill[];
+        mck1: .qt.M[`.inverse.account.redFill;{[a;b;c;d]};c];
+        mck2: .qt.M[`.inverse.account.incFill;{[a;b;c;d]};c];
+        mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d]};c];
+        mck3: .qt.M[`.inverse.account.UnrealizedPnl;{[a;b;c;d;e;f]};c];
+
+        res:.inverse.account.ApplyFill . p`args;
 
         .util.testutils.checkcMock[mck1;m[0];c];  // redFill Mock
         .util.testutils.checkMock[mck2;m[1];c];  // incFill Mock
         .util.testutils.checkMock[mck3;m[2];c];  // crsFill Mock
+        .util.testutils.checkMock[mck4;m[3];c];  // crsFill Mock
     };
     {[p]
-    
+        :`args`eAcc`eInv`mocks!(
+            (
+
+            );
+            ();
+            ();
+            (
+                
+            )
+        );
     };
     (
         ("hedged:long_to_longer";(
