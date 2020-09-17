@@ -38,8 +38,8 @@
             withdrawCount       : `long$();
             tradeVolume         : `long$();
             tradeCount          : `long$();
-            netLongPosition     : `long$();
-            netShortPosition    : `long$();
+            netLongPosition     : `long$(); // Scalar Positive > 0 
+            netShortPosition    : `long$(); // Scalar Negative < 0
             posMargin           : `long$();
             longMargin          : `long$();
             shortMargin         : `long$();

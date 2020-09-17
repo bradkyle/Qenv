@@ -233,10 +233,10 @@
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
 
-    (ib,iL,iS)[`unrealizedPnl]:.inverse.account.UnrealizedPnl[];
+    (ib;iL;iS)[`unrealizedPnl]:.inverse.account.UnrealizedPnl[]; // TODO
 
     // TODO posMargin, markValue, maintMarginReq, initMarginReq
-    a[`unrealizedPnl]:sum[(ib,iL,iS)[`unrealizedPnl]];
+    a[`unrealizedPnl]:sum[(ib;iL;iS)[`unrealizedPnl]];
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
     (a;(iB;iL;iS))
@@ -278,9 +278,8 @@
 
     // TODO this is subtracted from the margin?
 
-    a[`longFundingCost]:0;
-    a[`shortFundingCost]:0;
-    a[`totalFundingCost]:0;
+    a[`longFundingCost`shortFundingCost]:(a`netLongPosition`netShortPosition)*fundingRate;
+    a[`totalFundingCost]:sum a[`longFundingCost`shortFundingCost];
     a[`realizedPnl]:0;
   
     // TODO balance - realizedPnl
