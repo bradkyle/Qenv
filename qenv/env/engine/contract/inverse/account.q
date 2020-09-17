@@ -49,7 +49,8 @@
 // keep the specified inventory open. 
 /  @param i  (Instrument) The current instrument
 /  @param iv (Inventory) The given inventory
-.inverse.account.MaintMargin            :{[i;iv;a;]
+.inverse.account.MaintMargin            :{[i;a;iv]
+    mmreq:.inverse.account.MaintMarginReq[i;a];
     :7h$()
     };
 
@@ -58,7 +59,8 @@
 // inventory/position size divided by the selected margin.
 /  @param i  (Instrument) The current instrument
 /  @param iv (Inventory) The given inventory
-.inverse.account.InitMargin             :{[i;iv;a;]
+.inverse.account.InitMargin             :{[i;a;iv]
+    imreq:.inverse.account.InitMarginReq[i;a];
     :7h$()
     };
 
