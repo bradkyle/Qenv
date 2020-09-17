@@ -322,7 +322,8 @@
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
         niqty:          sum'[nleaves-ndisplayqty];
-        nqty:           state[`vqty]-((ndisplayqty-state[`displayqty])+(state`rp));
+        displaydlt:     (ndisplayqty-state[`displayqty]);
+        nqty:           .util.Clip[((-/)state`vqty`rp)-sum'[displaydlt]];
         nvqty:          nqty+sum'[ndisplayqty];
         nshft:          nleaves+noffset;
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
@@ -340,12 +341,18 @@
         partfilled:`boolean$(raze[(sums'[state`offset]<=state[`rp])-(nshft<=state[`rp])]); // todo mask
         fullfilled: `boolean$(raze[(state[`offset]<=state[`rp])and(nshft<=state[`rp])]); // todo mask
 
+        .order.test.ndisplayqty:ndisplayqty;
+        .order.test.niqty:niqty;
         .order.test.nleaves:nleaves;
         .order.test.noffset:noffset;
+        .order.test.nvqty:nvqty;
+        .order.test.nqty:nqty;
         .order.test.msk:msk;
         .order.test.state1:state;
-        // TODO update with displayqty
+        // TODO update with displayqty // TODO make simpler
         .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
+
+
         .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze'[state`orderId`offset`leaves`displayqty])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
@@ -367,14 +374,14 @@
 
         state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
-        .order.test.obi:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];
-        .order.OrderBook,:raze'[flip[0^(state`price`bside`tgt`hqty`iqty`vqty)]];  // TODO fix here
+        .order.test.obi:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
+        .order.OrderBook,:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
 
         delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
 
     ];if[count[state]>0;[
         
-        .order.OrderBook,:flip .util.PadM[state`price`side`tgt`hqty`iqty`vqty];
+        .order.OrderBook,:flip .util.PadM[state`price`side`qty`hqty`iqty`vqty];
         
     ]]]; // TODO fix
     

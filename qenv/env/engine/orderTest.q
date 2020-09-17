@@ -1133,7 +1133,7 @@ dozc:{x+y}[doz];
         ));
         (("BUY: orderbook has agent iceberg orders and data hidden orders, trade fills other",
          "agent order, trade execution > agent order offset, fill is agent (reduce only)");(
-             ( // Current Depth ((10#-1);1000+til 10;10#1000;((10 20),(8#10));((180 160),(8#0));10#1000)
+             ( // Current Depth  
                  [price:1000+til 10] 
                  side:(10#-1);
                  qty:10#1000;
@@ -1142,12 +1142,12 @@ dozc:{x+y}[doz];
                  vqty:((1020 1040),(8#1000))
             ); 
             (   // Current Orders  
-                til[4];4#1;4#1;4#-1;4#1;
-                ((2#100),(2#400));
-                4#100;
-                ((2#10),(2#20));
-                4#1000 1001;
-                4#z
+                til[4];4#1;4#1;4#-1;4#1; // 
+                ((2#100),(2#400)); // offset
+                4#100; // leaves
+                ((2#10),(2#20)); // displayqty
+                4#1000 1001; // price
+                4#z // time
             ); 
             (1;1450;1b;z);  // Fill Execution Buy
             (  // Expected Depth ([price:1001+til 9] side:(9#-1);qty:(550,(8#1000));vqty:(750,(8#1000))); 
@@ -1160,12 +1160,12 @@ dozc:{x+y}[doz];
             );  
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
                 til[4];4#1;4#1;4#-1;4#1;
-                ((3#0),160);
-                ((3#0),100);
-                ((3#0),20);
-                4#1000 1001;
-                (3#2),0;
-                4#z
+                ((3#0),160); // offset
+                ((3#0),100); // leaves
+                ((3#0),20); // displayqty
+                4#1000 1001; // price
+                (3#2),0; // status
+                4#z // time
             ); 
             (1b;4;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
                 (`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;1b;1001;50);
