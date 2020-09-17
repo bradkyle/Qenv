@@ -123,7 +123,7 @@
         // Derive the hidden dlts as merely the sum of detected
         // hidden order quantities at each level, because they 
         // are derived from trades, they can only be increased.
-        if[count[state`nhqty]>0;state[`hqty]+:sum'[state`nhqty]];
+        if[count[state`nhqty]>0;state[`hqty]+:sum'[.util.PadM[state`nhqty]]];
 
         dneg:sum'[{x where[x<0]}'[dlts]];
         $[(count[dneg]>0);[
@@ -141,6 +141,7 @@
 
                 shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
                 mxshft:max'[shft];
+                .order.test.shft:shft;
 
                 // The Minimum offset should be the minimum shft
                 // of the preceeding orders in the queue i.e. so
@@ -148,7 +149,7 @@
                 // a hidden order qty it should represent this
                 // offset (hidden order qty derived from data)
                 // is always put at the front of the queue.
-                mnoffset: (0,'-1_'(shft))+raze[state`hqty];
+                mnoffset: (0,'-1_'(shft))+raze[.util.PadM[state`hqty]];
                 .order.test.mnoffset:mnoffset;
 
                 // Derive the non agent qtys that
@@ -196,12 +197,13 @@
                 / nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
                 .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
                 .order.test.O2:.order.Order;
+                state[`vqty]:nvqty;
                 .order.test.state3:state;
 
-                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
+                .order.OrderBook,:raze'[flip .util.PadM'[.order.test.state3`price`side`tgt`hqty`iqty`vqty]];
             ];[
-                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
-                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
+                state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
+                .order.OrderBook,:raze'[flip .util.PadM'[.order.test.state3`price`side`tgt`hqty`iqty`vqty]];
             ]];
 
 
