@@ -36,7 +36,7 @@
 /  @param i  (Instrument) The current instrument
 /  @param a  (Account) The account
 /  @return (Float) A float representing the fraction of initMarginRequired
-.inverse.account.MaintMarginReq          :{[i;a]
+.inverse.account.MaintMarginReq          :{[i;a] // TODO include 
     :(![i`riskTiers;enlist(>;`mxamt;amt); (); `mmr])+(i[`riskBuffer] | 0); // TODO derive
     };
 
@@ -46,7 +46,7 @@
 /  @param i  (Instrument) The current instrument
 /  @param a  (Account) The account
 /  @return (Float) A float representing the fraction of initMarginRequired
-.inverse.account.InitMarginReq           :{[i;a]
+.inverse.account.InitMarginReq          :{[i;a]
     :(![i`riskTiers;enlist(>;`mxamt;amt); (); `imr])+(i[`riskBuffer] | 0);
     };
 
@@ -58,7 +58,7 @@
 /  @return (Long) The total maintenence margin that is required
 .inverse.account.MaintMargin            :{[i;a;iv]
     mmreq:.inverse.account.MaintMarginReq[i;a];
-    :7h$()
+    :7h$(iv[`amt]*mmreq)
     };
 
 // Derives the initial margin that is reserved for a given inventory 
