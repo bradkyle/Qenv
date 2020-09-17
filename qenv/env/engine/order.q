@@ -142,7 +142,8 @@
                 // a hidden order qty it should represent this
                 // offset (hidden order qty derived from data)
                 // is always put at the front of the queue.
-                mnoffset: (0,'-1_'(shft));
+                mnoffset: (0,'-1_'(shft))+raze[state`hqty];
+                .order.test.mnoffset:mnoffset;
 
                 // Derive the non agent qtys that
                 // make up the orderbook // TODO add hqty, iqty to this.
