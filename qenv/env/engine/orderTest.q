@@ -109,7 +109,7 @@ dozc:{x+y}[doz];
                 qty:(10#1000);
                 hqty:(10#0);
                 iqty:(10#0);
-                vqty:(10#1200)
+                vqty:(1000 1200 1200 1000 1000 1000 1200 1200 1000 1000)
             );  
             (   // Current Orders
                 til[8];8#1;8#1; // orderId, accountId, instrumentId 
@@ -134,7 +134,7 @@ dozc:{x+y}[doz];
                 qty:(8#1000);
                 hqty:(8#0);
                 iqty:(8#0);
-                vqty:(8#1000)
+                vqty:(1200 1200 1000 1000 1200 1200 1000 1000)
             ); 
             (   // Expected Orders
                 til[8];8#1;8#1; // orderId, accountId, instrumentId 

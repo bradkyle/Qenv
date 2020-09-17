@@ -187,10 +187,12 @@
                 .order.test.O2:.order.Order;
                 .order.test.state3:state;
 
-                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;nvqty;nvqty;nvqty;nvqty))];
+                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
             ];[
+                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
+
                 .order.test.state4:state;
-                .order.OrderBook,:.util.PadM[raze'[flip[0^(state`price`side`tgt`hqty`iqty`vqty)]]]; 
+                .order.OrderBook,:raze'[flip(.order.bookCols!(state`price;state`side;state`tgt;state`hqty;state`iqty;nvqty))];
             ]];
 
             // TODO update hqty!
