@@ -66,7 +66,6 @@ dozc:{x+y}[doz];
         p:c[`params];
         delete from `.order.OrderBook;
         delete from `.order.Order;
-        
         .order.OrderBook,:p[`cDepth];
         .util.testutils.setupOrders[0^p`cOrd];
 
@@ -78,7 +77,7 @@ dozc:{x+y}[doz];
 
         / .util.testutils.checkMock[mck1;m[0];c];
         .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils._checkOrders[(`orderId`side`otype`offset`leaves`price`time);p[`eOrd];c];
+        .util.testutils._checkOrders[(`orderId`side`otype`offset`leaves`displayqty`price`time);p[`eOrd];c];
 
     };
     {[p] 
@@ -113,13 +112,14 @@ dozc:{x+y}[doz];
                 vqty:(10#1200)
             );  
             (   // Current Orders
-                til[20];20#1;20#1; // orderId, accountId, instrumentId 
-                ((10#-1),(10#1)); // side
-                20#1;(20#100 400); // offsets
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
+                til[8];8#1;8#1; // orderId, accountId, instrumentId 
+                ((4#-1),(4#1)); // side
+                8#1; // side
+                (8#100 400); // offsets
+                8#100; // leaves
+                8#100; // displayqty
+                ((4#1001 1002),(4#998 997)); // price
+                8#z // time
             ); 
             (   // Depth Update
                 ((5#-1),(5#1)); // side
@@ -137,14 +137,14 @@ dozc:{x+y}[doz];
                 vqty:(8#1000)
             ); 
             (   // Expected Orders
-                til[20];20#1;20#1; // orderId, accountId, instrumentId 
-                ((10#-1),(10#1)); // side
-                20#1; // otype
+                til[8];8#1;8#1; // orderId, accountId, instrumentId 
+                ((4#-1),(4#1)); // side
+                8#1; // otype
                 ((8#0 200 100 400)); // offsets
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
+                8#100; // leaves
+                8#100; // displayqty
+                ((4#1001 1002),(4#998 997)); // price
+                8#z // time
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
