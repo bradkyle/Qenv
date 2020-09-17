@@ -330,16 +330,16 @@
         nfilled:        state[`size] - nleaves; // New amount that is filled
         accdlts:        state[`leaves] - nleaves; // The new Account deltas
 
-
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
         // above. They should not overlap.f
-        fullfilled: (sums[state[`offset]]<=state[`rp])and(nshft<=state[`rp]); // todo mask
-        partfilled:(state[`offset]<=state[`rp])and(nshft<=state[`rp]); // todo mask
+        // get fully filled and then set all others that dont conform to 
+        // partially filled, by simple exclusion conditional.
+        nstatus:2*((sums[state[`offset]]<=state[`rp])and(nshft<=state[`rp])); // todo mask
+        nstatus+:1*((state[`offset]<=state[`rp])and not nstatus); // todo mask
 
-
-        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls]:(
-            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts
+        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
+            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
         );
         .order.test.stateu:state;
 
@@ -352,15 +352,13 @@
         .order.test.nqty:nqty;
         .order.test.msk:msk;
         .order.test.state1:state;
-        .order.test.partfilled:partfilled;
-        .order.test.fullfilled:fullfilled; 
+        .order.test.nstatus:nstatus; 
         .order.test.nshft:nshft;
 
         // TODO update with displayqty // TODO make simpler
         .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
 
-
-        .order.Order,:flip(`orderId`offset`leaves`displayqty!((raze'[state`orderId`offset`leaves`displayqty])[;where[msk]]));  // update where partial
+        .order.Order,:flip(`orderId`offset`leaves`displayqty`status!((raze'[state`orderId`offset`leaves`displayqty`status])[;where[msk]]));  // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
         // Make order updates
