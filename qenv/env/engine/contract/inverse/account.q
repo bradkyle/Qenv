@@ -95,7 +95,7 @@
     // Calculate the next available 
     a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
     a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
-    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0); // TODO convert to long
+    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
     a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
     // Derive margin requirements
@@ -234,7 +234,7 @@
     // the availbable balance.
     a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO sign
     a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0); // TODO sign
-    a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
+    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0);
 
     / (ib;iL;iS)[`unrealizedPnl]):.inverse.account.UnrealizedPnl[]; // TODO
 

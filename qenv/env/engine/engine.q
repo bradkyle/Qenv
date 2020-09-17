@@ -137,7 +137,7 @@
     // Apply settlement to the given accounts
     // and their respective inventories, this 
     // would reset realized pnl into the balance
-    .account.ApplySettlement[];
+    .account.ApplySettlement[instrument];
 
     .pipe.egress.AddSettlementEvent[];
     };
@@ -155,7 +155,7 @@
 
     //  Apply funding the the open agent 
     // positions/inventory 
-    .account.ApplyFunding[];
+    .account.ApplyFunding[instrument];
 
     .pipe.egress.AddFundingEvent[];
     };
@@ -184,8 +184,8 @@
 .engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
     .instrument.UpdatePriceLimits[instrument;]; // TODO derive price limti
-    .order.UpdatePriceLimits[];
-    .pipe.egress.AddPriceLimitEvent[];    
+    .order.UpdatePriceLimits[instrument;];
+    .pipe.egress.AddPriceLimitEvent[instrument;];    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -213,7 +213,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
-    .account.Withdraw[];
+    .account.Withdraw[instrument];
     };
 
 
@@ -227,7 +227,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
-    .account.Deposit[];
+    .account.Deposit[instrument];
     };
 
 
