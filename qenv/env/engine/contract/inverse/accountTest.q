@@ -708,9 +708,8 @@ nl:{neg l[x]}
     
     };
     (
-        ("Negative Funding occurs combined short position";());
-        ("Positive Funding occurs combined short position";());
-        ("Negative Funding occurs combined long position";());
+        ("Mark price increases";());
+        ("Mark price decreases";());
         ("Positive Funding occurs combined long position";())
     );
     .util.testutils.defaultContractHooks;
