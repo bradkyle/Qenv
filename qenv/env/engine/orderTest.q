@@ -391,17 +391,41 @@ dozc:{x+y}[doz];
         ));
         ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
             // side; price; qty; hqty; iqty; vqty
-            (((10#1),(10#-1));((raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5)));20#1000;((20,(9#10)),(20,(9#10)));(((2#80),(8#10)),((2#80),(8#10)));20#1000);  // Current Depth
-            (til[20];20#1;20#1;((10#-1),(10#1));20#1;(20#100 400);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Current Orders
+            (
+                ((10#1),(10#-1));
+                ((raze flip 2 5#(999-til 5)),(raze flip 2 5#(1000+til 5)));
+                20#1000;
+                ((20,(9#10)),(20,(9#10)));
+                (((2#80),(8#10)),((2#80),(8#10)));
+                20#1000
+            );  // Current Depth
+            (
+                til[20];20#1;20#1;
+                ((10#-1),(10#1));
+                20#1;(20#100 400);
+                20#100;
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
+                20#z
+            ); // Current Orders
             (
                 ((20#1),(20#-1));
                 ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
-                (40#0 1000);
-                ((10, (19#0)),(10, (19#0)));
-                (sc[z] (40#0 1))
+                (40#0 1000); // NQTY
+                ((10, (19#0)),(10, (19#0))); // NHQTY
+                (sc[z] (40#0 1)) // TIME
             );  // Depth Update
             ([price:((999-til 5),(1000+til 5))] side:(5#1),(5#-1);qty:(10#1000);hqty:(10#1000);iqty:(10#1000);vqty:(10#1200)); // Expected Depth
-            (til[20];20#1;20#1;((10#-1),(10#1));20#1;(20#0 200);20#100;((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));20#z); // Expected Orders
+            (
+                til[20];
+                20#1;
+                20#1;
+                ((10#-1),(10#1));
+                20#1;
+                (20#0 200);
+                20#100;
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5)));
+                20#z
+            ); // Expected Orders
             (0b;0;()); // Expected AddDepthEvent Mock
             () // Expected Events
         ))
