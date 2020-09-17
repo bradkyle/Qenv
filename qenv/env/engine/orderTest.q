@@ -842,7 +842,7 @@ dozc:{x+y}[doz];
             (1b;1;()); // Expected AddOrderUpdateEvent Mock
             (1b;1;()) // Expected AddDepthEvent Mock
         ));
-        (("SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent",
+        (("SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // TODO fix
           "orders, trade execution > agent order offset, fill is agent (3 orders on one level)");(
              ( // Current Depth  
                  [price:1000-til 10] 
@@ -853,12 +853,12 @@ dozc:{x+y}[doz];
                  vqty:((1010 1020),(8#1000)) // TODO fix
             ); 
             (   // Current Orders  
-                til[4];4#1;4#1;4#1;4#1; // 
-                ((2#400),(2#600)); // offset
-                4#100; // leaves
-                ((2#10),(2#20)); // displayqty
-                4#1000 999; // price
-                4#z // time
+                til[5];5#1;5#1;5#1;5#1; // 
+                ((2#400),(2#600),850); // offset
+                5#100; // leaves
+                ((2#10),(3#20)); // displayqty
+                5#1000 999; // price
+                5#z // time
             ); 
             (-1;1850;1b;z);  // Fill Execution Buy
             ( // Current Depth  
@@ -887,7 +887,7 @@ dozc:{x+y}[doz];
             (0b;0;()); // Expected IncSelfFill Mock
             (1b;1;()); // Expected AddOrderUpdateEvent Mock
             (1b;1;()) // Expected AddDepthEvent Mock
-        ));
+        ))
     );
     .util.testutils.defaultEngineHooks;
     "Process trades from the historical data or agent orders",
