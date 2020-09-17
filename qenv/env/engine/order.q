@@ -147,6 +147,9 @@
                 // are derived from trades, they can only be increased.
                 hiddendlts: sum'[state`nhqty];
 
+                // Derive the deltas in the agent order offsets as if there
+                // were a uniform distribution of cancellations throughout
+                // the queue.
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
 
                 .order.test.offsetdlts:offsetdlts;
