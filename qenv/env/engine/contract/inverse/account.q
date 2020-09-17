@@ -302,7 +302,7 @@
     a[`depositAmount]+:deposited;
     a[`depositCount]+:1;
     a[`withdrawable]+:deposited;
-    / a[`available]:.account.Available[acc]; // TODO
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
     / a[`initMarginReq`maintMarginReq]
 
 
@@ -326,19 +326,15 @@
 .inverse.account.Withdraw       :{[i;a;withdrawn;time]
     // Account: available, withdrawable, withdrawCount
 
-    if[not[count[a]>0];'INVALID_ACCOUNTID];
-
     $[withdrawn < a[`withdrawable];[
         // TODO more expressive and complete upddate statement accounting for margin etc.
 
         a[`balance]-:withdrawn;
         a[`withdrawAmount]+:withdrawn;
         a[`withdrawCount]+:1;
-        a[`withdrawable]-:withdrawn;
-        / a[`available]:.account.Available[acc]; // TODO
+        a[`withdrawable]-:withdrawn;    
+        a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
-        // TODO update liquidation price 
-        
         ];'InsufficientMargin];  
     a
     };

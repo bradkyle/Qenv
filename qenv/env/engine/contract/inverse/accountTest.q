@@ -115,10 +115,6 @@ nl:{neg l[x]}
     "Function for deriving the exec cost from the qty and the price"];
 
 
-.qt.RunTests[];
-
-/
-
 .qt.Unit[
     ".inverse.account.InitMarginReq";
     {[c]
@@ -129,7 +125,12 @@ nl:{neg l[x]}
     {[p]
     
     };
-    ();
+    (
+        ("Minimum tier position size maint margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier position size maint margin req";((0 0 0 0 0 0);0));
+        ("Minimum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
+        ("Maximum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -144,7 +145,10 @@ nl:{neg l[x]}
     {[p]
     
     };
-    ();
+    (
+        ("Zero args:Binance BTCUSDT analog, faceValue 1";((0 0 0 0 0 0);0));
+        ("Zero args:Bitmex XBTUSD inverse analog, faceValue 1";((0 0 0 0 0 0);0))
+    );
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
@@ -179,9 +183,6 @@ nl:{neg l[x]}
 
 // TODO simplify rectify state
 
-
-
-
 .qt.Unit[
     ".inverse.account.AdjustOrderMargin";
     {[c]
@@ -200,6 +201,7 @@ nl:{neg l[x]}
     .util.testutils.defaultContractHooks;
     "Function for deriving the exec cost from the qty and the price"];
 
+.qt.RunTests[];
 
 .qt.Unit[
     ".inverse.account.incFill";
