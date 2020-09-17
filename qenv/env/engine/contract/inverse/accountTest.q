@@ -708,8 +708,13 @@ nl:{neg l[x]}
     
     };
     (
-        ("Mark price increases";());
-        ("Mark price decreases";());
+        ("Mark price increases combined long";());
+        ("Mark price increases combined short";());
+        ("Mark price increases hedged long";());
+        ("Mark price increases hedged short";());
+        ("Mark price increases hedged 75 long/ 25 short";());
+        ("Mark price increases hedged 25 short/ 75 short";());
+        ("Mark price decreases ";());
         ("Positive Funding occurs combined long position";())
     );
     .util.testutils.defaultContractHooks;
