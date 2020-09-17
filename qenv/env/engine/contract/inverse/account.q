@@ -278,8 +278,8 @@
     fundingCostBySide:(a`netLongPosition`netShortPosition)*fundingRate;
     a[`longFundingCost`shortFundingCost]+:fundingCostBySide;
     a[`totalFundingCost]:sum a[`longFundingCost`shortFundingCost];
-    a[`realizedPnl]+:(fundingCostBySide*i[`markPrice]); // TODO round off
-    
+    a[`realizedPnl]+:(fundingCostBySide*i[`markPrice]); // TODO round off and check is markPrice
+
     // TODO balance - realizedPnl
     // withdrawable, frozen
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
@@ -296,7 +296,7 @@
 // Update available/withdrawable etc. // TODO validate arguments?
 .inverse.account.Deposit  :{[i;a;deposited;time]
     // TODO more expressive and complete upddate statement accounting for margin etc.
-    // Account: available, liquidationprice, bankruptcyprice, depositCount
+    // Account: available, withdrawable, depositCount
 
     a[`balance]-:deposited;
     a[`depositAmount]+:deposited;
@@ -324,7 +324,7 @@
 /  @throws InvalidAccountId accountId was not found.
 /  @throws InsufficientMargin account has insufficient margin for withdraw
 .inverse.account.Withdraw       :{[i;a;withdrawn;time]
-    // Account: available, liquidationprice, bankruptcyprice, withdrawCount
+    // Account: available, withdrawable, withdrawCount
 
     if[not[count[a]>0];'INVALID_ACCOUNTID];
 
