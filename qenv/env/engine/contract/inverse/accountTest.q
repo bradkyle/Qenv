@@ -222,6 +222,7 @@ nl:{neg l[x]}
                 (); // Instrument
                 (); // Inventory
                 (); // dlt
+                1000
             ); 
             () // Expected Inventory
         ));

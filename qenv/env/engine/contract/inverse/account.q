@@ -120,20 +120,20 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.inverse.account.incFill                 :{[price;qty;account;iv]
+.inverse.account.incFill                 :{[i;iv;dlt;price]
     
     // Increase the total Entry and amt
     iv[`amt`totalEntry]+:qty;
 
     // derive execCost 
-    iv[`execCost]+: .inverse.account.ExecCost[price;qty]; 
+    iv[`execCost]+: .inverse.account.ExecCost[price;dlt]; 
 
     / Calculates the average price of entry for 
     / the current postion, used in calculating 
     / realized and unrealized pnl.
-    iv[`avgPrice]: .inverse.account.AvgPrice . iv[`isignum`execCost`totalEntry];
-
-    :iv
+    iv[`avgPrice]: (.inverse.account.AvgPrice . 
+                        iv[`isignum`execCost`totalEntry]);
+    iv
     };
 
 // Red Fill is used when the fill is to be removed from the given inventory.
@@ -142,19 +142,20 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-.inverse.account.redFill                 :{[price;qty;account;iv]
+.inverse.account.redFill                 :{[i;iv;dlt;price]
 
     // When the inventory is being closed it realizes 
-    rpl:.inverse.account.RealizedPnl[
-        qty;
+    iv[`realizedPnl]+:.inverse.account.RealizedPnl[
+        dlt;
         price;
-        isign;
+        iv[`isignum];
         iv[`avgPrice];
-        faceValue];
+        i[`faceValue]];
 
-    iv[`amt]-:qty;
-    iv[`realizedPnl]+:rpl;
-
+    // Remove the dlt amount frou
+    // the inventory amount and reset entry
+    // values where necessary.
+    iv[`amt]-:dlt;
     if[abs[iv[`amt]]=0;iv[`avgPrice`execCost]:0];
 
     :iv
@@ -166,7 +167,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return          (Inventory) The new updated inventory
-.inverse.account.crsFill                 :{[price;namt;account;iv]
+.inverse.account.crsFill                 :{[i;iv;dlt;price]
     iv:.inverse.account.redFill[price;iv[`amt];account;iv];
     iv:.inverse.account.incFill[price;namt;account;iv];
     iv[`isignum]:neg[iv[`isignum]];  
@@ -196,15 +197,15 @@
       ];'INVALID_POSITION_TYPE];
 
     // Common logic // TODO make aplicable to active inventory
-    i[`realizedPnl]-:cost;
-    i[`fillCount]+:1;
-    i[`tradeVolume]+:qty;
-    i[`unrealizedPnl]:.inverse.account.UnrealizedPnl[
-        i[`amt];
-        isign;
-        i[`avgPrice];
-        markPrice;
-        faceValue];
+    iv[`realizedPnl]-:cost;
+    iv[`fillCount]+:1;
+    iv[`tradeVolume]+:qty;
+    iv[`unrealizedPnl]:.inverse.account.UnrealizedPnl[
+        iv[`amt];
+        iv[`isignum];
+        iv[`avgPrice];
+        i[`markPrice];
+        i[`faceValue]];
     i[`markValue]+:qty;
 
     i[`entryValue]:(((%/)i`amt`avgPrice) | 0); // TODO to long
@@ -212,6 +213,7 @@
 
     a[`balance]-:cost;
     a[`totalCommission]+:cost;
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
  
     (a;(iB;iL;iS))    
     };
@@ -228,8 +230,8 @@
 // @param markPrice (Long) The latest mark price of the instrument
 .inverse.account.UpdateMarkPrice         :{[markPrice;i;a;iB;iL;iS]
 
-    a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0);
-    a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0);
+    a[`openBuyLoss]:(min[0,(markPrice*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO sign
+    a[`openSellLoss]:(min[0,(markPrice*a[`openSellQty])-a[`openSellValue]] |0); // TODO sign
     a[`openLoss]:(sum[acc`openSellLoss`openBuyLoss] | 0);
 
     / (ib;iL;iS)[`unrealizedPnl]):.inverse.account.UnrealizedPnl[]; // TODO
