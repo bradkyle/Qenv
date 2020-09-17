@@ -103,12 +103,12 @@ dozc:{x+y}[doz];
             .util.testutils.makeOrders[ordCols[p[4]];flip p[4]]);
     };
     (
-       ("(No hidden qty or Iceberg) differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
+       ("(No hidden or Iceberg qty) differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
-                hqty:((10, (4#0)),(10, (4#0)));
+                hqty:(20#0);
                 iqty:(10#1000);
                 vqty:(10#1200)
             );  
@@ -154,7 +154,7 @@ dozc:{x+y}[doz];
                 side:(5#1),(5#-1);
                 qty:(10#1000);
                 hqty:((10, (4#0)),(10, (4#0)));
-                iqty:(10#1000);
+                iqty:(10#0);
                 vqty:(10#1200)
             );  
             (   // Current Orders
@@ -179,7 +179,7 @@ dozc:{x+y}[doz];
                 side:(5#1),(5#-1);
                 qty:(10#1000);
                 hqty:((20, (4#0)),(20, (4#0)));
-                iqty:(10#1000);
+                iqty:(10#0);
                 vqty:(10#1200)
             ); 
             (   // Expected Orders
