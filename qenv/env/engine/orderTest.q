@@ -414,7 +414,14 @@ dozc:{x+y}[doz];
                 ((10, (19#0)),(10, (19#0))); // NHQTY
                 (sc[z] (40#0 1)) // TIME
             );  // Depth Update
-            ([price:((999-til 5),(1000+til 5))] side:(5#1),(5#-1);qty:(10#1000);hqty:(10#1000);iqty:(10#1000);vqty:(10#1200)); // Expected Depth
+            (
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:(10#1000);
+                iqty:(10#1000);
+                vqty:(10#1200)
+            ); // Expected Depth
             (
                 til[20];
                 20#1;
