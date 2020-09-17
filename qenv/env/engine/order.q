@@ -116,9 +116,7 @@
         // Derive the hidden dlts as merely the sum of detected
         // hidden order quantities at each level, because they 
         // are derived from trades, they can only be increased.
-        if[count[state`nhqty]>0;[
-            state[`hqty]:.util.PadM[0^raze'[(.order.test.state`hqty;sum'[state`nhqty])]]
-        ]];
+        if[count[state`nhqty]>0;state[`hqty]+:sum'[state`nhqty]];
 
         dneg:sum'[{x where[x<0]}'[dlts]];
         if[count[dneg]>0;[
