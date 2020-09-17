@@ -103,13 +103,13 @@ dozc:{x+y}[doz];
             .util.testutils.makeOrders[ordCols[p[4]];flip p[4]]);
     };
     (
-       ("(No hidden or Iceberg qty) differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
+       enlist("(No hidden or Iceberg qty) differing update prices by time, repletes order spread during update, many order offset prices, finishes at both order levels";(
            (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
                 qty:(10#1000);
-                hqty:(20#0);
-                iqty:(10#1000);
+                hqty:(10#0);
+                iqty:(10#0);
                 vqty:(10#1200)
             );  
             (   // Current Orders
@@ -130,9 +130,9 @@ dozc:{x+y}[doz];
                 [price:((998-til 4),(1001+til 4))] 
                 side:(4#1),(4#-1);
                 qty:(8#1000);
-                hqty:((20, (4#0)),(20, (4#0)));
-                iqty:(10#1000);
-                vqty:(8#(1200,(3#1000)))
+                hqty:(8#0);
+                iqty:(8#0);
+                vqty:(8#1000)
             ); 
             (   // Expected Orders
                 til[20];
@@ -147,54 +147,55 @@ dozc:{x+y}[doz];
             ); 
             (0b;0;()); // Expected AddDepthEvent Mock
             (0b;0;()) // Expected AddOrderUpdatedEvent Mock
-        ));
-        ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
-           (   // Current Depth
-                [price:((999-til 5),(1000+til 5))] 
-                side:(5#1),(5#-1);
-                qty:(10#1000);
-                hqty:((10, (4#0)),(10, (4#0)));
-                iqty:(10#0);
-                vqty:(10#1200)
-            );  
-            (   // Current Orders
-                til[20];20#1;20#1; // `orderId`instrumentId`accountId
-                ((10#-1),(10#1)); // side
-                20#1; // otype
-                (20#100 400); // offset
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
-            ); 
-            (   // Depth Update
-                ((20#1),(20#-1));
-                ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
-                (40#0 1000); // NQTY
-                ((10, (19#0)),(10, (19#0))); // NHQTY
-                (sc[z] (40#0 1)) // TIME
-            );  
-            (   // Expected Depth
-                [price:((999-til 5),(1000+til 5))] 
-                side:(5#1),(5#-1);
-                qty:(10#1000);
-                hqty:((20, (4#0)),(20, (4#0)));
-                iqty:(10#0);
-                vqty:(10#1200)
-            ); 
-            (   // Expected Orders
-                til[20];20#1;20#1; // `orderId`instrumentId`accountId
-                ((10#-1),(10#1)); // `side
-                20#1; // otype
-                (20#0 200); // offset
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
-            ); 
-            (0b;0;()); // Expected AddDepthEvent Mock
-            (0b;0;()) // Expected AddOrderUpdatedEvent Mock
         ))
+        //
+        / ("many levels with many iceberg orders at same offset interval with hidden qty, price is removed across all levels fully (1000)";(
+        /    (   // Current Depth
+        /         [price:((999-til 5),(1000+til 5))] 
+        /         side:(5#1),(5#-1);
+        /         qty:(10#1000);
+        /         hqty:((10, (4#0)),(10, (4#0)));
+        /         iqty:(10#0);
+        /         vqty:(10#1200)
+        /     );  
+        /     (   // Current Orders
+        /         til[20];20#1;20#1; // `orderId`instrumentId`accountId
+        /         ((10#-1),(10#1)); // side
+        /         20#1; // otype
+        /         (20#100 400); // offset
+        /         20#100; // leaves
+        /         20#100; // displayqty
+        /         ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+        /         20#z // time
+        /     ); 
+        /     (   // Depth Update
+        /         ((20#1),(20#-1));
+        /         ((raze flip 2 10#(999-til 5)),(raze flip 2 10#(1000+til 5)));
+        /         (40#0 1000); // NQTY
+        /         ((10, (19#0)),(10, (19#0))); // NHQTY
+        /         (sc[z] (40#0 1)) // TIME
+        /     );  
+        /     (   // Expected Depth
+        /         [price:((999-til 5),(1000+til 5))] 
+        /         side:(5#1),(5#-1);
+        /         qty:(10#1000);
+        /         hqty:((20, (4#0)),(20, (4#0)));
+        /         iqty:(10#0);
+        /         vqty:(10#1200)
+        /     ); 
+        /     (   // Expected Orders
+        /         til[20];20#1;20#1; // `orderId`instrumentId`accountId
+        /         ((10#-1),(10#1)); // `side
+        /         20#1; // otype
+        /         (20#0 200); // offset
+        /         20#100; // leaves
+        /         20#100; // displayqty
+        /         ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+        /         20#z // time
+        /     ); 
+        /     (0b;0;()); // Expected AddDepthEvent Mock
+        /     (0b;0;()) // Expected AddOrderUpdatedEvent Mock
+        / ))
     );
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
@@ -202,7 +203,7 @@ dozc:{x+y}[doz];
     "orders where necessary"];
 
 
-.qt.SkpBes[16];
+.qt.SkpAft[1];
 / .qt.SkpBes[46];
 .qt.RunTests[];
 /
