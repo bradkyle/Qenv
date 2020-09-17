@@ -701,7 +701,7 @@ nl:{neg l[x]}
 
         mck2: .qt.M[`.inverse.account.crsFill;{[a;b;c;d;e;f]};c];
 
-        res:.inverse.account.UpdateMarkPrice[];
+        res:.inverse.account.UpdateMarkPrice . p`args;
 
     };
     {[p]
@@ -729,7 +729,7 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.ApplyFunding[];
+        res:.inverse.account.ApplyFunding . p`args;
         
     };
     {[p]
@@ -761,7 +761,7 @@ nl:{neg l[x]}
     {[c]
         p:c[`params];
 
-        res:.inverse.account.Deposit[];
+        res:.inverse.account.Deposit . p`args;
         
     };
     {[p]
