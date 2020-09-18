@@ -7,6 +7,8 @@
 // TODO decreasing distribution (exp, log, normal) (bucketed/levelled)
 // TODO flat distribution   (bucketed/levelled)
 
+t1:{1+til[x]}
+t2:{2+til[x]}
 
 // Amount distribution logic
 // ---------------------------------------------------------------------------------------->
@@ -15,7 +17,7 @@
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.increasingLinearDistribution                     :{[amt;num;lotsize]
-        l:til num:
+        l:t1 num:
 
     };
 
@@ -23,7 +25,7 @@
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
 .state.decreasingLinearDistribution                     :{[amt;num;lotsize]
-        l:reverse til num;
+        l:reverse t1 num;
 
     };
 
@@ -32,7 +34,7 @@
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.increasingSuperLinearDistribution                :{[amt;num;lotsize]
-        l:til[num]*til[num]:
+        l:t1[num]*t1[num]:
 
     };
 
@@ -40,7 +42,7 @@
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
 .state.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
-        l:til[num]*til[num]:
+        l:t1[num]*t1[num]:
 
     };
 
@@ -48,15 +50,15 @@
 // the order quantities return the increasing exponential distribution of
 // qty for the given set of groups in order.
 .state.increasingExponentialDistribution                :{[amt;num;lotsize]
-        l:exp til[num];
-        
+        l:exp t1[num];
+
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing exponential distribution of
 // qty for the given set of groups in order.
 .state.decreasingExponentialDistribution                :{[amt;num;lotsize]
-        l:reverse exp til[num];
+        l:reverse exp t1[num];
 
     };
 
@@ -64,14 +66,15 @@
 // the order quantities return the increasing logarithmic distribution of
 // qty for the given set of groups in order.
 .state.increasingLogarithmicDistribution                :{[amt;num;lotsize]
-
+        l:log t2[num];
+        
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing logarithmic distribution of
 // qty for the given set of groups in order.
 .state.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
-
+        l:reverse log t2[num];
     };
 
 // Given a total amount and the number of groups in which to distribute
