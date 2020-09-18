@@ -103,21 +103,21 @@ ramfrac:{};
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
-.state.uniformalPriceDistribution                       :{[mxprice;mnprice;ticksize;num]
+.state.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
 
     };
 
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
 // orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-.state.exponentialPriceDistribution                     :{[mxprice;mnprice;ticksize;num]
+.state.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
 
     };
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
-.state.logarithmicPriceDistribution                     :{[mxprice;mnprice;ticksize;num]
+.state.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
 
     };    
 
