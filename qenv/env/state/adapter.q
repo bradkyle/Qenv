@@ -7,20 +7,20 @@
 // TODO decreasing distribution (exp, log, normal) (bucketed/levelled)
 // TODO flat distribution   (bucketed/levelled)
 
-t1:{1+til[x]}
-t2:{2+til[x]}
-frac:{x%sum[xs]};
-rfrac:{};
 
 // Amount distribution logic
 // ---------------------------------------------------------------------------------------->
+t1:{1+til[x]}
+t2:{2+til[x]}
+frac:{x%sum[xs]};
+ramfrac:{};
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.increasingLinearDistribution                     :{[amt;num;lotsize]
         l:t1[num]:
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -28,7 +28,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.decreasingLinearDistribution                     :{[amt;num;lotsize]
         l:reverse t1[num];
-
+        ramfrac[]
     };
 
 
@@ -37,7 +37,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.increasingSuperLinearDistribution                :{[amt;num;lotsize]
         l:t1[num]*t1[num]:
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -45,7 +45,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
         l:t1[num]*t1[num]:
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -53,7 +53,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.increasingExponentialDistribution                :{[amt;num;lotsize]
         l:exp t1[num];
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -61,7 +61,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.decreasingExponentialDistribution                :{[amt;num;lotsize]
         l:reverse exp t1[num];
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -69,7 +69,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.increasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:log t2[num];
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -77,7 +77,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:reverse log t2[num];
-
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -85,6 +85,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.normalDistribution                               :{[amt;num;lotsize]
         l:0;
+        ramfrac[]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -92,6 +93,7 @@ rfrac:{};
 // qty for the given set of groups in order.
 .state.flatDistribution                                 :{[amt;num;lotsize]
         l:num#1;
+        ramfrac[]
     };
 
 
@@ -221,14 +223,14 @@ rfrac:{};
 // with the total amount being specified and a look
 // forward period thus the amount is derived.
 .state.adapter.createUniformTemporalOrders              :{[]
-
+    'nyi
     };
 
 // Creates a set of orders at a random interval and
 // at a random amount such that the total target amount
 // becomes replete within a given time period
 .state.adapter.createRandomTemporalOrders               :{[]
-
+    'nyi
     };
 
 // Flattening Utils
