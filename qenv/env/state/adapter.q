@@ -102,6 +102,10 @@
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
+/  @param mnprice  (Long) The minimum price at which the distribution should start
+/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
+/  @param num      (Long) The number of levels to generate 
+/  @return         (List[Long]) The uniformal price distribution.
 .state.adapter.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
     mnprice+((2*til[num];2*t1[num])*ticksize)
     };
@@ -109,6 +113,21 @@
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
 // orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
+/  @param mnprice  (Long) The minimum price at which the distribution should start
+/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
+/  @param num      (Long) The number of levels to generate 
+/  @return         (List[Long]) The superlinear price distribution.
+.state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num]
+
+    };
+
+// Generates a set of buckets according to
+// a exponential distribution of price throughout the
+// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
+/  @param mnprice  (Long) The minimum price at which the distribution should start
+/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
+/  @param num      (Long) The number of levels to generate 
+/  @return         (List[Long]) The exponential price distribution.
 .state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
 
     };
@@ -116,6 +135,10 @@
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
+/  @param mnprice  (Long) The minimum price at which the distribution should start
+/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
+/  @param num      (Long) The number of levels to generate 
+/  @return         (List[Long]) The logarithmic price distribution.
 .state.adapter.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
 
     };    
