@@ -9,6 +9,8 @@
 
 t1:{1+til[x]}
 t2:{2+til[x]}
+frac:{x%sum[xs]};
+rfrac:{};
 
 // Amount distribution logic
 // ---------------------------------------------------------------------------------------->
@@ -17,7 +19,7 @@ t2:{2+til[x]}
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.increasingLinearDistribution                     :{[amt;num;lotsize]
-        l:t1 num:
+        l:t1[num]:
 
     };
 
@@ -25,7 +27,7 @@ t2:{2+til[x]}
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
 .state.decreasingLinearDistribution                     :{[amt;num;lotsize]
-        l:reverse t1 num;
+        l:reverse t1[num];
 
     };
 
@@ -67,7 +69,7 @@ t2:{2+til[x]}
 // qty for the given set of groups in order.
 .state.increasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:log t2[num];
-        
+
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -75,20 +77,21 @@ t2:{2+til[x]}
 // qty for the given set of groups in order.
 .state.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:reverse log t2[num];
+
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the normal distribution of
 // qty for the given set of groups in order.
 .state.normalDistribution                               :{[amt;num;lotsize]
-
+        l:0;
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the flat distribution of
 // qty for the given set of groups in order.
 .state.flatDistribution                                 :{[amt;num;lotsize]
-
+        l:num#1;
     };
 
 
