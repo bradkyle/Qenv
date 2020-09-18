@@ -160,18 +160,6 @@
     .pipe.egress.AddFundingEvent[];
     };
 
-// Inc Fill is used when the fill is to be added to the given inventory
-// inc fill would AdjustOrderMargin if the order when the order was a limit
-// order.
-/  @param price     (Long) The price at which the fill is occuring
-/  @param qty       (Long) The quantity that is being filled.
-/  @param account   (Account) The account to which the inventory belongs.
-/  @param inventory (Inventory) The inventory that is going to be added to.
-/  @return (Inventory) The new updated inventory
-.engine.ProcessLiquidationEvents :{[events]
-    // TODO check    
-    .pipe.egress.AddLiquidationEvent[];
-    };
 
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
@@ -246,6 +234,19 @@
     .pipe.egress.AddBatch[events]; // TODO add noise/dropout/randomization
     };
 
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessLiquidationEvents :{[events]
+    // TODO check    
+    .pipe.egress.AddLiquidationEvent[];
+    };
 
 / Public Event .engine.Processing logic (Writes)
 / -------------------------------------------------------------------->

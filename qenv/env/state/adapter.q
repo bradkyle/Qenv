@@ -15,6 +15,7 @@
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.increasingLinearDistribution                     :{[amt;num;lotsize]
+        l:til num:
 
     };
 
@@ -22,6 +23,24 @@
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
 .state.decreasingLinearDistribution                     :{[amt;num;lotsize]
+        l:reverse til num;
+
+    };
+
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the increasing linear distribution of
+// qty for the given set of groups in order.
+.state.increasingSuperLinearDistribution                :{[amt;num;lotsize]
+        l:til[num]*til[num]:
+
+    };
+
+// Given a total amount and the number of groups in which to distribute
+// the order quantities return the decreasing linear distribution of
+// qty for the given set of groups in order.
+.state.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
+        l:til[num]*til[num]:
 
     };
 
@@ -29,13 +48,15 @@
 // the order quantities return the increasing exponential distribution of
 // qty for the given set of groups in order.
 .state.increasingExponentialDistribution                :{[amt;num;lotsize]
-
+        l:exp til[num];
+        
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing exponential distribution of
 // qty for the given set of groups in order.
 .state.decreasingExponentialDistribution                :{[amt;num;lotsize]
+        l:reverse exp til[num];
 
     };
 
@@ -331,7 +352,7 @@
 // Creates a set of actions dispersed in time that represent
 // a macro action
 .state.adapter.constructMacroAction                    :{[]
-
+    'nyi
     };
 
 // Action Adapter Mapping // TODO convert to batch, descriptions
