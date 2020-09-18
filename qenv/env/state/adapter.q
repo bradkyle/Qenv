@@ -10,90 +10,89 @@
 
 // Amount distribution logic
 // ---------------------------------------------------------------------------------------->
-t1:{1+til[x]}
-t2:{2+til[x]}
-frac:{x%sum[xs]};
-ramfrac:{};
+.state.adapter.t1:{1+til[x]}
+.state.adapter.t2:{2+til[x]}
+.state.adapter.frac:{x%sum[xs]};
+.state.adapter.ramfrac:{};
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
-.state.increasingLinearDistribution                     :{[amt;num;lotsize]
+.state.adapter.increasingLinearDistribution                     :{[amt;num;lotsize]
         l:t1[num]:
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
-.state.decreasingLinearDistribution                     :{[amt;num;lotsize]
+.state.adapter.decreasingLinearDistribution                     :{[amt;num;lotsize]
         l:reverse t1[num];
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
-
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
-.state.increasingSuperLinearDistribution                :{[amt;num;lotsize]
+.state.adapter.increasingSuperLinearDistribution                :{[amt;num;lotsize]
         l:t1[num]*t1[num]:
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
-.state.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
+.state.adapter.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
         l:t1[num]*t1[num]:
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing exponential distribution of
 // qty for the given set of groups in order.
-.state.increasingExponentialDistribution                :{[amt;num;lotsize]
+.state.adapter.increasingExponentialDistribution                :{[amt;num;lotsize]
         l:exp t1[num];
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing exponential distribution of
 // qty for the given set of groups in order.
-.state.decreasingExponentialDistribution                :{[amt;num;lotsize]
+.state.adapter.decreasingExponentialDistribution                :{[amt;num;lotsize]
         l:reverse exp t1[num];
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing logarithmic distribution of
 // qty for the given set of groups in order.
-.state.increasingLogarithmicDistribution                :{[amt;num;lotsize]
+.state.adapter.increasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:log t2[num];
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing logarithmic distribution of
 // qty for the given set of groups in order.
-.state.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
+.state.adapter.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
         l:reverse log t2[num];
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the normal distribution of
 // qty for the given set of groups in order.
-.state.normalDistribution                               :{[amt;num;lotsize]
+.state.adapter.normalDistribution                               :{[amt;num;lotsize]
         l:0;
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the flat distribution of
 // qty for the given set of groups in order.
-.state.flatDistribution                                 :{[amt;num;lotsize]
+.state.adapter.flatDistribution                                 :{[amt;num;lotsize]
         l:num#1;
-        ramfrac[]
+        .state.adapter.ramfrac[l;amt;lotsize]
     };
 
 
@@ -103,21 +102,21 @@ ramfrac:{};
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
-.state.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
-
+.state.adapter.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
+    mnprice+((2*til[num];2*t1[num])*ticksize)
     };
 
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
 // orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-.state.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
+.state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
 
     };
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
 // orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
-.state.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
+.state.adapter.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
 
     };    
 
@@ -272,7 +271,7 @@ ramfrac:{};
 
 // Bins a given quantity into an appropriate amount given the current
 // balance/available balance and the amount given as a bin size.
-.state.staticOrderSizeStepper                           :{[]
+.state.adapter.staticOrderSizeStepper                           :{[]
 
     };
 
@@ -281,7 +280,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createLevelLimitOrdersStaticSizeByDelta          :{[]
+.state.adapter.createLevelLimitOrdersStaticSizeByDelta          :{[]
 
     };
 
@@ -290,7 +289,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createLevelLimitOrdersDynamicSizeByDelta         :{[]
+.state.adapter.createLevelLimitOrdersDynamicSizeByDelta         :{[]
 
     };
 
@@ -299,7 +298,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createBucketLimitOrdersStaticSizeByDelta         :{[]
+.state.adapter.createBucketLimitOrdersStaticSizeByDelta         :{[]
 
     };
 
@@ -308,7 +307,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createBucketLimitOrdersDynamicSizeByDelta        :{[]
+.state.adapter.createBucketLimitOrdersDynamicSizeByDelta        :{[]
 
     };
 
@@ -317,7 +316,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createLevelIcebergOrdersStaticSizeByDelta        :{[]
+.state.adapter.createLevelIcebergOrdersStaticSizeByDelta        :{[]
 
     };
 
@@ -326,7 +325,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createLevelIcebergOrdersDynamicSizeByDelta       :{[]
+.state.adapter.createLevelIcebergOrdersDynamicSizeByDelta       :{[]
 
     };
 
@@ -335,7 +334,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createBucketIcebergOrdersStaticSizeByDelta       :{[]
+.state.adapter.createBucketIcebergOrdersStaticSizeByDelta       :{[]
 
     };
 
@@ -344,7 +343,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.createBucketIcebergOrdersDynamicSizeByDelta      :{[]
+.state.adapter.createBucketIcebergOrdersDynamicSizeByDelta      :{[]
 
     };
 
