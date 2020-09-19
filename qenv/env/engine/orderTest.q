@@ -667,11 +667,11 @@ dozc:{x+y}[doz];
             .util.testutils.defaultAccount;
             p`td];
 
-        / .util.testutils.checkMock[mck1;m[0];c];  // Expected ApplyFill Mock
-        / .util.testutils.checkMock[mck2;m[1];c];  // Expected AddTradeEvent Mock
-        / .util.testutils.checkMock[mck3;m[2];c];  // Expected IncSelfFill Mock
-        / .util.testutils.checkMock[mck4;m[3];c];  // Expected AddOrderUpdated Mock
-        / .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected ApplyFill Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected AddTradeEvent Mock
+        .util.testutils.checkMock[mck3;m[2];c];  // Expected IncSelfFill Mock
+        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddOrderUpdated Mock
+        .util.testutils.checkMock[mck5;m[4];c];  // Expected AddDepthEvent Mock
 
         .util.testutils.checkDepth[p[`eDepth];c];
         .util.testutils._checkOrders[
@@ -944,7 +944,7 @@ dozc:{x+y}[doz];
                  qty:10#1000;
                  hqty:((10 20),(8#10));
                  iqty:((270 160),(8#0)); // TODO fix
-                 vqty:((1010 1020),(8#1000)) // TODO fix
+                 vqty:((1030 1040),(8#1000)) // TODO fix
             ); 
             (   // Current Orders  
                 til[5];5#1;5#1;5#1;5#1; // 
@@ -956,12 +956,58 @@ dozc:{x+y}[doz];
             ); 
             (-1;1850;1b;z);  // Fill Execution Buy
             ( // Current Depth  
+                 [price:999-til 9] 
+                 side:(9#1);
+                 qty:(510,8#1000);
+                 hqty:(0,(8#10));
+                 iqty:(80,(8#0));
+                 vqty:(530, 8#1000)
+            ); 
+            (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
+                til[5];5#1;5#1;5#1;5#1; // 
+                ((3#0),60,0); // offset
+                ((3#0),100,0);  // leaves
+                (0 0 0 20 0); // displayqty
+                5#1000 999; // price
+                ((3#1),0 1); // status
+                5#z // time
+            ); 
+            (1b;1;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
+                 enlist(`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;0b;1000;200) 
+            ));  // Expected ApplyFill Mock
+            (1b;1;( // AddTradeEvent: side size price
+                enlist((-1;1000;200);z)
+            ));  // Expected AddTradeEvent Mock
+            (0b;0;()); // Expected IncSelfFill Mock
+            (1b;1;()); // Expected AddOrderUpdateEvent Mock
+            (1b;1;()) // Expected AddDepthEvent Mock
+        ));
+        (("SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // TODO fix
+          "orders, trade execution > agent order offset, fill is agent (3 orders on second level)");(
+             ( // Current Depth  
                  [price:1000-til 10] 
                  side:(10#1);
-                 qty:(560,9#1000);
-                 hqty:((0 20),(8#10));
-                 iqty:((120 160),(8#0));
-                 vqty:(590 1020, 8#1000)
+                 qty:10#1000;
+                 hqty:((10 20),(8#10));
+                 iqty:((270 160),(8#0)); // TODO fix
+                 vqty:((1030 1040),(8#1000)) // TODO fix
+            ); 
+            (   // Current Orders  
+                til[5];5#1;5#1;5#1;5#1; // 
+                ((2#400),(2#600),850); // offset
+                5#100; // leaves
+                ((2#10),(3#20)); // displayqty
+                5#1000 999; // price
+                5#z // time
+            ); 
+            (-1;1850;1b;z);  // Fill Execution Buy
+            ( // Current Depth  
+                 [price:999-til 9] 
+                 side:(9#1);
+                 qty:(510,8#1000);
+                 hqty:(0,(8#10));
+                 iqty:(80,(8#0));
+                 vqty:(530, 8#1000)
             ); 
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
                 til[5];5#1;5#1;5#1;5#1; // 

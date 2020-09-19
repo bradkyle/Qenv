@@ -366,7 +366,7 @@
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
 
-        // 
+        // Add trade events back into the event pipeline
         .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
