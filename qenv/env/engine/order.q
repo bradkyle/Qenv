@@ -298,21 +298,8 @@
         // Calculate new shifts and max shifts
         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
-        
-        // Derive the non agent qtys that
-        // make up the orderbook
-        // The offset includes the hidden qty
 
-        / notAgentQty: flip .util.PadM[raze'[(
-        /         0^state[`hqty]; // hidden qty
-        /         0^(state[`offset][;0] - 0^state[`hqty]); // first offset
-        /         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
-        /         .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
-        /     )]];
-        / .order.test.notAgentQty:notAgentQty;
-
-        / notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
-
+        // TOOD update comments
         // The delta in the visual qty is equal to sum of the change in the open display qty
         // and the total fill qty that isnt used to fill the hqty or iqty of the previous
         // queue instantiation.
@@ -359,10 +346,12 @@
 
         // TODO update with displayqty // TODO make simpler
         oupd:flip(`orderId`offset`leaves`displayqty`status!((raze'[state`orderId`offset`leaves`displayqty`status])[;where[msk]]));
+        // Amend orders in orderbook.
         .order.Order,:oupd; // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[oupd;time]; // Emit events for all 
         // Make order updates
+       
         mflls:flip(`accountId`price`qty`reduce!((raze'[state`accountId`price`fills`reduce])[;where[msk]]));
         
         .order.test.mflls:mflls;
@@ -374,19 +363,22 @@
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
   
+
+        // 
         .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
         state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
-        .order.test.obi:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
-        .order.OrderBook,:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
+        obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
+        .order.OrderBook,:obupd;
 
+        // TODO make simpler and move down
         delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
 
     ];if[count[state]>0;[
-        
+        // TODO testing
         .order.OrderBook,:flip .util.PadM[state`price`side`qty`hqty`iqty`vqty];
         
     ]]]; // TODO fix
