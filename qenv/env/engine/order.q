@@ -341,7 +341,7 @@
 
         // Derive the non agent qty's from the state such that quantities
         // such as the visible resultant trades can be derived etc.
-        notAgentQty: flip .util.PadM[raze'[(
+        notAgentQty: .util.PadM[raze'[flip (
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
@@ -349,11 +349,12 @@
             )]];
         .order.test.notAgentQty:notAgentQty;
 
-        notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
-        / splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty] 
-        / qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt] 
-
-
+        / notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
+        // Derive the splt which is the combination of the leaves of all orders at 
+        // a level with the interspaced display qty etc. which is used to derive the
+        // disparate quantities of trades that occur at a given price level.
+        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty]; 
+        qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[state`rp;splt];
 
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
             nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
