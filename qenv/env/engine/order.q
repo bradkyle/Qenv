@@ -349,7 +349,6 @@
             )]];
         .order.test.notAgentQty:notAgentQty;
 
-        / notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
         // Derive the splt which is the combination of the leaves of all orders at 
         // a level with the interspaced display qty etc. which is used to derive the
         // disparate quantities of trades that occur at a given price level.
@@ -384,12 +383,15 @@
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
 
+        // Derive the maker side from the state.
+        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
+
         // Add trade events back into the event pipeline
+        trds:{}[state`prices;qty;state`bside];
         .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
 
-        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
         obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
         .order.OrderBook,:obupd;
