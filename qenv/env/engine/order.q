@@ -284,7 +284,7 @@
 
         // Pad state into a matrix
         // for faster operations
-        padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
+        padcols:(`offset`size`leaves`displayqty`reduce`orderId`side, // TODO make constant?
             `accountId`instrumentId`price`status);
         (state padcols):.util.PadM'[state padcols];
         .order.test.pstate:state;
@@ -303,15 +303,15 @@
         // make up the orderbook
         // The offset includes the hidden qty
 
-        notAgentQty: flip .util.PadM[raze'[(
-                0^state[`hqty]; // hidden qty
-                0^(state[`offset][;0] - 0^state[`hqty]); // first offset
-                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
-                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
-            )]];
-        .order.test.notAgentQty:notAgentQty;
+        / notAgentQty: flip .util.PadM[raze'[(
+        /         0^state[`hqty]; // hidden qty
+        /         0^(state[`offset][;0] - 0^state[`hqty]); // first offset
+        /         .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
+        /         .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
+        /     )]];
+        / .order.test.notAgentQty:notAgentQty;
 
-        notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
+        / notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
 
         // The delta in the visual qty is equal to sum of the change in the open display qty
         // and the total fill qty that isnt used to fill the hqty or iqty of the previous
@@ -358,11 +358,10 @@
         .order.test.nshft:nshft;
 
         // TODO update with displayqty // TODO make simpler
-        .order.test.zn:`orderId`offset`leaves`displayqty!(raze'[state`orderId`offset`leaves`displayqty]);
-
-        .order.Order,:flip(`orderId`offset`leaves`displayqty`status!((raze'[state`orderId`offset`leaves`displayqty`status])[;where[msk]]));  // update where partial
+        oupd:flip(`orderId`offset`leaves`displayqty`status!((raze'[state`orderId`offset`leaves`displayqty`status])[;where[msk]]));
+        .order.Order,:oupd; // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
-        .pipe.egress.AddOrderUpdatedEvent[]; // Emit events for all 
+        .pipe.egress.AddOrderUpdatedEvent[oupd;time]; // Emit events for all 
         // Make order updates
         mflls:flip(`accountId`price`qty`reduce!((raze'[state`accountId`price`fills`reduce])[;where[msk]]));
         
