@@ -387,7 +387,7 @@
         state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
         // Add trade events back into the event pipeline
-        trds:{}[state`prices;qty;state`bside];
+        trds:raze[{}'[state`prices;qty;state`bside]];
         .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
 
         if[isagnt;.account.ApplyFill[[]]]; // TODO
