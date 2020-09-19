@@ -327,11 +327,6 @@
         nstatus:1*((state[`offset]<=state[`rp])and(nshft<=state[`rp])); // todo mask
         nstatus+:2*((sums[state[`offset]]<=state[`rp])and not nstatus); // todo mask
 
-        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
-            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
-        );
-        .order.test.stateu:state;
-
         .order.test.ndisplayqty:ndisplayqty;
         .order.test.displaydlt:displaydlt;
         .order.test.niqty:niqty;
@@ -343,6 +338,26 @@
         .order.test.state1:state;
         .order.test.nstatus:nstatus; 
         .order.test.nshft:nshft;
+
+        // Derive the non agent qty's from the state such that quantities
+        // such as the visible resultant trades can be derived etc.
+        notAgentQty: flip .util.PadM[raze'[(
+                0^state[`hqty]; // hidden qty
+                0^(state[`offset][;0] - 0^state[`hqty]); // first offset
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
+                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
+            )]];
+        .order.test.notAgentQty:notAgentQty;
+
+        notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
+        / splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty] 
+
+
+        state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
+            nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
+        );
+        .order.test.stateu:state;
+
 
         // Derive order amends from given trades
         oupdCols:`orderId`offset`leaves`displayqty`status;
