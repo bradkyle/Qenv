@@ -107,7 +107,7 @@
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The uniformal price distribution.
 .state.adapter.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
-        mnprice+((2*til[num];2*t1[num])*ticksize)
+        mnprice+((2*til[num];2*t1[num])*ticksize) // Derive the distribution of prices
     };
 
 // Generates a set of buckets according to
