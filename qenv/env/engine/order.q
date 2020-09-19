@@ -344,27 +344,27 @@
         .order.test.nstatus:nstatus; 
         .order.test.nshft:nshft;
 
-        // TODO update with displayqty // TODO make simpler
+        // Derive order amends from given trades
         oupdCols:`orderId`offset`leaves`displayqty`status;
-        oupd:flip(oupdCols!((raze'[state[oupdCols]])[;where[msk]]));
-        // Amend orders in orderbook.
+        oupd:flip(oupdCols!((raze'[state[oupdCols]])[;where[msk]])); // TODO make faster
         .order.Order,:oupd; // update where partial
-        / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
-        .pipe.egress.AddOrderUpdatedEvent[oupd;time]; // Emit events for all 
+
+        // Add order update events.
+        .pipe.egress.AddOrderUpdatedEvent[oupd;fillTime]; // Emit events for all 
+        
         // Make order updates
-       
         mfllsCols:`accountId`price`qty`reduce;
-        mflls:flip(mfllsCols!((raze'[state[mfflsCols]])[;where[msk]]));
+        mflls:flip(mfllsCols!((raze'[state[mfllsCols]])[;where[msk]]));
         
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
         .order.test.isagnt:isagnt;
+
         if[count[mflls]>0;[
             if[(isagnt and (account[`accountId] in mflls[`accountId]));
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
-  
 
         // 
         .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades

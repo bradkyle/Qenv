@@ -937,13 +937,13 @@ dozc:{x+y}[doz];
             (1b;1;()) // Expected AddDepthEvent Mock
         ));
         (("SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // TODO fix
-          "orders, trade execution > agent order offset, fill is agent (3 orders on one level)");(
+          "orders, trade execution > agent order offset, fill is agent (3 orders on first level)");(
              ( // Current Depth  
                  [price:1000-til 10] 
                  side:(10#1);
                  qty:10#1000;
                  hqty:((10 20),(8#10));
-                 iqty:((180 160),(8#0)); // TODO fix
+                 iqty:((270 160),(8#0)); // TODO fix
                  vqty:((1010 1020),(8#1000)) // TODO fix
             ); 
             (   // Current Orders  
@@ -964,13 +964,13 @@ dozc:{x+y}[doz];
                  vqty:(590 1020, 8#1000)
             ); 
             (   // Expected Orders (til[4];4#1;4#1;4#-1;4#1;(4#0);((3#0),50);((3#0),50);4#1000 1001;(3#2),0;4#z);
-                til[4];4#1;4#1;4#1;4#1;
-                (0 400 150 600); // offset
-                (50,3#100); // leaves
-                (10 10 20 20); // displayqty
-                4#1000 999; // price
-                (1,3#0); // status
-                4#z // time
+                til[5];5#1;5#1;5#1;5#1; // 
+                ((3#0),60,0); // offset
+                ((3#0),100,0);  // leaves
+                (0 0 0 20 0); // displayqty
+                5#1000 999; // price
+                ((3#1),0 1); // status
+                5#z // time
             ); 
             (1b;1;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
                  enlist(`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;0b;1000;200) 
