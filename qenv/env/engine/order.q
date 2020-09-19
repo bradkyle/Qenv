@@ -351,6 +351,8 @@
 
         notAgentQtyRp:(sums'[notAgentQty])-state[`rp];
         / splt:{$[count[x];1_(raze raze'[0,(0^x);y]);y]}'[pleaves;nagentQty] 
+        / qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[rp;splt] 
+
 
 
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
