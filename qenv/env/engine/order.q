@@ -286,7 +286,7 @@
         // for faster operations
         padcols:(`offset`size`leaves`displayqty`reduce`orderId`side, // TODO make constant?
             `accountId`instrumentId`price`status);
-        (state padcols):.util.PadM'[state padcols];
+        (state padcols):.util.PadM'[state padcols]; // TODO make faster?
         .order.test.pstate:state;
 
         // Useful counts 
@@ -345,14 +345,16 @@
         .order.test.nshft:nshft;
 
         // TODO update with displayqty // TODO make simpler
-        oupd:flip(`orderId`offset`leaves`displayqty`status!((raze'[state`orderId`offset`leaves`displayqty`status])[;where[msk]]));
+        oupdCols:`orderId`offset`leaves`displayqty`status;
+        oupd:flip(oupdCols!((raze'[state[oupdCols]])[;where[msk]]));
         // Amend orders in orderbook.
         .order.Order,:oupd; // update where partial
         / ![`.order.Order;.util.cond.bookBounds[];0;`symbol$()]; // Delete where filled
         .pipe.egress.AddOrderUpdatedEvent[oupd;time]; // Emit events for all 
         // Make order updates
        
-        mflls:flip(`accountId`price`qty`reduce!((raze'[state`accountId`price`fills`reduce])[;where[msk]]));
+        mfllsCols:`accountId`price`qty`reduce;
+        mflls:flip(mfllsCols!((raze'[state[mfflsCols]])[;where[msk]]));
         
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
