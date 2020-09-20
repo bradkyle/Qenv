@@ -144,6 +144,8 @@ ramfrac:{};
     };    
 
 
+.state.adapter.getBuckets:{};
+
 // Stop Creation
 // ---------------------------------------------------------------------------------------->
 // Should use the expected next state inventory
@@ -264,7 +266,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDeltaProvided          :{[buyamts;sellamts;]
+.state.adapter.createLevelLimitOrdersDeltaProvided          :{[buyamts;sellamts;num]
 
     };
 
@@ -273,7 +275,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDeltaDistribution         :{[buyamt;sellamt;distkind]
+.state.adapter.createLevelLimitOrdersDeltaDistribution         :{[buyamt;sellamt;distkind;num]
 
     };
 
@@ -282,7 +284,9 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts;]
+.state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts;num]
+        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
+        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
 
     };
 
@@ -291,7 +295,11 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;buyamt;sellamt;distkind]
+.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;buyamt;sellamt;selldistkind;buydistkind;num]
+        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
+        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
+        selldistrib:.state.adapter.getAmtDistribution[selldistkind;sellamt;num];
+        buydistrib:.state.adapter.getAmtDistribution[buydistkind;buyamt;num];
 
     };
  
