@@ -267,7 +267,16 @@ ramfrac:{};
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
 .state.adapter.createLevelLimitOrdersDeltaProvided          :{[buyamts;sellamts;num]
+        sellprices:.state.getLvlPrices[-1;count[sellamts]];
+        buyprices:.state.getLvlPrices[1;count[buyamts]];
 
+        // Derive current variables
+        cselldistrib:.state.getLvlsQty[sellpricebuckets;-1;aId];
+        cbuydistrib:.state.getLvlsQty[buypricebuckets;1;aId];
+
+        // Derive bucket deltas
+        dltselldistrib:sellamts-cselldistrib;
+        dltbuydistrib:buyamts-cbuydistrib;
     };
 
 // Derives the delta between the current outstanding/leaves
@@ -276,7 +285,19 @@ ramfrac:{};
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
 .state.adapter.createLevelLimitOrdersDeltaDistribution         :{[buyamt;sellamt;distkind;num]
+        // Derive target variabless
+        sellprices:.state.getLvlPrices[-1;num];
+        buyprices:.state.getLvlPrices[1;num];
+        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num];
+        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num];
 
+        // Derive current variables
+        cselldistrib:.state.getLvlsQty[sellpricebuckets;-1;aId];
+        cbuydistrib:.state.getLvlsQty[buypricebuckets;1;aId];
+
+        // Derive bucket deltas
+        dltselldistrib:tselldistrib-cselldistrib;
+        dltbuydistrib:tbuydistrib-cbuydistrib;
     };
 
 // Derives the delta between the current outstanding/leaves
@@ -285,8 +306,8 @@ ramfrac:{};
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
 .state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts]
-        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];count[sellamts]];
-        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];count[buyamts]];
+        sellpricebuckets:.state.adapter.getBuckets[bucketkind;count[sellamts]];
+        buypricebuckets:.state.adapter.getBuckets[bucketkind;count[buyamts]];
 
         // Derive current state
         cselldistrib:.state.getBucketedQty[sellpricebuckets;-1;aId];
@@ -295,7 +316,6 @@ ramfrac:{};
         // Derive bucket deltas
         dltselldistrib:sellamts-cselldistrib;
         dltbuydistrib:buyamts-cbuydistrib;
-
     };
 
 // Derives the delta between the current outstanding/leaves
@@ -307,8 +327,8 @@ ramfrac:{};
 // that inevitably occur in volatile markets.
 .state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;amts;distkinds;num]
         // Derive target states
-        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
-        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
+        sellpricebuckets:.state.adapter.getBuckets[bucketkind;num];
+        buypricebuckets:.state.adapter.getBuckets[bucketkind;num];
         tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num];
         tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num];
         
