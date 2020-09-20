@@ -360,53 +360,57 @@ ramfrac:{};
 // ---------------------------------------------------------------------------------------->
 
 // TODO HEDGED PATHFINDER
-.state.adapter.HedgedPathFinder         :{[encouragement;accountId;a]
-    
-    };
 
 // COMBINED PATHFINDER                
-.state.adapter.CombinedPathFinder       :{[encouragement;accountId;a]
+.state.adapter.CombinedPathFinder       :{[encouragement;time;accountId;a]
+        numBuckets:10;
 
         // Creates a set of post only market orders at given levels.
         limitfn:.state.adapter.createBucketLimitOrdersDeltaDistribution[
-            accountId;10;.state.adapter.superlinearPriceDistribution]; 
+            accountId;numBuckets;.state.adapter.superlinearPriceDistribution]; 
 
-        marketfn:0;
+        marketfn:.state.adapter.createMarketOrder[];
+        
+        // Creates a 
+        macromarketfn:.state.adapter.constructMacroAction[
+            .state.adapter.createMarketOrder;
+            ];
 
-        macromarketfn:0;
-
-        flatfn:0;
+        // Creates the set of events that will serve to flatten
+        // the current outstanding positions of the agent
+        flatfn::.state.adapter.createFlattenAllMarketOrders[
+            accountId];
 
         $[a=0;[penalty+:encouragement];
-          a=1; limitfn[();()];           // sell only very aggressive;
-          a=2; limitfn[();()];           // sell only aggressive;
-          a=3; limitfn[();()];           // sell only moderate;
-          a=4; limitfn[();()];           // sell only conservative;
-          a=5; limitfn[();()];           // sell/buy very aggressive
-          a=6; limitfn[();()];           // sell/buy aggressive
-          a=7; limitfn[();()];           // sell/buy moderate
-          a=8; limitfn[();()];           // sell/buy conservative
-          a=9; limitfn[();()];           // buy/sell conservative
-          a=10;limitfn[();()];           // buy/sell moderate
-          a=11;limitfn[();()];           // buy/sell aggressive
-          a=12;limitfn[();()];           // buy/sell very aggressive
-          a=13;limitfn[();()];           // buy only conservative; 
-          a=14;limitfn[();()];           // buy only moderate;
-          a=15;limitfn[();()];           // buy only aggressive
-          a=16;limitfn[();()];           // buy only very aggressive
-          a=17;marketfn[];               // moderate sell market
-          a=18;marketfn[];               // moderate buy market
-          a=19;marketfn[];               // aggressive buy market
-          a=20;marketfn[];               // aggressive sell market
-          a=21:macromarketfn[];          // conservative macro market sell
-          a=22:macromarketfn[];          // conservative macro market buy
-          a=23:macromarketfn[];          // moderate macro market sell
-          a=24;macromarketfn[];          // moderate macro market buy
-          a=25;macromarketfn[];          // aggressive macro market sell
-          a=26;macromarketfn[];          // aggressive macro market buy
-          a=27;macromarketfn[];          // very aggressive macro market sell
-          a=28;macromarketfn[];          // very aggressive macro market buy
-          a=29;flatfn[];                 // flatten position with market orders
+          a=1; limitfn[();()];                      // sell only very aggressive;
+          a=2; limitfn[();()];                      // sell only aggressive;
+          a=3; limitfn[();()];                      // sell only moderate;
+          a=4; limitfn[();()];                      // sell only conservative;
+          a=5; limitfn[();()];                      // sell/buy very aggressive
+          a=6; limitfn[();()];                      // sell/buy aggressive
+          a=7; limitfn[();()];                      // sell/buy moderate
+          a=8; limitfn[();()];                      // sell/buy conservative
+          a=9; limitfn[();()];                      // buy/sell conservative
+          a=10;limitfn[();()];                      // buy/sell moderate
+          a=11;limitfn[();()];                      // buy/sell aggressive
+          a=12;limitfn[();()];                      // buy/sell very aggressive
+          a=13;limitfn[();()];                      // buy only conservative; 
+          a=14;limitfn[();()];                      // buy only moderate;
+          a=15;limitfn[();()];                      // buy only aggressive
+          a=16;limitfn[();()];                      // buy only very aggressive
+          a=17;marketfn[];                          // moderate sell market
+          a=18;marketfn[];                          // moderate buy market
+          a=19;marketfn[];                          // aggressive buy market
+          a=20;marketfn[];                          // aggressive sell market
+          a=21:macromarketfn[(5;10;0.01)];          // conservative macro market sell
+          a=22:macromarketfn[(5;10;0.01)];          // conservative macro market buy
+          a=23:macromarketfn[(5;10;0.01)];          // moderate macro market sell
+          a=24;macromarketfn[(5;10;0.01)];          // moderate macro market buy
+          a=25;macromarketfn[(5;10;0.01)];          // aggressive macro market sell
+          a=26;macromarketfn[(5;10;0.01)];          // aggressive macro market buy
+          a=27;macromarketfn[(5;10;0.01)];          // very aggressive macro market sell
+          a=28;macromarketfn[(5;10;0.01)];          // very aggressive macro market buy
+          a=29;flatfn[];                            // flatten position with market orders
           'INVALID_ACTION];
     };
 
@@ -418,6 +422,6 @@ ramfrac:{};
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter. // TODO pair with state account repr
-.state.adapter.Adapt :{[adapterType; time; actions]
-        {}'[];
+.state.adapter.Adapt :{[adapterType; encouragement; time; actions]
+        .state.adapter.CombinedPathFinder[encouragement;time]'[actions[;0];actions[;1]];
     };

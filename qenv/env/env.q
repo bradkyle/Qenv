@@ -148,6 +148,7 @@
 .env.Step    :{[actions]
     // TODO format actions
     step:.env.CurrentStep;
+    // TODO get current time
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
