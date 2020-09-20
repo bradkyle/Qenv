@@ -361,7 +361,7 @@ ramfrac:{};
 
 // TODO HEDGED PATHFINDER
 .state.adapter.HedgedPathFinder         :{[encouragement;accountId;a]
-
+    
     };
 
 // COMBINED PATHFINDER                

@@ -25,7 +25,8 @@
 // TODO executions.
 
 // TODO hourly/30 minute signals
-// TODO 
+// TODO make larger i.e. 256-512 features
+// TODO move into c
 
 // TODO xgboost predictor etc.
 // TODO longer term candlestic features
