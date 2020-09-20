@@ -403,6 +403,8 @@
         mfllsCols:`accountId`price`qty`reduce;
         mflls:flip(mfllsCols!((raze'[state[mfllsCols]])[;where[msk]]));
         
+        .order.test.acc:account;
+        .order.test.ins:instrument;
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
         .order.test.isagnt:isagnt;
@@ -419,8 +421,6 @@
         obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
         .order.OrderBook,:obupd;
 
-        // TODO make simpler and move down
-        delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
 
     ];if[count[state]>0;[
         // TODO testing
@@ -428,6 +428,8 @@
         
     ]]]; // TODO fix
     
+    // TODO make simpler and move down
+    delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
     
     // Delete all out of bounds depths, depths that are empty 
     // i.e. where vqty + hqty = 0
