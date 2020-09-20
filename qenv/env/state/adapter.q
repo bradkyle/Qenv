@@ -10,10 +10,10 @@
 
 // Amount distribution logic
 // ---------------------------------------------------------------------------------------->
-.state.adapter.t1:{1+til[x]}
-.state.adapter.t2:{2+til[x]}
-.state.adapter.frac:{x%sum[xs]};
-.state.adapter.ramfrac:{};
+t1:{1+til[x]}
+t2:{2+til[x]}
+frac:{x%sum[xs]};
+ramfrac:{};
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
@@ -35,7 +35,7 @@
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
 .state.adapter.increasingSuperLinearDistribution                :{[amt;num;lotsize]
-        l:t1[num]*t1[num]:
+        l:t1[num]*t1[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
 
@@ -43,7 +43,7 @@
 // the order quantities return the decreasing linear distribution of
 // qty for the given set of groups in order.
 .state.adapter.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
-        l:t1[num]*t1[num]:
+        l:t1[num]*t1[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
 
@@ -111,14 +111,15 @@
     };
 
 // Generates a set of buckets according to
-// a exponential distribution of price throughout the
+// a superlinear distribution of price throughout the
 // orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
 /  @param mnprice  (Long) The minimum price at which the distribution should start
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The superlinear price distribution.
 .state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num]
-        
+        l:t1[num]*t1[num];
+        mnprice+(()*ticksize)
     };
 
 // Generates a set of buckets according to
@@ -129,7 +130,8 @@
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The exponential price distribution.
 .state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
-
+        
+        mnprice+(()*ticksize)
     };
 
 // Generates a set of buckets according to
@@ -205,8 +207,8 @@
 // Simply places a single stop order for each corresponding
 // position at a given loss fraction of the positions value
 // (unrealized pnl).
-.state.adapter.naiveStops                              :{[]
-    // 1%avgprice
+.state.adapter.naiveStops                              :{[aId]
+    lprice:.state.deriveLiquidationPrice[aId];
     };
 
 // Uniform staggered stop placement
@@ -214,6 +216,7 @@
 // equidistant price points in relation to the current
 // mark price up to the final maximum loss fraction
 .state.adapter.uniformStops                            :{[]
+    lprice:.state.deriveLiquidationPrice[aId];
 
     };   
 
@@ -222,6 +225,7 @@
 // magnitude away from the current price to a given 
 // maximum loss fraction
 .state.adapter.exponentialStops                        :{[]
+    lprice:.state.deriveLiquidationPrice[aId];
 
     };
 
@@ -230,6 +234,7 @@
 // magnitude away from the current price to a given maximum
 // loss fraction.
 .state.adapter.logarithmicStops                        :{[]
+    lprice:.state.deriveLiquidationPrice[aId];
 
     };
 
