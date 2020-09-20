@@ -207,15 +207,16 @@ ramfrac:{};
 // Simply places a single stop order for each corresponding
 // position at a given loss fraction of the positions value
 // (unrealized pnl).
-.state.adapter.naiveStops                              :{[aId]
+.state.adapter.naiveStops                              :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
+    mprice:.state.deriveMarkPrice[];
     };
 
 // Uniform staggered stop placement
 // Places a uniform set of for instance 5 stop orders at 
 // equidistant price points in relation to the current
 // mark price up to the final maximum loss fraction
-.state.adapter.uniformStops                            :{[]
+.state.adapter.uniformStops                            :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };   
@@ -224,7 +225,7 @@ ramfrac:{};
 // Places a set of stops that exponentially increase in
 // magnitude away from the current price to a given 
 // maximum loss fraction
-.state.adapter.exponentialStops                        :{[]
+.state.adapter.exponentialStops                        :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };
@@ -233,7 +234,7 @@ ramfrac:{};
 // Places a set of stops that logarithmically increase in
 // magnitude away from the current price to a given maximum
 // loss fraction.
-.state.adapter.logarithmicStops                        :{[]
+.state.adapter.logarithmicStops                        :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };
