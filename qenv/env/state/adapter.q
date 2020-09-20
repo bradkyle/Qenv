@@ -259,7 +259,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersStaticSizeByDelta          :{[]
+.state.adapter.createLevelLimitOrdersDeltaProvided          :{[]
 
     };
 
@@ -268,7 +268,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDynamicSizeByDelta         :{[]
+.state.adapter.createLevelLimitOrdersDeltaDistribution      :{[]
 
     };
 
@@ -277,7 +277,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersStaticSizeByDelta         :{[]
+.state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts;]
 
     };
 
@@ -286,47 +286,11 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersDynamicSizeByDelta        :{[]
+.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;buyamt;sellamt;distkind]
 
     };
-
-// Derives the delta between the current outstanding/leaves
-// order quantity at a given price level and the static target
-// "desired" order quantity at that price level and generates
-// the set of amend/new/cancel order requests that need to take
-// place in order to ameliarate the difference.
-.state.adapter.createLevelIcebergOrdersStaticSizeByDelta        :{[]
-
-    };
-
-// Derives the delta between the current outstanding/leaves
-// order quantity at a given price level and the static target
-// "desired" order quantity at that price level and generates
-// the set of amend/new/cancel order requests that need to take
-// place in order to ameliarate the difference.
-.state.adapter.createLevelIcebergOrdersDynamicSizeByDelta       :{[]
-
-    };
-
-// Derives the delta between the current outstanding/leaves
-// order quantity at a given price level and the static target
-// "desired" order quantity at that price level and generates
-// the set of amend/new/cancel order requests that need to take
-// place in order to ameliarate the difference.
-.state.adapter.createBucketIcebergOrdersStaticSizeByDelta       :{[]
-
-    };
-
-// Derives the delta between the current outstanding/leaves
-// order quantity at a given price level and the static target
-// "desired" order quantity at that price level and generates
-// the set of amend/new/cancel order requests that need to take
-// place in order to ameliarate the difference.
-.state.adapter.createBucketIcebergOrdersDynamicSizeByDelta      :{[]
-
-    };
-
-
+ 
+ 
 // Macro Action Utilities
 // ---------------------------------------------------------------------------------------->
 // Macro actions are useful when it is assumed that the agent has an effect on what
