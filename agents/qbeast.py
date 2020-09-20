@@ -138,7 +138,7 @@ class QNet(nn.Module):
         x = inputs["frame"]  # [T, B, C, H, W].
         T, B, *_ = x.shape
         x = torch.flatten(x, 0, 1)  # Merge time and batch.
-        x = x.float() / 255.0
+        x = x.float() / 255.0 #TODO should this be scaled down?
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
