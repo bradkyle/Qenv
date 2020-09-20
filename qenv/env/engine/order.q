@@ -353,7 +353,8 @@
         // a level with the interspaced display qty etc. which is used to derive the
         // disparate quantities of trades that occur at a given price level.
         splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty];         
-        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
+        state[`bside]:nside; // TODO changes
+        state[`mside]:side; // TODO changes
 
         // Derive trades and taker account fills
         // --------------------------------------------------------------->
@@ -365,14 +366,16 @@
             qtys:qtys where[qtys>0];
             c:count qtys;
             :(c#side;c#price;qtys);
-            }'[state`rp;splt;state`price;state`bside]];
+            }'[state`rp;splt;state`price;state[`mside]]];
+        .order.test.tds0:tds;
         flls:();
-        tds:flip[`side`price`qty!raze'[tds]];
-
+        tds:flip[raze'[tds]];
+        .order.test.tds:tds;
+        
         // Derive the maker side from the state.
         if[count[tds]>0;[
                 if[isagnt;.account.ApplyFill[account;instrument;side] flls]; // TODO time
-                .pipe.egress.AddTradeEvent[tds;fillTime];
+                {.pipe.egress.AddTradeEvent[x;y]}'[tds;count[tds]#fillTime];
             ]];
 
 
