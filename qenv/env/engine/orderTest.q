@@ -1019,8 +1019,8 @@ dozc:{x+y}[doz];
                 5#z // time
             ); 
             (1b;1;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
-                 (.util.testutils.defaultInstrument;.util.testutils.defaultAccount;-1;(z;0b;0b;1000;200));
-                 (.util.testutils.defaultInstrument;.util.testutils.defaultAccount;-1;(z;0b;0b;1000;200)) 
+                 (.util.testutils.defaultInstrumentID;.util.testutils.defaultAccountID;-1;(z;0b;0b;1000;200));
+                 (.util.testutils.defaultInstrumentID;.util.testutils.defaultAccountID;-1;(z;0b;0b;1000;200)) 
             ));  // Expected ApplyFill Mock
             (1b;12;( // AddTradeEvent: side size price
                 ((-1;1000;10);z); // TODO check

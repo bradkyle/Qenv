@@ -287,7 +287,7 @@
     $[count[odrs]>0;[
         state:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!state;`price xgroup (update oprice:price, oside:side from odrs)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
-
+        state[`accountId`instrumentId]:7h$(state[`accountId`instrumentId]);
         // Pad state into a matrix
         // for faster operations
         padcols:(`offset`size`leaves`displayqty`reduce`orderId`side, // TODO make constant?
@@ -381,12 +381,6 @@
                     }'[state`tside;state`price;tqty;fillTime];
             ]];
 
-        if[(count[tqty]>0) and isagnt;[
-                flls:(state`mside;state`price;sum'[tqty];count[tqty]#reduce);
-                cflls:count flls;
-                .order.test.flls:flls;
-                .account.ApplyFillG'[cflls#ciId;cflls#caId;cflls#side;flls];
-            ]]; 
 
         // Update orders table and emit order updated event
         // --------------------------------------------------------------->
@@ -400,8 +394,17 @@
         // Add order update events.
         .pipe.egress.AddOrderUpdatedEvent[oupd;fillTime]; // Emit events for all 
         
-        // ApplyFill to maker orders (orders in limit order book)
+        // ApplyFill taker(on trades) maker(on orders in ob)
         // --------------------------------------------------------------->
+
+        // Derive the taker fills as the trades that where executed by
+        // an agent i.e. isagnt is true.
+        if[(count[tqty]>0) and isagnt;[
+                flls:(state`mside;state`price;sum'[tqty];count[tqty]#reduce);
+                cflls:count flls;
+                .order.test.flls:flls;
+                .account.ApplyFillG'[cflls#ciId;cflls#caId;cflls#side;flls];
+            ]]; 
 
         // Make order updates
         // Derives all maker fills as the sum of the amount filled by side,price
@@ -420,6 +423,7 @@
             gmflls:`price`side`reduce`accountId xgroup mflls;
             cgmflls:count gmflls;                
             .order.test.mflls1:mflls;
+            .order.test.gmflls:gmflls;
             if[(isagnt and (account[`accountId] in mflls[`accountId]));[
                 .account.IncSelfFill[accountId;cgmflls;sum[mflls`filled]]; // TODO check 
                 ]];
