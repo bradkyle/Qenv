@@ -118,7 +118,7 @@
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The superlinear price distribution.
 .state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num]
-
+        
     };
 
 // Generates a set of buckets according to

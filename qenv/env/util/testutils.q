@@ -165,6 +165,7 @@ dozc:{x+y}[doz];
             if[count[eBook]>0;[
                 cl:$[count[cl]>0;cl;cols[eBook]];
                 rBook:.order.OrderBook;
+                // TODO order
                 .qt.A[count[eBook];=;count[rBook];"orderBook lvl count";case]; // TODO check
                 .qt.A[(cl#0!rBook);~;(cl#0!eBook);"orderBook";case]; // TODO check
             ]];
