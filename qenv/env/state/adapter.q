@@ -245,6 +245,11 @@ ramfrac:{};
     };
 
 
+// Iceberg/Hidden order Utils
+// ---------------------------------------------------------------------------------------->
+
+
+
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
@@ -259,7 +264,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDeltaProvided          :{[]
+.state.adapter.createLevelLimitOrdersDeltaProvided          :{[buyamts;sellamts;]
 
     };
 
@@ -268,7 +273,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDeltaDistribution      :{[]
+.state.adapter.createLevelLimitOrdersDeltaDistribution         :{[buyamt;sellamt;distkind]
 
     };
 
