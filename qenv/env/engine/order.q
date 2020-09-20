@@ -370,6 +370,11 @@
         .order.test.nshft:nshft;
         .order.test.notAgentQty:notAgentQty;
         .order.test.tqty:tqty;
+        .order.test.numLvls:numLvls;
+        .order.test.acc:account;
+        .order.test.isagnt:isagnt;
+        .order.test.nside:nside;
+        .order.test.ins:instrument;
 
         // Derive trades and taker account fills
         // --------------------------------------------------------------->
@@ -396,40 +401,42 @@
         
         // ApplyFill taker(on trades) maker(on orders in ob)
         // --------------------------------------------------------------->
+        fllCols:`instrumentId`accountId`side`price`qty`reduce`time;
 
         // Derive the taker fills as the trades that where executed by
         // an agent i.e. isagnt is true.
         if[(count[tqty]>0) and isagnt;[
-                flls:(state`mside;state`price;sum'[tqty];count[tqty]#reduce);
-                cflls:count flls;
-                .order.test.flls:flls;
-                .account.ApplyFillG'[cflls#ciId;cflls#caId;cflls#side;flls];
+                flls:flip(fllCols!(
+                    numLvls#ciId;
+                    numLvls#caId;
+                    state`tside;
+                    state`price;
+                    sum'[tqty];
+                    count[tqty]#reduce;
+                    numLvls#fillTime));
+                .account.ApplyFillG . ?[flls;];
             ]]; 
 
         // Make order updates
         // Derives all maker fills as the sum of the amount filled by side,price
         // accountId,reduce etc. and are batched and filled.
-        mfllsCols:`accountId`side`price`qty`reduce;
-        mflls:flip(mfllsCols!raze'[(state`accountId;state`oside;state`oprice;(nleaves-state`leaves);state`reduce)][;where[msk]]);
+        mflls:flip(fllCols!raze'[(
+            state`instrumentId;
+            state`accountId;
+            state`oside;
+            state`oprice;
+            (nleaves-state`leaves);
+            state`reduce;
+            numLvls#fillTime)][;where[msk]]);
         
-        .order.test.acc:account;
-        .order.test.ins:instrument;
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
-        .order.test.isagnt:isagnt;
-        .order.test.nside:nside;
 
         if[count[mflls]>0;[
-            gmflls:`price`side`reduce`accountId xgroup mflls;
-            cgmflls:count gmflls;                
-            .order.test.mflls1:mflls;
-            .order.test.gmflls:gmflls;
             if[(isagnt and (account[`accountId] in mflls[`accountId]));[
-                .account.IncSelfFill[accountId;cgmflls;sum[mflls`filled]]; // TODO check 
+                .account.IncSelfFill . ?[mflls;();();()]; 
                 ]];
-            .order.test.cgmflls:cgmflls;
-            .account.ApplyFill'[cgmflls#ciId;cgmflls#caId;cgmflls#nside;mflls]; // TODO change to take order accountIds, and time!
-
+            .account.ApplyFillG . ?[mflls;();();()]; 
             ]];
         // Update OrderBook
         // --------------------------------------------------------------->
