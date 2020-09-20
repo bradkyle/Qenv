@@ -325,7 +325,7 @@ ramfrac:{};
 // place in order to ameliarate the difference.
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets.
-.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;amts;distkinds;num]
+.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[aId;num;bucketkind;amts;distkinds]
         // Derive target states
         sellpricebuckets:.state.adapter.getBuckets[bucketkind;num];
         buypricebuckets:.state.adapter.getBuckets[bucketkind;num];
