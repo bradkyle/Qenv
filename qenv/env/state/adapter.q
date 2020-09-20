@@ -157,7 +157,7 @@ ramfrac:{};
 // Simply places a single stop order for each corresponding
 // position at a given loss fraction of the positions value
 // (unrealized pnl).
-.state.adapter.naiveStops                              :{[aId;num;mxfrac]
+.state.adapter.createNaiveStops                       :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
     mprice:.state.deriveMarkPrice[];
     };
@@ -166,7 +166,7 @@ ramfrac:{};
 // Places a uniform set of for instance 5 stop orders at 
 // equidistant price points in relation to the current
 // mark price up to the final maximum loss fraction
-.state.adapter.uniformStops                            :{[aId;num;mxfrac]
+.state.adapter.createUniformStops                     :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };   
@@ -175,7 +175,7 @@ ramfrac:{};
 // Places a set of stops that exponentially increase in
 // magnitude away from the current price to a given 
 // maximum loss fraction
-.state.adapter.exponentialStops                        :{[aId;num;mxfrac]
+.state.adapter.createExponentialStops                 :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };
@@ -184,7 +184,7 @@ ramfrac:{};
 // Places a set of stops that logarithmically increase in
 // magnitude away from the current price to a given maximum
 // loss fraction.
-.state.adapter.logarithmicStops                        :{[aId;num;mxfrac]
+.state.adapter.createLogarithmicStops                 :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
 
     };
@@ -366,8 +366,7 @@ ramfrac:{};
 
         // Creates a set of post only market orders at given levels.
         limitfn:.state.adapter.createBucketLimitOrdersDeltaDistribution[
-            accountId;10;
-            .state.adapter.superlinearPriceDistribution]; 
+            accountId;10;.state.adapter.superlinearPriceDistribution]; 
 
         marketfn:0;
 

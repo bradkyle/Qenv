@@ -56,6 +56,8 @@
 .obs.derive: {[step;aIds] // TODO make faster? // TODO fill values with blanks (0f), make faster
 
             // TODO order flow calculation, book activity etc.
+            // TODO iceberg orders
+            // TODO iceberg order detection
 
             // Depth Features
             asks:select[-5;>price] price, size from .state.CurrentDepth where side=-1; // price descending asks
