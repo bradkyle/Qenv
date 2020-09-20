@@ -186,7 +186,7 @@ ramfrac:{};
 // loss fraction.
 .state.adapter.createLogarithmicStops                 :{[aId;num;mxfrac]
     lprice:.state.deriveLiquidationPrice[aId];
-
+    
     };
 
 // ATR stop placement 
@@ -360,6 +360,9 @@ ramfrac:{};
 // ---------------------------------------------------------------------------------------->
 
 // TODO HEDGED PATHFINDER
+.state.adapter.HedgedPathFinder         :{[encouragement;accountId;a]
+
+    };
 
 // COMBINED PATHFINDER                
 .state.adapter.CombinedPathFinder       :{[encouragement;accountId;a]

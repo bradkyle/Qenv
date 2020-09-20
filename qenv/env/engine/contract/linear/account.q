@@ -78,7 +78,6 @@ InitMargin       :{[]
 /  @return (Account) The input as a symbol
 /  @throws InsufficientMargin account has insufficient margin for adjustment
 AdjustOrderMargin       :{[price;delta;markPrice;isign]
-
     premium: abs[min[0,(isign*(markPrice-price))]];
 
     account[`openBuyLoss]:(min[0,(markPrice*account[`openBuyQty])-account[`openBuyValue]] | 0);
