@@ -15,7 +15,7 @@ from torch import multiprocessing as mp
 from torch import nn
 from torch.nn import functional as F
 
-from torchbeast import atari_wrappers
+from torchbeast import qenv_wrappers
 from torchbeast.core import environment
 from torchbeast.core import file_writer
 from torchbeast.core import prof
@@ -23,6 +23,7 @@ from torchbeast.core import vtrace
 
 def act(
         flags,
+        num_actors: int,
         pool_index: int,
         free_queue: mp.SimpleQueue,
         full_queue: mp.SimpleQueue,
