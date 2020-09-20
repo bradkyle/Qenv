@@ -266,15 +266,17 @@ ramfrac:{};
 
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of the given inventory.
-.state.adapter.createFlattenSideMarketOrders            :{[]
-
+.state.adapter.createFlattenSideMarketOrders            :{[aId;side]
+    ivn:.state.getSideOpenInventory[aId;side];
+    nside:neg[side];
+    
     };
 
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of all inventories for
 // a given account.
-.state.adapter.createFlattenAllMarketOrders             :{[]
-
+.state.adapter.createFlattenAllMarketOrders             :{[aId]
+    ivn:.state.getOpenInventory[aId];
     };
 
 // Creates the set of limit orders that will serve to 
@@ -282,7 +284,7 @@ ramfrac:{};
 // it will be assumed that the orders will be placed at the
 // best price/bucket.
 .state.adapter.createFlattenSideLimitOrders             :{[]
-
+    'nyi
     };
 
 // Creates the set of limit orders that will serve to 
@@ -291,7 +293,7 @@ ramfrac:{};
 // it will be assumed that the orders will be placed at the
 // best price/bucket.
 .state.adapter.createFlattenAllLimitOrders              :{[]
-
+    'nyi
     };
 
 

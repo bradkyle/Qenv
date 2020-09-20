@@ -55,6 +55,9 @@
 // Return all open positions for an account
 .state.openInventory            :{?[`.state.CurrentInventory;]};
 
+// Return all open positions for an account
+.state.sideOpenInventory        :{?[`.state.CurrentInventory;]};
+
 // Return the amt of each inventory by side for account
 .state.amtBySide                :{?[`.state.CurrentInventory;]};
 
