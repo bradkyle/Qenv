@@ -118,8 +118,7 @@ ramfrac:{};
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The superlinear price distribution.
 .state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num]
-        l:t1[num]*t1[num];
-        mnprice+(()*ticksize)
+        mnprice+((xexp[t1[num];2];xexp[t2[num];2])*ticksize)
     };
 
 // Generates a set of buckets according to
@@ -130,8 +129,7 @@ ramfrac:{};
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The exponential price distribution.
 .state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
-        
-        mnprice+(()*ticksize)
+        mnprice+((exp[t1[num];exp[t2[num]]])*ticksize)
     };
 
 // Generates a set of buckets according to
@@ -142,58 +140,8 @@ ramfrac:{};
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The logarithmic price distribution.
 .state.adapter.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
-
+        mnprice+((log[t1[num];log[t2[num]]])*ticksize)        
     };    
-
-
-
-// Bucketed Limit Order Creation
-// ---------------------------------------------------------------------------------------->
-
-// Generates a set of order levels according to
-// a uniform distribution of buckets throughout the
-// orderbook .i.e: (0,2),(2,4),(4,6),(6,8) etc.
-// Deltas will be derived by summing the total leaves
-// of the orders in each bucket and attributing the
-// qty delta between the current state and the target
-// state therin.
-// Buckets can thereafter be referenced simply by a 
-// given action mapping i.e. 1: (0,2)
-// Orders are then placed at the foremost marketable 
-// limit price in the bucket.
-.state.adapter.uniformalBucketOrders                     :{[]
-
-    };
-
-// Generates a set of order levels according to
-// a exponential distribution of buckets throughout the
-// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-// Deltas will be derived by summing the total leaves
-// of the orders in each bucket and attributing the
-// qty delta between the current state and the target
-// state therin.
-// Buckets can thereafter be referenced simply by a 
-// given action mapping i.e. 1: (0,1)
-// Orders are then placed at the foremost marketable 
-// limit price in the bucket.
-.state.adapter.exponentialBucketOrders                   :{[]
-
-    };
-
-// Generates a set of order levels according to
-// a exponential distribution of buckets throughout the
-// orderbook .i.e: (0,4),(4,8),(8,10),(10,11) etc.
-// Deltas will be derived by summing the total leaves
-// of the orders in each bucket and attributing the
-// qty delta between the current state and the target
-// state therin.
-// Buckets can thereafter be referenced simply by a 
-// given action mapping i.e. 1: (0,4)
-// Orders are then placed at the foremost marketable 
-// limit price in the bucket.
-.state.adapter.logarithmicBucketOrders                   :{[]
-    
-    };
 
 
 // Stop Creation
@@ -269,7 +217,7 @@ ramfrac:{};
 .state.adapter.createFlattenSideMarketOrders            :{[aId;side]
     ivn:.state.getSideOpenInventory[aId;side];
     nside:neg[side];
-    
+
     };
 
 // Creates the set of market orders that will serve to 

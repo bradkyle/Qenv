@@ -142,6 +142,8 @@
 
 .state.derivePriceAtBucket        :{?[]};
 
+.state.bestAskPrice                :{};
+.state.bestBidPrice                :{};
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features
