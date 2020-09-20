@@ -152,3 +152,7 @@
 .account.ApplyFill:{[a;b;c;d;e;f;g;h]
 
     };
+
+.account.GetAndApplyFill:{
+
+    };

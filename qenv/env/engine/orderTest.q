@@ -1019,10 +1019,11 @@ dozc:{x+y}[doz];
                 5#z // time
             ); 
             (1b;1;( // ApplyFill accountId;instrumentId;side;time;reduceOnly;isMaker;price;qty
-                 enlist(`.account.Account!0;`.instrument.Instrument!0;-1;z;0b;0b;1000;200) 
+                 (.util.testutils.defaultInstrument;.util.testutils.defaultAccount;-1;(z;0b;0b;1000;200));
+                 (.util.testutils.defaultInstrument;.util.testutils.defaultAccount;-1;(z;0b;0b;1000;200)) 
             ));  // Expected ApplyFill Mock
             (1b;12;( // AddTradeEvent: side size price
-                ((-1;1000;10);z);
+                ((-1;1000;10);z); // TODO check
                 ((-1;1000;390);z);
                 ((-1;1000;100);z);
                 ((-1;1000;100);z);

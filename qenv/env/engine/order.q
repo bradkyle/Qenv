@@ -158,12 +158,11 @@
                 // HQTY is excluded from this because the hqty is derived
                 // from historic data and as such the nascent cancellations
                 // are functionally ignored.
-                notAgentQty: flip .util.PadM[raze'[(
-                        0^state[`offset][;0]; // Use the first offset as the first non agent qty
-                        .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
-                        .util.Clip[sum[state`qty`hqty]-mxshft] // TODO change?
-                    )]];
-
+                notAgentQty: :.util.PadM[raze'[flip(
+                    0^state[`offset][;0]; // Use the first offset as the first non agent qty
+                    .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
+                    .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift // TODO
+                )]];
                 .order.test.notAgentQty:notAgentQty;
                 .order.test.ob:.order.OrderBook;
 
@@ -226,6 +225,8 @@
 
 // Process Trades/Market Orders
 // --------------------------------------------------------------> // Price limits merely stipulate maximum market order price
+    
+
 // TODO udpate best bid + best ask
 // TODO move to C for increased speed.
 // TODO add junk order to taker, hidden to taker etc.
@@ -327,6 +328,24 @@
         nstatus:1*((state[`offset]<=state[`rp])and(nshft<=state[`rp])); // todo mask
         nstatus+:2*((sums[state[`offset]]<=state[`rp])and not nstatus); // todo mask
 
+        // Derive the non agent qty's from the state such that quantities
+        // such as the visible resultant trades can be derived etc.
+        notAgentQty: .util.PadM[raze'[flip(
+                0^state[`hqty]; // hidden qty
+                0^(state[`offset][;0] - 0^state[`hqty]); // first offset
+                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
+                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
+        )]];
+
+        // Derive the splt which is the combination of the leaves of all orders at 
+        // a level with the interspaced display qty etc. which is used to derive the
+        // disparate quantities of trades that occur at a given price level.
+        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty];
+
+        // Derives the non-zero trade qtys that occur as a result of the replaced amount 
+        // returns the quantities by price level.
+        tqty:{s:sums[y];q:.util.Clip[?[(x-s)>=0;y;x-(s-y)]];q where[q>0]}'[state`rp;splt]; 
+
         .order.test.ndisplayqty:ndisplayqty;
         .order.test.displaydlt:displaydlt;
         .order.test.niqty:niqty;
@@ -338,46 +357,24 @@
         .order.test.state1:state;
         .order.test.nstatus:nstatus; 
         .order.test.nshft:nshft;
-
-        // Derive the non agent qty's from the state such that quantities
-        // such as the visible resultant trades can be derived etc.
-        notAgentQty: .util.PadM[raze'[flip(
-                0^state[`hqty]; // hidden qty
-                0^(state[`offset][;0] - 0^state[`hqty]); // first offset
-                .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
-                .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift
-            )]];
         .order.test.notAgentQty:notAgentQty;
 
-        // Derive the splt which is the combination of the leaves of all orders at 
-        // a level with the interspaced display qty etc. which is used to derive the
-        // disparate quantities of trades that occur at a given price level.
-        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty];         
-        state[`bside]:nside; // TODO changes
-        state[`mside]:side; // TODO changes
+        // TODO move into own function.
+        state[`mside]:nside; // TODO changes
+        state[`tside]:side; // TODO changes
 
         // Derive trades and taker account fills
         // --------------------------------------------------------------->
-
-        // Derive the trades as the 
-        tds:flip[{[rp;splt;price;side]
-            thresh:sums[splt];
-            qtys:.util.Clip[?[(rp-thresh)>=0;splt;rp-(thresh-splt)]];
-            qtys:qtys where[qtys>0];
-            c:count qtys;
-            :(c#side;c#price;qtys);
-            }'[state`rp;splt;state`price;state[`mside]]];
-        .order.test.tds0:tds;
-        flls:();
-        tds:flip[raze'[tds]];
-        .order.test.tds:tds;
-        
         // Derive the maker side from the state.
-        if[count[tds]>0;[
-                if[isagnt;.account.ApplyFill[account;instrument;side] flls]; // TODO time
+        if[count[tqty]>0;[
+                tds:flip[raze'[(state`tside;state`price;tqty)]];
                 {.pipe.egress.AddTradeEvent[x;y]}'[tds;count[tds]#fillTime];
             ]];
 
+        if[isagnt;[
+                flls:(state`mside;state`price;sum'[tqty];reduce);
+                .account.ApplyFill[instrument;account;side]'[flls];
+            ]]; 
 
         // Update state for easy reference
         // --------------------------------------------------------------->
@@ -415,13 +412,13 @@
         if[count[mflls]>0;[
             if[(isagnt and (account[`accountId] in mflls[`accountId]));
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
-                .account.ApplyFill[account;instrument;nside] mflls; // TODO change to take order accountIds, and time!
+                .account.ApplyFill[instrument;account;nside]'[mflls]; // TODO change to take order accountIds, and time!
                 ]];
 
         // Update OrderBook
         // --------------------------------------------------------------->
 
-        obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
+        obupd:raze'[flip .util.PadM'[state`price`mside`qty`hqty`iqty`vqty]];
         .order.OrderBook,:obupd;
 
 
