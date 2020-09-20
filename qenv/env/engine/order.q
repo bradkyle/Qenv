@@ -352,14 +352,34 @@
         // Derive the splt which is the combination of the leaves of all orders at 
         // a level with the interspaced display qty etc. which is used to derive the
         // disparate quantities of trades that occur at a given price level.
-        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty]; 
-        qty:{s:sums[y];Clip[?[(x-s)>=0;y;x-(s-y)]]}'[state`rp;splt];
+        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty];         
+        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
+        // Derive the trades as the 
+        tds:{[rp;splt;price;side]
+            thresh:sums[splt];
+            qtys:.util.Clip[?[(rp-thresh)>=0;splt;rp-(thresh-splt)]];
+            qtys:qtys where[qtys>0];
+            c:count qtys;
+            :(c#side;c#price;qtys);
+            }'[state`rp;splt;state`price;state`bside];
+        .order.test.tds:tds;
+
+        tds:flip[`side`price`qty!raze'[flip[tds]]];
+        .order.test.tds1:tds;
+
+        // Derive the maker side from the state.
+
+        // Add trade events back into the event pipeline
+        .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
+
+        if[isagnt;.account.ApplyFill[[]]]; // TODO
+
+        // Update the state to represent the changes
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
             nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
         );
         .order.test.stateu:state;
-
 
         // Derive order amends from given trades
         oupdCols:`orderId`offset`leaves`displayqty`status;
@@ -382,16 +402,6 @@
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
                 .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
                 ]];
-
-        // Derive the maker side from the state.
-        state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
-
-        // Add trade events back into the event pipeline
-        trds:raze[{}'[state`prices;qty;state`bside]];
-        .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
-
-        if[isagnt;.account.ApplyFill[[]]]; // TODO
-
 
         obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
         .order.OrderBook,:obupd;
