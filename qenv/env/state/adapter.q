@@ -284,9 +284,17 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts;num]
-        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
-        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
+.state.adapter.createBucketLimitOrdersDeltaProvided            :{[bucketkind;buyamts;sellamts]
+        sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];count[sellamts]];
+        buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];count[buyamts]];
+
+        // Derive current state
+        cselldistrib:.state.getBucketedQty[sellpricebuckets;-1;aId];
+        cbuydistrib:.state.getBucketedQty[buypricebuckets;1;aId];
+
+        // Derive bucket deltas
+        dltselldistrib:sellamts-cselldistrib;
+        dltbuydistrib:buyamts-cbuydistrib;
 
     };
 
@@ -295,18 +303,22 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;buyamt;sellamt;selldistkind;buydistkind;num]
+// Bucketing order qty's prevents needless order update requests
+// that inevitably occur in volatile markets.
+.state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;amts;distkinds;num]
         // Derive target states
         sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
         buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
-        selldistrib:.state.adapter.getAmtDistribution[selldistkind;sellamt;num];
-        buydistrib:.state.adapter.getAmtDistribution[buydistkind;buyamt;num];
+        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num];
+        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num];
         
         // Derive current state
         cselldistrib:.state.getBucketedQty[sellpricebuckets;-1;aId];
-        cbuydistrib:.state.getBucketedQty[buypricebuckets;-1;aId];
+        cbuydistrib:.state.getBucketedQty[buypricebuckets;1;aId];
 
-        //
+        // Derive bucket deltas
+        dltselldistrib:tselldistrib-cselldistrib;
+        dltbuydistrib:tbuydistrib-cbuydistrib;
     };
  
  
