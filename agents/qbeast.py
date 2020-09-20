@@ -116,9 +116,12 @@ class QNet(nn.Module):
         # self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
 
         # Fully connected layer.
-        self.fc = nn.Linear(3136, 512)
+        self.fc1 = nn.Linear(3136, 512)
+        self.fc2 = nn.Linear(3136, 512)
+        self.fc3 = nn.Linear(3136, 512)
+        self.fc4 = nn.Linear(3136, 512)
 
-        core_output_size = self.fc.out_features + num_actions + 1
+        core_output_size = self.fc4.out_features + num_actions + 1
 
         self.policy = nn.Linear(core_output_size, self.num_actions)
         self.baseline = nn.Linear(core_output_size, 1)
@@ -136,11 +139,11 @@ class QNet(nn.Module):
         T, B, *_ = x.shape
         x = torch.flatten(x, 0, 1)  # Merge time and batch.
         x = x.float() / 255.0
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
         x = x.view(T * B, -1)
-        x = F.relu(self.fc(x))
+        x = F.relu(self.fc4(x))
 
         one_hot_last_action = F.one_hot(
             inputs["last_action"].view(T * B), self.num_actions

@@ -126,13 +126,13 @@ def compute_policy_gradient_loss(logits, actions, advantages):
 
 
 def act(
-    flags,
-    actor_index: int,
-    free_queue: mp.SimpleQueue,
-    full_queue: mp.SimpleQueue,
-    model: torch.nn.Module,
-    buffers: Buffers,
-    initial_agent_state_buffers,
+        flags,
+        actor_index: int,
+        free_queue: mp.SimpleQueue,
+        full_queue: mp.SimpleQueue,
+        model: torch.nn.Module,
+        buffers: Buffers,
+        initial_agent_state_buffers,
 ):
     try:
         logging.info("Actor %i started.", actor_index)
