@@ -371,6 +371,10 @@ ramfrac:{};
 
         marketfn:0;
 
+        macromarketfn:0;
+
+        flatfn:0;
+
         $[a=0;[penalty+:encouragement];
           a=1; limitfn[();()];           // sell only very aggressive;
           a=2; limitfn[();()];           // sell only aggressive;
