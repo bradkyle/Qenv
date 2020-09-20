@@ -341,7 +341,7 @@
 
         // Derive the non agent qty's from the state such that quantities
         // such as the visible resultant trades can be derived etc.
-        notAgentQty: .util.PadM[raze'[flip (
+        notAgentQty: .util.PadM[raze'[flip(
                 0^state[`hqty]; // hidden qty
                 0^(state[`offset][;0] - 0^state[`hqty]); // first offset
                 .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; // middle offset + shft
@@ -355,28 +355,38 @@
         splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[state`leaves;notAgentQty];         
         state[`bside]:first'[distinct'[state[`side]]]; // TODO changes
 
+        // Derive trades and taker account fills
+        // --------------------------------------------------------------->
+
         // Derive the trades as the 
-        tds:{[rp;splt;price;side]
+        tds:flip[{[rp;splt;price;side]
             thresh:sums[splt];
             qtys:.util.Clip[?[(rp-thresh)>=0;splt;rp-(thresh-splt)]];
             qtys:qtys where[qtys>0];
             c:count qtys;
             :(c#side;c#price;qtys);
-            }'[state`rp;splt;state`price;state`bside];
-        flls:[];
-        tds:flip[`side`price`qty!raze'[flip[tds]]];
+            }'[state`rp;splt;state`price;state`bside]];
+        flls:();
+        tds:flip[`side`price`qty!raze'[tds]];
 
         // Derive the maker side from the state.
         if[count[tds]>0;[
-                if[isagnt;.account.ApplyFill[account;instrument;side] mflls]; 
+                if[isagnt;.account.ApplyFill[account;instrument;side] flls]; // TODO time
                 .pipe.egress.AddTradeEvent[tds;fillTime];
             ]];
+
+
+        // Update state for easy reference
+        // --------------------------------------------------------------->
 
         // Update the state to represent the changes
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
             nhqty;noffset;nleaves;ndisplayqty;niqty;nqty;nvqty;nshft;nmxshft;nfilled;accdlts;nstatus
         );
         .order.test.stateu:state;
+
+        // Update orders table and emit order updated event
+        // --------------------------------------------------------------->
 
         // Derive order amends from given trades
         oupdCols:`orderId`offset`leaves`displayqty`status;
@@ -386,6 +396,9 @@
         // Add order update events.
         .pipe.egress.AddOrderUpdatedEvent[oupd;fillTime]; // Emit events for all 
         
+        // ApplyFill to maker orders (orders in limit order book)
+        // --------------------------------------------------------------->
+
         // Make order updates
         mfllsCols:`accountId`price`qty`reduce;
         mflls:flip(mfllsCols!((raze'[state[mfllsCols]])[;where[msk]]));
@@ -399,6 +412,9 @@
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
                 .account.ApplyFill[account;instrument;nside] mflls; // TODO change to take order accountIds, and time!
                 ]];
+
+        // Update OrderBook
+        // --------------------------------------------------------------->
 
         obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
         .order.OrderBook,:obupd;
