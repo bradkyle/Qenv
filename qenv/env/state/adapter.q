@@ -359,9 +359,8 @@ ramfrac:{};
 // Action Adapter Mapping // TODO convert to batch, descriptions
 // ---------------------------------------------------------------------------------------->
 
-
-// DISCRETE ACTIONS
-.state.adapter.DiscreteAdapter                          :{[accountId;a]
+// PATHFINDER                
+.state.adapter.PathFinder                              :{[accountId;a]
         $[a=0;[];
           a=1;[];
           a=2;[];
@@ -370,85 +369,6 @@ ramfrac:{};
           'INVALID_ACTION];
     };
 
-// TENLEVEL             
-.state.adapter.TenLevelAdapter                          :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// FIVELEVEL                
-.state.adapter.FiveLevelAdapter                         :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// EXPBUCKET                
-.state.adapter.ExpBucketAdapter                         :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// LOGBUCKET                
-.state.adapter.LogBucketAdapter                         :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// UNIBUCKET                
-.state.adapter.UniBucketAdapter                         :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// EXPBUCKET                
-.state.adapter.ExpBucketAdapterWithIcebergs             :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// LOGBUCKET                
-.state.adapter.LogBucketAdapterWithIcebergs             :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
-
-// UNIBUCKET                
-.state.adapter.UniBucketAdapterWithIcebergs             :{[accountId;a]
-        $[a=0;[];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
-          'INVALID_ACTION];
-    };
 
 // Main Adapt Function
 // ---------------------------------------------------------------------------------------->
