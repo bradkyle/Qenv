@@ -363,14 +363,13 @@
             c:count qtys;
             :(c#side;c#price;qtys);
             }'[state`rp;splt;state`price;state`bside];
-
+        flls:[];
         tds:flip[`side`price`qty!raze'[flip[tds]]];
-        .order.test.tds1:tds;
 
         // Derive the maker side from the state.
         if[count[tds]>0;[
                 if[isagnt;.account.ApplyFill[account;instrument;side] mflls]; 
-                .pipe.egress.AddTradeEvent[[];fillTime];
+                .pipe.egress.AddTradeEvent[tds;fillTime];
             ]];
 
         // Update the state to represent the changes
@@ -398,7 +397,7 @@
         if[count[mflls]>0;[
             if[(isagnt and (account[`accountId] in mflls[`accountId]));
                 .account.IncSelfFill[accountId;count[mflls];sum[sflls`filled]]];
-                .account.ApplyFill[account;instrument;side] mflls; // TODO change to take order accountIds, and time!
+                .account.ApplyFill[account;instrument;nside] mflls; // TODO change to take order accountIds, and time!
                 ]];
 
         obupd:raze'[flip .util.PadM'[state`price`bside`qty`hqty`iqty`vqty]];
