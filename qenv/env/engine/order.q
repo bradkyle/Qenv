@@ -363,17 +363,15 @@
             c:count qtys;
             :(c#side;c#price;qtys);
             }'[state`rp;splt;state`price;state`bside];
-        .order.test.tds:tds;
 
         tds:flip[`side`price`qty!raze'[flip[tds]]];
         .order.test.tds1:tds;
 
         // Derive the maker side from the state.
-
-        // Add trade events back into the event pipeline
-        .pipe.egress.AddTradeEvent[[];fillTime]; // TODO derive trades
-
-        if[isagnt;.account.ApplyFill[[]]]; // TODO
+        if[count[tds]>0;[
+                if[isagnt;.account.ApplyFill[account;instrument;side] mflls]; 
+                .pipe.egress.AddTradeEvent[[];fillTime];
+            ]];
 
         // Update the state to represent the changes
         state[`hqty`offset`leaves`displayqty`iqty`qty`vqty`shft`mxshft`filled`flls`status]:(
