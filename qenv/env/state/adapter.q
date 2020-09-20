@@ -129,7 +129,7 @@ ramfrac:{};
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The exponential price distribution.
 .state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
-        mnprice+((exp[t1[num];exp[t2[num]]])*ticksize)
+        mnprice+((exp[t1[num]];exp[t2[num]])*ticksize)
     };
 
 // Generates a set of buckets according to
@@ -296,11 +296,17 @@ ramfrac:{};
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
 .state.adapter.createBucketLimitOrdersDeltaDistribution         :{[bucketkind;buyamt;sellamt;selldistkind;buydistkind;num]
+        // Derive target states
         sellpricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestAskPrice[];num];
         buypricebuckets:.state.adapter.getBuckets[bucketkind;.state.bestBidPrice[];num];
         selldistrib:.state.adapter.getAmtDistribution[selldistkind;sellamt;num];
         buydistrib:.state.adapter.getAmtDistribution[buydistkind;buyamt;num];
+        
+        // Derive current state
+        cselldistrib:.state.getBucketedQty[sellpricebuckets;-1;aId];
+        cbuydistrib:.state.getBucketedQty[buypricebuckets;-1;aId];
 
+        //
     };
  
  
