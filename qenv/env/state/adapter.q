@@ -106,7 +106,7 @@ ramfrac:{};
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The uniformal price distribution.
-.state.adapter.uniformalPriceDistribution                      :{[mnprice;ticksize;num]
+.state.adapter.uniformalPriceDistribution                      :{[mnprice;ticksize;num;isignum]
         mnprice+((2*til[num];2*t1[num])*ticksize) // Derive the distribution of prices
     };
 
@@ -117,7 +117,7 @@ ramfrac:{};
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The superlinear price distribution.
-.state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num]
+.state.adapter.superlinearPriceDistribution                    :{[mnprice;ticksize;num;isignum]
         mnprice+((xexp[t1[num];2];xexp[t2[num];2])*ticksize)
     };
 
@@ -128,7 +128,7 @@ ramfrac:{};
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The exponential price distribution.
-.state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num]
+.state.adapter.exponentialPriceDistribution                    :{[mnprice;ticksize;num;isignum]
         mnprice+((exp[t1[num]];exp[t2[num]])*ticksize)
     };
 
@@ -139,7 +139,7 @@ ramfrac:{};
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The logarithmic price distribution.
-.state.adapter.logarithmicPriceDistribution                    :{[mnprice;ticksize;num]
+.state.adapter.logarithmicPriceDistribution                    :{[mnprice;ticksize;num;isignum]
         mnprice+((log[t1[num];log[t2[num]]])*ticksize)        
     };    
 
@@ -288,8 +288,8 @@ ramfrac:{};
         // Derive target variabless
         sellprices:.state.getLvlPrices[-1;num];
         buyprices:.state.getLvlPrices[1;num];
-        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num];
-        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num];
+        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num;-1];
+        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num;1];
 
         // Derive current variables
         cselldistrib:.state.getLvlsQty[sellpricebuckets;-1;aId];
@@ -329,8 +329,8 @@ ramfrac:{};
         // Derive target states
         sellpricebuckets:.state.adapter.getBuckets[bucketkind;num];
         buypricebuckets:.state.adapter.getBuckets[bucketkind;num];
-        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num];
-        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num];
+        tselldistrib:.state.adapter.getAmtDistribution[distkinds[0];amts[0];num;-1];
+        tbuydistrib:.state.adapter.getAmtDistribution[distkinds[1];amts[1];num;1];
         
         // Derive current state
         cselldistrib:.state.getBucketedQty[sellpricebuckets;-1;aId];
@@ -361,11 +361,42 @@ ramfrac:{};
 
 // PATHFINDER                
 .state.adapter.PathFinder                              :{[encouragement;accountId;a]
+
+        limitfn:.state.adapter.createBucketLimitOrdersDeltaDistribution[
+            accountId;
+            10;
+            .state.adapter.superlinearPriceDistribution];
+
+        marketfn:0;
+
         $[a=0;[penalty+:encouragement];
-          a=1;[];
-          a=2;[];
-          a=3;[];
-          a=4;[];
+          a=1;limitfn[];    // sell only very aggressive
+          a=1;limitfn[];    // sell only aggressive
+          a=2;limitfn[];    // buy only very aggressive
+          a=2;limitfn[];    // buy only aggressive
+          a=3;limitfn[];    // sell only mid
+          a=4;limitfn[];    // buy only mid
+          a=5;limitfn[];    // sell only far
+          a=6;limitfn[];    // buy only far
+          a=7;limitfn[];    // buy/sell aggressive
+          a=8;limitfn[];    // sell/buy aggressive
+          a=9;limitfn[];    // buy/sell mid
+          a=10;limitfn[];   // sell/buy mid
+          a=11;limitfn[];   // buy/sell far
+          a=12;limitfn[];   // sell/buy far
+          a=13;limitfn[];
+          a=14;limitfn[];
+          a=15;limitfn[];
+          a=16;limitfn[];
+          a=17;marketfn[];
+          a=18;marketfn[];
+          a=19;marketfn[];
+          a=20;marketfn[];
+          a=21:macromarketfn[];
+          a=22;macromarketfn[];
+          a=23;macromarketfn[];
+          a=24;macromarketfn[];
+          a=20;flatfn[];
           'INVALID_ACTION];
     };
 
