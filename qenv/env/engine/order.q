@@ -31,6 +31,11 @@
     execInst        : `long$());
 .order.ordCols:cols .order.Order;
 
+.order.deriveFlls:{
+    gcls:`instrumentId`accountId`side`price`reduce;
+    (0!?[x;();gcls!gcls;`fll`time!((sum;`qty);(last;`time))])
+    };
+
 // OrderBook
 // =====================================================================================>
 / ?[t;c;b;a;n;(g;cn)]     /select up to n records sorted by g on cn
@@ -414,7 +419,7 @@
                     sum'[tqty];
                     count[tqty]#reduce;
                     numLvls#fillTime));
-                .account.ApplyFillG . ?[flls;];
+                .account.ApplyFillG . .order.deriveFlls[flls];
             ]]; 
 
         // Make order updates
@@ -427,16 +432,18 @@
             state`oprice;
             (nleaves-state`leaves);
             state`reduce;
-            numLvls#fillTime)][;where[msk]]);
+            state`time)][;where[msk]]);
         
         .order.test.mflls:mflls;
         .order.test.zec:(account[`accountId] in mflls[`accountId]);
 
         if[count[mflls]>0;[
             if[(isagnt and (account[`accountId] in mflls[`accountId]));[
-                .account.IncSelfFill . ?[mflls;();();()]; 
+                .account.IncSelfFill . ?[mflls;
+                        enlist(=;`accountId;caId);0b;
+                        `accountId`count`amount!()]; 
                 ]];
-            .account.ApplyFillG . ?[mflls;();();()]; 
+            .account.ApplyFillG . .order.deriveFlls[mflls]; 
             ]];
         // Update OrderBook
         // --------------------------------------------------------------->
