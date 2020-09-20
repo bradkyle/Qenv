@@ -371,8 +371,8 @@
                 {.pipe.egress.AddTradeEvent[x;y]}'[tds;count[tds]#fillTime];
             ]];
 
-        if[isagnt;[
-                flls:(state`mside;state`price;sum'[tqty];reduce);
+        if[(count[tqty]>0) and isagnt;[
+                flls:(state`mside;state`price;sum'[tqty];count[tqty]#reduce);
                 .account.ApplyFill[instrument;account;side]'[flls];
             ]]; 
 
