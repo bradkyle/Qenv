@@ -360,8 +360,8 @@ ramfrac:{};
 // ---------------------------------------------------------------------------------------->
 
 // PATHFINDER                
-.state.adapter.PathFinder                              :{[accountId;a]
-        $[a=0;[];
+.state.adapter.PathFinder                              :{[encouragement;accountId;a]
+        $[a=0;[penalty+:encouragement];
           a=1;[];
           a=2;[];
           a=3;[];
