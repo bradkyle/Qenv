@@ -190,6 +190,8 @@
     rwd:.state.rew.GetRewards[step; 100; aIds];
     dns:.state.dns.GetDones[]; // TODO move to env and create better!
 
+    // TODO log interval?
+
     .env.CurrentStep+:1;
     :(obs;rwd;dns);
     };

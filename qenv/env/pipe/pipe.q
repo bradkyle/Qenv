@@ -27,6 +27,13 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 / .env.EventBatch:(.env.PrimeBatchNum)_(.env.EventBatch); // Shift events
 / .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
+// TODO get first Ingress Batch (for testing purposes)
+.pipe.getFirstIngressBatch         :{
+    $[[`BatchIndex in key `.loader];[
+        .pipe.BatchIndex@rand count[.pipe.BatchIndex]
+    ];'BATCHINDEX_UNSET];
+    };
+
 // 
 .pipe.getCurriculumIngressBatch      :{
     $[[`BatchIndex in key `.loader];[
@@ -72,7 +79,8 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
         k=0;.pipe.getChronologicalIngressBatch[];
         k=1;.pipe.getRandomIngressBatch[];
         k=2;.pipe.getCurriculumIngressBatch[];
-        .pipe.getRandomIngressBatch[]];
+        k=3;.pipe.getFirstIngressBatch[];
+        .pipe.getFirstIngressBatch[]];
 
     // TODO if not chronological 
     // delete all events from ingress events
