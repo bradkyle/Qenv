@@ -203,6 +203,8 @@
     [sigid:`long$(); time:`datetime$()]
     sigvalue        :   `float$());
 
+// TODO failure event history!
+
 .state.InsertEvents :{
     {
         k:x`kind;
