@@ -460,6 +460,7 @@
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price TODO make faster
         nfilled:        state[`size] - nleaves; // New amount that is filled (in total)
         accdlts:        state[`leaves] - nleaves; // The new amounts that will attribute to fills.
+        nobupd:         count[nhqty];
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -512,16 +513,23 @@
         .order.test.hqtydlt:hqtydlt;
         .order.test.leavesdlt:leavesdlt;
         .order.test.numtds:numtds;
+        .order.test.nobupd:nobupd;
 
         // Derive and apply trades
         // -------------------------------------------------->
 
-        // 
-        .order.applyNewTrades . flip(raze'[( // TODO derive the prices at each level before
+        .order.test.bbnbc:raze'[( // TODO derive the prices at each level before
                 numtds#state`tside;
                 numtds#state`price;
                 tqty;
-                numtds#fillTime)]);
+                numtds#fillTime)];
+
+        // 
+        .order.applyNewTrades . raze'[( // TODO derive the prices at each level before
+                numtds#state`tside;
+                numtds#state`price;
+                tqty;
+                numtds#fillTime)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -577,7 +585,7 @@
                 nhqty;
                 niqty;
                 nvqty;
-                fillTime)]); // TODO add time
+                nobupd#fillTime)]); // TODO add time
 
     ];if[count[state]>0;[
         // If no orders exist in the orderbook 

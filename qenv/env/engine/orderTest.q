@@ -143,13 +143,13 @@ dozc:{x+y}[doz];
 
         m:p[`mocks];
 
-        mck1: .qt.M[`.order.applyNewTrades;{[a;b;c;d;e;f;g;h]};c];
-        mck2: .qt.M[`.order.applyOrderUpdates;{[a;b]};c];
-        mck3: .qt.M[`.order.applyTakerFills;{[a;b;c]};c];
-        mck4: .qt.M[`.order.applyMakerFills;{[a;b]};c];
-        mck5: .qt.M[`.order.applyBookUpdates;{[a;b]};c];
-        mck6: .qt.M[`.order.pruneBook;{[a;b]};c];
-        mck7: .qt.M[`.order.pruneOrders;{[a;b]};c];
+        mck1: .qt.M[`.order.applyNewTrades;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyOrderUpdates;{[a;b;c;d;e;f;g]};c];
+        mck3: .qt.M[`.order.applyTakerFills;{[a;b;c;d;e;f;g]};c];
+        mck4: .qt.M[`.order.applyMakerFills;{[a;b;c;d;e;f;g]};c];
+        mck5: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+        mck6: .qt.M[`.order.pruneBook;{};c];
+        mck7: .qt.M[`.order.pruneOrders;{};c];
 
         .order.ProcessTrade[
             .util.testutils.defaultInstrument;
@@ -346,9 +346,9 @@ dozc:{x+y}[doz];
                     enlist(enlist(0;1;1;1000;95;0b;z))
                 )); 
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;610;0;80;635;z)) // TODO check
+                    enlist((999;1;520;0;120;560;z);(1000;1;0;0;0;0;z)) // TODO check
                 )) 
-          ));
+          ))
     );
     .util.testutils.defaultEngineHooks;
     "Process trades from the historical data or agent orders",
