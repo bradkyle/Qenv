@@ -238,7 +238,20 @@
 // Process Trades/Market Orders
 // --------------------------------------------------------------> // Price limits merely stipulate maximum market order price
 
-.order.applyOrderUpdates            :{[]
+.order.applyNewTrades                   :{[side;price;qty;time]
+        :1b;
+        // Derive the maker side from the state.
+        if[count[tqty]>0;[
+            {[side;price;tqty;ftime]
+                ctq:count[tqty];
+                .pipe.egress.AddTradeEvent'[flip(ctq#side;ctq#price;tqty);ctq#ftime]; // TODO make faster?
+                }'[state`tside;state`price;tqty;fillTime];
+        ]];
+    };
+
+.order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status]
+
+        :1b;
         // Derive order amends from given trades
         oupdCols:`orderId`price`offset`leaves`displayqty`status;
         oupd:flip(oupdCols!raze'[(
@@ -256,17 +269,9 @@
         .pipe.egress.AddOrderUpdatedEvent[oupd;fillTime]; // Emit events for all 
     };
 
-.order.applyTrades                  :{[]
-        // Derive the maker side from the state.
-        if[count[tqty]>0;[
-            {[side;price;tqty;ftime]
-                ctq:count[tqty];
-                .pipe.egress.AddTradeEvent'[flip(ctq#side;ctq#price;tqty);ctq#ftime]; // TODO make faster?
-                }'[state`tside;state`price;tqty;fillTime];
-        ]];
-    };
-
-.order.applyTakerFills              :{[]
+.order.applyTakerFills                  :{[instrumentId;accountId;side;price;amt;reduce;fillTime]
+        :1b;
+        
         // Derive the taker fills as the trades that where executed by
         // an agent i.e. isagnt is true.
         if[(count[tqty]>0) and isagnt;[
@@ -283,11 +288,10 @@
         ]]; 
     };
 
-.order.applyMakerFills              :{[]
+.order.applyMakerFills                  :{[instrumentId;accountId;side;price;amt;reduce;fillTime]
         // Make order updates
         // Derives all maker fills as the sum of the amount filled by side,price
         // accountId,reduce etc. and are batched and filled.
-        flldlt:(nleaves-state`leaves);
         .order.test.flldlt:flldlt;
         if[any[raze[flldlt]<>0];[
             mflls:flip(.order.fllCols!raze'[(
@@ -471,12 +475,50 @@
         .order.test.hqtydlt:hqtydlt;
         .order.test.leavesdlt:leavesdlt;
 
-        // Apply resultant state
-        // --------------------------------------------------------------->
-        .order.applyTrades[];
-        .order.applyOrderUpdates[];
-        .order.applyTakerFills[];
-        .order.applyMakerFills[];
+        // Derive and apply trades
+        // -------------------------------------------------->
+
+        // 
+        .order.applyNewTrades[state`tside;state`price;tqty;fillTime];
+        
+        // Derive and apply order updates
+        // -------------------------------------------------->
+        
+        // 
+        .order.applyOrderUpdates . flip(raze'[(
+                state`orderId;
+                state`oprice;
+                noffset;
+                nleaves;
+                ndisplayqty;
+                nstatus)][;where[msk]]);
+
+
+        // Derive and apply Executions
+        // -------------------------------------------------->
+    
+        .order.applyTakerFills   . flip(raze'[(
+                numLvls#ciId;
+                numLvls#caId;
+                state`tside;
+                state`price;
+                sum'[tqty];
+                count[tqty]#reduce;
+                numLvls#fillTime)]);
+
+        .order.applyMakerFills   . raze'[(
+                state`instrumentId;
+                state`accountId;
+                state`oside;
+                state`oprice;
+                (nleaves-state`leaves);
+                state`reduce;
+                state`time)][;where[msk]]);
+    
+    
+        // Derive and apply order book updates
+        // -------------------------------------------------->
+
         .order.applyOrderBookUpdates[];
 
     ];if[count[state]>0;[
