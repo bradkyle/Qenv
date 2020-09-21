@@ -572,7 +572,8 @@
                 nqty;
                 nhqty;
                 niqty;
-                nvqty)]); // TODO add time
+                nvqty;
+                state`time)]); // TODO add time
 
     ];if[count[state]>0;[
         // If no orders exist in the orderbook 
