@@ -8,7 +8,17 @@
         res:.engine.getInstrument[p[`events]];
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Get the main engine instrument"];
 
@@ -272,7 +282,7 @@
         ))
     );
     .util.testutils.defaultContractHooks;
-    " "];
+    "Process a batch of deposit events"];
 
 
 .qt.Unit[

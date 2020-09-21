@@ -36,7 +36,7 @@
 
 // Trades the given opposing positions with eachother
 // to reduce exposure as seen with huobi.
-.liquidation.SelfTrade          :{
+.liquidation.SelfTrade          :{[a;iB;iL;iS]
 
     };
 
