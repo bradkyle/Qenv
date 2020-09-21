@@ -95,6 +95,10 @@
         ]];
     };
 
+.order.applyOffsetUpdates               :{[orderId;price;offset]
+
+    };
+
 .order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status]
 
         :1b;
