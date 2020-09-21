@@ -538,7 +538,6 @@
                 nstatus;
                 state`time)][;where[msk]]); // TODO check time
 
-
         // Derive and apply Executions
         // -------------------------------------------------->
     
@@ -573,7 +572,7 @@
                 nhqty;
                 niqty;
                 nvqty;
-                state`time)]); // TODO add time
+                fillTime)]); // TODO add time
 
     ];if[count[state]>0;[
         // If no orders exist in the orderbook 

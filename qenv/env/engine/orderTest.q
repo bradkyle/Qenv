@@ -207,7 +207,7 @@ dozc:{x+y}[doz];
                 ));   
                 (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(0;0;-1;1000;5;1b;z))
+                    enlist(enlist(1000;1;1000;5;170;1030;z))
                 ))     
           ));
           (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
@@ -240,7 +240,7 @@ dozc:{x+y}[doz];
                 ));   
                 (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(0;0;-1;1000;5;1b;z))
+                    enlist(enlist(1000;1;810;0;170;840;z))
                 )) 
           ))
     );
