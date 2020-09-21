@@ -305,21 +305,23 @@
                 .order.test.nshft:nshft;
                 .order.test.mxnshft:mxnshft;
                 .order.test.nvqty:nvqty;
+                .order.test.msk:msk;
                 // TODO considering visible quantity doesn't change
 
                 // Update the order offsets
-                .order.applyOffsetUpdates   . (raze'[(
+                .order.applyOffsetUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
                         state`orderId;
                         state`oprice;
-                        noffset)]);
+                        noffset)]][;where[msk]]);
 
-                .order.applyBookUpdates     . (raze'[(
+                .order.applyBookUpdates     . .order.test.bngd:(0^.util.PadM[raze'[(
                         state`price;
-                        state`mside;
-                        state`qty;
+                        state`side;
+                        state`tgt;
                         state`hqty;
                         state`iqty;
-                        nvqty)]);
+                        nvqty;
+                        last'[state`time])]]);
 
 
             ];[
