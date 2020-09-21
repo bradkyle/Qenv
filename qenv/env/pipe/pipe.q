@@ -62,7 +62,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 // Reset 
 // Derive the initial state from the
 // engine and derive deposit events etc
-.pipe.Reset       :{[config]
+.pipe.Reset       :{[config] // TODO mutex on read of db?
 
     / .pipe.CONF;
 
