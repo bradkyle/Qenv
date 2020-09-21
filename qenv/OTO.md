@@ -37,6 +37,8 @@ Trailing Limit if Touched
 Trailing Limit + Market
 Trailing Relative + Market
 
+Create giant data 
+
 https://tickertape.tdameritrade.com/trading/trading-basics-advanced-stock-order-types-17852#:~:text=These%20advanced%20order%20types%20fall,or%20%E2%80%9Ctime%20in%20force.%E2%80%9D
 
 
