@@ -298,19 +298,19 @@ dozc:{x+y}[doz];
                 );  
                 (-1;495;1b;z);  // Fill Execution Buy
                 (1b;1;( // Expected .order.applyNewTrades Mock
-                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;95;z))
+                    enlist(3#-1;3#1000;10 390 95;3#z)
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;0;5;5;1;z);(2;1000;105;100;20;0;z)) // offset includes hqty // TODO check
+                    enlist flip((0;1000;0;5;5;1;z);(2;1000;105;100;20;0;z)) // offset includes hqty // TODO check
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;495;1b;z)) 
+                    enlist(enlist'[(0;0;-1;1000;495;1b;z)]) 
                 ));   
                 (1b;1;( // Expected .order.applyMakerFills Mock
-                    enlist(enlist(0;1;1;1000;95;0b;z))
+                    enlist(enlist'[(0;1;1;1000;95;0b;z)])
                 )); 
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;610;0;80;635;z)) // TODO check
+                    enlist(enlist'[(1000;1;610;0;80;635;z)]) // TODO check
                 )) 
           ));
           // TODO fills entire level
@@ -334,19 +334,29 @@ dozc:{x+y}[doz];
                 ); 
                 (-1;1850;1b;z);  // Fill Execution Buy
                 (1b;1;( // Expected .order.applyNewTrades Mock
-                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;95;z))
+                    enlist flip(
+                        (-1;1000;10;z);
+                        (-1;1000;390;z);
+                        (-1;1000;95;z)
+                    )
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;0;5;5;1;z);(2;1000;105;100;20;0;z)) // offset includes hqty // TODO check
+                    enlist flip(
+                        (0;999;0;0;0;1;z);
+                        (2;999;0;60;20;1;z);
+                        (4;999;210;100;20;0;z);
+                        (1;1000;0;0;0;1;z);
+                        (3;1000;0;0;0;1;z)
+                    )
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;495;1b;z)) 
+                    enlist flip((0;0;-1;999;640;1b;z);(0;0;-1;1000;1030;1b;z)) 
                 ));   
                 (1b;1;( // Expected .order.applyMakerFills Mock
-                    enlist(enlist(0;1;1;1000;95;0b;z))
+                    enlist flip((0;1;1;999;100;0b;z);(0;1;1;999;40;0b;z);(0;1;1;1000;100;0b;z);(0;1;1;1000;100;0b;z))
                 )); 
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist((999;1;520;0;120;560;z);(1000;1;0;0;0;0;z)) // TODO check
+                    enlist flip((999;1;520;0;120;560;z);(1000;1;0;0;0;0;z)) // TODO check
                 )) 
           ))
     );
@@ -1171,7 +1181,7 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
-/  .qt.SkpBes[11];
+/  .qt.SkpBes[3];
 .qt.SkpBesTest[1];
 / .qt.SkpBes[46];
 .qt.RunTests[];

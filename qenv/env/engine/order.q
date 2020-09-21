@@ -537,26 +537,26 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-        .order.applyOrderUpdates . flip(raze'[(
+        .order.applyOrderUpdates . raze'[(
                 state`orderId;
                 state`oprice;
                 noffset;
                 nleaves;
                 ndisplayqty;
                 nstatus;
-                state`time)][;where[msk]]); // TODO check time
+                state`time)][;where[msk]]; // TODO check time
 
         // Derive and apply Executions
         // -------------------------------------------------->
     
-        .order.applyTakerFills . flip(raze'[(
+        .order.applyTakerFills . raze'[(
                 numLvls#ciId;
                 numLvls#caId;
                 state`tside;
                 state`price;
                 sum'[tqty];
                 count[tqty]#reduce;
-                numLvls#fillTime)]); 
+                numLvls#fillTime)]; 
 
         // Check to see if the leaves of any maker orders
         // hase been update by deriving the delta and if there
@@ -565,39 +565,39 @@
         flldlt:(nleaves-state`leaves);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
-            .order.applyMakerFills  . flip(raze'[(
+            .order.applyMakerFills  . raze'[(
                     state`instrumentId;
                     state`accountId;
                     state`oside;
                     state`oprice;
                     abs[flldlt];
                     state`reduce;
-                    state`time)][;where[msk and isfll]]); // TOOD check time
+                    state`time)][;where[msk and isfll]]; // TOOD check time
             ]];
 
         // Derive and apply order book updates
         // -------------------------------------------------->
 
-        .order.applyBookUpdates . flip(raze'[(
+        .order.applyBookUpdates . raze'[(
                 state`price;
                 state`mside;
                 nqty;
                 nhqty;
                 niqty;
                 nvqty;
-                nobupd#fillTime)]); // TODO add time
+                nobupd#fillTime)]; // TODO add time
 
     ];if[count[state]>0;[
         // If no orders exist in the orderbook 
         // and yet the trade still executes
         // TODO test
-        .order.applyBookUpdates . flip(raze'[(
+        .order.applyBookUpdates . raze'[(
                 state`price;
                 state`mside;
                 nqty;
                 nhqty;
                 niqty;
-                nvqty)]);
+                nvqty)];
         
     ]]];
     
