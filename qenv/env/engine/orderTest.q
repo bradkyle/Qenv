@@ -130,7 +130,12 @@ dozc:{x+y}[doz];
                 (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
             ); 
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
-                enlist flip((0;1000;395;100;10;0;z);(2;1000;595;100;20;0;z))
+                enlist flip(
+                    (0;1000;395;100;10;0;z);
+                    (2;1000;595;100;20;0;z);
+                    (0;1000;395;100;10;0;z);
+                    (2;1000;595;100;20;0;z)
+                )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
@@ -140,7 +145,7 @@ dozc:{x+y}[doz];
                     (20 10 10 0 0 0 0); // hqty
                     (170 ,(6#0)); // iqty
                     (0 1000 1000 30 1000 1000 30); // vqty
-                    (sc[z] 0 1))) // time
+                    (sc[z] 0 1 1 0 1 1 0))) // time
             ))     
         ))
     );
