@@ -188,6 +188,13 @@
 
 .engine.validateOrders:{[o]
 
+        // Routine validation
+        o[`otype] in .pipe.common.ORDERKIND;
+        o[`side]  in .pipe.common.ORDERSIDE;
+        o[`timeinforce]  in .pipe.common.TIMEINFORCE;
+
+        o[`otype]  in (2 3);
+        o[`displayqty]  in (2 3);
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -209,9 +216,11 @@
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
 
+    orders:.engine.validateOrders[];
+
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
-    .order.NewOrder[];
+    .order.NewOrder[instrument;accounts;orders];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -228,9 +237,17 @@
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     orders:y`datum;
 
+    orders:(`accountId`price`side`otype,
+    `timeinforce`size`limitprice`stopprice,
+    `reduce`trigger`displayqty)!raze'[y`datum];
+
+    orders:.engine.validateOrders[];
+
+    // TODO fill orders with current orders
+
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
-    .order.AmendOrder[];
+    .order.AmendOrder[instrument;accounts;orders];
     
     };
 
