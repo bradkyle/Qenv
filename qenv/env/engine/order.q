@@ -294,9 +294,7 @@
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
                 mxnshft:max'[nshft];
                 lsttime:last'[state`time]; // TODO apply to each order
-
                 numordlvl:count'[noffset];
-
 
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
@@ -551,7 +549,10 @@
 
         // Derive and apply Executions
         // -------------------------------------------------->
-    
+
+        // Apply the set of fills that would satisfy the 
+        // amount of liquidity that is being removed from
+        // the orderbook.
         .order.applyTakerFills . raze'[(
                 numLvls#ciId;
                 numLvls#caId;
