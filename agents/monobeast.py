@@ -250,7 +250,7 @@ def learn(
         elif flags.reward_clipping == "none":
             clipped_rewards = rewards
 
-        discounts = (~batch["done"]).float() * flags.discounting
+        discounts = (~(batch["done"]).byte()).float() * flags.discounting
 
         vtrace_returns = vtrace.from_logits(
             behavior_policy_logits=batch["policy_logits"],
