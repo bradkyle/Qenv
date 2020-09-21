@@ -119,7 +119,7 @@
     // Essentially find the deltas in the mark price provided
     // and derive a change in the unrealized pnl, triggering
     // liquidations where neccessary
-    .account.UpdateMarkPrice[instrument;d;events`time];
+    .account.CONTRACT.UpdateMarkPrice[instrument;d;events`time];
 
     // Where appliccable trigger stop orders 
     // TODO add a delay in placement of orders
@@ -142,7 +142,7 @@
     // Apply settlement to the given accounts
     // and their respective inventories, this 
     // would reset realized pnl into the balance
-    .account.ApplySettlement[instrument];
+    .account.CONTRACT.ApplySettlement[instrument];
 
     .pipe.egress.AddSettlementEvent[];
     };
@@ -160,7 +160,7 @@
 
     //  Apply funding the the open agent 
     // positions/inventory 
-    .account.ApplyFunding[instrument];
+    .account.CONTRACT.ApplyFunding[instrument];
 
     .pipe.egress.AddFundingEvent[];
     };
@@ -206,7 +206,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
-    .account.Withdraw[instrument];
+    .account.CONTRACT.Withdraw[instrument];
     };
 
 
@@ -220,7 +220,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
-    .account.Deposit[instrument];
+    .account.CONTRACT.Deposit[instrument];
     };
 
 

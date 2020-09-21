@@ -1,7 +1,8 @@
 / \l inventory.q
 // THIS FILE REPRESENTS THE LOGIC PERTAINING TO THE ACCOUNT OF AN INSTRUMENT
- 
+
 .account.accountCount:0;
+.account.CONTRACT:.inverse.account;
 
 // TODO executions
 

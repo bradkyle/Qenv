@@ -134,7 +134,7 @@
                 count[tqty]#reduce;
                 numLvls#fillTime));
             .order.test.flls:flls;
-            .account.ApplyFillG . .order.deriveFlls[flls];
+            .account.CONTRACT.ApplyFill . .order.deriveFlls[flls];
         ]]; 
     };
 
@@ -159,7 +159,7 @@
             if[(isagnt and (account[`accountId] in mflls[`accountId]));[
                 .account.IncSelfFill . .order.deriveSelfFlls[mflls;caId];
                 ]];
-            .account.ApplyFillG . .order.deriveFlls[mflls]; 
+            .account.CONTRACT.ApplyFillG . .order.deriveFlls[mflls]; 
             ]];
 
     };
