@@ -345,7 +345,7 @@ dozc:{x+y}[doz];
                         (-1;1000;100;z);
                         (-1;1000;100;z);
                         (-1;1000;100;z);
-                        (-1;1000;33s0;z)
+                        (-1;1000;330;z)
                     )
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
@@ -398,7 +398,7 @@ dozc:{x+y}[doz];
                         (-1;1000;100;z);
                         (-1;1000;100;z);
                         (-1;1000;100;z);
-                        (-1;1000;33s0;z)
+                        (-1;1000;300;z)
                     )
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
