@@ -42,13 +42,13 @@
 
 // Takes over the inventory and returns the resultant
 // inventory with the fee being removed.
-.liquidation.TakeOverWithFee    :{
+.liquidation.TakeOverWithFee    :{[a;iB;iL;iS]
 
     };
 
 // Takes over the inventory completely without returning
 // it, essentially the entire inventory has been lost.
-.liquidation.TakeOverTotally    :{
+.liquidation.TakeOverTotally    :{[a;iB;iL;iS]
 
     };
 
