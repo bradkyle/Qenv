@@ -54,7 +54,14 @@
 
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
     };
-    ();
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ));
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of new trade eventss"];
 
