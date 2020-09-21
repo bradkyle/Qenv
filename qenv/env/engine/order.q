@@ -101,7 +101,6 @@
     };
 
 .order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status;fillTime]
-
         :1b;
         // Derive order amends from given trades
         oupdCols:`orderId`price`offset`leaves`displayqty`status;
@@ -166,7 +165,7 @@
     };
 
 .order.applyBookUpdates        :{[price;side;qty;hqty;iqty;vqty;fillTime]
-
+        :1b;
         // derive the updated price levels from the state and emit a depth
         // update event for those price levels.
         obupd:flip raze'[(state`price;state`mside;nqty;nhqty;niqty;nvqty)];
@@ -312,8 +311,7 @@
                 .order.applyOffsetUpdates   . (raze'[(
                         state`orderId;
                         state`oprice;
-                        noffset;
-                        )]);
+                        noffset)]);
 
                 .order.applyBookUpdates     . (raze'[(
                         state`price;
