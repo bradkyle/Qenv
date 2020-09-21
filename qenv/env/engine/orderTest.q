@@ -335,17 +335,70 @@ dozc:{x+y}[doz];
                 (-1;1850;1b;z);  // Fill Execution Buy
                 (1b;1;( // Expected .order.applyNewTrades Mock
                     enlist flip(
+                        (-1;999;20;z);
+                        (-1;999;380;z);
+                        (-1;999;100;z);
+                        (-1;999;100;z);
+                        (-1;999;40;z);
                         (-1;1000;10;z);
                         (-1;1000;390;z);
-                        (-1;1000;95;z);
+                        (-1;1000;100;z);
+                        (-1;1000;100;z);
+                        (-1;1000;100;z);
+                        (-1;1000;33s0;z)
+                    )
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+                    enlist flip(
+                        (0;999;0;0;0;1;z);
+                        (2;999;0;60;20;1;z);
+                        (4;999;210;100;20;0;z);
+                        (1;1000;0;0;0;1;z);
+                        (3;1000;0;0;0;1;z)
+                    )
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+                    enlist flip((0;0;-1;999;640;1b;z);(0;0;-1;1000;1030;1b;z)) 
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+                    enlist flip((0;1;1;999;100;0b;z);(0;1;1;999;40;0b;z);(0;1;1;1000;100;0b;z);(0;1;1;1000;100;0b;z))
+                )); 
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+                    enlist flip((999;1;520;0;120;560;z);(1000;1;0;0;0;0;z)) // TODO check
+                )) 
+          ));
+          (("1f) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // 17
+          "orders, trade execution > agent order offset, fill is agent (3 orders on first level)");(
+                ( // Current Depth  
+                 [price:1000-til 10] 
+                 side:(10#1);
+                 qty:10#1000;
+                 hqty:((10 20),(8#10));
+                 iqty:((250 170),(8#0)); // TODO fix
+                 vqty:((1050 1030),(8#1000)) // (999:10 20=30(1200-170=1030), 1000:10 20 20=50(1300-250=1050))
+                ); 
+                (   // Current Orders  
+                    til[5];5#1;5#1;5#1;5#1; // 
+                    ((2#400),(2#600),850); // offset (includes hidden qty)
+                    5#100; // leaves
+                    ((2#10),(3#20)); // displayqty (999:10 20=30, 1000:10 20 20=50)
+                    5#1000 999; // price 
+                    5#z // time
+                ); 
+                (-1;1850;1b;z);  // Fill Execution Buy
+                (1b;1;( // Expected .order.applyNewTrades Mock
+                    enlist flip(
+                        (-1;999;20;z);
+                        (-1;999;380;z);
+                        (-1;999;100;z);
+                        (-1;999;100;z);
+                        (-1;999;40;z);
                         (-1;1000;10;z);
                         (-1;1000;390;z);
-                        (-1;1000;95;z);
-                        (-1;1000;10;z);
-                        (-1;1000;390;z);
-                        (-1;1000;95;z);
-                        (-1;1000;10;z);
-                        (-1;1000;390;z)
+                        (-1;1000;100;z);
+                        (-1;1000;100;z);
+                        (-1;1000;100;z);
+                        (-1;1000;33s0;z)
                     )
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
