@@ -19,7 +19,8 @@
         p:c[`params];
 
         m:p`mocks;
-        
+
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
 
         .engine.ProcessDepthUpdateEvents[p[`events]];
@@ -46,6 +47,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
 
         .engine.ProcessNewTradeEvents[p[`events]];
@@ -62,6 +64,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -80,6 +83,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -98,6 +102,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -116,7 +121,8 @@
     ".engine.ProcessNewPriceLimitEvents";
     {[c]
         p:c[`params];
-
+        
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -136,6 +142,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -154,6 +161,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -172,6 +180,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
@@ -191,6 +200,7 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
 
         .engine.ProcessSignalEvents[p[`events]];
