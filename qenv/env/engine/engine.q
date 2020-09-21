@@ -229,6 +229,9 @@
         // balance.
         premium:(o[`side]*(i[`markprice]-o[`price]))
 
+        // derive the instantaneous loss that will be incurred for each order
+        // placement and thereafter derive the cumulative loss for each order
+        // filter out orders that attribute to insufficient balance where neccessary
         a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
         a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
         a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
