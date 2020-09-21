@@ -153,6 +153,8 @@ dozc:{x+y}[doz];
             .util.testutils.defaultInstrument;
             .util.testutils.defaultAccount;
             p`td];
+        
+        .order.test.m:m;
 
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyNewTrades Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyOrderUpdates Mock
@@ -170,10 +172,10 @@ dozc:{x+y}[doz];
             p[0];
             .util.testutils.makeOrders[ordCols;flip p[1]];
             p[2];
-            (5_10#p));
+            (3_8#p));
     };
     (
-        (("SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 12
+        (("1a) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 12
           "order, trade execution <= agent order offset, fill is agent (partial hidden qty fill)");(
                 ( // Current Depth  
                     [price:1000-til 10] 
@@ -184,20 +186,65 @@ dozc:{x+y}[doz];
                     vqty:((1030 1030),(8#1000)) // TODO fix
                 ); 
                 (   // Current Orders  
-                til[4];4#1;4#1;4#1;4#1; // 
-                ((2#400),(2#600)); // offset
-                4#100; // leaves
-                ((2#10),(2#20)); // displayqty
-                4#1000 999; // price
-                4#z // time
+                    til[4];4#1;4#1;4#1;4#1; // 
+                    ((2#400),(2#600)); // offset
+                    4#100; // leaves
+                    ((2#10),(2#20)); // displayqty
+                    4#1000 999; // price
+                    4#z // time
                 );
                 (-1;5;1b;z);  // Sell should reduce
-                (0b;0;());    // Expected .order.applyNewTrades Mock
-                (0b;0;());    // Expected .order.applyOrderUpdates Mock
-                (0b;0;());    // Expected .order.applyTakerFills Mock
-                (0b;0;());    // Expected .order.applyMakerFills Mock
-                (0b;0;())     // Expected .order.applyBookUpdates Mock
+                (1b;1;( // Expected .order.applyNewTrades Mock
+
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+ 
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+
+                ));    
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+
+                ))     
           ));
+          (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
+          "order, trade execution <= agent order offset, fill is agent");(
+                ( // Current Depth  
+                    [price:1000-til 10] 
+                    side:(10#1);
+                    qty:10#1000;
+                    hqty:((10 20),(8#10));
+                    iqty:((170 170),(8#0)); // TODO fix
+                    vqty:((1030 1030),(8#1000)) // TODO fix
+                ); 
+                (   // Current Orders  
+                    til[4];4#1;4#1;4#1;4#1; // 
+                    ((2#400),(2#600)); // offset
+                    4#100; // leaves
+                    ((2#10),(2#20)); // displayqty
+                    4#1000 999; // price
+                    4#z // time
+                ); 
+                (-1;200;1b;z);   // Sell should reduce
+                (1b;1;( // Expected .order.applyNewTrades Mock
+
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+ 
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+
+                ));    
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+
+                )) 
+          ))
     );
     .util.testutils.defaultEngineHooks;
     "Process trades from the historical data or agent orders",
