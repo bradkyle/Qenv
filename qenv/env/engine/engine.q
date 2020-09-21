@@ -360,7 +360,7 @@
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
 
-    withdraws:();
+    w:events`datum;
 
     .account.CONTRACT.Withdraw[instrument];
     };
