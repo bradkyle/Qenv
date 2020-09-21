@@ -71,14 +71,17 @@ dozc:{x+y}[doz];
         .util.testutils.setupOrders[0^p`cOrd];
 
         m:p`mocks;
-        mck1: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b;c;d;e;f;g;h]};c];
+        
+        mck2: .qt.M[`.order.applyOffsetUpdates;{[a;b;c]};c];
+        mck5: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+        mck6: .qt.M[`.order.pruneBook;{};c];
+        mck7: .qt.M[`.order.pruneOrders;{};c];
 
         // instrument;nxt:(side;price;qty;hqty;time)
         .order.ProcessDepth[.util.testutils.defaultInstrument;p`nxt];
 
-        / .util.testutils.checkMock[mck1;m[0];c];
-        .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils._checkOrders[(`orderId`side`otype`offset`leaves`displayqty`price`time);p[`eOrd];c];
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     {[p] 
@@ -94,16 +97,45 @@ dozc:{x+y}[doz];
             count[p[2]]=5;`side`price`nqty`nhqty`time!p[2];
             'INVALID_NXT];
 
-        :`cDepth`cOrd`nxt`mocks`eDepth`eOrd!(
+        :`cDepth`cOrd`nxt`mocks!(
             p[0];
             .util.testutils.makeOrders[ordCols[p[1]];flip p[1]];
             nxt;
-            enlist p[5];
-            p[3]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols[p[4]];flip p[4]]);
+            (3_5#p));
     };
     (
-       
+       (("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
+            "repletes order spread during update, many order offset prices");(
+            ( // Current Depth  
+                [price:1000-til 10] 
+                side:(10#1);
+                qty:10#1000;
+                hqty:((10 20),(8#10));
+                iqty:((170 170),(8#0)); // TODO fix
+                vqty:((1030 1030),(8#1000)) // TODO fix
+            ); 
+            (   // Current Orders  
+                til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
+                ((2#400),(2#600)); // offset
+                4#100; // leaves
+                ((2#10),(2#20)); // displayqty
+                4#1000 999; // price
+                4#z // time
+            );
+            (   // Depth Update
+                ((5#-1),(5#1)); // side
+                ((1000 1001 1002 1001 1002),(999 998 997 997 998)); // price
+                ((0 0 0 1000 1000),(0 0 0 1000 1000)); // NQTY
+                (10#0); // NHQTY
+                (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
+            ); 
+            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+                enlist flip((0;1000;395;100;10;0;z);(2;1000;595;100;20;0;z))
+            ));    
+            (1b;1;( // Expected .order.applyBookUpdates Mock
+                enlist(enlist'[(1000;1;1000;5;170;1030;z)])
+            ))     
+        ));
     );
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
@@ -1248,6 +1280,6 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
-.qt.SkpBesTest[1];
+.qt.SkpBesTest[0];
 / .qt.SkpBes[46];
 .qt.RunTests[];

@@ -96,6 +96,7 @@
     };
 
 .order.applyOffsetUpdates               :{[orderId;price;offset]
+                .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
 
     };
 
@@ -204,6 +205,10 @@
 // TODO what happens when order is at the back of the queue and hidden qty increases?
 // TODO edge case
 
+
+                / .order.OrderBook,:raze'[flip 0^.util.PadM'[(`time xasc state)`price`side`tgt`hqty`iqty`vqty]];
+                / .order.test.ob1:.order.OrderBook;
+
 // TODO validation.
 
 /  @param price     (Long) The price at which the fill is occuring
@@ -281,6 +286,14 @@
                 // were a uniform distribution of cancellations throughout
                 // the queue.
                 offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
+                
+                // Offset deltas are derived adn added to the current offset
+                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
+                nshft:   state[`leaves]+noffset;
+                
+                // Calculate the new vis qty
+                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
+                mxnshft:max'[nshft];
 
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
@@ -288,31 +301,21 @@
                 .order.test.shft:shft;
                 .order.test.tmaxN:tmaxN;
                 .order.test.mxshft:mxshft;
-                // Offset deltas are derived adn added to the current offset
-                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
-                nshft:   state[`leaves]+noffset;
-                
                 .order.test.prices:state`price;
                 .order.test.noffset:noffset;
                 .order.test.nshft:nshft;
-                .order.test.state2:state;
-                
-                // Calculate the new vis qty
-                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
-                mxnshft:max'[nshft];
                 .order.test.mxnshft:mxnshft;
                 .order.test.nvqty:nvqty;
                 // TODO considering visible quantity doesn't change
 
-                // Derive the new visible quantity as 
-                / nvqty: ?[mxnshft>nvqty;mxnshft;nvqty]; // The new visible quantity
-                .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
-                .order.test.O2:.order.Order;
-                state[`vqty]:nvqty;
-                .order.test.state3:state;
-                .order.test.obk:.order.OrderBook;
+                // Update the order offsets
+                .order.applyOffsetUpdates   . (raze'[(
+                        state`orderId;
+                        state`oprice;
+                        noffset;
+                        )]);
 
-                .order.applyBookUpdates . flip(raze'[(
+                .order.applyBookUpdates     . (raze'[(
                         state`price;
                         state`mside;
                         nqty;
@@ -321,8 +324,6 @@
                         nvqty)]);
 
 
-                .order.OrderBook,:raze'[flip 0^.util.PadM'[(`time xasc state)`price`side`tgt`hqty`iqty`vqty]];
-                .order.test.ob1:.order.OrderBook;
             ];[
                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                
