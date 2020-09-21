@@ -261,6 +261,9 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
+
+    withdraws:();
+
     .account.CONTRACT.Withdraw[instrument];
     };
 
@@ -275,6 +278,9 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
+
+    deposits:();
+
     .account.CONTRACT.Deposit[instrument];
     };
 
