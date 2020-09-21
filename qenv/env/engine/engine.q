@@ -212,6 +212,8 @@
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     
+    // check max batch order amends
+
     orders:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
@@ -236,6 +238,8 @@
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     orders:y`datum;
+
+    // check max batch order amends
 
     orders:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
