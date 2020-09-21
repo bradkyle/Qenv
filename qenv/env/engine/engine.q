@@ -125,8 +125,7 @@
     // TODO add a delay in placement of orders
     .order.UpdateMarkPrice[instrument;d;events`time];
 
-    // Update the mark price in the liquidation engine and
-    // by exten
+    // Inspect the account tables for any insolvent accounts.
     .liquidation.InspectAccounts[];
     
     .pipe.egress.AddMarkEvent[];
