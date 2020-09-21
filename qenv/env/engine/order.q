@@ -95,7 +95,7 @@
         ]];
     };
 
-.order.applyOffsetUpdates               :{[orderId;price;offset]
+.order.applyOffsetUpdates               :{[orderId;price;offset;time]
                 .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
 
     };
@@ -293,6 +293,7 @@
                 // Calculate the new vis qty
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
                 mxnshft:max'[nshft];
+                lsttime:last'[state`time]; // TODO apply to each order
 
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
@@ -306,13 +307,15 @@
                 .order.test.mxnshft:mxnshft;
                 .order.test.nvqty:nvqty;
                 .order.test.msk:msk;
+                .order.test.lsttime:lsttime;
                 // TODO considering visible quantity doesn't change
 
                 // Update the order offsets
                 .order.applyOffsetUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
                         state`orderId;
                         state`oprice;
-                        noffset)]][;where[msk]]);
+                        noffset;
+                        state`time)]][;where[msk]]);
 
                 .order.applyBookUpdates     . .order.test.bngd:(0^.util.PadM[raze'[(
                         state`price;
@@ -321,7 +324,7 @@
                         state`hqty;
                         state`iqty;
                         nvqty;
-                        last'[state`time])]]);
+                        lsttime)]]);
 
 
             ];[
