@@ -541,7 +541,7 @@
         // Derive and apply Executions
         // -------------------------------------------------->
     
-        .order.applyTakerFills  . flip(raze'[(
+        .order.applyTakerFills . flip(raze'[(
                 numLvls#ciId;
                 numLvls#caId;
                 state`tside;
@@ -562,10 +562,11 @@
                     state`accountId;
                     state`oside;
                     state`oprice;
-                    flldlt;
+                    abs[flldlt];
                     state`reduce;
                     state`time)][;where[msk and isfll]]); // TOOD check time
             ]];
+
         // Derive and apply order book updates
         // -------------------------------------------------->
 

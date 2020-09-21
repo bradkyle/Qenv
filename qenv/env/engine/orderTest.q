@@ -242,6 +242,76 @@ dozc:{x+y}[doz];
                 (1b;1;( // Expected .order.applyBookUpdates Mock
                     enlist(enlist(1000;1;810;0;170;840;z))
                 )) 
+          ));
+          (("1c) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
+          "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order < displayqty)");(
+                ( // Current Depth  
+                    [price:1000-til 10] 
+                    side:(10#1);
+                    qty:10#1000;
+                    hqty:((10 20),(8#10));
+                    iqty:((170 170),(8#0)); // TODO fix
+                    vqty:((1030 1030),(8#1000)) // TODO fix
+                ); 
+                (   // Current Orders  
+                    til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
+                    ((2#400),(2#600)); // offset
+                    4#100; // leaves
+                    ((2#10),(2#20)); // displayqty
+                    4#1000 999; // price
+                    4#z // time
+                );  
+                (-1;450;1b;z);  // Fill Execution Buy
+                (1b;1;( // Expected .order.applyNewTrades Mock
+                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;50;z))
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+                    enlist((0;1000;0;50;10;1;z);(2;1000;150;100;20;0;z)) // offset includes hqty
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+                    enlist(enlist(0;0;-1;1000;450;1b;z)) 
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+                    enlist(enlist(0;1;1;1000;50;0b;z))
+                )); 
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+                    enlist(enlist(1000;1;610;0;120;640;z))
+                )) 
+          ));
+          (("1d) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
+          "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order > display qty)");(
+                ( // Current Depth  
+                    [price:1000-til 10] 
+                    side:(10#1);
+                    qty:10#1000;
+                    hqty:((10 20),(8#10));
+                    iqty:((170 170),(8#0)); // TODO fix
+                    vqty:((1030 1030),(8#1000)) // TODO fix
+                ); 
+                (   // Current Orders  
+                    til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
+                    ((2#400),(2#600)); // offset
+                    4#100; // leaves
+                    ((2#10),(2#20)); // displayqty
+                    4#1000 999; // price
+                    4#z // time
+                );  
+                (-1;495;1b;z);  // Fill Execution Buy
+                (1b;1;( // Expected .order.applyNewTrades Mock
+                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;95;z))
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+                    enlist((0;1000;0;5;5;1;z);(2;1000;150;100;20;0;z)) // offset includes hqty
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+                    enlist(enlist(0;0;-1;1000;450;1b;z)) 
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+                    enlist(enlist(0;1;1;1000;50;0b;z))
+                )); 
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+                    enlist(enlist(1000;1;610;0;120;640;z))
+                )) 
           ))
     );
     .util.testutils.defaultEngineHooks;
