@@ -18,10 +18,25 @@
     {[c]
         p:c[`params];
 
+        m:p`mocks;
+        
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+
         .engine.ProcessDepthUpdateEvents[p[`events]];
 
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+
+        ));
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of depth update events"];
 
@@ -31,8 +46,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+
         .engine.ProcessNewTradeEvents[p[`events]];
 
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
     };
     ();
     .util.testutils.defaultContractHooks;
@@ -44,8 +62,13 @@
     {[c]
         p:c[`params];
 
-        .engine.ProcessMarkUpdateEvents[p[`events]];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
+        .engine.ProcessMarkUpdateEvents[p[`events]];
+        
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
     ();
     .util.testutils.defaultContractHooks;
@@ -57,8 +80,13 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
         .engine.ProcessSettlementEvents[p[`events]];
 
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
     ();
     .util.testutils.defaultContractHooks;
@@ -70,7 +98,13 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
         .engine.ProcessFundingEvents[p[`events]];
+
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     ();
@@ -79,18 +113,23 @@
 
 
 .qt.Unit[
-    ".engine.ProcessLiquidationEvents";
+    ".engine.ProcessNewPriceLimitEvents";
     {[c]
         p:c[`params];
 
-        .engine.ProcessLiquidationEvents[p[`events]];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
+        .engine.ProcessFundingEvents[p[`events]];
+        
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     ();
     .util.testutils.defaultContractHooks;
-    "Process a set of liquidation events"];
-
-
+    "Process a set of funding events"];
+    
 .qt.Unit[
     ".engine.ProcessNewPriceLimitEvents";
     {[c]
