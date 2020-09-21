@@ -84,6 +84,7 @@
 // Utilities For the application of state deltas
 // -------------------------------------------------------------->
 
+// TODO update instrument last price?
 .order.applyNewTrades                   :{[side;price;qty;time]
         :1b;
         // Derive the maker side from the state.

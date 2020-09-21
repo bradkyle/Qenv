@@ -186,7 +186,7 @@
     };
 
 
-.engine.validateOrders:{[]
+.engine.validateOrders:{[o]
 
     };
 
@@ -200,9 +200,14 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewOrderEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
+    accountIds:key .account.Account; 
+    // TODO check all count=12
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
-    orders:y`datum;
+    
+    orders:(`accountId`price`side`otype,
+    `timeinforce`size`limitprice`stopprice,
+    `reduce`trigger`displayqty)!raze'[y`datum];
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
