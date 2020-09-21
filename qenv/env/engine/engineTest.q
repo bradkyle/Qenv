@@ -209,13 +209,30 @@
         p:c[`params];
 
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
 
         .engine.ProcessEvents[p[`events]];
 
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
-    ();
+    (
+        ((("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a batch of events"];
 
