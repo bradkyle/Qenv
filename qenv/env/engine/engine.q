@@ -362,7 +362,11 @@
 
     w:events`datum;
 
-    .account.CONTRACT.Withdraw[instrument];
+    // Calculate the cumulative sum of withdraws
+    // and filter withdraws where the amount would
+    // exceed the available account balance
+
+    .account.CONTRACT.Withdraw[i];
     };
 
 
@@ -378,6 +382,10 @@
     instrument:.engine.getInstrument[];
 
     deposits:();
+    
+    // Calculate the cumulative sum of withdraws
+    // and filter withdraws where the amount would
+    // exceed the available account balance
 
     .account.CONTRACT.Deposit[instrument];
     };
