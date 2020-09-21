@@ -36,7 +36,7 @@
         ));
         ((("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
 
-        ));
+        ))
     );
     .util.testutils.defaultContractHooks;
     "Process a set of depth update events"];
@@ -54,13 +54,16 @@
 
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
     };
+    {[p]
+    
+    };
     (
         ((("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
         ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
-        ));
+        ))
     );
     .util.testutils.defaultContractHooks;
     "Process a set of new trade eventss"];
