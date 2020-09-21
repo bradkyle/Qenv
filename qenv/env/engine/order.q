@@ -536,7 +536,7 @@
         // Derive and apply Executions
         // -------------------------------------------------->
     
-        .order.applyTakerFills . flip(raze'[(
+        .order.applyTakerFills  . flip(raze'[(
                 numLvls#ciId;
                 numLvls#caId;
                 state`tside;
@@ -545,7 +545,7 @@
                 count[tqty]#reduce;
                 numLvls#fillTime)]);
 
-        .order.applyMakerFills . flip(raze'[(
+        .order.applyMakerFills  . flip(raze'[(
                 state`instrumentId;
                 state`accountId;
                 state`oside;
@@ -566,10 +566,18 @@
                 nvqty)]);
 
     ];if[count[state]>0;[
-        // TODO testing
-        .order.applyOrderBookUpdates[];
+        // If no orders exist in the orderbook 
+        // and yet the trade still executes
+        // TODO test
+        .order.applyBookUpdates . flip(raze'[(
+                state`price;
+                state`mside;
+                nqty;
+                nhqty;
+                niqty;
+                nvqty)]);
         
-    ]]]; // TODO fix
+    ]]];
     
    .order.pruneBook[];
    .order.pruneOrders[];
