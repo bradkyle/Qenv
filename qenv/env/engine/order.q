@@ -99,7 +99,7 @@
 
     };
 
-.order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status]
+.order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status;fillTime]
 
         :1b;
         // Derive order amends from given trades
@@ -164,7 +164,7 @@
 
     };
 
-.order.applyBookUpdates        :{[price;side;qty;hqty;iqty;vqty]
+.order.applyBookUpdates        :{[price;side;qty;hqty;iqty;vqty;fillTime]
 
         // derive the updated price levels from the state and emit a depth
         // update event for those price levels.
@@ -447,13 +447,13 @@
         // Derive the new quantitites that are representative of the change in the state
         // of the orders and orderbook when the given trade occurs.
         nhqty:          .util.Clip[(-/)state`hqty`rp]; // Derive the new hidden qty
-        noffset:        .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
         nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster/fix
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster/fix
         niqty:          sum'[nleaves-ndisplayqty]; // The new order invisible qty = leaves - display qty
         displaydlt:     (ndisplayqty-state[`displayqty]); // Derive the change in the order display qty
         leavesdlt:      (nleaves-state[`leaves]); // Derive the change in the order leaves
         hqtydlt:        (nhqty-state[`hqty]); // Derive the change in hidden order qty
+        noffset:        .util.Clip[((-/)state`offset`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
         nqty:           .util.Clip[((-/)state`qty`rp)-(sum'[leavesdlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
         nvqty:          nqty+sum'[ndisplayqty]; // Derive the new visible qty as order display qty + the new qty from above
         nshft:          nleaves+noffset; // 
@@ -486,7 +486,7 @@
         // Derives the non-zero trade qtys that occur as a result of the replaced amount 
         // returns the quantities by price level.
         tqty:{s:sums[y];q:.util.Clip[?[(x-s)>=0;y;x-(s-y)]];q where[q>0]}'[state`rp;splt]; 
-
+        numtds:count[raze[tqty]];
         // TODO move into own function.
         state[`mside]:nside; // TODO changes
         state[`tside]:side; // TODO changes
@@ -511,12 +511,17 @@
         .order.test.ins:instrument;
         .order.test.hqtydlt:hqtydlt;
         .order.test.leavesdlt:leavesdlt;
+        .order.test.numtds:numtds;
 
         // Derive and apply trades
         // -------------------------------------------------->
 
         // 
-        .order.applyNewTrades[state`tside;state`price;tqty;fillTime];
+        .order.applyNewTrades . flip(raze'[( // TODO derive the prices at each level before
+                numtds#state`tside;
+                numtds#state`price;
+                tqty;
+                numtds#fillTime)]);
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -530,7 +535,8 @@
                 noffset;
                 nleaves;
                 ndisplayqty;
-                nstatus)][;where[msk]]);
+                nstatus;
+                state`time)][;where[msk]]); // TODO check time
 
 
         // Derive and apply Executions
@@ -543,17 +549,20 @@
                 state`price;
                 sum'[tqty];
                 count[tqty]#reduce;
-                numLvls#fillTime)]);
+                numLvls#fillTime)]); 
 
-        .order.applyMakerFills  . flip(raze'[(
-                state`instrumentId;
-                state`accountId;
-                state`oside;
-                state`oprice;
-                (nleaves-state`leaves);
-                state`reduce;
-                state`time)][;where[msk]]);
-    
+        flldlt:(nleaves-state`leaves);
+        isfll:raze[flldlt]>0;
+        if[any[isfll];[
+            .order.applyMakerFills  . flip(raze'[(
+                    state`instrumentId;
+                    state`accountId;
+                    state`oside;
+                    state`oprice;
+                    flldlt;
+                    state`reduce;
+                    state`time)][;where[msk and isfll]]); // TOOD check time
+            ]];
         // Derive and apply order book updates
         // -------------------------------------------------->
 
@@ -563,7 +572,7 @@
                 nqty;
                 nhqty;
                 niqty;
-                nvqty)]);
+                nvqty)]); // TODO add time
 
     ];if[count[state]>0;[
         // If no orders exist in the orderbook 

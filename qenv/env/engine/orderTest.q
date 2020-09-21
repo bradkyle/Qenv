@@ -130,6 +130,8 @@ dozc:{x+y}[doz];
 // TODO drifts out of book bounds
 // TODO no previous depth however previous orders.
 // TODO fills 3 levels
+// TODO test different instrument
+// TODO test with different accounts
 .qt.Unit[
     ".order.ProcessTrade";
     {[c]
@@ -186,28 +188,26 @@ dozc:{x+y}[doz];
                     vqty:((1030 1030),(8#1000)) // TODO fix
                 ); 
                 (   // Current Orders  
-                    til[4];4#1;4#1;4#1;4#1; // 
+                    til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
                     ((2#400),(2#600)); // offset
                     4#100; // leaves
                     ((2#10),(2#20)); // displayqty
                     4#1000 999; // price
                     4#z // time
                 );
-                (-1;5;1b;z);  // Sell should reduce
+                (-1;5;1b;z);  // Sell should reduce // TODO add time check
                 (1b;1;( // Expected .order.applyNewTrades Mock
-
+                    enlist(enlist(-1;1000;5;z))
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
- 
+                    enlist((0;1000;395;100;10;0;z);(2;1000;595;100;20;0;z))
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-
+                    enlist(enlist(0;0;-1;1000;5;1b;z))
                 ));   
-                (1b;1;( // Expected .order.applyMakerFills Mock
-
-                ));    
+                (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-
+                    enlist(enlist(0;0;-1;1000;5;1b;z))
                 ))     
           ));
           (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
@@ -221,7 +221,7 @@ dozc:{x+y}[doz];
                     vqty:((1030 1030),(8#1000)) // TODO fix
                 ); 
                 (   // Current Orders  
-                    til[4];4#1;4#1;4#1;4#1; // 
+                    til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
                     ((2#400),(2#600)); // offset
                     4#100; // leaves
                     ((2#10),(2#20)); // displayqty
@@ -230,19 +230,17 @@ dozc:{x+y}[doz];
                 ); 
                 (-1;200;1b;z);   // Sell should reduce
                 (1b;1;( // Expected .order.applyNewTrades Mock
-
+                    enlist((-1;1000;10;z);(-1;1000;190;z))
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
- 
+                    enlist((0;1000;200;100;10;0;z);(2;1000;400;100;20;0;z)) // offset includes hqty
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-
+                    enlist(enlist(0;0;-1;1000;200;1b;z)) // TODO should be same instrument
                 ));   
-                (1b;1;( // Expected .order.applyMakerFills Mock
-
-                ));    
+                (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-
+                    enlist(enlist(0;0;-1;1000;5;1b;z))
                 )) 
           ))
     );
