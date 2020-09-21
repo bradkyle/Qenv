@@ -550,8 +550,12 @@
                 count[tqty]#reduce;
                 numLvls#fillTime)]); 
 
+        // Check to see if the leaves of any maker orders
+        // hase been update by deriving the delta and if there
+        // exists any where the delta is not 0 pass those through
+        // to the .order.applyMakerFills function.
         flldlt:(nleaves-state`leaves);
-        isfll:raze[flldlt]>0;
+        isfll:raze[flldlt]<>0;
         if[any[isfll];[
             .order.applyMakerFills  . flip(raze'[(
                     state`instrumentId;
