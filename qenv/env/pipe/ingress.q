@@ -12,10 +12,10 @@
     };
 
 .pipe.ingress.AddBatch               :{[events]
-        ecount:count[events];
-        events[`eid]:.pipe.event.eventCount + til ecount;
-        .pipe.event.eventCount+:ecount;        
-        .pipe.ingress.Event,:events;
+        ecount:count[events`time];
+        events[`eid]:(.pipe.event.eventCount + til ecount);
+        .pipe.event.eventCount+:ecount;       
+        .pipe.ingress.Event,:flip events;
     };
 
 /*******************************************************

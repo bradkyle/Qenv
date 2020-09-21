@@ -1,4 +1,36 @@
-\l 
+
+\cd ../../quantest/
+\l quantest.q 
+\cd ../env/engine/
+
+\cd contract/inverse
+\l account.q
+/ \cd ../linear
+/ \l account.q
+/ \cd ../quanto
+/ \l account.q
+\cd ../../
+
+\l instrument.q
+\l account.q
+\l order.q
+
+\cd ../util
+\l table.q
+\l testutils.q 
+\l cond.q
+\cd ../engine/
+
+\cd ../pipe
+\l common.q
+\l event.q 
+\l egress.q
+\l ingress.q 
+\l pipe.q 
+\cd ../engine
+
+
+\l engine.q
 
 .qt.Unit[
     ".engine.getInstrument";
@@ -12,10 +44,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -41,10 +73,10 @@
     
     };
     (
-        ((("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+        (("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+        (("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
 
         ))
     );
@@ -68,10 +100,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -97,10 +129,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -126,10 +158,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -156,10 +188,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -186,10 +218,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -202,24 +234,30 @@
     {[c]
         p:c[`params];
 
+        m:p`mocks;
         mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
         .engine.ProcessOrderEvents[p[`events]];
-
+        .engine.test.m:m;
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
-    {[p]
-    
-    };
+    {[p]`events`mocks!(p[0];(1_3#p))};
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
-
+        (("7:0) ProcessOrderEvents BUY: single event");(
+            (
+                (z;8;0;(0;0;0;0;0;0)); // 
+                (z;8;0;(1;0;0;0;0;0))
+            );
+            (1b;1;());
+            (1b;1;())
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
-
+        (("7:1) ProcessOrderEvents SELL: single event");(
+            ();
+            (1b;1;());
+            (1b;1;())
         ))
     );
     .util.testutils.defaultContractHooks;
@@ -244,10 +282,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -274,10 +312,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -302,10 +340,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -339,10 +377,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -362,10 +400,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -385,10 +423,10 @@
     
     };
     (
-        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+        (("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+        (("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -396,3 +434,5 @@
     "Reset the engine with different config"];
 
 // TODO Engine Integration Tests
+.qt.SkpBesTest[7];
+.qt.RunTests[];

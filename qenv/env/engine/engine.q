@@ -197,7 +197,15 @@
     instrument:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
+
+    // new order/amend order fields 
+    // (`accountId`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 11 fields
+
+    // amend order fields
+    // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
     
+    // cancel order fields
+
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
