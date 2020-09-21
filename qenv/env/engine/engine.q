@@ -127,7 +127,7 @@
 
     // Update the mark price in the liquidation engine and
     // by exten
-    .liquidation.UpdateMarkPrice
+    .liquidation.InspectAccounts[];
     
     .pipe.egress.AddMarkEvent[];
     };
