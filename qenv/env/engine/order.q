@@ -730,7 +730,7 @@
                         cob[`vqty]-:co[`displayqty];
                         cob[`iqty]-:((-/)co`leaves`displayqty);
 
-                        .order.Order,:(o,cod); // TODO test
+                        .order.Order,:(o,cod); // TODO test move into make order update
                         .order.OrderBook,:(cob;nob);
                         .pipe.egress.AddOrderUpdatedEvent[o;o`time];
                     ];  

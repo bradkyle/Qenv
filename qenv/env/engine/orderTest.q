@@ -104,7 +104,7 @@ dozc:{x+y}[doz];
             (3_5#p));
     };
     (
-       enlist(("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
+       (("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
             "repletes order spread during update, many order offset prices");(
             ( // Current Depth  
                 [price:1000-til 10] 
@@ -131,7 +131,7 @@ dozc:{x+y}[doz];
             ); 
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z);
+                    (1;999;20;z); // TODO check
                     (3;999;520;z);
                     (0;1000;400;z);
                     (2;1000;600;z)
@@ -147,7 +147,51 @@ dozc:{x+y}[doz];
                     (0 1000 1000 30 1000 1000 30); // vqty
                     (sc[z] 0 1 1 0 1 1 0))) // time
             ))     
-        ))
+        ));
+        (("0b) ProcessDepth BUY+SELL: many levels with many iceberg orders at ",
+            "same offset interval with hidden qty, price is removed across all levels fully (1000)");(
+            ( // Current Depth  
+                [price:1000-til 10] 
+                side:(10#1);
+                qty:10#1000;
+                hqty:((10 20),(8#10));
+                iqty:((170 170),(8#0)); // TODO fix
+                vqty:((1030 1030),(8#1000)) // TODO fix
+            ); 
+            (   // Current Orders  
+                til[4];4#0;4#1;4#1;4#1; // `orderId`instrumentId`accountId`side`otype 
+                ((2#400),(2#600)); // offset
+                4#100; // leaves
+                ((2#10),(2#20)); // displayqty
+                4#1000 999; // price
+                4#z // time
+            );
+            (   // Depth Update
+                ((5#-1),(5#1)); // side
+                ((1000 1001 1002 1001 1002),(999 998 997 997 998)); // price
+                ((0 0 0 1000 1000),(0 0 0 1000 1000)); // NQTY
+                (10#0); // NHQTY
+                (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
+            ); 
+            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+                enlist flip(
+                    (1;999;20;z); // TODO check
+                    (3;999;520;z);
+                    (0;1000;400;z);
+                    (2;1000;600;z)
+                )
+            ));    
+            (1b;1;( // Expected .order.applyBookUpdates Mock
+                enlist((
+                    1000 1001 1002 999 998 997 1000; // price
+                    (3#-1),(4#1);   // side
+                    (0 1000 1000 0 1000 1000 0); // qty
+                    (20 10 10 0 0 0 0); // hqty
+                    (170 ,(6#0)); // iqty
+                    (0 1000 1000 30 1000 1000 30); // vqty
+                    (sc[z] 0 1 1 0 1 1 0))) // time
+            ))     
+        ));
     );
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",
