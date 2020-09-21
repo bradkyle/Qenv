@@ -83,7 +83,17 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of mark price update events"];
 
@@ -102,7 +112,17 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of settlement events"];
 
@@ -122,7 +142,17 @@
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of funding events"];
 
@@ -142,7 +172,17 @@
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of funding events"];
      
@@ -161,7 +201,17 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of order events"];
 
@@ -180,7 +230,17 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a set of withdraw events"];
 
@@ -200,7 +260,17 @@
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     " "];
 
@@ -218,7 +288,17 @@
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Process a batch of signal events"];
 
@@ -245,11 +325,14 @@
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
+    {[p]
+    
+    };
     (
-        ((("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
 
         ));
-        ((("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
 
         ))
     );
@@ -265,7 +348,17 @@
         .engine.Info[p[`events]];
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Get the current info for the engine"];
 
@@ -278,7 +371,17 @@
         .engine.Reset[p[`events]];
 
     };
-    ();
+    {[p]
+    
+    };
+    (
+        ((("1:0) ProcessNewTradeEvents BUY: single event");(
+
+        ));
+        ((("1:1) ProcessDepthUpdateEvents SELL: single event");(
+
+        ))
+    );
     .util.testutils.defaultContractHooks;
     "Reset the engine with different config"];
 
