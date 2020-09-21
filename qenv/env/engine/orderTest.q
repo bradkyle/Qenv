@@ -301,18 +301,54 @@ dozc:{x+y}[doz];
                     enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;95;z))
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;0;5;5;1;z);(2;1000;150;100;20;0;z)) // offset includes hqty
+                    enlist((0;1000;0;5;5;1;z);(2;1000;105;100;20;0;z)) // offset includes hqty // TODO check
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;450;1b;z)) 
+                    enlist(enlist(0;0;-1;1000;495;1b;z)) 
                 ));   
                 (1b;1;( // Expected .order.applyMakerFills Mock
-                    enlist(enlist(0;1;1;1000;50;0b;z))
+                    enlist(enlist(0;1;1;1000;95;0b;z))
                 )); 
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;610;0;120;640;z))
+                    enlist(enlist(1000;1;610;0;80;635;z)) // TODO check
                 )) 
-          ))
+          ));
+          // TODO fills entire level
+          (("1e) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // 16
+          "orders, trade execution > agent order offset, fill is agent (3 orders on second level)");(
+                ( // Current Depth  
+                    [price:1000-til 10] 
+                    side:(10#1);
+                    qty:10#1000;
+                    hqty:((10 20),(8#10));
+                    iqty:((170 170),(8#0)); // TODO fix
+                    vqty:((1030 1030),(8#1000)) // TODO fix
+                ); 
+                (   // Current Orders  
+                    til[5];5#0;5#1;5#1;5#1; // `orderId`instrumentId`accountId`side`otype 
+                    ((2#400),(2#600),850); // offset
+                    5#100; // leaves
+                    ((2#10),(3#20)); // displayqty
+                    5#999 1000; // price
+                    5#z // time
+                ); 
+                (-1;1850;1b;z);  // Fill Execution Buy
+                (1b;1;( // Expected .order.applyNewTrades Mock
+                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;95;z))
+                ));    
+                (1b;1;( // Expected .order.applyOrderUpdates Mock
+                    enlist((0;1000;0;5;5;1;z);(2;1000;105;100;20;0;z)) // offset includes hqty // TODO check
+                ));    
+                (1b;1;( // Expected .order.applyTakerFills Mock
+                    enlist(enlist(0;0;-1;1000;495;1b;z)) 
+                ));   
+                (1b;1;( // Expected .order.applyMakerFills Mock
+                    enlist(enlist(0;1;1;1000;95;0b;z))
+                )); 
+                (1b;1;( // Expected .order.applyBookUpdates Mock
+                    enlist(enlist(1000;1;610;0;80;635;z)) // TODO check
+                )) 
+          ));
     );
     .util.testutils.defaultEngineHooks;
     "Process trades from the historical data or agent orders",
