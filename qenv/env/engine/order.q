@@ -345,13 +345,9 @@
 
     ]]; // TODO fix
 
-    // Delete all out of bounds depths, depths that are empty 
-    // i.e. where vqty + hqty = 0
-    delete from `.order.OrderBook where (vqty+iqty+hqty)<=0;
-    / ![`.order.OrderBook;.util.cond.bookPrune[];0;`symbol$()];  TODO pruning functionality
-    / .order.test.OB:.order.OrderBook;
-    // Return the orderbook update to the egress pipe
-    / .pipe.egress.AddDepthEvent[?[`.order.OrderBook;.util.cond.bookUpdBounds[];0b;()];last[]; 
+   .order.pruneBook[];   
+   .order.pruneOrders[];
+
     };
 
 
