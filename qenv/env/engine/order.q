@@ -34,7 +34,7 @@
 .order.fllCols:`instrumentId`accountId`side`price`qty`reduce`time;
 .order.deriveFlls       :{
     gcls:`instrumentId`accountId`side`price`reduce;
-    (0!?[x;();gcls!gcls;`fll`time!((sum;`qty);(last;`time))])
+    (0!?[x;();gcls!gcls;`fll`time!((sum;`qty);(last;`time))]) / [`instrumentId`accountId`side`price`qty`reduce`time]
     };
 
 .order.deriveSelfFlls   :{
@@ -237,7 +237,9 @@
 
 // Process Trades/Market Orders
 // --------------------------------------------------------------> // Price limits merely stipulate maximum market order price
-    
+
+/ .order.applyOrderUpdates    :{[]};
+
 
 // TODO udpate best bid + best ask
 // TODO move to C for increased speed.
@@ -325,18 +327,20 @@
 
         // Derive the new quantitites that are representative of the change in the state
         // of the orders and orderbook when the given trade occurs.
-        nhqty:          .util.Clip[(-/)state`hqty`rp];
+        nhqty:          .util.Clip[(-/)state`hqty`rp]; // Derive the new hidden qty
         noffset:        .util.Clip[(-/)state`offset`rp]; // Subtract the replaced amount and clip<0
-        nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster
+        nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[state`rp;state`leaves;state`offset]]; // TODO faster/fix
         ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[state[`displayqty];nleaves]]; // TODO faster
-        niqty:          sum'[nleaves-ndisplayqty];
-        displaydlt:     (ndisplayqty-state[`displayqty]);
-        nqty:           .util.Clip[((-/)state`vqty`rp)-sum'[displaydlt]];
-        nvqty:          nqty+sum'[ndisplayqty];
-        nshft:          nleaves+noffset;
-        nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price
-        nfilled:        state[`size] - nleaves; // New amount that is filled
-        accdlts:        state[`leaves] - nleaves; // The new Account deltas
+        niqty:          sum'[nleaves-ndisplayqty]; // The new order invisible qty = leaves - display qty
+        displaydlt:     (ndisplayqty-state[`displayqty]); // Derive the change in the order display qty
+        leavesdlt:      (nleaves-state[`leaves]); // Derive the change in the order leaves
+        hqtydlt:        (nhqty-state[`hqty]); // Derive the change in hidden order qty
+        nqty:           .util.Clip[((-/)state`qty`rp)-(sum'[leavesdlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
+        nvqty:          nqty+sum'[ndisplayqty]; // Derive the new visible qty as order display qty + the new qty from above
+        nshft:          nleaves+noffset; // 
+        nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price TODO make faster
+        nfilled:        state[`size] - nleaves; // New amount that is filled (in total)
+        accdlts:        state[`leaves] - nleaves; // The new amounts that will attribute to fills.
 
         // Derived the boolean representation of partially and 
         // fully filled orders within the matrix of orders referenced
@@ -386,6 +390,7 @@
         .order.test.isagnt:isagnt;
         .order.test.nside:nside;
         .order.test.ins:instrument;
+        .order.test.hqtydlt:hqtydlt;
 
         // Derive trades and taker account fills
         // --------------------------------------------------------------->
@@ -429,6 +434,7 @@
                     sum'[tqty];
                     count[tqty]#reduce;
                     numLvls#fillTime));
+                .order.test.flls:flls;
                 .account.ApplyFillG . .order.deriveFlls[flls];
             ]]; 
 
@@ -471,6 +477,7 @@
     
     // TODO make simpler and move down
     delete from `.order.OrderBook where (vqty+hqty+iqty)<=0;
+    delete from `.order.Order where leaves<=0;
     
     // Delete all out of bounds depths, depths that are empty 
     // i.e. where vqty + hqty = 0
