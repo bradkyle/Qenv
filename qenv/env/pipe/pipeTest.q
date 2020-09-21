@@ -1,7 +1,20 @@
 
 
 
+.qt.Unit[
+    ".pipe.getFirstIngressBatch";
+    {[c]
+        p:c[`params];
 
+        .account.ProcessDepth[p[`event]];
+
+    };
+    {[p]
+    
+    };
+    ();
+    .util.testutils.defaultPipeHooks;
+    "Global function for creating a new account"];
 
 .qt.Unit[
     ".pipe.getCurriculumIngressBatch";
