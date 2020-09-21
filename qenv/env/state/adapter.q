@@ -266,7 +266,7 @@ ramfrac:{};
 // "desired" order quantity at that price level and generates
 // the set of amend/new/cancel order requests that need to take
 // place in order to ameliarate the difference.
-.state.adapter.createLevelLimitOrdersDeltaProvided          :{[buyamts;sellamts;num]
+.state.adapter.createLevelLimitOrdersDeltaProvided              :{[buyamts;sellamts;num]
         sellprices:.state.getLvlPrices[-1;count[sellamts]];
         buyprices:.state.getLvlPrices[1;count[buyamts]];
 
