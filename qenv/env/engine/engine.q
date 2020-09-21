@@ -199,9 +199,7 @@
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
 
     // new order order fields 
-    // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 11 fields
- 
-    // cancel order fields
+    // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
 
     };
 
@@ -221,8 +219,6 @@
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
     
-    // cancel order fields
-
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory

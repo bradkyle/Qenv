@@ -230,7 +230,7 @@
      
 
 .qt.Unit[
-    ".engine.ProcessOrderEvents";
+    ".engine.ProcessNewOrderEvents";
     {[c]
         p:c[`params];
 
@@ -239,22 +239,24 @@
         mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
 
-        .engine.ProcessOrderEvents[p[`events]];
+        .engine.ProcessNewOrderEvents[p[`events]];
         .engine.test.m:m;
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
     {[p]`events`mocks!(p[0];(1_3#p))};
     (
-        (("7:0) ProcessOrderEvents BUY: single event");(
+        (("7:0) ProcessNewOrderEvents BUY: 2 single new order events");(
             (   // `eid`time`cmd`kind`datum
-                enlist(z;8;0;(0;0;0;0;0;0))
+                enlist(z;2#8;2#0;((0;0;0;0;0;0);(0;0;0;0;0;0)))
             );
             (1b;1;());
             (1b;1;())
         ));
-        (("7:1) ProcessOrderEvents SELL: single event");(
-            ();
+        (("7:1) ProcessNewOrderEvents SELL: 2 single new order events");(
+            (
+                enlist(z;2#8;2#0;((0;0;0;0;0;0);(0;0;0;0;0;0)))
+            );
             (1b;1;());
             (1b;1;())
         ))
@@ -262,6 +264,40 @@
     .util.testutils.defaultContractHooks;
     "Process a set of order events"];
 
+.qt.Unit[
+    ".engine.ProcessAmendOrderEvents";
+    {[c]
+        p:c[`params];
+
+        m:p`mocks;
+        mck1: .qt.M[`.engine.getInstrument;{:.util.testutils.defaultInstrument};c];        
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
+        .engine.ProcessAmendOrderEvents[p[`events]];
+        .engine.test.m:m;
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
+    };
+    {[p]`events`mocks!(p[0];(1_3#p))};
+    (
+        (("7:0) ProcessAmendOrderEvents BUY: 2 single new order events");(
+            (   // `eid`time`cmd`kind`datum
+                enlist(z;2#8;2#0;((0;0;0;0;0;0);(0;0;0;0;0;0)))
+            );
+            (1b;1;());
+            (1b;1;())
+        ));
+        (("7:1) ProcessAmendOrderEvents SELL: 2 single new order events");(
+            (
+                enlist(z;2#8;2#0;((0;0;0;0;0;0);(0;0;0;0;0;0)))
+            );
+            (1b;1;());
+            (1b;1;())
+        ))
+    );
+    .util.testutils.defaultContractHooks;
+    "Process a set of order events"];
 
 .qt.Unit[
     ".engine.ProcessWithdrawEvents";
