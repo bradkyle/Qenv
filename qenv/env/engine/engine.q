@@ -237,7 +237,7 @@
         a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
         a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
-        a[`available]<a[`initMarginReq]
+        a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
 
     };
 
