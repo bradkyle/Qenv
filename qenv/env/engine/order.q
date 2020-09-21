@@ -289,6 +289,8 @@
     };
 
 .order.applyMakerFills                  :{[instrumentId;accountId;side;price;amt;reduce;fillTime]
+        :1b;
+
         // Make order updates
         // Derives all maker fills as the sum of the amount filled by side,price
         // accountId,reduce etc. and are batched and filled.
@@ -506,7 +508,7 @@
                 count[tqty]#reduce;
                 numLvls#fillTime)]);
 
-        .order.applyMakerFills   . raze'[(
+        .order.applyMakerFills   . flip(raze'[(
                 state`instrumentId;
                 state`accountId;
                 state`oside;
@@ -514,7 +516,6 @@
                 (nleaves-state`leaves);
                 state`reduce;
                 state`time)][;where[msk]]);
-    
     
         // Derive and apply order book updates
         // -------------------------------------------------->
