@@ -213,7 +213,8 @@
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     
     // check max batch order amends
-
+    
+    // TODO add execInst
     orders:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
