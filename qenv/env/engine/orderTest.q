@@ -197,17 +197,17 @@ dozc:{x+y}[doz];
                 );
                 (-1;5;1b;z);  // Sell should reduce // TODO add time check
                 (1b;1;( // Expected .order.applyNewTrades Mock
-                    enlist(enlist(-1;1000;5;z))
+                    enlist(enlist'[(-1;1000;5;z)])
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;395;100;10;0;z);(2;1000;595;100;20;0;z))
+                    enlist flip((0;1000;395;100;10;0;z);(2;1000;595;100;20;0;z))
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;5;1b;z))
+                    enlist(enlist'[(0;0;-1;1000;5;1b;z)])
                 ));   
                 (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;1000;5;170;1030;z))
+                    enlist(enlist'[(1000;1;1000;5;170;1030;z)])
                 ))     
           ));
           (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
@@ -230,17 +230,17 @@ dozc:{x+y}[doz];
                 ); 
                 (-1;200;1b;z);   // Sell should reduce
                 (1b;1;( // Expected .order.applyNewTrades Mock
-                    enlist((-1;1000;10;z);(-1;1000;190;z))
+                    enlist flip((-1;1000;10;z);(-1;1000;190;z))
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;200;100;10;0;z);(2;1000;400;100;20;0;z)) // offset includes hqty
+                    enlist flip((0;1000;200;100;10;0;z);(2;1000;400;100;20;0;z)) // offset includes hqty
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;200;1b;z)) // TODO should be same instrument
+                    enlist(enlist'[(0;0;-1;1000;200;1b;z)]) // TODO should be same instrument
                 ));   
                 (0b;0;()); // Expected .order.applyMakerFills Mock
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;810;0;170;840;z))
+                    enlist(enlist'[(1000;1;810;0;170;840;z)])
                 )) 
           ));
           (("1c) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
@@ -263,19 +263,19 @@ dozc:{x+y}[doz];
                 );  
                 (-1;450;1b;z);  // Fill Execution Buy
                 (1b;1;( // Expected .order.applyNewTrades Mock
-                    enlist((-1;1000;10;z);(-1;1000;390;z);(-1;1000;50;z))
+                    enlist flip((-1;1000;10;z);(-1;1000;390;z);(-1;1000;50;z))
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
-                    enlist((0;1000;0;50;10;1;z);(2;1000;150;100;20;0;z)) // offset includes hqty
+                    enlist flip((0;1000;0;50;10;1;z);(2;1000;150;100;20;0;z)) // offset includes hqty
                 ));    
                 (1b;1;( // Expected .order.applyTakerFills Mock
-                    enlist(enlist(0;0;-1;1000;450;1b;z)) 
+                    enlist(enlist'[(0;0;-1;1000;450;1b;z)]) 
                 ));   
                 (1b;1;( // Expected .order.applyMakerFills Mock
-                    enlist(enlist(0;1;1;1000;50;0b;z))
+                    enlist(enlist'[(0;1;1;1000;50;0b;z)])
                 )); 
                 (1b;1;( // Expected .order.applyBookUpdates Mock
-                    enlist(enlist(1000;1;610;0;120;640;z))
+                    enlist(enlist'[(1000;1;610;0;120;640;z)])
                 )) 
           ));
           (("1d) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
@@ -337,7 +337,15 @@ dozc:{x+y}[doz];
                     enlist flip(
                         (-1;1000;10;z);
                         (-1;1000;390;z);
-                        (-1;1000;95;z)
+                        (-1;1000;95;z);
+                        (-1;1000;10;z);
+                        (-1;1000;390;z);
+                        (-1;1000;95;z);
+                        (-1;1000;10;z);
+                        (-1;1000;390;z);
+                        (-1;1000;95;z);
+                        (-1;1000;10;z);
+                        (-1;1000;390;z)
                     )
                 ));    
                 (1b;1;( // Expected .order.applyOrderUpdates Mock
@@ -1181,7 +1189,6 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
-/  .qt.SkpBes[3];
 .qt.SkpBesTest[1];
 / .qt.SkpBes[46];
 .qt.RunTests[];

@@ -488,6 +488,7 @@
         // returns the quantities by price level.
         tqty:{s:sums[y];q:.util.Clip[?[(x-s)>=0;y;x-(s-y)]];q where[q>0]}'[state`rp;splt]; 
         numtds:count[raze[tqty]];
+        numtdslvl:count'[tqty];
         // TODO move into own function.
         state[`mside]:nside; // TODO changes
         state[`tside]:side; // TODO changes
@@ -514,20 +515,15 @@
         .order.test.leavesdlt:leavesdlt;
         .order.test.numtds:numtds;
         .order.test.nobupd:nobupd;
+        .order.test.numtdslvl:numtdslvl;
 
         // Derive and apply trades
         // -------------------------------------------------->
 
-        .order.test.bbnbc:raze'[( // TODO derive the prices at each level before
-                numtds#state`tside;
-                numtds#state`price;
-                tqty;
-                numtds#fillTime)];
-
         // 
         .order.applyNewTrades . raze'[( // TODO derive the prices at each level before
-                numtds#state`tside;
-                numtds#state`price;
+                numtds#state`tside; // more accurate derivation
+                raze[{x#y}'[numtdslvl;state`price]]; // more accurate derivation
                 tqty;
                 numtds#fillTime)];
         
