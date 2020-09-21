@@ -149,11 +149,4 @@
 .account.GetInventoryOfAccount     :{[a]
     ?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()]
     };
-
-.account.ApplyFill:{[a;b;c;d;e;f;g;h]
-
-    };
-
-.account.ApplyFillG:{
-
-    };
+  
