@@ -193,14 +193,14 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessOrderEvents :{[events] // Requires accountId
+.engine.ProcessNewOrderEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
-
+    .order.NewOrder[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -218,6 +218,7 @@
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
+    .order.AmendOrder[];
     
     };
 
