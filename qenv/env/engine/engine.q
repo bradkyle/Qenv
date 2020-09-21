@@ -284,17 +284,68 @@
 
     // check max batch order amends
 
-    orders:(`accountId`price`side`otype,
+    // check max batch order amends
+    count'[events`datum]<>12 // Filter events where col count<>12
+    
+    // filter events by type
+    // TODO increment request counts!
+
+    // TODO add execInst
+    o:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
 
-    orders:.engine.PreprocessOrders[];
+     // Routine validation
+    o[`otype] in .pipe.common.ORDERKIND;
+    o[`side]  in .pipe.common.ORDERSIDE;
+    o[`timeinforce]  in .pipe.common.TIMEINFORCE;
 
+    // Instrument specific validation        
+    o[`price] > ins[`minPrice]; // larger than min price
+    o[`price] < ins[`maxPrice]; // smaller than max price
+    o[`size] > ins[`minSize]; // larger than min size
+    o[`size] < ins[`maxSize]; // smaller than max size
+    (o[`price] mod i)<>0;
+
+    // fill null then validate
+    o[`limitprice]:0^o[`limitprice];
+    o[`stopprice]:0^o[`stopprice];
+    o[`trigger]:0^o[`trigger];
+    o[`timeinforce]:0^o[`timeinforce];
+    o[`reduce]:0b^o[`reduce];
+    o[`displayqty]:o[`size]^o[`displayqty];
+    o[`displayqty] > ins[`minSize]; // larger than min size
+    o[`displayqty] < ins[`maxSize]; // smaller than max size
+
+    // TODO all in .common.ExecInst
+    // TODO 1 in execIns
+    o[`otype]  in (2 3); // where otype 
+
+    (all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]])
+
+    o[`displayqty]  in (2 3);
+
+    // Derive the sum of the margin that will be required
+    // for each order to be filled and filter out the orders
+    // for which their respective account has insufficient 
+    // balance.
+    premium:(o[`side]*(i[`markprice]-o[`price]))
+
+    // derive the instantaneous loss that will be incurred for each order
+    // placement and thereafter derive the cumulative loss for each order
+    // filter out orders that attribute to insufficient balance where neccessary
+    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
+    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
+    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
+
+    a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
     // TODO fill orders with current orders
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
-    .order.AmendOrder[instrument;accounts;orders];
+    .order.AmendOrder[i;a;o];
     
     };
 
