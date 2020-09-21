@@ -129,27 +129,20 @@
     ();
     .util.testutils.defaultContractHooks;
     "Process a set of funding events"];
-    
-.qt.Unit[
-    ".engine.ProcessNewPriceLimitEvents";
-    {[c]
-        p:c[`params];
-
-        .engine.ProcessNewPriceLimitEvents[p[`events]];
-
-    };
-    ();
-    .util.testutils.defaultContractHooks;
-    "Process a set of new price limit events"];
-
+     
 
 .qt.Unit[
     ".engine.ProcessOrderEvents";
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
         .engine.ProcessOrderEvents[p[`events]];
 
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
     ();
     .util.testutils.defaultContractHooks;
@@ -161,8 +154,13 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
         .engine.ProcessWithdrawEvents[p[`events]];
 
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
     };
     ();
     .util.testutils.defaultContractHooks;
@@ -174,7 +172,13 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+
         .engine.ProcessDepositEvents[p[`events]];
+
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     ();
@@ -187,7 +191,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+
         .engine.ProcessSignalEvents[p[`events]];
+
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     ();
@@ -200,7 +208,11 @@
     {[c]
         p:c[`params];
 
+        mck1: .qt.M[`.order.ProcessDepth;{[a;b;c;d]};c];
+
         .engine.ProcessEvents[p[`events]];
+
+        .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
     ();
