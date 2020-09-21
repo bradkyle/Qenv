@@ -186,14 +186,29 @@
     };
 
 
-.engine.validateOrders:{[ins;acc;o]
+.engine.validateOrders:{[i;o]
 
         // Routine validation
         o[`otype] in .pipe.common.ORDERKIND;
         o[`side]  in .pipe.common.ORDERSIDE;
         o[`timeinforce]  in .pipe.common.TIMEINFORCE;
 
-        o[`otype]  in (2 3);
+        // Instrument specific validation        
+        o[`price] > ins[`minPrice]; // larger than min price
+        o[`price] < ins[`maxPrice]; // smaller than max price
+        o[`size] > ins[`minSize]; // larger than min price
+        o[`size] < ins[`maxSize]; // smaller than max price
+        (o[`price] mod i)<>0;
+
+        // fill null then validate
+        o[`limitprice]:0^o[`limitprice];
+        o[`stopprice]:0^o[`stopprice];
+        o[`trigger]:0^o[`trigger];
+        o[`timeinforce]:0^o[`timeinforce];
+        o[`reduce]:0b^o[`reduce];
+        o[`displayqty]:o[`size]^
+ 
+        o[`otype]  in (2 3); // where otype 
         o[`displayqty]  in (2 3);
     };
 
