@@ -70,44 +70,6 @@
     :7h$((iv[`amt]*imreq)) // TODO check if amt or datum?
     };
 
-// Adjust Open Limit Order Margin
-// ---------------------------------------------------------------------------------------->
-
-// TODO make shorter
-// AdjustOrderMargin interprets whether a given margin 
-// delta principly derived from either the placement/cancellation
-// of a limit order or the application of a order fill will exceed the
-// accounts available balance in which case an exception will be 
-// thrown, or otherwise will return the resultant account state that the
-// given delta will cause on execution. TODO dry!
-/  @param price (Long) The effective price of the delta
-/  @param delta (Long) The quantity delta that is to be applied 
-/  @param isign (Long) Either 1: Long, -1:Short 
-/  @return (Account) The input as a symbol
-/  @throws InsufficientMargin account has insufficient margin for adjustment
-.inverse.account.AdjustOrderMargin       :{[i;a;price;delta;isign]
-
-    // Derive the new premium  
-    premium: abs[min[0,(isign*(i[`markPrice]-price))]];
-
-    // TODO add new open order qty to calculations?
-
-    // Calculate the next available 
-    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
-    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
-    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
-    a[`available]:((a[`balance]-sum[account`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
-
-    // Derive margin requirements
-    a[`initMargin]:.inverse.account.InitMargin[i;a;0];
-    a[`maintMargin]:.inverse.account.MaintMargin[i;a;0];
-
-    // Raises an error if the current available margin is less 
-    // than the required amount, or else returns the updated account
-    $[a[`available]<a[`initMargin];'InsufficientMargin;a] // TODO check
-    };
-
-
 // Main Public Fill Functionality
 // ---------------------------------------------------------------------------------------->
 

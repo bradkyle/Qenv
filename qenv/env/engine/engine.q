@@ -237,6 +237,8 @@
         a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
         a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
+        a[`available]<a[`initMarginReq]
+
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
