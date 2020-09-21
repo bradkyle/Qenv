@@ -247,9 +247,8 @@
     {[p]`events`mocks!(p[0];(1_3#p))};
     (
         (("7:0) ProcessOrderEvents BUY: single event");(
-            (
-                (z;8;0;(0;0;0;0;0;0)); // 
-                (z;8;0;(1;0;0;0;0;0))
+            (   // `eid`time`cmd`kind`datum
+                enlist(z;8;0;(0;0;0;0;0;0))
             );
             (1b;1;());
             (1b;1;())

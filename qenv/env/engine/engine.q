@@ -198,8 +198,25 @@
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
 
-    // new order/amend order fields 
-    // (`accountId`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 11 fields
+    // new order order fields 
+    // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 11 fields
+ 
+    // cancel order fields
+
+    };
+
+// Inc Fill is used when the fill is to be added to the given inventory
+// inc fill would AdjustOrderMargin if the order when the order was a limit
+// order.
+/  @param price     (Long) The price at which the fill is occuring
+/  @param qty       (Long) The quantity that is being filled.
+/  @param account   (Account) The account to which the inventory belongs.
+/  @param inventory (Inventory) The inventory that is going to be added to.
+/  @return (Inventory) The new updated inventory
+.engine.ProcessAmendOrderEvents :{[events] // Requires accountId
+    instrument:.engine.getInstrument[];
+    // TODO do validation here
+    // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
@@ -283,7 +300,7 @@
     newwm: max x`time;
     $[null[.engine.WaterMark] or [newwm>.engine.WaterMark];[
         {
-            k:x`kind;
+            k:x`f;
             $[k=0; .engine.ProcessDepthUpdateEvents[x];     // DEPTH
             k=1; .engine.ProcessNewTradeEvents[x];        // TRADE
             k=2; .engine.ProcessMarkUpdateEvents[x];      // MARK
@@ -296,7 +313,7 @@
             k=11;.engine.ProcessDepositEvents[x];         // DEPOSIT
             k=16;.engine.ProcessSignalEvents[x];         // SIGNAL
             'INVALID_EVENT_KIND];
-        }'[`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x];
+        }'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
         .engine.WaterMark:newwm;
     ];'WATERMARK_HAS_PASSED];
     // TODO pop events
