@@ -69,11 +69,14 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     .pipe.fwdSize:config`fwdSize; // The 
     .pipe.batchSize:config`batchSize; // The size of the batches in minutes
 
-    if[not[`BatchIndex in key `.loader];[
+    // Check if the Batch index which in 
+    if[not[`BatchIndex in key `.ingest];[
         .pipe.BatchIndex:select i:max i, t:max time by .pipe.batchSize xbar `minute$time from .pipe.events;
     ]];
     // .Q.MAP??
     
+    // Get the next ingress batch based on the
+    // configuration provided
     k:config`batchKind;
     nextBatch:$[
         k=0;.pipe.getChronologicalIngressBatch[];
