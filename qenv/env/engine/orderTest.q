@@ -72,10 +72,10 @@ dozc:{x+y}[doz];
 
         m:p`mocks;
         
-        mck2: .qt.M[`.order.applyOffsetUpdates;{[a;b;c]};c];
-        mck5: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
-        mck6: .qt.M[`.order.pruneBook;{};c];
-        mck7: .qt.M[`.order.pruneOrders;{};c];
+        mck1: .qt.M[`.order.applyOffsetUpdates;{[a;b;c]};c];
+        mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
+        mck3: .qt.M[`.order.pruneBook;{};c];
+        mck4: .qt.M[`.order.pruneOrders;{};c];
 
         // instrument;nxt:(side;price;qty;hqty;time)
         .order.ProcessDepth[.util.testutils.defaultInstrument;p`nxt];
@@ -104,7 +104,7 @@ dozc:{x+y}[doz];
             (3_5#p));
     };
     (
-       (("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
+       enlist(("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
             "repletes order spread during update, many order offset prices");(
             ( // Current Depth  
                 [price:1000-til 10] 
@@ -135,7 +135,7 @@ dozc:{x+y}[doz];
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist(enlist'[(1000;1;1000;5;170;1030;z)])
             ))     
-        ));
+        ))
     );
     .util.testutils.defaultEngineHooks;
     "Given a depth update which consists of a table of time,side,price",

@@ -318,9 +318,9 @@
                 .order.applyBookUpdates     . (raze'[(
                         state`price;
                         state`mside;
-                        nqty;
-                        nhqty;
-                        niqty;
+                        state`qty;
+                        state`hqty;
+                        state`iqty;
                         nvqty)]);
 
 
