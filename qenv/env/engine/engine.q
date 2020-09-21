@@ -40,6 +40,10 @@
     
     );
 
+.engine.FilterValid     :{
+
+    };
+
 // Because the Environment for all practical purposes
 // only uses one instrument, this function returns the
 // primary instance of Instrument for which all actions
@@ -186,7 +190,7 @@
     };
 
 
-.engine.validateOrders:{[i;o]
+.engine.PreprocessOrders:{[i;o]
 
         // Routine validation
         o[`otype] in .pipe.common.ORDERKIND;
@@ -196,8 +200,8 @@
         // Instrument specific validation        
         o[`price] > ins[`minPrice]; // larger than min price
         o[`price] < ins[`maxPrice]; // smaller than max price
-        o[`size] > ins[`minSize]; // larger than min price
-        o[`size] < ins[`maxSize]; // smaller than max price
+        o[`size] > ins[`minSize]; // larger than min size
+        o[`size] < ins[`maxSize]; // smaller than max size
         (o[`price] mod i)<>0;
 
         // fill null then validate
@@ -206,10 +210,30 @@
         o[`trigger]:0^o[`trigger];
         o[`timeinforce]:0^o[`timeinforce];
         o[`reduce]:0b^o[`reduce];
-        o[`displayqty]:o[`size]^
- 
+        o[`displayqty]:o[`size]^o[`displayqty];
+        o[`displayqty] > ins[`minSize]; // larger than min size
+        o[`displayqty] < ins[`maxSize]; // smaller than max size
+
+        // TODO all in .common.ExecInst
+        // TODO 1 in execIns
         o[`otype]  in (2 3); // where otype 
+
+        (all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+        all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]])
+ 
         o[`displayqty]  in (2 3);
+
+        // Derive the sum of the margin that will be required
+        // for each order to be filled and filter out the orders
+        // for which their respective account has insufficient 
+        // balance.
+        premium:(o[`side]*(i[`markprice]-o[`price]))
+
+        a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
+        a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
+        a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
+        a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
+
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -234,7 +258,7 @@
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
 
-    orders:.engine.validateOrders[];
+    orders:.engine.PreprocessOrders[];
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
@@ -261,7 +285,7 @@
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
 
-    orders:.engine.validateOrders[];
+    orders:.engine.PreprocessOrders[];
 
     // TODO fill orders with current orders
 
