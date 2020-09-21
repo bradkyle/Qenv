@@ -263,6 +263,8 @@
 
     a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
 
+    // Create probabalistic dropout of orders according to some loadshedding coefficient.
+
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
     .order.NewOrder[instrument;accounts;orders];
@@ -342,6 +344,8 @@
 
     a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
     // TODO fill orders with current orders
+
+    // Create probabalistic dropout of orders according to some loadshedding coefficient.
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
