@@ -12,6 +12,8 @@
 // environment allowing for effective generalization.
 // In this sense multiple agents could not only effectively 
 // run within the same environment instance but also on the
-// same cpu
+// same cpu.
+// Because the unroll length of the agent in the environment 
+// is short in comparison to the batch, the action 
 
 // Beast learner pool

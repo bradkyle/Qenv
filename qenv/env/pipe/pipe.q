@@ -12,8 +12,6 @@
 // @p: probability spread
 PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til n};
 
-
-
 / csi:count[.env.StepIndex];
 / nevents:flip[.env.EventBatch@idx];
 / idx:.env.StepIndex@step;

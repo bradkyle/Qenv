@@ -66,6 +66,7 @@ reduceOnly on both position closes order amount fully or rejects order?
 is the order margin updated?
 derive updates from 20 levels* full update
 
+Use the interface as a action space for agents
 
 Worker Types
     - Websocket
