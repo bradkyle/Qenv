@@ -131,7 +131,7 @@
     .order.UpdateMarkPrice[instrument;d;events`time];
 
     // Inspect the account tables for any insolvent accounts.
-    .liquidation.InspectAccounts[];
+    .liquidation.InspectAccounts[instrument];
     
     .pipe.egress.AddMarkEvent[];
     };
@@ -184,8 +184,11 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
+
+    // TODO just derive last price limits from events
+    pricelimits:events`datum;
+
     .instrument.UpdatePriceLimits[instrument;]; // TODO derive price limti
-    .order.UpdatePriceLimits[instrument;];
     .pipe.egress.AddPriceLimitEvent[instrument;];    
     };
 

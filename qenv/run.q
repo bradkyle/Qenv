@@ -17,3 +17,6 @@
 // is short in comparison to the batch, the action 
 
 // Beast learner pool
+
+
+// Testing is done with a single agent
