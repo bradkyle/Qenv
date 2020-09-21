@@ -131,10 +131,10 @@ dozc:{x+y}[doz];
             ); 
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;1000;395;20;z);
-                    (3;1000;595;520;z);
-                    (0;1000;395;400;z);
-                    (2;1000;595;600;z)
+                    (1;999;20;z);
+                    (3;999;520;z);
+                    (0;1000;400;z);
+                    (2;1000;600;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock

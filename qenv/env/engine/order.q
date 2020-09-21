@@ -295,6 +295,9 @@
                 mxnshft:max'[nshft];
                 lsttime:last'[state`time]; // TODO apply to each order
 
+                numordlvl:count'[noffset];
+
+
                 .order.test.offsetdlts:offsetdlts;
                 .order.test.dneg:dneg;
                 .order.test.state1:state;
@@ -313,9 +316,9 @@
                 // Update the order offsets
                 .order.applyOffsetUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
                         state`orderId;
-                        state`oprice;
+                        raze[{x#y}'[numordlvl;state`price]]; // TODO make faster
                         noffset;
-                        state`time)]][;where[msk]]);
+                        raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]]); // TODO make fasters
 
                 .order.applyBookUpdates     . .order.test.bngd:(0^.util.PadM[raze'[(
                         state`price;
