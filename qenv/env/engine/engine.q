@@ -185,6 +185,11 @@
     .pipe.egress.AddPriceLimitEvent[instrument;];    
     };
 
+
+.engine.validateOrders:{[]
+
+    };
+
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
@@ -197,6 +202,7 @@
     instrument:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
+    orders:y`datum;
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
@@ -215,6 +221,7 @@
     instrument:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
+    orders:y`datum;
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
