@@ -186,7 +186,7 @@
     };
 
 
-.engine.validateOrders:{[o]
+.engine.validateOrders:{[ins;acc;o]
 
         // Routine validation
         o[`otype] in .pipe.common.ORDERKIND;
