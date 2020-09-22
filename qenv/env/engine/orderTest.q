@@ -222,10 +222,10 @@ dozc:{x+y}[doz];
             );
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -267,10 +267,10 @@ dozc:{x+y}[doz];
             );
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -312,10 +312,10 @@ dozc:{x+y}[doz];
             );
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -357,10 +357,10 @@ dozc:{x+y}[doz];
             );   
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -402,10 +402,10 @@ dozc:{x+y}[doz];
             );   
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -447,10 +447,10 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;20;100;100;0;z); // TODO check
+                    (3;999;520;100;100;0;z);
+                    (0;1000;400;100;100;0;z);
+                    (2;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -492,10 +492,10 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip( // offset on both sides should be reduced to 0
-                    (0;1001;0;z); // TODO check
-                    (1;1001;100;z);
-                    (2;998;0;z);
-                    (3;998;100;z)
+                    (0;1001;0;100;100;0;z); // TODO check
+                    (1;1001;100;100;100;0;z);
+                    (2;998;0;100;100;0;z);
+                    (3;998;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -537,8 +537,8 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (0;998;0;z); // TODO check
-                    (1;998;100;z)
+                    (0;998;0;100;100;0;z); // TODO check
+                    (1;998;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -580,8 +580,8 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (0;998;0;z); // TODO check
-                    (1;998;100;z)
+                    (0;998;0;100;100;0;z); // TODO check
+                    (1;998;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -617,7 +617,7 @@ dozc:{x+y}[doz];
             ); 
             (  // Depth Update (best ask price jumps)
                 ((4#1),(2#-1));
-                ((999 998 998 999),(999 999));
+                ((999 998 998 999),(999 999)); // Because the level at 99 changes (and no trades occur, hqty stays the same)
                 ((0 0 1000 1000),(1000 0));
                 (sc[z] 0 0 2 2 0 1)
             );     
@@ -632,7 +632,7 @@ dozc:{x+y}[doz];
                     998 999 999; // price
                     1 -1 1;   // side
                     (1000 0 1000); // qty
-                    (0 10 0); // hqty TODO (hqty at the level will be overwritten by the price change?)
+                    (0 0 10); // hqty TODO (hqty at the level will be overwritten by the price change?)
                     (0 0 0); // iqty
                     (1200 0 1000); // vqty
                     (sc[z] 0 1 2))) // time
@@ -1783,5 +1783,5 @@ dozc:{x+y}[doz];
     "Global function for checking stop orders"];
 
 .qt.SkpBesTest[0];
-/ .qt.SkpBes[46];
+/ .qt.SkpBes[10];
 .qt.RunTests[];
