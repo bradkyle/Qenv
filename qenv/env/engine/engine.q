@@ -104,7 +104,6 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewTradeEvents :{[e]
     // This function assumes that a trade was derived from data and not an agent
-
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
     e:`accountId`side`fillqty`reduce!e`datum;
@@ -285,8 +284,6 @@
         0;"Order had execInst of postOnly"];
 
     e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
-
-    // TODO convert order accountId to mapping
     e[`accountId]:`.account.Account!e[`accountId];
     a:e[`accountId];
 
@@ -401,8 +398,6 @@
         0;"Order had execInst of postOnly"];
 
     e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
-
-    // TODO convert order accountId to mapping
     e[`accountId]:`.account.Account!e[`accountId];
     a:e[`accountId];
 
@@ -498,6 +493,7 @@
     e[`instrumentId]:`.instrument.Instrument!0;
 
     e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
+    e[`accountId]:`.account.Account!e[`accountId];
 
     // TODO convert order accountId to mapping
 
@@ -534,6 +530,8 @@
     e[`instrumentId]:`.instrument.Instrument!0;
 
     e:.engine.Purge[e;not[e[`accountId] in key[.account.Account]];0;"Invalid account"];
+    e[`accountId]:`.account.Account!e[`accountId];
+
     e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
     e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
