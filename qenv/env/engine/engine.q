@@ -183,13 +183,9 @@
 
     e[`instrumentId]:`.instrument.Instrument!0;
 
-    //  Apply funding the the open agent 
-    // positions/inventory 
-    .account.CONTRACT.ApplyFunding[instrument];
-
     if[count[e]>0;[
         .account.ApplyFunding . e;
-        .instrument.Instrument . e;
+        .instrument.UpdateFunding . e;
         ]];    
     };
 
