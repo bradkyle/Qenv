@@ -420,7 +420,7 @@ dozc:{x+y}[doz];
             ))     
         ));
         (("0h) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
-          "(best price decreases during update) finishes past order level (past final spread)");(
+          "(best price decreases during update) finishes past order level (past final spread)");( // incoming orders should be participate don't initiate
             (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
