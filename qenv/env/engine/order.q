@@ -334,7 +334,7 @@
     nside:neg[side];
     isagnt:count[account]>0;
     
-    ciId:instrument`instrumentId;
+    ciId:instrument`instrumentId; // TODO use accountref
     caId:account`accountId;
     
     // Join the opposing side of the orderbook with the current agent orders

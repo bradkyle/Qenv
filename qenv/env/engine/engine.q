@@ -99,7 +99,7 @@
     
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
-    d:events`datum;
+    d:`side`fillqty`reduceevents`datum;
 
 
 
