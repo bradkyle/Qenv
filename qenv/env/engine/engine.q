@@ -148,6 +148,10 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessSettlementEvents :{[events]
     instrument:.engine.getInstrument[];
+
+    events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
+
+    f:`
     
     // Apply settlement to the given accounts
     // and their respective inventories, this 
