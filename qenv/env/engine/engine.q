@@ -207,8 +207,7 @@
 
     e[`instrumentId]:`.instrument.Instrument!0;
 
-    
-    
+    if[count[e]>0;.instrument.Instrument . e];    
     };
 
 
@@ -229,7 +228,7 @@
     // check max batch order amends
      // Filter e where col count<>12
     
-    e:.engine.Purge[e;count'[e`datum]<>12;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>13;0;"Invalid schema"];
 
     // In live version would get instrument here
     // filter e by type
