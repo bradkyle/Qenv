@@ -119,9 +119,10 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[events]
     instrument:.engine.getInstrument[];
-    d:events`datum;
-    instrument[`markPrice]:last[d]; // Derive the last mark price from the events
-    .instrument.Instrument,:instrument;
+
+    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+
+    m:`markPrice`basis!events;
 
     // Essentially find the deltas in the mark price provided
     // and derive a change in the unrealized pnl, triggering
