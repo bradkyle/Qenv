@@ -155,7 +155,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.order.ProcessDepth        :{[instrument;nxt] //TODO fix and test, hidden order
+.order.ProcessDepth        :{[e] //TODO fix and test, hidden order
     // TODO validation
     // TODO offsets cannot be less than hidden qty
 
@@ -329,7 +329,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory // TODO make viable for batch insertions!
-.order.ProcessTrade        :{[instrument;account;td] // TODO validation, fix and test, change instrument to i, account to a
+.order.ProcessTrade        :{[e] // TODO validation, fix and test, change instrument to i, account to a
     side:td[0];fillQty:td[1];reduce: td[2];fillTime:td[3];
     nside:neg[side];
     isagnt:count[account]>0;
@@ -570,7 +570,7 @@
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
-.order.NewOrder            :{[i;a;o] 
+.order.NewOrder            :{[e] 
     // TODO validation?
     (o`instrumentId`accountId):(
         `.instrument.Instrument!o[`instrumentId];
@@ -638,7 +638,7 @@
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory // TODO if update price to past best bid/ask ProcessTrade
-.order.AmendOrder            :{[i;a;o] // TODO add time 
+.order.AmendOrder            :{[e] // TODO add time 
     // TODO validation?
     co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
     // TODO fill current order with next order
@@ -783,7 +783,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.order.CheckStopOrders   :{[instrument;time]
+.order.CheckStopOrders   :{[e]
     .order.ExecuteStop[instrument;time]'[?[`.order.OrderBook;.util.cond.isActiveStop[];0b;()]];
     };
 
