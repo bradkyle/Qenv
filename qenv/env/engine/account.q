@@ -56,7 +56,8 @@
             selfFillCount       : `long$();
             selfFillVolume      : `long$();
             leverage            : `long$();
-            monthVolume         : `long$());
+            monthVolume         : `long$();
+            state               : `long$());
 
 .account.mandCols:();
 .account.allCols:cols .account.Account;
