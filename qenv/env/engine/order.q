@@ -645,9 +645,9 @@
 /  @return (Inventory) The new updated inventory // TODO if update price to past best bid/ask ProcessTrade
 .order.AmendOrder            :{[e] // TODO add time 
     // TODO validation?
-    co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()];
+    co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()]; // TODO move to engine
     // TODO fill current order with next order
-    if[not null[o`size];[o[`leaves]:o[`size];o[`size]:co[`size]]];
+    if[not null[o`size];[o[`leaves]:o[`size];o[`size]:co[`size]]]; // TODO move to engine
     o:co,o;
     k:o[`otype];
     res:$[(k in (1,4,5));[ // LIMIT ORDER

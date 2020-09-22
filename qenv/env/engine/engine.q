@@ -453,6 +453,7 @@
     e:`accountId`orderId`clOrdId!e;
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
+    e[`accountId]:`.account.Account!e[`accountId];
     
     if[count[oId]>0;.order.CancelOrder . e];
     };
