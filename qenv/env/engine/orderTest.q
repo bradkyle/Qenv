@@ -510,7 +510,7 @@ dozc:{x+y}[doz];
             ))     
         ));
         (("0j) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
-          "(best price decreases during update) finishes at order level");(
+          "(best price decreases during update) finishes at order level");( // TODO make different
             (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -537,8 +537,8 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;998;20;z); // TODO check
-                    (2;;600;z)
+                    (0;998;0;z); // TODO check
+                    (1;998;100;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
