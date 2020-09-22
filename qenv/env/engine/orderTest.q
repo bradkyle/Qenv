@@ -403,21 +403,23 @@ dozc:{x+y}[doz];
             );   
             (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
-                    (1;999;20;100;100;0;z); // TODO check
-                    (3;999;520;100;100;0;z);
-                    (0;1000;400;100;100;0;z);
-                    (2;1000;600;100;100;0;z)
+                    (0;1000;10;100;100;0;z); // TODO check
+                    (1;1000;110;100;100;0;z);
+                    (2;1001;0;100;100;0;z);
+                    (3;1001;100;100;100;0;z);
+                    (4;1002;0;100;100;0;z);
+                    (5;1002;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    1000 1001 1002 999 998 997 1000; // price
-                    (3#-1),(4#1);   // side
-                    (0 1000 1000 0 1000 1000 0); // qty
-                    (20 10 10 0 0 0 0); // hqty
-                    (170 ,(6#0)); // iqty
-                    (0 1000 1000 30 1000 1000 30); // vqty
-                    (sc[z] 0 1 1 0 1 1 0))) // time
+                    1000 1001 1002 1000 1001; // price // TODO check that this is sufficient
+                    (3#-1),(2#1);   // side
+                    0 0 1000 0 0; // qty
+                    10 0 0 0 0; // hqty
+                    0 0 0 0 0; // iqty
+                    200 200 1200 0 0; // vqty
+                    (sc[z] 0 0 0 1 1))) // time
             ))     
         ));
         (("0h) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
@@ -697,6 +699,8 @@ dozc:{x+y}[doz];
     "Given a depth update which consists of a table of time,side,price",
     "size update the orderbook and the individual order offsets/iceberg",
     "orders where necessary"];
+
+// TODO integration tests
 
 // TODO no liquidity
 // TODO add order update events!!!!
