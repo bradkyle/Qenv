@@ -72,7 +72,7 @@ dozc:{x+y}[doz];
 
         m:p`mocks;
         
-        mck1: .qt.M[`.order.applyOffsetUpdates;{[a;b;c;d]};c];
+        mck1: .qt.M[`.order.applyOrderUpdates;{[a;b;c;d;e;f;g]};c];
         mck2: .qt.M[`.order.applyBookUpdates;{[a;b;c;d;e;f;g]};c];
         mck3: .qt.M[`.order.pruneBook;{};c];
         mck4: .qt.M[`.order.pruneOrders;{};c];
@@ -623,8 +623,8 @@ dozc:{x+y}[doz];
             );     
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (0;998;0;z); /
-                    (1;998;100;z)
+                    (0;998;0;100;100;0;z); /
+                    (1;998;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock

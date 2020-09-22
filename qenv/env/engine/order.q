@@ -319,10 +319,13 @@
                 // .order.applyOrderUpdates  :{[orderId;price;offset;leaves;displayqty;status;fillTime]
 
                 // Update the order offsets
-                .order.applyOffsetUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
+                .order.applyOrderUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
                         state`orderId;
                         raze[{x#y}'[numordlvl;state`price]]; // TODO make faster
                         noffset;
+                        state`leaves;
+                        state`displayqty;
+                        state`status;
                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]]); // TODO make fasters
 
                 .order.applyBookUpdates     . .order.test.bngd:(0^.util.PadM[raze'[(
