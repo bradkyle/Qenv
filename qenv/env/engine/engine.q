@@ -79,14 +79,12 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepthUpdateEvents :{[events]
+.engine.ProcessDepthUpdateEvents :{[e]
 
-    events:.engine.Purge[events;count'[events`datum]<>4;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>4;0;"Invalid schema"];
 
-    d:`side`price`nqty`nhqty!events;
-    // `side`price`nqty`nhqty`time
-
-    nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from events);
+    e:`side`price`nqty`nhqty!events;
+    e[`instrumentId]:`.instrument.Instrument!0;    
 
     .order.ProcessDepth[];
 
@@ -102,16 +100,16 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewTradeEvents :{[events]
+.engine.ProcessNewTradeEvents :{[e]
 
-    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    d:`accountId`side`fillqty`reduce!events`datum;
+    e:`accountId`side`fillqty`reduce!e`datum;
 
-    
+    e[`instrumentId]:`.instrument.Instrument!0;    
 
     // TODO derive from account
-    .order.ProcessTrade'[d`account`side`fill`reduce`time];
+    .order.ProcessTrade'[e`account`side`fill`reduce`time];
 
     };
 
@@ -129,6 +127,8 @@
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
     m:`markPrice`basis!events;
+
+    m[`instrumentId]:`.instrument.Instrument!0;
 
     // Essentially find the deltas in the mark price provided
     // and derive a change in the unrealized pnl, triggering
