@@ -7,6 +7,6 @@
 
 // Use watermark or event index
 
-.ingest.Advance     :{[]
+.ingest.Advance     :{[port;windowkind;forward]
         // Select from ingest where 
     };

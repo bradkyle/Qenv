@@ -85,7 +85,7 @@
     .state.Reset[.env.CONF];
 
     // Advance the state
-    .ingest.Advance . .env.CONF[`ingest][];
+    .ingest.Advance . .env.CONF[`ingest][`port`windowkind`forward];
     
     // Reset the current step
     step:0;
