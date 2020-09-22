@@ -40,12 +40,14 @@
 
     );
 
-.engine.Purge           :{
-
+.engine.Purge           :{[events;cond;errkind;errmsg]
+        .pipe.egress.AddBatchFailure . (events where[cond]);
+        (events where[not[cond]])
     };
 
-.engine.PurgeNot        :{
-
+.engine.PurgeNot        :{[events;cond;errkind;errmsg]
+        .pipe.egress.AddBatchFailure . (events where[not[cond]]);
+        (events where[cond])
     };
 
 .engine.PurgeConvert    :{
