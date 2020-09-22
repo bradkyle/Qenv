@@ -161,8 +161,8 @@
 
     e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
-    s:0;
-    s[`instrumentId]:`.instrument.Instrument!0;
+    e:`settlement; // TODO
+    e[`instrumentId]:`.instrument.Instrument!0;
     
 
     };
@@ -376,7 +376,7 @@
     e[`trigger]:0^e[`trigger];
     e[`timeinforce]:0^e[`timeinforce];
     e[`reduce]:0b^e[`reduce];
-    e[`displayqty]:e[`size]^e[`displayqty];
+    e[`displayqty]:e[`leaves]^e[`displayqty];
     e[`execInst]:enlist[0]^e[`execInst];
     
     e:.engine.PurgeNot[e;e[`displayqty] < i[`minSize];0;"Invalid displayqty: size<minSize"];
