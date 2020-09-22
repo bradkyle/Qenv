@@ -219,7 +219,7 @@
     // TODO add execInst
     o:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
-    `reduce`trigger`displayqty)!raze'[y`datum];
+    `reduce`trigger`displayqty)!raze'[events`datum];
 
      // Routine validation
     o[`otype] in .pipe.common.ORDERKIND;
