@@ -370,8 +370,11 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessCancelOrderEvents :{[e] // Requires accountId
+    e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
-    oIds:e`datum; // TODO check that account belongs to order
+    e:`accountId`orderId`clOrdId!e;
+
+    e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
     
     if[count[oId]>0;.order.CancelOrder . oId];
     };
@@ -385,10 +388,11 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessCancelAllEvents :{[e] // Requires accountId
+    e:.engine.Purge[e;count'[e`datum]<>1;0;"Invalid schema"];
     
-    aIds:e`datum;
+    e:enlist[`accountId]!enlist[e];
 
-    aIds:.engine.PurgeNot[aIds;aIds in key[.account.Account];0;"Invalid account"];
+    e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
 
     // TODO convert order accountId to mapping
 
