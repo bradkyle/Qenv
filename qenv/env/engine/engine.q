@@ -248,16 +248,17 @@
     // TODO 1 in execIns
     o[`otype]  in (2 3); // where otype 
 
-    (all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
-    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and 
 
-    o[`displayqty]  in (2 3);
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
     // for which their respective account has insufficient 
     // balance.
     premium:(o[`side]*(i[`markprice]-o[`price]))
+
+    o:.engine.Purge[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+        all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
+        0;"Order had execInst of postOnly"];
 
     // derive the instantaneous loss that will be incurred for each order
     // placement and thereafter derive the cumulative loss for each order
