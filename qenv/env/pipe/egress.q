@@ -77,3 +77,22 @@
         .pipe.egress.AddEvent[time;0;15;failure]; // TODO        
         };
 
+
+/*******************************************************
+/ Egress Selection/Filtering Utils
+
+
+// 1) enlist(Time <= ((Time + StepFreqTime)-Req time?))
+// 2)
+// 3)
+getEgressCond   :{$[x=0;();x=1;();x=3;();'INVALID_EGRESS_COND]};
+
+//
+.pipe._GetEgressEvents     :{[step;windowkind]
+    econd:.pipe.getEgressCond[windowkind];
+    events:?[`.pipe.egress.Event;econd;0b;()];
+    ![`.pipe.egress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
+    events
+    };
+
+.pipe.GetEgressEvents     :{.pipe._GetEgressEvents[x;.pipe.CONF`windowkind]};

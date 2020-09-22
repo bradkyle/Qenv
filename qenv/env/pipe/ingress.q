@@ -66,3 +66,27 @@
         .pipe.ingress.AddEvent[time;0;11;deposit]; // TODO        
         };
 
+/*******************************************************
+/ Ingress Selection/Filtering Utils
+
+
+// 1) enlist(Time <= Time + StepFreqTime)
+// 2) enlist(Index <= Index + StepFreqIndex)
+// 3) ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
+getIngressCond  :{$[x=0;();x=1;();x=3;();'INVALID_INGRESS_COND]};
+
+// enlist(<=;`time;)
+// enlist(<=;`i;)
+// ((<=;`i;);(<=;`time;)) 
+
+// Returns the set of events that would occur in the given step 
+// of the agent action.
+.pipe._GetIngressEvents   :{[step;windowkind] // TODO should select next batch according to config
+    econd:.pipe.getEgressCond[windowkind];
+    events:?[`.pipe.ingress.Event;econd;0b;()];
+    ![`.pipe.ingress.Event;enlist(=;`eid;events`eid);0b;`symbol$()];
+    events
+    };
+
+// Simply uses the first window kind 
+.pipe.GetIngressEvents    :{.pipe._GetIngressEvents[x;0]}; 
