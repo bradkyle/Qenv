@@ -409,29 +409,28 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[e]
-    i:.engine.getInstrument[]; // Requires accountId
-
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    w:`accountId`withdrawamt!e`datum;
+    e:`accountId`withdrawamt!e`datum;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
-    w:.engine.PurgeNot[w;w[`accountId] in key[.account.Account];0;"Invalid account"];
+    e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
 
     // TODO convert order accountId to mapping
 
-    w:.engine.Purge[w;w[`accountId][`balance]<=0;0;"account has no balance"];
-    w:.engine.Purge[w;w[`accountId][`available]<=0;0;"account has insufficient available balance"];
-    w:.engine.Purge[w;w[`accountId][`state]=1;0;"Account has been disabled"];
-    w:.engine.Purge[w;w[`accountId][`state]=2;0;"Account has been locked for liquidation"];
+    e:.engine.Purge[e;e[`accountId][`balance]<=0;0;"account has no balance"];
+    e:.engine.Purge[e;e[`accountId][`available]<=0;0;"account has insufficient available balance"];
+    e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
+    e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
     // exceed the available account balance
-    w:.engine.Purge[w;
-        sums'[`accountId xgroup w]>w[`account][`withdrawable];
+    e:.engine.Purge[e;
+        sums'[`accountId xgroup e]>e[`account][`withdrawable];
         0;"Account has been locked for liquidation"];    
 
-    if[count[w]>0;.order.Withdraw . w];
+    if[count[e]>0;.order.Withdraw . e];
     };
 
 
