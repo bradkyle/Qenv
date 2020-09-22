@@ -365,7 +365,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessCancelOrderEvents :{[events] // Requires accountId
-
+    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory

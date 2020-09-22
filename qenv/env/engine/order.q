@@ -316,6 +316,8 @@
                 .order.test.lsttime:lsttime;
                 // TODO considering visible quantity doesn't change
 
+                // .order.applyOrderUpdates  :{[orderId;price;offset;leaves;displayqty;status;fillTime]
+
                 // Update the order offsets
                 .order.applyOffsetUpdates   . .order.test.bng:(0^.util.PadM[raze'[(
                         state`orderId;
