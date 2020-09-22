@@ -420,7 +420,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepositEvents :{[events] // Requires accountId
+.engine.ProcessDepositEvents :{[events] // Requires accountId (this would be passive in production)
     instrument:.engine.getInstrument[];
 
     dps:();
@@ -428,6 +428,10 @@
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
     // exceed the available account balance
+    w:.engine.Purge[w;w[`accountId][`balance]<=0;0;"account has no balance"];
+    w:.engine.Purge[w;w[`accountId][`available]<=0;0;"account has insufficient available balance"];
+    w:.engine.Purge[w;w[`accountId][`state]=1;0;"Account has been disabled"];
+    w:.engine.Purge[w;w[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     .account.CONTRACT.Deposit[instrument];
     };
