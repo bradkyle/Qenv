@@ -2,7 +2,6 @@
 // THIS FILE REPRESENTS THE LOGIC PERTAINING TO THE ACCOUNT OF AN INSTRUMENT
 
 .account.accountCount:0;
-.account.CONTRACT:.inverse.account;
 
 // TODO executions
 
@@ -150,3 +149,4 @@
     ?[`.account.Inventory;enlist(=;`accountId;a`accountId);0b;()]
     };
   
+.account.ApplyFill                  :{}

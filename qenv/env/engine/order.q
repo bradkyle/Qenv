@@ -135,7 +135,7 @@
                 count[tqty]#reduce;
                 numLvls#fillTime));
             .order.test.flls:flls;
-            .account.CONTRACT.ApplyFill . .order.deriveFlls[flls];
+            .account.ApplyFill . .order.deriveFlls[flls];
         ]]; 
     };
 
@@ -160,13 +160,13 @@
             if[(isagnt and (account[`accountId] in mflls[`accountId]));[
                 .account.IncSelfFill . .order.deriveSelfFlls[mflls;caId];
                 ]];
-            .account.CONTRACT.ApplyFillG . .order.deriveFlls[mflls]; 
+            .account.ApplyFill . .order.deriveFlls[mflls]; 
             ]];
 
     };
 
 .order.applyBookUpdates        :{[price;side;qty;hqty;iqty;vqty;fillTime]
-        :1b;
+        :1b; // TODO sort by time
         // derive the updated price levels from the state and emit a depth
         // update event for those price levels.
         obupd:flip raze'[(state`price;state`mside;nqty;nhqty;niqty;nvqty)];

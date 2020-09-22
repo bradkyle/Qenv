@@ -1,7 +1,7 @@
 \l adapter.q 
 // TODO CHANGE EVENTS TO LISTS INSTEAD OF DICTIONARIES
 
-// Agent ________________________ engine ____
+// Agents ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
 //      \_____ other features _____________________________/              \___ Logging
 
