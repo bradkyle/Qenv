@@ -4,7 +4,10 @@
 
 .pipe.Ingest[];
 
-// Beast environment pool
+.agent.LearnerQueue[];
+.agent.DynamicBatcher[];
+
+// Beast environment/actor pool
 // Creates a set of environments that each load a minibatch
 // of events into memory and over which a set of actors will
 // act i.e. each instance of the environment may have 30 agents
@@ -15,6 +18,9 @@
 // same cpu.
 // Because the unroll length of the agent in the environment 
 // is short in comparison to the batch, the action 
+ // Unroll length, learner queue, inference batcher, actor model.initial()
+ // num pools, num actors per pool
+.agent.ActorPool[]
 
 // Beast learner pool
 
