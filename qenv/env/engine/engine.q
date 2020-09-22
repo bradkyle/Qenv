@@ -128,7 +128,6 @@
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
     e:`markPrice`basis!e;
-
     e[`instrumentId]:`.instrument.Instrument!0;
 
     if[count[e]>0;[
@@ -180,7 +179,6 @@
     e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
     e:`fundingRate`nextFundingRate`nextFundingtime!e;
-
     e[`instrumentId]:`.instrument.Instrument!0;
 
     if[count[e]>0;[
@@ -203,7 +201,6 @@
     // TODO type checks
     // TODO just derive last price limits from e
     e:`upricelimit`lpricelimit!e;
-
     e[`instrumentId]:`.instrument.Instrument!0;
 
     if[count[e]>0;.instrument.UpdateMarkPrice . e];    
@@ -451,6 +448,7 @@
     e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
     e:`accountId`orderId`clOrdId!e;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
     e[`accountId]:`.account.Account!e[`accountId];
@@ -470,6 +468,7 @@
     e:.engine.Purge[e;count'[e`datum]<>1;0;"Invalid schema"];
     
     e:enlist[`accountId]!enlist[e];
+    e[`instrumentId]:`.instrument.Instrument!0;
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
     e[`accountId]:`.account.Account!e[`accountId];
