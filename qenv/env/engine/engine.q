@@ -472,6 +472,7 @@
     e:enlist[`accountId]!enlist[e];
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
+    e[`accountId]:`.account.Account!e[`accountId];
 
     // TODO convert order accountId to mapping
 
