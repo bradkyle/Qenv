@@ -85,7 +85,7 @@
     .state.Reset[.env.CONF];
 
     // Advance the state
-    .ingest.Advance . .env.CONF[`ingest][`port`windowkind`forward];
+    .ingest.Advance . .env.CONF[`ingest][`port`firstforward]; // TODO get random batch etc
     
     // Reset the current step
     step:0;
@@ -151,6 +151,8 @@
     // TODO format actions
     step:.env.CurrentStep;
     // TODO get current time
+
+    .ingest.Advance . .env.CONF[`ingest][`port`forward];
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
