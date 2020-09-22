@@ -396,7 +396,7 @@
     o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
     o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
-    .order.CancelAllOrders[i;a;oId];
+    if[count[aId]>0;.order.CancelAllOrders . aId];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -430,7 +430,7 @@
         sums'[`accountId xgroup w]>w[`account][`withdrawable];
         0;"Account has been locked for liquidation"];    
 
-    .account.CONTRACT.Withdraw[i];
+    if[count[w]>0;.order.Withdraw . w];
     };
 
 
@@ -453,7 +453,7 @@
     d:.engine.Purge[d;d[`accountId][`state]=1;0;"Account has been disabled"];
     d:.engine.Purge[d;d[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
-    .account.CONTRACT.Deposit[instrument];
+    if[count[d]>0;.account.Deposit . d];
     };
 
 
