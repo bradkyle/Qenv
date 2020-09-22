@@ -340,108 +340,107 @@ dozc:{x+y}[doz];
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    1000 1001 1002 999 998 997 1000; // price
+                    998 997 996 995 1000 1001 1002 1003 1004; // price
                     (3#-1),(4#1);   // side
-                    (0 1000 1000 0 1000 1000 0); // qty
+                    9#1000; // qty
                     (20 10 10 0 0 0 0); // hqty
                     (170 ,(6#0)); // iqty
                     (0 1000 1000 30 1000 1000 30); // vqty
                     (sc[z] 0 1 1 0 1 1 0))) // time
             ))     
         ));
-        (("0e) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
-          "(best price increases during update) finishes past order level (past final spread) with hidden qty");(
-            (   // Current Depth
-                [price:((999-til 5),(1000+til 5))] 
-                side:(5#1),(5#-1);
-                qty:(10#1000);
-                hqty:((10, (4#0)),(10, (4#0)));
-                iqty:(10#0);
-                vqty:(10#1200)
-            );   
-            (   // Current Orders
-                til[20];20#1;20#1; // `orderId`instrumentId`accountId
-                ((10#-1),(10#1)); // side
-                20#1; // otype
-                (20#100 400); // offset
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
-            ); 
-            (  // Depth Update
-                ((4#-1),(2#1));
-                ((1000 1001 1002 1002),(1000 1001));
-                ((0 0 0 1000),(1000 1000));
-                (sc[z] 0 0 0 1 0 0)
-            );
-            (1b;1;( // Expected .order.applyOrderUpdates Mock
-                enlist flip(
-                    (1;999;20;100;100;0;z); // TODO check
-                    (3;999;520;100;100;0;z);
-                    (0;1000;400;100;100;0;z);
-                    (2;1000;600;100;100;0;z)
-                )
-            ));    
-            (1b;1;( // Expected .order.applyBookUpdates Mock
-                enlist((
-                    1000 1001 1002 999 998 997 1000; // price
-                    (3#-1),(4#1);   // side
-                    (0 1000 1000 0 1000 1000 0); // qty
-                    (20 10 10 0 0 0 0); // hqty
-                    (170 ,(6#0)); // iqty
-                    (0 1000 1000 30 1000 1000 30); // vqty
-                    (sc[z] 0 1 1 0 1 1 0))) // time
-            ))     
-        ));
-        (("0f) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
-          "(best price decreases during update) finishes past order level (past final spread)");(
-            (   // Current Depth
-                [price:((999-til 5),(1000+til 5))] 
-                side:(5#1),(5#-1);
-                qty:(10#1000);
-                hqty:((10, (4#0)),(10, (4#0)));
-                iqty:(10#0);
-                vqty:(10#1200)
-            );    
-            (   // Current Orders
-                til[20];20#1;20#1; // `orderId`instrumentId`accountId
-                ((10#-1),(10#1)); // side
-                20#1; // otype
-                (20#100 400); // offset
-                20#100; // leaves
-                20#100; // displayqty
-                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
-                20#z // time
-            ); 
-            (  // Depth Update
-                ((4#1),(2#-1));
-                ((999 998 997 997),(999 998));
-                ((0 0 0 1000),(1000 1000));
-                (sc[z] 0 0 0 1 0 0)
-            );   
-            (1b;1;( // Expected .order.applyOrderUpdates Mock
-                enlist flip(
-                    (1;999;20;100;100;0;z); // TODO check
-                    (3;999;520;100;100;0;z);
-                    (0;1000;400;100;100;0;z);
-                    (1;999;20;100;100;0;z); // TODO check
-                    (3;999;520;100;100;0;z);
-                    (0;1000;400;100;100;0;z);
-                    (2;1000;600;100;100;0;z)
-                )
-            ));    
-            (1b;1;( // Expected .order.applyBookUpdates Mock
-                enlist((
-                    999 998 999 998 997; // price
-                    (2#-1),(3#1);   // side
-                    (1000 1000 0 0 1000); // qty
-                    (0 0 10 0 0); // hqty
-                    (0 0 0 0 0); // iqty
-                    (1000 1000 200 200 1200); // vqty
-                    (sc[z] 0 0 0 0 0))) // time
-            ))     
-        ));
+        / (("0e) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
+        /   "(best price increases during update) finishes past order level (past final spread) with hidden qty");(
+        /     (   // Current Depth
+        /         [price:((999-til 5),(1000+til 5))] 
+        /         side:(5#1),(5#-1);
+        /         qty:(10#1000);
+        /         hqty:((10, (4#0)),(10, (4#0)));
+        /         iqty:(10#0);
+        /         vqty:(10#1200)
+        /     );   
+        /     (   // Current Orders
+        /         til[20];20#1;20#1; // `orderId`instrumentId`accountId
+        /         ((10#-1),(10#1)); // side
+        /         20#1; // otype
+        /         (20#100 400); // offset
+        /         20#100; // leaves
+        /         20#100; // displayqty
+        /         ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+        /         20#z // time
+        /     ); 
+        /     (  // Depth Update
+        /         ((4#-1),(2#1));
+        /         ((1000 1001 1002 1002),(1000 1001));
+        /         ((0 0 0 1000),(1000 1000));
+        /         (sc[z] 0 0 0 1 0 0)
+        /     );
+        /     (1b;1;( // Expected .order.applyOrderUpdates Mock
+        /         enlist flip(
+        /             (1;999;20;100;100;0;z); // TODO check
+        /             (3;999;520;100;100;0;z);
+        /             (0;1000;400;100;100;0;z);
+        /             (2;1000;600;100;100;0;z)
+        /         )
+        /     ));    
+        /     (1b;1;( // Expected .order.applyBookUpdates Mock
+        /         enlist((
+        /             1000 1001 1002 999 998 997 1000; // price
+        /             (3#-1),(4#1);   // side
+        /             (0 1000 1000 0 1000 1000 0); // qty
+        /             (20 10 10 0 0 0 0); // hqty
+        /             (170 ,(6#0)); // iqty
+        /             (0 1000 1000 30 1000 1000 30); // vqty
+        /             (sc[z] 0 1 1 0 1 1 0))) // time
+        /     ))     
+        / ));
+        / (("0f) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
+        /   "(best price decreases during update) finishes past order level (past final spread)");(
+        /     (   // Current Depth
+        /         [price:((999-til 5),(1000+til 5))] 
+        /         side:(5#1),(5#-1);
+        /         qty:(10#1000);
+        /         hqty:((10, (4#0)),(10, (4#0)));
+        /         iqty:(10#0);
+        /         vqty:(10#1200)
+        /     );    
+        /     (   // Current Orders
+        /         til[20];20#1;20#1; // `orderId`instrumentId`accountId
+        /         ((10#-1),(10#1)); // side
+        /         20#1; // otype
+        /         (20#100 400); // offset
+        /         20#100; // leaves
+        /         20#100; // displayqty
+        /         ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+        /         20#z // time
+        /     ); 
+        /     (  // Depth Update
+        /         ((4#1),(2#-1));
+        /         ((999 998 997 997),(999 998));
+        /         ((0 0 0 1000),(1000 1000));
+        /         (sc[z] 0 0 0 1 0 0)
+        /     );   
+        /     (1b;1;( // Expected .order.applyOrderUpdates Mock
+        /         enlist flip(
+        /             (10;999;10;100;100;0;z); // TODO check
+        /             (11;999;110;100;100;0;z);
+        /             (12;998;0;100;100;0;z);
+        /             (13;998;100;100;100;0;z); // TODO check
+        /             (14;997;0;100;100;0;z);
+        /             (15;997;100;100;100;0;z)
+        /         )
+        /     ));    
+        /     (1b;1;( // Expected .order.applyBookUpdates Mock
+        /         enlist((
+        /             999 998 999 998 997; // price
+        /             (2#-1),(3#1);   // side
+        /             (1000 1000 0 0 1000); // qty
+        /             (0 0 10 0 0); // hqty
+        /             (0 0 0 0 0); // iqty
+        /             (1000 1000 200 200 1200); // vqty
+        /             (sc[z] 0 0 0 0 0))) // time
+        /     ))     
+        / ));
         (("0g) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
           "(best price increases during update) finishes past order level (within final spread)");(
             (   // Current Depth
