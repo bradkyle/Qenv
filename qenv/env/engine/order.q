@@ -535,7 +535,7 @@
         // Derive and apply trades
         // -------------------------------------------------->
 
-        // 
+        // Add trades to the egress table
         .order.applyNewTrades . raze'[( // TODO derive the prices at each level before
                 numtds#state`tside; // more accurate derivation
                 raze[{x#y}'[numtdslvl;state`price]]; // more accurate derivation
@@ -592,6 +592,7 @@
         // Derive and apply order book updates
         // -------------------------------------------------->
 
+        // Update the orderbook state
         .order.applyBookUpdates . raze'[(
                 state`price;
                 state`mside;
