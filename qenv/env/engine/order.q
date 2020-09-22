@@ -145,9 +145,8 @@
 // TODO what happens when order is at the back of the queue and hidden qty increases?
 // TODO edge case
 
-
-                / .order.OrderBook,:raze'[flip 0^.util.PadM'[(`time xasc state)`price`side`tgt`hqty`iqty`vqty]];
-                / .order.test.ob1:.order.OrderBook;
+/ .order.OrderBook,:raze'[flip 0^.util.PadM'[(`time xasc state)`price`side`tgt`hqty`iqty`vqty]];
+/ .order.test.ob1:.order.OrderBook;
 
 // TODO validation.
 
