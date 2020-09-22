@@ -87,94 +87,29 @@
 // TODO update instrument last price?
 .order.applyNewTrades                   :{[side;price;qty;time]
         :1b;
-        // Derive the maker side from the state.
-        if[count[tqty]>0;[
-            {[side;price;tqty;ftime]
-                ctq:count[tqty];
-                .pipe.egress.AddTradeEvent'[flip(ctq#side;ctq#price;tqty);ctq#ftime]; // TODO make faster?
-                }'[state`tside;state`price;tqty;fillTime];
-        ]];
     };
 
 .order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status;fillTime]
         :1b;
-        // Derive order amends from given trades
-        oupdCols:`orderId`price`offset`leaves`displayqty`status;
-        oupd:flip(oupdCols!raze'[(
-            state`orderId;
-            state`oprice;
-            noffset;
-            nleaves;
-            ndisplayqty;
-            nstatus)][;where[msk]]); // TODO make faster
-        .order.test.oupd:oupd;
-        .order.Order,:oupd; // update where partial
-        .order.test.O2:.order.Order;
-
-        // Add order update events.
-        .pipe.egress.AddOrderUpdatedEvent[oupd;fillTime]; // Emit events for all 
     };
 
 .order.applyTakerFills                  :{[instrumentId;accountId;side;price;amt;reduce;fillTime]
         :1b;
-        
-        // Derive the taker fills as the trades that where executed by
-        // an agent i.e. isagnt is true.
-        if[(count[tqty]>0) and isagnt;[
-            flls:flip(.order.fllCols!(
-                numLvls#ciId;
-                numLvls#caId;
-                state`tside;
-                state`price;
-                sum'[tqty];
-                count[tqty]#reduce;
-                numLvls#fillTime));
-            .order.test.flls:flls;
-            .account.ApplyFill . .order.deriveFlls[flls];
-        ]]; 
     };
 
 .order.applyMakerFills                  :{[instrumentId;accountId;side;price;amt;reduce;fillTime]
         :1b;
-
-        // Make order updates
-        // Derives all maker fills as the sum of the amount filled by side,price
-        // accountId,reduce etc. and are batched and filled.
-        .order.test.flldlt:flldlt;
-        if[any[raze[flldlt]<>0];[
-            mflls:flip(.order.fllCols!raze'[(
-                state`instrumentId;
-                state`accountId;
-                state`oside;
-                state`oprice;
-                flldlt;
-                state`reduce;
-                state`time)][;where[msk]]);
-            .order.test.mflls:mflls;
-            
-            if[(isagnt and (account[`accountId] in mflls[`accountId]));[
-                .account.IncSelfFill . .order.deriveSelfFlls[mflls;caId];
-                ]];
-            .account.ApplyFill . .order.deriveFlls[mflls]; 
-            ]];
-
     };
 
-.order.applyBookUpdates        :{[price;side;qty;hqty;iqty;vqty;fillTime]
+.order.applyBookUpdates                 :{[price;side;qty;hqty;iqty;vqty;fillTime]
         :1b; // TODO sort by time
-        // derive the updated price levels from the state and emit a depth
-        // update event for those price levels.
-        obupd:flip raze'[(state`price;state`mside;nqty;nhqty;niqty;nvqty)];
-        .order.test.obupd:obupd;
-        .order.OrderBook,:obupd;
-        .pipe.egress.AddDepthEvent[obupd[;0 5];last fillTime];
     }
 
-.order.pruneBook                :{
+.order.pruneBook                        :{
     delete from `.order.OrderBook where (vqty+iqty+hqty)<=0;
     }
    
-.order.pruneOrders              :{
+.order.pruneOrders                      :{
     delete from `.order.Order where leaves<=0;
     }
 
