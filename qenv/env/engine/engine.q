@@ -223,17 +223,17 @@
     `reduce`trigger`displayqty)!raze'[events`datum];
 
      // Routine validation
-    o:.engine.PurgeNot[o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
-    o:.engine.PurgeNot[o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
-    o:.engine.PurgeNot[o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
+    o:.engine.PurgeNot[o;o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
+    o:.engine.PurgeNot[o;o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
+    o:.engine.PurgeNot[o;o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
 
     // Instrument specific validation        
-    o:.engine.PurgeNot[o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
-    o:.engine.PurgeNot[o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
-    o:.engine.PurgeNot[o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
-    o:.engine.PurgeNot[o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
-    o:.engine.PurgeNot[(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
-    o:.engine.PurgeNot[(o[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
+    o:.engine.PurgeNot[o;o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
+    o:.engine.PurgeNot[o;o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
+    o:.engine.PurgeNot[o;o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
+    o:.engine.PurgeNot[o;o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    o:.engine.PurgeNot[o;(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
+    o:.engine.PurgeNot[o;(o[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
 
     // fill null then validate
     o[`limitprice]:0^o[`limitprice];
@@ -244,29 +244,34 @@
     o[`displayqty]:o[`size]^o[`displayqty];
     o[`execInst]:enlist[0]^o[`execInst];
     
-    o:.engine.PurgeNot[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
-    o:.engine.PurgeNot[o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
-    o:.engine.PurgeNot[(o[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
-    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
+    o:.engine.PurgeNot[o;o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
+    o:.engine.PurgeNot[o;o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    o:.engine.PurgeNot[o;(o[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
+    o:.engine.PurgeNot[o;all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
-    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid execInst"];
+    o:.engine.PurgeNot[o;all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid execInst"];
 
     // Run purge operations on market orders
-    o:.engine.NestedPurgeNot[o[`otype] = 0]; 
+    o:.engine.NestedPurgeNot[o;o[`otype] = 0]; 
 
     // Run purge operation on stop limit orders
-    o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; 
+    o:.engine.NestedPurgeNot[o;o[`otype]  in (2 3)]; 
 
     // Purge all orders that have execInst of post only and would cross bid ask spread
-    o:.engine.PurgeNot[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+    o:.engine.PurgeNot[o;(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
         all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
         0;"Order had execInst of postOnly"];
 
-    o:.engine.PurgeNot[o[`accountId] in key[.account.Account];0;"Invalid account"];
+    o:.engine.PurgeNot[o;o[`accountId] in key[.account.Account];0;"Invalid account"];
 
     // TODO convert order accountId to mapping
+
+    o:.engine.PurgeNot[o;o[`accountId][`balance]>0;0;"Order account has no balance"];
+    
+    o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
+    o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     a:o[`accountId];
 
