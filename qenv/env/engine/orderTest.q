@@ -441,9 +441,9 @@ dozc:{x+y}[doz];
             ); 
             (  // Depth Update
                 ((4#1),(4#-1));
-                ((999 998 997 997),(999 998 999 998)); // 
-                ((0 0 0 1000),(1000 1000 0 0));
-                (sc[z] 0 0 0 1 0 0 1 1)
+                ((999 998 997 997), (999,  998,  999, 998)); // 
+                ((0,  0,  0,  1000),(1000, 1000, 0,   0));
+                (sc[z] 0 0 0 1 0 0 1 1) // The mid price decreases by two levels and then returns
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
