@@ -41,12 +41,12 @@
     );
 
 .engine.Purge           :{[events;cond;errkind;errmsg]
-        .pipe.egress.AddBatchFailure . (events where[cond]);
+        .pipe.egress.AddBatchFailure[(events where[cond]);errkind;errmsg];
         (events where[not[cond]])
     };
 
 .engine.PurgeNot        :{[events;cond;errkind;errmsg]
-        .pipe.egress.AddBatchFailure . (events where[not[cond]]);
+        .pipe.egress.AddBatchFailure[(events where[not[cond]]);errkind;errmsg];
         (events where[cond])
     };
 
