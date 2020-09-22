@@ -360,7 +360,7 @@
     e[`orderId]:`.order.Order!e[`orderId];
 
     // TODO fill current orders with new order events
-    e:
+    e:e[`orderId]^e; // TODO check this works
 
     e:.engine.PurgeNot[e;e[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
     e:.engine.PurgeNot[e;e[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
