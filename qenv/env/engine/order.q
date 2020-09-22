@@ -31,6 +31,11 @@
     execInst        : `long$());
 .order.ordCols:cols .order.Order;
 
+.order.CLMap    :(
+    [clId:`long$()]
+    orderId:`.order.Order$(); 
+    );
+
 .order.fllCols:`instrumentId`accountId`side`price`qty`reduce`time;
 .order.deriveFlls       :{
     gcls:`instrumentId`accountId`side`price`reduce;

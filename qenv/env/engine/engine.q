@@ -123,7 +123,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessMarkUpdateEvents :{[events]
+.engine.ProcessMarkUpdateEvents :{[e]
 
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
@@ -157,7 +157,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessSettlementEvents :{[events]
+.engine.ProcessSettlementEvents :{[e]
 
     e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
@@ -218,7 +218,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewOrderEvents :{[events] // Requires accountId
+.engine.ProcessNewOrderEvents :{[e] // Requires accountId
     / accountIds:key .account.Account; 
     // TODO check all count=12
     // TODO do validation here
@@ -330,12 +330,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessAmendOrderEvents :{[events] // Requires accountId
-    / accountIds:key .account.Account; 
-    // TODO check all count=12
-    // TODO do validation here
-    // $[any[in[e[`orderId`clOrdId];key[.order.Order]`orderId]];
-    
+.engine.ProcessAmendOrderEvents :{[e] // Requires accountId
     // check max batch order amends
      // Filter e where col count<>12
     
@@ -346,7 +341,7 @@
     // TODO increment request counts!
 
     // TODO add execInst
-    e:(`accountId`price`side`otype,
+    e:(`orderId`clId`accountId`price`side`otype,
     `timeinforce`execInst`leaves`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[e`datum]; // TODO remove raze
 
@@ -357,7 +352,13 @@
     / e:.engine.PurgeConvert[e;e[`side];7h;0;"Invalid otype"];
     / e:.engine.PurgeConvert[e;e[`side];7h;0;"Invalid otype"];
 
+    // TODO get orderId with clId
+
      // Routine validation
+    e:.engine.PurgeNot[e;e[`orderId] in key[.order.Order];0;"Invalid orderId"];
+    
+    // fill current orders with new order events
+
     e:.engine.PurgeNot[e;e[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
     e:.engine.PurgeNot[e;e[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
     e:.engine.PurgeNot[e;e[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
