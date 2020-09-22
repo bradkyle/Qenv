@@ -151,7 +151,7 @@
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
-    f:`
+    s:0;
     
     // Apply settlement to the given accounts
     // and their respective inventories, this 
