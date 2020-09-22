@@ -244,7 +244,9 @@
     `reduce`trigger`displayqty)!raze'[events`datum];
 
     // TODO type conversions
-    o:.engine.PurgeConvert[o;o[`otype];;0;"Invalid otype"];
+    / o:.engine.PurgeConvert[o;o[`otype];7h;0;"Invalid otype"];
+    / o:.engine.PurgeConvert[o;o[`side];7h;0;"Invalid otype"];
+    / o:.engine.PurgeConvert[o;o[`side];7h;0;"Invalid otype"];
 
      // Routine validation
     o:.engine.PurgeNot[o;o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
