@@ -224,6 +224,8 @@
     `timeinforce`execInst`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[events`datum];
 
+    // TODO type conversions
+
      // Routine validation
     o:.engine.PurgeNot[o;o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
     o:.engine.PurgeNot[o;o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
