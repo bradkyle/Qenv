@@ -348,7 +348,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessCancelOrderEvents :{[events] // Requires accountId
 
-    oIds:events`datum;
+    oIds:events`datum; // TODO check that account belongs to order
     
     .order.CancelOrder[i;a;oId];
     };
