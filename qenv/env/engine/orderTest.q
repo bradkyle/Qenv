@@ -495,18 +495,17 @@ dozc:{x+y}[doz];
                     (1;999;20;z); // TODO check
                     (1;999;520;z);
                     (2;1000;400;z);
-                    (3;1000;600;z)
-                )
+                    (3;1000;600;z))
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    1000 999 1001 998 1002 997; // price
-                    -1 1 -1 1 -1 1;   // side
-                    0 0 1000 1000 1000 1000; // qty
-                    10 10 0 0 0 0; // hqty
-                    0 0 0 0 0 0; // iqty
-                    0 0 1200 1200 1000 1000; // vqty
-                    (sc[z] 0 0 0 0 1 1))) // time
+                    1000 999 1001 998 1001 1002 998 997; // price
+                    -1 1 1 -1 -1 -1 1 1;   // side
+                    0 0 0 0 1000 1000 1000 1000; // qty
+                    10 10 0 0 0 0 0 0; // hqty
+                    0 0 0 0 0 0 0 0; // iqty
+                    0 0 200 200 1000 1000 1000 1000; // vqty
+                    (sc[z] 0 0 0 0 1 1 1 1))) // time
             ))     
         ));
         (("0j) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
