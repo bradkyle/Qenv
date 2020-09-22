@@ -24,7 +24,7 @@
         %(sum[prd[(iB;iL;iS)`amt`mmr]]-sum[x;(-/)(iB;iS)]);
     };
  
-.util.contract.LiquidationPrice       :{[a;iB;iL;iS;ins]
+.util.contract.quanto.LiquidationPrice       :{[a;iB;iL;iS;ins]
     
     };
 
