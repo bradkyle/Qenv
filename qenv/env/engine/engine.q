@@ -88,7 +88,7 @@
 
     // TODO processing
     
-    if[count[e]>0;.order.ProcessDeph . e];
+    if[count[e]>0;.order.ProcessDepth . e];
 
     };
 
@@ -103,6 +103,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewTradeEvents :{[e]
+    // This function assumes that a trade was derived from data and not an agent
 
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
@@ -110,7 +111,7 @@
 
     e[`instrumentId]:`.instrument.Instrument!0;    
 
-    if[count[e]>0;.order.ProcessDeph . e];
+    if[count[e]>0;.order.ProcessTrade . e];
     };
 
 
@@ -126,23 +127,26 @@
 
     e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    m:`markPrice`basis!e;
+    e:`markPrice`basis!e;
 
-    m[`instrumentId]:`.instrument.Instrument!0;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
-    // Essentially find the deltas in the mark price provided
-    // and derive a change in the unrealized pnl, triggering
-    // liquidations where neccessary
-    .account.CONTRACT.UpdateMarkPrice[instrument;d;e`time];
+    if[count[e]>0;[
+            // Essentially find the deltas in the mark price provided
+            // and derive a change in the unrealized pnl, triggering
+            // liquidations where neccessary
+            .account.UpdateMarkPrice . e;
 
-    // Where appliccable trigger stop orders 
-    // TODO add a delay in placement of orders
-    .order.UpdateMarkPrice[instrument;d;e`time];
+            // Where appliccable trigger stop orders 
+            // TODO add a delay in placement of orders
+            .order.UpdateMarkPrice . e;
 
-    // Inspect the account tables for any insolvent accounts.
-    .liquidation.InspectAccounts[instrument];
+            // Inspect the account tables for any insolvent accounts.
+            .liquidation.InspectAccounts ;
+            
+        ]];
+
     
-    .pipe.egress.AddMarkEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -160,12 +164,7 @@
     s:0;
     s[`instrumentId]:`.instrument.Instrument!0;
     
-    // Apply settlement to the given accounts
-    // and their respective inventories, this 
-    // would reset realized pnl into the balance
-    .account.CONTRACT.ApplySettlement[instrument];
 
-    .pipe.egress.AddSettlementEvent[];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -209,6 +208,7 @@
     e[`instrumentId]:`.instrument.Instrument!0;
 
     
+    
     };
 
 
@@ -241,7 +241,7 @@
     `reduce`trigger`displayqty)!raze'[e`datum];
 
     e[`instrumentId]:`.instrument.Instrument!0;
-
+    i:e[`instrumentId];
     // TODO type conversions
     / e:.engine.PurgeConvert[e;e[`otype];7h;0;"Invalid otype"];
     / e:.engine.PurgeConvert[e;e[`side];7h;0;"Invalid otype"];
@@ -253,10 +253,10 @@
     e:.engine.PurgeNot[e;e[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
 
     // Instrument specific validation        
-    e:.engine.PurgeNot[e;e[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
-    e:.engine.PurgeNot[e;e[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
-    e:.engine.PurgeNot[e;e[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
-    e:.engine.PurgeNot[e;e[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    e:.engine.PurgeNot[e;e[`price] < i[`minPrice];0;"Invalid price: price<minPrice"];
+    e:.engine.PurgeNot[e;e[`price] > i[`maxPrice;0;"Invalid price: price>maxPrice"];
+    e:.engine.PurgeNot[e;e[`size] < i[`minSize];0;"Invalid size: size<minSize"]; 
+    e:.engine.PurgeNot[e;e[`size] > i[`maxSize];0;"Invalid size: size>maxSize"];
     e:.engine.PurgeNot[e;(e[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
     e:.engine.PurgeNot[e;(e[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
 
@@ -269,8 +269,8 @@
     e[`displayqty]:e[`size]^e[`displayqty];
     e[`execInst]:enlist[0]^e[`execInst];
     
-    e:.engine.PurgeNot[e;e[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
-    e:.engine.PurgeNot[e;e[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    e:.engine.PurgeNot[e;e[`displayqty] < i[`minSize];0;"Invalid displayqty: size<minSize"];
+    e:.engine.PurgeNot[e;e[`displayqty] > i[`maxSize];0;"Invalid displayqty: size>maxSize"];
     e:.engine.PurgeNot[e;(e[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
     e:.engine.PurgeNot[e;all[e[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
@@ -292,13 +292,13 @@
     e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
 
     // TODO convert order accountId to mapping
-
-    e:.engine.Purge[e;e[`accountId][`balance]<=0;0;"Order account has no balance"];
-    e:.engine.Purge[e;e[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
-    e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
-    e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
-
+    e[`accountId]:`.account.Account!e[`accountId];
     a:e[`accountId];
+
+    e:.engine.Purge[e;a[`balance]<=0;0;"Order account has no balance"];
+    e:.engine.Purge[e;a[`available]<=0;0;"Order account has insufficient available balance"];
+    e:.engine.Purge[e;a[`state]=1;0;"Account has been disabled"];
+    e:.engine.Purge[e;a[`state]=2;0;"Account has been locked for liquidation"];
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
