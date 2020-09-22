@@ -228,7 +228,7 @@
         .order.test.nxt:nxt;
         nxt:flip nxt;
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:0!uj[lj[`side`price xgroup nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
+        state:`time xasc 0!uj[lj[`side`price xgroup nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty`nqty)]]]]);
         .order.test.state:state;
@@ -266,7 +266,7 @@
                 // a hidden order qty it should represent this
                 // offset (hidden order qty derived from data)
                 // is always put at the front of the queue.
-                mnoffset: (0,'-1_'(shft))+raze[.util.PadM[state`hqty]];
+                mnoffset: (0,'-1_'(state`leaves))+raze[.util.PadM[state`hqty]]; // TODO this should be nshft
                 .order.test.mnoffset:mnoffset;
 
                 // Derive the non agent qtys that
@@ -285,7 +285,11 @@
                 // Derive the deltas in the agent order offsets as if there
                 // were a uniform distribution of cancellations throughout
                 // the queue.
-                offsetdlts: -1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg]);
+                // Because the offset is cumulative i.e. offsets further back
+                // in the queue are progressively more affected by the changes
+                // in the offsets of previous orders, the cumulative sum of the
+                // offsets is used to derive the offsetdlts
+                offsetdlts: sums'[-1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg])]; // TODO sums
                 
                 // Offset deltas are derived adn added to the current offset
                 noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
@@ -294,7 +298,7 @@
                 // Calculate the new vis qty
                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
                 mxnshft:max'[nshft];
-                lsttime:last'[state`time]; // TODO apply to each order
+                lsttime:max'[state`time]; // TODO apply to each order
                 numordlvl:count'[noffset];
 
                 .order.test.offsetdlts:offsetdlts;
