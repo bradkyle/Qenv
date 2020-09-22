@@ -22,7 +22,9 @@ inferenceBatcher    :.agent.DynamicBatcher[];
  // num pools, num actors per pool
 ActorPool           :.agent.ActorPool[]
 
-// Beast learner pool
+// Beast learner pool, 
+// learner threads = 2 
+// inference_threads=2
 
 
 // Testing is done with a single agent

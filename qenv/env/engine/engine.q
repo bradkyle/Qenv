@@ -54,15 +54,6 @@
         cond:@[conv$;col;]; // TODO make
     };
 
-// Because the Environment for all practical purposes
-// only uses one instrument, this function returns the
-// primary instance of Instrument for which all actions
-// relate and are configured by.
-/  @return (Instrument) The primary instance of instrument
-.engine.getInstrument   :{
-    $[0 in key[.instrument.Instrument];:.instrument.Instrument@0;'UNSET_PRIMARY_INSTRUMENT]; // TODO check
-    };
-
 // TODO get account, get order etc.
 // TODO error handling
 
