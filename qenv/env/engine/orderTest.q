@@ -429,7 +429,7 @@ dozc:{x+y}[doz];
                 iqty:(10#0);
                 vqty:(10#1200)
             );    
-            (   // Current Orders
+            (   // Current Orders (order for each level)
                 til[20];20#1;20#1; // `orderId`instrumentId`accountId
                 ((10#-1),(10#1)); // side
                 20#1; // otype
