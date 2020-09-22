@@ -187,6 +187,8 @@
 .engine.ProcessNewPriceLimitEvents :{[events] // 
     instrument:.engine.getInstrument[];
 
+    events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
+
     // TODO just derive last price limits from events
     pricelimits:events`datum;
 
