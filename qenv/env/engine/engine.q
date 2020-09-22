@@ -50,8 +50,8 @@
         (events where[cond])
     };
 
-.engine.ConvertElsePurge    :{
-
+.engine.ConvertElsePurge    :{[events;col;conv;errkind;errmsg]
+        cond:@[conv$;col;]; // TODO make
     };
 
 // Because the Environment for all practical purposes

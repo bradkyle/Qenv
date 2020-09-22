@@ -608,7 +608,7 @@
                         o[`offset]:sum[ob`vqty`hqty`iqty];
                         // Fill orderbook where neccessary
                         (ob`price`side)^:(o`price;o`side);
-                        ob:0^ob;
+                        ob:0^ob; // TODO move to engine
                         // TODO if order is hidden update ob
                         ob[`vqty]+:o[`displayqty];
                         ob[`iqty]+:0^((-/)o`leaves`displayqty); // TODO check
