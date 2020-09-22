@@ -96,11 +96,6 @@
         ]];
     };
 
-.order.applyOffsetUpdates               :{[orderId;price;offset;time]
-                .order.Order,:flip(`orderId`offset!((raze[state`orderId];raze[noffset])[;where[msk]])); 
-
-    };
-
 .order.applyOrderUpdates                :{[orderId;price;offset;leaves;displayqty;status;fillTime]
         :1b;
         // Derive order amends from given trades
