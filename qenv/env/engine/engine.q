@@ -187,7 +187,10 @@
     // positions/inventory 
     .account.CONTRACT.ApplyFunding[instrument];
 
-    .pipe.egress.AddFundingEvent[];
+    if[count[e]>0;[
+        .account.ApplyFunding . e;
+        .instrument.Instrument . e;
+        ]];    
     };
 
 
@@ -207,7 +210,7 @@
 
     e[`instrumentId]:`.instrument.Instrument!0;
 
-    if[count[e]>0;.instrument.Instrument . e];    
+    if[count[e]>0;.instrument.UpdateMarkPrice . e];    
     };
 
 
