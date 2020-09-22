@@ -1,6 +1,9 @@
 
 
-
+// TODO select partitions
+// TODO map batches to partitions
+// Would in this instance assume episodes are at maximum a day long
+// 
 
 // Probabalistic choice
 // @n: number of choices

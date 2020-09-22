@@ -9,7 +9,7 @@
 .ingest.watermark  :0;
 .ingest.h:hopen `::5001;
 
-.ingest.Advance     :{[port;windowkind;forward]
+.ingest.Advance     :{[port;wkind;part;fwdnum;]
         // Select from ingest where 
         events:.ingest.h(".ingest.GetBatch[",string[.ingest.watermark],";",string[forward],"]")
         .pipe.ingress.AddBatch[events];
