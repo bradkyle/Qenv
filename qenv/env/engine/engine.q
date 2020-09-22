@@ -270,8 +270,8 @@
 
     // TODO convert order accountId to mapping
 
-    o:.engine.PurgeNot[o;o[`accountId][`balance]>0;0;"Order account has no balance"];
-    
+    o:.engine.Purge[o;o[`accountId][`balance]<=0;0;"Order account has no balance"];
+    o:.engine.Purge[o;o[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
     o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
     o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
