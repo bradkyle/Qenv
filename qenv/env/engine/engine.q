@@ -564,8 +564,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessLiquidationEvents :{[e]
-    // TODO check    
-    .pipe.egress.AddLiquidationEvent[];
+    .pipe.egress.AddLiquidationEvent[e];
     };
 
 / Public Event .engine.Processing logic (Writes)
