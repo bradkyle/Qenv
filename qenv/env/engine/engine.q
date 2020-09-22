@@ -40,7 +40,7 @@
     
     );
 
-.engine.FilterInvalid     :{
+.engine.Purge    :{
 
     };
 
@@ -222,16 +222,16 @@
     `reduce`trigger`displayqty)!raze'[events`datum];
 
      // Routine validation
-    o[`otype] in .pipe.common.ORDERKIND;
-    o[`side]  in .pipe.common.ORDERSIDE;
-    o[`timeinforce]  in .pipe.common.TIMEINFORCE;
+    o:.engine.Purge[o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
+    o:.engine.Purge[o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
+    o:.engine.Purge[o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
 
     // Instrument specific validation        
-    o[`price] > ins[`minPrice]; // larger than min price
-    o[`price] < ins[`maxPrice]; // smaller than max price
-    o[`size] > ins[`minSize]; // larger than min size
-    o[`size] < ins[`maxSize]; // smaller than max size
-    (o[`price] mod i)<>0;
+    o:.engine.Purge[o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
+    o:.engine.Purge[o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
+    o:.engine.Purge[o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
+    o:.engine.Purge[o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    o:.engine.Purge[(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
 
     // fill null then validate
     o[`limitprice]:0^o[`limitprice];
@@ -240,15 +240,16 @@
     o[`timeinforce]:0^o[`timeinforce];
     o[`reduce]:0b^o[`reduce];
     o[`displayqty]:o[`size]^o[`displayqty];
-    o[`displayqty] > ins[`minSize]; // larger than min size
-    o[`displayqty] < ins[`maxSize]; // smaller than max size
+    
+    o:.engine.Purge[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
+    o:.engine.Purge[o[`displayqty] > ins[`maxSize];0;"Invalid size: size>maxSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
     o[`otype]  in (2 3); // where otype 
 
     (all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
-    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]])
+    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and 
 
     o[`displayqty]  in (2 3);
 
