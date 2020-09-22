@@ -476,7 +476,7 @@ dozc:{x+y}[doz];
             );  
             (   // Current Orders
                 til[4];4#1;4#1; // `orderId`instrumentId`accountId
-                ((2#1),(2#-1)); // side
+                ((2#-1),(2#1)); // side
                 4#1; // otype
                 (4#100 400); // offset
                 4#100; // leaves
@@ -492,20 +492,21 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (0;1001;100;z); // TODO check
-                    (1;1001;400;z);
-                    (2;998; 100;z);
-                    (3;998; 600;z))
+                    (0;1001;0;z); // TODO check
+                    (1;1001;100;z);
+                    (2;998;0;z);
+                    (3;998;100;z)
+                )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    1000 999 1001 998 1001 1002 998 997; // price
-                    -1 1 1 -1 -1 -1 1 1;   // side
-                    0 0 0 0 1000 1000 1000 1000; // qty
-                    10 10 0 0 0 0 0 0; // hqty
-                    0 0 0 0 0 0 0 0; // iqty
-                    0 0 200 200 1000 1000 1000 1000; // vqty
-                    (sc[z] 0 0 0 0 1 1 1 1))) // time
+                    1000 999 1001 998 1002 997; // price
+                    -1 1 -1 1 -1 1;   // side
+                    0 0 1000 1000 1000 1000; // qty
+                    10 10 0 0 0 0; // hqty
+                    0 0 0 0 0 0; // iqty
+                    0 0 1200 1200 1000 1000; // vqty
+                    (sc[z] 0 0 0 0 1 1))) // time
             ))     
         ));
         (("0j) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",

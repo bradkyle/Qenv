@@ -292,7 +292,7 @@
     // check max batch order amends
     count'[events`datum]<>12 // Filter events where col count<>12
     
-    // filter events by type
+    // Check if order exists
     // TODO increment request counts!
 
     // TODO add execInst
