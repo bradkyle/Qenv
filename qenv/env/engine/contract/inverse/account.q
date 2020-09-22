@@ -139,7 +139,7 @@
 // ApplyFill applies a given execution to an account and its respective
 // inventory, The function is for all intensive purposes only referenced
 // from ProcessTrade in .order. // TODO
-// 
+// fillQty would be long of contract at price price would also be long
 .inverse.account.ApplyFill               :{[i;a;iB;iL;iS;fill]
 
     k:a`positionType;
