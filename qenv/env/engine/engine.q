@@ -40,7 +40,15 @@
     
     );
 
-.engine.Purge    :{
+.engine.PurgeNot        :{
+
+    };
+
+.engine.Purge           :{
+
+    };
+
+.engine.PurgeConvert    :{
 
     };
 
@@ -101,7 +109,7 @@
 
     d:`accountId`side`fillqty`reduce!events`datum;
 
-
+    
 
     // TODO derive from account
     .order.ProcessTrade[instrument]'[d`account`side`fill`reduce`time];
