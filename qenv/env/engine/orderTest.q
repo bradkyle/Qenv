@@ -476,7 +476,7 @@ dozc:{x+y}[doz];
             );  
             (   // Current Orders
                 til[4];4#1;4#1; // `orderId`instrumentId`accountId
-                ((2#-1),(2#1)); // side
+                ((2#1),(2#-1)); // side
                 4#1; // otype
                 (4#100 400); // offset
                 4#100; // leaves
@@ -486,16 +486,16 @@ dozc:{x+y}[doz];
             ); 
             (  // Depth Update
                 ((5#-1),(5#1));
-                ((1000 1001 1002 1001 1002),(999 998 997 998 997));
+                ((1000 1001 1002 1001 1002),(999 998 997 998 997)); // price increases before decreasing again
                 ((0 0 0 1000 1000),(0 0 0 1000 1000));
                 (sc[z] 0 0 0 1 1 0 0 0 1 1)
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
                     (1;999;20;z); // TODO check
-                    (3;999;520;z);
-                    (0;1000;400;z);
-                    (2;1000;600;z)
+                    (1;999;520;z);
+                    (2;1000;400;z);
+                    (3;1000;600;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
