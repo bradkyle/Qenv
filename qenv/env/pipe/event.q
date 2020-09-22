@@ -1,4 +1,6 @@
 
+// Stores Common logic for all events
+
 // TODO setup in seperate process?
 
 /*******************************************************
