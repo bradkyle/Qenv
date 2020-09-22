@@ -357,7 +357,10 @@
      // Routine validation
     e:.engine.PurgeNot[e;e[`orderId] in key[.order.Order];0;"Invalid orderId"];
     
-    // fill current orders with new order events
+    e[`orderId]:`.order.Order!e[`orderId];
+
+    // TODO fill current orders with new order events
+    e:
 
     e:.engine.PurgeNot[e;e[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
     e:.engine.PurgeNot[e;e[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
