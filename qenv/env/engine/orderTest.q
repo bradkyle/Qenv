@@ -340,13 +340,13 @@ dozc:{x+y}[doz];
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    998 997 996 995 1000 1001 1002 1003 1004; // price
-                    (3#-1),(4#1);   // side
-                    9#1000; // qty
-                    (20 10 10 0 0 0 0); // hqty
-                    (170 ,(6#0)); // iqty
-                    (0 1000 1000 30 1000 1000 30); // vqty
-                    (sc[z] 0 1 1 0 1 1 0))) // time
+                    999 998 997 996 995 1000 1001 1002 1003 1004; // price
+                    (5#1),(5#-1);   // side
+                    10#1000; // qty
+                    10#(10 0 0 0 0); // hqty
+                    10#0; // iqty
+                    10#1200; // vqty
+                    (sc[z] (10#0)))) // time
             ))     
         ));
         / (("0e) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
@@ -1906,6 +1906,6 @@ dozc:{x+y}[doz];
     .util.testutils.defaultEngineHooks;
     "Global function for checking stop orders"];
 
-.qt.SkpBesTest[5];
-/ .qt.SkpBes[7];
+/ .qt.SkpBesTest[5];
+.qt.SkpBes[3];
 .qt.RunTests[];
