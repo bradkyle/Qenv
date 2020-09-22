@@ -86,7 +86,9 @@
     e:`side`price`nqty`nhqty!events;
     e[`instrumentId]:`.instrument.Instrument!0;    
 
-    .order.ProcessDepth[];
+    // TODO processing
+    
+    if[count[e]>0;.order.ProcessDeph . e];
 
     };
 
@@ -108,9 +110,7 @@
 
     e[`instrumentId]:`.instrument.Instrument!0;    
 
-    // TODO derive from account
-    .order.ProcessTrade'[e`account`side`fill`reduce`time];
-
+    if[count[e]>0;.order.ProcessDeph . e];
     };
 
 
@@ -180,9 +180,9 @@
 
     e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
-    f:`fundingRate`nextFundingRate`nextFundingtime!e;
+    e:`fundingRate`nextFundingRate`nextFundingtime!e;
 
-    f[`instrumentId]:`.instrument.Instrument!0;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
     //  Apply funding the the open agent 
     // positions/inventory 
@@ -201,17 +201,14 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[e] // 
-
-    e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
-
+    e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
+    // TODO type checks
     // TODO just derive last price limits from e
-    p:e`datum;
+    e:`upricelimit`lpricelimit!e;
 
+    e[`instrumentId]:`.instrument.Instrument!0;
 
-    p[`instrumentId]:`.instrument.Instrument!0;
-
-    .instrument.UpdatePriceLimits[instrument;]; // TODO derive price limti
-    .pipe.egress.AddPriceLimitEvent[instrument;];    
+    
     };
 
 
@@ -227,7 +224,7 @@
     / accountIds:key .account.Account; 
     // TODO check all count=12
     // TODO do validation here
-    // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
+    // $[any[in[e[`orderId`clOrdId];key[.order.Order]`orderId]];
     
     // check max batch order amends
      // Filter e where col count<>12
@@ -239,75 +236,75 @@
     // TODO increment request counts!
 
     // TODO add execInst
-    o:(`accountId`price`side`otype,
+    e:(`accountId`price`side`otype,
     `timeinforce`execInst`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[e`datum];
 
-    o[`instrumentId]:`.instrument.Instrument!0;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
     // TODO type conversions
-    / o:.engine.PurgeConvert[o;o[`otype];7h;0;"Invalid otype"];
-    / o:.engine.PurgeConvert[o;o[`side];7h;0;"Invalid otype"];
-    / o:.engine.PurgeConvert[o;o[`side];7h;0;"Invalid otype"];
+    / e:.engine.PurgeConvert[e;e[`otype];7h;0;"Invalid otype"];
+    / e:.engine.PurgeConvert[e;e[`side];7h;0;"Invalid otype"];
+    / e:.engine.PurgeConvert[e;e[`side];7h;0;"Invalid otype"];
 
      // Routine validation
-    o:.engine.PurgeNot[o;o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
-    o:.engine.PurgeNot[o;o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
-    o:.engine.PurgeNot[o;o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
+    e:.engine.PurgeNot[e;e[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
+    e:.engine.PurgeNot[e;e[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
+    e:.engine.PurgeNot[e;e[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
 
     // Instrument specific validation        
-    o:.engine.PurgeNot[o;o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
-    o:.engine.PurgeNot[o;o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
-    o:.engine.PurgeNot[o;o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
-    o:.engine.PurgeNot[o;o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
-    o:.engine.PurgeNot[o;(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
-    o:.engine.PurgeNot[o;(o[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
+    e:.engine.PurgeNot[e;e[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
+    e:.engine.PurgeNot[e;e[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
+    e:.engine.PurgeNot[e;e[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
+    e:.engine.PurgeNot[e;e[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    e:.engine.PurgeNot[e;(e[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
+    e:.engine.PurgeNot[e;(e[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
 
     // fill null then validate
-    o[`limitprice]:0^o[`limitprice];
-    o[`stopprice]:0^o[`stopprice];
-    o[`trigger]:0^o[`trigger];
-    o[`timeinforce]:0^o[`timeinforce];
-    o[`reduce]:0b^o[`reduce];
-    o[`displayqty]:o[`size]^o[`displayqty];
-    o[`execInst]:enlist[0]^o[`execInst];
+    e[`limitprice]:0^e[`limitprice];
+    e[`stopprice]:0^e[`stopprice];
+    e[`trigger]:0^e[`trigger];
+    e[`timeinforce]:0^e[`timeinforce];
+    e[`reduce]:0b^e[`reduce];
+    e[`displayqty]:e[`size]^e[`displayqty];
+    e[`execInst]:enlist[0]^e[`execInst];
     
-    o:.engine.PurgeNot[o;o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
-    o:.engine.PurgeNot[o;o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
-    o:.engine.PurgeNot[o;(o[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
-    o:.engine.PurgeNot[o;all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
+    e:.engine.PurgeNot[e;e[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
+    e:.engine.PurgeNot[e;e[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    e:.engine.PurgeNot[e;(e[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
+    e:.engine.PurgeNot[e;all[e[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
-    o:.engine.PurgeNot[o;all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid execInst"];
+    e:.engine.PurgeNot[e;all[e[`execInst] in .pipe.common.EXECINST];0;"Invalid execInst"];
 
     // Run purge operations on market orders
-    o:.engine.NestedPurgeNot[o;o[`otype] = 0]; 
+    e:.engine.NestedPurgeNot[e;e[`otype] = 0]; 
 
     // Run purge operation on stop limit orders
-    o:.engine.NestedPurgeNot[o;o[`otype]  in (2 3)]; 
+    e:.engine.NestedPurgeNot[e;e[`otype]  in (2 3)]; 
 
     // Purge all orders that have execInst of post only and would cross bid ask spread
-    o:.engine.PurgeNot[o;(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
-        all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
+    e:.engine.PurgeNot[e;(all[(e[`side]<0),(i[`bestBidPrice]>=e[`price]),i[`hasLiquidityBuy]] or
+        all[(e[`side]>0),(i[`bestAskPrice]<=e[`price]),i[`hasLiquiditySell]]) and (1 in e[`execInst]);
         0;"Order had execInst of postOnly"];
 
-    o:.engine.PurgeNot[o;o[`accountId] in key[.account.Account];0;"Invalid account"];
+    e:.engine.PurgeNot[e;e[`accountId] in key[.account.Account];0;"Invalid account"];
 
     // TODO convert order accountId to mapping
 
-    o:.engine.Purge[o;o[`accountId][`balance]<=0;0;"Order account has no balance"];
-    o:.engine.Purge[o;o[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
-    o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
-    o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
+    e:.engine.Purge[e;e[`accountId][`balance]<=0;0;"Order account has no balance"];
+    e:.engine.Purge[e;e[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
+    e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
+    e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
-    a:o[`accountId];
+    a:e[`accountId];
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
     // for which their respective account has insufficient 
     // balance.
-    premium:(o[`side]*(i[`markprice]-o[`price]));
+    premium:(e[`side]*(i[`markprice]-e[`price]));
 
     // TODO derive better
     // derive the instantaneous loss that will be incurred for each order
@@ -324,7 +321,7 @@
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
-    if[count[o]>0;.order.NewOrder . o];
+    if[count[o]>0;.order.NewOrder . e];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -337,7 +334,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessAmendOrderEvents :{[events] // Requires accountId
     // TODO do validation here
-    // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
+    // $[any[in[e[`orderId`clOrdId];key[.order.Order]`orderId]];
     orders:y`datum;
 
     // check max batch order amends
@@ -349,7 +346,7 @@
     // TODO increment request counts!
 
     // TODO add execInst
-    o:(`accountId`price`side`otype,
+    e:(`accountId`price`side`otype,
     `timeinforce`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[y`datum];
 
@@ -357,7 +354,7 @@
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
-    if[count[o]>0;.order.AmendOrder . o];
+    if[count[o]>0;.order.AmendOrder . e];
     
     };
 
@@ -396,10 +393,10 @@
 
     // TODO convert order accountId to mapping
 
-    o:.engine.Purge[o;o[`accountId][`balance]<=0;0;"Order account has no balance"];
-    o:.engine.Purge[o;o[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
-    o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
-    o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
+    e:.engine.Purge[e;e[`accountId][`balance]<=0;0;"Order account has no balance"];
+    e:.engine.Purge[e;e[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
+    e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
+    e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     if[count[aId]>0;.order.CancelAllOrders . e];
     };
@@ -458,7 +455,7 @@
     e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
     e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
-    if[count[d]>0;.account.Deposit . d];
+    if[count[d]>0;.account.Deposit . e];
     };
 
 

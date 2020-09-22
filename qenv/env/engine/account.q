@@ -57,7 +57,7 @@
             selfFillVolume      : `long$();
             leverage            : `long$();
             monthVolume         : `long$();
-            state               : `long$()); // TODO
+            state               : `long$()); // TODO add reference to Inventory
 
 .account.mandCols:();
 .account.allCols:cols .account.Account;
