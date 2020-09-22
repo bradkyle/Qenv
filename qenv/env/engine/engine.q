@@ -213,7 +213,7 @@
     // check max batch order amends
      // Filter events where col count<>12
     
-    events:.engine.Purge[events;count'[events`datum]<>12;0;"Invalid column count"];
+    events:.engine.Purge[events;count'[events`datum]<>12;0;"Invalid schema"];
 
     // In live version would get instrument here
     // filter events by type
@@ -388,11 +388,25 @@
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
 
-    wds:events`datum;
+    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+
+    w:`accountId`withdrawamt!events`datum;
+
+    w:.engine.PurgeNot[w;w[`accountId] in key[.account.Account];0;"Invalid account"];
+
+    // TODO convert order accountId to mapping
+
+    w:.engine.Purge[w;w[`accountId][`balance]<=0;0;"account has no balance"];
+    w:.engine.Purge[w;w[`accountId][`available]<=0;0;"account has insufficient available balance"];
+    w:.engine.Purge[w;w[`accountId][`state]=1;0;"Account has been disabled"];
+    w:.engine.Purge[w;w[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
     // exceed the available account balance
+    w:.engine.Purge[w;
+        sums'[`accountId xgroup w]>w[`account][`withdrawable];
+        0;"Account has been locked for liquidation"];    
 
     .account.CONTRACT.Withdraw[i];
     };
