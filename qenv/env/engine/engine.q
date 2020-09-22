@@ -124,20 +124,20 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[events]
 
-    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    m:`markPrice`basis!events;
+    m:`markPrice`basis!e;
 
     m[`instrumentId]:`.instrument.Instrument!0;
 
     // Essentially find the deltas in the mark price provided
     // and derive a change in the unrealized pnl, triggering
     // liquidations where neccessary
-    .account.CONTRACT.UpdateMarkPrice[instrument;d;events`time];
+    .account.CONTRACT.UpdateMarkPrice[instrument;d;e`time];
 
     // Where appliccable trigger stop orders 
     // TODO add a delay in placement of orders
-    .order.UpdateMarkPrice[instrument;d;events`time];
+    .order.UpdateMarkPrice[instrument;d;e`time];
 
     // Inspect the account tables for any insolvent accounts.
     .liquidation.InspectAccounts[instrument];
@@ -155,7 +155,7 @@
 /  @return (Inventory) The new updated inventory
 .engine.ProcessSettlementEvents :{[events]
 
-    events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
     s:0;
     s[`instrumentId]:`.instrument.Instrument!0;
@@ -176,11 +176,11 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessFundingEvents :{[events]
+.engine.ProcessFundingEvents :{[e]
 
-    events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
-    f:`fundingRate`nextFundingRate`nextFundingtime!events;
+    f:`fundingRate`nextFundingRate`nextFundingtime!e;
 
     f[`instrumentId]:`.instrument.Instrument!0;
 
@@ -200,12 +200,12 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessNewPriceLimitEvents :{[events] // 
+.engine.ProcessNewPriceLimitEvents :{[e] // 
 
-    events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>3;0;"Invalid schema"];
 
-    // TODO just derive last price limits from events
-    p:events`datum;
+    // TODO just derive last price limits from e
+    p:e`datum;
 
 
     p[`instrumentId]:`.instrument.Instrument!0;
@@ -230,18 +230,18 @@
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     
     // check max batch order amends
-     // Filter events where col count<>12
+     // Filter e where col count<>12
     
-    events:.engine.Purge[events;count'[events`datum]<>12;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>12;0;"Invalid schema"];
 
     // In live version would get instrument here
-    // filter events by type
+    // filter e by type
     // TODO increment request counts!
 
     // TODO add execInst
     o:(`accountId`price`side`otype,
     `timeinforce`execInst`size`limitprice`stopprice,
-    `reduce`trigger`displayqty)!raze'[events`datum];
+    `reduce`trigger`displayqty)!raze'[e`datum];
 
     o[`instrumentId]:`.instrument.Instrument!0;
 
@@ -343,7 +343,7 @@
     // check max batch order amends
 
     // check max batch order amends
-    count'[events`datum]<>12 // Filter events where col count<>12
+    count'[e`datum]<>12 // Filter e where col count<>12
     
     // Check if order exists
     // TODO increment request counts!
@@ -369,9 +369,9 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessCancelOrderEvents :{[events] // Requires accountId
+.engine.ProcessCancelOrderEvents :{[e] // Requires accountId
 
-    oIds:events`datum; // TODO check that account belongs to order
+    oIds:e`datum; // TODO check that account belongs to order
     
     if[count[oId]>0;.order.CancelOrder . oId];
     };
@@ -384,9 +384,9 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessCancelAllEvents :{[events] // Requires accountId
+.engine.ProcessCancelAllEvents :{[e] // Requires accountId
     
-    aIds:events`datum;
+    aIds:e`datum;
 
     aIds:.engine.PurgeNot[aIds;aIds in key[.account.Account];0;"Invalid account"];
 
@@ -408,12 +408,12 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessWithdrawEvents :{[events]
+.engine.ProcessWithdrawEvents :{[e]
     i:.engine.getInstrument[]; // Requires accountId
 
-    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    w:`accountId`withdrawamt!events`datum;
+    w:`accountId`withdrawamt!e`datum;
 
     w:.engine.PurgeNot[w;w[`accountId] in key[.account.Account];0;"Invalid account"];
 
@@ -443,16 +443,17 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessDepositEvents :{[events] // Requires accountId (this would be passive in production)
+.engine.ProcessDepositEvents :{[e] // Requires accountId (this would be passive in production)
     i:.engine.getInstrument[];
 
-    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+    e:.engine.Purge[e;count'[e`datum]<>2;0;"Invalid schema"];
 
-    d:`accountId`depositamt!events`datum;
+    e:`accountId`depositamt!e`datum;
+    e[`instrumentId]:`.instrument.Instrument!0;
 
-    d:.engine.Purge[d;not[d[`accountId] in key[.account.Account]];0;"Invalid account"];
-    d:.engine.Purge[d;d[`accountId][`state]=1;0;"Account has been disabled"];
-    d:.engine.Purge[d;d[`accountId][`state]=2;0;"Account has been locked for liquidation"];
+    e:.engine.Purge[e;not[e[`accountId] in key[.account.Account]];0;"Invalid account"];
+    e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
+    e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
     if[count[d]>0;.account.Deposit . d];
     };
@@ -469,8 +470,8 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessSignalEvents :{[events] // Requires accountId
-    .pipe.egress.AddBatch[events]; // TODO add noise/dropout/randomization
+.engine.ProcessSignalEvents :{[e] // Requires accountId
+    .pipe.egress.AddBatch[e]; // TODO add noise/dropout/randomization
     };
 
 
@@ -482,7 +483,7 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessLiquidationEvents :{[events]
+.engine.ProcessLiquidationEvents :{[e]
     // TODO check    
     .pipe.egress.AddLiquidationEvent[];
     };
