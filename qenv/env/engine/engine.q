@@ -238,7 +238,7 @@
     // TODO add execInst
     e:(`accountId`price`side`otype,
     `timeinforce`execInst`size`limitprice`stopprice,
-    `reduce`trigger`displayqty)!raze'[e`datum];
+    `reduce`trigger`displayqty)!raze'[e`datum]; // TODO remove raze
 
     e[`instrumentId]:`.instrument.Instrument!0;
     i:e[`instrumentId];
