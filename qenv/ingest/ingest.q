@@ -1,12 +1,6 @@
 
 
-.pipe.fwdSize:config`fwdSize; // The 
-.pipe.batchSize:config`batchSize; // The size of the batches in minutes
 
-// Check if the Batch index which in 
-if[not[`BatchIndex in key `.ingest];[
-    .pipe.BatchIndex:select i:max i, t:max time by .pipe.batchSize xbar `minute$time from .pipe.events;
-]];
 
 // Probabalistic choice
 // @n: number of choices
@@ -28,31 +22,43 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 / .env.StepIndex:(.env.PrimeBatchNum)_(.env.StepIndex); // Shift events
 
 // TODO get first Ingress Batch (for testing purposes)
-.pipe.getFirstIngressBatch         :{
+.ingest.getFirstIngressBatch         :{
     $[[`BatchIndex in key `.loader];[
-        .pipe.BatchIndex@rand count[.pipe.BatchIndex]
+        .ingest.BatchIndex@rand count[.ingest.BatchIndex]
     ];'BATCHINDEX_UNSET];
     };
 
 // 
-.pipe.getCurriculumIngressBatch      :{
+.ingest.getCurriculumIngressBatch      :{
     $[[`BatchIndex in key `.loader];[
 
     ];'BATCHINDEX_UNSET];
     };
 
 // 
-.pipe.getChronologicalIngressBatch  :{
+.ingest.getChronologicalIngressBatch  :{
     $[[`BatchIndex in key `.loader];[
         $[[`CurrentBatch in key `.loader];[
-            .pipe.BatchIndex@(.pipe.CurrentBatch mod count[.pipe.BatchIndex])
+            .ingest.BatchIndex@(.ingest.CurrentBatch mod count[.ingest.BatchIndex])
         ];'CURRENTBATCH_UNSET];
     ];'BATCHINDEX_UNSET];
     };
 
 // 
-.pipe.getRandomIngressBatch         :{
+.ingest.getRandomIngressBatch         :{
     $[[`BatchIndex in key `.loader];[
-        .pipe.BatchIndex@rand count[.pipe.BatchIndex]
+        .ingest.BatchIndex@rand count[.ingest.BatchIndex]
     ];'BATCHINDEX_UNSET];
+    };
+
+
+
+.ingest.Run         :{[]
+
+
+
+    // Check if the Batch index which in 
+    if[not[`BatchIndex in key `.ingest];[
+        .ingest.BatchIndex:select i:max i, t:max time by .ingest.batchSize xbar `minute$time from .ingest.events;
+    ]];
     };
