@@ -426,12 +426,8 @@
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
     d:`accountId`depositamt!events`datum;
-    
-    // Calculate the cumulative sum of withdraws
-    // and filter withdraws where the amount would
-    // exceed the available account balance
-    d:.engine.Purge[d;d[`accountId][`balance]<=0;0;"account has no balance"];
-    d:.engine.Purge[d;d[`accountId][`available]<=0;0;"account has insufficient available balance"];
+
+    d:.engine.Purge[d;not[d[`accountId] in key[.account.Account]];0;"Invalid account"];
     d:.engine.Purge[d;d[`accountId][`state]=1;0;"Account has been disabled"];
     d:.engine.Purge[d;d[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
