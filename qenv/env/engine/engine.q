@@ -80,10 +80,10 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepthUpdateEvents :{[events]
-    i:.engine.getInstrument[];
 
-    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+    events:.engine.Purge[events;count'[events`datum]<>4;0;"Invalid schema"];
 
+    d:`side`price`nqty`nhqty!events;
     // `side`price`nqty`nhqty`time
 
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from events);
@@ -103,8 +103,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewTradeEvents :{[events]
-    i:.engine.getInstrument[];
-    
+
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
     d:`accountId`side`fillqty`reduce!events`datum;
@@ -112,7 +111,7 @@
     
 
     // TODO derive from account
-    .order.ProcessTrade[instrument]'[d`account`side`fill`reduce`time];
+    .order.ProcessTrade'[d`account`side`fill`reduce`time];
 
     };
 
@@ -126,7 +125,6 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[events]
-    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
@@ -156,11 +154,11 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessSettlementEvents :{[events]
-    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
     s:0;
+    s[`instrumentId]:`.instrument.Instrument!0;
     
     // Apply settlement to the given accounts
     // and their respective inventories, this 
@@ -179,11 +177,12 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessFundingEvents :{[events]
-    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
     f:`fundingRate`nextFundingRate`nextFundingtime!events;
+
+    f[`instrumentId]:`.instrument.Instrument!0;
 
     //  Apply funding the the open agent 
     // positions/inventory 
@@ -202,12 +201,14 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[events] // 
-    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
     // TODO just derive last price limits from events
-    pricelimits:events`datum;
+    p:events`datum;
+
+
+    p[`instrumentId]:`.instrument.Instrument!0;
 
     .instrument.UpdatePriceLimits[instrument;]; // TODO derive price limti
     .pipe.egress.AddPriceLimitEvent[instrument;];    
@@ -223,7 +224,6 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewOrderEvents :{[events] // Requires accountId
-    i:.engine.getInstrument[];
     / accountIds:key .account.Account; 
     // TODO check all count=12
     // TODO do validation here
@@ -242,6 +242,8 @@
     o:(`accountId`price`side`otype,
     `timeinforce`execInst`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[events`datum];
+
+    o[`instrumentId]:`.instrument.Instrument!0;
 
     // TODO type conversions
     / o:.engine.PurgeConvert[o;o[`otype];7h;0;"Invalid otype"];
@@ -334,7 +336,6 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessAmendOrderEvents :{[events] // Requires accountId
-    i:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     orders:y`datum;
