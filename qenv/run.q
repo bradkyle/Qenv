@@ -26,6 +26,7 @@ inferenceBatcher    :.agent.DynamicBatcher[];
 ActorPool           :.agent.ActorPool[]
 
 // Actor pool thread
+// Run the actor pool in a seperate process
 
 // optimizer (RMSProp)
 
@@ -34,8 +35,10 @@ ActorPool           :.agent.ActorPool[]
 // load checkpoints
 
 // learner threads
+/ flags, learner_queue, model, actor_model, optimizer, scheduler, stats, plogger
+// learner threads run the learn python method
 
 // inference threads
-/ flags, learner_queue, model, actor_model, optimizer, scheduler, stats, plogger
+// flags, inference_batcher, actor_model
 
 // Testing is done with a single agent
