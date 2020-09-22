@@ -103,15 +103,21 @@
 
 .order.applyBookUpdates                 :{[price;side;qty;hqty;iqty;vqty;fillTime]
         :1b; // TODO sort by time
-    }
+    };
 
+// Deletes all levels from the orderbook where the sum of the visible qty, order hidden qty
+// and the data derived hidden qty is 0, also should delete all levels a certain distance
+// away from the mid price to increase speed.
 .order.pruneBook                        :{
-    delete from `.order.OrderBook where (vqty+iqty+hqty)<=0;
-    }
+        delete from `.order.OrderBook where (vqty+iqty+hqty)<=0;
+    };
    
+// Deletes all limit orders from the orders table where the leaves qty is = 0
+// also should delete all active limit orders that are a certain distance
+// away from the mid price to increase speed.
 .order.pruneOrders                      :{
-    delete from `.order.Order where leaves<=0;
-    }
+        delete from `.order.Order where leaves<=0;
+    };
 
 // Process Depth update
 // -------------------------------------------------------------->
