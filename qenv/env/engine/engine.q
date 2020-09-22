@@ -423,7 +423,9 @@
 .engine.ProcessDepositEvents :{[events] // Requires accountId (this would be passive in production)
     instrument:.engine.getInstrument[];
 
-    dps:();
+    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+
+    d:`accountId`depositamt!events`datum;
     
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
