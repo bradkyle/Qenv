@@ -259,7 +259,7 @@
     o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; 
 
     // 
-    o:.engine.Purge[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+    o:.engine.PurgeNot[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
         all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
         0;"Order had execInst of postOnly"];
 
