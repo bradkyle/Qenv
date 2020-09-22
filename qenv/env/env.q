@@ -83,6 +83,9 @@
     // return obs
     .engine.Reset[.env.CONF];
     .state.Reset[.env.CONF];
+
+    // Advance the state
+    .ingest.Advance[];
     
     // Reset the current step
     step:0;

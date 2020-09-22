@@ -15,6 +15,7 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
 / // before the first step into the state buffer for "Priming"
 / nevents:raze flip'[value[.env.PrimeBatchNum#.env.EventBatch]]; 
 
+// TODO allow for eventTag referencing etc.
 
 / // Set the current Event batch to exclude the event batches
 / // used in the priming of the state.
@@ -51,9 +52,15 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     ];'BATCHINDEX_UNSET];
     };
 
-.ingest.Run         :{[]
+
+// The setup function is run at the start of a given period
+
+.ingest.Setup         :{[path]
     // TODO assert path exists
-    // TODO assert 
+    // TODO assert that path is splayed
+    // store event count store event index
+    
+
 
     system ("l ", path);
 
