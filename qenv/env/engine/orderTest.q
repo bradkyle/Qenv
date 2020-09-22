@@ -500,13 +500,13 @@ dozc:{x+y}[doz];
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
-                    1000 1001 1002 999 998 997 1000; // price
-                    (3#-1),(4#1);   // side
-                    (0 1000 1000 0 1000 1000 0); // qty
-                    (20 10 10 0 0 0 0); // hqty
-                    (170 ,(6#0)); // iqty
-                    (0 1000 1000 30 1000 1000 30); // vqty
-                    (sc[z] 0 1 1 0 1 1 0))) // time
+                    1000 999 1001 998 1002 997; // price
+                    -1 1 -1 1 -1 1;   // side
+                    0 0 1000 1000 1000 1000; // qty
+                    10 10 0 0 0 0; // hqty
+                    0 0 0 0 0 0; // iqty
+                    0 0 1200 1200 1000 1000; // vqty
+                    (sc[z] 0 0 0 0 1 1))) // time
             ))     
         ));
         (("0j) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update",
