@@ -101,7 +101,11 @@
 .engine.ProcessNewTradeEvents :{[events]
     instrument:.engine.getInstrument[];
     
+    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
+
     d:events`datum;
+
+
 
     // TODO derive from account
     .order.ProcessTrade[instrument]'[d`account`side`fill`reduce`time];
