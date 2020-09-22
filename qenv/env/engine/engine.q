@@ -218,7 +218,7 @@
 
     // TODO add execInst
     o:(`accountId`price`side`otype,
-    `timeinforce`size`limitprice`stopprice,
+    `timeinforce`execInst`size`limitprice`stopprice,
     `reduce`trigger`displayqty)!raze'[events`datum];
 
      // Routine validation
@@ -240,10 +240,11 @@
     o[`timeinforce]:0^o[`timeinforce];
     o[`reduce]:0b^o[`reduce];
     o[`displayqty]:o[`size]^o[`displayqty];
-    o[`execInst]:()^o[`execInst];
+    o[`execInst]:enlist[0]^o[`execInst];
     
     o:.engine.Purge[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
-    o:.engine.Purge[o[`displayqty] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    o:.engine.Purge[o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    o:.engine.Purge[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
