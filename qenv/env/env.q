@@ -83,7 +83,6 @@
     // return obs
     .engine.Reset[.env.CONF];
     .state.Reset[.env.CONF];
-    .pipe.Reset[.env.CONF];
 
     // Reset the current step
     step:0;
