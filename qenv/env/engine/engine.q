@@ -376,7 +376,7 @@
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
     
-    if[count[oId]>0;.order.CancelOrder . oId];
+    if[count[oId]>0;.order.CancelOrder . e];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -401,7 +401,7 @@
     o:.engine.Purge[o;o[`accountId][`state]=1;0;"Account has been disabled"];
     o:.engine.Purge[o;o[`accountId][`state]=2;0;"Account has been locked for liquidation"];
 
-    if[count[aId]>0;.order.CancelAllOrders . aId];
+    if[count[aId]>0;.order.CancelAllOrders . e];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
