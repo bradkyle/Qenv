@@ -80,6 +80,8 @@
     $[not (type events[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
     $[not (type events[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
 
+    // `side`price`nqty`nhqty`time
+
     nxt:0!(`side`price xgroup select time, side:datum[;0], price:datum[;1], size:datum[;2] from events);
 
     .order.ProcessDepth[];
