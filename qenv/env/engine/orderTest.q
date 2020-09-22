@@ -60,6 +60,7 @@ dozc:{x+y}[doz];
 // TODO process depth // process trade Integration check
 // TODO hidden/iceberg orders orders 
 // TODO replicate cases without hidden orders!
+// TODO longer update streams
 
 .qt.Unit[
     ".order.ProcessDepth";
@@ -80,7 +81,7 @@ dozc:{x+y}[doz];
         // instrument;nxt:(side;price;qty;hqty;time)
         .order.ProcessDepth[.util.testutils.defaultInstrument;p`nxt];
 
-        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
+        .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOrderUpdates Mock
         .util.testutils.checkMock[mck2;m[1];c];  // Expected .order.applyBookUpdates Mock
 
     };
@@ -129,7 +130,7 @@ dozc:{x+y}[doz];
                 (10#0); // NHQTY
                 (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
             ); 
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;z); // TODO check
                     (3;999;520;z);
@@ -175,7 +176,7 @@ dozc:{x+y}[doz];
                 ((10, (19#0)),(10, (19#0))); // NHQTY
                 (sc[z] (40#0 1)) // TIME
             ); 
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;z); // TODO check
                     (3;999;520;z);
@@ -220,7 +221,7 @@ dozc:{x+y}[doz];
                 (40#900 1000);
                 (sc[z] (40#0 1))
             );
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;100;100;0;z); // TODO check
                     (3;999;520;100;100;0;z);
@@ -265,7 +266,7 @@ dozc:{x+y}[doz];
                 (40#900 1000);
                 (sc[z] (40#0 1))
             );
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;100;100;0;z); // TODO check
                     (3;999;520;100;100;0;z);
@@ -310,7 +311,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000),(1000 1000));
                 (sc[z] 0 0 0 1 0 0)
             );
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;100;100;0;z); // TODO check
                     (3;999;520;100;100;0;z);
@@ -355,7 +356,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000),(1000 1000));
                 (sc[z] 0 0 0 1 0 0)
             );   
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;100;100;0;z); // TODO check
                     (3;999;520;100;100;0;z);
@@ -400,7 +401,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000),(1000 1000 0 0));
                 (sc[z] 0 0 0 1 0 0 1 1)
             );   
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (1;999;20;100;100;0;z); // TODO check
                     (3;999;520;100;100;0;z);
@@ -440,20 +441,21 @@ dozc:{x+y}[doz];
                 20#z // time
             ); 
             (  // Depth Update The mid price decreases by two 
-                // levels and then returns by one spread having increased by one
+                // levels (updating open buy orders) and 
+                // then returns by one spread having increased by one
                 ((4#1),(4#-1));
                 ((999 998 997 997), (999,  998,  999, 998)); // 
                 ((0,  0,  0,  1000),(1000, 1000, 0,   0));
                 (sc[z] 0 0 0 1 0 0 1 1) // 
             );  
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
-                    (10;999;20;100;100;0;z); // TODO check
-                    (11;999;20;100;100;0;z); // TODO check
-                    (12;999;20;100;100;0;z); // TODO check
-                    (13;999;520;100;100;0;z);
-                    (14;1000;400;100;100;0;z);
-                    (15;1000;600;100;100;0;z)
+                    (10;999;10;100;100;0;z); // offset equalt to hqty
+                    (11;999;110;100;100;0;z); // offset = hqty+o1leaves
+                    (12;998;0;100;100;0;z); // 
+                    (13;998;100;100;100;0;z);
+                    (14;997;0;100;100;0;z);
+                    (15;997;100;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
@@ -493,7 +495,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000 1000),(0 0 0 1000 1000));
                 (sc[z] 0 0 0 1 1 0 0 0 1 1)
             );  
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip( // offset on both sides should be reduced to 0
                     (0;1001;0;100;100;0;z); // TODO check
                     (1;1001;100;100;100;0;z);
@@ -538,7 +540,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000 1000),(1000 1000 0 0));
                 (sc[z] 0 0 0 1 1 0 0 1 1)
             );  
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (0;998;0;100;100;0;z); // TODO check
                     (1;998;100;100;100;0;z)
@@ -581,7 +583,7 @@ dozc:{x+y}[doz];
                 ((0 0 0 1000 1000),(1000 1000 0 0));
                 (sc[z] 0 0 0 1 1 0 0 1 1)
             );  
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (0;998;0;100;100;0;z); // TODO check
                     (1;998;100;100;100;0;z)
@@ -624,7 +626,7 @@ dozc:{x+y}[doz];
                 ((0 0 1000 1000),(1000 0));
                 (sc[z] 0 0 2 2 0 1)
             );     
-            (1b;1;( // Expected .order.applyOffsetUpdates Mock
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
                 enlist flip(
                     (0;998;0;100;100;0;z); /
                     (1;998;100;100;100;0;z)
@@ -639,6 +641,55 @@ dozc:{x+y}[doz];
                     (0 0 0); // iqty
                     (1200 0 1000); // vqty
                     (sc[z] 0 1 2))) // time
+            ))     
+        ));
+        (("0m) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
+          "(best price decreases during update) finishes past order level (past final spread)");( // incoming orders should be participate don't initiate
+            (   // Current Depth
+                [price:((999-til 5),(1000+til 5))] 
+                side:(5#1),(5#-1);
+                qty:(10#1000);
+                hqty:((10, (4#0)),(10, (4#0)));
+                iqty:(10#0);
+                vqty:(10#1200)
+            );    
+            (   // Current Orders (order for each level)
+                til[20];20#1;20#1; // `orderId`instrumentId`accountId
+                ((10#-1),(10#1)); // side
+                20#1; // otype
+                (20#100 400); // offset
+                20#100; // leaves
+                20#100; // displayqty
+                ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
+                20#z // time
+            ); 
+            (  // Depth Update The mid price decreases by two 
+                // levels (updating open buy orders) and 
+                // then returns by one spread having increased by one
+                ((4#1),(4#-1));
+                ((999 998 997 997), (999,  998,  999, 998)); // 
+                ((0,  0,  0,  1000),(1000, 1000, 0,   0));
+                (sc[z] 0 0 0 1 0 0 1 1) // 
+            );  
+            (1b;1;( // Expected .order.applyOrderUpdates Mock
+                enlist flip(
+                    (10;999;10;100;100;0;z); // offset equalt to hqty
+                    (11;999;110;100;100;0;z); // offset = hqty+o1leaves
+                    (12;998;0;100;100;0;z); // 
+                    (13;998;100;100;100;0;z);
+                    (14;997;0;100;100;0;z);
+                    (15;997;100;100;100;0;z)
+                )
+            ));    
+            (1b;1;( // Expected .order.applyBookUpdates Mock
+                enlist((
+                    999 998 997 999 998; // price
+                    1 1 1 -1 -1;   // side
+                    0 0 1000 0 0; // qty
+                    10 0 0 0 0; // hqty
+                    0 0 0 0 0; // iqty
+                    200 200 1200 0 0; // vqty
+                    (sc[z] 0 0 0 1 1))) // time
             ))     
         ))
     );
@@ -969,7 +1020,7 @@ dozc:{x+y}[doz];
     "size update the orderbook and the individual order offsets/iceberg",
     "orders and call Add Events/Fills etc. where necessary"];
 
-
+// TODO integration tests.
 
 // TOOD place limit order, stop order, market order
 // TODO Cancel limit order, stop market order, stop limit order
@@ -1786,5 +1837,5 @@ dozc:{x+y}[doz];
     "Global function for checking stop orders"];
 
 .qt.SkpBesTest[0];
-/ .qt.SkpBes[10];
+/ .qt.SkpBes[7];
 .qt.RunTests[];

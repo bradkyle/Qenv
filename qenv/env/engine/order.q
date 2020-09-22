@@ -175,9 +175,13 @@
         .pipe.egress.AddDepthEvent[obupd[;0 5];last fillTime];
     }
 
-.order.pruneBook                :{delete from `.order.OrderBook where (vqty+iqty+hqty)<=0}
+.order.pruneBook                :{
+    delete from `.order.OrderBook where (vqty+iqty+hqty)<=0;
+    }
    
-.order.pruneOrders              :{delete from `.order.Order where leaves<=0}
+.order.pruneOrders              :{
+    delete from `.order.Order where leaves<=0;
+    }
 
 // Process Depth update
 // -------------------------------------------------------------->
@@ -321,7 +325,7 @@
                 // Update the order offsets
                 .order.applyOrderUpdates   . .order.test.bng:(0^raze'[.util.PadM'[(
                         state`orderId;
-                        raze[{x#y}'[numordlvl;state`price]]; // TODO make faster
+                        raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
                         noffset;
                         state`leaves;
                         state`displayqty;
