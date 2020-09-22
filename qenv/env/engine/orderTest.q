@@ -439,18 +439,21 @@ dozc:{x+y}[doz];
                 ((raze flip 2 5#(1000+til 5)),(raze flip 2 5#(999-til 5))); // price
                 20#z // time
             ); 
-            (  // Depth Update
+            (  // Depth Update The mid price decreases by two 
+                // levels and then returns by one spread having increased by one
                 ((4#1),(4#-1));
                 ((999 998 997 997), (999,  998,  999, 998)); // 
                 ((0,  0,  0,  1000),(1000, 1000, 0,   0));
-                (sc[z] 0 0 0 1 0 0 1 1) // The mid price decreases by two levels and then returns
+                (sc[z] 0 0 0 1 0 0 1 1) // 
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;100;100;0;z); // TODO check
-                    (3;999;520;100;100;0;z);
-                    (0;1000;400;100;100;0;z);
-                    (2;1000;600;100;100;0;z)
+                    (10;999;20;100;100;0;z); // TODO check
+                    (11;999;20;100;100;0;z); // TODO check
+                    (12;999;20;100;100;0;z); // TODO check
+                    (13;999;520;100;100;0;z);
+                    (14;1000;400;100;100;0;z);
+                    (15;1000;600;100;100;0;z)
                 )
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
