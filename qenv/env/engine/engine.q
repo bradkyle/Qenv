@@ -322,7 +322,7 @@
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
-    .order.NewOrder[instrument;accounts;orders];
+    if[count[o]>0;.order.NewOrder . o];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -356,7 +356,7 @@
 
     // amend order fields
     // (`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty)
-    .order.AmendOrder[i;a;o];
+    if[count[o]>0;.order.AmendOrder . o];
     
     };
 
