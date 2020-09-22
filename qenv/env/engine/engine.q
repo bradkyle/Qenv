@@ -222,16 +222,16 @@
     `reduce`trigger`displayqty)!raze'[events`datum];
 
      // Routine validation
-    o:.engine.Purge[o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
-    o:.engine.Purge[o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
-    o:.engine.Purge[o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
+    o:.engine.PurgeNot[o[`otype] in .pipe.common.ORDERKIND;0;"Invalid otype"];
+    o:.engine.PurgeNot[o[`side]  in .pipe.common.ORDERSIDE;0;"Invalid side"];
+    o:.engine.PurgeNot[o[`timeinforce]  in .pipe.common.TIMEINFORCE;0;"Invalid timeinforce"]; // TOOD fill
 
     // Instrument specific validation        
-    o:.engine.Purge[o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
-    o:.engine.Purge[o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
-    o:.engine.Purge[o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
-    o:.engine.Purge[o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
-    o:.engine.Purge[(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
+    o:.engine.PurgeNot[o[`price] < ins[`minPrice];0;"Invalid price: price<minPrice"];
+    o:.engine.PurgeNot[o[`price] > ins[`maxPrice;0;"Invalid price: price>maxPrice"];
+    o:.engine.PurgeNot[o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
+    o:.engine.PurgeNot[o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
+    o:.engine.PurgeNot[(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
 
     // fill null then validate
     o[`limitprice]:0^o[`limitprice];
@@ -242,13 +242,15 @@
     o[`displayqty]:o[`size]^o[`displayqty];
     o[`execInst]:enlist[0]^o[`execInst];
     
-    o:.engine.Purge[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
-    o:.engine.Purge[o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
-    o:.engine.Purge[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
+    o:.engine.PurgeNot[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
+    o:.engine.PurgeNot[o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
-    o[`otype]  in (2 3); // where otype 
+    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
+
+    o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; // where otype 
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
