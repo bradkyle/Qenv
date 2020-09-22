@@ -39,6 +39,70 @@ doz:`date$z;
 dozc:{x+y}[doz];
 
 
+.qt.Unit[
+    ".order.applyNewTrades";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Function for adding trades to event pipe and state"];
+
+
+.qt.Unit[
+    ".order.applyOrderUpdates";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Function for adding trades to event pipe and state"];
+
+
+.qt.Unit[
+    ".order.applyTakerFills";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Function for adding trades to event pipe and state"];
+
+
+.qt.Unit[
+    ".order.applyMakerFills";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Function for adding trades to event pipe and state"];
+
+
+.qt.Unit[
+    ".order.applyBookUpdates";
+    {[c]
+        p:c[`params];
+
+
+    };
+    {};
+    ();
+    .util.testutils.defaultEngineHooks;
+    "Function for adding trades to event pipe and state"];
+
 // TODO check orders event by time
 // TODO depth update does not match order update
 // TODO depth update crosses
