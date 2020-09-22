@@ -267,6 +267,7 @@
                         state`status;
                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]]); // TODO make fasters
 
+                // Update the orderbook
                 .order.applyBookUpdates     . .order.test.bngd:(0^raze'[.util.PadM'[(
                         state`price;
                         state`side;
