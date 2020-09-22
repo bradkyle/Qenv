@@ -9,14 +9,18 @@
 .pipe.egress.AddEvent              :{[event] // TODO validate
         .pipe.event.eventCount+:count[event];
         .pipe.egress.Event,:(time;cmd;kind;datum);
-    };
+        };
 
 .pipe.egress.AddBatch               :{[events] // TODO validate
         ecount:count[events];
         events[`eid]:.pipe.event.eventCount + til ecount;
         .pipe.event.eventCount+:ecount;        
         .pipe.egress.Event,:events;
-    };
+        };
+
+.pipe.egress.AddBatchFailure        :{[]
+        
+        };
 
 /*******************************************************
 / MarketData event Construction
