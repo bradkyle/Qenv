@@ -85,7 +85,7 @@
     .state.Reset[.env.CONF];
 
     // Advance the state
-    .ingest.Advance[];
+    .ingest.Advance . .env.CONF[`ingest][];
     
     // Reset the current step
     step:0;
