@@ -168,6 +168,8 @@
 .engine.ProcessFundingEvents :{[events]
     instrument:.engine.getInstrument[];
 
+    events:.engine.Purge[events;count'[events`datum]<>4;0;"Invalid schema"];
+
     //  Apply funding the the open agent 
     // positions/inventory 
     .account.CONTRACT.ApplyFunding[instrument];
