@@ -372,7 +372,7 @@
 
     oIds:events`datum; // TODO check that account belongs to order
     
-    .order.CancelOrder[i;a;oId];
+    if[count[oId]>0;.order.CancelOrder . oId];
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
