@@ -296,7 +296,7 @@
                 nshft:   state[`leaves]+noffset;
                 
                 // Calculate the new vis qty
-                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];
+                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]]; // TODO make faster
                 mxnshft:max'[nshft];
                 lsttime:max'[state`time]; // TODO apply to each order
                 numordlvl:count'[noffset];

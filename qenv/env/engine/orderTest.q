@@ -465,7 +465,7 @@ dozc:{x+y}[doz];
             ))     
         ));
         (("0i) ProcessDepth BUY+SELL: order levels retract past order prices i.e. spread increases",
-          "The orders should remain behind in this instance");(
+          "The orders should remain behind in this instance");( // Has been checked
             (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
