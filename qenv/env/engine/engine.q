@@ -211,8 +211,10 @@
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     
     // check max batch order amends
-    count'[events`datum]<>12 // Filter events where col count<>12
+     // Filter events where col count<>12
     
+    events:.engine.Purge[events;count'[events`datum]<>12;0;"Invalid column count"];
+
     // In live version would get instrument here
     // filter events by type
     // TODO increment request counts!
