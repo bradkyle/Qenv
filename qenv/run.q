@@ -4,6 +4,9 @@
 
 .pipe.Ingest[];
 
+/ The queue the learner threads will get their data from.
+/ Setting `minimum_batch_size == maximum_batch_size`
+/ makes the batch size static.
 learnerQueue        :.agent.LearnerQueue[];
 inferenceBatcher    :.agent.DynamicBatcher[];
 
@@ -22,9 +25,17 @@ inferenceBatcher    :.agent.DynamicBatcher[];
  // num pools, num actors per pool
 ActorPool           :.agent.ActorPool[]
 
-// Beast learner pool, 
-// learner threads = 2 
-// inference_threads=2
+// Actor pool thread
 
+// optimizer (RMSProp)
+
+// scheduler
+
+// load checkpoints
+
+// learner threads
+
+// inference threads
+/ flags, learner_queue, model, actor_model, optimizer, scheduler, stats, plogger
 
 // Testing is done with a single agent
