@@ -492,10 +492,10 @@ dozc:{x+y}[doz];
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
                 enlist flip(
-                    (1;999;20;z); // TODO check
-                    (1;999;520;z);
-                    (2;1000;400;z);
-                    (3;1000;600;z))
+                    (0;1001;100;z); // TODO check
+                    (1;1001;400;z);
+                    (2;998; 100;z);
+                    (3;998; 600;z))
             ));    
             (1b;1;( // Expected .order.applyBookUpdates Mock
                 enlist((
