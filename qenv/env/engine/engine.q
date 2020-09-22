@@ -367,6 +367,8 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessCancelOrderEvents :{[events] // Requires accountId
+
+    oIds:events`datum;
     
     .order.CancelOrder[i;a;oId];
     };
@@ -379,8 +381,10 @@
 /  @param account   (Account) The account to which the inventory belongs.
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
-.engine.ProcessCancelOrderEvents :{[events] // Requires accountId
+.engine.ProcessCancelAllEvents :{[events] // Requires accountId
     
+    aIds:events`datum;
+
     .order.CancelAllOrders[i;a;oId];
     };
 
@@ -395,7 +399,7 @@
 .engine.ProcessWithdrawEvents :{[events]
     instrument:.engine.getInstrument[]; // Requires accountId
 
-    w:events`datum;
+    wds:events`datum;
 
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
@@ -416,7 +420,7 @@
 .engine.ProcessDepositEvents :{[events] // Requires accountId
     instrument:.engine.getInstrument[];
 
-    deposits:();
+    dps:();
     
     // Calculate the cumulative sum of withdraws
     // and filter withdraws where the amount would
