@@ -51,11 +51,11 @@ PChoice :{[n;k;p]k?raze ("j"$p*10 xexp max count each("."vs'string p)[;1])#'til 
     ];'BATCHINDEX_UNSET];
     };
 
-
-
 .ingest.Run         :{[]
+    // TODO assert path exists
+    // TODO assert 
 
-
+    system ("l ", path);
 
     // Check if the Batch index which in 
     if[not[`BatchIndex in key `.ingest];[
