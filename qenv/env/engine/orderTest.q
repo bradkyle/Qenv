@@ -464,8 +464,8 @@ dozc:{x+y}[doz];
                     (sc[z] 0 1 1 0 1 1 0))) // time
             ))     
         ));
-        (("0i) ProcessDepth BUY+SELL:differing update prices by time, crosses order spread during update ",
-          "(best price decreases during update) finishes past order level (past final spread)");(
+        (("0i) ProcessDepth BUY+SELL: order levels retract past order prices i.e. spread increases",
+          "The orders should remain behind in this instance");(
             (   // Current Depth
                 [price:((999-til 5),(1000+til 5))] 
                 side:(5#1),(5#-1);
@@ -486,12 +486,12 @@ dozc:{x+y}[doz];
             ); 
             (  // Depth Update
                 ((5#-1),(5#1));
-                ((1000 1001 1002 1001 1002),(999 998 997 998 997)); // price increases before decreasing again
+                ((1000 1001 1002 1001 1002),(999 998 997 998 997)); // spread increases before decreasing again
                 ((0 0 0 1000 1000),(0 0 0 1000 1000));
                 (sc[z] 0 0 0 1 1 0 0 0 1 1)
             );  
             (1b;1;( // Expected .order.applyOffsetUpdates Mock
-                enlist flip(
+                enlist flip( // offset on both sides should be reduced to 0
                     (0;1001;0;z); // TODO check
                     (1;1001;100;z);
                     (2;998;0;z);
@@ -531,7 +531,7 @@ dozc:{x+y}[doz];
             ); 
             (  // Depth Update
                 ((5#1),(4#-1));
-                ((999 998 997 997 998),(999 998 999 998));
+                ((999 998 997 997 998),(999 998 999 998)); /// TODO make unique
                 ((0 0 0 1000 1000),(1000 1000 0 0));
                 (sc[z] 0 0 0 1 1 0 0 1 1)
             );  
