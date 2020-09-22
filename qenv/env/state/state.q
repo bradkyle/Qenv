@@ -95,27 +95,27 @@
 
 // Get the current qtys at each order level
 // .util.cond.isActiveAccountOrder
-.state.ordQtyByPrice        :{?[`.order.CurrentOrders]};
+.state.ordQtyByPrice                :{?[`.order.CurrentOrders]};
 
 // Get the sum of the outstanding order qtys for each
 // level by price
-.state.lvlQtyByPrice        :{?[`.order.CurrentOrders]};
+.state.lvlQtyByPrice                :{?[`.order.CurrentOrders]};
 
 // Derive the sum of the leaves qty/outstanding qty of
 // orders for each price bucket provided for a specified
 // agent. i.e.
 // e.g. exponent price buckets:(0,1);(2,4),(5,10),(11,22)
 // e.g. uniform price buckets:(0,1);(2,3),(4,5),(5,6)
-.state.deriveBucketedQty    :{};
+.state.deriveBucketedQty            :{};
 
 // Derive the set of limit orders that have drifted 
 // outside of the observation bounds of the agent 
 // such that they can be for instance cancelled.
-.state.outBoundsOrders      :{};
+.state.outBoundsOrders              :{};
 
 
 // Generates the next unique client order id
-.state.genNextClOrdId       :{};
+.state.genNextClOrdId               :{};
 
 // DEPTH
 // ----------------------------------------------------------------------------------------------->
@@ -133,17 +133,17 @@
 .state.depthCols:cols .state.DepthEventHistory;
 .state.CurrentDepth: `price xkey .state.DepthEventHistory;
 
-.state.derivelvlPrices            :{?[]};
+.state.derivelvlPrices             :{?[]};
 
 // TODO add error handling
-.state.derivePriceAtLvl           :{?[]};
+.state.derivePriceAtLvl            :{?[]};
 
-.state.deriveBucketedPrices       :{};
+.state.deriveBucketedPrices        :{?[]};
 
-.state.derivePriceAtBucket        :{?[]};
+.state.derivePriceAtBucket         :{?[]};
 
-.state.bestAskPrice                :{};
-.state.bestBidPrice                :{};
+.state.bestAskPrice                :{?[]};
+.state.bestBidPrice                :{?[]};
 
 // Maintains a set of historic trade events
 // that could be used to create ohlc features

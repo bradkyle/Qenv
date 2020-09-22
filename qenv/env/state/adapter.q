@@ -144,7 +144,9 @@ ramfrac:{};
     };    
 
 
-.state.adapter.getBuckets:{};
+.state.adapter.getBuckets                                       :{[]
+
+    };
 
 // Stop Creation
 // ---------------------------------------------------------------------------------------->
