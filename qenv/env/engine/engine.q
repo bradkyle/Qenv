@@ -72,13 +72,9 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepthUpdateEvents :{[events]
-    instrument:.engine.getInstrument[];
-    // Convert/multiply 
-    
-    lt:exec last time from events;
-    events:flip events;
-    $[not (type events[`time])~15h;[.logger.Err["Invalid event time"]; :0b];]; //todo erroring
-    $[not (type events[`intime])~15h;[.logger.Err["Invalid event intime"]; :0b];]; // todo erroring
+    i:.engine.getInstrument[];
+
+    events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
     // `side`price`nqty`nhqty`time
 
@@ -99,7 +95,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewTradeEvents :{[events]
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
     
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
@@ -122,7 +118,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessMarkUpdateEvents :{[events]
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
@@ -152,7 +148,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessSettlementEvents :{[events]
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
@@ -175,7 +171,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessFundingEvents :{[events]
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
@@ -198,7 +194,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessNewPriceLimitEvents :{[events] // 
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>3;0;"Invalid schema"];
 
@@ -327,7 +323,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessAmendOrderEvents :{[events] // Requires accountId
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
     // TODO do validation here
     // $[any[in[o[`orderId`clOrdId];key[.order.Order]`orderId]];
     orders:y`datum;
@@ -401,7 +397,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessWithdrawEvents :{[events]
-    instrument:.engine.getInstrument[]; // Requires accountId
+    i:.engine.getInstrument[]; // Requires accountId
 
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
@@ -436,7 +432,7 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepositEvents :{[events] // Requires accountId (this would be passive in production)
-    instrument:.engine.getInstrument[];
+    i:.engine.getInstrument[];
 
     events:.engine.Purge[events;count'[events`datum]<>2;0;"Invalid schema"];
 
