@@ -213,6 +213,7 @@
     // check max batch order amends
     count'[events`datum]<>12 // Filter events where col count<>12
     
+    // In live version would get instrument here
     // filter events by type
     // TODO increment request counts!
 
@@ -258,11 +259,16 @@
     // Run purge operation on stop limit orders
     o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; 
 
-    // 
+    // Purge all orders that have execInst of post only and would cross bid ask spread
     o:.engine.PurgeNot[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
         all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
         0;"Order had execInst of postOnly"];
 
+    o:.engine.PurgeNot[o[`accountId] in key[.account.Account];0;"Invalid account"];
+
+    // TODO convert order accountId to mapping
+
+    a:o[`accountId];
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
@@ -270,6 +276,7 @@
     // balance.
     premium:(o[`side]*(i[`markprice]-o[`price]));
 
+    // TODO derive better
     // derive the instantaneous loss that will be incurred for each order
     // placement and thereafter derive the cumulative loss for each order
     // filter out orders that attribute to insufficient balance where neccessary
