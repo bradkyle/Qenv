@@ -232,6 +232,7 @@
     o:.engine.PurgeNot[o[`size] < ins[`minSize];0;"Invalid size: size<minSize"]; 
     o:.engine.PurgeNot[o[`size] > ins[`maxSize];0;"Invalid size: size>maxSize"];
     o:.engine.PurgeNot[(o[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
+    o:.engine.PurgeNot[(o[`size] mod i[`lotSize])<>0;0;"Invalid lotSize"];
 
     // fill null then validate
     o[`limitprice]:0^o[`limitprice];
@@ -244,23 +245,30 @@
     
     o:.engine.PurgeNot[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
     o:.engine.PurgeNot[o[`displayqty] > ins[`maxSize];0;"Invalid displayqty: size>maxSize"];
+    o:.engine.PurgeNot[(o[`displayqty] mod i[`lotSize])<>0;0;"Invalid displayqty lot size"];
     o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
 
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
-    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid tickSize"];
+    o:.engine.PurgeNot[all[o[`execInst] in .pipe.common.EXECINST];0;"Invalid execInst"];
 
-    o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; // where otype 
+    // Run purge operations on market orders
+    o:.engine.NestedPurgeNot[o[`otype] = 0]; 
+
+    // Run purge operation on stop limit orders
+    o:.engine.NestedPurgeNot[o[`otype]  in (2 3)]; 
+
+    // 
+    o:.engine.Purge[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
+        all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
+        0;"Order had execInst of postOnly"];
+
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
     // for which their respective account has insufficient 
     // balance.
-    premium:(o[`side]*(i[`markprice]-o[`price]))
-
-    o:.engine.Purge[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or
-        all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]) and (1 in o[`execInst]);
-        0;"Order had execInst of postOnly"];
+    premium:(o[`side]*(i[`markprice]-o[`price]));
 
     // derive the instantaneous loss that will be incurred for each order
     // placement and thereafter derive the cumulative loss for each order

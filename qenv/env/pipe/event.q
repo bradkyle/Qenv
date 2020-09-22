@@ -61,15 +61,6 @@
     datum       :());
 // TODO set table attributes
 
-// .pipe.event.Adds an event to the Event table.
-.pipe.event.ValidateEvent   : {[time;cmd;kind;datum] // TODO .pipe.event.Add better validation
-        $[not (type time)=-15h;[.logger.Err["Invalid event time"]; :0b];]; //
-        $[not (cmd in .event.EVENTCMD);[.logger.Err["Invalid event cmd"]; :0b];]; // TODO default
-        $[not (kind in .event.EVENTKIND);[.logger.Err["Invalid event kind"]; :0b];];
-        $[not (type datum)=99h;[.logger.Err["Invalid datum"]; :0b];]; // should error if not dictionary
-        / if[not] //validate datum 
-        };
-
 
 .pipe.event.COLS                   :`time`cmd`kind`datum;
 
