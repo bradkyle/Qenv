@@ -240,6 +240,7 @@
     o[`timeinforce]:0^o[`timeinforce];
     o[`reduce]:0b^o[`reduce];
     o[`displayqty]:o[`size]^o[`displayqty];
+    o[`execInst]:()^o[`execInst];
     
     o:.engine.Purge[o[`displayqty] < ins[`minSize];0;"Invalid displayqty: size<minSize"];
     o:.engine.Purge[o[`displayqty] > ins[`maxSize];0;"Invalid size: size>maxSize"];
@@ -247,8 +248,6 @@
     // TODO all in .common.ExecInst
     // TODO 1 in execIns
     o[`otype]  in (2 3); // where otype 
-
-
 
     // Derive the sum of the margin that will be required
     // for each order to be filled and filter out the orders
