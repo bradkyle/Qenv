@@ -44,6 +44,7 @@ class EnvServer {
     virtual grpc::Status StreamingEnv(
         grpc::ServerContext *context,
         grpc::ServerReaderWriter<Step, Action> *stream) override {
+          
       py::gil_scoped_acquire acquire;  // Destroy after pyenv.
       py::object pyenv;
       py::object stepfunc;
