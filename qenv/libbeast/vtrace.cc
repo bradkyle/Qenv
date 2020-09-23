@@ -30,9 +30,12 @@ from_importance_weights(){
     torch::Tensor deltas = clipped_rhos * (rewards + discounts * values_t_plus_1 - values);
 
     torch::Tensor acc = torch::zeros_like();
+    // TODO impl
 
     // Add V(x_s) to get v_s.
+    torch::Tensor vs = torch::add(vs_minus_v_xs, values);
 
+    // Advantage for policy gradient.
 }
 
 from_logits(){
