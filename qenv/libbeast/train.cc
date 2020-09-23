@@ -40,24 +40,24 @@ void infer(DynamicBatcher inference_batcher){
 void learn(BatchingQueue learner_queue){
     torch::Tensor tensors = 0;
 
-
+    // TODO
 
     torch::Tensor vtrace_returns = vtrace::from_logits(
-
+        // TODO
     );
 
     torch::Tensor pg_loss = compute_policy_gradient_loss(
-
+        // TDOO
     );
 
     torch::Tensor baseline_loss = (
         baseline_cost * compute_baseline_loss(
-
+            // TODO
         ));
 
     torch::Tensor entropy_loss  = (
         entropy_cost * compute_entropy_loss(
-
+            // TODO
         ));
 
     torch::Tensor total_loss = (
