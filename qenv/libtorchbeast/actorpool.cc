@@ -679,8 +679,8 @@ void init_actorpool(py::module& m) {
       .def("is_closed", &BatchingQueue<>::is_closed)
       .def("size", &BatchingQueue<>::size)
       .def("__iter__",
-           [](std::shared_ptr<BatchingQueue<>> queue) { return queue; })
-      .def("__next__", [](BatchingQueue<>& queue) {
+           [](std::shared_ptr<BatchingQueue<>> queue) { return queue; }) // i.e. for tensors in learner_queue
+      .def("__next__", [](BatchingQueue<>& queue) { // i.e. for tensors in learner queue
         py::gil_scoped_release release;
         std::pair<TensorNest, std::vector<Empty>> pair = queue.dequeue_many();
         return pair.first;
