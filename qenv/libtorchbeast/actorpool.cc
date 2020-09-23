@@ -403,10 +403,15 @@ class ActorPool {
       throw py::connection_error("Initial read failed.");
     }
 
+    // Instantiate the initial agent state (which is passed in as a param)
     TensorNest initial_agent_state = initial_agent_state_;
 
     TensorNest env_outputs = ActorPool::step_pb_to_nest(&step_pb);
+
+    // TODO what is this for?
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
+    
+    // Where is compute derived from?
     TensorNest all_agent_outputs =
         inference_batcher_->compute(compute_inputs);  // Copy.
 
@@ -439,6 +444,9 @@ class ActorPool {
         rollout.push_back(std::move(last));
 
         // Run a loop for a given set unroll length
+        // This function in the case of a multi agent environment
+        // should invoke a series of agent states inorder to compute
+        // a set of resultant actions.
         for (int t = 1; t <= unroll_length_; ++t) {
           all_agent_outputs = inference_batcher_->compute(compute_inputs);
 
