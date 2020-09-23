@@ -34,7 +34,20 @@ torch::Tensor   compute_policy_gradient_loss(
 void infer(DynamicBatcher inference_batcher){
     torch::NoGradGuard no_grad; // TODO check functionality
 
-    inference_batcher.get_batch();
+    batch = inference_batcher.get_batch();
+
+    batched_env_outputs, agent_state = batch.get_inputs();
+    frame, reward, done, *_ = batched_env_outputs
+
+    framce = frame.to(,non_blocking=true) // TODO args
+    reward = reward.to();
+    done = done.to();
+    agent_state = nest.map(); // TODO
+
+    // lock get outputs from model
+
+    batch.set_outputs();
+
 };
 
 void learn(BatchingQueue learner_queue){
