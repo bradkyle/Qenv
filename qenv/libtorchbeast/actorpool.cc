@@ -410,6 +410,7 @@ class ActorPool {
     // Instantiate the initial agent state (which is passed in as a param)
     TensorNest initial_agent_state = initial_agent_state_;
 
+    // Convert the step protocol buffers into nest tensors
     TensorNest env_outputs = ActorPool::step_pb_to_nest(&step_pb);
 
     // TODO what is this for?
@@ -498,8 +499,10 @@ class ActorPool {
         rollout.clear();
 
         // Reset the initial agent state to the current 
-        // state.
+        // state, which will in turn update the subsequent step
         initial_agent_state = agent_state;  // Copy
+
+        // 
         count_ += unroll_length_;
       }
     } catch (const ClosedBatchingQueue& e) {
