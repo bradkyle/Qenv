@@ -404,10 +404,10 @@ class MultiActorPool {
 
     // Create grpc client context
     grpc::ClientContext context;
-    std::shared_ptr<grpc::ClientReaderWriter<rpcenv::MultiAction, rpcenv::Step>>
+    std::shared_ptr<grpc::ClientReaderWriter<rpcenv::MultiAction, rpcenv::MultiStep>>
         stream(stub->StreamingMultiEnv(&context));
 
-    rpcenv::Step step_pb;
+    rpcenv::MultiStep step_pb;
     if (!stream->Read(&step_pb)) {
       throw py::connection_error("Initial read failed.");
     }
@@ -415,7 +415,7 @@ class MultiActorPool {
     // Instantiate the initial agent state (which is passed in as a param)
     TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
 
-    // Convert the step protocol buffers into nest tensors
+    // Convert the MultiStep protocol buffers into nest tensors
     TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
 
     // TODO what is this for?
@@ -480,7 +480,7 @@ class MultiActorPool {
           // Write the set of actions to the grpc stream
           stream->Write(action_pb);
 
-          // Read the set of step results from the grpc stream
+          // Read the set of MultiStep results from the grpc stream
           if (!stream->Read(&step_pb)) {
             throw py::connection_error("Read failed.");
           }
@@ -504,7 +504,7 @@ class MultiActorPool {
         rollout.clear();
 
         // Reset the initial agent state to the current 
-        // state, which will in turn update the subsequent step
+        // state, which will in turn update the subsequent MultiStep
         initial_agent_state = agent_state;  // Copy
 
         // 
@@ -551,7 +551,7 @@ class MultiActorPool {
         /*deleter=*/[data](void*) { delete data; }, dtype));
   }
 
-  static TensorNest step_pb_to_nest(rpcenv::Step* step_pb) {
+  static TensorNest step_pb_to_nest(rpcenv::MultiStep* step_pb) {
     TensorNest done = TensorNest(
         torch::full({1, 1}, step_pb->done(), torch::dtype(torch::kBool)));
     TensorNest reward = TensorNest(torch::full({1, 1}, step_pb->reward()));
