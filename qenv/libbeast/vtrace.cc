@@ -32,6 +32,8 @@ from_importance_weights(){
     torch::Tensor acc = torch::zeros_like();
     // TODO impl
 
+    vs_minus_v_xs = torch.stack(result) // TODO
+
     // Add V(x_s) to get v_s.
     torch::Tensor vs = torch::add(vs_minus_v_xs, values);
 
@@ -48,7 +50,7 @@ from_importance_weights(){
     torch::Tensor pg_advantages = clipped_pg_rhos * (rewards + discounts * vs_t_plus_1 - values);
 
     // return VTraceReturns(vs=vs, pg_advantages=pg_advantages)
-}
+};
 
 from_logits(){
     torch::Tensor target_action_log_probs = action_log_probs(target_policy_logits, actions);
