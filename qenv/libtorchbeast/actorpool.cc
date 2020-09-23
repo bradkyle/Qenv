@@ -496,6 +496,9 @@ class ActorPool {
                 {batch(rollout, 0), std::move(initial_agent_state)})),
         });
         rollout.clear();
+
+        // Reset the initial agent state to the current 
+        // state.
         initial_agent_state = agent_state;  // Copy
         count_ += unroll_length_;
       }
