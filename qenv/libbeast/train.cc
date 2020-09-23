@@ -40,3 +40,23 @@ void infer(DynamicBatcher inference_batcher){
 void learn(BatchingQueue learner_queue){
     torch::Tensor tensors = 0;
 };
+
+void train(){
+    learner_queue = libtorchbeast::BatchingQueue(
+
+    );
+
+    inference_batcher = libtorchbeast::DynamicBatcher(
+
+    );
+
+    // TOOD setup addresses
+
+    auto model = std::make_shared<Net>(); 
+    // TODO set to device
+
+    auto actor_model = std::make_shared<Net>(); 
+    // TODO set to device
+
+    
+};
