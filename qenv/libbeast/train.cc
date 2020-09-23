@@ -142,6 +142,7 @@ void learn( // TODO flags
 };
 
 void train(){
+    
 
     // The queue the learner threads will get their data from.
     // Setting `minimum_batch_size == maximum_batch_size`

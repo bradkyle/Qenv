@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -26,9 +24,52 @@
 #include <stdexcept>
 #include <thread>
 
+#include <grpc++/grpc++.h>
+
+// Enable including numpy via numpy_stub.h.
+#define USE_NUMPY 1
+
+#include <ATen/core/ivalue.h>
+#include <torch/csrc/autograd/profiler.h>
+#include <torch/csrc/utils/numpy_stub.h>
+#include <torch/extension.h>
+#include <torch/script.h>
+
+#include "nest_serialize.h"
+#include "rpcenv.grpc.pb.h"
+#include "rpcenv.pb.h"
+
+#include "../nest/nest/nest.h"
+#include "../nest/nest/nest_pybind.h"
+
+namespace py = pybind11;
+
+typedef nest::Nest<torch::Tensor> TensorNest;
+
+TensorNest batch(const std::vector<TensorNest>& tensors, int64_t batch_dim) {
+  // TODO(heiner): Consider using accessors and writing slices ourselves.
+  nest::Nest<std::vector<torch::Tensor>> zipped = TensorNest::zip(tensors);
+  return zipped.map([batch_dim](const std::vector<torch::Tensor>& v) {
+    return torch::cat(v, batch_dim);
+  });
+}
+
+struct ClosedBatchingQueue : public std::runtime_error {
+ public:
+  using std::runtime_error::runtime_error;
+};
+
+// Enable a few standard Python exceptions.
+namespace pybind11 {
+PYBIND11_RUNTIME_EXCEPTION(runtime_error, PyExc_RuntimeError)
+PYBIND11_RUNTIME_EXCEPTION(timeout_error, PyExc_TimeoutError)
+PYBIND11_RUNTIME_EXCEPTION(connection_error, PyExc_ConnectionError)
+}  // namespace pybind11
+
+struct Empty {};
+
 // Batching Queue
 // --------------------------------------------------------------------------->
-struct Empty {};
 
 template <typename T = Empty>
 class BatchingQueue {
@@ -184,4 +225,396 @@ class BatchingQueue {
   std::deque<QueueItem> deque_ /* GUARDED_BY(mu_) */;
 
   const bool check_inputs_;
+};
+
+
+// Dynamic Batcher
+// --------------------------------------------------------------------------->
+
+class DynamicBatcher {
+ public:
+  typedef std::promise<std::pair<std::shared_ptr<TensorNest>, int64_t>>
+      BatchPromise;
+  class Batch {
+   public:
+    Batch(int64_t batch_dim, TensorNest&& tensors,
+          std::vector<BatchPromise>&& promises, bool check_outputs)
+        : batch_dim_(batch_dim),
+          inputs_(std::move(tensors)),
+          promises_(std::move(promises)),
+          check_outputs_(check_outputs) {}
+
+    const TensorNest& get_inputs() { return inputs_; }
+
+    void set_outputs(TensorNest outputs) {
+      if (promises_.empty()) {
+        // Batch has been set before.
+        throw py::runtime_error("set_outputs called twice");
+      }
+
+      if (check_outputs_) {
+        const int64_t expected_batch_size = promises_.size();
+
+        outputs.for_each([this,
+                          expected_batch_size](const torch::Tensor& tensor) {
+          if (tensor.dim() <= batch_dim_) {
+            std::stringstream ss;
+            ss << "With batch dimension " << batch_dim_
+               << ", output shape must have at least " << batch_dim_ + 1
+               << " dimensions, but got " << tensor.sizes();
+            throw py::value_error(ss.str());
+          }
+          if (tensor.sizes()[batch_dim_] != expected_batch_size) {
+            throw py::value_error(
+                "Output shape must have the same batch "
+                "dimension as the input batch size. Expected: " +
+                std::to_string(expected_batch_size) +
+                ". Observed: " + std::to_string(tensor.sizes()[batch_dim_]));
+          }
+        });
+      }
+
+      auto shared_outputs = std::make_shared<TensorNest>(std::move(outputs));
+
+      int64_t b = 0;
+      for (auto& promise : promises_) {
+        promise.set_value(std::make_pair(shared_outputs, b));
+        ++b;
+      }
+      promises_.clear();
+    }
+
+   private:
+    const int64_t batch_dim_;
+    const TensorNest inputs_;
+    std::vector<BatchPromise> promises_;
+
+    const bool check_outputs_;
+  };
+
+  DynamicBatcher(int64_t batch_dim, int64_t minimum_batch_size,
+                 int64_t maximum_batch_size,
+                 std::optional<int> timeout_ms = std::nullopt,
+                 bool check_outputs = true)
+      : batching_queue_(batch_dim, minimum_batch_size, maximum_batch_size,
+                        timeout_ms),
+        batch_dim_(batch_dim),
+        check_outputs_(check_outputs) {}
+
+  TensorNest compute(TensorNest tensors) {
+    BatchPromise promise;
+    auto future = promise.get_future();
+
+    // 
+    batching_queue_.enqueue({std::move(tensors), std::move(promise)});
+
+    std::future_status status = future.wait_for(std::chrono::seconds(10 * 60));
+    if (status != std::future_status::ready) {
+      throw py::timeout_error("Compute timeout reached.");
+    }
+
+    const std::pair<std::shared_ptr<TensorNest>, int64_t> pair = [&] {
+      try {
+        return future.get();
+      } catch (const std::future_error& e) {
+        if (batching_queue_.is_closed() &&
+            e.code() == std::future_errc::broken_promise) {
+          throw ClosedBatchingQueue("Batching queue closed during compute");
+        }
+        throw;
+      }
+    }();
+
+    return pair.first->map([batch_dim = batch_dim_,
+                            batch_entry = pair.second](const torch::Tensor& t) {
+      return t.slice(batch_dim, batch_entry, batch_entry + 1);
+    });
+  }
+
+  std::shared_ptr<Batch> get_batch() {
+    auto pair = batching_queue_.dequeue_many();
+    return std::make_shared<Batch>(batch_dim_, std::move(pair.first),
+                                   std::move(pair.second), check_outputs_);
+  }
+
+  int64_t size() const { return batching_queue_.size(); }
+
+  void close() { batching_queue_.close(); }
+  bool is_closed() { return batching_queue_.is_closed(); }
+
+ private:
+  BatchingQueue<std::promise<std::pair<std::shared_ptr<TensorNest>, int64_t>>>
+      batching_queue_;
+  int64_t batch_dim_;
+
+  bool check_outputs_;
+};
+
+
+// Actor Pool
+// --------------------------------------------------------------------------->
+
+class ActorPool {
+ public:
+  ActorPool(int unroll_length, std::shared_ptr<BatchingQueue<>> learner_queue,
+            std::shared_ptr<DynamicBatcher> inference_batcher,
+            std::vector<std::string> env_server_addresses,
+            TensorNest initial_agent_state)
+      : unroll_length_(unroll_length),
+        learner_queue_(std::move(learner_queue)),
+        inference_batcher_(std::move(inference_batcher)),
+        env_server_addresses_(std::move(env_server_addresses)),
+        initial_agent_state_(std::move(initial_agent_state)) {}
+
+
+  // MAIN LOOP FUNCTION
+  // ------------------------------------------------------------->
+
+  void loop(int64_t loop_index, const std::string& address) {
+
+    // Create a shared insecure grpc channel to the env
+    std::shared_ptr<grpc::Channel> channel =
+        grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
+    
+    // Connect to the rpc server
+    std::unique_ptr<rpcenv::RPCEnvServer::Stub> stub =
+        rpcenv::RPCEnvServer::NewStub(channel);
+
+    // Set a timeout
+    auto deadline =
+        std::chrono::system_clock::now() + std::chrono::seconds(10 * 60);
+
+    if (loop_index == 0) {
+      std::cout << "First Environment waiting for connection to " << address
+                << " ...";
+    }
+
+    // Wait for connection to be estabilished
+    if (!channel->WaitForConnected(deadline)) {
+      throw py::timeout_error("WaitForConnected timed out.");
+    }
+    if (loop_index == 0) {
+      std::cout << " connection established." << std::endl;
+    }
+
+    // Create grpc client context
+    grpc::ClientContext context;
+    std::shared_ptr<grpc::ClientReaderWriter<rpcenv::MultiAction, rpcenv::Step>>
+        stream(stub->StreamingMultiEnv(&context));
+
+    rpcenv::Step step_pb;
+    if (!stream->Read(&step_pb)) {
+      throw py::connection_error("Initial read failed.");
+    }
+
+    // Instantiate the initial agent state (which is passed in as a param)
+    TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
+
+    // Convert the step protocol buffers into nest tensors
+    TensorNest env_outputs = ActorPool::step_pb_to_nest(&step_pb);
+
+    // TODO what is this for?
+    TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
+    
+    // Calls the compute method of the DynamicBatcher defined above 
+    // The . (dot) operator and the -> (arrow) operator are used
+    // to reference individual members of classes, structures, 
+    // and unions.
+    TensorNest all_agent_outputs =
+        inference_batcher_->compute(compute_inputs);  // Copy.
+
+    // Check this once per thread.
+    if (!all_agent_outputs.is_vector()) {
+      throw py::value_error("Expected agent output to be tuple");
+    }
+
+    if (all_agent_outputs.get_vector().size() != 2) {
+      throw py::value_error(
+          "Expected agent output to be ((action, ...), new_state) but got "
+          "sequence of "
+          "length " +
+          std::to_string(all_agent_outputs.get_vector().size()));
+    }
+
+    TensorNest agent_state = all_agent_outputs.get_vector()[1];
+    TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
+    if (!agent_outputs.is_vector()) {
+      throw py::value_error(
+          "Expected first entry of agent output to be a (action, ...) tuple");
+    }
+
+    TensorNest last(std::vector({env_outputs, agent_outputs}));
+
+    rpcenv::MultiAction action_pb;
+    std::vector<TensorNest> rollout;
+    try {
+      while (true) {
+        rollout.push_back(std::move(last));
+
+        // Run a loop for a given set unroll length
+        // This function in the case of a multi agent environment
+        // should invoke a series of agent states inorder to compute
+        // a set of resultant actions.
+        for (int t = 1; t <= unroll_length_; ++t) {
+          all_agent_outputs = inference_batcher_->compute(compute_inputs);
+
+          agent_state = all_agent_outputs.get_vector()[1];
+          agent_outputs = all_agent_outputs.get_vector()[0];
+
+          // agent_outputs must be a tuple/list.
+          const TensorNest& action = agent_outputs.get_vector().front();
+
+          action_pb.Clear();
+
+          fill_nest_pb(
+              action_pb.mutable_nest_action(), action,
+              [&](rpcenv::NDArray* array, const torch::Tensor& tensor) {
+                return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
+              });
+
+          // Write the set of actions to the grpc stream
+          stream->Write(action_pb);
+
+          // Read the set of step results from the grpc stream
+          if (!stream->Read(&step_pb)) {
+            throw py::connection_error("Read failed.");
+          }
+          env_outputs = ActorPool::step_pb_to_nest(&step_pb);
+          compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
+
+          last = TensorNest(std::vector({env_outputs, agent_outputs}));
+          rollout.push_back(std::move(last));
+        }
+
+
+        last = rollout.back();
+
+
+        // enqueue the rollout into the learner queue which 
+        // will subsequently update state
+        learner_queue_->enqueue({
+            TensorNest(std::vector(
+                {batch(rollout, 0), std::move(initial_agent_state)})),
+        });
+        rollout.clear();
+
+        // Reset the initial agent state to the current 
+        // state, which will in turn update the subsequent step
+        initial_agent_state = agent_state;  // Copy
+
+        // 
+        count_ += unroll_length_;
+      }
+    } catch (const ClosedBatchingQueue& e) {
+      // Thrown when inference_batcher_ and learner_queue_ are closed. Stop.
+      stream->WritesDone();
+      grpc::Status status = stream->Finish();
+      if (!status.ok()) {
+        std::cerr << "rpc failed on finish." << std::endl;
+      }
+    }
+  }
+
+  void run() {
+    // std::async instead of plain threads as we want to raise any exceptions
+    // here and not in the created threads.
+    std::vector<std::future<void>> futures;
+    for (int64_t i = 0, size = env_server_addresses_.size(); i != size; ++i) {
+      futures.push_back(std::async(std::launch::async, &ActorPool::loop, this,
+                                   i, env_server_addresses_[i]));
+    }
+    for (auto& future : futures) {
+      // This will only catch errors in the first thread. std::when_any would be
+      // good here but it's not available yet. We could also write the
+      // condition_variable code ourselves, but let's not do this.
+      future.get();
+    }
+  }
+
+  uint64_t count() const { return count_; }
+
+  static TensorNest array_pb_to_nest(rpcenv::NDArray* array_pb) {
+    std::vector<int64_t> shape = {1, 1};  // [T=1, B=1].
+    for (int i = 0, length = array_pb->shape_size(); i < length; ++i) {
+      shape.push_back(array_pb->shape(i));
+    }
+    std::string* data = array_pb->release_data();
+    at::ScalarType dtype = torch::utils::numpy_dtype_to_aten(array_pb->dtype());
+
+    return TensorNest(torch::from_blob(
+        data->data(), shape,
+        /*deleter=*/[data](void*) { delete data; }, dtype));
+  }
+
+  static TensorNest step_pb_to_nest(rpcenv::Step* step_pb) {
+    TensorNest done = TensorNest(
+        torch::full({1, 1}, step_pb->done(), torch::dtype(torch::kBool)));
+    TensorNest reward = TensorNest(torch::full({1, 1}, step_pb->reward()));
+    TensorNest episode_step = TensorNest(torch::full(
+        {1, 1}, step_pb->episode_step(), torch::dtype(torch::kInt32)));
+    TensorNest episode_return =
+        TensorNest(torch::full({1, 1}, step_pb->episode_return()));
+
+    return TensorNest(std::vector(
+        {nest_pb_to_nest(step_pb->mutable_observation(), array_pb_to_nest),
+         std::move(reward), std::move(done), std::move(episode_step),
+         std::move(episode_return)}));
+  }
+
+  static void fill_ndarray_pb(rpcenv::NDArray* array,
+                              const torch::Tensor& tensor,
+                              int64_t start_dim = 0) {
+    if (!tensor.is_contiguous())
+      // TODO(heiner): Fix this non-contiguous case.
+      throw py::value_error("Cannot convert non-contiguous tensor.");
+    array->set_dtype(aten_to_dtype(tensor.scalar_type()));
+
+    at::IntArrayRef shape = tensor.sizes();
+
+    for (size_t i = start_dim, ndim = shape.size(); i < ndim; ++i) {
+      array->add_shape(shape[i]);
+    }
+
+    // TODO: Consider set_allocated_data.
+    // TODO: Consider [ctype = STRING_VIEW] in proto file.
+    array->set_data(tensor.data_ptr(), tensor.nbytes());
+  }
+
+ private:
+  // Copied from the private torch/csrc/utils/tensor_numpy.cpp.
+  // TODO(heiner): Expose this in PyTorch then use that function.
+  static int aten_to_dtype(const at::ScalarType scalar_type) {
+    switch (scalar_type) {
+      case at::kDouble:
+        return NPY_DOUBLE;
+      case at::kFloat:
+        return NPY_FLOAT;
+      case at::kHalf:
+        return NPY_HALF;
+      case at::kLong:
+        return NPY_INT64;
+      case at::kInt:
+        return NPY_INT32;
+      case at::kShort:
+        return NPY_INT16;
+      case at::kChar:
+        return NPY_INT8;
+      case at::kByte:
+        return NPY_UINT8;
+      case at::kBool:
+        return NPY_BOOL;
+      default: {
+        std::string what = "Got unsupported ScalarType ";
+        throw py::value_error(what + at::toString(scalar_type));
+      }
+    }
+  }
+
+  std::atomic_uint64_t count_;
+
+  const int unroll_length_;
+  std::shared_ptr<BatchingQueue<>> learner_queue_;
+  std::shared_ptr<DynamicBatcher> inference_batcher_;
+  const std::vector<std::string> env_server_addresses_;
+  TensorNest initial_agent_state_;
 };

@@ -52,7 +52,11 @@ message Step {
 }
 
 message MultiStep {
-    
+  message AgentStep {
+    optional int32  agent_id = 1;
+    optional Step step = 2;
+  }
+  repeated AgentStep agent_step = 1;
 }
 
 service RPCEnvServer {
