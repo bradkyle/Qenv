@@ -552,7 +552,7 @@ class MultiActorPool {
   }
 
   static TensorNest step_pb_to_nest(rpcenv::MultiStep* step_pb) {
-
+    std::vector<TensorNest> multi_step = {};
     for () { // TODO make faster
       TensorNest done = TensorNest(
         torch::full(
@@ -581,15 +581,16 @@ class MultiActorPool {
               step_pb->episode_return()
             ));
 
-      return TensorNest(std::vector(
+      multi_step.push_back(TensorNest(std::vector(
           {
             nest_pb_to_nest(step_pb->mutable_observation(), array_pb_to_nest),
             std::move(reward), 
             std::move(done), 
             std::move(episode_step),
             std::move(episode_return)
-          }));
-    }
+          })));
+    };
+    return multi_step;
     
   }
 
