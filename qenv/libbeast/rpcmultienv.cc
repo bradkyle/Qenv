@@ -23,8 +23,8 @@
 #include <pybind11/stl.h>
 
 #include "nest_serialize.h"
-#include "rpcenv.grpc.pb.h"
-#include "rpcenv.pb.h"
+#include "rpcmultienv.grpc.pb.h"
+#include "rpcmultienv.pb.h"
 
 #include "../nest/nest/nest.h"
 #include "../nest/nest/nest_pybind.h"
@@ -33,7 +33,7 @@ namespace py = pybind11;
 
 typedef nest::Nest<py::array> PyArrayNest;
 
-namespace rpcenv {
+namespace rpcmultienv {
 class EnvServer {
  private:
   class ServiceImpl final : public RPCEnvServer::Service {
@@ -43,7 +43,7 @@ class EnvServer {
    private:
     virtual grpc::Status StreamingEnv(
         grpc::ServerContext *context,
-        grpc::ServerReaderWriter<MultiStep, Action> *stream) override {
+        grpc::ServerReaderWriter<MultiStep, MultiAction> *stream) override {
           
       py::gil_scoped_acquire acquire;  // Destroy after pyenv.
       py::object pyenv;
@@ -90,7 +90,7 @@ class EnvServer {
       step_pb.set_episode_step(episode_step);
       step_pb.set_episode_return(episode_return);
 
-      Action action_pb;
+      MultiAction action_pb;
       while (true) {
         {
           py::gil_scoped_release release;  // Release while doing transfer.
@@ -131,7 +131,7 @@ class EnvServer {
 
     py::object env_init_;  // TODO: Make sure GIL is held when destroyed.
 
-    // TODO: Add observation and action size functions (pre-load env)
+    // TODO: Add observation and MultiAction size functions (pre-load env)
   };
 
  public:
@@ -165,7 +165,7 @@ class EnvServer {
     server_->Shutdown();
   }
 
-  static void fill_ndarray_pb(rpcenv::NDArray *array, py::array pyarray) {
+  static void fill_ndarray_pb(rpcmultienv::NDArray *array, py::array pyarray) {
     // Make sure array is C-style contiguous. If it isn't, this creates
     // another memcopy that is not strictly necessary.
     if ((pyarray.flags() & py::array::c_style) == 0) {
@@ -188,7 +188,7 @@ class EnvServer {
     array->set_data(info.ptr, info.itemsize * info.size);
   }
 
-  static PyArrayNest array_pb_to_nest(rpcenv::NDArray *array_pb) {
+  static PyArrayNest array_pb_to_nest(rpcmultienv::NDArray *array_pb) {
     std::vector<int64_t> shape;
     for (int i = 0, length = array_pb->shape_size(); i < length; ++i) {
       shape.push_back(array_pb->shape(i));
@@ -213,12 +213,12 @@ class EnvServer {
   std::unique_ptr<grpc::Server> server_;
 };
 
-}  // namespace rpcenv
+}  // namespace rpcmultienv
 
 void init_rpcenv(py::module &m) {
-  py::class_<rpcenv::EnvServer>(m, "Server")
+  py::class_<rpcmultienv::EnvServer>(m, "Server")
       .def(py::init<py::object, const std::string &>(), py::arg("env_class"),
            py::arg("server_address") = "unix:/tmp/polybeast")
-      .def("run", &rpcenv::EnvServer::run)
-      .def("stop", &rpcenv::EnvServer::stop);
+      .def("run", &rpcmultienv::EnvServer::run)
+      .def("stop", &rpcmultienv::EnvServer::stop);
 }
