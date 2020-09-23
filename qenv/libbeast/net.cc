@@ -10,12 +10,31 @@ struct Net : torch::nn::Module {
   }
 
   // Implement the Net's algorithm.
-  torch::Tensor forward(torch::Tensor x) {
+  torch::Tensor forward(NetInput inputs, torch::Tensor core_state) {
+    
+    x = inputs.frame;
+    x = x.flatten(0,1);
+    x = x.to(float) / 255.0; 
+    
     // Use one of many tensor manipulation functions.
     x = torch::relu(fc1->forward(x.reshape({x.size(0), 784})));
     x = torch::dropout(x, /*p=*/0.5, /*train=*/is_training());
     x = torch::relu(fc2->forward(x));
-    x = torch::log_softmax(fc3->forward(x), /*dim=*/1);
+
+    one_hot_last_action = torch::one_hot( // TODO 
+      inputs.last_action.view_as(),
+      num_actions
+      );
+
+    clipped_reward = torch::clamp(inputs.reward, -1, 1).view_as(T*B, 1);
+    core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
+
+    if(use_lstm){
+
+    }else{
+      
+    };
+
     return x;
   }
 

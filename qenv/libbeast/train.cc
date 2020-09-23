@@ -42,25 +42,27 @@ void infer(
     ){
     torch::NoGradGuard no_grad; // TODO check functionality
 
-    torch::Tensor batch = inference_batcher.get_batch();
+    torch::Tensor batch = inference_batcher.get_batch(); // TODO generator
 
-    batch.for_each([this, ](const torch::Tensor& tensor){
-        batch_inputs = batch.get_inputs();
-        batched_env_outputs = batch_inputs[0]; 
-        agent_state = batch_inputs[1];
+    batch_inputs = batch.get_inputs();
+    batched_env_outputs = batch_inputs[0]; 
+    agent_state = batch_inputs[1];
 
-        torch::Tensor frame  = batched_env_outputs[0].to(,non_blocking=true) // TODO args
-        torch::Tensor reward = batched_env_outputs[1].to();
-        torch::Tensor done  = batched_env_outputs[2].to();
-        torch::Tensor agent_state = nest.map();
-    });
+    torch::Tensor frame  = batched_env_outputs[0].to(flags.actor_device); // TODO non blocking // TODO args
+    torch::Tensor reward = batched_env_outputs[1].to(flags.actor_device);
+    torch::Tensor done  = batched_env_outputs[2].to(flags.actor_device);
+    torch::Tensor agent_state = nest.map(); // TODO agent state to device non blocking
+
+    torch::Tensor outputs = model -> forward(
+        dict(frame=frame, reward=reward, done=done), 
+        agent_state
+    ); // TODO to tuple?
 
 
 
      // TODO map to device
 
     // TODO lock get outputs from model
-    torch::Tensor outputs = model -> forward(dict(frame=frame, reward=reward, done=done), agent_state); // TODO to tuple?
     // nest map t.cpu()
     batch.set_outputs(outputs);
 
