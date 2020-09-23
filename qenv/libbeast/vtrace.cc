@@ -36,6 +36,7 @@ from_importance_weights(){
     torch::Tensor vs = torch::add(vs_minus_v_xs, values);
 
     // Advantage for policy gradient.
+    torch::Tensor vs_t_plus_q = torch.cat(,0);
 }
 
 from_logits(){
