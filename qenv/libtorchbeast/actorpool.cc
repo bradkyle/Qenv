@@ -351,6 +351,10 @@ class ActorPool {
         env_server_addresses_(std::move(env_server_addresses)),
         initial_agent_state_(std::move(initial_agent_state)) {}
 
+
+  // MAIN LOOP FUNCTION
+  // ------------------------------------------------------------->
+  
   void loop(int64_t loop_index, const std::string& address) {
     std::shared_ptr<grpc::Channel> channel =
         grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
@@ -399,7 +403,7 @@ class ActorPool {
           "length " +
           std::to_string(all_agent_outputs.get_vector().size()));
     }
-    
+
     TensorNest agent_state = all_agent_outputs.get_vector()[1];
     TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
     if (!agent_outputs.is_vector()) {
