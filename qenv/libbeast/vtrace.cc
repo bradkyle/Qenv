@@ -6,4 +6,12 @@
 
 action_log_probs()  {
 
-    };
+};
+
+from_logits(){
+
+};
+
+from_importance_weights(){
+    
+}
