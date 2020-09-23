@@ -416,7 +416,7 @@ class MultiActorPool {
     TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
 
     // Convert the MultiStep protocol buffers into nest tensors
-    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
+    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO
 
     // TODO what is this for?
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
@@ -552,9 +552,9 @@ class MultiActorPool {
   }
 
   static TensorNest step_pb_to_nest(rpcenv::MultiStep* step_pb) {
-    std::vector<TensorNest> multi_step = {};
+    std::vector<TensorNes<void>> multi_step;
     for () { // TODO make faster
-      TensorNest done = TensorNest(
+      TensorNest done = TensorNest( // TODO check
         torch::full(
           {1, 1}, 
           step_pb->done(), 
