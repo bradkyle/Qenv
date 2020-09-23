@@ -36,9 +36,22 @@ from_importance_weights(){
     torch::Tensor vs = torch::add(vs_minus_v_xs, values);
 
     // Advantage for policy gradient.
-    torch::Tensor vs_t_plus_q = torch.cat(,0);
+    torch::Tensor broadcasted_bootstrap_values = torch::ones_like(vs[0]) * bootstrap_value;
+    torch::Tensor vs_t_plus_q = torch.cat([vs[1:], broadcasted_bootstrap_values.unsqueeze(0)],0);
+
+    torch::Tensor clipped_rhos;
+    if (clip_pg_rho_threshold) {
+        clipped_pg_rhos = torch.clamp(rhos, max=clip_pg_rho_threshold); 
+    } else {
+        clipped_pg_rhos = rhos;
+    };
+    torch::Tensor pg_advantages = clipped_pg_rhos * (rewards + discounts * vs_t_plus_1 - values);
+
+    // return VTraceReturns(vs=vs, pg_advantages=pg_advantages)
 }
 
 from_logits(){
-
+    torch::Tensor target_action_log_probs = action_log_probs(target_policy_logits, actions);
+    torch::Tensor behavior_action_log_probs = action_log_probs(behavior_policy_logits, actions);
+    torch::Tensor log_rhos = target_action_log_probs - behavior_action_log_probs;
 };
