@@ -29,3 +29,14 @@ torch::Tensor   compute_policy_gradient_loss(
                 advantages.detach()
             );
 };
+
+// TODO is run in its own thread
+void infer(DynamicBatcher inference_batcher){
+    torch::NoGradGuard no_grad; // TODO check functionality
+
+    inference_batcher.get_batch();
+};
+
+void learn(BatchingQueue learner_queue){
+    torch::Tensor tensors = 0;
+};
