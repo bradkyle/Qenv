@@ -150,6 +150,7 @@ class BatchingQueue {
     }
   }
 
+  // Decueue many gets a set of 
   std::pair<TensorNest, std::vector<T>> dequeue_many() {
     std::vector<TensorNest> tensors;
     std::vector<T> payloads;
