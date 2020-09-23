@@ -430,7 +430,10 @@ class ActorPool {
                 return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
               });
 
+          // Write the set of actions to the grpc stream
           stream->Write(action_pb);
+
+          // Read the set of step results from the grpc stream
           if (!stream->Read(&step_pb)) {
             throw py::connection_error("Read failed.");
           }

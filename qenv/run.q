@@ -42,3 +42,10 @@ ActorPool           :.agent.ActorPool[]
 // flags, inference_batcher, actor_model
 
 // Testing is done with a single agent
+
+Main        :{[]
+
+    actorIds:til[numActors];
+    
+
+    };
