@@ -411,7 +411,10 @@ class ActorPool {
     // TODO what is this for?
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
     
-    // Where is compute derived from?
+    // Calls the DynamicBatcher defined above 
+    // The . (dot) operator and the -> (arrow) operator are used
+    // to reference individual members of classes, structures, 
+    // and unions.
     TensorNest all_agent_outputs =
         inference_batcher_->compute(compute_inputs);  // Copy.
 
