@@ -18,6 +18,10 @@ syntax = "proto2";
 
 package rpcenv;
 
+message MultiAction {
+
+}
+
 message Action {
   optional int32 action = 1;
   optional ArrayNest nest_action = 2;
@@ -43,6 +47,11 @@ message Step {
   optional float episode_return = 5;
 }
 
+message MultiStep {
+
+}
+
 service RPCEnvServer {
   rpc StreamingEnv(stream Action) returns (stream Step) {}
+  rpc StreamingMultiEnv(stream MultiAction) returns (stream MultiStep) {}
 }

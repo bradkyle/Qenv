@@ -148,6 +148,8 @@ class EnvServer {
     grpc::ServerBuilder builder;
     builder.AddListeningPort(server_address_,
                              grpc::InsecureServerCredentials());
+
+    // Register the grpc Step service
     builder.RegisterService(&service_);
     server_ = builder.BuildAndStart();
     std::cerr << "Server listening on " << server_address_ << std::endl;
