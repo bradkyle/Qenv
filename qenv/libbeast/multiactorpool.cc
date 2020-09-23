@@ -458,6 +458,8 @@ class MultiActorPool {
 
     TensorNest agent_state = all_agent_outputs.get_vector()[1];
     TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
+
+    // TODO update for multiagent env
     if (!agent_outputs.is_vector()) {
       throw py::value_error(
           "Expected first entry of agent output to be a (action, ...) tuple");
@@ -502,6 +504,8 @@ class MultiActorPool {
           if (!stream->Read(&step_pb)) {
             throw py::connection_error("Read failed.");
           }
+
+          
           env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
           compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
 
