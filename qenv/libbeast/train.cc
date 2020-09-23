@@ -56,7 +56,7 @@ void infer(
     torch::Tensor done  = batched_env_outputs[2].to();
     torch::Tensor agent_state = nest.map(); // TODO map to device
 
-    // lock get outputs from model
+    // TODO lock get outputs from model
     torch::Tensor outputs = model -> forward(); // TODO to tuple?
     // nest map t.cpu()
     batch.set_outputs(outputs);
