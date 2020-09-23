@@ -30,8 +30,8 @@ struct Net : torch::nn::Module {
     core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
 
     if(use_lstm){
-
-    }else{
+      core_input = core_input.view_as(T,B,-1);
+    } else {
       
     };
 
