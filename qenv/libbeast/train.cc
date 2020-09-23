@@ -37,7 +37,9 @@ torch::Tensor   compute_policy_gradient_loss(
 };
 
 // TODO is run in its own thread
-void infer(DynamicBatcher inference_batcher){
+void infer(
+    DynamicBatcher inference_batcher
+    ){
     torch::NoGradGuard no_grad; // TODO check functionality
 
     torch::Tensor batch = inference_batcher.get_batch();
@@ -59,7 +61,14 @@ void infer(DynamicBatcher inference_batcher){
 
 };
 
-void learn(BatchingQueue learner_queue){
+// TORCH_MODULE(Net);
+
+// TODO named tuple analog
+void learn( // TODO flags
+    BatchingQueue learner_queue,
+    Model model,
+    
+    ){
     torch::Tensor tensors = nest.map(); // map the tensors to the learner dervice
 
     // lock.acquire()
