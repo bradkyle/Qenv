@@ -121,6 +121,9 @@ void learn( // TODO flags
             learner_outputs.policy_logits
         ));
 
+    // Derive the total loss, which is sent back
+    // to the agent as the sum of the previous 
+    // 3 loss tensors.
     torch::Tensor total_loss = (
         pg_loss + baseline_loss + entropy_loss
     );

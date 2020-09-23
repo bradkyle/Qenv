@@ -39,6 +39,13 @@ struct Net : torch::nn::Module {
     torch::Tensor policy_logits = 0;
     torch::Tensor baseline = 0;
 
+    torch::Tensor action;
+    if(training){
+        action = torch::multinomial(); // TODO
+    } else {
+        action = torch::argmax();
+    };
+
     return x;
   }
 
