@@ -68,6 +68,9 @@ PYBIND11_RUNTIME_EXCEPTION(connection_error, PyExc_ConnectionError)
 
 struct Empty {};
 
+// Batching Queue
+// --------------------------------------------------------------------------->
+
 template <typename T = Empty>
 class BatchingQueue {
  public:
@@ -221,6 +224,10 @@ class BatchingQueue {
   const bool check_inputs_;
 };
 
+
+// Dynamic Batcher
+// --------------------------------------------------------------------------->
+
 class DynamicBatcher {
  public:
   typedef std::promise<std::pair<std::shared_ptr<TensorNest>, int64_t>>
@@ -339,6 +346,10 @@ class DynamicBatcher {
   bool check_outputs_;
 };
 
+
+// Actor Pool
+// --------------------------------------------------------------------------->
+
 class ActorPool {
  public:
   ActorPool(int unroll_length, std::shared_ptr<BatchingQueue<>> learner_queue,
@@ -354,13 +365,18 @@ class ActorPool {
 
   // MAIN LOOP FUNCTION
   // ------------------------------------------------------------->
-  
+
   void loop(int64_t loop_index, const std::string& address) {
+
+    // Create a shared insecure grpc channel to the env
     std::shared_ptr<grpc::Channel> channel =
         grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
+    
+    // Connect to the rpc server
     std::unique_ptr<rpcenv::RPCEnvServer::Stub> stub =
         rpcenv::RPCEnvServer::NewStub(channel);
 
+    // Set a timeout
     auto deadline =
         std::chrono::system_clock::now() + std::chrono::seconds(10 * 60);
 
@@ -368,6 +384,8 @@ class ActorPool {
       std::cout << "First Environment waiting for connection to " << address
                 << " ...";
     }
+
+    // Wait for connection to be estabilished
     if (!channel->WaitForConnected(deadline)) {
       throw py::timeout_error("WaitForConnected timed out.");
     }
@@ -375,6 +393,7 @@ class ActorPool {
       std::cout << " connection established." << std::endl;
     }
 
+    // Create
     grpc::ClientContext context;
     std::shared_ptr<grpc::ClientReaderWriter<rpcenv::Action, rpcenv::Step>>
         stream(stub->StreamingEnv(&context));
