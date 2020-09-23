@@ -39,12 +39,13 @@ void infer(DynamicBatcher inference_batcher){
     batched_env_outputs, agent_state = batch.get_inputs();
     frame, reward, done, *_ = batched_env_outputs
 
-    framce = frame.to(,non_blocking=true) // TODO args
-    reward = reward.to();
-    done = done.to();
-    agent_state = nest.map(); // TODO
+    torch::Tensor frame  = batched_env_outputs[0].to(,non_blocking=true) // TODO args
+    torch::Tensor reward = batched_env_outputs[1].to();
+    torch::Tensor done  = batched_env_outputs[2].to();
+    torch::Tensor agent_state = nest.map(); // TODO
 
     // lock get outputs from model
+    torch::Tensor outputs = model -> forward(); // TODO to tuple?
 
     batch.set_outputs();
 
