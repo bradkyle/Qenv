@@ -355,9 +355,13 @@ class DynamicBatcher {
 // Actor Pool
 // --------------------------------------------------------------------------->
 
-class ActorPool {
+// MultiActorPool instantiates a set of actors for each instance of env_server_addresses.
+// The utilization of multiple actors in this manner is for the effective randomization
+// of the market microstructure.
+
+class MultiActorPool {
  public:
-  ActorPool(int unroll_length, std::shared_ptr<BatchingQueue<>> learner_queue,
+  MultiActorPool(int unroll_length, std::shared_ptr<BatchingQueue<>> learner_queue,
             std::shared_ptr<DynamicBatcher> inference_batcher,
             std::vector<std::string> env_server_addresses,
             TensorNest initial_agent_state)
@@ -412,7 +416,7 @@ class ActorPool {
     TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
 
     // Convert the step protocol buffers into nest tensors
-    TensorNest env_outputs = ActorPool::step_pb_to_nest(&step_pb);
+    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
 
     // TODO what is this for?
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
@@ -480,7 +484,7 @@ class ActorPool {
           if (!stream->Read(&step_pb)) {
             throw py::connection_error("Read failed.");
           }
-          env_outputs = ActorPool::step_pb_to_nest(&step_pb);
+          env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
           compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
 
           last = TensorNest(std::vector({env_outputs, agent_outputs}));
@@ -521,7 +525,7 @@ class ActorPool {
     // here and not in the created threads.
     std::vector<std::future<void>> futures;
     for (int64_t i = 0, size = env_server_addresses_.size(); i != size; ++i) {
-      futures.push_back(std::async(std::launch::async, &ActorPool::loop, this,
+      futures.push_back(std::async(std::launch::async, &MultiActorPool::loop, this,
                                    i, env_server_addresses_[i]));
     }
     for (auto& future : futures) {
