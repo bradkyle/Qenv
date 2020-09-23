@@ -29,7 +29,9 @@ from_importance_weights(){
     torch::Tensor values_t_plus_1 = torch.cat();
     torch::Tensor deltas = clipped_rhos * (rewards + discounts * values_t_plus_1 - values);
 
-    torch::Tensor acc = torch::zeros_like(); 
+    torch::Tensor acc = torch::zeros_like();
+
+    // Add V(x_s) to get v_s.
 
 }
 
