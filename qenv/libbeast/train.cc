@@ -4,6 +4,12 @@
 #include <torch/script.h>
 #include <torch/torch.h>
 
+bool path_exists(const std::string &s)
+{
+  struct stat buffer;
+  return (stat (s.c_str(), &buffer) == 0);
+}
+
 torch::Tensor   compute_baseline_loss(torch::Tensor advantages){
     return 0.5 * torch::sum(advantages.pow(2));
 };
@@ -65,21 +71,29 @@ void learn(BatchingQueue learner_queue){
     // TODO
 
     torch::Tensor vtrace_returns = vtrace::from_logits(
-        // TODO
+        actor_outputs.policy_logits,
+        learner_outputs.policy_logits,
+        actor_outputs.action,
+        discounts,
+        clipped_rewards,
+        learner_outputs.baseline,
+        bootstrap_value
     );
 
     torch::Tensor pg_loss = compute_policy_gradient_loss(
-        // TDOO
+        learner_outputs.policy_logits,
+        actor_outputs.action,
+        vtrace_returns.pg_advantages
     );
 
     torch::Tensor baseline_loss = (
-        baseline_cost * compute_baseline_loss(
-            // TODO
+        flags.baseline_cost * compute_baseline_loss(
+            vtrace_returns.vs - learner_outputs.baseline
         ));
 
     torch::Tensor entropy_loss  = (
-        entropy_cost * compute_entropy_loss(
-            // TODO
+        flags.entropy_cost * compute_entropy_loss(
+            learner_outputs.policy_logits
         ));
 
     torch::Tensor total_loss = (
@@ -145,9 +159,12 @@ void train(){
         flags.alpha
     );
 
-    // learning rate scheduler
+    // learning rate scheduler // TODO implement
 
     // load any checkpoints that may exist
+    if (path_exists(checkpointpath)){
+
+    };
 
     // Create Learner threads=
 
