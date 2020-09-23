@@ -108,6 +108,9 @@ class BatchingQueue {
   }
 
   void enqueue(QueueItem item) {
+
+    // If the configuration stipulates that
+    // the inputs should be checked
     if (check_inputs_) {
       bool is_empty = true;
 
@@ -302,6 +305,7 @@ class DynamicBatcher {
     BatchPromise promise;
     auto future = promise.get_future();
 
+    // 
     batching_queue_.enqueue({std::move(tensors), std::move(promise)});
 
     std::future_status status = future.wait_for(std::chrono::seconds(10 * 60));
@@ -411,7 +415,7 @@ class ActorPool {
     // TODO what is this for?
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
     
-    // Calls the DynamicBatcher defined above 
+    // Calls the compute method of the DynamicBatcher defined above 
     // The . (dot) operator and the -> (arrow) operator are used
     // to reference individual members of classes, structures, 
     // and unions.
@@ -483,6 +487,10 @@ class ActorPool {
 
 
         last = rollout.back();
+
+
+        // enqueue the rollout into the learner queue which 
+        // will subsequently update state
         learner_queue_->enqueue({
             TensorNest(std::vector(
                 {batch(rollout, 0), std::move(initial_agent_state)})),
