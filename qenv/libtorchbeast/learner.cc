@@ -35,6 +35,25 @@
 // Inference
 // ------------------------------------------------------------------->
 
+// def inference(flags, inference_batcher, model, lock=threading.Lock()):  # noqa: B008
+//     with torch.no_grad():
+//         for batch in inference_batcher:
+//             batched_env_outputs, agent_state = batch.get_inputs()
+//             frame, reward, done, *_ = batched_env_outputs
+//             frame = frame.to(flags.actor_device, non_blocking=True)
+//             reward = reward.to(flags.actor_device, non_blocking=True)
+//             done = done.to(flags.actor_device, non_blocking=True)
+//             agent_state = nest.map(
+//                 lambda t: t.to(flags.actor_device, non_blocking=True), agent_state
+//             )
+//             with lock:
+//                 outputs = model(
+//                     dict(frame=frame, reward=reward, done=done), agent_state
+//                 )
+//             outputs = nest.map(lambda t: t.cpu(), outputs)
+//             batch.set_outputs(outputs)
+
+
 
 // Learn
 // ------------------------------------------------------------------->
