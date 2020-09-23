@@ -246,7 +246,7 @@
 //         elif flags.reward_clipping == "none":
 //             clipped_rewards = env_outputs.rewards
 
-//         discounts = (~(env_outputs.done).byte()).float() * flags.discounting // apply discounts to all steps that aren't done
+//         discounts = (~(env_outputs.done).byte()).float() * flags.discounting
 
 //         vtrace_returns = vtrace.from_logits(
 //             behavior_policy_logits=actor_outputs.policy_logits,

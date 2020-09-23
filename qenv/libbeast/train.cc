@@ -67,18 +67,27 @@ void infer(
 void learn( // TODO flags
     BatchingQueue learner_queue,
     Model model,
-    
+    Model actor_model,
+    // TODO
     ){
     torch::Tensor tensors = nest.map(); // map the tensors to the learner dervice
 
     // lock.acquire()
     // only one thread learning at a time?
-    torch::Tensor outputs = model -> forward((, intitial_agent_state));
+    torch::Tensor outputs = model -> forward(((), intitial_agent_state)); // TODO change type
 
+    if(flags.reward_clipping == "abs_one"){
+        clipped_rewards = torch::clamp(env_outputs.rewards, -1, 1); // TODO check
+    } else {
+        clipped_rewards = env_outputs.rewards;
+    };
+
+     // apply discounts to all steps where done = 0b
     discounts = (env_outputs.negative().to(float)) + flags.discounting;
 
     // TODO
-
+    
+    // Derive the vtrace returns from the batches
     torch::Tensor vtrace_returns = vtrace::from_logits(
         actor_outputs.policy_logits,
         learner_outputs.policy_logits,
@@ -109,16 +118,34 @@ void learn( // TODO flags
         pg_loss + baseline_loss + entropy_loss
     );
 
+    // In PyTorch, we need to set the gradients to zero before 
+    // starting to do backpropragation because PyTorch accumulates 
+    // the gradients on subsequent backward passes.
     optimizer.zero_grad();
-    total_loss.backward();
-    torch::nn::utils.clip_grad_norm_(model.parameters(), ); // todo flag
+
+    // Run backward pass with autograd
+    total_loss.backward(); 
+
+    // 
+    torch::nn::utils.clip_grad_norm_(
+        model.parameters(), 
+        flags.grad_norm_clipping
+    ); // todo flag
+    
+    // Step the optimizer and
+    // scheduler respectively
     optimizer.step();
     scheduler.step();
+
+    actor_model.load_state_dict();
 
 };
 
 void train(){
 
+    // The queue the learner threads will get their data from.
+    // Setting `minimum_batch_size == maximum_batch_size`
+    // makes the batch size static.
     auto learner_queue = libtorchbeast::BatchingQueue(
         1, // batch_dim
         flags.batch_size, // minimum batch size
@@ -127,6 +154,10 @@ void train(){
         flags.max_learner_queue_size
     );
 
+    // The "batcher" , a queue for the inference call.
+    // Will yield "batch" objects with `get_inputs` and
+    // `set_outputs` methods.
+    // The batch size of the tensors will be dynamic
     auto inference_batcher = libtorchbeast::DynamicBatcher(
         1, // batch_dim
         1, // minimum batch size
@@ -149,8 +180,7 @@ void train(){
         flags.use_lstm
     )).to(flags.actor_device);
 
-    // TODO set to device
-
+    // The ActorPool that will run `flags.num_actors` many loops.
     ActorPool actors = libtorchbeast::ActorPool(
         flags.unroll_length,
         learner_queue,
@@ -160,7 +190,7 @@ void train(){
     );
 
     // Rmsprop 
-    optimizer = torch::optim::Optimizer(
+    optimizer = torch::optim::Optimizer( // TODO change to R
         model.parameters(), // Set the optiizer on the learner model params
         flags.learning_rate,
         flags.momentum,
@@ -175,7 +205,8 @@ void train(){
 
     };
 
-    // Create Learner threads=
+    // Create Learner threads
+
 
     // Create inference threads
 
