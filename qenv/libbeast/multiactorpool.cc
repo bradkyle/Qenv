@@ -326,9 +326,9 @@ class DynamicBatcher {
       }
     }();
 
-    return pair.first->map([batch_dim = batch_dim_,
-                            batch_entry = pair.second](const torch::Tensor& t) {
-      return t.slice(batch_dim, batch_entry, batch_entry + 1);
+    // Define a map function that serves to TODO
+    return pair.first->map([batch_dim = batch_dim_, batch_entry = pair.second](const torch::Tensor& t) {
+        return t.slice(batch_dim, batch_entry, batch_entry + 1);
     });
   }
 
@@ -418,7 +418,8 @@ class MultiActorPool {
     // Convert the MultiStep protocol buffers into nest tensors
     TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO
 
-    // TODO what is this for?
+    // create a batch vector of env outputs, in a multienv scenario this would
+    // entail a set of multiple agent_step pairs i.e. the MultiStep pb
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
     
     // Calls the compute method of the DynamicBatcher defined above 
@@ -433,6 +434,7 @@ class MultiActorPool {
       throw py::value_error("Expected agent output to be tuple");
     }
 
+    // TODO update this for multi agent scenario
     if (all_agent_outputs.get_vector().size() != 2) {
       throw py::value_error(
           "Expected agent output to be ((action, ...), new_state) but got "
