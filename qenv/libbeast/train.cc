@@ -39,6 +39,27 @@ void infer(DynamicBatcher inference_batcher){
 
 void learn(BatchingQueue learner_queue){
     torch::Tensor tensors = 0;
+
+
+
+    torch::Tensor vtrace_returns = vtrace::from_logits(
+
+    );
+
+    torch::Tensor pg_loss = compute_policy_gradient_loss(
+
+    );
+
+    torch::Tensor baseline_loss = (
+        baseline_cost * compute_baseline_loss(
+
+        ));
+
+    torch::Tensor entropy_loss  = (
+        entropy_cost * compute_entropy_loss(
+
+        ));
+
 };
 
 void train(){
@@ -58,5 +79,22 @@ void train(){
     auto actor_model = std::make_shared<Net>(); 
     // TODO set to device
 
-    
+    actors = libtorchbeast::ActorPool(
+
+    );
+
+    // Rmsprop 
+
+    // learning rate scheduler
+
+    // load any checkpoints that may exist
+
+    // Create Learner threads=
+
+    // Create inference threads
+
+    // start actor pool
+
+
+
 };
