@@ -29,11 +29,15 @@ struct Net : torch::nn::Module {
     clipped_reward = torch::clamp(inputs.reward, -1, 1).view_as(T*B, 1);
     core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
 
+    torch::Tensor core_output;
     if(use_lstm){
-      core_input = core_input.view_as(T,B,-1);
+      core_input = core_input.view_as(T,B,-1); 
     } else {
-      
+      core_output = core_input;
     };
+
+    torch::Tensor policy_logits = 0;
+    torch::Tensor baseline = 0;
 
     return x;
   }
