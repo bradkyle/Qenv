@@ -34,25 +34,33 @@ torch::Tensor   compute_policy_gradient_loss(
 void infer(DynamicBatcher inference_batcher){
     torch::NoGradGuard no_grad; // TODO check functionality
 
-    batch = inference_batcher.get_batch();
+    torch::Tensor batch = inference_batcher.get_batch();
 
-    batched_env_outputs, agent_state = batch.get_inputs();
-    frame, reward, done, *_ = batched_env_outputs
+    batch_inputs = batch.get_inputs();
+
+    batched_env_outputs = batch_inputs[0]; 
+    agent_state = batch_inputs[1];
 
     torch::Tensor frame  = batched_env_outputs[0].to(,non_blocking=true) // TODO args
     torch::Tensor reward = batched_env_outputs[1].to();
     torch::Tensor done  = batched_env_outputs[2].to();
-    torch::Tensor agent_state = nest.map(); // TODO
+    torch::Tensor agent_state = nest.map(); // TODO map to device
 
     // lock get outputs from model
     torch::Tensor outputs = model -> forward(); // TODO to tuple?
-
-    batch.set_outputs();
+    // nest map t.cpu()
+    batch.set_outputs(outputs);
 
 };
 
 void learn(BatchingQueue learner_queue){
-    torch::Tensor tensors = 0;
+    torch::Tensor tensors = nest.map(); // map the tensors to the learner dervice
+
+    // lock.acquire()
+    // only one thread learning at a time?
+    torch::Tensor outputs = model -> forward((, intitial_agent_state));
+
+    discounts = (env_outputs.negative().to(float)) + flags.discounting;
 
     // TODO
 
@@ -87,27 +95,55 @@ void learn(BatchingQueue learner_queue){
 };
 
 void train(){
-    learner_queue = libtorchbeast::BatchingQueue(
 
+    auto learner_queue = libtorchbeast::BatchingQueue(
+        1, // batch_dim
+        flags.batch_size, // minimum batch size
+        flags.batch_size, // maximum batch size
+        true, // check inputs
+        flags.max_learner_queue_size
     );
 
-    inference_batcher = libtorchbeast::DynamicBatcher(
-
+    auto inference_batcher = libtorchbeast::DynamicBatcher(
+        1, // batch_dim
+        1, // minimum batch size
+        512, // maximum batch size
+        100, // timeout ms
+        true // check outputs
     );
 
     // TOOD setup addresses
 
-    auto model = std::make_shared<Net>(); 
+    // Instantiate the learner device
+    auto model = (std::make_shared<Net>(
+        flags.num_actions,
+        flags.use_lstm
+    )).to(flags.learner_device);
+
+    // Instantiate the actor device
+    auto actor_model = (std::make_shared<Net>(
+        flags.num_actions,
+        flags.use_lstm
+    )).to(flags.actor_device);
+
     // TODO set to device
 
-    auto actor_model = std::make_shared<Net>(); 
-    // TODO set to device
-
-    actors = libtorchbeast::ActorPool(
-
+    ActorPool actors = libtorchbeast::ActorPool(
+        flags.unroll_length,
+        learner_queue,
+        inference_batcher,
+        env_server_addresses,
+        actor_model.initial_state() // TODO check this
     );
 
     // Rmsprop 
+    optimizer = torch::optim::Optimizer(
+        model.parameters(), // Set the optiizer on the learner model params
+        flags.learning_rate,
+        flags.momentum,
+        flags.epsilon,
+        flags.alpha
+    );
 
     // learning rate scheduler
 
