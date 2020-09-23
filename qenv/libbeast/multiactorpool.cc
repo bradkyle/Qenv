@@ -553,12 +553,31 @@ class MultiActorPool {
 
   static TensorNest step_pb_to_nest(rpcenv::MultiStep* step_pb) {
     TensorNest done = TensorNest(
-        torch::full({1, 1}, step_pb->done(), torch::dtype(torch::kBool)));
-    TensorNest reward = TensorNest(torch::full({1, 1}, step_pb->reward()));
-    TensorNest episode_step = TensorNest(torch::full(
-        {1, 1}, step_pb->episode_step(), torch::dtype(torch::kInt32)));
+        torch::full(
+          {1, 1}, 
+          step_pb->done(), 
+          torch::dtype(torch::kBool)
+        ));
+
+    TensorNest reward = TensorNest(
+      torch::full(
+        {1, 1}, 
+        step_pb->reward()
+      ));
+
+    TensorNest episode_step = TensorNest(
+      torch::full(
+        {1, 1}, 
+        step_pb->episode_step(), 
+        torch::dtype(torch::kInt32)
+      ));
+
     TensorNest episode_return =
-        TensorNest(torch::full({1, 1}, step_pb->episode_return()));
+        TensorNest(
+          torch::full(
+            {1, 1}, 
+            step_pb->episode_return()
+          ));
 
     return TensorNest(std::vector(
         {nest_pb_to_nest(step_pb->mutable_observation(), array_pb_to_nest),
