@@ -37,8 +37,6 @@ torch::Tensor   compute_policy_gradient_loss(
 };
 
 // TODO is run in its own thread
-// Inference would need to account for the multi-agent scenario
-// whereas the learn function defined below would not. 
 void infer(
     DynamicBatcher inference_batcher
     ){

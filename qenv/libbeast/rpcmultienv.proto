@@ -16,7 +16,7 @@
 
 syntax = "proto2";
 
-package rpcenv;
+package rpcmultienv;
 
 message Action {
   optional int32 action = 1;
@@ -59,7 +59,7 @@ message MultiStep {
   repeated AgentStep agent_step = 1;
 }
 
-service RPCEnvServer {
+service rpcmultienvServer {
   rpc StreamingEnv(stream Action) returns (stream Step) {}
   rpc StreamingMultiEnv(stream MultiAction) returns (stream MultiStep) {}
 }

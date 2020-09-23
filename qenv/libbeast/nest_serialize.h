@@ -2,10 +2,10 @@
 #pragma once
 
 #include "../nest/nest/nest.h"
-#include "rpcenv.pb.h"
+#include "rpcmultienv.pb.h"
 
 template <typename T, typename Function>
-void fill_nest_pb(rpcenv::ArrayNest* nest_pb, nest::Nest<T> nest,
+void fill_nest_pb(rpcmultienv::ArrayNest* nest_pb, nest::Nest<T> nest,
                   Function fill_ndarray_pb) {
   using Nest = nest::Nest<T>;
   std::visit(
@@ -15,14 +15,14 @@ void fill_nest_pb(rpcenv::ArrayNest* nest_pb, nest::Nest<T> nest,
           },
           [nest_pb, &fill_ndarray_pb](const std::vector<Nest>& v) {
             for (const Nest& n : v) {
-              rpcenv::ArrayNest* subnest = nest_pb->add_vector();
+              rpcmultienv::ArrayNest* subnest = nest_pb->add_vector();
               fill_nest_pb(subnest, n, fill_ndarray_pb);
             }
           },
           [nest_pb, &fill_ndarray_pb](const std::map<std::string, Nest>& m) {
             auto* map_pb = nest_pb->mutable_map();
             for (const auto& p : m) {
-              rpcenv::ArrayNest& subnest_pb = (*map_pb)[p.first];
+              rpcmultienv::ArrayNest& subnest_pb = (*map_pb)[p.first];
               fill_nest_pb(&subnest_pb, p.second, fill_ndarray_pb);
             }
           }},
@@ -30,9 +30,9 @@ void fill_nest_pb(rpcenv::ArrayNest* nest_pb, nest::Nest<T> nest,
 }
 
 template <typename Function>
-std::invoke_result_t<Function, rpcenv::NDArray*> nest_pb_to_nest(
-    rpcenv::ArrayNest* nest_pb, Function array_to_nest) {
-  using Nest = std::invoke_result_t<Function, rpcenv::NDArray*>;
+std::invoke_result_t<Function, rpcmultienv::NDArray*> nest_pb_to_nest(
+    rpcmultienv::ArrayNest* nest_pb, Function array_to_nest) {
+  using Nest = std::invoke_result_t<Function, rpcmultienv::NDArray*>;
   if (nest_pb->has_array()) {
     return array_to_nest(nest_pb->mutable_array());
   }

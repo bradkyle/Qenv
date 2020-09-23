@@ -36,8 +36,8 @@
 #include <torch/script.h>
 
 #include "nest_serialize.h"
-#include "rpcenv.grpc.pb.h"
-#include "rpcenv.pb.h"
+#include "rpcmultienv.grpc.pb.h"
+#include "rpcmultienv.pb.h"
 
 #include "../nest/nest/nest.h"
 #include "../nest/nest/nest_pybind.h"
@@ -236,6 +236,7 @@ class DynamicBatcher {
  public:
   typedef std::promise<std::pair<std::shared_ptr<TensorNest>, int64_t>>
       BatchPromise;
+
   class Batch {
    public:
     Batch(int64_t batch_dim, TensorNest&& tensors,
@@ -334,8 +335,12 @@ class DynamicBatcher {
 
   std::shared_ptr<Batch> get_batch() {
     auto pair = batching_queue_.dequeue_many();
-    return std::make_shared<Batch>(batch_dim_, std::move(pair.first),
-                                   std::move(pair.second), check_outputs_);
+    return std::make_shared<Batch>( // Return a torch 
+        batch_dim_, 
+        std::move(pair.first),
+        std::move(pair.second), 
+        check_outputs_
+    );
   }
 
   int64_t size() const { return batching_queue_.size(); }
@@ -382,8 +387,8 @@ class MultiActorPool {
         grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
     
     // Connect to the rpc server
-    std::unique_ptr<rpcenv::RPCEnvServer::Stub> stub =
-        rpcenv::RPCEnvServer::NewStub(channel);
+    std::unique_ptr<rpcmultienv::rpcmultienvServer::Stub> stub =
+        rpcmultienv::rpcmultienvServer::NewStub(channel);
 
     // Set a timeout
     auto deadline =
@@ -404,10 +409,10 @@ class MultiActorPool {
 
     // Create grpc client context
     grpc::ClientContext context;
-    std::shared_ptr<grpc::ClientReaderWriter<rpcenv::MultiAction, rpcenv::MultiStep>>
+    std::shared_ptr<grpc::ClientReaderWriter<rpcmultienv::MultiAction, rpcmultienv::MultiStep>>
         stream(stub->StreamingMultiEnv(&context));
 
-    rpcenv::MultiStep step_pb;
+    rpcmultienv::MultiStep step_pb;
     if (!stream->Read(&step_pb)) {
       throw py::connection_error("Initial read failed.");
     }
@@ -417,6 +422,8 @@ class MultiActorPool {
 
     // Convert the MultiStep protocol buffers into nest tensors
     TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO
+
+    // TODO map the compute function to each step pb ?
 
     // create a batch vector of env outputs, in a multienv scenario this would
     // entail a set of multiple agent_step pairs i.e. the MultiStep pb
@@ -448,11 +455,11 @@ class MultiActorPool {
     if (!agent_outputs.is_vector()) {
       throw py::value_error(
           "Expected first entry of agent output to be a (action, ...) tuple");
-    }
+    };
 
     TensorNest last(std::vector({env_outputs, agent_outputs}));
 
-    rpcenv::MultiAction action_pb;
+    rpcmultienv::MultiAction multi_action_pb;
     std::vector<TensorNest> rollout;
     try {
       while (true) {
@@ -471,16 +478,19 @@ class MultiActorPool {
           // agent_outputs must be a tuple/list.
           const TensorNest& action = agent_outputs.get_vector().front();
 
-          action_pb.Clear();
+          multi_action_pb.Clear();
 
+          // TODO what does this do?
           fill_nest_pb(
-              action_pb.mutable_nest_action(), action,
-              [&](rpcenv::NDArray* array, const torch::Tensor& tensor) {
+              multi_action_pb.mutable_nest_action(), action,
+              [&](rpcmultienv::NDArray* array, const torch::Tensor& tensor) {
                 return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
               });
 
           // Write the set of actions to the grpc stream
-          stream->Write(action_pb);
+          // That will in turn be ingested by an instance
+          // of the environment
+          stream->Write(multi_action_pb);
 
           // Read the set of MultiStep results from the grpc stream
           if (!stream->Read(&step_pb)) {
@@ -540,7 +550,7 @@ class MultiActorPool {
 
   uint64_t count() const { return count_; }
 
-  static TensorNest array_pb_to_nest(rpcenv::NDArray* array_pb) {
+  static TensorNest array_pb_to_nest(rpcmultienv::NDArray* array_pb) {
     std::vector<int64_t> shape = {1, 1};  // [T=1, B=1].
     for (int i = 0, length = array_pb->shape_size(); i < length; ++i) {
       shape.push_back(array_pb->shape(i));
@@ -553,7 +563,7 @@ class MultiActorPool {
         /*deleter=*/[data](void*) { delete data; }, dtype));
   }
 
-  static TensorNest step_pb_to_nest(rpcenv::MultiStep* step_pb) {
+  static TensorNest step_pb_to_nest(rpcmultienv::MultiStep* step_pb) {
     std::vector<TensorNes<void>> multi_step;
     for () { // TODO make faster
       TensorNest done = TensorNest( // TODO check
@@ -597,7 +607,7 @@ class MultiActorPool {
   }
 
   // TODO delve
-  static void fill_ndarray_pb(rpcenv::NDArray* array,
+  static void fill_ndarray_pb(rpcmultienv::NDArray* array,
                               const torch::Tensor& tensor,
                               int64_t start_dim = 0) {
     
