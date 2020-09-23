@@ -181,7 +181,7 @@
 //             frame = frame.to(flags.actor_device, non_blocking=True)
 //             reward = reward.to(flags.actor_device, non_blocking=True)
 //             done = done.to(flags.actor_device, non_blocking=True) // https://pytorch.org/cppdocs/api/classat_1_1_tensor.html#class-documentation
-//             agent_state = nest.map(
+//             agent_state = nest.map( // nest c 
 //                 lambda t: t.to(flags.actor_device, non_blocking=True), agent_state
 //             )
 //             with lock:

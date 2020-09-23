@@ -48,7 +48,7 @@
 
 
 // def action_log_probs(policy_logits, actions):
-//     return -F.nll_loss(
+//     return -F.nll_loss( // https://pytorch.org/cppdocs/api/function_namespaceat_1a97f3172f3e4c3b9821eef29a8c321009.html#function-documentation
 //         F.log_softmax(torch.flatten(policy_logits, 0, -2), dim=-1),
 //         torch.flatten(actions),
 //         reduction="none",
