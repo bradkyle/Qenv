@@ -18,13 +18,17 @@ syntax = "proto2";
 
 package rpcenv;
 
-message MultiAction {
-
-}
-
 message Action {
   optional int32 action = 1;
   optional ArrayNest nest_action = 2;
+}
+
+message MultiAction {
+  message AgentAction {
+    optional int32  agent_id = 1;
+    optional Action action = 2;
+  }
+  repeated AgentAction agent_action = 1;
 }
 
 message NDArray {
@@ -48,7 +52,7 @@ message Step {
 }
 
 message MultiStep {
-
+    
 }
 
 service RPCEnvServer {
