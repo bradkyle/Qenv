@@ -54,4 +54,20 @@ from_logits(){
     torch::Tensor target_action_log_probs = action_log_probs(target_policy_logits, actions);
     torch::Tensor behavior_action_log_probs = action_log_probs(behavior_policy_logits, actions);
     torch::Tensor log_rhos = target_action_log_probs - behavior_action_log_probs;
+
+    VtraceReturns vtrace_returns = from_importance_weights(
+        log_rhos,
+        discounts,
+        rewards,
+        values,
+        bootstrap_value,
+        clip_rho_threshold,
+        clip_pg_rho_threshold
+    );
+    //     return VTraceFromLogitsReturns(
+//         log_rhos=log_rhos,
+//         behavior_action_log_probs=behavior_action_log_probs,
+//         target_action_log_probs=target_action_log_probs,
+//         **vtrace_returns._asdict(),
+//     )
 };
