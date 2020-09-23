@@ -391,6 +391,7 @@ class ActorPool {
     if (!all_agent_outputs.is_vector()) {
       throw py::value_error("Expected agent output to be tuple");
     }
+
     if (all_agent_outputs.get_vector().size() != 2) {
       throw py::value_error(
           "Expected agent output to be ((action, ...), new_state) but got "
@@ -398,6 +399,7 @@ class ActorPool {
           "length " +
           std::to_string(all_agent_outputs.get_vector().size()));
     }
+    
     TensorNest agent_state = all_agent_outputs.get_vector()[1];
     TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
     if (!agent_outputs.is_vector()) {
@@ -413,6 +415,7 @@ class ActorPool {
       while (true) {
         rollout.push_back(std::move(last));
 
+        // Run a loop for a given set unroll length
         for (int t = 1; t <= unroll_length_; ++t) {
           all_agent_outputs = inference_batcher_->compute(compute_inputs);
 
@@ -443,6 +446,8 @@ class ActorPool {
           last = TensorNest(std::vector({env_outputs, agent_outputs}));
           rollout.push_back(std::move(last));
         }
+
+
         last = rollout.back();
         learner_queue_->enqueue({
             TensorNest(std::vector(
