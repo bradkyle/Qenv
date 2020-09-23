@@ -60,6 +60,16 @@ void learn(BatchingQueue learner_queue){
 
         ));
 
+    torch::Tensor total_loss = (
+        pg_loss + baseline_loss + entropy_loss
+    );
+
+    optimizer.zero_grad();
+    total_loss.backward();
+    torch::nn::utils.clip_grad_norm_(model.parameters(), ); // todo flag
+    optimizer.step();
+    scheduler.step();
+
 };
 
 void train(){
