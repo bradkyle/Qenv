@@ -34,9 +34,10 @@
 
 // Net
 // ------------------------------------------------------------------->
+// #include <torch/torch.h>
 
-// class Net(nn.Module):
-//     def __init__(self, num_actions, use_lstm=False):
+// class Net(nn.Module): struct Net : torch::nn::Module {
+//     def __init__(self, num_actions, use_lstm=False): Net(int64_t N, int64_t M) {
 //         super(Net, self).__init__()
 //         self.num_actions = num_actions
 //         self.use_lstm = use_lstm
@@ -117,8 +118,8 @@
 
 //     def forward(self, inputs, core_state):
 //         x = inputs["frame"]
-//         T, B, *_ = x.shape
-//         x = torch.flatten(x, 0, 1)  # Merge time and batch.
+//         T, B, *_ = x.shape 
+//         x = torch.flatten(x, 0, 1)  # Merge time and batch. https://pytorch.org/cppdocs/api/function_namespaceat_1ab8820c4c1715f8ee0882f8919cdf80f2.html
 //         x = x.float() / 255.0
 
 //         res_input = None
@@ -174,7 +175,11 @@
 // ------------------------------------------------------------------->
 
 // def inference(flags, inference_batcher, model, lock=threading.Lock()):  # noqa: B008
-//     with torch.no_grad():
+//     """V-trace from log importance weights."""
+//     {
+//          torch::NoGradGuard no_grad;
+//     }
+//     with torch.no_grad(): // invokes dequeue many
 //         for batch in inference_batcher:
 //             batched_env_outputs, agent_state = batch.get_inputs()
 //             frame, reward, done, *_ = batched_env_outputs
@@ -208,7 +213,7 @@
 //     plogger,
 //     lock=threading.Lock(),
 // ):
-//     for tensors in learner_queue: // invokes dequeue many
+//     for tensors in learner_queue: 
 
 
 //         tensors = nest.map(lambda t: t.to(flags.learner_device), tensors) // map each tensor to the learner device

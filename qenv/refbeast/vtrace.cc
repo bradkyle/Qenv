@@ -99,38 +99,42 @@
 //     clip_pg_rho_threshold=1.0,
 // ):
 //     """V-trace from log importance weights."""
+//     {
+//          torch::NoGradGuard no_grad;
+//     }
 //     with torch.no_grad():
 //         rhos = torch.exp(log_rhos)
 //         if clip_rho_threshold is not None:
-//             clipped_rhos = torch.clamp(rhos, max=clip_rho_threshold)
+//              // https://pytorch.org/cppdocs/api/function_namespaceat_1a841f17d40902723ce69e6a9ed8ff2c10.html
+//             clipped_rhos = torch.clamp(rhos, max=clip_rho_threshold) 
 //         else:
 //             clipped_rhos = rhos
 
-//         cs = torch.clamp(rhos, max=1.0)
+//         cs = torch.clamp(rhos, max=1.0) // https://pytorch.org/cppdocs/api/function_namespaceat_1a841f17d40902723ce69e6a9ed8ff2c10.html
 //         # Append bootstrapped value to get [v1, ..., v_t+1]
-//         values_t_plus_1 = torch.cat(
-//             [values[1:], torch.unsqueeze(bootstrap_value, 0)], dim=0
+//         values_t_plus_1 = torch.cat( https://pytorch.org/cppdocs/api/function_namespaceat_1a224cc240a8cc8b9ba137d0c92c21a14c.html
+//             [values[1:], torch.unsqueeze(bootstrap_value, 0)], dim=0 https://pytorch.org/cppdocs/api/function_namespaceat_1abb85aec9e29fb6176db0004d6d9bcba7.html
 //         )
 //         deltas = clipped_rhos * (rewards + discounts * values_t_plus_1 - values)
 
-//         acc = torch.zeros_like(bootstrap_value)
+//         acc = torch.zeros_like(bootstrap_value) https://pytorch.org/cppdocs/api/function_namespaceat_1ad7f6f191c9c29c5200b787ad82698818.html
 //         result = []
 //         for t in range(discounts.shape[0] - 1, -1, -1):
 //             acc = deltas[t] + discounts[t] * cs[t] * acc
 //             result.append(acc)
 //         result.reverse()
-//         vs_minus_v_xs = torch.stack(result)
+//         vs_minus_v_xs = torch.stack(result) https://pytorch.org/cppdocs/api/function_namespaceat_1aa015fb8bf3f3b43644929c5a7b617b47.html?
 
 //         # Add V(x_s) to get v_s.
-//         vs = torch.add(vs_minus_v_xs, values)
+//         vs = torch.add(vs_minus_v_xs, values) https://pytorch.org/cppdocs/api/function_namespaceat_1a0b94036087f206a574a0d7842dc93f7c.html#exhale-function-namespaceat-1a0b94036087f206a574a0d7842dc93f7c
 
 //         # Advantage for policy gradient.
-//         broadcasted_bootstrap_values = torch.ones_like(vs[0]) * bootstrap_value
-//         vs_t_plus_1 = torch.cat(
+//         broadcasted_bootstrap_values = torch.ones_like(vs[0]) * bootstrap_value https://pytorch.org/cppdocs/api/function_namespaceat_1aa012efb3f45a87f5c1949796072d61d8.html#exhale-function-namespaceat-1aa012efb3f45a87f5c1949796072d61d8
+//         vs_t_plus_1 = torch.cat( https://pytorch.org/cppdocs/api/function_namespaceat_1a224cc240a8cc8b9ba137d0c92c21a14c.html
 //             [vs[1:], broadcasted_bootstrap_values.unsqueeze(0)], dim=0
 //         )
 //         if clip_pg_rho_threshold is not None:
-//             clipped_pg_rhos = torch.clamp(rhos, max=clip_pg_rho_threshold)
+//             clipped_pg_rhos = torch.clamp(rhos, max=clip_pg_rho_threshold) // https://pytorch.org/cppdocs/api/function_namespaceat_1a841f17d40902723ce69e6a9ed8ff2c10.html
 //         else:
 //             clipped_pg_rhos = rhos
 //         pg_advantages = clipped_pg_rhos * (rewards + discounts * vs_t_plus_1 - values)
