@@ -231,6 +231,7 @@ class BatchingQueue {
 
 // Dynamic Batcher
 // --------------------------------------------------------------------------->
+// Used to batch perceptual streams to the inference worker
 
 class DynamicBatcher {
  public:
@@ -421,6 +422,8 @@ class MultiActorPool {
     TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
 
     // Convert the MultiStep protocol buffers into nest tensors
+    // Returns a set of TensorNest where each item maps to a given 
+    // agent.
     TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO
 
     // TODO map the compute function to each step pb ?
@@ -429,6 +432,9 @@ class MultiActorPool {
     // entail a set of multiple agent_step pairs i.e. the MultiStep pb
     TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
     
+    // torch .jit fork?
+
+
     // Calls the compute method of the DynamicBatcher defined above 
     // The . (dot) operator and the -> (arrow) operator are used
     // to reference individual members of classes, structures, 
