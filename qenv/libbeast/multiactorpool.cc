@@ -439,7 +439,9 @@ class MultiActorPool {
     // Calls the compute method of the DynamicBatcher defined above 
     // The . (dot) operator and the -> (arrow) operator are used
     // to reference individual members of classes, structures, 
-    // and unions.
+    // and unions. which serves to create the first tensor
+    // in a multi agent scenario it would loop over the columns
+    // (compute_inputs) of the first row.
     TensorNest all_agent_outputs =
         inference_batcher_->compute(compute_inputs);  // Copy.
 
@@ -457,6 +459,7 @@ class MultiActorPool {
           std::to_string(all_agent_outputs.get_vector().size()));
     }
 
+    // TODO get the 
     TensorNest agent_state = all_agent_outputs.get_vector()[1];
     TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
 
@@ -469,7 +472,7 @@ class MultiActorPool {
     TensorNest last(std::vector({env_outputs, agent_outputs}));
 
     rpcmultienv::MultiAction multi_action_pb;
-    std::vector<std::vector<TensorNest>> rollouts;
+    std::vector<std::vector<TensorNest>> rollouts; // TODO change to boost matrix
     try {
       while (true) {
 
@@ -508,29 +511,30 @@ class MultiActorPool {
           // Write the set of actions to the grpc stream
           // That will in turn be ingested by an instance
           // of the environment
-          stream->Write(multi_action_pb);
+          stream->Write(multi_action_pb); // TODO change to q/kdb+
 
           // Read the set of MultiStep results from the grpc stream
-          if (!stream->Read(&step_pb)) {
+          if (!stream->Read(&step_pb)) { // TOOD change to q/KDB+
             throw py::connection_error("Read failed.");
           }
 
-          
+          // Derives a vector of environment outputs for each
+          // actor from the protocol buffers referenced // TODO change to q/KDB
           env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
-
 
           // reset the compute inputs for the next iteration
           compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
 
-
+          // Reset the last tensor which both serves as the last instance
+          // of all rollout steps and the first instance of the next rollout.
           last = TensorNest(std::vector({env_outputs, agent_outputs}));
 
-
+          // should append to each agents respective column
           rollouts.push_back(std::move(last));
         }
 
         // Implement this for multiple actors
-        last = rollouts.back();
+        last = rollouts.end1();
 
 
         // enqueue the rollout into the learner queue which 
@@ -539,24 +543,28 @@ class MultiActorPool {
         // streams have been acquired in the same rollout
         // we would enqueue each instance of rollout into
         // the learner queue
+        for (int c = 1; c <= rollouts.size2(); ++c) {
+            learner_queue_->enqueue({
+                TensorNest(
+                  std::vector(
+                    {
+                      // Calls the batch function from
+                      // above with the given column c
+                      // i.e. 
+                      batch(rollouts[], 0), 
+                      std::move(initial_agent_state)
+                    }
+                  )
+                ),
+            });
+        }
 
-
-        learner_queue_->enqueue({
-            TensorNest(
-              std::vector(
-                {
-                  batch(rollout, 0), // Calls batch function from above
-                  std::move(initial_agent_state)
-                }
-              )
-            ),
-        });
-
-        // Clear the set of rollouts.
+        // Clear the rollout matrix
         rollouts.clear();
 
-        // Reset the initial agent state to the current 
-        // state, which will in turn update the subsequent MultiStep
+        // Set the initial agent states to the current latent
+        // state, which will in turn be used for inference in
+        // the subsequent step.
         initial_agent_state = agent_state;  // Copy
 
         // 
