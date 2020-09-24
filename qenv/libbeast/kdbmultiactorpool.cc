@@ -367,12 +367,11 @@ class DynamicBatcher {
 
 class MultiActorPool {
  public:
-  MultiActorPool(int unroll_length, int num_actors, std::shared_ptr<BatchingQueue<>> learner_queue,
+  MultiActorPool(int unroll_length, std::shared_ptr<BatchingQueue<>> learner_queue,
             std::shared_ptr<DynamicBatcher> inference_batcher,
             std::vector<std::string> env_server_addresses,
             TensorNest initial_agent_state)
       : unroll_length_(unroll_length),
-        num_actors_(num_actors),
         learner_queue_(std::move(learner_queue)),
         inference_batcher_(std::move(inference_batcher)),
         env_server_addresses_(std::move(env_server_addresses)),
@@ -383,6 +382,9 @@ class MultiActorPool {
   // ------------------------------------------------------------->
 
   void loop(int64_t loop_index, const std::string& address) {
+
+
+    // handle = khpu(hostname, portnumber, usernamepassword)
 
     // Create a shared insecure grpc channel to the env
     std::shared_ptr<grpc::Channel> channel =
@@ -431,7 +433,7 @@ class MultiActorPool {
 
     // create a batch vector of env outputs, in a multienv scenario this would
     // entail a set of multiple agent_step pairs i.e. the MultiStep pb
-    TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state})); // TODO instantiate for each num_actors
+    TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state}));
     
     // torch .jit fork?
 
@@ -469,25 +471,16 @@ class MultiActorPool {
     TensorNest last(std::vector({env_outputs, agent_outputs}));
 
     rpcmultienv::MultiAction multi_action_pb;
-    std::vector<std::vector<TensorNest>> rollouts;
+    std::vector<TensorNest> rollout;
     try {
       while (true) {
-
-        // Adds either the first instance of last which
-        // is derived above as a vector of the env outputs 
-        // and agent outputs 
-        // or as the last instance of env outputs and agent
-        // outputs derived after the loop.
-        rollouts.push_back(std::move(last));
+        rollout.push_back(std::move(last));
 
         // Run a loop for a given set unroll length
         // This function in the case of a multi agent environment
         // should invoke a series of agent states inorder to compute
         // a set of resultant actions.
         for (int t = 1; t <= unroll_length_; ++t) {
-
-          // Would have to be an each?
-          // for each mapping
           all_agent_outputs = inference_batcher_->compute(compute_inputs);
 
           agent_state = all_agent_outputs.get_vector()[1];
@@ -517,43 +510,23 @@ class MultiActorPool {
 
           
           env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
-
-
-          // reset the compute inputs for the next iteration
           compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
 
-
           last = TensorNest(std::vector({env_outputs, agent_outputs}));
-
-
-          rollouts.push_back(std::move(last));
+          rollout.push_back(std::move(last));
         }
 
-        // Implement this for multiple actors
-        last = rollouts.back();
+
+        last = rollout.back();
 
 
         // enqueue the rollout into the learner queue which 
-        // will subsequently update state. In the multiactor
-        // scenario whereby in essence multiple perceptual
-        // streams have been acquired in the same rollout
-        // we would enqueue each instance of rollout into
-        // the learner queue
-
-
+        // will subsequently update state
         learner_queue_->enqueue({
-            TensorNest(
-              std::vector(
-                {
-                  batch(rollout, 0), // Calls batch function from above
-                  std::move(initial_agent_state)
-                }
-              )
-            ),
+            TensorNest(std::vector(
+                {batch(rollout, 0), std::move(initial_agent_state)})),
         });
-
-        // Clear the set of rollouts.
-        rollouts.clear();
+        rollout.clear();
 
         // Reset the initial agent state to the current 
         // state, which will in turn update the subsequent MultiStep
