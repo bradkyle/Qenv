@@ -4,7 +4,24 @@
 #include <torch/script.h>
 #include <torch/torch.h>
 
-torch::Tensor action_log_probs()  {
+
+struct VTraceFromLogitsReturns {
+    torch::Tensor log_rhos;
+    torch::Tensor behavior_action_log_probs;
+    torch::Tensor target_action_log_probs;
+    torch::Tensor vs;
+    torch::Tensor pg_advantages;
+};
+
+struct  VTraceReturns {
+    torch::Tensor vs;
+    torch::Tensor pg_advantages;
+};
+
+
+torch::Tensor action_log_probs(
+    torch::Tensor policy_logits, 
+    torch::Tensor actions)  {
     return torch::nll_loss(
         torch::log_softmax(policy_logits.flatten(0,-2), -1), 
         actions.flatten(),
@@ -12,7 +29,15 @@ torch::Tensor action_log_probs()  {
     ).negative();
 };
 
-from_importance_weights(){
+
+vtrace::VTraceReturns from_importance_weights(
+    torch::Tensor log_rhos,
+    torch::Tensor discounts,
+    torch::Tensor rewards,
+    torch::Tensor values,
+    torch::Tensor bootstrap_value,
+    int64_t clip_rho_threshold,
+    int64_t clip_pg_rho_threshold){
     torch::NoGradGuard no_grad;
     torch::Tensor rhos = log_rhos.exp(); // TODO check
 
@@ -49,27 +74,39 @@ from_importance_weights(){
     };
     torch::Tensor pg_advantages = clipped_pg_rhos * (rewards + discounts * vs_t_plus_1 - values);
 
-    // return VTraceReturns(vs=vs, pg_advantages=pg_advantages)
+    return vtrace::VTraceReturns{vs, pg_advantages}
 };
 
-from_logits(){
+vtrace::VTraceFromLogitsReturns from_logits(
+    torch::Tensor behavior_action_log_probs,
+    torch::Tensor target_action_log_probs,
+    torch::Tensor actions,
+    torch::Tensor discounts,
+    torch::Tensor rewards,
+    torch::Tensor values,
+    torch::Tensor bootstrap_value,
+    int64_t clip_rho_threshhold,
+    int64_t clip_pg_threshold){
+
     torch::Tensor target_action_log_probs = action_log_probs(target_policy_logits, actions);
     torch::Tensor behavior_action_log_probs = action_log_probs(behavior_policy_logits, actions);
     torch::Tensor log_rhos = target_action_log_probs - behavior_action_log_probs;
 
-    VtraceReturns vtrace_returns = from_importance_weights(
+    vtrace::VtraceReturns vtrace_returns = from_importance_weights(
         log_rhos,
         discounts,
         rewards,
         values,
         bootstrap_value,
         clip_rho_threshold,
-        clip_pg_rho_threshold
-    );
-    //     return VTraceFromLogitsReturns(
-//         log_rhos=log_rhos,
-//         behavior_action_log_probs=behavior_action_log_probs,
-//         target_action_log_probs=target_action_log_probs,
-//         **vtrace_returns._asdict(),
-//     )
-};
+        clip_pg_rho_threshold);
+
+    return vtrace::VTraceFromLogitsReturns{
+        log_rhos, 
+        behavior_action_log_probs, 
+        target_action_log_probs,
+        vtrace_returns.vs,
+        vtrace_returns.pg_advantages};
+
+    };
+
