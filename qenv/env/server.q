@@ -2,4 +2,7 @@
 
 \p 5050
 
-.server.DumStep         :{til 9};
+.server.DumStep         :{[]
+
+
+    };
