@@ -10,6 +10,10 @@ namespace kdbmultienv     {
         std::string password;
     };
 
+    struct EnvConfig {
+
+    };
+
     class MultiEnvClient
     {
     private:

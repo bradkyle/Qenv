@@ -471,14 +471,15 @@ class MultiActorPool {
   // MAIN LOOP FUNCTION
   // ------------------------------------------------------------->
 
-  void loop(int64_t loop_index, const kdbmultienv::Address& address) {
+  void loop(
+    int64_t loop_index, 
+    const kdbmultienv::Address& address, 
+    kdbmultienv::EnvConfig& env_config) {
 
     // TODO
     std::shared<kdbmultienv::MultiEnvClient> client = kdbmultienv::MultiEnvClient(
       address,
-      
-    );
-    
+      env_config);
 
     // Set a timeout
     auto deadline =
