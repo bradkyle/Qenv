@@ -389,22 +389,18 @@ class MultiActorPool {
   // MAIN LOOP FUNCTION
   // ------------------------------------------------------------->
 
-  void loop(int64_t loop_index, const std::string& address) {
+  void loop(int64_t loop_index, const KDBServerAddress& address) {
 
-    // Create a shared insecure grpc channel to the env
-    std::shared_ptr<grpc::Channel> channel =
-        grpc::CreateChannel(address, grpc::InsecureChannelCredentials());
+    // TODO
+    std::shared<kdbmultienv::MultiEnvClient> client = MultiEnvClient();
     
-    // Connect to the rpc server
-    std::unique_ptr<rpcmultienv::rpcmultienvServer::Stub> stub =
-        rpcmultienv::rpcmultienvServer::NewStub(channel);
 
     // Set a timeout
     auto deadline =
         std::chrono::system_clock::now() + std::chrono::seconds(10 * 60);
 
     if (loop_index == 0) {
-      std::cout << "First Environment waiting for connection to " << address
+      std::cout << "First Environment waiting for connection to " << address.toString()
                 << " ...";
     }
 
@@ -416,13 +412,15 @@ class MultiActorPool {
       std::cout << " connection established." << std::endl;
     }
 
+    
+
     // Create grpc client context
     grpc::ClientContext context; // TODO change to kdb
     std::shared_ptr<grpc::ClientReaderWriter<rpcmultienv::MultiAction, rpcmultienv::MultiStep>>
         stream(stub->StreamingMultiEnv(&context));
 
     // Retrieve the first step (reset) from the environment
-    rpcmultienv::MultiStep step_pb; // TODO change to kdb
+    kdbmultienv::MultiStep multi_step; // TODO change to kdb
     if (!stream->Read(&step_pb)) {
       throw py::connection_error("Initial read failed.");
     }
@@ -435,9 +433,10 @@ class MultiActorPool {
     // Convert the MultiStep protocol buffers into nest tensors
     // Returns a set of TensorNest where each item maps to a given 
     // agent.
-    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO change to kdb
+    TensorNest env_outputs = &multi_step.nest_repr(); // TODO change to kdb
 
     // TODO map the compute function to each step pb ?
+    // Assert env outputs and initial agent states have same length
 
     // create a batch vector of env outputs, in a multienv scenario this would
     // entail a set of multiple agent_step pairs i.e. the MultiStep pb
