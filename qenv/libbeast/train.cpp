@@ -78,7 +78,7 @@ void learn( // TODO flags
     // TODO
     ){
     torch::Tensor tensors = learner_queue; // map the tensors to the learner dervice
-    
+    // TODO map to device
     TorchNest batch = tensors[0];
     TorchNest 
 
@@ -86,9 +86,9 @@ void learn( // TODO flags
     // only one thread learning at a time?
     torch::Tensor outputs = model -> forward(
         net::NetInput{
-            env_outputs[0],
-            env_outputs[1],
-            env_outputs[2]
+            env_outputs[0], // frame
+            env_outputs[1], // done
+            env_outputs[2] // reward
         }, 
         intitial_agent_state); // TODO change type
 
