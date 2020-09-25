@@ -32,7 +32,7 @@ namespace kdbmultienv     {
 
     class Status {
 
-    };
+    }; // todo ok
 
     class MultiEnvClient
     {

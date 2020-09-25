@@ -608,17 +608,7 @@ class MultiActorPool {
           multi_agent_outputs = all_multi_agent_outputs.get_vector()[0];
 
           // multi_agent_outputs must be a tuple/list.
-          const TensorNest& action = multi_agent_outputs.get_vector().front();
-
-          multi_action.Clear();
-
-          // TODO what does this do?
-          fill_nest_pb(
-              multi_action.mutable_nest_action(), 
-              action,
-              [&](kdbmultienv::NDArray* array, const torch::Tensor& tensor) {
-                return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
-              });
+          const TensorNest& multi_action = multi_agent_outputs.get_vector().front();
 
           // Write the set of actions to the grpc stream
           // That will in turn be ingested by an instance
@@ -697,44 +687,14 @@ class MultiActorPool {
 
   uint64_t count() const { return count_; }
 
-
   static TensorNest replicate_agent_state(TensorNest agent_state, int num_actors){
     // TODO?
   };
 
   
-
  private:
-  // Copied from the private torch/csrc/utils/tensor_numpy.cpp.
-  // TODO(heiner): Expose this in PyTorch then use that function.
-  static int aten_to_dtype(const at::ScalarType scalar_type) {
-    switch (scalar_type) {
-      case at::kDouble:
-        return NPY_DOUBLE;
-      case at::kFloat:
-        return NPY_FLOAT;
-      case at::kHalf:
-        return NPY_HALF;
-      case at::kLong:
-        return NPY_INT64;
-      case at::kInt:
-        return NPY_INT32;
-      case at::kShort:
-        return NPY_INT16;
-      case at::kChar:
-        return NPY_INT8;
-      case at::kByte:
-        return NPY_UINT8;
-      case at::kBool:
-        return NPY_BOOL;
-      default: {
-        std::string what = "Got unsupported ScalarType ";
-        throw py::value_error(what + at::toString(scalar_type));
-      }
-    }
-  }
-
   std::atomic_uint64_t count_;
+  std::atomic_uint64_t count_all_;
 
   const int unroll_length_;
   std::shared_ptr<BatchingQueue<>> learner_queue_;
