@@ -54,7 +54,7 @@ void infer(
     torch::Tensor agent_state = nest.map(); // TODO agent state to device non blocking
 
     torch::Tensor outputs = model -> forward(
-        dict(frame=frame, reward=reward, done=done), 
+        net::NetInput{frame,done,reward}, 
         agent_state
     ); // TODO to tuple?
 
@@ -77,11 +77,20 @@ void learn( // TODO flags
     Model actor_model,
     // TODO
     ){
-    torch::Tensor tensors = nest.map(); // map the tensors to the learner dervice
+    torch::Tensor tensors = learner_queue; // map the tensors to the learner dervice
+    
+    TorchNest batch = tensors[0];
+    TorchNest 
 
     // lock.acquire()
     // only one thread learning at a time?
-    torch::Tensor outputs = model -> forward(((), intitial_agent_state)); // TODO change type
+    torch::Tensor outputs = model -> forward(
+        net::NetInput{
+            env_outputs[0],
+            env_outputs[1],
+            env_outputs[2]
+        }, 
+        intitial_agent_state); // TODO change type
 
     if(flags.reward_clipping == "abs_one"){
         clipped_rewards = torch::clamp(env_outputs.rewards, -1, 1); // TODO check

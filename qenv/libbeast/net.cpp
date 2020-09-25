@@ -1,6 +1,13 @@
 
 #include <torch/torch.h>
 
+
+struct NetInput {
+  torch::Tensor frame;
+  torch::Tensor reward;
+  torch::tensor done;
+}
+
 struct Net : torch::nn::Module {
   Net() {
     // Construct and register two Linear submodules.
