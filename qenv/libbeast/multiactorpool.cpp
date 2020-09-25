@@ -164,7 +164,7 @@ class BatchingQueue {
   // streams have been acquired in the same rollout
   // we would enqueue each instance of rollout into
   // the learner queue
-  void enqueue_all(QueueItem item) { // TODO
+  void enqueue_all(QueueItem item) { // TODO make effective
 
     // If the configuration stipulates that
     // the inputs should be checked
