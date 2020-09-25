@@ -14,11 +14,23 @@ namespace kdbmultienv     {
 
     };
 
+    class Action {
+
+    };
+
     class MultiAction {
 
     };
 
+    class Step {
+
+    }; // Todo to nest
+
     class MultiStep {
+
+    }; // TODO to nest
+
+    class Status {
 
     };
 
@@ -43,6 +55,10 @@ namespace kdbmultienv     {
             kdbmultienv::MultiAction action,
             kdbmultienv::MultiStep& step){
                 
+        }
+
+        kdbmultienv::Status Close(){
+
         }
     };
     
