@@ -38,6 +38,7 @@
 // TODO add longer trend candle predictors for hour, 15 min, 30 min etc trained on historical data
 // TODO signals from other exchanges etc.
 // TODO include request time and delay etc as a feature
+// TODO create multi-scale features i.e. (5 seconds, 1 minute, 15 minute, 60 minute, 6 hours etc.)
 
 // XGBOOST
 // https://towardsdatascience.com/forecasting-stock-prices-using-xgboost-a-detailed-walk-through-7817c1ff536a
