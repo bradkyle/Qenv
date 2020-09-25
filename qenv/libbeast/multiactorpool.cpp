@@ -478,26 +478,9 @@ class MultiActorPool {
     kdbmultienv::EnvConfig& env_config) {
 
     // TODO
-    std::shared<kdbmultienv::MultiEnvClient> client = kdbmultienv::MultiEnvClient(
+    std::shared<kdbmultienv::MultiEnv> client = kdbmultienv::MultiEnv(
       address,
       env_config);
-
-    // Set a timeout
-    auto deadline =
-        std::chrono::system_clock::now() + std::chrono::seconds(10 * 60);
-
-    if (loop_index == 0) {
-      std::cout << "First Environment waiting for connection to " << address.toString()
-                << " ...";
-    }
-
-    // Wait for connection to be estabilished
-    if (!client->WaitForConnected(deadline)) {
-      throw py::timeout_error("WaitForConnected timed out.");
-    }
-    if (loop_index == 0) {
-      std::cout << " connection established." << std::endl;
-    }
 
     // Retrieve the first step (reset) from the environment
     kdbmultienv::MultiStep multi_step; // TODO change to kdb

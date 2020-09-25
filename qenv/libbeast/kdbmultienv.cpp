@@ -21,6 +21,8 @@ namespace kdbmultienv     {
             struct Action {
 
             };
+
+            
     };
 
     class MultiStep {
@@ -37,15 +39,11 @@ namespace kdbmultienv     {
 
     }; // todo ok, get from grpc
 
-    class MultiEnvClient
+    class MultiEnv
     {
     public:
-        MultiEnvClient(/* args */);
-        ~MultiEnvClient();
-
-        bool WaitForConnected() {
-            
-        } // TODO get from grpc
+        MultiEnv(/* args */);
+        ~MultiEnv();
 
         kdbmultienv::MultiStep Reset(
             kdbmultienv::MultiStep& step){
@@ -65,15 +63,15 @@ namespace kdbmultienv     {
         const kdbmultienv::Address env_server_address_;
     };
     
-    MultiEnvClient::MultiEnvClient(/* args */)
+    MultiEnv::MultiEnv(/* args */)
     {
     }
 
-    MultiEnvClient::Step(/* args */)
+    MultiEnv::Step(/* args */)
     {
     }
     
-    MultiEnvClient::~MultiEnvClient()
+    MultiEnv::~MultiEnv()
     {
     }
     

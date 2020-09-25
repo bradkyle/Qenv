@@ -26,6 +26,5 @@
             .server.DumResT[actions];
           k=1;
             .server.DumRes[actions];
-            .server.DumRes[actions]];
-        
+            .server.DumRes[actions]];  
     };
