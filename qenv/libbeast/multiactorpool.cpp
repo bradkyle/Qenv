@@ -623,7 +623,7 @@ class MultiActorPool {
           // Write the set of actions to the grpc stream
           // That will in turn be ingested by an instance
           // of the environment
-          client->Step(multi_action; &multi_step); // TODO change to q/kdb+
+          client->Step(multi_action; &multi_step); 
 
           // Derives a vector of environment outputs for each
           // actor from the protocol buffers referenced // TODO change to q/KDB
