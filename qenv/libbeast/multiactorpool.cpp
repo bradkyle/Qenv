@@ -164,46 +164,47 @@ class BatchingQueue {
   // streams have been acquired in the same rollout
   // we would enqueue each instance of rollout into
   // the learner queue
-  void enqueue_all(QueueItem item) { // TODO make effective
+  void enqueue_all(std::vector<QueueItem> items) { // TODO make effective
+    for(int i =0;i<items.size(); i++) {
+        // If the configuration stipulates that
+        // the inputs should be checked
+        if (check_inputs_) {
+          bool is_empty = true;
 
-    // If the configuration stipulates that
-    // the inputs should be checked
-    if (check_inputs_) {
-      bool is_empty = true;
+          items[i].tensors.for_each([this, &is_empty](const torch::Tensor& tensor) {
+            is_empty = false;
 
-      item.tensors.for_each([this, &is_empty](const torch::Tensor& tensor) {
-        is_empty = false;
+            if (tensor.dim() <= batch_dim_) {
+              throw py::value_error(
+                  "Enqueued tensors must have more than batch_dim == " +
+                  std::to_string(batch_dim_) + " dimensions, but got " +
+                  std::to_string(tensor.dim()));
+            }
+          });
 
-        if (tensor.dim() <= batch_dim_) {
-          throw py::value_error(
-              "Enqueued tensors must have more than batch_dim == " +
-              std::to_string(batch_dim_) + " dimensions, but got " +
-              std::to_string(tensor.dim()));
+          if (is_empty) {
+            throw py::value_error("Cannot enqueue empty vector of tensors");
+          }
         }
-      });
 
-      if (is_empty) {
-        throw py::value_error("Cannot enqueue empty vector of tensors");
-      }
-    }
+        bool should_notify = false;
+        {
+          std::unique_lock<std::mutex> lock(mu_);
+          // Block when maximum_queue_size is reached.
+          while (maximum_queue_size_ != std::nullopt && !is_closed_ &&
+                deque_.size() >= *maximum_queue_size_) {
+            can_enqueue_.wait(lock);
+          }
+          if (is_closed_) {
+            throw ClosedBatchingQueue("Enqueue to closed queue");
+          }
+          deque_.push_back(std::move(items[i])); // TODO check if this is correct
+          should_notify = deque_.size() >= minimum_batch_size_;
+        }
 
-    bool should_notify = false;
-    {
-      std::unique_lock<std::mutex> lock(mu_);
-      // Block when maximum_queue_size is reached.
-      while (maximum_queue_size_ != std::nullopt && !is_closed_ &&
-             deque_.size() >= *maximum_queue_size_) {
-        can_enqueue_.wait(lock);
-      }
-      if (is_closed_) {
-        throw ClosedBatchingQueue("Enqueue to closed queue");
-      }
-      deque_.push_back(std::move(item));
-      should_notify = deque_.size() >= minimum_batch_size_;
-    }
-
-    if (should_notify) {
-      enough_inputs_.notify_one();
+        if (should_notify) {
+          enough_inputs_.notify_one();
+        }
     }
   }
 
@@ -391,12 +392,13 @@ class DynamicBatcher {
     });
   }
 
+  // TODO check this
   TensorNest compute_all(TensorNest tensors) {
     BatchPromise promise;
     auto future = promise.get_future();
 
     // 
-    batching_queue_.enqueue({std::move(tensors), std::move(promise)});
+    batching_queue_.enqueue_all({std::move(tensors), std::move(promise)});
 
     std::future_status status = future.wait_for(std::chrono::seconds(10 * 60));
     if (status != std::future_status::ready) {
@@ -617,7 +619,7 @@ class MultiActorPool {
         // Implement this for multiple actors
         last = rollouts.end1();
 
-        learner_queue_->enqueue_all({TensorNest(
+        learner_queue_->enqueue_all({TensorNest( // TODO
                   std::vector(
                     {
                       batch_all(rollouts, 0),
