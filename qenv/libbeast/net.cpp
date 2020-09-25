@@ -16,6 +16,14 @@ struct Net : torch::nn::Module {
     fc3 = register_module("fc3", torch::nn::Linear(32, 10));
   }
 
+  torch::Tensor initial_state(int batch_size=1) {
+     if (!use_lstm_){
+       return 
+     } else {
+       torch::zeros(core_num_layers_, batch_size, core_hidden_layers_)
+     }
+  }
+
   // Implement the Net's algorithm.
   torch::Tensor forward(NetInput inputs, torch::Tensor core_state) {
     
@@ -28,13 +36,13 @@ struct Net : torch::nn::Module {
     x = torch::dropout(x, /*p=*/0.5, /*train=*/is_training());
     x = torch::relu(fc2->forward(x));
 
-    one_hot_last_action = torch::one_hot( // TODO 
+    torch::Tensor one_hot_last_action = torch::one_hot( // TODO 
       inputs.last_action.view_as(),
       num_actions
       );
 
-    clipped_reward = torch::clamp(inputs.reward, -1, 1).view_as(T*B, 1);
-    core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
+    torch::Tensor clipped_reward = torch::clamp(inputs.reward, -1, 1).view_as(T*B, 1);
+    torch::Tensor core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
 
     torch::Tensor core_output;
     if(use_lstm){
