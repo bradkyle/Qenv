@@ -608,7 +608,7 @@ class MultiActorPool {
           multi_agent_outputs = all_multi_agent_outputs.get_vector()[0];
 
           // multi_agent_outputs must be a tuple/list.
-          const TensorNest& multi_action = multi_agent_outputs.get_vector().front();
+          TensorNest multi_action = multi_agent_outputs.get_vector().front(); // TODO
 
           // Write the set of actions to the grpc stream
           // That will in turn be ingested by an instance
