@@ -468,6 +468,7 @@ class MultiActorPool {
         initial_agent_state_(std::move(initial_agent_state)) {}
 
 
+
   // MAIN LOOP FUNCTION
   // ------------------------------------------------------------->
 
@@ -507,7 +508,9 @@ class MultiActorPool {
     // Duplicate the initial agent state (which is passed in as a param)
     // num_actors times, such that multiple perceptual streams can be
     // derived simultaneously.
-    TensorNest initial_multi_agent_states = initial_agent_state_; // TODO replicate this for each num agent
+    TensorNest initial_multi_agent_states = MultiActorPool::replicate_agent_state(
+      initial_agent_state_,
+      num_actors_);
 
     // Convert the MultiStep protocol buffers into nest tensors
     // Returns a set of TensorNest where each item maps to a given 
@@ -693,6 +696,11 @@ class MultiActorPool {
   }
 
   uint64_t count() const { return count_; }
+
+
+  static TensorNest replicate_agent_state(TensorNest agent_state, int num_actors){
+    // TODO?
+  };
 
   static TensorNest array_pb_to_nest(kdbmultienv::NDArray* array_pb) {
     std::vector<int64_t> shape = {1, 1};  // [T=1, B=1].

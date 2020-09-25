@@ -14,6 +14,8 @@ namespace kdbmultienv     {
 
     };
 
+    class Multi
+
     class MultiEnvClient
     {
     private:
