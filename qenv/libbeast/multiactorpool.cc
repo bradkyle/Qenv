@@ -658,17 +658,7 @@ class MultiActorPool {
                   )
                 ),
             });
-
-        
-        for (int c = 1; c <= rollouts.size2(); ++c) { // TODO convert to xtensor? vs pytorch tensor
-            // Calls the batch function from
-            // above with the given column c
-            // of the rollouts and pairs this
-            // with the initial agent states of the
-            // c'th agent.
-            
-        }
-
+ 
         // Clear the rollout matrix
         rollouts.clear();
 
@@ -679,13 +669,13 @@ class MultiActorPool {
 
         // 
         count_ += unroll_length_;
+        count_all_ += (unroll_length_*num_actors_);
       }
     } catch (const ClosedBatchingQueue& e) {
       // Thrown when inference_batcher_ and learner_queue_ are closed. Stop.
-      stream->WritesDone();  // TODO change to q/kdb+
-      grpc::Status status = stream->Finish(); // TODO change to q/kdb+
+      kdb::Status status = client->Close();  // TODO change to q/kdb+
       if (!status.ok()) {
-        std::cerr << "rpc failed on finish." << std::endl;
+        std::cerr << "kdb env failed on finish." << std::endl;
       }
     }
   }
