@@ -410,28 +410,33 @@ class MultiActorPool {
     }
 
     // Create grpc client context
-    grpc::ClientContext context;
+    grpc::ClientContext context; // TODO change to kdb
     std::shared_ptr<grpc::ClientReaderWriter<rpcmultienv::MultiAction, rpcmultienv::MultiStep>>
         stream(stub->StreamingMultiEnv(&context));
 
-    rpcmultienv::MultiStep step_pb;
+    // Retrieve the first step (reset) from the environment
+    rpcmultienv::MultiStep step_pb; // TODO change to kdb
     if (!stream->Read(&step_pb)) {
       throw py::connection_error("Initial read failed.");
     }
 
-    // Instantiate the initial agent state (which is passed in as a param)
-    TensorNest initial_agent_state = initial_agent_state_; // TODO replicate this for each num agent
+    // Duplicate the initial agent state (which is passed in as a param)
+    // num_actors times, such that multiple perceptual streams can be
+    // derived simultaneously.
+    TensorNest initial_agent_states = initial_agent_state_; // TODO replicate this for each num agent
 
     // Convert the MultiStep protocol buffers into nest tensors
     // Returns a set of TensorNest where each item maps to a given 
     // agent.
-    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO
+    TensorNest env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO change to kdb
 
     // TODO map the compute function to each step pb ?
 
     // create a batch vector of env outputs, in a multienv scenario this would
     // entail a set of multiple agent_step pairs i.e. the MultiStep pb
-    TensorNest compute_inputs(std::vector({env_outputs, initial_agent_state})); // TODO instantiate for each num_actors
+    // TODO make sure outputs size = initial agent states!
+
+    TensorNest compute_inputs(std::vector({env_outputs, initial_agent_states})); // TODO instantiate for each num_actors
     
     // torch .jit fork?
 
@@ -459,8 +464,12 @@ class MultiActorPool {
           std::to_string(all_agent_outputs.get_vector().size()));
     }
 
-    // TODO get the 
-    TensorNest agent_state = all_agent_outputs.get_vector()[1];
+    // Instantiates a set of num_actors X agent states that
+    // are used 
+    TensorNest agent_states = all_agent_outputs.get_vector()[1];
+    
+    // Instantiates a set of num_actors X agent states that
+    // are used
     TensorNest agent_outputs = all_agent_outputs.get_vector()[0];
 
     // TODO update for multiagent env
@@ -472,7 +481,7 @@ class MultiActorPool {
     TensorNest last(std::vector({env_outputs, agent_outputs}));
 
     rpcmultienv::MultiAction multi_action_pb;
-    std::vector<std::vector<TensorNest>> rollouts; // TODO change to boost matrix
+    std::vector<std::vector<TensorNest>> rollouts; // TODO change to xtensor matrix
     try {
       while (true) {
 
@@ -493,7 +502,11 @@ class MultiActorPool {
           // for each mapping
           all_agent_outputs = inference_batcher_->compute(compute_inputs);
 
-          agent_state = all_agent_outputs.get_vector()[1];
+          // Returns a set of num_actors X agent states that are
+          // used  
+          agent_states = all_agent_outputs.get_vector()[1];
+          
+          // Returns a set of num_actors  X agent outputs
           agent_outputs = all_agent_outputs.get_vector()[0];
 
           // agent_outputs must be a tuple/list.
@@ -503,7 +516,8 @@ class MultiActorPool {
 
           // TODO what does this do?
           fill_nest_pb(
-              multi_action_pb.mutable_nest_action(), action,
+              multi_action_pb.mutable_nest_action(), 
+              action,
               [&](rpcmultienv::NDArray* array, const torch::Tensor& tensor) {
                 return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
               });
@@ -520,7 +534,7 @@ class MultiActorPool {
 
           // Derives a vector of environment outputs for each
           // actor from the protocol buffers referenced // TODO change to q/KDB
-          env_outputs = MultiActorPool::step_pb_to_nest(&step_pb);
+          env_outputs = MultiActorPool::step_pb_to_nest(&step_pb); // TODO change to q/kdb+
 
           // reset the compute inputs for the next iteration
           compute_inputs = TensorNest(std::vector({env_outputs, agent_state}));
@@ -543,16 +557,18 @@ class MultiActorPool {
         // streams have been acquired in the same rollout
         // we would enqueue each instance of rollout into
         // the learner queue
-        for (int c = 1; c <= rollouts.size2(); ++c) {
+        for (int c = 1; c <= rollouts.size2(); ++c) { // TODO convert to xtensor? vs pytorch tensor
+            // Calls the batch function from
+            // above with the given column c
+            // of the rollouts and pairs this
+            // with the initial agent states of the
+            // c'th agent.
             learner_queue_->enqueue({
                 TensorNest(
                   std::vector(
                     {
-                      // Calls the batch function from
-                      // above with the given column c
-                      // i.e. 
-                      batch(rollouts[], 0), 
-                      std::move(initial_agent_state)
+                      batch(rollouts[], 0),
+                      std::move(initial_agent_states[])
                     }
                   )
                 ),
@@ -565,15 +581,15 @@ class MultiActorPool {
         // Set the initial agent states to the current latent
         // state, which will in turn be used for inference in
         // the subsequent step.
-        initial_agent_state = agent_state;  // Copy
+        initial_agent_states = agent_states;  // Copy
 
         // 
         count_ += unroll_length_;
       }
     } catch (const ClosedBatchingQueue& e) {
       // Thrown when inference_batcher_ and learner_queue_ are closed. Stop.
-      stream->WritesDone();
-      grpc::Status status = stream->Finish();
+      stream->WritesDone();  // TODO change to q/kdb+
+      grpc::Status status = stream->Finish(); // TODO change to q/kdb+
       if (!status.ok()) {
         std::cerr << "rpc failed on finish." << std::endl;
       }
@@ -585,8 +601,13 @@ class MultiActorPool {
     // here and not in the created threads.
     std::vector<std::future<void>> futures;
     for (int64_t i = 0, size = env_server_addresses_.size(); i != size; ++i) {
-      futures.push_back(std::async(std::launch::async, &MultiActorPool::loop, this,
-                                   i, env_server_addresses_[i]));
+      futures.push_back(std::async(
+        std::launch::async, 
+        &MultiActorPool::loop, 
+        this,
+        i, 
+        env_server_addresses_[i]
+      ));
     }
     for (auto& future : futures) {
       // This will only catch errors in the first thread. std::when_any would be

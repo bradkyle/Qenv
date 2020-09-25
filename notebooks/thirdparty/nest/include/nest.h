@@ -193,7 +193,7 @@ struct Nest {
         value);
   }
 
-  static Nest<std::vector<T>> zip(
+  static Nest<std::vector<T>> zip( // slower than mere ref
       const std::vector<Nest<T>> &nests) {
     const int nests_size = nests.size();
     if (nests_size == 0) {
