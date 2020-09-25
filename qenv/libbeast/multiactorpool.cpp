@@ -599,7 +599,8 @@ class MultiActorPool {
           // Would have to be an each?
           // for each mapping
           all_multi_agent_outputs = inference_batcher_->compute_all(compute_inputs);
-
+          // Todo check that all agent outputs/values are present.
+          
           // Returns a set of num_actors X agent states that are
           // used  
           multi_agent_states = all_multi_agent_outputs.get_vector()[1];
