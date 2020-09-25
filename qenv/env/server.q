@@ -17,15 +17,15 @@
     };
 
 .server.DumResT          :{[actions]
-    `agentId`observation`reward`done`episode_step`episode_return!flip[.server.DumRes[actions]]
+    (`agentId`observation`reward`done`episode_step`episode_return!flip[.server.DumRes[actions]])
     };
 
 // TODO ACTIONS should be a tuple/vector of (agentId, action)
 .server.DumStep         :{[actions;k]
         :$[k=0;
-            .server.DumResT[actions]
+            .server.DumResT[actions];
           k=1;
-            .server.DumRes[actions]
+            .server.DumRes[actions];
             .server.DumRes[actions]];
         
     };
