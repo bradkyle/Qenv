@@ -14,37 +14,38 @@ namespace kdbmultienv     {
 
     };
 
-    class Action {
-
-    };
-
     class MultiAction {
+        private:
 
+        public:
+            struct Action {
+
+            };
     };
-
-    class Step {
-
-    }; // Todo to nest
 
     class MultiStep {
+        private:
+
+        public:
+            struct Step {
+
+            };
 
     }; // TODO to nest
 
     class Status {
 
-    }; // todo ok
+    }; // todo ok, get from grpc
 
     class MultiEnvClient
     {
-    private:
-        /* data */
     public:
         MultiEnvClient(/* args */);
         ~MultiEnvClient();
 
         bool WaitForConnected() {
             
-        }
+        } // TODO get from grpc
 
         kdbmultienv::MultiStep Reset(
             kdbmultienv::MultiStep& step){
@@ -60,6 +61,8 @@ namespace kdbmultienv     {
         kdbmultienv::Status Close(){
 
         }
+    private:
+        const kdbmultienv::Address env_server_address_;
     };
     
     MultiEnvClient::MultiEnvClient(/* args */)
