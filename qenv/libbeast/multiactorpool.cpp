@@ -452,18 +452,13 @@ class DynamicBatcher {
 // The utilization of multiple actors in this manner is for the effective randomization
 // of the market microstructure.
 
-struct KDBServerAddress { // TODO impl class for converting to connect str etc.
-  int         portnumber;
-  std::string hostname;
-  std::string username;
-  std::string password;
-};
+
 
 class MultiActorPool {
  public:
   MultiActorPool(int unroll_length, int num_actors, std::shared_ptr<BatchingQueue<>> learner_queue,
             std::shared_ptr<DynamicBatcher> inference_batcher,
-            std::vector<KDBServerAddress> env_server_addresses,
+            std::vector<kdbmultienv::Address> env_server_addresses,
             TensorNest initial_agent_state)
       : unroll_length_(unroll_length),
         num_actors_(num_actors),
@@ -476,10 +471,13 @@ class MultiActorPool {
   // MAIN LOOP FUNCTION
   // ------------------------------------------------------------->
 
-  void loop(int64_t loop_index, const KDBServerAddress& address) {
+  void loop(int64_t loop_index, const kdbmultienv::Address& address) {
 
     // TODO
-    std::shared<kdbmultienv::MultiEnvClient> client = MultiEnvClient();
+    std::shared<kdbmultienv::MultiEnvClient> client = kdbmultienv::MultiEnvClient(
+      address,
+      
+    );
     
 
     // Set a timeout
