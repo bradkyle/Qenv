@@ -26,7 +26,7 @@ torch::Tensor action_log_probs(
         torch::log_softmax(policy_logits.flatten(0,-2), -1), 
         actions.flatten(),
         // TODO reduction
-    ).negative();
+    ).view_as(actions).negative();
 };
 
 
@@ -48,7 +48,7 @@ vtrace::VTraceReturns from_importance_weights(
         clipped_rhos = rhos; 
     };
 
-    cs = torch::clamp(rhos; );
+    cs = torch::clamp(rhos; ); // TOD max=1.0
 
     // Append bootstrapped value to get  [v1, ..., v_t+1]
     torch::Tensor values_t_plus_1 = torch.cat();
