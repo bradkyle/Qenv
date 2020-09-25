@@ -36,8 +36,8 @@
 #include <torch/script.h>
 
 #include "nest_serialize.h"
-#include "rpcmultienv.grpc.pb.h"
-#include "rpcmultienv.pb.h"
+#include "kdbmultienv.grpc.pb.h"
+#include "kdbmultienv.pb.h"
 
 #include "../nest/nest/nest.h"
 #include "../nest/nest/nest_pybind.h"
@@ -525,10 +525,7 @@ class MultiActorPool {
     TensorNest compute_inputs(std::vector({
         multi_env_outputs, 
         initial_multi_agent_states
-      })); // TODO instantiate for each num_actors
-    
-    // torch .jit fork?
-
+      })); // TODO instantiate for each num_actors/ create zip fn
 
     // Calls the compute method of the DynamicBatcher defined above 
     // The . (dot) operator and the -> (arrow) operator are used
@@ -557,7 +554,7 @@ class MultiActorPool {
     // TODO update this for multi agent scenario
     if (all_multi_agent_outputs.get_vector().size() != 2) {
       throw py::value_error(
-          "Expected agent output to be ((action, ...), new_state) but got "
+          "Expected mulit agent output to be (((action, ...), new_state),((action, ...), new_state)) but got "
           "sequence of "
           "length " +
           std::to_string(all_multi_agent_outputs.get_vector().size()));
@@ -579,7 +576,7 @@ class MultiActorPool {
 
     TensorNest last(std::vector({multi_env_outputs, multi_agent_outputs})); // TODO check
 
-    rpcmultienv::MultiAction multi_action_pb;
+    kdbmultienv::MultiAction multi_action;
     std::vector<std::vector<TensorNest>> rollouts; // TODO change to xtensor matrix
     try {
       while (true) {
@@ -611,25 +608,20 @@ class MultiActorPool {
           // multi_agent_outputs must be a tuple/list.
           const TensorNest& action = multi_agent_outputs.get_vector().front();
 
-          multi_action_pb.Clear();
+          multi_action.Clear();
 
           // TODO what does this do?
           fill_nest_pb(
-              multi_action_pb.mutable_nest_action(), 
+              multi_action.mutable_nest_action(), 
               action,
-              [&](rpcmultienv::NDArray* array, const torch::Tensor& tensor) {
+              [&](kdbmultienv::NDArray* array, const torch::Tensor& tensor) {
                 return fill_ndarray_pb(array, tensor, /*start_dim=*/2);
               });
 
           // Write the set of actions to the grpc stream
           // That will in turn be ingested by an instance
           // of the environment
-          stream->Write(multi_action_pb); // TODO change to q/kdb+
-
-          // Read the set of MultiStep results from the grpc stream
-          if (!stream->Read(&multi_step)) { // TOOD change to q/KDB+
-            throw py::connection_error("Read failed.");
-          }
+          client->Step(multi_action; &multi_step); // TODO change to q/kdb+
 
           // Derives a vector of environment outputs for each
           // actor from the protocol buffers referenced // TODO change to q/KDB
@@ -703,7 +695,7 @@ class MultiActorPool {
 
   uint64_t count() const { return count_; }
 
-  static TensorNest array_pb_to_nest(rpcmultienv::NDArray* array_pb) {
+  static TensorNest array_pb_to_nest(kdbmultienv::NDArray* array_pb) {
     std::vector<int64_t> shape = {1, 1};  // [T=1, B=1].
     for (int i = 0, length = array_pb->shape_size(); i < length; ++i) {
       shape.push_back(array_pb->shape(i));
@@ -716,7 +708,7 @@ class MultiActorPool {
         /*deleter=*/[data](void*) { delete data; }, dtype));
   }
 
-  static TensorNest multi_step_to_nest(rpcmultienv::MultiStep* multi_step) {
+  static TensorNest multi_step_to_nest(kdbmultienv::MultiStep* multi_step) {
     std::vector<TensorNes<void>> multi_step;
     for () { // TODO make faster
       TensorNest done = TensorNest( // TODO check
@@ -760,7 +752,7 @@ class MultiActorPool {
   }
 
   // TODO delve
-  static void fill_ndarray_pb(rpcmultienv::NDArray* array,
+  static void fill_ndarray_pb(kdbmultienv::NDArray* array,
                               const torch::Tensor& tensor,
                               int64_t start_dim = 0) {
     
