@@ -69,13 +69,13 @@ dozc:{x+y}[doz];
             (1b;1;())
         ));
         (("1:2) ProcessDepthUpdateEvents BUY: (No hidden qty) multiple salient records");(
-            `eid`time`cmd`kind`datum!(0;z;0;0;(1,100,100,0));
+            `eid`time`cmd`kind`datum!flip((0;z;0;0;(1,100,100,0));(0;z;0;0;(1,100,100,0)));
             (1b;1;())
         ));
         (("1:3) ProcessDepthUpdateEvents SELL: (No hidden qty) multiple salient records");(
-            `eid`time`cmd`kind`datum!(0;z;0;0;(-1,100,100,0));
+            `eid`time`cmd`kind`datum!flip((0;z;0;0;(1,100,100,0));(0;z;0;0;(1,100,100,0)));
             (1b;1;())
-        ));
+        ))
     );
     .util.testutils.defaultContractHooks;
     "Process a set of depth update events"];
