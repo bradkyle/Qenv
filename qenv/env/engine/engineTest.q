@@ -13,6 +13,8 @@
 
 \l instrument.q
 \l account.q
+show 99#"=";
+
 \l order.q
 
 \cd ../util
@@ -26,12 +28,21 @@
 \l event.q 
 \l egress.q
 \l ingress.q 
-\l pipe.q 
 \cd ../engine
 
-
 \l engine.q
- 
+
+l: `long$
+z:.z.z;
+sc:{x+(`second$y)};
+sn:{x-(`second$y)};
+sz:sc[z];
+snz:sn[z];
+dts:{(`date$x)+(`second$x)};
+dtz:{dts[sc[x;y]]}[z]
+doz:`date$z;
+dozc:{x+y}[doz];
+
 .qt.Unit[
     ".engine.ProcessDepthUpdateEvents";
     {[c]
@@ -46,14 +57,14 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
     };
     {[p]
-    
+        :
     };
     (
         (("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
-
+            `eid`time`cmd`kind`datum!(0;z;0;0;(1,100,100,0))
         ));
         (("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
-
+            enlist(-1,100,100,0)
         ))
     );
     .util.testutils.defaultContractHooks;

@@ -31,10 +31,10 @@
     execInst        : `long$());
 .order.ordCols:cols .order.Order;
 
-.order.CLMap    :(
-    [clId:`long$()]
-    orderId:`.order.Order$(); 
-    );
+/ .order.CLMap    :(
+/     [clId:`long$()]
+/     orderId:`.order.Order$(); 
+/     );
 
 .order.fllCols:`instrumentId`accountId`side`price`qty`reduce`time;
 .order.deriveFlls       :{
@@ -152,7 +152,6 @@
 
 / .order.OrderBook,:raze'[flip 0^.util.PadM'[(`time xasc state)`price`side`tgt`hqty`iqty`vqty]];
 / .order.test.ob1:.order.OrderBook;
-
 // TODO validation.
 
 /  @param price     (Long) The price at which the fill is occuring
@@ -164,15 +163,15 @@
     // TODO validation
     // TODO offsets cannot be less than hidden qty
 
-    odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct nxt`price];0b;()]; // TODO batch update
+    odrs:?[.order.Order;.util.cond.isActiveLimitB[distinct e`price];0b;()]; // TODO batch update
     $[count[odrs]>0;[
         ob:0^(0!(?[`.order.OrderBook;();0b;()]));
         .order.test.ob:ob;
         // TODO uj new event
-        .order.test.nxt:nxt;
-        nxt:flip nxt;
+        .order.test.e:e;
+        e:flip e;
         // ?[`.order.OrderBook;((=;`side;1);(<;1000;(+\;`vqty)));0b;`price`side`qty`vqty`svqty!(`price;`side;`qty;`vqty;(+\;`vqty))]
-        state:`time xasc 0!uj[lj[`side`price xgroup nxt;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
+        state:`time xasc 0!uj[lj[`side`price xgroup e;`side`price xgroup ob];`side`price xgroup odrs]; // TODO grouping
 
         dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty`nqty)]]]]);
         .order.test.state:state;
@@ -571,18 +570,18 @@
 // TODO add place time // TODO validation
 // New Order Adds an order to the orderbook.
 /  @param i     (Instrument) The instrument for which this order is placed
-/  @param o     (Order) The order that is being placed.
+/  @param e     (Order) The order that is being placed.
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory
 .order.NewOrder            :{[e] 
     // TODO validation?
-    (o`instrumentId`accountId):(
-        `.instrument.Instrument!o[`instrumentId];
-        `.account.Account!o[`accountId]);
-    k:o[`otype];
+    (e`instrumentId`accountId):(
+        `.instrument.Instrument!e[`instrumentId];
+        `.account.Account!e[`accountId]);
+    k:e[`otype];
     res:$[k=0;[ // MARKET ORDER
-                .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                .order.ProcessTrade[i;a;e`side;e`size;e`reduce;e`time];
           ]; 
           (k in (1,4,5));[ // LIMIT ORDER // TODO allow for hidden orders to be dispersed
                 // IF the order is present, amend order, if amended to 0 remove
@@ -591,32 +590,32 @@
                 // If the order crosses the bid/ask spread
                 // sell order <= best bid or buy order >= best ask 
                 // process the order as a trade. 
-                $[(all[(o[`side]<0),(i[`bestBidPrice]>=o[`price]),i[`hasLiquidityBuy]] or 
-                    all[(o[`side]>0),(i[`bestAskPrice]<=o[`price]),i[`hasLiquiditySell]]); // check postonly
+                $[(all[(e[`side]<0),(i[`bestBidPrice]>=e[`price]),i[`hasLiquidityBuy]] or 
+                    all[(e[`side]>0),(i[`bestAskPrice]<=e[`price]),i[`hasLiquiditySell]]); // check postonly
                     [
-                        .order.ProcessTrade[i;a;o`side;o`size;o`reduce;o`time];
+                        .order.ProcessTrade[i;a;e`side;e`size;e`reduce;e`time];
                     ];
                     [
                         // Becuase the order is placed at the back of the queue
                         // no change in the offsets of the other orders occurs at 
                         // the level.
-                        o[`orderId]:(.order.orderCount+:1);
-                        o[`leaves]:o[`size];
-                        o[`displayqty]:o[`leaves]^o[`displayqty];
+                        e[`orderId]:(.order.orderCount+:1);
+                        e[`leaves]:e[`size];
+                        e[`displayqty]:e[`leaves]^e[`displayqty];
                         // get the orderbook price level
-                        ob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
-                        o[`offset]:sum[ob`vqty`hqty`iqty];
+                        ob:?[`.order.OrderBook;enlist(=;`price;e`price);();()];
+                        e[`offset]:sum[ob`vqty`hqty`iqty];
                         // Fill orderbook where neccessary
-                        (ob`price`side)^:(o`price;o`side);
+                        (ob`price`side)^:(e`price;e`side);
                         ob:0^ob; // TODO move to engine
                         // TODO if order is hidden update ob
-                        ob[`vqty]+:o[`displayqty];
-                        ob[`iqty]+:0^((-/)o`leaves`displayqty); // TODO check
-                        .order.Order,:o;
+                        ob[`vqty]+:e[`displayqty];
+                        ob[`iqty]+:0^((-/)e`leaves`displayqty); // TODO check
+                        .order.Order,:e;
                         .order.OrderBook,:ob;
 
-                        .pipe.egress.AddOrderCreatedEvent[o;o`time];
-                        .pipe.egress.AddDepthEvent[();o`time]; // TODO remove for partial book updates
+                        .pipe.egress.AddOrderCreatedEvent[e;e`time];
+                        .pipe.egress.AddDepthEvent[();e`time]; // TODO remove for partial book updates
 
                     ]];
           ]; 
@@ -625,7 +624,7 @@
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
-              .order.Order,:o;
+              .order.Order,:e;
          ]; 
          'INVALID_ORDER_TYPE]; 
     // Prune engine orders to increase speed
@@ -639,17 +638,17 @@
 // Amend Order modifies a given order.
 // Takes the place of cancel logic when an order amount is amended to zero.
 /  @param i     (Instrument) The instrument for which this order is placed
-/  @param o     (Order) The order that is being placed.
+/  @param e     (Order) The order that is being placed.
 /  @param a    (Account) The account to which this order belongs.
 /  @param time (datetime) The time at which this order was placed.
 /  @return (Inventory) The new updated inventory // TODO if update price to past best bid/ask ProcessTrade
 .order.AmendOrder            :{[e] // TODO add time 
     // TODO validation?
-    co:first 0!?[`.order.Order;enlist(=;`orderId;o`orderId);0b;()]; // TODO move to engine
+    co:first 0!?[`.order.Order;enlist(=;`orderId;e`orderId);0b;()]; // TODO move to engine
     // TODO fill current order with next order
-    if[not null[o`size];[o[`leaves]:o[`size];o[`size]:co[`size]]]; // TODO move to engine
-    o:co,o;
-    k:o[`otype];
+    if[not null[e`size];[e[`leaves]:e[`size];e[`size]:co[`size]]]; // TODO move to engine
+    e:co,e;
+    k:e[`otype];
     res:$[(k in (1,4,5));[ // LIMIT ORDER
                 // Get the current state of the order book at the given price level. 
                 cob:?[`.order.OrderBook;enlist(=;`price;co`price);();()];
@@ -659,47 +658,47 @@
 
                 // IF the order is present, amend order, if amended to 0 remove
                 // Get the current state of the order. // TODO simplify into change in price and side, change in size
-                $[not[sum[o`leaves`size]>0];[
+                $[not[sum[e`leaves`size]>0];[
                         // Cancel order and update orderbook subsequently
                         cob[`iqty]-:((-/)co`leaves`displayqty); // TODO check
                         cob[`vqty]-:co[`leaves];
 
-                        ![`.order.Order;enlist(=;`orderId;o`orderId);0;`symbol$()]; // Simpler drop
+                        ![`.order.Order;enlist(=;`orderId;e`orderId);0;`symbol$()]; // Simpler drop
 
                         .order.OrderBook,:cob;
-                        .pipe.egress.AddOrderCancelledEvent[o;o`time];
+                        .pipe.egress.AddOrderCancelledEvent[e;e`time];
                         
                     ];
-                    ((o[`side]<>co[`side]) or (o[`price]<>co[`price]));
+                    ((e[`side]<>co[`side]) or (e[`price]<>co[`price]));
                     [ // If the order should be replaced in the order queue when it is moved in orderbook.
-                        nob:?[`.order.OrderBook;enlist(=;`price;o`price);();()];
+                        nob:?[`.order.OrderBook;enlist(=;`price;e`price);();()];
                         cod[`offset]-:co[`leaves];
 
-                        (nob`price`side)^:(o`price;o`side);
+                        (nob`price`side)^:(e`price;e`side);
                         nob:0^nob;
-                        o[`offset]:sum[nob`vqty`hqty`iqty];
+                        e[`offset]:sum[nob`vqty`hqty`iqty];
 
                             // set the new orderbook qty to the  
-                        nob[`iqty]+:((-/)o`leaves`displayqty); // TODO check    
-                        nob[`vqty]+:o`displayqty;
+                        nob[`iqty]+:((-/)e`leaves`displayqty); // TODO check    
+                        nob[`vqty]+:e`displayqty;
 
                         cob[`vqty]-:co[`displayqty];
                         cob[`iqty]-:((-/)co`leaves`displayqty);
 
-                        .order.Order,:(o,cod); // TODO test move into make order update
+                        .order.Order,:(e,cod); // TODO test move into make order update
                         .order.OrderBook,:(cob;nob);
-                        .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+                        .pipe.egress.AddOrderUpdatedEvent[e;e`time];
                     ];  
-                    (o[`leaves]>co[`leaves]);
+                    (e[`leaves]>co[`leaves]);
                     [ // If the order should be replaced in the order queue when it is made larger.
 
                         // considering the order is being replaced in the queue 
                         // amend all orders above the order to reflect the change
                         // in offset.
-                        o[`displayqty]:o`leaves;
+                        e[`displayqty]:e`leaves;
                         
-                        vdlt:(o[`leaves] - co[`leaves]);
-                        dlt:vdlt+(o[`displayqty]-co[`displayqty]);
+                        vdlt:(e[`leaves] - co[`leaves]);
+                        dlt:vdlt+(e[`displayqty]-co[`displayqty]);
                         
                         // Adjust the offsets of all orders > offset at level
                         // and update orderbook.
@@ -709,24 +708,24 @@
 
                         // Because the price of the order has not been changed
                         // merely update the same level of the orderbook.
-                        cob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
+                        cob[`iqty]+:(((-/)e`leaves`displayqty)-((-/)co`leaves`displayqty));
                         cob[`vqty]+:vdlt;
 
                         // Reset the order offset to the sum of the 
                         // visible and hidden quantity at the level
-                        o[`offset]:(cob[`vqty]-(o[`leaves]))+sum[cob`hqty`iqty];
+                        e[`offset]:(cob[`vqty]-(e[`leaves]))+sum[cob`hqty`iqty];
 
-                        .order.Order,:(o,cod); // TODO check
+                        .order.Order,:(e,cod); // TODO check
                         .order.OrderBook,:cob;
-                        .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+                        .pipe.egress.AddOrderUpdatedEvent[e;e`time];
                     ];
                     [   // If the order reduces in size it does not affect the placement in the queue
 
                         // Derive the delta in size of the order
-                        vdlt:(o[`leaves] - co[`leaves]);
-                        dlt:vdlt+(o[`displayqty]-co[`displayqty]);
+                        vdlt:(e[`leaves] - co[`leaves]);
+                        dlt:vdlt+(e[`displayqty]-co[`displayqty]);
 
-                        o[`displayqty]:min[o`leaves`displayqty];
+                        e[`displayqty]:min[e`leaves`displayqty];
 
                         // Adjust the offsets of all orders > offset at level
                         // and update orderbook.
@@ -736,23 +735,23 @@
 
                         // Because the price of the order has not been changed
                         // merely update the same level of the orderbook.
-                        cob[`iqty]+:(((-/)o`leaves`displayqty)-((-/)co`leaves`displayqty));
+                        cob[`iqty]+:(((-/)e`leaves`displayqty)-((-/)co`leaves`displayqty));
                         cob[`vqty]+:vdlt;
 
-                        .order.Order,:(o,cod); // TODO check
+                        .order.Order,:(e,cod); // TODO check
                         .order.OrderBook,:cob;
-                        .pipe.egress.AddOrderUpdatedEvent[o;o`time];
+                        .pipe.egress.AddOrderUpdatedEvent[e;e`time];
                     ]];
                     
                 // TODO dependent on visible delta
-                .pipe.egress.AddDepthEvent[cob;o`time]; // TODO
+                .pipe.egress.AddDepthEvent[cob;e`time]; // TODO
           ]; 
           (k in (1,2));[ // STOP_LIMIT_ORDER, STOP_MARKET_ORDER
               // IF the order is present, amend order, if amended to 0 remove
               // Stop orders do not modify state of 
               // the orderbook and thus can be inserted
               // as such.
-              .order.Order,:o;
+              .order.Order,:e;
          ]; 
          'INVALID_ORDER_TYPE]; 
     // Prune engine orders to increase speed
