@@ -79,6 +79,8 @@
     e:`side`price`nqty`nhqty!events;
     e[`instrumentId]:`.instrument.Instrument!0;    
 
+    // TODO purge depth updates that cross spread?
+
     // TODO processing
     
     if[count[e]>0;.order.ProcessDepth . e];
@@ -154,8 +156,6 @@
 
     e:`settlement; // TODO
     e[`instrumentId]:`.instrument.Instrument!0;
-    
-
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -211,7 +211,7 @@
     / accountIds:key .account.Account; 
     // TODO check all count=12
     // TODO do validation here
-    // $[any[in[e[`orderId`clOrdId];key[.order.Order]`orderId]];
+    / $[any[in[e[`orderId`clOrdId];key[.order.Order]`orderId]];
     
     // check max batch order amends
      // Filter e where col count<>12
@@ -241,7 +241,7 @@
 
     // Instrument specific validation        
     e:.engine.PurgeNot[e;e[`price] < i[`minPrice];0;"Invalid price: price<minPrice"];
-    e:.engine.PurgeNot[e;e[`price] > i[`maxPrice;0;"Invalid price: price>maxPrice"];
+    e:.engine.PurgeNot[e;e[`price] > i[`maxPrice];0;"Invalid price: price>maxPrice"];
     e:.engine.PurgeNot[e;e[`size] < i[`minSize];0;"Invalid size: size<minSize"]; 
     e:.engine.PurgeNot[e;e[`size] > i[`maxSize];0;"Invalid size: size>maxSize"];
     e:.engine.PurgeNot[e;(e[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
@@ -300,12 +300,15 @@
     a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
     a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
 
-    a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
+    // Derive new initmargin req, initmargin, etc.
+
+    e:.engine.Purge[e;a[`available]<a[`initMarginReq];0;"Account has insufficient balance to place order"]; // filter orders where resultant available is less than initMarginReq
 
     // Create probabalistic dropout of orders according to some loadshedding coefficient.
 
     // new order order fields 
-    // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
+    // (`accountId`clOid`price`side`otype`timeinforce`size
+    //`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
     if[count[o]>0;.order.NewOrder . e];
     };
 
@@ -355,7 +358,7 @@
 
     // Instrument specific validation        
     e:.engine.PurgeNot[e;e[`price] < i[`minPrice];0;"Invalid price: price<minPrice"];
-    e:.engine.PurgeNot[e;e[`price] > i[`maxPrice;0;"Invalid price: price>maxPrice"];
+    e:.engine.PurgeNot[e;e[`price] > i[`maxPrice];0;"Invalid price: price>maxPrice"];
     e:.engine.PurgeNot[e;e[`size] < i[`minSize];0;"Invalid size: size<minSize"]; 
     e:.engine.PurgeNot[e;e[`size] > i[`maxSize];0;"Invalid size: size>maxSize"];
     e:.engine.PurgeNot[e;(e[`price] mod i[`tickSize])<>0;0;"Invalid tickSize"];
@@ -404,24 +407,12 @@
     // for which their respective account has insufficient 
     // balance.
     premium:(e[`side]*(i[`markprice]-e[`price]));
-
-    // TODO derive better
-    // derive the instantaneous loss that will be incurred for each order
-    // placement and thereafter derive the cumulative loss for each order
-    // filter out orders that attribute to insufficient balance where neccessary
-    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
-    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
-    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
-    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
-
-    a[`available]<a[`initMarginReq] // filter orders where resultant available is less than initMarginReq
-
+ 
     // Create probabalistic dropout of orders according to some loadshedding coefficient.
 
     // new order order fields 
     // (`accountId`clOid`price`side`otype`timeinforce`size`limitprice`stopprice`reduce`trigger`displayqty) = 12 fields
     if[count[o]>0;.order.NewOrder . e];
-    
     };
 
 // Inc Fill is used when the fill is to be added to the given inventory
@@ -440,6 +431,8 @@
 
     e:.engine.PurgeNot[e;e`accountId in key[.account.Account];0;"Invalid account"];
     e[`accountId]:`.account.Account!e[`accountId];
+
+    // TODO update account margin value 
     
     if[count[oId]>0;.order.CancelOrder . e];
     };
@@ -467,6 +460,8 @@
     e:.engine.Purge[e;e[`accountId][`available]<=0;0;"Order account has insufficient available balance"];
     e:.engine.Purge[e;e[`accountId][`state]=1;0;"Account has been disabled"];
     e:.engine.Purge[e;e[`accountId][`state]=2;0;"Account has been locked for liquidation"];
+
+    // TODO update account margin value
 
     if[count[aId]>0;.order.CancelAllOrders . e];
     };
@@ -579,18 +574,18 @@
     $[null[.engine.WaterMark] or [newwm>.engine.WaterMark];[
         {
             k:x`f;
-            $[k=0; .engine.ProcessDepthUpdateEvents[x];     // DEPTH
-            k=1; .engine.ProcessNewTradeEvents[x];        // TRADE
-            k=2; .engine.ProcessMarkUpdateEvents[x];      // MARK
-            k=3; .engine.ProcessSettlementEvents[x];      // SETTLEMENT
-            k=4; .engine.ProcessFundingEvents[x];         // FUNDING
-            k=5; .engine.ProcessLiquidationEvents[x];     // LIQUIDATION
-            k=8; .engine.ProcessOrderEvents[x];           // ORDER
-            k=9; .engine.ProcessNewPriceLimitEvents[x];   // PRICELIMIT
-            k=10;.engine.ProcessWithdrawEvents[x];        // WITHDRAW
-            k=11;.engine.ProcessDepositEvents[x];         // DEPOSIT
-            k=16;.engine.ProcessSignalEvents[x];         // SIGNAL
-            'INVALID_EVENT_KIND];
+            $[k=0; .engine.ProcessDepthUpdateEvents[x];   // DEPTH
+              k=1; .engine.ProcessNewTradeEvents[x];        // TRADE
+              k=2; .engine.ProcessMarkUpdateEvents[x];      // MARK
+              k=3; .engine.ProcessSettlementEvents[x];      // SETTLEMENT
+              k=4; .engine.ProcessFundingEvents[x];         // FUNDING
+              k=5; .engine.ProcessLiquidationEvents[x];     // LIQUIDATION
+              k=8; .engine.ProcessOrderEvents[x];           // ORDER
+              k=9; .engine.ProcessNewPriceLimitEvents[x];   // PRICELIMIT
+              k=10;.engine.ProcessWithdrawEvents[x];        // WITHDRAW
+              k=11;.engine.ProcessDepositEvents[x];         // DEPOSIT
+              k=16;.engine.ProcessSignalEvents[x];          // SIGNAL
+              'INVALID_EVENT_KIND];
         }'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
         .engine.WaterMark:newwm;
     ];'WATERMARK_HAS_PASSED];

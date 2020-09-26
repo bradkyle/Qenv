@@ -38,8 +38,8 @@
             withdrawCount       : `long$();
             tradeVolume         : `long$();
             tradeCount          : `long$();
-            netLongPosition     : `long$(); // Scalar Positive > 0 
-            netShortPosition    : `long$(); // Scalar Negative < 0
+            netLongPosition     : `long$(); // Scalar Positive > 0 // TODO change to reference
+            netShortPosition    : `long$(); // Scalar Negative < 0 // TODO change to reference
             posMargin           : `long$();
             longMargin          : `long$();
             shortMargin         : `long$();
@@ -57,6 +57,7 @@
             selfFillVolume      : `long$();
             leverage            : `long$();
             monthVolume         : `long$();
+            requestCount        : `long$();
             state               : `long$()); // TODO add reference to Inventory
 
 .account.mandCols:();
