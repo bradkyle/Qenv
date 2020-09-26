@@ -36,13 +36,17 @@
     eventCount                  : `long$()
     );
 
-.engine.Requests        :(
+.engine.Requests        :( // TODO error catching and request limits
 
     );
 
 .engine.Purge               :{[events;cond;errkind;errmsg]
-        .pipe.egress.AddBatchFailure[(events where[cond]);errkind;errmsg];
-        (events where[not[cond]])
+        $[count[events]>0;[
+            ok: events where[not[cond]];
+            fails: events where[cond];
+            if[count[fails]>0;.pipe.egress.AddBatchFailure[fails;errkind;errmsg]];
+            :$[count[ok]>0;ok;()];
+        ];events]
     };
 
 .engine.PurgeNot            :{[events;cond;errkind;errmsg]
@@ -73,18 +77,20 @@
 /  @param inventory (Inventory) The inventory that is going to be added to.
 /  @return (Inventory) The new updated inventory
 .engine.ProcessDepthUpdateEvents :{[e]
-
+    if[(count[e`eid]=1);e:enlist[e]]; // TODO don't process if no events
     e:.engine.Purge[e;count'[e`datum]<>4;0;"Invalid schema"];
+    .engine.test.e:e;
 
-    e:`side`price`nqty`nhqty!events;
-    e[`instrumentId]:`.instrument.Instrument!0;    
+    if [count[e]>0;[
+        e:`side`price`nqty`nhqty!e[`datum];
+        e[`instrumentId]:`.instrument.Instrument!0;    
 
-    // TODO purge depth updates that cross spread?
+        // TODO purge depth updates that cross spread?
 
-    // TODO processing
-    
-    if[count[e]>0;.order.ProcessDepth . e];
-
+        // TODO processing
+        
+        if[count[e]>0;.order.ProcessDepth . e];
+    ]];
     };
 
 // Process New Iceberg events?
