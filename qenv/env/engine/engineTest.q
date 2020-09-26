@@ -60,19 +60,19 @@ dozc:{x+y}[doz];
         :`events`mocks!(p[0];p[1])
     };
     (
-        (("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+        (("1:0) ProcessDepthUpdateEvents BUY: (No hidden qty) one salient record");(
             `eid`time`cmd`kind`datum!(0;z;0;0;(1,100,100,0));
             (1b;1;())
         ));
-        (("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+        (("1:1) ProcessDepthUpdateEvents SELL: (No hidden qty) one salient record");(
             `eid`time`cmd`kind`datum!(0;z;0;0;(-1,100,100,0));
             (1b;1;())
         ));
-        (("1:2) ProcessDepthUpdateEvents BUY: (No hidden qty) one record");(
+        (("1:2) ProcessDepthUpdateEvents BUY: (No hidden qty) multiple salient records");(
             `eid`time`cmd`kind`datum!(0;z;0;0;(1,100,100,0));
             (1b;1;())
         ));
-        (("1:3) ProcessDepthUpdateEvents SELL: (No hidden qty) one record");(
+        (("1:3) ProcessDepthUpdateEvents SELL: (No hidden qty) multiple salient records");(
             `eid`time`cmd`kind`datum!(0;z;0;0;(-1,100,100,0));
             (1b;1;())
         ));
