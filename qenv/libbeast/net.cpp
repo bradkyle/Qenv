@@ -1,12 +1,14 @@
 
 #include <torch/torch.h>
 
-
 struct NetInput {
   torch::Tensor frame;
   torch::Tensor reward;
   torch::tensor done;
 }
+
+// TODO centralize
+typedef nest::Nest<torch::Tensor> TensorNest;
 
 struct Net : torch::nn::Module {
   Net() {
@@ -16,16 +18,19 @@ struct Net : torch::nn::Module {
     fc3 = register_module("fc3", torch::nn::Linear(32, 10));
   }
 
-  torch::Tensor initial_state(int batch_size=1) {
+  TensorNest initial_state(int batch_size=1) {
      if (!use_lstm_){
-       return 
+       return TensorNest(std::vector({}));
      } else {
-       torch::zeros(core_num_layers_, batch_size, core_hidden_layers_)
+       TensorNest(std::vector({
+          torch::zeros(core_num_layers_, batch_size, core_hidden_layers_), //TODO simplify
+          torch::zeros(core_num_layers_, batch_size, core_hidden_layers_)
+       });
      }
   }
 
   // Implement the Net's algorithm.
-  torch::Tensor forward(NetInput inputs, torch::Tensor core_state) {
+  TensorNest forward(TensorNest inputs, TensorNest core_state) {
     
     x = inputs.frame;
     x = x.flatten(0,1);
@@ -45,8 +50,15 @@ struct Net : torch::nn::Module {
     torch::Tensor core_input = torch.cat([x, clipped_reward, one_hot_last_action], -1);
 
     torch::Tensor core_output;
-    if(use_lstm){
-      core_input = core_input.view_as(T,B,-1); 
+    if(use_lstm_){
+      core_input = core_input.view_as(T,B,-1).unbind();
+      torch::Tensor not_done = inputs.done.negative().to(torch::kFloat64).unbind();
+      // TDOO assert tensors same lenght
+      std::vector<torch::Tensor> core_output_vector = std::vector({});
+      for (int i=0;i<core_input.size();i++) {
+
+      };
+      core_output = torch::flatten(torch::createPyObject(), );
     } else {
       core_output = core_input;
     };
@@ -55,7 +67,7 @@ struct Net : torch::nn::Module {
     torch::Tensor baseline = 0;
 
     torch::Tensor action;
-    if(training){
+    if(training_){
         action = torch::multinomial(); // TODO
     } else {
         action = torch::argmax();

@@ -36,9 +36,6 @@
 #include <torch/script.h>
 
 #include "nest_serialize.h"
-#include "kdbmultienv.grpc.pb.h"
-#include "kdbmultienv.pb.h"
-
 #include "../nest/nest/nest.h"
 #include "../nest/nest/nest_pybind.h"
 
@@ -497,11 +494,6 @@ class MultiActorPool {
       initial_agent_state_,
       num_actors_);
 
-    // Convert the MultiStep protocol buffers into nest tensors
-    // Returns a set of TensorNest where each item maps to a given 
-    // agent.
-    TensorNest multi_env_outputs = &multi_step.to_nest(); // TODO change to kdb
-
     // TODO map the compute function to each step pb ?
     // Assert env outputs and initial agent states have same length
 
@@ -510,7 +502,7 @@ class MultiActorPool {
     // TODO make sure outputs size = initial agent states!
 
     TensorNest compute_inputs(std::vector({
-        multi_env_outputs, 
+        &multi_step, // takes place of multi env outputs
         initial_multi_agent_states
       })); // TODO instantiate for each num_actors/ create zip fn
 
@@ -561,7 +553,7 @@ class MultiActorPool {
           "Expected first entry of agent output to be a (action, ...) tuple");
     };
 
-    TensorNest last(std::vector({multi_env_outputs, multi_agent_outputs})); // TODO check
+    TensorNest last(std::vector({&multi_step, multi_agent_outputs})); // TODO check
 
     kdbmultienv::MultiAction multi_action;
     std::vector<std::vector<TensorNest>> rollouts; // TODO change to xtensor matrix
@@ -601,16 +593,12 @@ class MultiActorPool {
           // of the environment
           client->Step(multi_action; &multi_step); 
 
-          // Derives a vector of environment outputs for each
-          // actor from the protocol buffers referenced // TODO change to q/KDB
-          multi_env_outputs = &multi_step.to_nest(); // TODO change to q/kdb+
-
           // reset the compute inputs for the next iteration
-          compute_inputs = TensorNest(std::vector({multi_env_outputs, agent_state}));
+          compute_inputs = TensorNest(std::vector({&multi_step, agent_state}));
 
           // Reset the last tensor which both serves as the last instance
           // of all rollout steps and the first instance of the next rollout.
-          last = TensorNest(std::vector({multi_env_outputs, multi_agent_outputs}));
+          last = TensorNest(std::vector({&multi_step, multi_agent_outputs}));
 
           // should append to each agents respective column
           rollouts.push_back(std::move(last));
