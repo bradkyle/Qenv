@@ -4,32 +4,6 @@
     
     };
 
-// TODO move to contract
-.engine.logic.fill.DeriveApproxLiquidationPrice     :{[]
-
-    };
-
-// TODO move to contract
-.engine.logic.fill.DeriveBankruptcyPrice            :{[]
-
-    };
-
-.engine.logic.fill.InitMarginReq                    :{[]
-
-    };
-
-.engine.logic.fill.MaintMarginReq                   :{[]
-
-    };
-
-.engine.logic.fill.MaintMargin                      :{[]
-
-    };
-
-.engine.logic.fill.InitMargin                       :{[]
-
-    };
-
 // Inc Fill is used when the fill is to be added to the given inventory
 // inc fill would AdjustOrderMargin if the order when the order was a limit
 // order.
