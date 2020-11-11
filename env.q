@@ -10,23 +10,25 @@
 // TODO random priceLimit events per batch
 // TODO random (large market buy events)
 
-
-// Episode is a table that is used to track 
-// the performance of all agents for a given
-// batch.
-.env.Episode :(
-        [episodeId               :`long$()]
-
-        batchIdx                 :`long$();
-        batchStart               :`datetime$();
-        batchEnd                 :`datetime$();                        
-        rewardTotal              :`float$();
-        returnQuoteTotal         :`float$();
-        returnBaseTotal          :`float$()); // TODO more data
-
 .env.CurrentStep:0; // The current step of the environment.
 .env.HasReset:0b;
 
+// Get Next Events 
+// =====================================================================================>
+
+// TODO move to trainer
+.env.GetEpisodes :{[start;end]
+    h:neg hopen master;    
+    h(("getEpisodes";start;end);"")
+    };
+
+.env.Advance :{[master;ep;kinds;start;end]
+    h:neg hopen master;    
+    h(("getNextBatch";kinds;ep;start;end);"")
+    };
+
+// Env Utils 
+// =====================================================================================>
 // Derives a dictionary of info pertaining to the agents
 // individually and those that are global.
 .env.Info        :{[aIds;step]
@@ -46,20 +48,6 @@
       
     }
 
-// Get Next Events 
-// =====================================================================================>
-
-// TODO move to trainer
-.env.Populate :{[start;end]
-    h:neg hopen master;    
-    h(("getEpisodes";start;end);"")
-    };
-
-.env.Advance :{[master;ep;kinds;start;end]
-    h:neg hopen master;    
-    h(("getNextBatch";kinds;ep;start;end);"")
-    };
-
 / Reset Logic
 // =====================================================================================>
 
@@ -74,6 +62,11 @@
     step:0;
     .env.CurrentStep:step;
     .env.HasReset:1b;
+
+    // select a random episode from ingest server 
+    .env.Episode:rand .env.GetEpisodes[
+        .conf.c[`ingest;`start];
+        .conf.c[`ingest;`end]];
 
     // Reset the Engine and 
     // the current state and 
@@ -136,7 +129,7 @@
     // the ingest cluster
     ingest:.env.Advance[
         .conf.c[`ingest;`master];
-        .env.CurrentEpisode;
+        .env.Episode;
         .conf.c[`ingest;`kinds];
         .env.Watermark;
         .env.Watermark+.conf.c[`ingest;`pullWindow];
@@ -176,7 +169,7 @@
     dns:.state.dns.GetDones[step;.conf.c[`env;`dneWindowSize];aIds]; // TODO move to env and create better!
 
     .env.CurrentStep+:1;
-    :(obs;rwd;dns);
+    :(obs;rwd;dns*isDone);
     };
 
 
