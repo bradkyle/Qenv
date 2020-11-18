@@ -2,6 +2,20 @@
 
 .order.Fill :{
 
+				iv:?[];
+				iv[`ordQty]-:0;
+				iv[`ordVal]:0;
+				iv[`ordLoss]:0;
+				iv[`amt]:0;
+				iv[`posQty]:0;
+
+				iv[`avgPrice]:0;
+				iv[`execCost]:0;
+
+				iv[`posVal]:0;
+				iv[`upnl]:();
+
+
 				};
 
 
