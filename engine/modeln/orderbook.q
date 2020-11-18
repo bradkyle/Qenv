@@ -3,7 +3,6 @@
 // qtys: represent the different level quantities at their given prices
 // the events will be generated using the sum of the quantities and the 
 // orderbook sizes at each price.
-// TODO add hidden/Iceberg qty
 
 / data qty
 / hidden qty  (only for data depth updates)
