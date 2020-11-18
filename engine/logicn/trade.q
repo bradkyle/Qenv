@@ -1,2 +1,4 @@
 
-.trade.Trade:{}
+.trade.Trade:{
+
+				};
