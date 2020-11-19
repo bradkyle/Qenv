@@ -1,5 +1,6 @@
-FROM thorad/qalpine:latest
+FROM thorad/kdb32:latest
 
-ADD dummy.q .
-EXPOSE 5001
+COPY . .
+EXPOSE 5000
+CMD server.q
   

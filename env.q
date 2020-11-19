@@ -13,31 +13,6 @@
 .env.CurrentStep:0; // The current step of the environment.
 .env.HasReset:0b;
 
-// Get Next Events 
-// =====================================================================================>
-
-// TODO move to trainer
-.env.GetEpisodes :{[start;end]
-    h:neg hopen master;    
-    h(("getEpisodes";start;end);"")
-    };
-
-.env.Advance :{[master;ep;kinds;start;end]
-    h:neg hopen master;    
-    h(("getNextBatch";kinds;ep;start;end);"")
-    };
-
-// Env Utils 
-// =====================================================================================>
-// Derives a dictionary of info pertaining to the agents
-// individually and those that are global.
-.env.Info        :{[aIds;step]
-        :(
-            .engine.Info[];
-            .state.Info[];
-            .env.CurrentStep
-        );
-    };
 
 / Reset Logic
 // =====================================================================================>
@@ -54,14 +29,11 @@
     .env.CurrentStep:step;
     .env.HasReset:1b;
 
-    // select a random episode from ingest server 
-    .env.Episode:rand .env.GetEpisodes[
-        .conf.c[`ingest;`start];
-        .conf.c[`ingest;`end]];
 
     // Reset the Engine and 
     // the current state and 
     // return obs
+    .ingest.Reset[];
     .state.Reset[];
     nevents: .engine.Reset[];
 
@@ -118,13 +90,12 @@
     // Get the next set of 
     // environment events from 
     // the ingest cluster
-    ingest:.env.Advance[
+    ingest:.ingest.Advance[
         .conf.c[`ingest;`master];
         .env.Episode;
         .conf.c[`ingest;`kinds];
         .env.Watermark;
-        .env.Watermark+.conf.c[`ingest;`pullWindow];
-        actions]; 
+        .env.Watermark+.conf.c[`ingest;`pullWindow]]; 
 
     isDone:ingest[0];
     xevents:ingest[1];
