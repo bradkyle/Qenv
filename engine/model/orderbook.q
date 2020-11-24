@@ -9,4 +9,4 @@
 / iceberg qty (only for agent orders)
 // Visible qty (including order qty)=(qty+displayqty)
 
-orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$())
+.engine.model.orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$())

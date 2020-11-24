@@ -1,8 +1,7 @@
 
 
 .order.Fill :{[i;a;f]
-
-				iv:?[];
+				iv:?[`inventory;enlist();0b;()];
 				iv[`ordQty]-:0;
 				iv[`ordVal]:0;
 				iv[`ordLoss]:0;
@@ -59,7 +58,7 @@
 
 
 .account.Withdraw:{[i;a;w]
-				a:?[`account;enlist]
+				a:?[`account;enlist();0b;()];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];
@@ -75,7 +74,7 @@
 				};
 
 .account.Deposit:{[i;a;d]
-				a:?[`account;enlist]
+				a:?[`account;enlist();0b;()];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				a[`deposited]+:deposited;
 				a[`imr]:0;
@@ -89,7 +88,7 @@
 				};
 
 .account.Leverage:{[i;a;l]
-				a:?[`account;enlist]
+				a:?[`account;enlist();0b;()];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];

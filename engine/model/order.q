@@ -4,8 +4,8 @@
 // TODO change price type to int, longs etc.
 // TODO allow for data derived i.e. exchange market orders. 
 // TODO move offset into seperate table?
-order:([oId:`long$()] 
-acc:`account$();invn:`inventory$();price:`long$();lprice:`long$();
-sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();
-state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();
-einst:`long$());
+.engine.model.order:([oId:`long$()] 
+				acc:`.engine.model.account$();invn:`.engine.model.inventory$();price:`long$();lprice:`long$();
+				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();
+				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();
+				einst:`long$());

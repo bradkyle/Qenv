@@ -11,9 +11,10 @@
 // Server
 // ---------------------------------------------------------------------------------->
 // 
-.conf.Config[`server;([]
-    port                        : .conf.Env[`port]
-    )];
+//.conf.Config[`server;([]
+//    port                        : .conf.Env[`port]
+//    )];
+show .conf
 
 // Env
 // ---------------------------------------------------------------------------------->
@@ -106,26 +107,6 @@
     depositres               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for deposit response                    
     leverageupdateres        :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for leverageupdate response                          
     liquidation              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for liquidation updates                        
-    signal1                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal1 updates                    
-    signal2                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal2 updates                    
-    signal3                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal3 updates                    
-    signal4                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal4 updates                    
-    signal5                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal5 updates                    
-    signal6                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal6 updates                    
-    signal7                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal7 updates                    
-    signal8                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal8 updates                    
-    signal9                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal9 updates                    
-    signal10                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal10 updates           
-    signal11                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal11 updates                    
-    signal12                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal12 updates                    
-    signal13                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal13 updates                    
-    signal14                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal14 updates                    
-    signal15                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal15 updates                    
-    signal16                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal16 updates                    
-    signal17                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal17 updates                    
-    signal18                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal18 updates                    
-    signal19                 :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for signal19 updates                    
-    signal20                 :.conf.NDTimespan[1.804904e-06;1.918936e-06]                 //  The normal distribution of the time delay for signal20 updates           
     )]; 
 
 // Instrument

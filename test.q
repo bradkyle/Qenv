@@ -16,15 +16,13 @@ getFn :{[path]
     system"l engine/init.q";
     system"l state/init.q";
     system"l env.q";
-    system"l server.q";
     system"l envTest.q";
-    system"l serverTest.q";
     /:args `ag be_true -l`/ Load integration and 
     // benchmark tests
     
     system"l test/init.q"
-    .qt.ShowOnly[(
-				getFn[".engine.logic.fill"]
+   // .qt.ShowOnly[(
+       // getFn[".engine.logic.fill"]
         /* getFn[".engine.model.instrument"] */
     /     / ".engine.logic.trade.ProcessAgentTrades"
     /     ".engine.model.account.NewAccounts";
@@ -34,10 +32,10 @@ getFn :{[path]
     /     ".engine.model.account.GetAllInsolvent";
     /     ".engine.model.account.GetAllUnsettled";
     /     ".engine.model.account.ValidAccountIds";
-    )];
+    //)];
     /* .qt.SkpBes[669]; */
     /* .qt.SkpAft[38]; */
-    .qt.SkpBesTest[73];
+    //.qt.SkpBesTest[73];
 
     .qt.RunTests[];
     };();{

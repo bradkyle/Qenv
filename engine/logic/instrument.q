@@ -1,6 +1,6 @@
 
 .instrument.Funding:{
-		iv:?[];
+	  iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
 
 		// TODO make simpler
     f:0!select 
@@ -16,7 +16,7 @@
 			};
 
 .instrument.MarkPrice:{
-		iv:?[];
+	  iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
 
 		// TODO make simpler
     upl:.engine.logic.contract.UnrealizedPnl[
@@ -36,15 +36,15 @@
 		a[`mmr]:0;
 		a[`avail]:()
 
-
-				};
+	};
 
 .instrument.Settlement:{
-	a:?[];
-	iv:?[];
-
-				};
+	iv:?[`inventory;enlist(<;`amt;0);0b;()];
+	a:?[`account;enlist(in;`aId;iv[`ivId]);0b;()];
+	a[`mrg]+:iv[`rpnl];
+	iv[`rpnl]:0;
+	};
 
 .instrument.PriceLimit:{
-	.instrument,:()
-				};
+	![`instrument;enlist();0b;`plmts`plmtb!x[`plmts`plmtb]]
+	};
