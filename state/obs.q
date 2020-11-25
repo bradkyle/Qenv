@@ -195,8 +195,8 @@ Feature Forecasters TODO iceberg detection!
             ticksize:0.1;
             bucketsize:2;
             num:10;
-            ap:.state.adapter.superlinearPriceDistribution[bap;bucketsize;ticksize;num;-1];
-            bp:.state.adapter.superlinearPriceDistribution[bbp;bucketsize;ticksize;num;1];
+            ap:.state.adapter.exponentialPriceDistribution[bap;bucketsize;ticksize;num;-1];
+            bp:.state.adapter.exponentialPriceDistribution[bbp;bucketsize;ticksize;num;1];
             asks:.state.bucketedDepth[ap;-1]; // price descending asks // todo
             bids:.state.bucketedDepth[bp;1]; // price ascending bids
             .state.obs.test.bids:bids;

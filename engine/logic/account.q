@@ -1,6 +1,10 @@
 
+.engine.logic.fill.DeriveRiskTier                  :{[instrument;account]
+    
+    };
 
-.order.Fill :{[i;a;f]
+// Fill account
+.engine.logic.account.Fill :{[i;a;f]
 				iv:?[`inventory;enlist();0b;()];
 				iv[`ordQty]-:0;
 				iv[`ordVal]:0;
@@ -57,7 +61,7 @@
 				};
 
 
-.account.Withdraw:{[i;a;w]
+.engine.logic.account.Withdraw:{[i;a;w]
 				a:?[`account;enlist();0b;()];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
@@ -73,7 +77,7 @@
 				// TODO add events
 				};
 
-.account.Deposit:{[i;a;d]
+.engine.logic.account.Deposit:{[i;a;d]
 				a:?[`account;enlist();0b;()];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				a[`deposited]+:deposited;
@@ -87,7 +91,7 @@
 
 				};
 
-.account.Leverage:{[i;a;l]
+.engine.logic.account.Leverage:{[i;a;l]
 				a:?[`account;enlist();0b;()];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];

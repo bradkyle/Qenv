@@ -1,5 +1,6 @@
 
-.instrument.Funding:{
+//
+.engine.logic.instrument.Funding:{
 	  iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
 
 		// TODO make simpler
@@ -15,7 +16,8 @@
 
 			};
 
-.instrument.MarkPrice:{
+// 
+.engine.logic.instrument.MarkPrice:{
 	  iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
 
 		// TODO make simpler
@@ -38,13 +40,13 @@
 
 	};
 
-.instrument.Settlement:{
+.engine.logic.instrument.Settlement:{
 	iv:?[`inventory;enlist(<;`amt;0);0b;()];
 	a:?[`account;enlist(in;`aId;iv[`ivId]);0b;()];
 	a[`mrg]+:iv[`rpnl];
 	iv[`rpnl]:0;
 	};
 
-.instrument.PriceLimit:{
+.engine.logic.instrument.PriceLimit:{
 	![`instrument;enlist();0b;`plmts`plmtb!x[`plmts`plmtb]]
 	};

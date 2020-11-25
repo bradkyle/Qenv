@@ -12,13 +12,10 @@
     {[c]
         p:c[`params];
 
-        
+        .state.allOpenInventory . p`args;        
 
     };
-    {[p]
-        e:({`time`kind`cmd`datum!x} each p[1]);
-        :`args`cState`eRes!(p[0];e;p[1]);
-    };
+    {[p]};
     (
         ("";(
 

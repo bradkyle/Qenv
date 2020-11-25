@@ -1,5 +1,8 @@
 TESTING:1b;
 BASE:system["pwd"][0];
+args:.Q.opt[.z.x];
+TESTSET:first args[`ts];
+show TESTSET;
  
 getFn :{[path]  
     {x,".",y}[path]'[string[system("f ",path)]]
@@ -21,9 +24,10 @@ getFn :{[path]
     // benchmark tests
     
     system"l test/init.q"
+
+    if[not[null[`$TESTSET]];.qt.ShowOnly[(getFn[TESTSET])]];
    // .qt.ShowOnly[(
-       // getFn[".engine.logic.fill"]
-        /* getFn[".engine.model.instrument"] */
+       //         /* getFn[".engine.model.instrument"] */
     /     / ".engine.logic.trade.ProcessAgentTrades"
     /     ".engine.model.account.NewAccounts";
     /     ".engine.model.account.UpdateAccounts";

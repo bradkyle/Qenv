@@ -73,6 +73,8 @@
         xbar[z;((1+x)%sum[x+1])*y]
     };
 
+.state.adapter.amtdist:();
+
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
 // qty for the given set of groups in order.
@@ -86,21 +88,6 @@
 // qty for the given set of groups in order.
 .state.adapter.decreasingLinearDistribution                     :{[amt;num;lotsize]
         reverse .state.adapter.increasingLinearDistribution[amt;num;lotsize]
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the increasing linear distribution of
-// qty for the given set of groups in order.
-.state.adapter.increasingSuperLinearDistribution                :{[amt;num;lotsize]
-        l:.state.adapter.t1[num]*.state.adapter.t1[num];
-        .state.adapter.ramfrac[l;amt;lotsize]
-    };
-
-// Given a total amount and the number of groups in which to distribute
-// the order quantities return the decreasing linear distribution of
-// qty for the given set of groups in order.
-.state.adapter.decreasingSuperLinearDistribution                :{[amt;num;lotsize]
-        reverse .state.adapter.increasingSuperLinearDistribution[amt;num;lotsize]
     };
 
 // Given a total amount and the number of groups in which to distribute
@@ -149,30 +136,10 @@
         .state.adapter.ramfrac[num#1;amt;lotsize]
     };
 
-
-// TODO multiplier passed in here
-// Switches the above functions for providing a price distribution bucket
-/  @param mnprice  (Long) The minimum price at which the distribution should start
-/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
-/  @param num      (Long) The number of levels to generate 
-/  @return         (List[Long]) The logarithmic price distribution.
-.state.adapter.getSizeDistributions                            :{[kind;amt;num;lotsize]
-    $[kind=0;.state.adapter.increasingLinearDistribution[amt;num;lotsize];
-      kind=1;.state.adapter.decreasingLinearDistribution[amt;num;lotsize];
-      kind=2;.state.adapter.increasingSuperLinearDistribution[amt;num;lotsize];
-      kind=3;.state.adapter.decreasingSuperLinearDistribution[amt;num;lotsize];
-      kind=4;.state.adapter.increasingExponentialDistribution[amt;num;lotsize];
-      kind=5;.state.adapter.decreasingExponentialDistribution[amt;num;lotsize];
-      kind=6;.state.adapter.increasingLogarithmicDistribution[amt;num;lotsize];
-      kind=7;.state.adapter.decreasingLogarithmicDistribution[amt;num;lotsize]; // TODO prob
-      kind=8;.state.adapter.normalDistribution[amt;num;lotsize];
-      kind=9;.state.adapter.flatDistribution[amt;num;lotsize];
-     'INVALID_SIZE_DISTRIBUTION]
-    };
-
 // Price Distribution Utilities
 // ---------------------------------------------------------------------------------------->
 // Buckets are a tuple of low and high // todo add midprice?
+.state.adapter.pricedist:();
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
@@ -185,16 +152,6 @@
         mnprice+((bucketsize*til[num];bucketsize*.state.adapter.t1[num])*(ticksize*isignum)) // Derive the distribution of prices
     };
 
-// Generates a set of buckets according to
-// a superlinear distribution of price throughout the
-// orderbook .i.e: (0,1),(1,2),(2,4),(4,8) etc.
-/  @param mnprice  (Long) The minimum price at which the distribution should start
-/  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
-/  @param num      (Long) The number of levels to generate 
-/  @return         (List[Long]) The superlinear price distribution. // TODO update to more formal impl
-.state.adapter.superlinearPriceDistribution                    :{[mnprice;bucketsize;ticksize;num;isignum]
-        mnprice+((.state.adapter.t1[num]*bucketsize;.state.adapter.t2[num]*bucketsize)*(ticksize*isignum))
-    };
 
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
@@ -215,21 +172,26 @@
 /  @param num      (Long) The number of levels to generate 
 /  @return         (List[Long]) The logarithmic price distribution.
 .state.adapter.logarithmicPriceDistribution                    :{[mnprice;bucketsize;ticksize;num;isignum]
-        mnprice+((log[.state.adapter.t1[num];log[.state.adapter.t2[num]]])*(ticksize*isignum))       
+        mnprice+((xlog[.state.adapter.t1[num];bucketsize];xlog[.state.adapter.t2[num];bucketsize])*(ticksize*isignum))
     };    
 
-// TODO multiplier passed in here
-// Switches the above functions for providing a price distribution bucket
+// assumes prices are long
+// Generates a set of buckets according to
+// a percentage distribution of price throughout the
+// orderbook 
 /  @param mnprice  (Long) The minimum price at which the distribution should start
+/  @param exbkt    (Long) The bucket specific exponent 
 /  @param ticksize (Long) The minimum interval (can be aggregated) of price allowed 
 /  @param num      (Long) The number of levels to generate 
+/  @param isignum  (Long) The side 
+/  @param mxfrac   (Long) The maximum fraction
 /  @return         (List[Long]) The logarithmic price distribution.
-.state.adapter.getPriceDistributedBuckets                      :{[k;mnprice;bucketsize;ticksize;num;isignum]
-    $[k=0;.state.adapter.uniformalPriceDistribution[mnprice;bucketsize;ticksize;num;isignum];
-      k=1;.state.adapter.superlinearPriceDistribution[mnprice;bucketsize;ticksize;num;isignum];
-      k=2;.state.adapter.exponentialPriceDistribution[mnprice;bucketsize;ticksize;num;isignum];
-      k=3;.state.adapter.logarithmicPriceDistribution[mnprice;bucketsize;ticksize;num;isignum]; 
-     'INVALID_PRICE_DISTRIBUTION]
+.state.adapter.expPcntPriceDistribution:{[mnprice;exbkt;ticksize;num;isignum;mxfrac]
+    if[(mxfrac>1) or (mxfrac<0);'INVALID_MXFRAC];
+    if[ticksize<1;'INVALID_TICKSIZE];
+    e:xexp[.state.adapter.t1[num];exbkt];
+    x:mnprice+(neg[isignum]*((mxfrac*(e%sum[e]))*mnprice));
+    distinct (mnprice,floor[x])
     };
 
 // Flattening Utils
@@ -430,8 +392,6 @@
 
 / kind=0;.state.adapter.increasingLinearDistribution[amt;num;lotsize];
 / kind=1;.state.adapter.decreasingLinearDistribution[amt;num;lotsize];
-/ kind=2;.state.adapter.increasingSuperLinearDistribution[amt;num;lotsize];
-/ kind=3;.state.adapter.decreasingSuperLinearDistribution[amt;num;lotsize];
 / kind=4;.state.adapter.increasingExponentialDistribution[amt;num;lotsize];
 / kind=5;.state.adapter.decreasingExponentialDistribution[amt;num;lotsize];
 / kind=6;.state.adapter.increasingLogarithmicDistribution[amt;num;lotsize];

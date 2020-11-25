@@ -441,8 +441,8 @@
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             (1000;2;0.1;10;-1);
             (
-                1000.2 1000.4 1000.6 1000.8 1001 1001.2 1001.4 1001.6 1001.8 1002;
-                1000 1000.2 1000.4 1000.6 1000.8 1001 1001.2 1001.4 1001.6 1001.8
+                1000 999.8 999.6 999.4 999.2 999 998.8 998.6 998.4 998.2;
+                999.8 999.6 999.4 999.2 999 998.8 998.6 998.4 998.2 998
             )
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
@@ -455,8 +455,8 @@
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;2;0.5;10;-1);
             (
-                1001 1002 1003 1004 1005 1006 1007 1008 1009 1010f;
-                1000 1001 1002 1003 1004 1005 1006 1007 1008 1009f
+                1000 999 998 997 996 995 994 993 992 991f;
+                999 998 997 996 995 994 993 992 991 990f
             )
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
@@ -468,9 +468,9 @@
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;3;0.5;10;-1);
-            reverse(
-                1000   1001.5 1003   1004.5 1006   1007.5 1009   1010.5 1012   1013.5;
-                1001.5 1003   1004.5 1006   1007.5 1009   1010.5 1012   1013.5 1015
+            (
+                1000 998.5 997 995.5 994 992.5 991 989.5 988 986.5;
+                998.5 997 995.5 994 992.5 991 989.5 988 986.5 985
             )
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
@@ -478,63 +478,6 @@
             (
                 1000   1001.5 1003   1004.5 1006   1007.5 1009   1010.5 1012   1013.5;
                 1001.5 1003   1004.5 1006   1007.5 1009   1010.5 1012   1013.5 1015
-            )
-        ))
-    );
-    .util.testutils.defaultStateHooks;
-    "Returns a given accounts open inventory"];
-
-.qt.Unit[
-    ".state.adapter.superlinearPriceDistribution";
-    {[c]
-        p:c[`params];
-
-        res:.state.adapter.superlinearPriceDistribution . p`args;
-        .qt.A[res;~;p[`eRes];"res";c];
-
-    };
-    {[p] :`args`eRes!p};
-    (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (1000;2;0.1;10;-1);
-            reverse(
-                1000.1 1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010;
-                1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010 1012.1
-            )
-        ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (1000;2;0.1;10;1);
-            (
-                1000.1 1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010;
-                1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010 1012.1
-            )
-        ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (1000;2;0.5;10;-1);
-            reverse(
-                1000.5 1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050;
-                1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050 1060.5
-            )
-        ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (1000;2;0.5;10;1);
-            (
-                1000.5 1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050;
-                1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050 1060.5
-            )
-        ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (1000;3;0.5;10;-1);
-            reverse(
-                1000.5 1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500;
-                1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500 1665.5
-            )
-        ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (1000;3;0.5;10;1);
-            (
-                1001.5 1003 1004.5 1006 1007.5 1009 1010.5 1012 1013.5 1015;
-                1003 1004.5 1006 1007.5 1009 1010.5 1012 1013.5 1015 1016.5
             )
         ))
     );
@@ -554,9 +497,9 @@
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             (1000;2;0.1;10;-1);
-            reverse(
-                1000.1 1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010;
-                1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010 1012.1
+            (
+                999.9 999.6 999.1 998.4 997.5 996.4 995.1 993.6 991.9 990;
+                999.6 999.1 998.4 997.5 996.4 995.1 993.6 991.9 990 987.9
             )
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
@@ -568,9 +511,9 @@
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;2;0.5;10;-1);
-            reverse(
-                1000.5 1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050;
-                1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050 1060.5
+            (
+                999.5 998.0 995.5 992 987.5 982 975.5 968 959.5 950;
+                998.0 995.5 992 987.5 982 975.5 968 959.5 950 939.5
             )
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
@@ -582,9 +525,9 @@
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;3;0.5;10;-1);
-            reverse(
-                1000.5 1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500;
-                1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500 1665.5
+            (
+                999.5 996 986.5 968 937.5 892 828.5 744 635.5 500;
+                996 986.5 968 937.5 892 828.5 744 635.5 500 334.5
             )
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
@@ -599,6 +542,7 @@
     "Returns a given accounts open inventory"];
 
 
+// TODO fix this
 .qt.Unit[
     ".state.adapter.logarithmicPriceDistribution";
     {[c]
@@ -612,7 +556,7 @@
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             (1000;2;0.1;10;-1);
-            reverse(
+            (
                 1000.1 1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010;
                 1000.4 1000.9 1001.6 1002.5 1003.6 1004.9 1006.4 1008.1 1010 1012.1
             )
@@ -626,7 +570,7 @@
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;2;0.5;10;-1);
-            reverse(
+            (
                 1000.5 1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050;
                 1002.0 1004.5 1008 1012.5 1018 1024.5 1032 1040.5 1050 1060.5
             )
@@ -640,7 +584,7 @@
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (1000;3;0.5;10;-1);
-            reverse(
+            (
                 1000.5 1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500;
                 1004 1013.5 1032 1062.5 1108 1171.5 1256 1364.5 1500 1665.5
             )
@@ -656,13 +600,13 @@
     .util.testutils.defaultStateHooks;
     "Returns a given accounts open inventory"];
 
+// Flattening Utils
+// ---------------------------------------------------------------------------------------->
+
 .qt.Unit[
-    ".state.adapter.getPriceDistributedBuckets";
+    ".state.adapter.createFlattenSideOrdersLimit";
     {[c]
         p:c[`params];
-
-        res:.state.adapter.getPriceDistributedBuckets . p`args;
-        .qt.A[res;~;p[`eRes];"res";c];
 
     };
     {[p] :`args`eRes!p};
@@ -680,119 +624,6 @@
             (10;5;0.1;1);(1 1 1)
         ))
     );
-    .util.testutils.defaultStateHooks;
-    "Returns a given accounts open inventory"];
-
-// Stop Creation
-// ---------------------------------------------------------------------------------------->
-
-.qt.Unit[
-    ".state.adapter.createNaiveStops";
-    {[c]
-        p:c[`params];
-
-        res:.state.adapter.createNaiveStops . p`args;
-        .qt.A[res;~;p[`eRes];"res";c];
-
-    };
-    {[p] :`args`eRes`mockss!p};
-    (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);
-            (1 1 1);
-            (
-                (`.state.deriveLiquidationPrice;();{});
-                (`.state.deriveMarkPrice;();{})
-            )
-        ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);
-            (1 1 1);
-            ()
-        ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);
-            (1 1 1);
-            ()
-        ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);
-            (1 1 1);
-            ()
-        ))
-    );
-    .util.testutils.defaultStateHooks;
-    "Returns a given accounts open inventory"];
-
-
-.qt.Unit[
-    ".state.adapter.uniStops";
-    {[c]
-        p:c[`params];
-
-        .state.adapter.createUniformStops[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
-
-
-.qt.Unit[
-    ".state.adapter.expStops";
-    {[c]
-        p:c[`params];
-
-        .state.adapter.createExponentialStops[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
-
-
-.qt.Unit[
-    ".state.adapter.logStops";
-    {[c]
-        p:c[`params];
-
-        .state.adapter.createLogarithmicStops[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
-
-
-// Temporal Order Utilities (used in macro actions)
-// ---------------------------------------------------------------------------------------->
-
-.qt.Unit[
-    ".state.adapter.createUniTemporalOrders";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
-
-
-.qt.Unit[
-    ".state.adapter.createRandTemporalOrders";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
-
-// Flattening Utils
-// ---------------------------------------------------------------------------------------->
-
-.qt.Unit[
-    ".state.adapter.createFlattenSideOrdersLimit";
-    {[c]
-        p:c[`params];
-
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
     "Global function for creating a new account"];
 
 
@@ -801,9 +632,22 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
+    };
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
     "Global function for creating a new account"];
 
 
@@ -812,9 +656,22 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
-
-    };();();.util.testutils.defaultStateHooks;
+    };
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
     "Global function for creating a new account"];
 
 
@@ -823,15 +680,24 @@
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
 
-    };();();.util.testutils.defaultStateHooks;
+    };
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
     "Global function for creating a new account"];
-
-
-// Macro Action Utils
-// ---------------------------------------------------------------------------------------->
-
 
 
 // General Order Placement Utilities
@@ -841,14 +707,19 @@
     ".state.adapter.createBatches";
     {[c]
         p:c[`params];
-        m:p[`mocks][;0];
-        f:p[`mocks][;1];
-
-        .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks!p};
-    ();
-    .util.testutils.defaultStateHooks;
+    {[p] :`args`eRes!p};
+    (
+        ("should allow for batches smaller than batch size";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("should allowr for batches larger than batch size";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("should allow for batches equal to batch size";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
     "Returns a given accounts open inventory"];
  
 .qt.Unit[
@@ -864,10 +735,22 @@
         .util.testutils.checkMock[mck1;m[0];c];  // Expected .order.applyOffsetUpdates Mock
 
     };
-    {[p] :`args`eRes`mockss!p};
-    ();
-    .util.testutils.defaultStateHooks;
-    "Returns a given accounts open inventory"];
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
+    "Creates the set of orders that will serve to transition the state"];
 
 .qt.Unit[
     ".state.adapter.createBucketLimitOrdersDeltaDistribution";
@@ -878,26 +761,105 @@
         .qt.A[res;~;p[`eRes];"res";c];
 
     };
-    {[p] :`args`eRes`mockss!p};
-    ();
-    .util.testutils.defaultStateHooks;
-    "Returns a given accounts open inventory"];
-
-
-
-// Action Adapter Mapping
-// ---------------------------------------------------------------------------------------->
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
+    "Creates the set of distributions that will serve to amelierate the bucket qty"];
 
 .qt.Unit[
-    ".state.adapter.Adapt";
+    ".state.adapter.constructMacroMarketFn";
     {[c]
         p:c[`params];
 
-        .account.ProcessDepth[p[`event]];
+        res:.state.adapter.constructMacroMarketFn . p`args;
+        .qt.A[res;~;p[`eRes];"res";c];
 
-    };();();.util.testutils.defaultStateHooks;
-    "Global function for creating a new account"];
+    };
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
+    "Creates the set of distributions that will serve to amelierate the bucket qty"];
 
-// TODO integration test between adapter and engine
 
-.qt.[];
+.qt.Unit[
+    ".state.adapter.deriveTradingMargin";
+    {[c]
+        p:c[`params];
+
+        res:.state.adapter.deriveTradingMargin . p`args;
+        .qt.A[res;~;p[`eRes];"res";c];
+
+    };
+    {[p] :`args`eRes!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1)
+        ))
+    );
+    "Creates the set of distributions that will serve to amelierate the bucket qty"];
+
+// Hedged Path Finder Tests 
+// ---------------------------------------------------------------------------------------->
+
+
+.qt.Unit[
+    ".state.adapter.HedgedPathFinder";
+    {[c]
+        p:c[`params];
+
+        res:.state.adapter.deriveTradingMargin . p`args;
+        .qt.A[res;~;p[`eRes];"res";c];
+
+    };
+    {[p] :`args`eRes`mocks!p};
+    (
+        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+            (10;5;0.1;1);(1 1 1);()
+        ))
+    );
+    "Path finder action set (made for binance exchange)"];
+
+
+
