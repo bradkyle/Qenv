@@ -1,80 +1,10 @@
 
 .qt.Unit[
-    ".engine.logic.account.InitMarginReq";
-    {[c]
-        p:c[`params];
-
-        res:.engine.logic.fill.InitMarginReq[];
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
-    };
-    {[p]
-    
-    };
-    (
-        ("Minimum tier position size init margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier position size init margin req";((0 0 0 0 0 0);0));
-        ("Minimum tier effective leverage init margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier effective leverage init margin req";((0 0 0 0 0 0);0))
-    );
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
-.qt.Unit[
-    ".engine.logic.account.MaintMarginReq";
-    {[c]
-        p:c[`params];
-
-        res:.engine.logic.fill.MaintMarginReq[];
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
-    };
-    {[p]
-    
-    };
-    (
-        ("Minimum tier position size maint margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier position size maint margin req";((0 0 0 0 0 0);0));
-        ("Minimum tier effective leverage maint margin req";((0 0 0 0 0 0);0));
-        ("Maximum tier effective leverage maint margin req";((0 0 0 0 0 0);0))
-    );
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
-.qt.Unit[
-    ".engine.logic.account.MaintMargin";
-    {[c]
-        p:c[`params];
-
-        res:.engine.logic.fill.MaintMargin[];
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
-
-.qt.Unit[
-    ".engine.logic.account.InitMargin";
-    {[c]
-        p:c[`params];
-
-        res:.engine.logic.fill.InitMargin[];
-        .qt.A[res;~;p[`eRes];"avgPrice";c];
-    };
-    {[p]
-    
-    };
-    ();
-    .util.testutils.defaultContractHooks;
-    "Function for deriving the exec cost from the qty and the price"];
-
-.qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
-        .qt.RunUnit[c;.engine.logic.fill.ApplyFills];
-    };.qt.generalParams;
+        .qt.RunUnit[c;.engine.logic.account.Fill];
+    };
+    {[p] :`args`eRes`mocks`err!p};
     (
         ("hedged:long_to_longer";(
             ( // Mocks
@@ -215,17 +145,18 @@
             (); // Fill
             (); // Eres
             () // Err
-        ));
+        ))
     );
-    .util.testutils.defaultContractHooks;
+    ({};{};{};{});
     "Function for deriving the exec cost from the qty and the price"];
 
 
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
-        .qt.RunUnit[c;.engine.services.account.ProcessWithdrawEvents];
-    };.qt.generalParams;
+        .qt.RunUnit[c;.engine.logic.account.Withdraw];
+    };
+    {[p] :`args`eRes`mocks`err!p};
     (
         ("1:0) ProcessWithdrawEvents";());
         ("1:1) ProcessWithdrawEvents";());
@@ -252,14 +183,15 @@
         ("withdraw insufficient balance with split hedged short(0.75)/long(0.25) position";());
         ("withdraw insufficient balance with split hedged long(0.25)/short(0.75) position";())
     );
-    .util.testutils.defaultContractHooks;
+    ({};{};{};{});
     "Process a batch of signal events"];
 
 .qt.Unit[
     ".engine.logic.account.Deposit";
     {[c]
-        .qt.RunUnit[c;.engine.services.account.ProcessDepositEvents];
-    };.qt.generalParams;
+        .qt.RunUnit[c;.engine.logic.account.Deposit];
+    };
+    {[p] :`args`eRes`mocks`err!p};
     (
         (("1:0) ProcessDepositEvents");());
         (("1:1) ProcessDepositEvents");());
@@ -286,15 +218,16 @@
         ("deposit invalid amt with split hedged short(0.75)/long(0.25) position";());
         ("deposit invalid amt with split hedged long(0.25)/short(0.75) position";())
     );
-    .util.testutils.defaultContractHooks;
+    ({};{};{};{});
     "Process a batch of signal events"];
 
 
 .qt.Unit[
     ".engine.logic.account.Leverage";
     {[c]
-        .qt.RunUnit[c;.engine.services.account.ProcessLeverageUpdateEvents];
-    };.qt.generalParams;
+        .qt.RunUnit[c;.engine.logic.account.Leverage];
+    };
+    {[p] :`args`eRes`mocks`err!p};
     (
         ("update leverage sufficient balance without positions";());
         ("update leverage sufficient balance with combined short position";());
