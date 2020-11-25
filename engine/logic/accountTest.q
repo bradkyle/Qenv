@@ -1,5 +1,19 @@
 
 .qt.Unit[
+    ".engine.logic.account.DeriveRiskTier";
+    {[c]
+				.qt.RunUnit[c;.engine.logic.account.DeriveRiskTier];
+    };
+    {[p] :`args`eRes`mocks`err!p};
+    (
+        ("update leverage sufficient balance without positions";());
+        ("update leverage sufficient balance without positions";())
+    );
+    ({};{};{};{});
+    "Global function for creating a new account"];
+ 
+
+.qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
         .qt.RunUnit[c;.engine.logic.account.Fill];
@@ -8,6 +22,10 @@
     (
         ("hedged:long_to_longer";(
             ( // Mocks
+								();
+								();
+								();
+								()
             );
             (); // Fill
             (); // Eres

@@ -25,6 +25,15 @@
     value events
     };
 
+// 1) enlist(Time <= Time + StepFreqTime)
+// 2) enlist(Index <= Index + StepFreqIndex)
+// 3) ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
+.ingress.getEgressCond  :{$[
+        x=0;enlist(<=;`time;(+;`time;`second$5)); // todo pass in time from conf
+        x=1;();
+        x=3;();
+        'INVALID_INGRESS_COND]};
+
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .egress._GetEgressEvents   :{[step;windowkind] // TODO should select next batch according to config
@@ -34,6 +43,11 @@
     ![`.egress.Event;enlist(=;`eid;key[events]`eid);0b;`symbol$()];
     value events
     };
+
+// ReInserts events into the egress event buffer
+.engine.Emit            :{[]
+
+				};
 
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->

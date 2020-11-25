@@ -1,5 +1,5 @@
 
-.trade.Trade:{
+.engine.services.trade.Trade:{
     nside:neg[side];
     isagnt:count[account]>0;
     
@@ -19,7 +19,7 @@
     state:state[where (state`rp)>0];
 
     // TODO select by offset aswell
-    odrs:.engine.model.order.GetOrdersBySideAndPrice[state`instrumentId;nside;state`price]; 
+		ordrs:.engine.model.orders.GetOrders[];
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
@@ -122,7 +122,7 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-        .engine.model.order.UpdateOrders[raze'[(
+				.engine.model.order.UpdateOrder'[raze'[(
                 state`orderId;
                 state`oprice;
                 noffset;
@@ -138,7 +138,7 @@
         // Apply the set of fills that would satisfy the 
         // amount of liquidity that is being removed from
         // the orderbook.
-        .engine.logic.fill.ApplyFills[raze'[(
+        .engine.logic.account.Fill[raze'[(
                 numLvls#ciId; // instrumentId
                 numLvls#caId; // accountId
                 state`tside; 
@@ -154,7 +154,7 @@
         flldlt:(nleaves-state`leaves);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
-            .engine.logic.fill.ApplyFills[raze'[(
+								.engine.logic.account.Fill[raze'[(
                     state`instrumentId;
                     state`accountId;
                     state`oside;
@@ -167,7 +167,7 @@
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        .engine.model.orderbook.UpdateLevels[raze'[(
+        .engine.logic.orderbook.Level'[raze'[(
                 state`price;
                 state`mside;
                 nqty;
@@ -181,7 +181,7 @@
         // If no orders exist in the orderbook 
         // and yet the trade still executes
         // TODO test
-        .engine.model.orderbook.UpdateLevels[raze'[(
+        .engine.logic.orderbook.Level'[raze'[(
                 state`price;
                 state`mside;
                 nqty;
@@ -191,7 +191,7 @@
         // emit depth update events        
     ]]];
     
-    .engine.model.orderbook.PruneOrderBook[];
-    .engine.model.order.PruneOrders[];      
+    };
 
-				};
+
+

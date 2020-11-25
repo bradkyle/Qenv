@@ -3,3 +3,4 @@
 				plmts:`long$();plmtb:`long$();lotSize:`long$();tickSize:`long$();mnSize:`long$();
   			mxSize:`long$();mnPrice:`long$();mxPrice:`long$();
 				bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$());
+

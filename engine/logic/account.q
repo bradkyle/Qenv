@@ -1,23 +1,24 @@
 
-.engine.logic.fill.DeriveRiskTier                  :{[instrument;account]
-    
+
+.engine.logic.account.DeriveAvailable							:{[a]
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+				  
     };
 
 // Fill account
 .engine.logic.account.Fill :{[i;a;f]
-				iv:?[`inventory;enlist();0b;()];
-				iv[`ordQty]-:0;
-				iv[`ordVal]:0;
-				iv[`ordLoss]:0;
-				iv[`amt]:0;
-				iv[`posQty]:0;
-				iv[totalEntry]+:qty;
+				iv:.engine.model.inventory.GetInventory[];
+				iv[`ordQty]-:f[`fqty];
+				iv[`ordVal]:prd[f[`fqty`fprice]];
+				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`posQty]+:f[`fdlt];
+				iv[totalEntry]+:max[f`dlt;0];
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
 						i[`cntTyp];
-						price;
-						dlt]; 
+						f[`fprice];
+						f[`fqty]]; 
 
 				/ Calculates the average price of entry for 
 				/ the current postion, used in calculating 
@@ -30,13 +31,16 @@
 
 				/ If the fill reduces the position, calculate the 
 				/ resultant pnl 
-				iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
+				if[f[`fdlt]>0;iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
 						i[`cntTyp];
-						dlt;
-						price;
+						f[`fqty];
+						f[`fprice];
 						iv[`isig];
 						iv[`avgPrice];
 						i[`faceValue]];
+
+				// If the inventory is reduced to zero reset the folowing
+				// values in the inventory.
     		if[abs[iv[`posQty]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 
 				/ If the position is changed, calculate the resultant
@@ -49,62 +53,71 @@
 						i[`markPrice];
 						i[`faceValue]];
 
+				// 
 				iv[`posVal]:0;
-				a[`mmr]:0;
-				a[`imr]:0;
-				a[`feeTier]:0;
+				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
+				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				a[`avail]:.engine.logic.account.DeriveAvailable[];
 
-				account,:();
-				inventory,:();
+				.engine.model.account.UpdateAccount a;
+				.engine.model.inventory.UpdateInventory iv;
+				.engine.model.instrument.UpdateInstrument i;
 
-
+				.engine.Emit[`account] a;
+				.engine.Emit[`inventory] iv;
+				.engine.Emit[`instrument] i;
 				};
 
 
 .engine.logic.account.Withdraw:{[i;a;w]
-				a:?[`account;enlist();0b;()];
+				a:.engine.model.account.GetAccount[];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
 				a[`widdraw]+:withdrawn;
-				a[`imr]:0;
-				a[`mmr]:0;
+				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
+				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
 
 				// pos order margin
-				a[`avail]:()
-				.account.account,:a;
-				// TODO add events
+				a[`avail]:.engine.logic.account.DeriveAvailable[];
+
+				.engine.model.account.UpdateAccount a;
+
+				.engine.Emit[`account] a;
 				};
 
 .engine.logic.account.Deposit:{[i;a;d]
-				a:?[`account;enlist();0b;()];
+				a:.engine.model.account.GetAccount[];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				a[`deposited]+:deposited;
-				a[`imr]:0;
-				a[`mmr]:0;
+				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
 
 				// pos order margin
-				a[`avail]:()
-				.account.account,:a;
-				//TODO add events	
+				a[`avail]:.engine.logic.account.DeriveAvailable[];
 
+				.engine.model.account.UpdateAccount a;
+
+				.engine.Emit[`account] a;
 				};
 
 .engine.logic.account.Leverage:{[i;a;l]
-				a:?[`account;enlist();0b;()];
+				a:.engine.model.account.GetAccount[];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
 				a[`leverage]:leverage;
-				a[`imr]:0;
-				a[`mmr]:0;
+				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
+				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
 
 				// pos order margin
-				a[`avail]:()
-				.account.account,:a;
-				// TODO add events
+				a[`avail]:.engine.logic.account.DeriveAvailable[];
+
+				.engine.model.account.UpdateAccount a;
+
+				.engine.Emit[`account] a;
 				};
 
 

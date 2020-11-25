@@ -14,47 +14,15 @@
 // TODO validation and stop orders
 // TODO Check mock called with correct
 .qt.Unit[
-    ".order.NewOrder";
+    ".engine.logic.order.NewOrder";
     {[c]
         p:c[`params];
-        delete from `.order.Order;
-        delete from `.order.OrderBook; // TODO make general
-        .util.testutils.setupDepth[p`cDepth];
-        .util.testutils.setupOrders[p`cOrd];
-        m:p[`mocks];
+				.engine.logic.order.NewOrder . p`args;
 
-        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f]};c];
-        mck2: .qt.M[`.pipe.egress.AddOrderCreatedEvent;{[a;b]};c];
-        mck3: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
-
-        ins:.util.testutils.defaultInstrument;    
-        if[count[p[`cIns]]>0;ins^:(p[`cIns])];
-        .order.NewOrder[
-            ins;
-            .util.testutils.defaultAccount;
-            p`o];
-
-        .util.testutils.checkMock[mck1;m[0];c];  // Expected ProcessTrade Mock
-        .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderCreatedEvent Mock
-        .util.testutils.checkMock[mck3;m[2];c];  // Expected AddDepthEvent Mock
-
-        .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils._checkOrders[
-            (`orderId`clId`side`otype`offset`size`leaves`displayqty`price`reduce`time);
-            p[`eOrd];c];
     };
     {[p] 
         // TODO account for one record
-        ordCols:`orderId`clId`instrumentId`accountId`side`otype`offset`size`leaves`displayqty`price`reduce`time;
-
-        :`cDepth`cOrd`cIns`o`mocks`eDepth`eOrd!(
-            p[0];
-            .util.testutils.makeOrders[ordCols;p[1]];
-            p[2];
-            p[3];
-            (6_9#p);
-            p[4]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols;p[5]]);
+        p
     };
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
@@ -285,290 +253,52 @@
 // TODO test change in display qty, side, price, execInst
 // TODO test with clOrdId
 .qt.Unit[
-    ".order.AmendOrder";
+    ".engine.logic.order.AmendOrder";
     {[c]
-        p:c[`params];
-        delete from `.order.Order;
-        delete from `.order.OrderBook; // TODO make general
-        .util.testutils.setupDepth[p`cDepth];
-        .util.testutils.setupOrders[p`cOrd];
+        .qt.RunUnit[c;.engine.logic.order.AmendOrder];
 
-        m:p[`mocks];
-
-        mck1: .qt.M[`.order.ProcessTrade;{[a;b;c;d;e;f]};c];
-        mck2: .qt.M[`.pipe.egress.AddOrderUpdatedEvent;{[a;b]};c];
-        mck3: .qt.M[`.pipe.egress.AddOrderCancellledEvent;{[a;b]};c];
-        mck4: .qt.M[`.pipe.egress.AddDepthEvent;{[a;b]};c];
-
-        .order.AmendOrder[
-            .util.testutils.defaultInstrument;
-            .util.testutils.defaultAccount;
-            p`o];
-
-        .util.testutils.checkMock[mck1;m[0];c];  // Expected ProcessTrade Mock
-        .util.testutils.checkMock[mck2;m[1];c];  // Expected AddOrderUpdatedEvent Mock
-        .util.testutils.checkMock[mck3;m[2];c];  // Expected AddOrderCancellledEvent Mock
-        .util.testutils.checkMock[mck4;m[3];c];  // Expected AddDepthEvent Mock
-
-        .util.testutils.checkDepth[p[`eDepth];c];
-        .util.testutils._checkOrders[
-            (`orderId`clId`side`otype`offset`size`leaves`displayqty`price`reduce`time);
-            p[`eOrd];c];
     };
-    {[p] 
-        // TODO account for one record
-        ordCols:`orderId`clId`instrumentId`accountId`side`otype`offset`size`leaves`displayqty`price`reduce`time;
-
-        :`cDepth`cOrd`cIns`o`mocks`eDepth`eOrd!(
-            p[0];
-            .util.testutils.makeOrders[ordCols;p[1]];
-            p[2];
-            p[3];
-            (6_10#p);
-            p[4]; // TODO shorten parameterization
-            .util.testutils.makeOrders[ordCols;p[5]]);
-    };
+    {[p] :`args`eRes`mocks`err!p};
     (
         // Decreasing in size stays at same price
         ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(1;1;10;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(310)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;10;10;999;0b;z);
-                (2;2;1;1;1;1;30;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;140;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								(19);();();()
         )); 
         ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(2;2;10;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(310)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;10;10;999;0b;z);
-                (3;3;1;1;1;1;140;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (last in queue), smaller than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(3;3;10;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(310)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;10;10;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         ));
         // Increasing in size stays at same price
         ("Amend limit order (first in queue), larger than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(1;1;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
-            (
-                (1;1;1;1;1;1;300;100;110;110;999;0b;z);
-                (2;2;1;1;1;1;20;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (second in queue), larger than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(2;2;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;300;100;110;110;999;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (last in queue), larger than previous, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(3;3;110;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(410)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;300;100;110;110;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         ));
         // Different price same side no orders on new level (same size)
         ("Amend limit order (first in queue), different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`price`time!(1;1;998;z); // Fill Execution
-            ([price:(999 998)] side:(1 1);qty:(100 0);hqty:(0);iqty:(0);vqty:(300 100)); // Expected Depth
-            (
-                (1;1;1;1;1;1;0;100;100;100;998;0b;z);
-                (2;2;1;1;1;1;20;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (second in queue), different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`price`time!(2;2;998;z); // Fill Execution
-            ([price:(999 998)] side:(1 1);qty:(100 0);hqty:(0);iqty:(0);vqty:(300 100)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;0;100;100;100;998;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (last in queue), different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`price`time!(3;3;998;z); // Fill Execution
-            ([price:(999 998)] side:(1 1);qty:(100 0);hqty:(0);iqty:(0);vqty:(300 100)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;0;100;100;100;998;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         ));
         // Amend to zero (Cancellation)
         ("Amend limit order (first in queue) to zero, different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(1;1;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
-            (
-                (2;2;1;1;1;1;20;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (second in queue) to zero, different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(2;2;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;130;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         )); 
         ("Amend limit order (last in queue) to zero, different price same side, should update offsets, depth etc.";(
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(400)); // Current Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z);
-                (3;3;1;1;1;1;230;100;100;100;999;0b;z)
-            ); // Current Orders 
-            `bestAskPrice`bestBidPrice`hasLiquidityBuy`hasLiquiditySell!(1000;999;1b;1b);
-           `orderId`clId`size`time!(3;3;0;z); // Fill Execution
-            ([price:enlist(999)] side:enlist(1);qty:enlist(100);hqty:enlist(0);iqty:enlist(0);vqty:enlist(300)); // Expected Depth
-            (
-                (1;1;1;1;1;1;10;100;100;100;999;0b;z);
-                (2;2;1;1;1;1;120;100;100;100;999;0b;z)
-            ); // Expected Orders
-            (0b;0;()); // Expected ProcessTrade Mock
-            (1b;1;()); // Expected AddOrderUpdatedEvent Mock
-            (0b;0;()); // Expected AddOrderCancellledEvent Mock
-            (1b;1;())  // Expected AddDepthEvent Mock
+								();();();()
         ))
         / ("Amend limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
         /     ((10#1);1000-til 10;10#1000); // Current Depth
@@ -693,5 +423,52 @@
     );
     ({};{};{};{});
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
+
+
+.qt.Unit[
+    ".engine.logic.order.CancelOrder";
+    {[c]
+        .qt.RunUnit[c;.engine.logic.order.CancelOrder];
+
+    };
+    {[p] :`args`eRes`mocks`err!p};
+    (
+        // Decreasing in size stays at same price
+        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+								();();();()
+				)); 
+        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+								();();();()
+				)) 
+    );
+    ({};{};{};{});
+    "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
+
+
+.qt.Unit[
+    ".engine.logic.order.CancelAllOrders";
+    {[c]
+        .qt.RunUnit[c;.engine.logic.order.CancelAllOrders];
+
+    };
+    {[p] :`args`eRes`mocks`err!p};
+    (
+        // Decreasing in size stays at same price
+        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+								();();();()
+				)); 
+        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+								();();();()
+				)) 
+    );
+    ({};{};{};{});
+    "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
+
+
+
+
+
+
+
 
 
