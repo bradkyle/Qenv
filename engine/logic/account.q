@@ -78,7 +78,7 @@
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
-				a[`widdraw]+:withdrawn;
+				a[`widdraw]+:w`withdraw;
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
@@ -98,7 +98,7 @@
 .engine.logic.account.Deposit:{[i;a;d]
 				a:.engine.model.account.GetAccount[];
 				if[a[`state]=1;[0;"Account has been disabled"]];
-				a[`deposited]+:deposited;
+				a[`deposited]+:d`deposit;
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
@@ -121,7 +121,7 @@
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
-				a[`leverage]:leverage;
+				a[`leverage]:l`leverage;
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];

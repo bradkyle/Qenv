@@ -49,6 +49,10 @@
 
 				};
 
+.engine.Purge   :{[event;kind;msg] 
+
+        };
+
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
