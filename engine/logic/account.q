@@ -28,13 +28,14 @@
 
 				/ / If the fill reduces the position, calculate the 
 				/ / resultant pnl 
-				if[f[`dlt]>0;iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
+				if[f[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
 						i[`cntTyp];
 						f[`qty];
 						f[`price];
 						iv[`isig];
 						iv[`avgPrice];
-						i[`faceValue]]];
+						i[`faceValue];
+						i[`smul]]];
 
 				/ // If the inventory is reduced to zero reset the folowing
 				/ // values in the inventory.
@@ -51,7 +52,7 @@
 						iv[`isig];
 						iv[`avgPrice]];	
 
-				// 
+				//  
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
@@ -59,8 +60,6 @@
 				risktier:.engine.model.risktier.GetRiskTier[];
 				a[`imr]:risktier[`imr];
 				a[`mmr]:risktier[`mmr];
-
-				a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;

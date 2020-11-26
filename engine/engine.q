@@ -46,11 +46,11 @@
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;event]
-
+        .engine.egress.Events,:(event);
 				};
 
 .engine.Purge   :{[event;kind;msg] 
-
+        .engine.egress.Events,:(event);
         };
 
 / Event Processing logic (Writes)
