@@ -3,7 +3,7 @@
 // Fill account
 .engine.logic.account.Fill :{[i;a;f]
 				iv:.engine.model.inventory.GetInventory[`side`aId!(`side;a`aId)];
-				iv[`ordQty]-:f[`fqty];
+				iv[`ordQty]-:f[`qty];
 				iv[`ordVal]:prd[f[`qty`price]];
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 				iv[`posQty]+:f[`dlt];
