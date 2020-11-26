@@ -1,5 +1,5 @@
 
-.engine.services.trade.Trade:{
+.engine.logic.trade.Trade:{[i;t]
     nside:neg[side];
     isagnt:count[account]>0;
     
