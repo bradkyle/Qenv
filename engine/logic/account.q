@@ -10,15 +10,16 @@
 				iv:.engine.model.inventory.GetInventory[`side`aId!(`side;a`aId)];
 				iv[`ordQty]-:f[`fqty];
 				iv[`ordVal]:prd[f[`fqty`fprice]];
-				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 				iv[`posQty]+:f[`fdlt];
-				iv[totalEntry]+:max[f`dlt;0];
+				iv[`totalEntry]+:max[(f`dlt;0)];
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
 						i[`cntTyp];
 						f[`fprice];
-						f[`fqty]]; 
+						f[`fqty];
+						i[`smul]]; 
 
 				/ / Calculates the average price of entry for 
 				/ / the current postion, used in calculating 
@@ -27,7 +28,8 @@
 						i[`cntTyp];
 						iv[`isig];
 						iv[`execCost];
-						iv[`totalEntry]];
+						iv[`totalEntry];
+						i[`smul]]; 
 
 				/ / If the fill reduces the position, calculate the 
 				/ / resultant pnl 
@@ -45,13 +47,14 @@
 
 				/ / If the position is changed, calculate the resultant
 				/ / unrealized pnl
-				iv[`upnl]:.engine.logic.contract.UnrealizedPnl[ // TODO
+				iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ // TODO
 						i[`cntTyp]; 
+						i[`mkprice];
+						i[`faceValue];
+						i[`smul];
 						iv[`posQty];
 						iv[`isig];
-						iv[`avgPrice];
-						i[`markPrice];
-						i[`faceValue]];
+						iv[`avgPrice]];	
 
 				// 
 				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
@@ -61,6 +64,7 @@
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
+				.engine.Emit[0;1];
 
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;

@@ -21,9 +21,9 @@
 /         i[`markPrice];
 /         i[`faceValue]];
 .engine.logic.contract.AvgPrice    :{[contractType;isignum;execCost;totalEntry;multiplier]
-    $[contractType=0;.engine.logic.contract.inverse.ExecCost[isignum;execCost;totalEntry;multiplier];
-      contractType=1;.engine.logic.contract.linear.ExecCost[isignum;execCost;totalEntry;multiplier];
-      contractType=2;.engine.logic.contract.quanto.ExecCost[isignum;execCost;totalEntry;multiplier];
+    $[contractType=0;.engine.logic.contract.inverse.AvgPrice[isignum;execCost;totalEntry;multiplier];
+      contractType=1;.engine.logic.contract.linear.AvgPrice[isignum;execCost;totalEntry;multiplier];
+      contractType=2;.engine.logic.contract.quanto.AvgPrice[isignum;execCost;totalEntry;multiplier];
       'nyi]
     };
 
@@ -35,9 +35,9 @@
 /         i[`markPrice];
 /         i[`faceValue]];
 .engine.logic.contract.UnrealizedPnl    :{[contractType;markPrice;faceValue;multiplier;amt;isignum;avgPrice] 
-				$[contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[markPrice;faceValue;multiplier;amt;isignum;avgPrice]; 
-				  contractType=1;.engine.logic.contract.linear.UnrealizedPnl[markPrice;faceValue;multiplier;amt;isignum;avgPrice];
-          contractType=2;.engine.logic.contract.quanto.UnrealizedPnl[markPrice;faceValue;multiplier;amt;isignum;avgPrice];
+      $[contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
+				  contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
+          contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
       'nyi]
     };
 
@@ -49,8 +49,8 @@
 /         i[`markPrice];
 /         i[`faceValue]];
 .engine.logic.contract.RealizedPnl    :{[contractType;fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier]
-    $[contractType=0;.engine.logic.contract.inverse.ExecCost[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
-      contractType=1;.engine.logic.contract.linear.ExecCost[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
-      contractType=2;.engine.logic.contract.quanto.ExecCost[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
+    $[contractType=0;.engine.logic.contract.inverse.RealizedPnl[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
+      contractType=1;.engine.logic.contract.linear.RealizedPnl[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
+      contractType=2;.engine.logic.contract.quanto.RealizedPnl[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier];
       'nyi]
     };

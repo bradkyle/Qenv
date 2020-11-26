@@ -45,7 +45,7 @@
     };
 
 // ReInserts events into the egress event buffer
-.engine.Emit            :{[]
+.engine.Emit            :{[kind;event]
 
 				};
 

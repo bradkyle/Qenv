@@ -1,6 +1,6 @@
 
 .engine.model.common.Get     :{[tbl;cnd]
-				?[tbl;cnd;0b;()] 
+				?[tbl;();0b;()] 
 				};
 
 .engine.model.common.Update  :{[]
