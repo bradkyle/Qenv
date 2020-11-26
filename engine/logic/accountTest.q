@@ -205,7 +205,21 @@
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
-        .qt.RunUnit[c;.engine.logic.account.Withdraw];
+        p:c[`params];
+        a:p`args;
+        m:p[`mocks];
+
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
+        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+
+        res:.engine.logic.account.Fill[a 0;a 1;a 2];
+
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck3;m[2];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
