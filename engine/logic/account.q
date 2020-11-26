@@ -72,12 +72,11 @@
 
 
 .engine.logic.account.Withdraw:{[i;a;w]
-				a:.engine.model.account.GetAccount[];
-				if[a[`bal]<=0;[0;"Order account has no balance"]];
-				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;[0;"Account has been disabled"]];
-				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
-				a[`widdraw]+:w`withdraw;
+				if[a[`bal]<=0;.engine.Purge[w;0;"Order account has no balance"]];
+				if[a[`available]<=0;.engine.Purge[w;0;"Order account has insufficient available balance"]];
+				if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
+				if[a[`state]=2;.engine.Purge[w;0;"Account has been locked for liquidation"]];
+				a[`wit]+:w`wit;
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
@@ -95,9 +94,8 @@
 				};
 
 .engine.logic.account.Deposit:{[i;a;d]
-				a:.engine.model.account.GetAccount[];
 				if[a[`state]=1;[0;"Account has been disabled"]];
-				a[`deposited]+:d`deposit;
+				a[`dep]+:d`dep;
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
@@ -115,7 +113,6 @@
 				};
 
 .engine.logic.account.Leverage:{[i;a;l]
-				a:.engine.model.account.GetAccount[];
 				if[a[`bal]<=0;[0;"Order account has no balance"]];
 				if[a[`available]<=0;[0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;[0;"Account has been disabled"]];

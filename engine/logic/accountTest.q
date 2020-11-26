@@ -12,7 +12,6 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
-.qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -269,6 +268,7 @@
     "Function for deriving the exec cost from the qty and the price"];
 
 
+.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
@@ -276,9 +276,9 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck1: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
+        mck2: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Purge;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
@@ -286,7 +286,6 @@
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
@@ -298,8 +297,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
@@ -316,11 +315,11 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;`mrg`mmr`imr!(0.1;0.03;32);()); // UpdateAccount 
+                (1b;1;();()); // Emit
+                (1b;3;();`amt`abc!()); // Purge
+                (1b;3;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
             ); // mocks 
             (
 
