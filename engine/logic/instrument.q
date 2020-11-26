@@ -1,6 +1,6 @@
 
 // Update 
-.engine.logic.instrument.Funding:{
+.engine.logic.instrument.Funding:{[i;x]
 				iv:.engine.model.inventory.GetInventory[()];
 				// TODO make simpler
 				fnd:0!select 
@@ -23,7 +23,7 @@
 			};
 
 //  
-.engine.logic.instrument.MarkPrice:{
+.engine.logic.instrument.MarkPrice:{[i;x]
 				iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
 
 				// TODO make simpler
@@ -52,7 +52,7 @@
 				.engine.Emit[`instrument] iv;
 	};
 
-.engine.logic.instrument.Settlement:{
+.engine.logic.instrument.Settlement:{[i;x]
 				iv:.engine.model.inventory.GetInventory[()];
 				a:.engine.model.account.GetAccount[fnd`accountId];
 				a[`mrg]+:iv[`rpnl];
@@ -71,7 +71,7 @@
 	};
 
 
-.engine.logic.instrument.PriceLimit:{
+.engine.logic.instrument.PriceLimit:{[i;x]
 				i:.engine.model.intrument.GetInstrument[];
 				i[`plmth]:x[`highest];
 				i[`plmtl]:x[`lowest];
