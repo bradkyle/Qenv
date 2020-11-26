@@ -79,8 +79,13 @@
 				if[a[`state]=1;[0;"Account has been disabled"]];
 				if[a[`state]=2;[0;"Account has been locked for liquidation"]];
 				a[`widdraw]+:withdrawn;
-				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
-				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				feetier:.engine.model.feetier.GetFeeTier[];
+				a[`mkrfee]:feetier[`mkrfee];
+				a[`tkrfee]:feetier[`tkrfee];
+
+				risktier:.engine.model.risktier.GetRiskTier[];
+				a[`imr]:risktier[`imr];
+				a[`mmr]:risktier[`mmr];
 
 				// pos order margin
 				a[`avail]:.engine.logic.account.DeriveAvailable[];
