@@ -24,12 +24,13 @@
 
 //  
 .engine.logic.instrument.MarkPrice:{[i;x]
-				iv:?[`inventory;enlist(<;`amt;0);enlist(`accountId)!enlist(`accountId);()];
+				i[`mkprice]:x;
+				iv:.engine.model.inventory.GetInventory[(<;`amt;0)];
 
 				// TODO make simpler
 				upl:.engine.logic.contract.UnrealizedPnl[
 						i[`contractType];
-						i[`markPrice];
+						i[`mkprice];
 						i[`faceValue];
 						i[`sizeMultiplier]];
 

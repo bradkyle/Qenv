@@ -268,7 +268,6 @@
     "Function for deriving the exec cost from the qty and the price"];
 
 
-.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
@@ -325,7 +324,6 @@
 
             ) // err 
         ));
-        ("1:1) ProcessWithdrawEvents";());
         ("withdraw sufficient balance without positions";());
         ("withdraw sufficient balance with combined short position";());
         ("withdraw sufficient balance with combined long position";());

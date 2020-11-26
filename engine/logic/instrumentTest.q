@@ -24,7 +24,6 @@
         ("First should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -42,7 +41,6 @@
         ("Second should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -92,6 +90,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
+.qt.SkpBesTest[29];
 .qt.Unit[
     ".engine.logic.instrument.MarkPrice";
     {[c]
@@ -99,7 +98,7 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
@@ -116,8 +115,7 @@
         ("First should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
+                1000
             );
             (); // res 
             (
@@ -134,8 +132,7 @@
         ("Second should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
+                1000
             );
             (); // res 
             (
@@ -209,7 +206,6 @@
         ("First should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -227,7 +223,6 @@
         ("Second should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -303,7 +298,6 @@
         ("First should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -321,7 +315,6 @@
         ("Second should succeed";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
