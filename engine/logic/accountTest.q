@@ -19,11 +19,13 @@
     {[c]
         p:c[`params];
         a:p`args;
-        m:p[`mocks][0];
+        m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
+        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.account.Fill[a 0;a 1;a 2];
 
@@ -37,7 +39,7 @@
         ("hedged:long_to_longer";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0;1;32); // account
+                `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
@@ -45,6 +47,8 @@
                 (1b;3;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0));
                 (1b;3;();`amt`abc!());
                 (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
             (
 
@@ -53,14 +57,16 @@
         ("hedged:longer_to_long";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0;1;32);
-                `fqty`fprice`dlt!(0;1;0)
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
             (
                 (1b;3;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0));
                 (1b;3;();`amt`abc!());
                 (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
             (
 
