@@ -7,12 +7,13 @@
 
 // Fill account
 .engine.logic.account.Fill :{[i;a;f]
-				iv:.engine.model.inventory.GetInventory[];
+				iv:.engine.model.inventory.GetInventory[`side`aId!(`side;a`aId)];
 				iv[`ordQty]-:f[`fqty];
 				iv[`ordVal]:prd[f[`fqty`fprice]];
 				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
 				iv[`posQty]+:f[`fdlt];
 				iv[totalEntry]+:max[f`dlt;0];
+				show 99#"BAM";
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[

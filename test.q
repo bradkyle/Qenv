@@ -2,6 +2,7 @@ TESTING:1b;
 BASE:system["pwd"][0];
 args:.Q.opt[.z.x];
 TESTSET:first args[`ts];
+SKIPBES:first args[`skp];
 show TESTSET;
  
 getFn :{[path]  
@@ -26,6 +27,7 @@ getFn :{[path]
     system"l test/init.q"
 
     if[not[null[`$TESTSET]];.qt.ShowOnly[(getFn[TESTSET])]];
+    if[not[null[`$SKIPBES]];.qt.SkpBesTest[(7h$SKIPBES)]];
     / if[not[null[`$SKIPBES]];.qt.ShowOnly[(getFn[TESTSET])]];
    // .qt.ShowOnly[(
        //         /* getFn[".engine.model.instrument"] */

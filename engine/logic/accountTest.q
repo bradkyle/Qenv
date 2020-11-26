@@ -16,23 +16,32 @@
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
-        .qt.RunUnit[c;.engine.logic.account.Fill];
+        p:c[`params];
+        a:p`args;
+
+        m:p`args;
+        mck1: .qt.M[`.engine.model.common.Get;{[a;b]};c];
+        mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+
+        res:.engine.logic.account.Fill . a;
+
+        .util.testutils.checkMock[mck1;m[0];c];
+        .util.testutils.checkMock[mck2;m[1];c];
+        .util.testutils.checkMock[mck3;m[2];c];
+
     };
     {[p] :`args`eRes`mocks`err!p};
     (
         ("hedged:long_to_longer";(
             ( // Mocks
-								();
-								();
-								()
+                `cntTyp`faceValue!(0;1);
+                `balance`mmr`imr!(0;1;32);
+                `fqty`fprice`dlt!(0;1;0)
             );
-            (
-                ();
-                ();
-                ()
-            ); // Fill
-            (); // Eres
-            () // Err
+            (); // res 
+            (); // mocks 
+            () // err 
         ));
         ("hedged:longer_to_long";(
             ( // Mocks
