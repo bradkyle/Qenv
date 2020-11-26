@@ -38,7 +38,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("hedged:long_to_longer";(
+        ("hedged:none_to_longer";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
