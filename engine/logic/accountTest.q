@@ -58,18 +58,78 @@
 
             ) // err 
         ));
-        ("hedged:longer_to_long";(
+        ("hedged:none_to_longer";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
             );
             (); // res 
             (
-                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0)); // GetInventory
-                (1b;1;();`amt`abc!()); // Update Account
-                (1b;1;();`amt`abc!()); // Update Inventory 
-                (1b;1;();`amt`abc!()); // Update Instrument 
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("hedged:none_to_longer";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("hedged:none_to_longer";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("hedged:none_to_longer";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
                 (1b;3;();`amt`abc!()); // Emit
                 (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
                 (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
