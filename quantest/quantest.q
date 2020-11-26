@@ -579,6 +579,7 @@ Assertion   :(
 A   :{[actual;relation;expected;msg;case]
     $[not null[`$msg];msg:`$msg;msg:`$""];
     failFlag::not .[relation; (actual; expected); 0b];
+    / show failFlag;
     state:$[failFlag;`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;enlist actual;str relation;enlist expected);
     `.qt.Assertion upsert ass;
@@ -655,6 +656,7 @@ AAll  :{[actual;expected;msg;case] // TODO add reasons
                 ]
             ];
         ]]);
+    
     state:$[all[failFlag];`FAIL;`PASS];
     ass:cols[.qt.Assertion]!((assertId+:1);case[`testId];case[`caseId];`THAT;state;msg;actual;`alleq;expected);
     `.qt.Assertion upsert ass;
@@ -708,7 +710,8 @@ Ma      :{[case;mId]
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 CheckMock :{[x;y;z]
-        .qt.MA[x;y[0];y[1];y[2];z];
+    mid:key[x]`mockId;
+    .qt.MA[mid;y[0];y[1];y[2];z];
     };
 
 mM :{[case;target;replacement]

@@ -19,17 +19,17 @@
     {[c]
         p:c[`params];
         a:p`args;
+        m:p[`mocks][0];
 
-        m:p`args;
         mck1: .qt.M[`.engine.model.common.Get;{[a;b]};c];
         mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
 
         res:.engine.logic.account.Fill[a til[3]];
 
-        .util.testutils.checkMock[mck1;m[0];c];
-        .util.testutils.checkMock[mck2;m[1];c];
-        .util.testutils.checkMock[mck3;m[2];c];
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck3;m[2];c];
 
     };
     {[p] :`args`eRes`mocks`err!p};
@@ -56,133 +56,133 @@
             (); // Fill
             (); // Eres
             () // Err
-        ));
-        ("hedged:long_to_flat";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:longer_to_flat";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:short_to_shorter";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:shorter_to_short";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:shorter_to_flat";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:long_to_longer";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:longer_to_long";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:long_to_flat";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:longer_to_short";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:long_to_shorter";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:short_to_shorter";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:shorter_to_short";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:short_to_long";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:short_to_longer";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("combined:short_to_flat_rpl_-50";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:long_to_flat_rpl_50";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:short_to_flat_rpl_50";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
-        ));
-        ("hedged:long_to_flat_rpl_-50";(
-            ( // Mocks
-            );
-            (); // Fill
-            (); // Eres
-            () // Err
         ))
+        / ("hedged:long_to_flat";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:longer_to_flat";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:short_to_shorter";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:shorter_to_short";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:shorter_to_flat";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:long_to_longer";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:longer_to_long";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:long_to_flat";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:longer_to_short";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:long_to_shorter";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:short_to_shorter";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:shorter_to_short";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:short_to_long";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:short_to_longer";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("combined:short_to_flat_rpl_-50";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:long_to_flat_rpl_50";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:short_to_flat_rpl_50";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ));
+        / ("hedged:long_to_flat_rpl_-50";(
+        /     ( // Mocks
+        /     );
+        /     (); // Fill
+        /     (); // Eres
+        /     () // Err
+        / ))
     );
     ({};{};{};{});
     "Function for deriving the exec cost from the qty and the price"];
