@@ -13,7 +13,6 @@
 				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
 				iv[`posQty]+:f[`fdlt];
 				iv[totalEntry]+:max[f`dlt;0];
-				show 99#"BAM";
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
@@ -55,7 +54,6 @@
 						i[`faceValue]];
 
 				// 
-				iv[`posVal]:0;
 				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
 				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
 				a[`avail]:.engine.logic.account.DeriveAvailable[];

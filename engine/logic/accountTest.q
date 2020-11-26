@@ -12,6 +12,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
+.qt.SkpBesTest[16];
 
 .qt.Unit[
     ".engine.logic.account.Fill";
@@ -24,7 +25,7 @@
         mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
 
-        res:.engine.logic.account.Fill . a;
+        res:.engine.logic.account.Fill[a til[3]];
 
         .util.testutils.checkMock[mck1;m[0];c];
         .util.testutils.checkMock[mck2;m[1];c];
@@ -40,8 +41,14 @@
                 `fqty`fprice`dlt!(0;1;0)
             );
             (); // res 
-            (); // mocks 
-            () // err 
+            (
+                (1b;0;();`amt`abc!());
+                (1b;0;();`amt`abc!());
+                (1b;0;();`amt`abc!());
+            ); // mocks 
+            (
+
+            ) // err 
         ));
         ("hedged:longer_to_long";(
             ( // Mocks

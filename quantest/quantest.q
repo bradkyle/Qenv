@@ -816,6 +816,8 @@ m:{
     :flip ej[`caseId;a;c]
     };
 
+ca:{.qt.Case@x}
+
 
 RT:{[ids] 
     t:select from .qt.Test where testId in ids;

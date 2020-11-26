@@ -1,4 +1,5 @@
 \cd engine
+\l testutils.q
 \l model/init.q
 \l logic/init.q
 \l engine.q
