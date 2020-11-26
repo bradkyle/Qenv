@@ -34,12 +34,9 @@
 						i[`faceValue];
 						i[`sizeMultiplier]];
 
-				f:0!select 
-				amtInMarket: sum[amt],
-				unrealizedPnl: upl'[amt;isignum;avgPrice] 
-						from iv;  
+				(upl;iv) fby iv[`aId];
 
-				a:.engine.model.account.GetAccount[fnd`accountId];
+				a:.engine.model.account.GetAccount[distinct iv`aId];
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
 				a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
 				a[`avail]:.engine.logic.account.DeriveAvailable[];

@@ -119,25 +119,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Second should succeed";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                1000
-            );
-            (); // res 
-            (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))

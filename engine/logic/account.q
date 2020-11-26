@@ -6,7 +6,7 @@
 				iv[`ordQty]-:f[`qty];
 				iv[`ordVal]:prd[f[`qty`price]];
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
-				iv[`posQty]+:f[`dlt];
+				iv[`amt]+:f[`dlt];
 				iv[`totalEntry]+:max[(f`dlt;0)];
 
 				// Calc
@@ -39,7 +39,7 @@
 
 				/ // If the inventory is reduced to zero reset the folowing
 				/ // values in the inventory.
-    		if[abs[iv[`posQty]]=0;iv[`avgPrice`execCost`totalEntry]:0];
+    		if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 
 				/ / If the position is changed, calculate the resultant
 				/ / unrealized pnl
@@ -48,7 +48,7 @@
 						i[`mkprice];
 						i[`faceValue];
 						i[`smul];
-						iv[`posQty];
+						iv[`amt];
 						iv[`isig];
 						iv[`avgPrice]];	
 
