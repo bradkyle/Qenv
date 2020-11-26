@@ -710,7 +710,7 @@ Ma      :{[case;mId]
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 CheckMock :{[x;y;z]
-    mid:key[x]`mockId;
+    mid:first key[x]`mockId;
     .qt.MA[mid;y[0];y[1];y[2];z];
     };
 

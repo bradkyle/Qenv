@@ -25,8 +25,8 @@
         mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b;c]};c];
         mck5: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck6: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck7: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+        mck6: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
+        mck7: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.account.Fill[a 0;a 1;a 2];
 
@@ -41,15 +41,15 @@
         ("hedged:long_to_longer";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
+                `aId`balance`mmr`imr!(0;0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
             );
             (); // res 
             (
                 (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0)); // GetInventory
-                (1b;1;();`amt`abc!()); // Update Account
-                (1b;1;();`amt`abc!()); // Update Inventory 
-                (1b;1;();`amt`abc!()); // Update Instrument 
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee`avail!(0,(6#0.1))))); // Update Account
+                (1b;1;enlist(enlist());()); // Update Inventory 
+                (1b;1;();()); // Update Instrument 
                 (1b;3;();`amt`abc!()); // Emit
                 (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
                 (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
