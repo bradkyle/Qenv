@@ -26,8 +26,8 @@ getFn :{[path]
     
     system"l test/init.q"
 
-    if[not[null[`$TESTSET]];.qt.ShowOnly[(getFn[TESTSET])]];
-    if[not[null[`$SKIPBES]];.qt.SkpBesTest[(7h$SKIPBES)]];
+    if[count[TESTSET]>0;.qt.ShowOnly[(getFn[TESTSET])]];
+    if[count[SKIPBES]>0;.qt.SkpBesTest[(7h$SKIPBES)]];
     / if[not[null[`$SKIPBES]];.qt.ShowOnly[(getFn[TESTSET])]];
    // .qt.ShowOnly[(
        //         /* getFn[".engine.model.instrument"] */
