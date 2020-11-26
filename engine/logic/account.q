@@ -4,16 +4,16 @@
 .engine.logic.account.Fill :{[i;a;f]
 				iv:.engine.model.inventory.GetInventory[`side`aId!(`side;a`aId)];
 				iv[`ordQty]-:f[`fqty];
-				iv[`ordVal]:prd[f[`fqty`fprice]];
+				iv[`ordVal]:prd[f[`qty`price]];
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
-				iv[`posQty]+:f[`fdlt];
+				iv[`posQty]+:f[`dlt];
 				iv[`totalEntry]+:max[(f`dlt;0)];
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
 						i[`cntTyp];
-						f[`fprice];
-						f[`fqty];
+						f[`price];
+						f[`qty];
 						i[`smul]]; 
 
 				/ / Calculates the average price of entry for 
@@ -28,10 +28,10 @@
 
 				/ / If the fill reduces the position, calculate the 
 				/ / resultant pnl 
-				if[f[`fdlt]>0;iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
+				if[f[`dlt]>0;iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
 						i[`cntTyp];
-						f[`fqty];
-						f[`fprice];
+						f[`qty];
+						f[`price];
 						iv[`isig];
 						iv[`avgPrice];
 						i[`faceValue]]];

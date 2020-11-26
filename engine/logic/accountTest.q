@@ -12,7 +12,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
-
+.qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -21,16 +21,20 @@
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.common.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b;c]};c];
+        mck5: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck6: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
+        mck7: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.account.Fill[a 0;a 1;a 2];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck4;m[3];c];
+        .qt.CheckMock[mck5;m[4];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
@@ -42,11 +46,13 @@
             );
             (); // res 
             (
-                (1b;3;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0));
-                (1b;3;();`amt`abc!());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0)); // GetInventory
+                (1b;1;();`amt`abc!()); // Update Account
+                (1b;1;();`amt`abc!()); // Update Inventory 
+                (1b;1;();`amt`abc!()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
             ); // mocks 
             (
 
@@ -60,11 +66,13 @@
             );
             (); // res 
             (
-                (1b;3;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0));
-                (1b;3;();`amt`abc!());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();`ordQty`ordVal`ordLoss`posQty`totalEntry`execCost`avgPrice!(0;0;0;0;0;0;0)); // GetInventory
+                (1b;1;();`amt`abc!()); // Update Account
+                (1b;1;();`amt`abc!()); // Update Inventory 
+                (1b;1;();`amt`abc!()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
             ); // mocks 
             (
 
