@@ -26,8 +26,6 @@
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
-        mck6: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck7: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.account.Fill[a 0;a 1;a 2];
 

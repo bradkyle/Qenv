@@ -1,10 +1,4 @@
 
-
-.engine.logic.account.DeriveAvailable							:{[a]
-    / a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
-				  
-    };
-
 // TODO add fee
 // Fill account
 .engine.logic.account.Fill :{[i;a;f]
@@ -71,7 +65,6 @@
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
-				.engine.Emit[0;1];
 
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;
