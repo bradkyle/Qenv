@@ -1,7 +1,7 @@
 
 
 .engine.logic.account.DeriveAvailable							:{[a]
-    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+    / a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 				  
     };
 
@@ -20,31 +20,31 @@
 						f[`fprice];
 						f[`fqty]]; 
 
-				/ Calculates the average price of entry for 
-				/ the current postion, used in calculating 
-				/ realized and unrealized pnl.
+				/ / Calculates the average price of entry for 
+				/ / the current postion, used in calculating 
+				/ / realized and unrealized pnl.
 				iv[`avgPrice]: .engine.logic.contract.AvgPrice[
 						i[`cntTyp];
 						iv[`isig];
 						iv[`execCost];
 						iv[`totalEntry]];
 
-				/ If the fill reduces the position, calculate the 
-				/ resultant pnl 
+				/ / If the fill reduces the position, calculate the 
+				/ / resultant pnl 
 				if[f[`fdlt]>0;iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
 						i[`cntTyp];
 						f[`fqty];
 						f[`fprice];
 						iv[`isig];
 						iv[`avgPrice];
-						i[`faceValue]];
+						i[`faceValue]]];
 
-				// If the inventory is reduced to zero reset the folowing
-				// values in the inventory.
+				/ // If the inventory is reduced to zero reset the folowing
+				/ // values in the inventory.
     		if[abs[iv[`posQty]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 
-				/ If the position is changed, calculate the resultant
-				/ unrealized pnl
+				/ / If the position is changed, calculate the resultant
+				/ / unrealized pnl
 				iv[`upnl]:.engine.logic.contract.UnrealizedPnl[ // TODO
 						i[`cntTyp]; 
 						iv[`posQty];

@@ -810,7 +810,11 @@ NxtAE :{
     :(`col xkey x);
     }
 
-m:{.qt.Case@x}
+m:{
+    c:select from .qt.Case where caseId=x;
+    a:select from .qt.Assertion where caseId=x;
+    :flip ej[`caseId;a;c]
+    };
 
 
 RT:{[ids] 
@@ -819,3 +823,5 @@ RT:{[ids]
     show 99#"#";show (45#" "),"TEST";show 99#"#";
     .qt.pntTest[exec from .qt.Test where testId in ids];
     };
+
+

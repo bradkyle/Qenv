@@ -26,6 +26,7 @@ getFn :{[path]
     system"l test/init.q"
 
     if[not[null[`$TESTSET]];.qt.ShowOnly[(getFn[TESTSET])]];
+    / if[not[null[`$SKIPBES]];.qt.ShowOnly[(getFn[TESTSET])]];
    // .qt.ShowOnly[(
        //         /* getFn[".engine.model.instrument"] */
     /     / ".engine.logic.trade.ProcessAgentTrades"
