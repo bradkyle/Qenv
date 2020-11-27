@@ -174,37 +174,235 @@
             () // err 
         ));
         ("Update increases qty at level, orders present, no hqty or iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update decreases qty at level, orders present, no hqty or iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update increases qty at level, orders present, hqty no iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update decreases qty at level, orders present, hqty no iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update increases qty at level, orders present, hqty and iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update decreases qty at level, orders present, hqty and iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("New side level, no orders present, no hqty or iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("New side level, update crosses spread orders present hqty no iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("New side level, update crosses spread orders present hqty and iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("New side level, update crosses spread orders present";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("New side level, hqty present";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ))
     );
     ({};{};{};{});

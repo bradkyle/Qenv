@@ -29,7 +29,7 @@
 				.engine.Emit[`instrument] iv;
 			};
 
-//  
+//   
 .engine.logic.instrument.MarkPrice:{[i;x]
 				i[`mkprice]:x;
 				iv:.engine.model.inventory.GetInventory[(<;`amt;0)];
