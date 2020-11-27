@@ -1,25 +1,25 @@
 
 .engine.logic.trade.Trade:{[i;a;t]
     isagnt:not[null[a]];
-
     nside:neg[t`side];
 
+    // Get levels that are to be updated
     l:.engine.model.orderbook.GetLevel[()];
-    
     s:l;
+
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
     aqty:sum[s[`iqty`hqty`vqty]];
     thresh:sums[aqty];
-    rp:(thresh-prev[thresh])-(thresh-fillQty);
+    rp:(thresh-prev[thresh])-(thresh-t`size);
     s[`thresh]:thresh; 
-    // Derive the amount that will be replaced per level
-    rp1:min[fillQty,first[aqty]]^rp; // TODO check that rp is correct
-    s[`rp]:rp1; 
-    s:s[where (s`rp)>0];
 
-    // TODO select by offset aswell
-		o:.engine.model.order.GetOrder[(in;price;s`price)];
+    // Derive the amount that will be replaced per level
+    rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
+    s[`rp]:rp1; 
+
+    // 
+		o:.engine.model.order.GetOrder[enlist(in;`price;s`price)];
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
@@ -27,8 +27,8 @@
     // typical offset and function like normal orders
     // except they aren't visible.
 
-    $[count[odrs]>0;[
-        s:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!s;`price xgroup (update oprice:price, oside:side from odrs)]]; 
+    $[count[o]>0;[
+        s:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[s`orderId]]]];
         s[`accountId`instrumentId]:7h$(s[`accountId`instrumentId]);
         // Pad s into a matrix
@@ -163,7 +163,7 @@
         .engine.Emit[`orderbook] l;
 
     ];if[count[s]>0;[
-        l:[raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#fillTime)]];
+        l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;t`time);
         .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`orderbook] l;
     ]]];
