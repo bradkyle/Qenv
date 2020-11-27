@@ -12,7 +12,6 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
-.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -468,6 +467,7 @@
 
             ) // err 
         ))
+    );
     "Global function for creating a new account"];
  
 

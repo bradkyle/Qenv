@@ -1,4 +1,10 @@
 
+.engine.logic.instrument.liquidate:{[i;a]
+		a[`status]:1;
+		.engine.model.liquidation.AddLiquidation[];
+
+	};
+
 // Update 
 .engine.logic.instrument.Funding:{[i;x]
 				iv:.engine.model.inventory.GetInventory[()];
@@ -40,6 +46,8 @@
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
 				a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
 				a[`avail]:.engine.logic.account.DeriveAvailable[];
+
+				a:.engine.logic.instrument.liquidate[i;a where[a[`avail]<i[`]]];
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
