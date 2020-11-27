@@ -36,14 +36,18 @@
 				a[`imr]:risktier[`imr];
 				a[`mmr]:risktier[`mmr];
 
-				a[`avail]:.engine.logic.account.DeriveAvailable[];
+				/ a[`avail]:.engine.logic.account.DeriveAvailable[];
+				// TODO check margin
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
-				.engine.model.order.CreateOrder o;
 
-				.engine.logic.account.Fill[]
+				if[[];[
+						.engine.logic.account.Fill[];
+						.engine.model.order.CreateOrder o;
+					]];
+
 				.engine.logic.orderbook.Level[]
 
 				.engine.Emit[`account] a;
