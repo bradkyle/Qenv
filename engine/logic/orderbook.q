@@ -12,6 +12,7 @@
                         tmaxN:til maxN;
                         numLvls:count[state`offset];
 
+                        // Get the shift
                         shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
                         mxshft:max'[shft];
 
@@ -53,12 +54,12 @@
                         lsttime:max'[state`time]; // TODO apply to each order
                         numordlvl:count'[noffset];
 
-                        .engine.model.order.UpdateOrder[]
-                        .engine.model.orderbook.UpdateLevel[];
+                        .engine.model.order.UpdateOrder o;
+                        .engine.model.orderbook.UpdateLevel l;
 
                 ];[
-                        .engine.model.orderbook.UpdateLevel[];
-                ]];
+                        .engine.model.orderbook.UpdateLevel l;
+                ];
                 .engine.Emit[`orderbook] l;
         ];[
                 .engine.model.orderbook.UpdateLevel[];
