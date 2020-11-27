@@ -59,7 +59,7 @@
 
                 ];[
                         .engine.model.orderbook.UpdateLevel l;
-                ];
+                ]];
                 .engine.Emit[`orderbook] l;
         ];[
                 .engine.model.orderbook.UpdateLevel[];
