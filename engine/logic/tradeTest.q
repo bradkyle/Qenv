@@ -23,6 +23,7 @@
 // TODO fills 3 levels
 // TODO test different instrument
 // TODO test with different accounts
+.qt.SkpBesTest[36];
 .qt.Unit[
     ".engine.logic.trade.Trade";
     {[c]
@@ -30,11 +31,12 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
+        mck1: .qt.M[`.engine.model.orderbook.GetLevel;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[0][3]];c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+        mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b] a}[m[3][3]];c];
+        mck5: .qt.M[`.engine.logic.account.Fill;{[a;b] a}[m[4][3]];c];
+        mck6: .qt.M[`.engine.model.order.UpdateOrder;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.trade.Trade[a 0;a 1];
 
@@ -49,7 +51,7 @@
             (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
+                `side`size`price`reduce`displayqty!(0;1;0;0) // fill
             );
             (); // res 
             (

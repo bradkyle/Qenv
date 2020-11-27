@@ -4,7 +4,7 @@
 
     nside:neg[t`side];
 
-    l:.engine.model.orderbook.GetLevel[];
+    l:.engine.model.orderbook.GetLevel[()];
     
     s:l;
     // Join the opposing side of the orderbook with the current agent orders
@@ -19,15 +19,13 @@
     s:s[where (s`rp)>0];
 
     // TODO select by offset aswell
-		o:.engine.model.orders.GetOrders[(in;price;s`price)];
+		o:.engine.model.order.GetOrder[(in;price;s`price)];
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
     // Iceberg orders placed by agents have a 
     // typical offset and function like normal orders
     // except they aren't visible.
-
-    // TODO count orders where filled >0;
 
     $[count[odrs]>0;[
         s:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!s;`price xgroup (update oprice:price, oside:side from odrs)]]; 
@@ -38,7 +36,6 @@
         padcols:(`offset`size`leaves`displayqty`reduce`orderId`side, // TODO make constant?
             `accountId`instrumentId`price`status);
         (s padcols):.util.PadM'[s padcols]; // TODO make faster?
-        .trade.test.ps:s;
 
         // Useful counts 
         maxN:max count'[s`offset];
