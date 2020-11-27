@@ -1,14 +1,13 @@
 
-.engine.logic.trade.Trade:{[i;t]
-    nside:neg[side];
-    isagnt:count[account]>0;
-    
-    ciId:instrument`instrumentId; // TODO use accountref
-    caId:account`accountId;
+.engine.logic.trade.Trade:{[i;a;t]
+    isagnt:not[null[a]];
+
+    nside:neg[t`side];
+
+    l:.engine.model.orderbook.GetLevel[];
     
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
-    state:0!?[`.order.OrderBook;enlist(=;`side;nside);0b;()];  
     aqty:sum[state[`iqty`hqty`vqty]];
     thresh:sums[aqty];
     rp:(thresh-prev[thresh])-(thresh-fillQty);

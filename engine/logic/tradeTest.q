@@ -80,38 +80,7 @@
             (
 
             ) // err 
-        ));
-        / ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ));
-        / ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ));
-        / ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ))
-        ("update leverage sufficient balance without positions";());
-        ("update leverage sufficient balance with combined short position";());
-        ("update leverage sufficient balance with combined long position";());
-        ("update leverage sufficient balance with hedged short position";());
-        ("update leverage sufficient balance with hedged long position";());
-        ("update leverage sufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage sufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance without positions";());
-        ("update leverage insufficient balance with combined short position";());
-        ("update leverage insufficient balance with combined long position";());
-        ("update leverage insufficient balance with hedged short position";());
-        ("update leverage insufficient balance with hedged long position";());
-        ("update leverage insufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage insufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";())
+        ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
