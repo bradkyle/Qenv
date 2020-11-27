@@ -122,7 +122,7 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-				o:raze'[(s`orderId;s`oprice;noffset;nleaves;ndisplayqty;nstatus;s`time)][;where[msk]]];
+				o:raze'[(s`orderId;s`oprice;noffset;nleaves;ndisplayqty;nstatus;s`time)][;where[msk]];
         .engine.model.orderbook.UpdateOrder o;
         .engine.Emit[`order] o;
         
