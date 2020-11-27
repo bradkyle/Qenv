@@ -1,5 +1,4 @@
 
-
 // TODO integration tests
 
 // TODO no liquidity
@@ -46,7 +45,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         (("1a) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 12
-          "order, trade execution <= agent order offset, fill is agent (partial hidden qty fill)");(( // Mocks
+          "order, trade execution <= agent order offset, fill is agent (partial hidden qty fill)");( // Mocks
             (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
