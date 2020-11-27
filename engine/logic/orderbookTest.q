@@ -42,6 +42,7 @@
 /     nxt;
 /     (3_5#p));
 
+.qt.SkpBesTest[35];
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
@@ -53,19 +54,17 @@
         mck2: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[1][3]];c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
         mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b]};c];
-        mck6: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b]};c];
-
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
+        mck5: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b]};c];
 
         res:.engine.logic.orderbook.Level[a 0;a 1];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck4;m[3];c];
+        .qt.CheckMock[mck5;m[4];c];
     };
     {`args`eRes`mocks`err!x};
     (
-        ("Update increases qty at level, no orders present, no hqty or iqty";(
+        ("No change occurs and thus no update is triggered";(
             (
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
@@ -80,10 +79,31 @@
                   `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
                   `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
                 ));
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();(0.1;0.1)); // Updategrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+                (0b;0;();()); // Emit
+                (0b;0;();()); // Updategrder
+                (0b;0;();()) // UpdateLevel
+            ); // mscks 
+            () // err 
+        ));
+        ("Update increases qty at level, no orders present, no hqty or iqty";(
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;2000;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();());
+                (1b;1;enlist(
+                    `orderbook;
+                    `side`price`qty`time!(1;1000;2000;z)
+                );()); // Emit
+                (0b;0;();()); // Updategrder
+                (1b;1;enlist enlist(
+                    `price`side`qty`hqty`iqty`vqty`time!(1000;1;2000;1000;1000;1000;z)
+                );()) // UpdateLevel
             ); // mscks 
             () // err 
         ));

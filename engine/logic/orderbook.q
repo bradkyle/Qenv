@@ -1,18 +1,17 @@
 
 .engine.logic.orderbook.Level :{[i;l]
-        c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])];
+        c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
-        $[any[differ[i`hqty`qty;l`hqty`qty]];[
+        $[any[differ'[c`hqty`qty;l`hqty`qty]];[
                 o:.engine.model.order.GetOrder[enlist()];
                 $[count[o]>0;[
                         n:count[o];
                         tn:til n;
-                        numLvls:count[state`offset];
 
                         // Get the shift
-                        shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
-                        mxshft:max'[shft];
+                        shft:sum'[o`offset`leaves]; // the sum of the order offsets and leaves
+                        mxshft:max[shft];
 
                         // The Minimum offset should be the minimum shft
                         // of the preceeding orders in the queue i.e. so
@@ -20,6 +19,7 @@
                         // a hidden order qty it should represent this
                         // offset (hidden order qty derived from data)
                         // is always put at the front of the queue.
+                        show c`hqty;
                         mnoffset: (0,'-1_'(state`leaves))+raze[.util.PadM[state`hqty]]; // TODO this should be nshft
 
                         // Derive the non agent qtys that
@@ -58,10 +58,12 @@
                 ];[
                         .engine.model.orderbook.UpdateLevel l;
                 ]];
-                .engine.Emit[`orderbook] l;
+                cl:`side`price`qty`time;
+                .engine.Emit[`orderbook;cl!l[cl]];
         ];[
-                .engine.model.orderbook.UpdateLevel[];
-                .engine.Emit[`orderbook] l;
+                / No update occurs, should emit?
+                / .engine.model.orderbook.UpdateLevel[];
+                / .engine.Emit[`orderbook] l;
         ]];
 
         / .engine.model.orderbook.PruneOrderBook[];
