@@ -15,3 +15,4 @@
 
 .engine.model.order.GetOrder:.engine.model.common.Get[`.engine.model.order.Order];
 .engine.model.order.UpdateOrder:.engine.model.common.Update[`.engine.model.order.Order];
+.engine.model.order.CreateOrder:.engine.model.common.Create[`.engine.model.order.Order];

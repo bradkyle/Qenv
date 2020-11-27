@@ -35,7 +35,7 @@
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
-				.engine.model.order.AddOrder o;
+				.engine.model.order.CreateOrder o;
 
 				.engine.logic.account.Fill[]
 				.engine.logic.orderbook.Level[]
