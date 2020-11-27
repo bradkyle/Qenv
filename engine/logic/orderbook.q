@@ -6,9 +6,8 @@
         $[any[differ[i`hqty`qty;l`hqty`qty]];[
                 o:.engine.model.order.GetOrder[enlist()];
                 $[count[o]>0;[
-                        
-                        maxN:max count'[state`offset];
-                        tmaxN:til maxN;
+                        n:count[o];
+                        tn:til n;
                         numLvls:count[state`offset];
 
                         // Get the shift
