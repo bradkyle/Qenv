@@ -130,10 +130,48 @@
             () // err 
         ));
         ("Update increases qty at level, no orders present, hqty no iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;500;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();());
+                (1b;1;enlist(
+                    `orderbook;
+                    `side`price`qty`time!(1;1000;500;z)
+                );()); // Emit
+                (0b;0;();()); // Updategrder
+                (1b;1;enlist enlist(
+                    `price`side`qty`hqty`iqty`vqty`time!(1000;1;500;1000;1000;1000;z)
+                );()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update decreases qty at level, no orders present, hqty no iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;500;1000;1000;1000;z)
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();());
+                (1b;1;enlist(
+                    `orderbook;
+                    `side`price`qty`time!(1;1000;500;z)
+                );()); // Emit
+                (0b;0;();()); // Updategrder
+                (1b;1;enlist enlist(
+                    `price`side`qty`hqty`iqty`vqty`time!(1000;1;500;1000;1000;1000;z)
+                );()) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update increases qty at level, orders present, no hqty or iqty";(
             ();();();()

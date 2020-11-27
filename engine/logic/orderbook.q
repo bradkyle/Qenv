@@ -19,7 +19,6 @@
                         // a hidden order qty it should represent this
                         // offset (hidden order qty derived from data)
                         // is always put at the front of the queue.
-                        show c`hqty;
                         mnoffset: (0,'-1_'(state`leaves))+raze[.util.PadM[state`hqty]]; // TODO this should be nshft
 
                         // Derive the non agent qtys that
