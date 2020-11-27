@@ -1,5 +1,5 @@
 
-.engine.logic.orderbook.Level :{[l]
+.engine.logic.orderbook.Level :{[i;l]
         ob:0^.engine.model.orderbook.GetLevels[x[`price]];
 
         // Update the depth 

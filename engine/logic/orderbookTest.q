@@ -43,9 +43,13 @@
 /     (3_5#p));
 
 .qt.Unit[
-    ".engine.logic.depth.ProcessDepthUpdatesWithOrders";
+    ".engine.logic.orderbook.Level";
     {[c]
-        .qt.RunUnit[c;.engine.services.mark.ProcessMarkUpdateEvents];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
+
+        res:.engine.logic.order.Level[a 0;a 1];
+
+        .qt.CheckMock[mck1;m[1];c];
     };
     {`args`eRes`mocks`err!x};
     (
