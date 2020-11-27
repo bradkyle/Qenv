@@ -12,6 +12,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
+.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -37,7 +38,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("hedged:none_to_longer";(
+        ("flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
@@ -57,7 +58,7 @@
 
             ) // err 
         ));
-        ("hedged:none_to_longer";(
+        ("long to flat: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
@@ -77,7 +78,7 @@
 
             ) // err 
         ));
-        ("hedged:none_to_longer";(
+        ("long to longer: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
@@ -97,7 +98,7 @@
 
             ) // err 
         ));
-        ("hedged:none_to_longer";(
+        ("flat to short: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
@@ -117,7 +118,27 @@
 
             ) // err 
         ));
-        ("hedged:none_to_longer";(
+        ("short to flat: UPL: 0, RPL:0 ONE POSITION";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("short to shorter: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
@@ -137,132 +158,6 @@
 
             ) // err 
         ))
-        / ("hedged:long_to_flat";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:longer_to_flat";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:short_to_shorter";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:shorter_to_short";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:shorter_to_flat";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:long_to_longer";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:longer_to_long";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:long_to_flat";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:longer_to_short";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:long_to_shorter";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:short_to_shorter";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:shorter_to_short";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:short_to_long";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:short_to_longer";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("combined:short_to_flat_rpl_-50";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:long_to_flat_rpl_50";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:short_to_flat_rpl_50";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ));
-        / ("hedged:long_to_flat_rpl_-50";(
-        /     ( // Mocks
-        /     );
-        /     (); // Fill
-        /     (); // Eres
-        /     () // Err
-        / ))
     );
     ({};{};{};{});
     "Function for deriving the exec cost from the qty and the price"];
@@ -288,7 +183,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("First should succeed";(
+        ("Withdraw no balance:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -306,7 +201,7 @@
 
             ) // err 
         ));
-        ("Second should succeed";(
+        ("Withdraw insufficient balance:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -314,38 +209,70 @@
             );
             (); // res 
             (
-                (1b;1;`mrg`mmr`imr!(0.1;0.03;32);()); // UpdateAccount 
-                (1b;1;();()); // Emit
-                (1b;3;();`amt`abc!()); // Purge
-                (1b;3;();`imr`mmr!(0.1;0.1)); // GetRiskTier
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
             (
 
             ) // err 
         ));
-        ("withdraw sufficient balance without positions";());
-        ("withdraw sufficient balance with combined short position";());
-        ("withdraw sufficient balance with combined long position";());
-        ("withdraw sufficient balance with hedged short position";());
-        ("withdraw sufficient balance with hedged long position";());
-        ("withdraw sufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("withdraw sufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("withdraw sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("withdraw sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("withdraw sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("withdraw sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("withdraw insufficient balance without positions";());
-        ("withdraw insufficient balance with combined short position";());
-        ("withdraw insufficient balance with combined long position";());
-        ("withdraw insufficient balance with hedged short position";());
-        ("withdraw insufficient balance with hedged long position";());
-        ("withdraw insufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("withdraw insufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("withdraw insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("withdraw insufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("withdraw insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("withdraw insufficient balance with split hedged long(0.25)/short(0.75) position";())
+        ("Withdraw Account disabled:should fail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Withdraw Account locked:should fail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ))
     );
     ({};{};{};{});
     "Process a batch of signal events"];
@@ -371,7 +298,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("First should succeed";(
+        ("Deposit Account disabled:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -379,8 +306,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
@@ -389,7 +316,7 @@
 
             ) // err 
         ));
-        ("Second should succeed";(
+        ("Deposit Account locked:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -397,8 +324,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
@@ -407,28 +334,24 @@
 
             ) // err 
         ));
-        ("deposit valid amt without positions";());
-        ("deposit valid amt with combined short position";());
-        ("deposit valid amt with combined long position";());
-        ("deposit valid amt with hedged short position";());
-        ("deposit valid amt with hedged long position";());
-        ("deposit valid amt with split hedged short(0.50)/long(0.50) position";());
-        ("deposit valid amt with split hedged long(0.50)/short(0.50) position";());
-        ("deposit valid amt with split hedged short(0.75)/long(0.25) position";());
-        ("deposit valid amt with split hedged long(0.25)/short(0.75) position";());
-        ("deposit valid amt with split hedged short(0.75)/long(0.25) position";());
-        ("deposit valid amt with split hedged long(0.25)/short(0.75) position";());
-        ("deposit invalid amt without positions";());
-        ("deposit invalid amt with combined short position";());
-        ("deposit invalid amt with combined long position";());
-        ("deposit invalid amt with hedged short position";());
-        ("deposit invalid amt with hedged long position";());
-        ("deposit invalid amt with split hedged short(0.50)/long(0.50) position";());
-        ("deposit invalid amt with split hedged long(0.50)/short(0.50) position";());
-        ("deposit invalid amt with split hedged short(0.75)/long(0.25) position";());
-        ("deposit invalid amt with split hedged long(0.25)/short(0.75) position";());
-        ("deposit invalid amt with split hedged short(0.75)/long(0.25) position";());
-        ("deposit invalid amt with split hedged long(0.25)/short(0.75) position";())
+        ("Deposit Success: Update fee tier, risk tier, avail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ))
     );
     ({};{};{};{});
     "Process a batch of signal events"];
@@ -455,7 +378,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("First should succeed";(
+        ("Leverage no balance:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -463,8 +386,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
@@ -473,7 +396,7 @@
 
             ) // err 
         ));
-        ("Second should succeed";(
+        ("Leverage insufficient balance:should fail";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
@@ -481,8 +404,8 @@
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
                 (1b;3;();`amt`abc!());
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
@@ -491,30 +414,60 @@
 
             ) // err 
         ));
-        ("update leverage sufficient balance without positions";());
-        ("update leverage sufficient balance with combined short position";());
-        ("update leverage sufficient balance with combined long position";());
-        ("update leverage sufficient balance with hedged short position";());
-        ("update leverage sufficient balance with hedged long position";());
-        ("update leverage sufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage sufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance without positions";());
-        ("update leverage insufficient balance with combined short position";());
-        ("update leverage insufficient balance with combined long position";());
-        ("update leverage insufficient balance with hedged short position";());
-        ("update leverage insufficient balance with hedged long position";());
-        ("update leverage insufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage insufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";())
-    );
-    ({};{};{};{});
+        ("Leverage Account disabled:should fail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Leverage Account locked:should fail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ))
     "Global function for creating a new account"];
  
 

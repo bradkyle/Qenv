@@ -90,7 +90,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
-.qt.SkpBesTest[29];
+/ .qt.SkpBesTest[29];
 .qt.Unit[
     ".engine.logic.instrument.MarkPrice";
     {[c]
