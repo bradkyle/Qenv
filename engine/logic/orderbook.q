@@ -1,6 +1,7 @@
 
 .engine.logic.orderbook.Level :{[i;l]
-        ob:0^.engine.model.orderbook.GetLevels[x[`price]];
+        c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])];
+        dls:deltas'[(i`hqty`qty;c`hqty`qty)];
 
         // Update the depth 
         // change to get levels

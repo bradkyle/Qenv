@@ -45,23 +45,24 @@
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
+        p:c[`params];
+        a:p`args;
+        m:p[`mocks];
 
-        res:.engine.logic.order.Level[a 0;a 1];
+        / mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
 
-        .qt.CheckMock[mck1;m[1];c];
+        res:.engine.logic.orderbook.Level[a 0;a 1];
+
+        / .qt.CheckMock[mck1;m[1];c];
     };
     {`args`eRes`mocks`err!x};
     (
        (("0a) ProcessDepth BUY+SELL: (No hidden or Iceberg qty) differing update prices by time,",
             "repletes order spread during update, many order offset prices");(
-            (   // Depth Update
-                ((5#-1),(5#1)); // side
-                ((1000 1001 1002 1001 1002),(999 998 997 997 998)); // price
-                ((0 0 0 1000 1000),(0 0 0 1000 1000)); // NQTY
-                (10#0); // NHQTY
-                (sc[z] 0 0 0 1 1 0 0 0 1 1) // time
-            ); 
+            ( // Args 
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+                `price`side`qty`hqty!(1001;-1;1000;0)
+            );
             ();
             (
                 ( // Current Depth  
