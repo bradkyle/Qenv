@@ -366,7 +366,228 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("Update mark price (increasing), one account: liquidation for tier should occur";(
+        ("Settlement no accounts";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account no inventory";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, one short inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, one short inventory: RPL -0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, one long inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, one long inventory: RPL -0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides long/short (0.75/0.25) inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides short/long (0.75/0.25) inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides long/short (0.75/0.25) inventory: RPL -0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides short/long (0.75/0.25) inventory: RPL -0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides long/short (0.5/0.5) inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement one account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement multiple account, both sides long/short (0.5/0.5) inventory: RPL 0.5";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                1000
+            );
+            (); // res 
+            (
+                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
+                (1b;3;();()); // 
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 1000
@@ -460,38 +681,7 @@
             (
 
             ) // err 
-        ));
-        / ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ));
-        / ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ));
-        / ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-        /     (10;5;0.1;1);(1 1 1);()
-        / ))
-        ("update leverage sufficient balance without positions";());
-        ("update leverage sufficient balance with combined short position";());
-        ("update leverage sufficient balance with combined long position";());
-        ("update leverage sufficient balance with hedged short position";());
-        ("update leverage sufficient balance with hedged long position";());
-        ("update leverage sufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage sufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage sufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage sufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance without positions";());
-        ("update leverage insufficient balance with combined short position";());
-        ("update leverage insufficient balance with combined long position";());
-        ("update leverage insufficient balance with hedged short position";());
-        ("update leverage insufficient balance with hedged long position";());
-        ("update leverage insufficient balance with split hedged short(0.50)/long(0.50) position";());
-        ("update leverage insufficient balance with split hedged long(0.50)/short(0.50) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";());
-        ("update leverage insufficient balance with split hedged short(0.75)/long(0.25) position";());
-        ("update leverage insufficient balance with split hedged long(0.25)/short(0.75) position";())
+        ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
