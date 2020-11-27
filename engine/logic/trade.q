@@ -110,11 +110,11 @@
         // -------------------------------------------------->
 
         // TODO emit trade events
-        / .order.applyNewTrades . raze'[( // TODO derive the prices at each level before
-        /         numtds#state`tside; // more accurate derivation
-        /         raze[{x#y}'[numtdslvl;state`price]]; // more accurate derivation
-        /         tqty;
-        /         numtds#fillTime)];
+        .engine.Emit[`trade] raze'[( // TODO derive the prices at each level before
+                numtds#state`tside; // more accurate derivation
+                raze[{x#y}'[numtdslvl;state`price]]; // more accurate derivation
+                tqty;
+                numtds#fillTime)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -122,7 +122,7 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-				.engine.model.order.UpdateOrder'[raze'[(
+				o:raze'[(
                 state`orderId;
                 state`oprice;
                 noffset;
@@ -130,7 +130,9 @@
                 ndisplayqty;
                 nstatus;
                 state`time)][;where[msk]]];
-        // Todo emit events
+        .engine.model.orderbook.UpdateOrder o;
+        .engine.Emit[`order] o;
+        
  
         // Derive and apply Executions
         // -------------------------------------------------->
@@ -167,7 +169,7 @@
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        .engine.logic.orderbook.Level'[raze'[(
+        l:[raze'[(
                 state`price;
                 state`mside;
                 nqty;
@@ -175,6 +177,9 @@
                 niqty;
                 nvqty;
                 nobupd#fillTime)]];
+
+        .engine.model.orderbook.UpdateLevel l;
+        .engine.Emit[`orderbook] l;
         // emit depth update events
 
     ];if[count[state]>0;[
