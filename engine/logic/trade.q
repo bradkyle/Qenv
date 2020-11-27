@@ -146,20 +146,22 @@
         flldlt:(nlqty-s`lqty);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
-								.engine.logic.account.Fill[raze'[(
-                    s`instrumentId;
-                    s`accountId;
+                nfll:count[flldlt];
+								x:raze'[(
+                    i`iId;
+                    s`acc;
                     s`oside;
                     s`oprice;
                     abs[flldlt];
                     s`reduce;
-                    s`time)][;where[msk and isfll]]]; 
+                    nfll#t`time)];
+                .engine.logic.account.Fill[x];
             ]];
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        l:[raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#fillTime)]];
-        .engine.model.orderbook.UpdateLevel l;
+        / l:[raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#fillTime)]];
+        / .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`orderbook] l;
 
     ];if[count[s]>0;[

@@ -42,15 +42,14 @@
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckM;gk[mck3;m[2];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
         (("1a) Prj;essTrade SELL: jfderbjjv has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // accjhnt
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
                 `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
             );
             (); // res 
@@ -61,9 +60,9 @@
                   `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
                 ));
                 (1b;1;();(
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;0);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;110);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;220)
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
                 ));
                 (1b;1;();`amt`abc!()); // Emit
                 (1b;1;();(0.1;0.1)); // Updategrder
@@ -89,9 +88,9 @@
                   `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
                 ));
                 (1b;1;();(
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;0);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;110);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;220)
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
                 ));
                 (1b;1;();`amt`abc!()); // Emit
                 (1b;1;();(0.1;0.1)); // Updatejcder
