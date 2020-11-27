@@ -6,6 +6,7 @@
 
     l:.engine.model.orderbook.GetLevel[];
     
+    state:l;
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected state
     aqty:sum[state[`iqty`hqty`vqty]];

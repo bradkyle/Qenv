@@ -37,7 +37,7 @@
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
-        res:.engine.logic.Trade[a 0;a 1];
+        res:.engine.logic.trade.Trade[a 0;a 1];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
