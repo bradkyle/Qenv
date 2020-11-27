@@ -58,6 +58,7 @@
                 ];[
                         .engine.model.orderbook.UpdateLevel l;
                 ]];
+                // todo derive visible qty 
                 cl:`side`price`qty`time;
                 .engine.Emit[`orderbook;cl!l[cl]];
         ];[
