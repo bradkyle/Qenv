@@ -42,83 +42,99 @@
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckM;gk[mck3;m[2];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        (("1a) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 12
-          "order, trade execution <= agent order offset, fill is agent (partial hidden qty fill)");( // Mocks
+        (("1a) Prj;essTrade SELL: jfderbjjv has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
+          "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `side`size`price`reduce`displayqty!(0;1;0;0;0) // fill
-            );
-            (); // res 
-            (
-                (1b;1;();`price`side`qty`hqty`iqty`vqty!(1000;1000;1000;1000;1000;1000)); // GetLevel 
-                (1b;1;();()); // GetOrder
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // UpdateOrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
-          "order, trade execution <= agent order offset, fill is agent");(
-            (
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
+                `balance`mmr`imr!(0.1;0.03;32); // accjhnt
                 `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
             );
             (); // res 
             (
-                (1b;1;();`price`side`qty`hqty`iqty`vqty!(1000;1000;1000;1000;1000;1000)); // GetLevel 
-                (1b;1;();()); // GetOrder
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;0);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;110);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;220)
+                ));
                 (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // UpdateOrder
+                (1b;1;();(0.1;0.1)); // Updategrder
                 (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
                 (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
-            ); // mocks 
+            ); // mscks 
+            (
+
+            ) // err 
+        ));
+        (("1b) ProcessTrade SELL: arderbdhk has agent hidden lrders, lvl1 size > qty, trade dwesn't fill agent", // 13
+          "rrder, trade executiyn <= agent irder pffset, fill is agent");(
+            (
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // accxunt
+                `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;0);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;110);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset!(0;-1;0;0;1000;0;0;100;100;100;0;220)
+                ));
+                (1b;1;();`amt`abc!()); // Emit
+                (1b;1;();(0.1;0.1)); // Updatejcder
+                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+            ); // mjbks 
             (
 
             ) // err 
         ))
-        / (("1c) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
-        /   "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order < displayqty)");(
+        / (("1c) PrjmessTrade SELL: jjderb;;d has agent hidden ;hders, lvl1 size > qty, trade partially fills agent", // 14
+        /   ";kder, trade executi;l >= agent ;qder ;wfset, fill is agent (partially fills iceberg ;eder < displayqty)");(
         /     (
         /         `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-        /         `balance`mmr`imr!(0.1;0.03;32); // account
+        /         `balance`mmr`imr!(0.1;0.03;32); // acc;rnt
         /         `fqty`fprice`dlt!(0;1;0) // fill
         /     );
         /     (); // res 
         /     (
         /         (1b;1;();`balance`mmr`imr!(0.1;0.03;32)); // GetLevel 
-        /         (1b;1;();()); // GetOrder
+        /         (1b;1;();()); // Get;tder
         /         (1b;1;();`amt`abc!()); // Emit
-        /         (1b;1;();`imr`mmr!(0.1;0.1)); // UpdateOrder
+        /         (1b;1;();`imr`mmr!(0.1;0.1)); // Update;yder
         /         (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
         /         (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
-        /     ); // mocks 
+        /     ); // m;uks 
         /     (
 
         /     ) // err 
         / ));
-        / (("1d) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
-        /   "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order > display qty)");(
+        / (("1d) Pr;iessTrade SELL: ;oderb;;z has agent hidden ;xders, lvl1 size > qty, trade partially fills agent", // 14
+        /   ";cder, trade executi;v >= agent ;bder ;nfset, fill is agent (partially fills iceberg ;mder > display qty)");(
         /     (
         /         `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-        /         `balance`mmr`imr!(0.1;0.03;32); // account
+        /         `balance`mmr`imr!(0.1;0.03;32); // acc;fnt
         /         `fqty`fprice`dlt!(0;1;0) // fill
         /     );
         /     (); // res 
         /     (
         /         (1b;1;();`balance`mmr`imr!(0.1;0.03;32)); // GetLevel 
-        /         (1b;1;();()); // GetOrder
+        /         (1b;1;();()); // Get;jder
         /         (1b;1;();`amt`abc!()); // Emit
-        /         (1b;1;();`imr`mmr!(0.1;0.1)); // UpdateOrder
+        /         (1b;1;();`imr`mmr!(0.1;0.1)); // Update;;der
         /         (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
         /         (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
         /     ); // mocks 

@@ -28,14 +28,14 @@
     // except they aren't visible.
 
     $[count[o]>0;[
-        s:0!{$[x>0;desc[y];asc[y]]}[neg[side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
+        s:0!{$[x>0;desc[y];asc[y]]}[neg[t`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[s`orderId]]]];
-        s[`accountId`instrumentId]:7h$(s[`accountId`instrumentId]);
+
         // Pad s into a matrix
         // for faster operations
-        padcols:(`offset`size`leaves`displayqty`reduce`orderId`side, // TODO make constant?
-            `accountId`instrumentId`price`status);
-        (s padcols):.util.PadM'[s padcols]; // TODO make faster?
+        / padcols:(`offset`size`lqty`dqty`reduce`orderId`side, // TODO make constant?
+        /     `accountId`instrumentId`price`status);
+        / (s padcols):.util.PadM'[s padcols]; // TODO make faster?
 
         // Useful counts 
         maxN:max count'[s`offset];
@@ -44,7 +44,7 @@
 
         // TODO new display qty
         // Calculate new shifts and max shifts
-        shft:sum[s`offset`leaves]; // the sum of the order offsets and leaves
+        shft:sum[s`offset`lqty]; // the sum of the order offsets and lqty
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
 
         // TOOD update comments
@@ -52,24 +52,24 @@
         // and the total fill qty that isnt used to fill the hqty or iqty of the previous
         // queue instantiation.
         // The qty on the other hand is equal to the sum of the amount of the visual qty
-        // that isn't made up of the new displayqty. 
+        // that isn't made up of the new dqty. 
 
         // Derive the new quantitites that are representative of the change in the s
         // of the orders and orderbook when the given trade occurs.
         nhqty:          .util.Clip[(-/)s`hqty`rp]; // Derive the new hidden qty
-        nleaves:        .util.Clip[{?[x>z;(y+z)-x;y]}'[s`rp;s`leaves;s`offset]]; // TODO faster/fix
-        ndisplayqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[s[`displayqty];nleaves]]; // TODO faster/fix
-        niqty:          sum'[nleaves-ndisplayqty]; // The new order invisible qty = leaves - display qty
-        displaydlt:     (ndisplayqty-s[`displayqty]); // Derive the change in the order display qty
-        leavesdlt:      (nleaves-s[`leaves]); // Derive the change in the order leaves
+        nlqty:        .util.Clip[{?[x>z;(y+z)-x;y]}'[s`rp;s`lqty;s`offset]]; // TODO faster/fix
+        ndqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[s[`dqty];nlqty]]; // TODO faster/fix
+        niqty:          sum'[nlqty-ndqty]; // The new order invisible qty = lqty - display qty
+        displaydlt:     (ndqty-s[`dqty]); // Derive the change in the order display qty
+        lqtydlt:      (nlqty-s[`lqty]); // Derive the change in the order lqty
         hqtydlt:        (nhqty-s[`hqty]); // Derive the change in hidden order qty
         noffset:        .util.Clip[((-/)s`offset`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
-        nqty:           .util.Clip[((-/)s`qty`rp)-(sum'[leavesdlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
-        nvqty:          nqty+sum'[ndisplayqty]; // Derive the new visible qty as order display qty + the new qty from above
-        nshft:          nleaves+noffset; // 
+        nqty:           .util.Clip[((-/)s`qty`rp)-(sum'[lqtydlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
+        nvqty:          nqty+sum'[ndqty]; // Derive the new visible qty as order display qty + the new qty from above
+        nshft:          nlqty+noffset; // 
         nmxshft:        {$[x>1;max[y];x=1;y;0]}'[maxN;nshft]; // the max shft for each price TODO make faster
-        nfilled:        s[`size] - nleaves; // New amount that is filled (in total)
-        accdlts:        s[`leaves] - nleaves; // The new amounts that will attribute to fills.
+        nfilled:        s[`oqty] - nlqty; // New amount that is filled (in total)
+        accdlts:        s[`lqty] - nlqty; // The new amounts that will attribute to fills.
         nobupd:         count[nhqty];
 
         // Derived the boolean representation of partially and 
@@ -89,10 +89,10 @@
                 .util.Clip[s[`vqty]-mxshft] // last qty - maximum shift
             )]];
 
-        // Derive the splt which is the combination of the leaves of all orders at 
+        // Derive the splt which is the combination of the lqty of all orders at 
         // a level with the interspaced display qty etc. which is used to derive the
         // disparate quantities of trades that occur at a given price level.
-        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[s`leaves;notAgentQty];
+        splt:{$[count[x];1_(raze raze'[(2#0),(0^x);y]);y]}'[s`lqty;notAgentQty];
 
         // Derives the non-zero trade qtys that occur as a result of the replaced amount 
         // returns the quantities by price level.
@@ -101,7 +101,7 @@
         numtdslvl:count'[tqty];
         // TODO move into own function.
         s[`mside]:nside; // TODO changes
-        s[`tside]:side; // TODO changes
+        s[`side]:t`side; // TODO changes
  
         // Derive and apply trades
         // -------------------------------------------------->
@@ -111,7 +111,7 @@
                 numtds#s`tside; // more accurate derivation
                 raze[{x#y}'[numtdslvl;s`price]]; // more accurate derivation
                 tqty;
-                numtds#fillTime)];
+                numtds#t`time)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -119,8 +119,8 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-				o:raze'[(s`orderId;s`oprice;noffset;nleaves;ndisplayqty;nstatus;s`time)][;where[msk]];
-        .engine.model.orderbook.UpdateOrder o;
+				o:raze'[(s`orderId;s`oprice;noffset;nlqty;ndqty;nstatus;s`time)][;where[msk]];
+        .engine.model.order.UpdateOrder o;
         .engine.Emit[`order] o;
         
  
@@ -137,13 +137,13 @@
                 s`price;
                 sum'[tqty];
                 count[tqty]#reduce;
-                numLvls#fillTime)]];
+                numLvls#t`time)]];
          
-        // Check to see if the leaves of any maker orders
+        // Check to see if the lqty of any maker orders
         // hase been update by deriving the delta and if there
         // exists any where the delta is not 0 pass those through
         // to the .order.applyMakerFills function.
-        flldlt:(nleaves-s`leaves);
+        flldlt:(nlqty-s`lqty);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
 								.engine.logic.account.Fill[raze'[(
