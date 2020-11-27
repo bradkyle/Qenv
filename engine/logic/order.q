@@ -2,24 +2,24 @@
 
 .engine.logic.order.NewOrder:{[i;a;o]
 				// Instrument validations
-				if[o[`price] < i[`minPrice];.engine.Purge[o;0;"Invalid price: price<minPrice"]];
-				if[o[`price] > i[`maxPrice];.engine.Purge[o;0;"Invalid price: price>maxPrice"]];
-				if[o[`oqty] < i[`minOqty];.engine.Purge[o;0;"Invalid oqty: oqty<minOqty"]];
-				if[o[`oqty] > i[`maxOqty];.engine.Purge[o;0;"Invalid oqty: oqty>maxOqty"]];
-				if[(o[`price] mod i[`tickOqty])<>0;.engine.Purge[o;0;"Invalid tickOqty"]]; 
-				if[(o[`oqty] mod i[`lotOqty])<>0;.engine.Purge[o;0;"Invalid lotOqty"]];
-				if[o[`dqty] < i[`minOqty];.engine.Purge[o;0;"Invalid dqty: oqty<minOqty"]];
-				if[o[`dqty] > i[`maxOqty];.engine.Purge[o;0;"Invalid dqty: oqty>maxOqty"]];
+				if[o[`price] < i[`minPrice];:.engine.Purge[o;0;"Invalid price: price<minPrice"]];
+				if[o[`price] > i[`maxPrice];:.engine.Purge[o;0;"Invalid price: price>maxPrice"]];
+				if[o[`oqty] < i[`minOqty];:.engine.Purge[o;0;"Invalid oqty: oqty<minOqty"]];
+				if[o[`oqty] > i[`maxOqty];:.engine.Purge[o;0;"Invalid oqty: oqty>maxOqty"]];
+				if[(o[`price] mod i[`tickOqty])<>0;:.engine.Purge[o;0;"Invalid tickOqty"]]; 
+				if[(o[`oqty] mod i[`lotOqty])<>0;:.engine.Purge[o;0;"Invalid lotOqty"]];
+				if[o[`dqty] < i[`minOqty];:.engine.Purge[o;0;"Invalid dqty: oqty<minOqty"]];
+				if[o[`dqty] > i[`maxOqty];:.engine.Purge[o;0;"Invalid dqty: oqty>maxOqty"]];
 				if[(o[`dqty] mod i[`lotOqty])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
 				if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
-					in'[1;o[`execInst]];.engine.Purge[o;0;"Order had execInst of postOnly"]];
+					in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
 
 				// Account validations
-				if[a[`balance]<=0;.engine.Purge[0;"Order account has no balance"]];
-				if[a[`available]<=0;.engine.Purge[0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;.engine.Purge[0;"Account has been disabled"]];
-				if[a[`state]=2;.engine.Purge[0;"Account has been locked for liquidation"]];
+				if[a[`balance]<=0;:.engine.Purge[0;"Order account has no balance"]];
+				if[a[`available]<=0;:.engine.Purge[0;"Order account has insufficient available balance"]];
+				if[a[`state]=1;:.engine.Purge[0;"Account has been disabled"]];
+				if[a[`state]=2;:.engine.Purge[0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
 				iv:.engine.model.inventory.GetInventory[];
@@ -43,7 +43,7 @@
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
-				if[[];[
+				$[[];[
 						.engine.logic.account.Fill[];
 						.engine.model.order.CreateOrder o;
 					]];
