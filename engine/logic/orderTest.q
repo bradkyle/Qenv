@@ -13,7 +13,7 @@
 // TODO amend to cross spread stop order
 // TODO validation and stop orders
 // TODO Check mock called with correct
-/ .qt.SkpBesTest[28];
+.qt.SkpBesTest[31];
 .qt.Unit[
     ".engine.logic.order.NewOrder";
     {[c]
@@ -21,11 +21,22 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b;c]};c];
+        mck5: .qt.M[`.engine.model.order.CreateOrder;{[a;b;c]};c];
+        mck6: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck7: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
+        mck8: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
 
-        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck4;m[3];c];
+        .qt.CheckMock[mck5;m[4];c];
 
     };
     {[p] :`args`eRes`mocks`err!p};
