@@ -1,8 +1,9 @@
 
 .engine.logic.instrument.liquidate:{[i;a]
 		a[`status]:1;
+		lq:();
 		.engine.model.liquidation.AddLiquidation[];
-
+		
 	};
 
 // Update 
