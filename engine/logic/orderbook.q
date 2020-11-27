@@ -3,6 +3,23 @@
         c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])];
         dlts:deltas'[(i`hqty`qty;c`hqty`qty)];
 
+        // TODO chenge to any dlts
+        $[sum[dlts]<0;[
+                o:.engine.model.order.GetOrder[enlist()];
+                $[count[o]>0;[
+                        
+                        .engine.model.order.UpdateOrder[]
+                        .engine.model.orderbook.UpdateLevel[];
+
+                ];[
+                        .engine.model.orderbook.UpdateLevel[];
+                ]];
+                .engine.Emit[`orderbook] l;
+
+        ];[
+
+        ]];
+
         // Update the depth 
         // change to get levels
         // TODO uj new event
