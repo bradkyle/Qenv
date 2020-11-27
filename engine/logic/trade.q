@@ -131,12 +131,12 @@
         // amount of liquidity that is being removed from
         // the orderbook.
         .engine.logic.account.Fill[raze'[(
-                numLvls#ciId; // instrumentId
-                numLvls#caId; // accountId
+                numLvls#i`instrumentId; // instrumentId
+                numLvls#a`aId; // accountId
                 s`tside; 
                 s`price;
                 sum'[tqty];
-                count[tqty]#reduce;
+                count[tqty]#t`reduce;
                 numLvls#t`time)]];
          
         // Check to see if the lqty of any maker orders
