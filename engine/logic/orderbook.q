@@ -1,10 +1,9 @@
 
 .engine.logic.orderbook.Level :{[i;l]
         c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])];
-        dlts:deltas'[(i`hqty`qty;c`hqty`qty)];
-
+        / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
-        $[sum[dlts]<0;[
+        $[any[differ[i`hqty`qty;l`hqty`qty]];[
                 o:.engine.model.order.GetOrder[enlist()];
                 $[count[o]>0;[
                         

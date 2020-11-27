@@ -49,25 +49,30 @@
         a:p`args;
         m:p[`mocks];
 
+        mck1: .qt.M[`.engine.model.orderbook.GetLevel;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[1][3]];c];
+        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b]};c];
+        mck6: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b]};c];
+
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.orderbook.Level[a 0;a 1];
 
-        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck3;m[2];c];
     };
     {`args`eRes`mocks`err!x};
     (
         ("Update increases qty at level, no orders present, no hqty or iqty";(
             (
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
-                `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
+                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
             );
             (); // res 
             (
                 (1b;1;();(
-                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
-                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
                   `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
                 ));
                 (1b;1;();(
