@@ -36,7 +36,7 @@
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
         mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.logic.account.Fill;{[a;b] a}[m[4][3]];c];
-        mck6: .qt.M[`.engine.model.order.UpdateOrder;{[a;b] a}[m[4][3]];c];
+        mck6: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.trade.Trade[a 0;a 1];
 
@@ -51,15 +51,16 @@
             (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
-                `side`size`price`reduce`displayqty!(0;1;0;0) // fill
+                `side`size`price`reduce`displayqty!(0;1;0;0;0) // fill
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // GetLevel 
+                (1b;3;();()); // GetOrder
+                (1b;3;();`amt`abc!()); // Emit
+                (1b;3;();`imr`mmr!(0.1;0.1)); // UpdateOrder
+                (1b;3;();`imr`mmr!(0.1;0.1)); // Fill
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
             ); // mocks 
             (
 
