@@ -19,7 +19,7 @@
     state:state[where (state`rp)>0];
 
     // TODO select by offset aswell
-		ordrs:.engine.model.orders.GetOrders[];
+		o:.engine.model.orders.GetOrders[enlist(in;price;state`price)];
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
