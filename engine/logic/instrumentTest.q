@@ -22,8 +22,6 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-
-
         ("Positive Funding: no accounts";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
@@ -131,7 +129,6 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
-.qt.SkpBesTest[28];
 .qt.Unit[
     ".engine.logic.instrument.MarkPrice";
     {[c]
@@ -648,24 +645,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("First should succeed";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
-            (); // res 
-            (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Second should succeed";(
+        enlist("Update highest/lowest price limit";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `fqty`fprice`dlt!(0;1;0) // fill

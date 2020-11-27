@@ -1,7 +1,6 @@
 
 
 .engine.logic.order.NewOrder:{[i;a;o]
-
 				// Instrument validations
 				if[x[`price] < i[`minPrice];.engine.Purge[o;0;"Invalid price: price<minPrice"]];
 				if[x[`price] > i[`maxPrice];.engine.Purge[o;0;"Invalid price: price>maxPrice"]];
