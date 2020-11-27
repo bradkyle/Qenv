@@ -160,8 +160,8 @@
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        / l:[raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#fillTime)]];
-        / .engine.model.orderbook.UpdateLevel l;
+        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t`time)];
+        .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`orderbook] l;
 
     ];if[count[s]>0;[

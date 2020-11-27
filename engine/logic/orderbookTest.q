@@ -49,16 +49,38 @@
         a:p`args;
         m:p[`mocks];
 
-        / mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.orderbook.Level[a 0;a 1];
 
-        / .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck1;m[1];c];
     };
     {`args`eRes`mocks`err!x};
     (
         ("Update increases qty at level, no orders present, no hqty or iqty";(
-            ();();();()
+            (
+                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
+                `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
+                `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();(
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
+                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                ));
+                (1b;1;();(
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
+                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
+                ));
+                (1b;1;();`amt`abc!()); // Emit
+                (1b;1;();(0.1;0.1)); // Updategrder
+                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+            ); // mscks 
+            () // err 
         ));
         ("Update decreases qty at level, no orders present, no hqty or iqty";(
             ();();();()

@@ -23,7 +23,6 @@
 // TODO fills 3 levels
 // TODO test different instrument
 // TODO test with different accounts
-.qt.SkpBesTest[36];
 .qt.Unit[
     ".engine.logic.trade.Trade";
     {[c]
