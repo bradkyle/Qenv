@@ -45,8 +45,9 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("First should succeed";(
-            ( // Mocks
+        (("1a) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 12
+          "order, trade execution <= agent order offset, fill is agent (partial hidden qty fill)");(( // Mocks
+            (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
@@ -63,8 +64,85 @@
 
             ) // err 
         ));
-        ("Second should succeed";(
-            ( // Mocks
+        (("1b) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade doesn't fill agent", // 13
+          "order, trade execution <= agent order offset, fill is agent");(
+            (
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
+                (1b;3;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        (("1c) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
+          "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order < displayqty)");(
+            (
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
+                (1b;3;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        (("1d) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade partially fills agent", // 14
+          "order, trade execution >= agent order offset, fill is agent (partially fills iceberg order > display qty)");(
+            (
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
+                (1b;3;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        (("1e) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // 16
+          "orders, trade execution > agent order offset, fill is agent (3 orders on second level)");(
+            (
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `balance`mmr`imr!(0.1;0.03;32); // account
+                `fqty`fprice`dlt!(0;1;0) // fill
+            );
+            (); // res 
+            (
+                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
+                (1b;3;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        (("1f) ProcessTrade SELL: orderbook has agent hidden orders, lvl1 size > qty, trade fills agent", // 17
+          "orders, trade execution > agent order offset, fill is agent (3 orders on first level)");(    
+            (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // account
                 `fqty`fprice`dlt!(0;1;0) // fill
