@@ -29,6 +29,7 @@
         mck6: .qt.M[`.engine.Emit;{[a;b]};c];
         mck7: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
         mck8: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
+        mck9: .qt.M[`.engine.Purge;{[a;b;c;d] a}[m[6][3]];c];
 
         res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
 
@@ -37,6 +38,7 @@
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
+        .qt.CheckMock[mck6;m[5];c];
 
     };
     {[p] :`args`eRes`mocks`err!p};

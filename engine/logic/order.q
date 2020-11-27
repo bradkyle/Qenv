@@ -12,8 +12,8 @@
 				if[o[`dqty] > i[`maxOqty];.engine.Purge[o;0;"Invalid dqty: oqty>maxOqty"]];
 				if[(o[`dqty] mod i[`lotOqty])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
 				if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-				all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
-				in'[1;o[`execInst]];.engine.Purge[o;0;"Order had execInst of postOnly"]];
+					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
+					in'[1;o[`execInst]];.engine.Purge[o;0;"Order had execInst of postOnly"]];
 
 				// Account validations
 				if[a[`balance]<=0;.engine.Purge[0;"Order account has no balance"]];
@@ -22,14 +22,20 @@
 				if[a[`state]=2;.engine.Purge[0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
-
 				iv:.engine.model.inventory.GetInventory[];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[f[`fqty`fprice]];
-				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`ordVal]:prd[o[`oqty`price]];
+				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
-				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
-				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				//  
+				feetier:.engine.model.feetier.GetFeeTier[];
+				a[`mkrfee]:feetier[`mkrfee];
+				a[`tkrfee]:feetier[`tkrfee];
+
+				risktier:.engine.model.risktier.GetRiskTier[];
+				a[`imr]:risktier[`imr];
+				a[`mmr]:risktier[`mmr];
+
 				a[`avail]:.engine.logic.account.DeriveAvailable[];
 
 				.engine.model.account.UpdateAccount a;
