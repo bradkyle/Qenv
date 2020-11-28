@@ -2,24 +2,27 @@
 
 .engine.logic.order.NewOrder:{[i;a;o]
 				// Instrument validations
-				if[o[`price] < i[`minPrice];:.engine.Purge[o;0;"Invalid price: price<minPrice"]];
-				if[o[`price] > i[`maxPrice];:.engine.Purge[o;0;"Invalid price: price>maxPrice"]];
-				if[o[`oqty] < i[`minOqty];:.engine.Purge[o;0;"Invalid oqty: oqty<minOqty"]];
-				if[o[`oqty] > i[`maxOqty];:.engine.Purge[o;0;"Invalid oqty: oqty>maxOqty"]];
-				if[(o[`price] mod i[`tickOqty])<>0;:.engine.Purge[o;0;"Invalid tickOqty"]]; 
-				if[(o[`oqty] mod i[`lotOqty])<>0;:.engine.Purge[o;0;"Invalid lotOqty"]];
-				if[o[`dqty] < i[`minOqty];:.engine.Purge[o;0;"Invalid dqty: oqty<minOqty"]];
-				if[o[`dqty] > i[`maxOqty];:.engine.Purge[o;0;"Invalid dqty: oqty>maxOqty"]];
-				if[(o[`dqty] mod i[`lotOqty])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
-				if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
-					in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
+				if[o[`price] < i[`mnPrice];:.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
+				if[o[`price] > i[`mxPrice];:.engine.Purge[o;0;"Invalid price: price>mxPrice"]];
+				if[o[`oqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid oqty: oqty<minqty"]];
+				if[o[`oqty] > i[`mxSize];:.engine.Purge[o;0;"Invalid oqty: oqty>maxqty"]];
+				if[(o[`price] mod i[`ticksize])<>0;:.engine.Purge[o;0;"Invalid ticksize"]]; 
+				if[(o[`oqty] mod i[`lotsize])<>0;:.engine.Purge[o;0;"Invalid lotsize"]];
+				if[o[`dqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid dqty: dqty<minsize"]];
+				if[o[`dqty] > i[`mxSize];:.engine.Purge[o;0;"Invalid dqty: dqty>maxsize"]];
+				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
+
+				// TODO
+				/ show "Bam";
+				/ if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
+				/ 	in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
 
 				// Account validations
-				if[a[`balance]<=0;:.engine.Purge[0;"Order account has no balance"]];
-				if[a[`available]<=0;:.engine.Purge[0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;:.engine.Purge[0;"Account has been disabled"]];
-				if[a[`state]=2;:.engine.Purge[0;"Account has been locked for liquidation"]];
+				if[a[`bal]<=0;:.engine.Purge[o;0;"Order account has no balance"]];
+				if[a[`avail]<=0;:.engine.Purge[o;0;"Order account has insufficient available balance"]];
+				if[a[`state]=1;:.engine.Purge[o;0;"Account has been disabled"]];
+				if[a[`state]=2;:.engine.Purge[o;0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
 				iv:.engine.model.inventory.GetInventory[];
@@ -33,6 +36,7 @@
 				a[`tkrfee]:feetier[`tkrfee];
 
 				risktier:.engine.model.risktier.GetRiskTier[];
+				show risktier;
 				a[`imr]:risktier[`imr];
 				a[`mmr]:risktier[`mmr];
 
@@ -44,11 +48,12 @@
 				.engine.model.instrument.UpdateInstrument i;
 
 				$[();[
-						.engine.logic.account.Fill[];
-						.engine.model.order.CreateOrder o;
-					]];
+							.engine.logic.account.Fill[];
+						];[
+							.engine.model.order.CreateOrder o;
+					 		.engine.logic.orderbook.Level[]
+						]];
 
-				.engine.logic.orderbook.Level[]
 
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;
@@ -64,8 +69,8 @@
 				o:c^o;
 
 				// Instrument validations
-				if[o[`price] < i[`minPrice];.engine.Purge[o;0;"Invalid price: price<minPrice"]];
-				if[o[`price] > i[`maxPrice];.engine.Purge[o;0;"Invalid price: price>maxPrice"]];
+				if[o[`price] < i[`mnPrice];.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
+				if[o[`price] > i[`mxPrice];.engine.Purge[o;0;"Invalid price: price>mxPrice"]];
 				if[o[`oqty] < i[`minOqty];.engine.Purge[o;0;"Invalid oqty: oqty<minOqty"]];
 				if[o[`oqty] > i[`maxOqty];.engine.Purge[o;0;"Invalid oqty: oqty>maxOqty"]];
 				if[(o[`price] mod i[`tickOqty])<>0;.engine.Purge[o;0;"Invalid tickOqty"]]; 

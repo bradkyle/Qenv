@@ -21,64 +21,74 @@
         a:p`args;
         m:p[`mocks];
 
+        mck0: .qt.M[`.engine.Purge;{[a;b;c] show c};c];
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
         mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b;c]};c];
         mck5: .qt.M[`.engine.model.order.CreateOrder;{[a;b;c]};c];
         mck6: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck7: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
-        mck8: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
-        mck9: .qt.M[`.engine.Purge;{[a;b;c;d] a}[m[6][3]];c];
+        mck7: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[6][3]];c];
+        mck8: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[7][3]];c];
+        mck9: .qt.M[`.engine.logic.account.Fill;{[a;b]};c];
+        mck10: .qt.M[`.engine.logic.orderbook.Level;{[a;b]};c];
 
         res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
 
+        show m;
+        show m[6];
+        .qt.CheckMock[mck0;m[8];c];
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
         .qt.CheckMock[mck6;m[5];c];
+        .qt.CheckMock[mck7;m[6];c];
+        .qt.CheckMock[mck8;m[7];c];
+        .qt.RestoreMocks[];
 
     };
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
-        ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
+        enlist("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
-                `aId`balance`mmr`imr`avail!(0;0.1;0.3;2;2); // account
-                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+                `cntTyp`faceValue`mkprice`smul`mxPrice`mnPrice`mxSize`mnSize`ticksize`lotsize!(0;1;1000;1;7h$1e8;0;7h$1e8;0;1;1); // instrument
+                `aId`bal`mmr`imr`avail!(0;0.1;0.3;2;2); // account
+                `oqty`price`dlt`reduce`dqty!(1;1000;1;1b;1) // fill
             );
             (); // res 
             (
                 (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
                 (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));()); // Inventory 
                 (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
-                (1b;3;();`amt`abc!()); // Emit
+                (1b;1;();()); // CreateOrder 
+                (1b;4;();()); // Emit
                 (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
-            ); // mocks 
-            () // err 
-        ));
-        ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
-                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
-                `qty`price`dlt`reduce!(1;1000;1;1b) // fill
-            );
-            (); // res 
-            (
-                (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
-                (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
-                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
-                (1b;3;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)); // GetFeeTier
+                (0b;0;();()) // Purge 
             ); // mocks 
             () // err 
         ))
+        / ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
+        /     ( // Mocks
+        /         `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
+        /         `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+        /         `qty`price`dlt`reduce!(1;1000;1;1b) // fill
+        /     );
+        /     (); // res 
+        /     (
+        /         (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+        /         (1b;1;enlist(enlist(`aId`balance`mmr`imr`mkrfee`tkrfee!(0,(5#0.1))));()); // Update Account
+        /         (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+        /         (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
+        /         (1b;3;();`amt`abc!()); // Emit
+        /         (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
+        /         (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+        /     ); // mocks 
+        /     () // err 
+        / ))
         / ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
         /     (); // Current Depth
         /     (); // Current Orders 
