@@ -46,7 +46,7 @@
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
-                `aId`balance`mmr`imr!(0;0.1;0.3;2); // account
+                `aId`balance`mmr`imr`avail!(0;0.1;0.3;2;2); // account
                 `qty`price`dlt`reduce!(1;1000;1;1b) // fill
             );
             (); // res 

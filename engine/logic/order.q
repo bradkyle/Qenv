@@ -43,7 +43,7 @@
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
-				$[[];[
+				$[();[
 						.engine.logic.account.Fill[];
 						.engine.model.order.CreateOrder o;
 					]];
