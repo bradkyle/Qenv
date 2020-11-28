@@ -45,9 +45,9 @@
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
-				.engine.model.instrument.UpdateInstrument i;
+				/ .engine.model.instrument.UpdateInstrument i;
 
-				$[();[
+				$[(o[`okind]=1);[
 							.engine.logic.account.Fill[];
 						];[
 							.engine.model.order.CreateOrder o;
