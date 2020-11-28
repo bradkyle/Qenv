@@ -1,4 +1,19 @@
 
+    a[`initMarginReq]:riskTiers[`imr]+(i[`riskBuffer] | 0);
+    a[`maintMarginReq]:riskTiers[`mmr]+(i[`riskBuffer] | 0);
+    a[`orderMargin]:a[`openOrderValue]^div[a[`openOrderValue];a[`leverage]]; // TODO optional charge based on config
+    
+    / a[`leverage]:0;
+    // TODO derive only the outstanding amount
+    // TODO derive better
+    // derive the instantaneous loss that will be incurred for each order
+    // placement and thereafter derive the cumulative loss for each order
+    // filter out orders that attribute to insufficient balance where neccessary
+    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
+    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
+    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
+    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
+    if[a[`available]<prd[a[`initMarginReq`valueInMarket]];[0;"Account has insufficient balance"]]; 
 
 .engine.logic.order.NewOrder:{[i;a;o]
 				// Instrument validations
@@ -12,7 +27,6 @@
 				if[o[`dqty] > i[`mxSize];:.engine.Purge[o;0;"Invalid dqty: dqty>maxsize"]];
 				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
 
-				// TODO
 				/ if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
 				/ 	in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
@@ -24,22 +38,26 @@
 				if[a[`state]=2;:.engine.Purge[o;0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
+				vdlt:prd[o[`oqty`price]]; 
+				lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
+				show vdlt;
+
 				iv:.engine.model.inventory.GetInventory[(();())];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]+:prd[o[`oqty`price]]; // TODO this is incorrect
+				iv[`ordVal]+:vdlt;
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
-				//  
+				// FeeTier  
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a[`mkrfee]:feetier[`mkrfee];
 				a[`tkrfee]:feetier[`tkrfee];
 
+				// RiskTier
 				risktier:.engine.model.risktier.GetRiskTier[];
 				a[`imr]:risktier[`imr];
 				a[`mmr]:risktier[`mmr];
 
-				/ a[`avail]:.engine.logic.account.DeriveAvailable[];
-				// TODO check margin
+				a[`avail]-:sum[(vdlt;lsdlt)];
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
