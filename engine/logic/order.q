@@ -26,7 +26,7 @@
 				dlt:o`oqty;
 				iv:.engine.model.inventory.GetInventory[(();())];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[o[`oqty`price]]; // TODO this is incorrect
+				iv[`ordVal]+:prd[o[`oqty`price]]; // TODO this is incorrect
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
 				//  
