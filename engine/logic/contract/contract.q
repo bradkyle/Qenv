@@ -1,4 +1,10 @@
 
+
+.engine.logic.contract.Value      :{[]
+    
+    
+    }; 
+
 //  UnrealizedPnl
 / i.UnrealizedPnl[ // TODO 
 /         iv[`amt];

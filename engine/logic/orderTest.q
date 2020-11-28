@@ -51,18 +51,18 @@
         enlist("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul`mxPrice`mnPrice`mxSize`mnSize`ticksize`lotsize!(0;1;1000;1;7h$1e8;0;7h$1e8;0;1;1); // instrument
-                `aId`bal`mmr`imr`avail!(0;2;0.3;0.3;2); // account
+                `aId`bal`avail!(0;2000;2000); // account
                 `oqty`price`dlt`reduce`dqty!(1;1000;1;1b;1) // fill
             );
             (); // res 
             (
                 (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
-                (1b;1;enlist(enlist(`aId`bal`mmr`imr`mkrfee`tkrfee`avail!(0;2;0.3;0.3;0.1;0.1;2)));()); // Update Account
+                (1b;1;enlist(enlist(`aId`bal`avail`ft`rt!(0;2000;1000;1;1)));()); // Update Account
                 (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(3;1000;0;0;0;0;0)));()); // Inventory 
                 (1b;1;();()); // CreateOrder 
                 (1b;4;();()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)); // GetFeeTier
+                (1b;1;();1); // GetRiskTier
+                (1b;1;();1); // GetFeeTier
                 (0b;0;();()) // Purge 
             ); // mocks 
             () // err 

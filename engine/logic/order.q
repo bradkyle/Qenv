@@ -22,7 +22,7 @@
 				if[a[`state]=2;:.engine.Purge[o;0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
-				vdlt:prd[o[`oqty`price]]; 
+				vdlt:prd[o[`oqty`price]]; // TODO contract specific 
 				lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 
 				iv:.engine.model.inventory.GetInventory[(();())];
@@ -31,14 +31,10 @@
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
 				// FeeTier  
-				feetier:.engine.model.feetier.GetFeeTier[];
-				a[`mkrfee]:feetier[`mkrfee];
-				a[`tkrfee]:feetier[`tkrfee];
+				a[`ft]:.engine.model.feetier.GetFeeTier[];
 
 				// RiskTier
-				risktier:.engine.model.risktier.GetRiskTier[];
-				a[`imr]:risktier[`imr];
-				a[`mmr]:risktier[`mmr];
+				a[`rt]:.engine.model.risktier.GetRiskTier[];
 
 				a[`avail]-:sum[(vdlt;lsdlt)];
 
@@ -55,7 +51,6 @@
 
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] i;
 				.engine.Emit[`order] i;
 
 		};
