@@ -34,8 +34,6 @@
 
         res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
 
-        show m;
-        show m[6];
         .qt.CheckMock[mck0;m[8];c];
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];

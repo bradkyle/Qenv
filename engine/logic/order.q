@@ -13,7 +13,6 @@
 				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
 
 				// TODO
-				/ show "Bam";
 				/ if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
 				/ 	in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
@@ -25,9 +24,9 @@
 				if[a[`state]=2;:.engine.Purge[o;0;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
-				iv:.engine.model.inventory.GetInventory[];
+				iv:.engine.model.inventory.GetInventory[(();())];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[o[`oqty`price]];
+				iv[`ordVal]:prd[o[`oqty`price]]; // TODO this is incorrect
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
 				//  
@@ -36,7 +35,6 @@
 				a[`tkrfee]:feetier[`tkrfee];
 
 				risktier:.engine.model.risktier.GetRiskTier[];
-				show risktier;
 				a[`imr]:risktier[`imr];
 				a[`mmr]:risktier[`mmr];
 
@@ -45,9 +43,8 @@
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
-				/ .engine.model.instrument.UpdateInstrument i;
 
-				$[(o[`okind]=1);[
+				$[(o[`okind]=0);[
 							.engine.logic.account.Fill[];
 						];[
 							.engine.model.order.CreateOrder o;
