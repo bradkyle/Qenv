@@ -54,12 +54,9 @@
 
 				//  
 				feetier:.engine.model.feetier.GetFeeTier[];
-				a[`mkrfee]:feetier[`mkrfee];
-				a[`tkrfee]:feetier[`tkrfee];
-
 				risktier:.engine.model.risktier.GetRiskTier[];
-				a[`imr]:risktier[`imr];
-				a[`mmr]:risktier[`mmr];
+
+				iv[`rpnl]-:cost;
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
