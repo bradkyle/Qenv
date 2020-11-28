@@ -52,7 +52,6 @@
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;
 				.engine.Emit[`order] i;
-
 		};
 
 .engine.logic.order.AmendOrder:{[i;a;o]
