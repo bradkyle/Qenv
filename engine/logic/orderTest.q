@@ -35,7 +35,7 @@
 
         res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
 
-        .qt.CheckMock[mck0;m[8];c];
+        .qt.CheckMock[mck0;m[7];c];
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
@@ -48,7 +48,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
-        enlist("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
+        ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul`mxPrice`mnPrice`mxSize`mnSize`ticksize`lotsize!(0;1;1000;1;7h$1e8;0;7h$1e8;0;1;1); // instrument
                 `aId`bal`avail!(0;2000;2000); // account
@@ -60,7 +60,26 @@
                 (1b;1;enlist(enlist(`aId`bal`avail`ft`rt!(0;2000;1000;1;1)));()); // Update Account
                 (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(3;1000;0;0;0;0;0)));()); // Inventory 
                 (1b;1;();()); // CreateOrder 
-                (1b;4;();()); // Emit
+                (1b;3;();()); // Emit
+                (1b;1;();1); // GetRiskTier
+                (1b;1;();1); // GetFeeTier
+                (0b;0;();()) // Purge 
+            ); // mocks 
+            () // err 
+        ));
+        ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul`mxPrice`mnPrice`mxSize`mnSize`ticksize`lotsize!(0;1;1000;1;7h$1e8;0;7h$1e8;0;1;1); // instrument
+                `aId`bal`avail!(0;2000;2000); // account
+                `oqty`price`dlt`reduce`dqty!(1;1000;1;1b;1) // fill
+            );
+            (); // res 
+            (
+                (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
+                (1b;1;enlist(enlist(`aId`bal`avail`ft`rt!(0;2000;1000;1;1)));()); // Update Account
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(3;1000;0;0;0;0;0)));()); // Inventory 
+                (1b;1;();()); // CreateOrder 
+                (1b;3;();()); // Emit
                 (1b;1;();1); // GetRiskTier
                 (1b;1;();1); // GetFeeTier
                 (0b;0;();()) // Purge 
