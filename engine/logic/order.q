@@ -1,20 +1,4 @@
 
-    a[`initMarginReq]:riskTiers[`imr]+(i[`riskBuffer] | 0);
-    a[`maintMarginReq]:riskTiers[`mmr]+(i[`riskBuffer] | 0);
-    a[`orderMargin]:a[`openOrderValue]^div[a[`openOrderValue];a[`leverage]]; // TODO optional charge based on config
-    
-    / a[`leverage]:0;
-    // TODO derive only the outstanding amount
-    // TODO derive better
-    // derive the instantaneous loss that will be incurred for each order
-    // placement and thereafter derive the cumulative loss for each order
-    // filter out orders that attribute to insufficient balance where neccessary
-    a[`openBuyLoss]:(min[0,(i[`markPrice]*a[`openBuyQty])-a[`openBuyValue]] | 0); // TODO convert to long
-    a[`openSellLoss]:(min[0,(i[`markPrice]*a[`openSellQty])-a[`openSellValue]] |0); // TODO convert to long
-    a[`openLoss]:(sum[a`openSellLoss`openBuyLoss] | 0); // TODO convert to long
-    a[`available]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0); // TODO convert to long
-    if[a[`available]<prd[a[`initMarginReq`valueInMarket]];[0;"Account has insufficient balance"]]; 
-
 .engine.logic.order.NewOrder:{[i;a;o]
 				// Instrument validations
 				if[o[`price] < i[`mnPrice];:.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
@@ -40,7 +24,6 @@
 				dlt:o`oqty;
 				vdlt:prd[o[`oqty`price]]; 
 				lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
-				show vdlt;
 
 				iv:.engine.model.inventory.GetInventory[(();())];
 				iv[`ordQty]+:dlt;
