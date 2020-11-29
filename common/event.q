@@ -106,10 +106,8 @@
 // by for example the state.
 // Acts like a kafka queue/pubsub.
 .common.event.Event  :( // TODO .common.event.Add failure to table
-    [eid        :`long$()]
     time        :`datetime$();
-    cmd         :`long$();
-    kind        :`long$();
+    kind        :`symbol$();
     datum       :());
 // TODO set table attributes
 
