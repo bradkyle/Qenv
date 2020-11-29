@@ -56,12 +56,18 @@
 				feetier:.engine.model.feetier.GetFeeTier[];
 				risktier:.engine.model.risktier.GetRiskTier[];
 
-				iv[`rpnl]-:cost;
+				// 
+				cost:feetier[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
 
+				// Derive the cost resulting from commisison
+				iv[`rpnl]-:`long$(cost*f[`qty]);
+
+				// Update datums
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
+				// Emit events
 				.engine.Emit[`account] a;
 				.engine.Emit[`inventory] iv;
 				.engine.Emit[`instrument] i;
