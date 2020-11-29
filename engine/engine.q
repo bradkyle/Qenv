@@ -61,7 +61,7 @@ ACCOUNT:();
 .engine.map:()!();
 
 // Public
-.engine.map[`depth]       :{show x}; //.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`depth]       :{[x] }; //.engine.logic.orderbook.Level[INSTRUMENT];
 .engine.map[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()];
 .engine.map[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
 .engine.map[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
@@ -79,7 +79,7 @@ ACCOUNT:();
 .engine.map[`cancelorder] :.engine.logic.order.CancelOrder[INSTRUMENT;ACCOUNT];
 .engine.map[`cancelall]   :.engine.logic.order.CancelAllOrders[INSTRUMENT;ACCOUNT];
 
-.engine.multiplex:{show .engine.map[first x[`kind]];@[.engine.multiplex[first x[`kind]];x;show]}; // TODO logging
+.engine.multiplex:{@[.engine.map[first x[`kind]];x;show]}; // TODO logging
 
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
     if[count[x]>0;[
@@ -92,7 +92,7 @@ ACCOUNT:();
             .engine.watermark:newwm;
             / r:.util.batch.TimeOffsetK[r];
             / r:.util.batch.GausRowDropouts[r];
-            .engine.egress.Events,:r;
+            if[count[r]>0;.engine.egress.Events,:r];
         ];'WATERMARK_HAS_PASSED];
     ]]
     };
