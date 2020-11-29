@@ -6,6 +6,15 @@
 .engine.ingress.Events      :.common.event.Event;
 .engine.egress.Events       :.common.event.Event;
 
+//
+.engine.AddBatch:{[events;ingress]
+        ecount:count[events`time];
+        events[`eid]:(.common.event.eventCount + til ecount);
+        .common.event.eventCount+:ecount;  
+        events[`time]:`datetime$(events[`time]);
+        .egress.Event,:$[type[events]=99h;flip events;events];
+    };
+
 // 1) enlist(Time <= Time + StepFreqTime)
 // 2) enlist(Index <= Index + StepFreqIndex)
 // 3) ((Time <= Time + StepFreqTime);(Index <= Index + StepFreqIndex))
