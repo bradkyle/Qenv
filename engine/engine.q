@@ -57,28 +57,29 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 INSTRUMENT:();
-.engine.logic:();
+ACCOUNT:();
+.engine.map:()!();
 
 // Public
-.engine.logic[`depth]       :.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.logic[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()];
-.engine.logic[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
-.engine.logic[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
-.engine.logic[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
-.engine.logic[`pricelimit]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
+.engine.map[`depth]       :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()];
+.engine.map[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
+.engine.map[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
+.engine.map[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
+.engine.map[`pricelimit]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
 
 // Account
-.engine.logic[`withdraw]    :.engine.logic.account.Withdraw[INSTRUMENT];
-.engine.logic[`deposit]     :.engine.logic.account.Deposit[INSTRUMENT];
-.engine.logic[`leverage]    :.engine.logic.account.Leverage[INSTRUMENT];
+.engine.map[`withdraw]    :.engine.logic.account.Withdraw[INSTRUMENT;ACCOUNT];
+.engine.map[`deposit]     :.engine.logic.account.Deposit[INSTRUMENT;ACCOUNT];
+.engine.map[`leverage]    :.engine.logic.account.Leverage[INSTRUMENT;ACCOUNT];
 
 // Ordering
-.engine.logic[`neworder]    :.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.logic[`amendorder]  :.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.logic[`cancelorder] :.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.logic[`cancelall]   :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`neworder]    :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
+.engine.map[`amendorder]  :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
+.engine.map[`cancelorder] :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
+.engine.map[`cancelall]   :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
 
-.engine.multiplex:{@[.engine.logic[y];x;show]}; // TODO logging
+.engine.multiplex:{@[.engine.map[y];x;show]}; // TODO logging
 
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
     if[count[x]>0;[
