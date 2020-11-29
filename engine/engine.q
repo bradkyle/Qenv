@@ -56,6 +56,27 @@
 
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
+INSTRUMENT:();
+.engine.logic:();
+
+// Public
+.engine.logic[`depth]       :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.logic[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()];
+.engine.logic[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
+.engine.logic[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
+.engine.logic[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
+.engine.logic[`pricelimit]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
+
+// Account
+.engine.logic[`withdraw]    :.engine.logic.account.Withdraw[INSTRUMENT];
+.engine.logic[`deposit]     :.engine.logic.account.Deposit[INSTRUMENT];
+.engine.logic[`leverage]    :.engine.logic.account.Leverage[INSTRUMENT];
+
+// Ordering
+.engine.logic[`neworder]    :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.logic[`amendorder]  :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.logic[`cancelorder] :.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.logic[`cancelall]   :.engine.logic.orderbook.Level[INSTRUMENT];
 
 .engine.multiplex:{@[.engine.logic[y];x;show]}; // TODO logging
 
@@ -63,14 +84,14 @@
     if[count[x]>0;[
         newwm: max x`time;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
-            x:.util.batch.TimeOffsetK[x];
+            / x:.util.batch.TimeOffsetK[x];
             r:$[count[distinct[x`kind]]>1;
                 .engine.multiplex'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
                 .engine.multiplex[0!(`f xgroup update f:first'[kind] from x)]];
             .engine.watermark:newwm;
-            r:.util.batch.TimeOffsetK[r];
-            r:.util.batch.GausRowDropouts[r];
-            .egress.AddBatch[r];
+            / r:.util.batch.TimeOffsetK[r];
+            / r:.util.batch.GausRowDropouts[r];
+            .engine.egress.Events,:r;
         ];'WATERMARK_HAS_PASSED];
     ]]
     };
