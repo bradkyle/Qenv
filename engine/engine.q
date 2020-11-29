@@ -74,10 +74,10 @@ ACCOUNT:();
 .engine.map[`leverage]    :.engine.logic.account.Leverage[INSTRUMENT;ACCOUNT];
 
 // Ordering
-.engine.map[`neworder]    :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
-.engine.map[`amendorder]  :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
-.engine.map[`cancelorder] :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
-.engine.map[`cancelall]   :.engine.logic.orderbook.Level[INSTRUMENT;ACCOUNT];
+.engine.map[`neworder]    :.engine.logic.order.NewOrder[INSTRUMENT;ACCOUNT];
+.engine.map[`amendorder]  :.engine.logic.order.AmendOrder[INSTRUMENT;ACCOUNT];
+.engine.map[`cancelorder] :.engine.logic.order.CancelOrder[INSTRUMENT;ACCOUNT];
+.engine.map[`cancelall]   :.engine.logic.order.CancelAllOrders[INSTRUMENT;ACCOUNT];
 
 .engine.multiplex:{@[.engine.map[y];x;show]}; // TODO logging
 
