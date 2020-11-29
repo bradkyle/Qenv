@@ -12,7 +12,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
-/ .qt.SkpBesTest[24];
+.qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -35,6 +35,8 @@
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
+        .qt.RestoreMocks[];
+
     };
     {[p] :`args`eRes`mocks`err!p};
     (
