@@ -46,11 +46,11 @@
     };
 
 // ReInserts events into the egress event buffer
-.engine.Emit            :{[kind;event]
+.engine.Emit            :{[kind;time;event]
         .engine.egress.Events,:(event);
 				};
 
-.engine.Purge   :{[event;kind;msg] 
+.engine.Purge   :{[kind;time;msg;event] 
         .engine.egress.Events,:(event);
         };
 
