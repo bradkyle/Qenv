@@ -64,7 +64,7 @@ ACCOUNT:();
 .engine.map[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
 .engine.map[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
 .engine.map[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
-.engine.map[`pricelimit]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
+.engine.map[`pricerange]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
 
 // Account
 .engine.map[`withdraw]    :.engine.logic.account.Withdraw[INSTRUMENT;ACCOUNT];
@@ -83,13 +83,13 @@ ACCOUNT:();
     if[count[x]>0;[
         newwm: max x`time;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
-            / x:.util.batch.TimeOffsetK[x];
+                x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
             r:$[count[distinct[x`kind]]>1;
                 .engine.multiplex'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
                 .engine.multiplex[0!(`f xgroup update f:first'[kind] from x)]];
             .engine.watermark:newwm;
-            / r:.util.batch.TimeOffsetK[r];
-            / r:.util.batch.GausRowDropouts[r];
+            r:.util.batch.RowDropoutK[.engine.Purge;r;.conf.c[];0;"event dropped"]; // Drop events
+            r:.util.batch.TimeOffsetK[r;.conf.c[]]; // Set return delay
             if[count[r]>0;.engine.egress.Events,:r];
         ];'WATERMARK_HAS_PASSED];
     ]]
