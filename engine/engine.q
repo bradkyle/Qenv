@@ -85,10 +85,25 @@ ACCOUNT:();
       }
 
 .engine.Reset   :{[events]
-      // TODO delete all models 
-      // TODO recreate all models etc to config
-      .engine.Advance[events]
-      }
+    // TODO delete all models 
+    .util.table.dropAll[(
+      `.engine.model.order.Order,
+      `.engine.model.account.Account,
+      `.engine.model.inventory.Inventory,
+      `.engine.model.instrument.Instrument,
+      `.engine.model.risktier.RiskTier,
+      `.engine.model.orderbook.OrderBook
+    )];
+
+    .engine.model.risktier.Create[];
+    .engine.model.feetier.Create[];
+    .engine.model.instrument.Create[];
+    .engine.model.account.Create[];
+    .engine.model.inventory.Create[];
+
+    // TODO recreate all models etc to config
+    .engine.Advance[events]
+    }
 
 
 
