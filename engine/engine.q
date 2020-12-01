@@ -55,7 +55,7 @@ ACCOUNT:();
 .engine.map[`cancelorder] :.engine.logic.order.CancelOrder[INSTRUMENT;ACCOUNT];
 .engine.map[`cancelall]   :.engine.logic.order.CancelAllOrders[INSTRUMENT;ACCOUNT];
 
-.engine.multiplex:{show x;@[.engine.map[first x[`kind]];x;show]}; // TODO logging
+.engine.multiplex:{@[.engine.map[first x[`kind]];x;show]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
 // depth during training

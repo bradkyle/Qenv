@@ -10,13 +10,8 @@
 // Expects a table to be return that has
 // accountId as the index 
 .state.obs.PrivateFeatureSet  :{[fn;size;aIds;step] // size is features per account row
-    x:size#0f;
+    x:(size*count[aIds])#0f;
     :fn[aIds]
-    };
-
-.state.obs.SignalFeatureSet   :{[fn;size;sIds;step] // TODOs
-    x:size#0f;
-    :fn[sIds]
     };
 
 .state.obs.JoinFeatureV        :{[pfea;xfea]
@@ -33,11 +28,9 @@
 // ----------------------------------------->
 
 .state.obs.fea.account        :.state.obs.PrivateFeatureSet[{
-    acc:0^(?[
-        .state.CurrentAccount;();
-        enlist[`accountId]!enlist[`accountId];
-        (`balance`available`frozen`maintMargin!`balance`available`frozen`maintMargin)
-    ]);
+    c:`balance`available`frozen`maintMargin;
+    acc:0^(?[.state.CurrentAccount;enlist(in;`accountId;x);enlist[`accountId]!enlist[`accountId];(c!c)]);
+    if[count[acc]<count[x];acc,:{((`accountId,x)!(y,(4#0)))}[c]'[x where not[x in key[acc][`accountId]]]];
     :acc;
     };4];
 
@@ -46,11 +39,14 @@
 // ----------------------------------------->
 
 // TODO derive approx liquidation price  
-.state.obs.fea.inventory      :.state.obs.PrivateFeatureSet[{[aIds]
-        // All Inventory
-        invn:?[`.state.CurrentInventory;enlist(in;`accountId;aIds);0b;()];
-        if[count[invn]>0;invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl]];
-        :invn;
+.state.obs.fea.inventory      :.state.obs.PrivateFeatureSet[{
+    c:`amt`realizedPnl`avgPrice`unrealizedPnl;
+    crs:cross[x;-1 1];
+    invn:?[`.state.CurrentInventory;enlist(in;`accountId;x);`accountId`side!`accountId`side;c!c];
+    .bam.invn:invn;
+    if[count[invn]<count[x*2];invn,:.bam.inv:{((`accountId`side,x)!(y,(4#0)))}[c]'[crs where not[crs in key[invn][`accountId`side]]]];
+    if[count[invn]>0;invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl]];
+    :invn;
     };6];   
 
 
@@ -60,82 +56,81 @@
 // TODO derivation by accountId // TODO testing
 // TODO add more features        
 .state.obs.fea.order          :.state.obs.PrivateFeatureSet[{[aIds]
-        // Bucketed limit order features
-        bap:.state.bestAskPrice[];
-        bbp:.state.bestBidPrice[];
-        ticksize:0.1;
-        bucketsize:2;
-        num:10;
-        ap:.state.adapter.superlinearPriceDistribution[bap;bucketsize;ticksize;num;-1];
-        bp:.state.adapter.superlinearPriceDistribution[bbp;bucketsize;ticksize;num;1];
-        aord:.state.limitLeavesByBucket[aIds;ap;-1]; // price descending asks // todo change to batch!
-        bord:.state.limitLeavesByBucket[aIds;bp;1]; // price ascending bids 
+    // Bucketed limit order features
+    bap:.state.bestAskPrice[];
+    bbp:.state.bestBidPrice[];
+    ticksize:0.1;
+    bucketsize:2;
+    num:10;
+    ap:.state.adapter.superlinearPriceDistribution[bap;bucketsize;ticksize;num;-1];
+    bp:.state.adapter.superlinearPriceDistribution[bbp;bucketsize;ticksize;num;1];
+    aord:.state.limitLeavesByBucket[aIds;ap;-1]; // price descending asks // todo change to batch!
+    bord:.state.limitLeavesByBucket[aIds;bp;1]; // price ascending bids 
 
-        f:`accountId`bkt`side`reduce`price`mprice`xprice`leaves!();
-        f[`accountId]:(44#0),(44#1);
-        f[`bkt]:88#til 11;
-        f[`reduce]:88#((22#0b),(22#1b));
-        f[`side]:88#((11#-1),(11#1));
-        f[`price]:88#asc[distinct[raze ap]]; // TODO add bp
-        fea:`accountId`bkt`side`reduce xkey flip[.util.Filt[`accountId`bkt`side`reduce`price;f]];
-        fea:0^((uj) over (fea;aord;bord));
-        show "BAM@";
-        fea:.util.Piv[0!fea;`accountId;`bkt`side`reduce;`leaves];
-        :fea
+    f:`accountId`bkt`side`reduce`price`mprice`xprice`leaves!();
+    f[`accountId]:(44#0),(44#1);
+    f[`bkt]:88#til 11;
+    f[`reduce]:88#((22#0b),(22#1b));
+    f[`side]:88#((11#-1),(11#1));
+    f[`price]:88#asc[distinct[raze ap]]; // TODO add bp
+    fea:`accountId`bkt`side`reduce xkey flip[.util.Filt[`accountId`bkt`side`reduce`price;f]];
+    fea:0^((uj) over (fea;aord;bord));
+    fea:.util.Piv[0!fea;`accountId;`bkt`side`reduce;`leaves];
+    :fea
     };44];
 
 // Depth Feature Sets
 // ----------------------------------------->
 
 .state.obs.fea.depth         :.state.obs.PublicFeatureSet[{
-            // Derives the set of features that pertain to the current bucketed prices
-            bap:.state.bestAskPrice[];
-            bbp:.state.bestBidPrice[];
-            ticksize:0.1;
-            bucketsize:2;
-            num:10;
-            ap:.state.adapter.exponentialPriceDistribution[bap;bucketsize;ticksize;num;-1];
-            bp:.state.adapter.exponentialPriceDistribution[bbp;bucketsize;ticksize;num;1];
-            asks:.state.bucketedDepth[ap;-1]; // price descending asks // todo
-            bids:.state.bucketedDepth[bp;1]; // price ascending bids
-            .state.obs.test.bids:bids;
-            .state.obs.test.asks:asks;
-            f:`bkt`side`price`mprice`xprice`size!();
-            f[`bkt]:22#til 11;
-            f[`side]:22#((11#-1),(11#1));
-            f[`price]:22#asc[distinct[raze ap]]; // TODO add bp
-            fea:`bkt`side xkey flip[.util.Filt[`bkt`side`price;f]];  
-            fea:0^((uj) over (fea;asks;bids));
-            .state.obs.test.fea:fea;
-            :(0!.state.obs.test.fea)`size; // TODO add better features, filter where not in buckets
-            / bestask:min asks;
-            / bestbid:max bids;
-            / asksizes:asks`size;
-            / askprices:asks`price;
-            / sumasksizes:sum asksizes;
-            / bidsizes:bids`size;
-            / bidprices:bids`price;
-            / sumbidsizes:sum bidsizes;
-            / bestbidsize:bestbid`size;
-            / bestasksize:bestask`size;
-            / bestaskprice:bestask`price;
-            / bestbidprice:bestbid`price;
-            / midprice:avg[bestaskprice,bestbidprice];
-            / spread:(-/)(bestaskprice,bestbidprice);
-            / bidsizefracs:bidsizes%sumbidsizes;
-            / asksizefracs:asksizes%sumasksizes;
-            / depthfrac:sumbidsizes%sumasksizes;
-            / :raze[(
-            /     bidsizefracs, // num
-            /     asksizefracs, // num
-            /     depthfrac, // num
-            /     spread, // 1
-            /     midprice, // 1
-            /     bestaskprice, // 1
-            /     bestbidprice, // 1
-            /     bestasksize, // 1
-            /     bestbidsize // 1
-            / )];
+    // Derives the set of features that pertain to the current bucketed prices
+    bap:.state.bestAskPrice[];
+    bbp:.state.bestBidPrice[];
+    ticksize:0.1;
+    bucketsize:2;
+    num:10;
+    ap:.state.adapter.exponentialPriceDistribution[bap;bucketsize;ticksize;num;-1];
+    bp:.state.adapter.exponentialPriceDistribution[bbp;bucketsize;ticksize;num;1];
+    asks:.state.bucketedDepth[ap;-1]; // price descending asks // todo
+    bids:.state.bucketedDepth[bp;1]; // price ascending bids
+    .state.obs.test.bids:bids;
+    .state.obs.test.asks:asks;
+    f:`bkt`side`price`mprice`xprice`size!();
+    f[`bkt]:22#til 11;
+    f[`side]:22#((11#-1),(11#1));
+    f[`price]:22#asc[distinct[raze ap]]; // TODO add bp
+    fea:`bkt`side xkey flip[.util.Filt[`bkt`side`price;f]];  
+    fea:0^((uj) over (fea;asks;bids));
+    .state.obs.test.fea:fea;
+    :(0!.state.obs.test.fea)`size; // TODO add better features, filter where not in buckets
+    / bestask:min asks;
+    / bestbid:max bids;
+    / asksizes:asks`size;
+    / askprices:asks`price;
+    / sumasksizes:sum asksizes;
+    / bidsizes:bids`size;
+    / bidprices:bids`price;
+    / sumbidsizes:sum bidsizes;
+    / bestbidsize:bestbid`size;
+    / bestasksize:bestask`size;
+    / bestaskprice:bestask`price;
+    / bestbidprice:bestbid`price;
+    / midprice:avg[bestaskprice,bestbidprice];
+    / spread:(-/)(bestaskprice,bestbidprice);
+    / bidsizefracs:bidsizes%sumbidsizes;
+    / asksizefracs:asksizes%sumasksizes;
+    / depthfrac:sumbidsizes%sumasksizes;
+    / :raze[(
+    /     bidsizefracs, // num
+    /     asksizefracs, // num
+    /     depthfrac, // num
+    /     spread, // 1
+    /     midprice, // 1
+    /     bestaskprice, // 1
+    /     bestbidprice, // 1
+    /     bestasksize, // 1
+    /     bestbidsize // 1
+    / )];
     };22];
 
 // Trade Feature Sets
@@ -143,66 +138,66 @@
 
 // TODO add more ? 
 .state.obs.fea.trade         :.state.obs.PublicFeatureSet[{
-        buys:select[100;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); // todo remove
-        sells:select[100;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); // todo remove
-        :raze[(
-            count[buys];
-            count[sells];
-            avg[5#buys`price];
-            avg[15#buys`price];
-            avg[30#buys`price];
-            avg[buys`price];
-            max[5#buys`price];
-            max[15#buys`price];
-            max[30#buys`price];
-            max[buys`price];
-            min[5#buys`price];
-            min[15#buys`price];
-            min[30#buys`price];
-            min[buys`price];
-            last[buys`price];
-            avg[5#sells`price];
-            avg[15#sells`price];
-            avg[30#sells`price];
-            avg[sells`price];
-            max[5#sells`price];
-            max[15#sells`price];
-            max[30#sells`price];
-            max[sells`price];
-            min[5#sells`price];
-            min[15#sells`price];
-            min[30#sells`price];
-            min[sells`price];
-            last[sells`price];
-            avg[5#buys`size];
-            avg[15#buys`size];
-            avg[30#buys`size];
-            avg[buys`size];
-            max[5#buys`size];
-            max[15#buys`size];
-            max[30#buys`size];
-            max[buys`size];
-            min[5#buys`size];
-            min[15#buys`size];
-            min[30#buys`size];
-            min[buys`size];
-            last[buys`size];
-            sum[buys`size]; 
-            avg[5#sells`size];
-            avg[15#sells`size];
-            avg[30#sells`size];
-            avg[sells`size];
-            max[5#sells`size];
-            max[15#sells`size];
-            max[30#sells`size];
-            max[sells`size];
-            min[5#sells`size];
-            min[15#sells`size];
-            min[30#sells`size];
-            min[sells`size];
-            last[sells`size];
-            sum[sells`size]
-        )];
+    buys:select[100;>time] price, size from .state.TradeEventHistory where side=1, time>(max[time]-`minute$5); // todo remove
+    sells:select[100;>time] price, size from .state.TradeEventHistory where side=-1, time>(max[time]-`minute$5); // todo remove
+    :raze[(
+        count[buys];
+        count[sells];
+        avg[5#buys`price];
+        avg[15#buys`price];
+        avg[30#buys`price];
+        avg[buys`price];
+        max[5#buys`price];
+        max[15#buys`price];
+        max[30#buys`price];
+        max[buys`price];
+        min[5#buys`price];
+        min[15#buys`price];
+        min[30#buys`price];
+        min[buys`price];
+        last[buys`price];
+        avg[5#sells`price];
+        avg[15#sells`price];
+        avg[30#sells`price];
+        avg[sells`price];
+        max[5#sells`price];
+        max[15#sells`price];
+        max[30#sells`price];
+        max[sells`price];
+        min[5#sells`price];
+        min[15#sells`price];
+        min[30#sells`price];
+        min[sells`price];
+        last[sells`price];
+        avg[5#buys`size];
+        avg[15#buys`size];
+        avg[30#buys`size];
+        avg[buys`size];
+        max[5#buys`size];
+        max[15#buys`size];
+        max[30#buys`size];
+        max[buys`size];
+        min[5#buys`size];
+        min[15#buys`size];
+        min[30#buys`size];
+        min[buys`size];
+        last[buys`size];
+        sum[buys`size]; 
+        avg[5#sells`size];
+        avg[15#sells`size];
+        avg[30#sells`size];
+        avg[sells`size];
+        max[5#sells`size];
+        max[15#sells`size];
+        max[30#sells`size];
+        max[sells`size];
+        min[5#sells`size];
+        min[15#sells`size];
+        min[30#sells`size];
+        min[sells`size];
+        last[sells`size];
+        sum[sells`size]
+    )];
     };56];
 
 
@@ -210,31 +205,32 @@
 // ----------------------------------------->
 
 .state.obs.fea.mark          :.state.obs.PublicFeatureSet[{
-        // Mark Price Features
-        markprice:((last[.state.MarkEventHistory]`markprice) | 0f);
-        lastprice:((last[.state.TradeEventHistory]`price) | 0f);
-        basis:lastprice-markprice;
-        raze[(
-            markprice;
-            basis
-        )]
+    // Mark Price Features
+    markprice:((last[.state.MarkEventHistory]`markprice) | 0f);
+    lastprice:((last[.state.TradeEventHistory]`price) | 0f);
+    basis:lastprice-markprice;
+    raze[(
+        markprice;
+        basis
+    )]
     };2];
 
 // Funding Feature Sets
 // ----------------------------------------->
 
 .state.obs.fea.funding      :.state.obs.PublicFeatureSet[{
-        funding:last[.state.FundingEventHistory];
-        countdown:.util.TimeDiffMin[funding`fundingtime;.state.WaterMark]; // TODO get delta in time
-        .state.obs.test.funding:funding;
-        raze[(
-            (funding[`fundingrate]  | 0f);
-            (countdown | 0f)
-        )]
+    funding:last[.state.FundingEventHistory];
+    countdown:.util.TimeDiffMin[funding`fundingtime;.state.WaterMark]; // TODO get delta in time
+    .state.obs.test.funding:funding;
+    raze[(
+        (funding[`fundingrate]  | 0f);
+        (countdown | 0f)
+    )]
     };2];
 
 
 // Main Derive Function
+// =====================================================================================================>
 // =====================================================================================================>
   
 // TODO join fea set
@@ -244,7 +240,6 @@
     .state.obs.fea.trade[step],
     .state.obs.fea.mark[step],
     .state.obs.fea.funding[step],
-    / .state.obs.fea.signal.0[step]
     );
 
     xfea:(); // private feature vectors
@@ -285,4 +280,5 @@
    :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     / :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
     };
+
 
