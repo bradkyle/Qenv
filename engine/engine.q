@@ -79,9 +79,10 @@ ACCOUNT:();
 / -------------------------------------------------------------------->
 
 .engine.Advance :{[events]
-    .bam.events:events;
     $[(count[.engine.ingress.Events]>0) and (count[events]>0);
-          .engine.ingress.Events,:events;.engine.ingress.Events:events];
+        .engine.ingress.Events,:events;
+      (count[events]>0);
+      .engine.ingress.Events:events;::];
     .engine.process[.engine.GetIngressEvents[.engine.watermark;`second$5;950]];
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
     }
