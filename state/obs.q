@@ -271,7 +271,7 @@
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)
             // backwards (randomized fill of buffer)
-            {x[`step]-:y;x:`accountId`step xkey x;.bam.x:x;show x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
+            {x[`step]-:y;x:`accountId`step xkey x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
     ]];
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
