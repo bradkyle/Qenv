@@ -136,9 +136,9 @@
     // inorder to derive the observations, dones and 
     // rewards that are to be sent back to the agent.
     aIds:actions[;0]; // Get the account ID's
-    obs:.state.obs.GetObs[step;.conf.c[`env;`obsWindowSize];aIds]; // TODO make better
-    rwd:.state.rew.GetRewards[step;.conf.c[`env;`rewWindowSize];aIds];
-    dns:.state.dns.GetDones[step;.conf.c[`env;`dneWindowSize];aIds]; // TODO move to env and create better!
+    obs:.state.obs.GetObs[step;100;aIds]; // TODO make better
+    rwd:.state.rew.GetRewards[step;100;aIds];
+    dns:.state.dns.GetDones[step;100;aIds]; // TODO move to env and create better!
 
     .env.CurrentStep+:1;
     :(obs;rwd;dns*isDone);
