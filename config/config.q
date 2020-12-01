@@ -50,14 +50,12 @@ np:.p.import`numpy
 // methods to update its state.
 .conf.Config        :{[tbl]
 
-
     };
 
 // Wraps a given multi configuration 
 // namespace with given namespace
 // methods to update its state.
 .conf.MultiConfig    :{[tbl]
-
 
     };
 

@@ -8,6 +8,7 @@
 .ingest.e,:select from pricerange;
 .ingest.e,:select from mark;
 .ingest.e,:select from funding;
+.ingest.e: select time, kind, datum from .ingest.e;
 .ingest.e:`time xasc .ingest.e;
 
 .ingest.Reset :{[]

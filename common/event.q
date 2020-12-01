@@ -105,7 +105,7 @@
 // The Event table is used exclusively within the engine and is not used
 // by for example the state.
 // Acts like a kafka queue/pubsub.
-.common.event.Event  :( // TODO .common.event.Add failure to table
+.common.event.Event  :([] // TODO .common.event.Add failure to table
     time        :`datetime$();
     kind        :`symbol$();
     datum       :());

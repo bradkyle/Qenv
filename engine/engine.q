@@ -7,15 +7,18 @@
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
-.engine.GetIngressEvents   :{[watermark] // TODO should select next batch according to config
-    select from i
-    events
+.engine.GetIngressEvents   :{[watermark;frq;per] // TODO should select next batch according to config
+    e:select[per] i, time, kind, datum from .engine.ingress.Events where time < ((watermark | first time)+frq); 
+    delete from `.engine.ingress.Events where i in e[`i]; 
+    enlist[`i] _ e
     };
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
-.engine.GetEgressEvents:{[watermark] // TODO should select next batch according to config
-
+.engine.GetEgressEvents:{[watermark;frq;per] // TODO should select next batch according to config
+    e:select[per] i, time, kind, datum from .engine.ingress.Events where time > ((watermark | first time)+frq); 
+    delete from `.engine.egress.Events where i in e[`i]; 
+    enlist[`i] _ e
     };
 
 // ReInserts events into the egress event buffer
@@ -52,7 +55,7 @@ ACCOUNT:();
 .engine.map[`cancelorder] :.engine.logic.order.CancelOrder[INSTRUMENT;ACCOUNT];
 .engine.map[`cancelall]   :.engine.logic.order.CancelAllOrders[INSTRUMENT;ACCOUNT];
 
-.engine.multiplex:{@[.engine.map[first x[`kind]];x;show]}; // TODO logging
+.engine.multiplex:{show x;@[.engine.map[first x[`kind]];x;show]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
 // depth during training
@@ -60,14 +63,13 @@ ACCOUNT:();
     if[count[x]>0;[
         newwm: max x`time;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
-            x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
-            r:$[count[distinct[x`kind]]>1;
+            / x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
+            $[count[distinct[x`kind]]>1;
                 .engine.multiplex'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
                 .engine.multiplex[0!(`f xgroup update f:first'[kind] from x)]];
             .engine.watermark:newwm;
-            r:.util.batch.RowDropoutK[.engine.Purge;r;.conf.c[];0;"event dropped"]; // Drop events
-            r:.util.batch.TimeOffsetK[r;.conf.c[]]; // Set return delay
-            if[count[r]>0;.engine.egress.Events,:r];
+            / r:.util.batch.RowDropoutK[.engine.Purge;r;.conf.c[];0;"event dropped"]; // Drop events
+            / r:.util.batch.TimeOffsetK[r;.conf.c[]]; // Set return delay
         ];'WATERMARK_HAS_PASSED];
     ]]
     };
@@ -77,9 +79,9 @@ ACCOUNT:();
 / -------------------------------------------------------------------->
 
 .engine.Advance :{[events]
-      .engine.ingress.Events,:events;
-      .engine.process .engine.GetIngressEvents[]
-      .engine.GetEgressEvents[]
+      $[count[.engine.ingress.Events]>0;.engine.ingress.Events,:events;.engine.ingress.Events:events];
+      .engine.process[.engine.GetIngressEvents[.engine.watermark;`second$5;950]];
+      .engine.GetEgressEvents[.engine.watermark;`second$5;950]
       }
 
 .engine.Reset   :{[events]
