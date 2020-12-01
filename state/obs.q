@@ -249,6 +249,7 @@
 
     xfea:(); // private feature vectors
     xfea:.state.obs.fea.account[aIds;step];
+    show .state.obs.fea.inventory[aIds;step];
     xfea:xfea uj .state.obs.fea.inventory[aIds;step];
     xfea:xfea uj .state.obs.fea.order[aIds;step];
     xfea:0!({raze'[x]}'[xfea]);
