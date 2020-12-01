@@ -321,35 +321,9 @@
         bucketsize:2;
         ticksize:0.1;
 
-        // TODO validate params
-        bside:count[distkinds]>1;
-        $[bside;
-            [
-                // TODO static function, better than flip
-                // Derive target states 
+        // Derive price distribution
 
-                // derive price distributions
-                bcp:0;
-                bop:0;
-
-                // derive size distributions 
-
-
-                
-                sid:((num#mside),(num#neg[mside]));
-                red:((num#reduces[0]),(num#reduces[1]))
-            ];[ 
-                prc:.state.adapter.getPriceDistributedBuckets[
-                    bucketkinds[0];
-                    .state.bestSidePrice[mside];
-                    bucketsize;
-                    ticksize;
-                    num;
-                    mside];
-                dst:.state.adapter.getSizeDistributions[distkinds;amts;num;mside];  
-                sid:num#mside;
-                red:num#reduces;              
-            ]];
+        // Derive size distribution
 
         // TODO do ol/cl/os/cs distrib
         // create delta events from target
