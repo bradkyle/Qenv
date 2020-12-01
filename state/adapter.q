@@ -318,8 +318,8 @@
         amd:static[0];aId:static[1];time:static[2];num:static[3];bucketkinds:static[4];
         //best bid
         // best ask
-        bucketsize:.conf.c[`env;`priceBucketSize];
-        ticksize:.conf.c[`env;`tickSize];
+        bucketsize:2;
+        ticksize:0.1;
 
         // TODO validate params
         bside:count[distkinds]>1;
@@ -409,8 +409,8 @@
 // HEDGED PATHFINDER                // TODO more action permutations. reverse,combo,macro etc
 .state.adapter.HedgedPathFinder       :{[encouragement;time;aId;a]
         events:();
-        numBuckets:.conf.c[`env;`numDepthBuckets];
-        useFraction:.conf.c[`env;`activeTradeFraction];;
+        numBuckets:10;
+        useFraction:0.5;
         dur:`timespan$(0D00:01:00.000000000);
         .state.adapter.penalty:0; 
 
