@@ -116,6 +116,7 @@
         l:log .state.adapter.t2[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
+.state.adapter.amtdist[`loginc]:.state.state.increasingLogarithmicDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing logarithmic distribution of
@@ -123,6 +124,7 @@
 .state.adapter.decreasingLogarithmicDistribution                :{[amt;num;lotsize]
         reverse .state.adapter.increasingLogarithmicDistribution[amt;num;lotsize]
     };
+.state.adapter.amtdist[`logdec]:.state.adapter.decreasingLogarithmicDistribution;
 
 // Just creates a ~quadratic distribution
 // Given a total amount and the number of groups in which to distribute
@@ -132,6 +134,7 @@
         l:num#(til[floor[num%2]+1],reverse til[floor[num%2]]);
         .state.adapter.ramfrac[l;amt;lotsize]
     };
+.state.adapter.amtdist[`norm]:.state.adapter.normalDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the flat distribution of
@@ -139,11 +142,12 @@
 .state.adapter.flatDistribution                                 :{[amt;num;lotsize]
         .state.adapter.ramfrac[num#1;amt;lotsize]
     };
+.state.adapter.amtdist[`flat]:.state.adapter.flatDistribution;
 
 // Price Distribution Utilities
 // ---------------------------------------------------------------------------------------->
 // Buckets are a tuple of low and high // todo add midprice?
-.state.adapter.pricedist:();
+.state.adapter.pricedist:()!();
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
