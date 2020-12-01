@@ -476,7 +476,7 @@
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter. // TODO pair with state account repr
-.state.adapter.Adapt :{[adapterType; encouragement; actions]
+.state.adapter.Adapt :{[encouragement; actions]
         :.state.adapter.HedgedPathFinder[encouragement;.state.WaterMark]'[actions[;0];actions[;1]];
     };
 
