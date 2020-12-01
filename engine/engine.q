@@ -8,7 +8,7 @@
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .engine.GetIngressEvents   :{[watermark;frq;per] // TODO should select next batch according to config
-    e:select[per] i, time, kind, datum from .engine.ingress.Events where time < ((watermark | first time)+frq); 
+    e:select[per] i, time, kind, datum from .engine.ingress.Events where (time>watermark) and (time < ((watermark | first time)+frq)); 
     delete from `.engine.ingress.Events where i in e[`i]; 
     enlist[`i] _ e
     };
@@ -60,6 +60,7 @@ ACCOUNT:();
 // Todo add slight randomization to incoming trades and 
 // depth during training
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
+    show count x;
     if[count[x]>0;[
         newwm: max x`time;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
