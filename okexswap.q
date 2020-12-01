@@ -184,3 +184,5 @@ feeCols:`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit;
     monthVolume         : .conf.RandomWithin[150000;0];                                    //                                       
     leverage            : .conf.RandomWithin[25;1]                                         //                                   
     )];
+
+
