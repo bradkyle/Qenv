@@ -61,6 +61,8 @@ show .conf
     outageMinLength             : .conf.RandomDurationWithin[10;1;`minute];               // The minimul length of data/connection outages
     stepFrequency               : .conf.StaticInterval[5;`second];                        // The threshold frequency of each step (temporal)
     stepPeriod                  : .conf.Static[100];                                      // The threshold period of each step (event count)
+    dataInterval                : .conf.StaticInterval[5;`second];                        // The size of the batch data to request from ingress server
+    pullInterval                : .conf.StaticInterval[5;`second];                        // The interval for which new data is requested
     ingestHost                  : .conf.Static[`localhost];                               // The host on which to connect to the ingest server
     ingestPort                  : .conf.Static[5001];                                     // The port on which to connect to the ingest server
     ingressWindowKind           : .conf.Static[0];                                        // The type of window to use for selecting events to be passed into engine
@@ -77,8 +79,6 @@ show .conf
 // IngressDelays
 // ---------------------------------------------------------------------------------->
 
-privreqlatency:.conf.NDTimespan[1.804904e-06;1.918936e-06];
-
 .conf.Config[`delays;([] // mu; sigma
     depth                    :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for depth updates                   
     trade                    :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for trade updates                  
@@ -86,27 +86,27 @@ privreqlatency:.conf.NDTimespan[1.804904e-06;1.918936e-06];
     settlement               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for settlement updates                       
     funding                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for funding updates                    
     pricelimit               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for pricelimit updates                       
-    neworderreq              :privreqlatency;                //  The normal distribution of the time delay for neworder request                     
-    neworderbatchreq         :privreqlatency;                //  The normal distribution of the time delay for neworderbatch request                          
-    amendorderreq            :privreqlatency;                //  The normal distribution of the time delay for amendorder request                       
-    amendorderbatchreq       :privreqlatency;                //  The normal distribution of the time delay for amendorderbatch request                            
-    cancelorderreq           :privreqlatency;                //  The normal distribution of the time delay for cancelorder request                        
-    cancelorderbatchreq      :privreqlatency;                //  The normal distribution of the time delay for cancelorderbatch request                             
-    cancelallordersreq       :privreqlatency;                //  The normal distribution of the time delay for cancelallorders request                            
-    withdrawreq              :privreqlatency;                //  The normal distribution of the time delay for withdraw request                     
-    depositreq               :privreqlatency;                //  The normal distribution of the time delay for deposit request                    
-    leverageupdatereq        :privreqlatency;                //  The normal distribution of the time delay for leverageupdate request    
-    neworderres              :privreqlatency;                //  The normal distribution of the time delay for neworder response                     
-    neworderbatchres         :privreqlatency;                //  The normal distribution of the time delay for neworderbatch response                          
-    amendorderres            :privreqlatency;                //  The normal distribution of the time delay for amendorder response                       
-    amendorderbatchres       :privreqlatency;                //  The normal distribution of the time delay for amendorderbatch response                            
-    cancelorderres           :privreqlatency;                //  The normal distribution of the time delay for cancelorder response                        
-    cancelorderbatchres      :privreqlatency;                //  The normal distribution of the time delay for cancelorderbatch response                             
-    cancelallordersres       :privreqlatency;                //  The normal distribution of the time delay for cancelallorders response                            
-    withdrawres              :privreqlatency;                //  The normal distribution of the time delay for withdraw response                     
-    depositres               :privreqlatency;                //  The normal distribution of the time delay for deposit response                    
-    leverageupdateres        :privreqlatency;                //  The normal distribution of the time delay for leverageupdate response                          
-    liquidation              :privreqlatency                 //  The normal distribution of the time delay for liquidation updates                        
+    neworderreq              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworder request                     
+    neworderbatchreq         :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworderbatch request                          
+    amendorderreq            :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorder request                       
+    amendorderbatchreq       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorderbatch request                            
+    cancelorderreq           :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorder request                        
+    cancelorderbatchreq      :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorderbatch request                             
+    cancelallordersreq       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelallorders request                            
+    withdrawreq              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for withdraw request                     
+    depositreq               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for deposit request                    
+    leverageupdatereq        :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for leverageupdate request    
+    neworderres              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworder response                     
+    neworderbatchres         :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworderbatch response                          
+    amendorderres            :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorder response                       
+    amendorderbatchres       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorderbatch response                            
+    cancelorderres           :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorder response                        
+    cancelorderbatchres      :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorderbatch response                             
+    cancelallordersres       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelallorders response                            
+    withdrawres              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for withdraw response                     
+    depositres               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for deposit response                    
+    leverageupdateres        :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for leverageupdate response                          
+    liquidation              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for liquidation updates                        
     )]; 
 
 // Instrument
@@ -121,27 +121,27 @@ feeCols:`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit;
     quoteAsset              : .conf.Static[`BTC];                                         //                                        
     baseAsset               : .conf.Static[`USDT];                                        //                                        
     underlyingAsset         : .conf.Static[`BTCUSDT];                                     //                                            
-    faceValue               : .conf.Static[100];                                            //                                    
+    faceValue               : .conf.Static[1];                                            //                                    
     maxLeverage             : .conf.Static[125];                                          //                                        
     minLeverage             : .conf.Static[1];                                            //                                    
     tickSize                : .conf.Static[0.01f];                                        //                                        
-    lotSize                 : .conf.Static[1];                                        //                                        
+    lotSize                 : .conf.Static[0.001];                                        //                                        
     priceMultiplier         : .conf.Static[100];                                          //                                        
-    sizeMultiplier          : .conf.Static[1];                                         //                                        
+    sizeMultiplier          : .conf.Static[1000];                                         //                                        
     fundingInterval         : .conf.StaticInterval[480;`minute];                          //                                                          
     taxed                   : .conf.Static[0b];                                           //                                    
     deleverage              : .conf.Static[0b];                                           //                                    
     capped                  : .conf.Static[0b];                                           //                                    
-    usePriceLimits          : .conf.Static[1b];                                           //                                    
+    usePriceLimits          : .conf.Static[0b];                                           //                                    
     maxPrice                : .conf.Static[1e6];                                          //                                        
     minPrice                : .conf.Static[0];                                            //                                    
     upricelimit             : .conf.Static[0];                                            //                                    
     lpricelimit             : .conf.Static[0];                                            //                                    
     maxOrderSize            : .conf.Static[1e6];                                          //                                        
     minOrderSize            : .conf.Static[0.001];                                        //                                        
-    junkOrderSize           : .conf.Static[0];                                        //                                        
+    junkOrderSize           : .conf.Static[0.001];                                        //                                        
     contractType            : .conf.Static[0];                                            //                                     
-    maxOpenOrders           : .conf.Static[100];                                           // The default maximum number of orders that an agent can have open.                                                            
+    maxOpenOrders           : .conf.Static[25];                                           // The default maximum number of orders that an agent can have open.                                                            
     maxDepthLevels          : .conf.Static[100];                                          // The maximum number of depth levels to maintain in the order book simulation.                                           
     takeOverFee             : .conf.Static[0];
     riskTiers               : .conf.Static[flip[riskCols!flip[(
@@ -181,14 +181,3 @@ feeCols:`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit;
     monthVolume         : .conf.RandomWithin[150000;0];                                    //                                       
     leverage            : .conf.RandomWithin[25;1]                                         //                                   
     )];
-
-
-
-
-
-
-
-
-
-
-

@@ -12,7 +12,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
  
-.qt.SkpBesTest[24];
+/ .qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]

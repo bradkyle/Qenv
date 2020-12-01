@@ -79,6 +79,8 @@ ACCOUNT:();
 
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show]}; // TODO logging
 
+// Todo add slight randomization to incoming trades and 
+// depth during training
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
     if[count[x]>0;[
         newwm: max x`time;
