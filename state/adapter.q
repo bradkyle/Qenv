@@ -314,7 +314,7 @@
 // place in order to ameliarate the difference.
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets. mside=major side
-.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;distkinds;amts;reduces]
+.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bucketkinds:static[4];
         //best bid
         // best ask
@@ -327,23 +327,14 @@
             [
                 // TODO static function, better than flip
                 // Derive target states 
-                prc:flip[(flip[.state.adapter.getPriceDistributedBuckets[
-                        bucketkinds[0];
-                        .state.bestSidePrice[mside];
-                        bucketsize;
-                        ticksize;
-                        num;
-                        mside]],
-                    flip[.state.adapter.getPriceDistributedBuckets[
-                        bucketkinds[1];
-                        .state.bestSidePrice[neg[mside]];
-                        bucketsize;
-                        ticksize;
-                        num;
-                        neg[mside]]])];
 
-                dst:(.state.adapter.getSizeDistributions[distkinds[0];amts[0];num;mside];
-                    .state.adapter.getSizeDistributions[distkinds[1];amts[1];num;neg[mside]]);
+                // derive price distributions
+                bcp:0;
+                bop:0;
+
+                // derive size distributions 
+
+
                 
                 sid:((num#mside),(num#neg[mside]));
                 red:((num#reduces[0]),(num#reduces[1]))
