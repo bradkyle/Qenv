@@ -7,7 +7,7 @@
 
 \d .policy
 
-Act: {[obs;nactions] rand nactions };
+Act: {[obs;nactions] enlist(0;rand nactions) };
 
 \d .
 
