@@ -65,7 +65,7 @@
     rwd:count[aIds]#0f;
     dns:count[aIds]#0b; // TODO move to env and create better!
 
-    :(obs;rwd;dns);
+    (obs;rwd;dns)
     };
 
 
@@ -138,10 +138,10 @@
     aIds:actions[;0]; // Get the account ID's
     obs:.state.obs.GetObs[step;100;aIds]; // TODO make better
     rwd:.state.rew.GetRewards[step;100;aIds];
-    dns:.state.dns.GetDones[step;100;aIds]; // TODO move to env and create better!
+    dns:count[aIds]#0b; // TODO move to env and create better!
 
     .env.CurrentStep+:1;
-    :(obs;rwd;dns*isDone);
+    (obs;rwd;dns)
     };
 
 
