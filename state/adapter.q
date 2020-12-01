@@ -73,7 +73,7 @@
         xbar[z;((1+x)%sum[x+1])*y]
     };
 
-.state.adapter.amtdist:();
+.state.adapter.amtdist:()!();
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing linear distribution of
@@ -82,6 +82,7 @@
         l:.state.adapter.t1[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
+.state.adapter.amtdist[`lininc]:.state.adapter.increasingLinearDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing linear distribution of
@@ -89,6 +90,7 @@
 .state.adapter.decreasingLinearDistribution                     :{[amt;num;lotsize]
         reverse .state.adapter.increasingLinearDistribution[amt;num;lotsize]
     };
+.state.adapter.amtdist[`lindec]:.state.adapter.decreasingLinearDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing exponential distribution of
