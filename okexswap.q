@@ -79,35 +79,38 @@ show .conf
 // IngressDelays
 // ---------------------------------------------------------------------------------->
 
+privreqlatency:.conf.NDTimespan[1.804904e-06;1.918936e-06];
+
 .conf.Config[`delays;([] // mu; sigma
-    depth                    :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for depth updates                   
-    trade                    :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for trade updates                  
-    mark                     :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for mark updates                 
-    settlement               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for settlement updates                       
-    funding                  :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for funding updates                    
-    pricelimit               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for pricelimit updates                       
-    neworderreq              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworder request                     
-    neworderbatchreq         :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworderbatch request                          
-    amendorderreq            :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorder request                       
-    amendorderbatchreq       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorderbatch request                            
-    cancelorderreq           :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorder request                        
-    cancelorderbatchreq      :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorderbatch request                             
-    cancelallordersreq       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelallorders request                            
-    withdrawreq              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for withdraw request                     
-    depositreq               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for deposit request                    
-    leverageupdatereq        :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for leverageupdate request    
-    neworderres              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworder response                     
-    neworderbatchres         :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for neworderbatch response                          
-    amendorderres            :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorder response                       
-    amendorderbatchres       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for amendorderbatch response                            
-    cancelorderres           :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorder response                        
-    cancelorderbatchres      :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelorderbatch response                             
-    cancelallordersres       :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for cancelallorders response                            
-    withdrawres              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for withdraw response                     
-    depositres               :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for deposit response                    
-    leverageupdateres        :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for leverageupdate response                          
-    liquidation              :.conf.NDTimespan[1.804904e-06;1.918936e-06];                //  The normal distribution of the time delay for liquidation updates                        
+    depth                    :.conf.NDTimespan[6.54859e-06;0.0001020794];                //  The normal distribution of the time delay for depth updates                   
+    trade                    :.conf.NDTimespan[8.223707e-05;0.0003887884];                //  The normal distribution of the time delay for trade updates                  
+    mark                     :.conf.NDTimespan[7.480917e-06;0.0001111712];                //  The normal distribution of the time delay for mark updates                 
+    settlement               :.conf.NDTimespan[9.209844e-06;0.0001231815];                //  The normal distribution of the time delay for settlement updates                       
+    funding                  :.conf.NDTimespan[9.209844e-06;0.0001231815];                //  The normal distribution of the time delay for funding updates                    
+    pricelimit               :.conf.NDTimespan[9.209844e-06;0.0001231815];                //  The normal distribution of the time delay for pricelimit updates                       
+    neworderreq              :privreqlatency;                                            //  The normal distribution of the time delay for neworder request                     
+    neworderbatchreq         :privreqlatency;                                            //  The normal distribution of the time delay for neworderbatch request                          
+    amendorderreq            :privreqlatency;                                            //  The normal distribution of the time delay for amendorder request                       
+    amendorderbatchreq       :privreqlatency;                                            //  The normal distribution of the time delay for amendorderbatch request                            
+    cancelorderreq           :privreqlatency;                                            //  The normal distribution of the time delay for cancelorder request                        
+    cancelorderbatchreq      :privreqlatency;                                            //  The normal distribution of the time delay for cancelorderbatch request                             
+    cancelallordersreq       :privreqlatency;                                            //  The normal distribution of the time delay for cancelallorders request                            
+    withdrawreq              :privreqlatency;                                            //  The normal distribution of the time delay for withdraw request                     
+    depositreq               :privreqlatency;                                            //  The normal distribution of the time delay for deposit request                    
+    leverageupdatereq        :privreqlatency;                                            //  The normal distribution of the time delay for leverageupdate request    
+    neworderres              :privreqlatency;                                            //  The normal distribution of the time delay for neworder response                     
+    neworderbatchres         :privreqlatency;                                            //  The normal distribution of the time delay for neworderbatch response                          
+    amendorderres            :privreqlatency;                                            //  The normal distribution of the time delay for amendorder response                       
+    amendorderbatchres       :privreqlatency;                                            //  The normal distribution of the time delay for amendorderbatch response                            
+    cancelorderres           :privreqlatency;                                            //  The normal distribution of the time delay for cancelorder response                        
+    cancelorderbatchres      :privreqlatency;                                            //  The normal distribution of the time delay for cancelorderbatch response                             
+    cancelallordersres       :privreqlatency;                                            //  The normal distribution of the time delay for cancelallorders response                            
+    withdrawres              :privreqlatency;                                            //  The normal distribution of the time delay for withdraw response                     
+    depositres               :privreqlatency;                                            //  The normal distribution of the time delay for deposit response                    
+    leverageupdateres        :privreqlatency;                                            //  The normal distribution of the time delay for leverageupdate response                          
+    liquidation              :privreqlatency                                             //  The normal distribution of the time delay for liquidation updates                        
     )]; 
+
 
 // Instrument
 // ---------------------------------------------------------------------------------->
