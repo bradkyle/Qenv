@@ -13,14 +13,14 @@ Act: {[obs;nactions] rand nactions };
 
 // Reset the environment
 // and get the first observations
-obs:.env.Reset[];
+.env.obs:.env.Reset[];
 
 // Take 100000 steps
 do[100;{
 				// pass observations to the agent
-				actions:.policy.Act[obs;27];
+				actions:.policy.Act[.env.obs;27];
 				res:.env.Step[actions];
-				obs:res[0];
+				.env.obs:res[0];
 				rwd:res[1];
 				dns:res[2];
 
