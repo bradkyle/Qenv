@@ -99,6 +99,7 @@
         l:exp .state.adapter.t1[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
+.state.adapter.amtdist[`expinc]:.state.adapter.increasingExponentialDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing exponential distribution of
@@ -106,6 +107,7 @@
 .state.adapter.decreasingExponentialDistribution                :{[amt;num;lotsize]
         reverse .state.adapter.increasingExponentialDistribution[amt;num;lotsize]
     };
+.state.adapter.amtdist[`expdec]:.state.adapter.increasingExponentialDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the increasing logarithmic distribution of
