@@ -159,7 +159,7 @@
 .state.adapter.uniformalPriceDistribution                      :{[mnprice;bucketsize;ticksize;num;isignum]
         mnprice+((bucketsize*til[num];bucketsize*.state.adapter.t1[num])*(ticksize*isignum)) // Derive the distribution of prices
     };
-
+.state.adapter.pricedist[`uniform]:.state.adapter.uniformalPriceDistribution;
 
 // Generates a set of buckets according to
 // a exponential distribution of price throughout the
@@ -171,6 +171,7 @@
 .state.adapter.exponentialPriceDistribution                    :{[mnprice;bucketsize;ticksize;num;isignum]
         mnprice+((xexp[.state.adapter.t1[num];bucketsize];xexp[.state.adapter.t2[num];bucketsize])*(ticksize*isignum))
     };
+.state.adapter.pricedist[`exp]:.state.adapter.exponentialPriceDistribution;
 
 // Generates a set of buckets according to
 // a uniform distribution of price throughout the
@@ -182,6 +183,7 @@
 .state.adapter.logarithmicPriceDistribution                    :{[mnprice;bucketsize;ticksize;num;isignum]
         mnprice+((xlog[.state.adapter.t1[num];bucketsize];xlog[.state.adapter.t2[num];bucketsize])*(ticksize*isignum))
     };    
+.state.adapter.pricedist[`log]:.state.adapter.logarithmicPriceDistribution;
 
 // assumes prices are long
 // Generates a set of buckets according to
@@ -201,6 +203,7 @@
     x:mnprice+(neg[isignum]*((mxfrac*(e%sum[e]))*mnprice));
     distinct (mnprice,floor[x])
     };
+.state.adapter.pricedist[`expcnt]:.state.adapter.expPcntPriceDistribution;
 
 // Flattening Utils
 // ---------------------------------------------------------------------------------------->
