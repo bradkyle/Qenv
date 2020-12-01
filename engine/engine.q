@@ -101,6 +101,9 @@ ACCOUNT:();
     .engine.model.account.Create[];
     .engine.model.inventory.Create[];
 
+    .engine.Emit[`account;]
+    .engine.Emit[`inventory;]
+
     // TODO recreate all models etc to config
     .engine.Advance[events]
     }

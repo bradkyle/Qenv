@@ -307,32 +307,31 @@
         k:x`kind;
         r:x`datum;
         $[
-            k=0;[
+            k=`depth;[
                 / .state.DepthEventHistory,:r;
                 .state.CurrentDepth,:r;
             ]; // DEPTH
-            k=1;[.state.TradeEventHistory,:r]; // TRADE
-            k=2;[.state.MarkEventHistory,:r]; // MARK
-            k=3;[.state.LiquidationEventHistory,:r]; // LIQUIDATION
-            k=4;[.state.FundingEventHistory,:r]; // FUNDING
-            k=5;[.state.SettlementHistory,:r]; // SETTLEMENT
-            k=6;[
+            k=`trade;[.state.TradeEventHistory,:r]; // TRADE
+            k=`mark;[.state.MarkEventHistory,:r]; // MARK
+            k=`liquidation;[.state.LiquidationEventHistory,:r]; // LIQUIDATION
+            k=`funding;[.state.FundingEventHistory,:r]; // FUNDING
+            k=`settlement;[.state.SettlementHistory,:r]; // SETTLEMENT
+            k=`account;[
                 .state.AccountEventHistory,:r;
                 .state.CurrentAccount,:r; 
                 // TODO pruning
             ]; // ACCOUNT
-            k=7;[
+            k=`inventory;[
                 / .state.InventoryEventHistory,:r;
                 .state.CurrentInventory,:r;
             ]; // INVENTORY
-            k=8;[
+            k=`order;[
                 / .state.OrderEventHistory,:r;
                 .state.CurrentOrders,:r; 
             ]; // ORDER
-            k=9;[.state.PriceLimitHistory,:r]; // PRICELIMIT
-            k=13;[.state.ExecutionEventHistory,:r]; // PRICELIMIT
+            k=`pricerange;[.state.PriceLimitHistory,:r]; // PRICELIMIT
+            k=`fill;[.state.ExecutionEventHistory,:r]; // PRICELIMIT
             / k=15;[.state.FailureEventHistrory,:r]; // ERROR
-            k=16;[.state.SignalEventHistory,:r]; // SIGNAL
             'INVALID_EVENT_KIND
         ];
     }'[0!(`kind xgroup x)];
