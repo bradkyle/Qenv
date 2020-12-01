@@ -116,7 +116,7 @@
         l:log .state.adapter.t2[num];
         .state.adapter.ramfrac[l;amt;lotsize]
     };
-.state.adapter.amtdist[`loginc]:.state.state.increasingLogarithmicDistribution;
+.state.adapter.amtdist[`loginc]:.state.adapter.increasingLogarithmicDistribution;
 
 // Given a total amount and the number of groups in which to distribute
 // the order quantities return the decreasing logarithmic distribution of
@@ -325,7 +325,7 @@
 // place in order to ameliarate the difference.
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets. mside=major side
-.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;amts;reduces]
+.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsts;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bucketkinds:static[4];
         //best bid
         // best ask
@@ -337,7 +337,7 @@
         // Derive size distribution
 
         // create delta events from target
-        :.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dst];
+        / :.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dst];
     };
  
  
@@ -392,8 +392,8 @@
         // amd;aId;num;bucketkind;amts;distkinds
         // Creates a set of post only market orders at given levels.
         // amd of zero entails that amend orders will be used.
-        limitfn:.state.adapter.createBucketLimitOrdersDeltaDistribution[(
-            0b;aId;time;numBuckets;(1;1))]; 
+        limitfn:.state.adapter.createBucketLimitOrdersDeltaDistribution[
+                (0b;aId;time;numBuckets;(1;1))]; 
 
         // Creates a single market order
         marketfn:.state.adapter.marketOrderWrapper[aId;time];
@@ -440,7 +440,8 @@
           a=23;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
           a=27;  marketfn[-1;samt;1b];                  // market open short; 
           'INVALID_ACTION];
-        :raze events;
+        show events;
+        :();
     };
 
  
@@ -452,6 +453,6 @@
 // its representative amalgamation of events by way
 // of an adapter. // TODO pair with state account repr
 .state.adapter.Adapt :{[encouragement; actions]
-        :.state.adapter.HedgedPathFinder[encouragement;.state.WaterMark]'[actions[;0];actions[;1]];
+        :raze .state.adapter.HedgedPathFinder[encouragement;.state.WaterMark]'[actions[;0];actions[;1]];
     };
 
