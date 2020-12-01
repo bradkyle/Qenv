@@ -325,7 +325,6 @@
 
         // Derive size distribution
 
-        // TODO do ol/cl/os/cs distrib
         // create delta events from target
         :.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dst];
     };
