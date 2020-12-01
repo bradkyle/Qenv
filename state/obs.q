@@ -62,8 +62,8 @@
     ticksize:0.1;
     bucketsize:2;
     num:10;
-    ap:.state.adapter.superlinearPriceDistribution[bap;bucketsize;ticksize;num;-1];
-    bp:.state.adapter.superlinearPriceDistribution[bbp;bucketsize;ticksize;num;1];
+    ap:.state.adapter.exponentialPriceDistribution[bap;bucketsize;ticksize;num;-1];
+    bp:.state.adapter.exponentialPriceDistribution[bbp;bucketsize;ticksize;num;1];
     aord:.state.limitLeavesByBucket[aIds;ap;-1]; // price descending asks // todo change to batch!
     bord:.state.limitLeavesByBucket[aIds;bp;1]; // price ascending bids 
 
@@ -239,12 +239,11 @@
     .state.obs.fea.depth[step],
     .state.obs.fea.trade[step],
     .state.obs.fea.mark[step],
-    .state.obs.fea.funding[step],
+    .state.obs.fea.funding[step]
     );
 
     xfea:(); // private feature vectors
     xfea:.state.obs.fea.account[aIds;step];
-    show .state.obs.fea.inventory[aIds;step];
     xfea:xfea uj .state.obs.fea.inventory[aIds;step];
     xfea:xfea uj .state.obs.fea.order[aIds;step];
     xfea:0!({raze'[x]}'[xfea]);
@@ -272,13 +271,13 @@
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)
             // backwards (randomized fill of buffer)
-            {x[`step]-:y;x:`accountId`step xkey x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
+            {x[`step]-:y;x:`accountId`step xkey x;.bam.x:x;show x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
     ]];
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
     .state.FeatureBuffer,:fea;
-   :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
-    / :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
+   / :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
+    :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
     };
 
 
