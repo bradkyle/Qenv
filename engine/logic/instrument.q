@@ -32,7 +32,7 @@
 
 //   
 .engine.logic.instrument.MarkPrice:{[i;x]
-				i[`mkprice]:x;
+				i[`mkprice]:x`datum;
 				iv:.engine.model.inventory.GetInventory[(<;`amt;0)];
 
 				// TODO make simpler

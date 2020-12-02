@@ -2,7 +2,7 @@
 \c 5000 5000
 \l init.q
 \l ingest/client.q
-/ \l okexswap.q
+\l okexswap.q
 / \l data/okex
 
 \d .policy
