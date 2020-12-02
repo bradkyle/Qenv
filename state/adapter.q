@@ -14,13 +14,14 @@
 / `timeinforce`execInst`size`limitprice`stopprice,
 / `reduce`trigger`displayqty
 / (0;0;1000;-1;1;0;0;1;0;0;0;0;1)
+.state.adapter.ordCols:`clOid`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst;
 
 .state.adapter.cancelOrders : {[t;e]
         // 8; // NEW ORDER
         // `NEW:0
         if[not[count[e]>0];:];
         e:value flip e;
-        enlist `time`kind`datum!(t;`cancelorder;e)
+        enlist `time`kind`datum!(t;`cancelorder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.amendOrders : {[t;e]
