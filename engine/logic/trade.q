@@ -1,11 +1,14 @@
 
-.engine.logic.trade._Trade:{[i;a;t]
-    isagnt:not[null[a]];
-    nside:neg[t`side];
+.engine.logic.trade.trade:{[i;a;t]
+    isagnt:count[a]>0;
+    nside:neg[t[`datum][0]];
+    show isagnt;
+    show nside;
+    show 90#"-";
 
+    // TODO count depth
     // Get levels that are to be updated
-    l:.engine.model.orderbook.GetLevel[()];
-    s:l;
+    c:.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -57,11 +60,11 @@
         // Derive the new quantitites that are representative of the change in the s
         // of the orders and orderbook when the given trade occurs.
         nhqty:          .util.Clip[(-/)s`hqty`rp]; // Derive the new hidden qty
-        nlqty:        .util.Clip[{?[x>z;(y+z)-x;y]}'[s`rp;s`lqty;s`offset]]; // TODO faster/fix
-        ndqty:    .util.Clip[{?[((x<y) and (y>0));x;y]}'[s[`dqty];nlqty]]; // TODO faster/fix
+        nlqty:          .util.Clip[{?[x>z;(y+z)-x;y]}'[s`rp;s`lqty;s`offset]]; // TODO faster/fix
+        ndqty:          .util.Clip[{?[((x<y) and (y>0));x;y]}'[s[`dqty];nlqty]]; // TODO faster/fix
         niqty:          sum'[nlqty-ndqty]; // The new order invisible qty = lqty - display qty
         displaydlt:     (ndqty-s[`dqty]); // Derive the change in the order display qty
-        lqtydlt:      (nlqty-s[`lqty]); // Derive the change in the order lqty
+        lqtydlt:        (nlqty-s[`lqty]); // Derive the change in the order lqty
         hqtydlt:        (nhqty-s[`hqty]); // Derive the change in hidden order qty
         noffset:        .util.Clip[((-/)s`offset`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
         nqty:           .util.Clip[((-/)s`qty`rp)-(sum'[lqtydlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
@@ -172,6 +175,4 @@
     
     };
 
-
-
-.engine.logic.trade.Trade:{[i;a;t] .engine.logic.trade._Trade[i;a]'[flip t]}
+.engine.logic.trade.Trade:{[i;a;t] .engine.logic.trade.trade[i;a]'[flip t]}

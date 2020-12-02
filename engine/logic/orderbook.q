@@ -1,5 +1,5 @@
 
-.engine.logic.orderbook._Level :{[i;l]
+.engine.logic.orderbook.level :{[i;l]
         .bam.l:l;
         if[count[l`datum]=3;ld:`side`price`qty`time!raze[l`datum`time]];
         / ld[`time]:l`time;
@@ -78,4 +78,4 @@
         / .engine.model.order.PruneOrders[];        
         };
 
-.engine.logic.orderbook.Level:{[i;l] .engine.logic.orderbook._Level[i]'[flip l]}
+.engine.logic.orderbook.Level:{[i;l] .engine.logic.orderbook.level[i]'[flip l]}
