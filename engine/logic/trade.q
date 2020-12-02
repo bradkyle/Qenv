@@ -8,7 +8,6 @@
     // Get levels that are to be updated
     c:0!.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0);(<;(+\;`qty);t`qty))]; //TODO impl max depth
     s:c;
-    show s;
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -166,7 +165,7 @@
         // -------------------------------------------------->
         l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t`time)];
         .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[`orderbook] l;
+        .engine.Emit[]
 
     ];if[count[s]>0;[
         l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;t`time);
