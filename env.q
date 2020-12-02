@@ -25,6 +25,7 @@
 /  @return          (List/Vector) The first observation for each agent
 .env.Reset    :{
     // Reset the current step
+    .Q.gc[];
     step:0;
     .env.CurrentStep:step;
     .env.HasReset:1b;

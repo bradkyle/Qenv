@@ -340,9 +340,7 @@
     .state.WaterMark:max x`time;
     };
 
-.state.InsertEvents: {
-    @[.state._InsertEvents;x;show]
-    };
+.state.InsertEvents: {@[.state._InsertEvents;x;show]};
 
 // Feature Extraction and Derivation
 // =====================================================================================>
