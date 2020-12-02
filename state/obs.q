@@ -93,16 +93,13 @@
     bp:.state.adapter.exponentialPriceDistribution[bbp;bucketsize;ticksize;num;1];
     asks:.state.bucketedDepth[ap;-1]; // price descending asks // todo
     bids:.state.bucketedDepth[bp;1]; // price ascending bids
-    .state.obs.test.bids:bids;
-    .state.obs.test.asks:asks;
     f:`bkt`side`price`mprice`xprice`size!();
     f[`bkt]:22#til 11;
     f[`side]:22#((11#-1),(11#1));
     f[`price]:22#asc[distinct[raze ap]]; // TODO add bp
     fea:`bkt`side xkey flip[.util.Filt[`bkt`side`price;f]];  
     fea:0^((uj) over (fea;asks;bids));
-    .state.obs.test.fea:fea;
-    :(0!.state.obs.test.fea)`size; // TODO add better features, filter where not in buckets
+    :(0!fea)`size; // TODO add better features, filter where not in buckets
     / bestask:min asks;
     / bestbid:max bids;
     / asksizes:asks`size;
