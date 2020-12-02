@@ -67,7 +67,7 @@ ACCOUNT:();
             / x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
             $[count[distinct[x`kind]]>1;
                 .engine.multiplex'[0!(`f xgroup update f:{sums((<>) prior x)}kind from `time xasc x)];
-                .engine.multiplex[flip 0!(`f xgroup update f:first'[kind] from x)]];
+                .engine.multiplex[first 0!(`f xgroup update f:first'[kind] from x)]];
             .engine.watermark:newwm;
             / r:.util.batch.RowDropoutK[.engine.Purge;r;.conf.c[];0;"event dropped"]; // Drop events
             / r:.util.batch.TimeOffsetK[r;.conf.c[]]; // Set return delay
