@@ -1,5 +1,6 @@
 
 .engine.logic.orderbook.Level :{[i;l]
+        show count flip l;
         c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
