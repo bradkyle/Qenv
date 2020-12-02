@@ -33,29 +33,32 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-.engine.publicWrapper:{};
-.engine.privateWrapper:{};
+.engine.publicWrapper:{i:?[];fn[i;x]};
+
+.engine.privateWrapper:{
+
+    };
 
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()]; //.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.map[`depth]       :.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.map[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
-.engine.map[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
-.engine.map[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
-.engine.map[`pricerange]  :.engine.logic.instrument.PriceLimit[INSTRUMENT];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade]; //.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice];
+.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
+.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
 
 // Account
-.engine.map[`withdraw]    :.engine.logic.account.Withdraw[INSTRUMENT;ACCOUNT];
-.engine.map[`deposit]     :.engine.logic.account.Deposit[INSTRUMENT;ACCOUNT];
-.engine.map[`leverage]    :.engine.logic.account.Leverage[INSTRUMENT;ACCOUNT];
+.engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw];
+.engine.map[`deposit]     :.engine.privateWrapper[.engine.logic.account.Deposit];
+.engine.map[`leverage]    :.engine.privateWrapper[.engine.logic.account.Leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.logic.order.NewOrder[INSTRUMENT;ACCOUNT];
-.engine.map[`amendorder]  :.engine.logic.order.AmendOrder[INSTRUMENT;ACCOUNT];
-.engine.map[`cancelorder] :.engine.logic.order.CancelOrder[INSTRUMENT;ACCOUNT];
-.engine.map[`cancelall]   :.engine.logic.order.CancelAllOrders[INSTRUMENT;ACCOUNT];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
 
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first x`kind]}; // TODO logging
 
@@ -134,16 +137,37 @@
         (`mxPrice                  ; 0) 
         ));
 
-    .engine.model.account.Create[(!) . flip(
-        (`state                   ; 0);                                            
-        (`quoteAsset              ; `BTC);                                         
+    .engine.model.inventory.Inventory,:flip[(!) . flip(
+        (`ivId             ; 0 1);                                            
+        (`aId              ; 0 0);                                            
+        (`side             ; 1 -1);                                            
+        (`ordQty           ; 2#0);
+        (`ordVal           ; 2#0);
+        (`ordLoss          ; 2#0);
+        (`amt              ; 2#0);
+        (`iw               ; 2#0); // isolated wallet
+        (`mm               ; 2#0);
+        (`posVal           ; 2#0);
+        (`rpnl             ; 2#0);  
+        (`avgPrice         ; 2#0);  
+        (`execCost         ; 2#0);  
+        (`upnl             ; 2#0);  
+        (`lev              ; 2#0)  
         )];
 
-    / .engine.model.account.Create[(!) . flip(
-    /     (`state                   ; 0);                                            
-    /     (`quoteAsset              ; `BTC);                                         
-    /     )];
-
+    .engine.model.account.Account,:(!) . flip(
+        (`aId              ; 0);                                            
+        (`lng              ; `.engine.model.inventory.Inventory$0);
+        (`srt              ; `.engine.model.inventory.Inventory$1);  
+        (`dep              ; 0);  
+        (`wit              ; 0);  
+        (`rt               ; `.engine.model.risktier.RiskTier$0);  
+        (`ft               ; `.engine.model.feetier.FeeTier$0);  
+        (`posTyp           ; 0);  
+        (`mrgTyp           ; 0);  
+        (`avail            ; 0);  
+        (`bal              ; 0)  
+        );
 
     .engine.Emit[`account;]
     .engine.Emit[`inventory;]
