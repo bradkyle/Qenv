@@ -134,10 +134,10 @@
         (`mxPrice                  ; 0) 
         ));
 
-    / .engine.model.account.Create[(!) . flip(
-    /     (`state                   ; 0);                                            
-    /     (`quoteAsset              ; `BTC);                                         
-    /     )];
+    .engine.model.account.Create[(!) . flip(
+        (`state                   ; 0);                                            
+        (`quoteAsset              ; `BTC);                                         
+        )];
 
     / .engine.model.account.Create[(!) . flip(
     /     (`state                   ; 0);                                            
