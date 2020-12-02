@@ -335,7 +335,7 @@
         // Derive price distribution
         prc:();
         if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[
-                          first bkttyp;.state.bestSidePrice[mside];bktsize;ticksize;num;mside]];
+                first bkttyp;.state.bestSidePrice[mside];bktsize;ticksize;num;mside]];
         / if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
         /                 bkttyp[1];.state.bestSidePrice[neg mside];bktsize;ticksize;num;neg mside]];
 
