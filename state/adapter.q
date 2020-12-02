@@ -326,17 +326,15 @@
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets. mside=major side
 .state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsts;amts;reduces]
-        amd:static[0];aId:static[1];time:static[2];num:static[3];bucketkinds:static[4];
+        amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
 
-        //best bid
-        // best ask
         bucketsize:2;
         ticksize:0.1;
 
         // Derive price distribution
         prc:();
-        prc,:.state.adapter.expPcntPriceDistribution[];
-        prc,:.state.adapter.expPcntPriceDistribution[];
+        if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[first bkttyp;.state.bestSidePrice[mside];]];
+        if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[]];
 
         // Derive size distribution
         dsts:();
@@ -344,8 +342,8 @@
         if[count[amts]>1;dsts,:.state.adapter.amtdist[dsts[1]][amts[1];num;neg[mside]]];
 
         red:sid:();
-        if[count[amts]>0;[red,:();sid,:()]];
-        if[count[amts]>0;[red,:();sid,:()]];
+        if[count[amts]>0;[red,:(num#first[reduces]);sid,:(num#mside)]];
+        if[count[amts]>1;[red,:(num#reduces[1]);sid,:(num#neg[mside])]];
 
         // create delta events from target
         if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
