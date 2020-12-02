@@ -1,5 +1,5 @@
 
-\c 500 500
+\c 5000 5000
 \l init.q
 \l ingest/client.q
 / \l okexswap.q
