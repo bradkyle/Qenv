@@ -273,6 +273,7 @@
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
     .state.FeatureBuffer,:fea;
+    .bam.fb:.state.FeatureBuffer;
    / :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
     };
