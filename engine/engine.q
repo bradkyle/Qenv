@@ -172,8 +172,10 @@
         (`bal              ; 10)  
         );
 
-    .engine.Emit[`account;.engine.watermark]'[iv`aId`side`time`balance`frozen`mm]
-    .engine.Emit[`inventory;.engine.watermark;acc`aId`time`bal`avail`dep`wit]
+    t:min events`time;
+    .bam.acc:select aId, time:t, bal, avail, dep, mm:0 from acc;
+    .engine.Emit[`account;t;
+        select aId, time:t, bal, avail, dep, mm:0 from acc];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
