@@ -21,7 +21,7 @@
     rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
     s[`rp]:rp1; 
 
-    // 
+    // Get the current active orders at the prices 
 		o:.engine.model.order.GetOrder[enlist(in;`price;s`price)];
     
     // Hidden order qty i.e. derived from data 
