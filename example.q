@@ -22,7 +22,7 @@ do[1000;{
 				// pass observations to the agent
 				show .env.step;
 				show `second$(.z.P - .env.start);
-				actions:.policy.Act[.env.obs;27];
+				actions:.policy.Act[.env.obs;21];
 				res:.env.Step[actions];
 				.env.obs:res[0];
 				rwd:res[1];

@@ -334,8 +334,8 @@
 
         // Derive price distribution
         prc:();
-        ap:.state.adapter.expPcntPriceDistribution[]
-        bp:.state.adapter.expPcntPriceDistribution[]
+        prc,:.state.adapter.expPcntPriceDistribution[]
+        prc,:.state.adapter.expPcntPriceDistribution[]
 
         // Derive size distribution
         dsts:();
@@ -423,31 +423,25 @@
         events,:$[a=0;[.state.adapter.penalty+:encouragement; ()];
           a=1;   marketfn[1;lamt;1b];                   // market open long;
           a=2;   macromarketfn[1;10;tdamt;0b];          // macro market open long;
-          a=3;   limitfn[1;(5;5);(tdamt;samt);01b];     // aggressive open long close short;
-          a=4;   limitfn[1;(3;3);(tdamt;samt);01b];     // moderate open long close short;
-          a=5;   limitfn[1;(1;1);(tdamt;samt);01b];     // conservative open long close short;
-          a=6;   limitfn[1;5;tdamt;0b];                 // aggressive open long;
-          a=7;   limitfn[1;3;tdamt;0b];                 // moderate open long;
-          a=8;   limitfn[1;1;tdamt;0b];                 // conservative open long;
-          a=9;   limitfn[1;1;lamt;1b];                  // conservative close long;
-          a=10;  limitfn[1;3;lamt;1b];                  // moderate close long;
-          a=11;  limitfn[1;5;lamt;1b];                  // aggressive close long;
-          a=12;  macromarketfn[1;10;lamt;1b];           // market close long;
-          a=13;  marketfn[1;lamt;1b];                   // market close long;
-          a=14;  flatfn[aId];                     // flatten position with market orders
-          a=15;  marketfn[-1;samt;1b];                  // market close short;
-          a=16;  macromarketfn[-1;10;lamt;1b];          // market close short;
-          a=17;  limitfn[-1;5;samt;1b];                 // aggressive close short;
-          a=18;  limitfn[-1;3;samt;1b];                 // moderate close short;
-          a=19;  limitfn[-1;1;samt;1b];                 // conservative close short;
-          a=20;  limitfn[-1;1;tdamt;0b];                // conservative open short;
-          a=21;  limitfn[-1;3;tdamt;0b];                // moderate open short;
-          a=22;  limitfn[-1;5;tdamt;0b];                // aggressive open short;
-          a=24;  limitfn[-1;(1;1);(tdamt;lamt);01b];    // conservative open short close long;
-          a=25;  limitfn[-1;(3;3);(tdamt;lamt);01b];    // moderate open short close long;
-          a=26;  limitfn[-1;(5;5);(tdamt;lamt);01b];    // aggressive open short close long;
-          a=23;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
-          a=27;  marketfn[-1;samt;1b];                  // market open short; 
+          a=3;   limitfn[1;(`expinc;`expinc);(tdamt;samt);01b];     // aggressive open long close short;
+          a=4;   limitfn[1;(`lininc;`lininc);(tdamt;samt);01b];     // conservative open long close short;
+          a=5;   limitfn[1;`expinc;tdamt;0b];                 // aggressive open long;
+          a=6;   limitfn[1;`lininc;tdamt;0b];                 // conservative open long;
+          a=7;   limitfn[1;`lininc;lamt;1b];                  // conservative close long;
+          a=8;  limitfn[1;`expinc;lamt;1b];                  // aggressive close long;
+          a=9;  macromarketfn[1;10;lamt;1b];           // market close long;
+          a=10;  marketfn[1;lamt;1b];                   // market close long;
+          a=11;  flatfn[aId];                     // flatten position with market orders
+          a=12;  marketfn[-1;samt;1b];                  // market close short;
+          a=13;  macromarketfn[-1;10;lamt;1b];          // market close short;
+          a=14;  limitfn[-1;`expinc;samt;1b];                 // aggressive close short;
+          a=15;  limitfn[-1;`lininc;samt;1b];                 // conservative close short;
+          a=16;  limitfn[-1;`lininc;tdamt;0b];                // conservative open short;
+          a=17;  limitfn[-1;`expinc;tdamt;0b];                // aggressive open short;
+          a=18;  limitfn[-1;(`lindec;`lindec);(tdamt;lamt);01b];    // conservative open short close long;
+          a=19;  limitfn[-1;(`expinc;`expinc);(tdamt;lamt);01b];    // aggressive open short close long;
+          a=20;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
+          a=21;  marketfn[-1;samt;1b];                  // market open short; 
           'INVALID_ACTION];
         :();
     };
