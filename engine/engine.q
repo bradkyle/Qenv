@@ -98,7 +98,7 @@ ACCOUNT:();
       `.engine.model.orderbook.OrderBook
     )];
 
-    .engine.model.engine.model.risktier.Create[riskCols!flip[(
+    .engine.model.engine.model.risktier.Create[`mxamt`mmr`imr`maxlev!flip[(
         50000       0.004    0.008    125f;
         250000      0.005    0.01     100f;
         1000000     0.01     0.02     50f;
@@ -110,17 +110,16 @@ ACCOUNT:();
         500000000   0.25     0.50     2f;
         500000000   0.25     1.0      1f)]];
 
-    .engine.model.engine.model.feetier.Create[riskCols!flip[(
-        50000       0.004    0.008    125f;
-        250000      0.005    0.01     100f;
-        1000000     0.01     0.02     50f;
-        5000000     0.025    0.05     20f;
-        20000000    0.05     0.1      10f;
-        50000000    0.1      0.20     5f;
-        100000000   0.125    0.25     4f;
-        200000000   0.15     0.333    3f;
-        500000000   0.25     0.50     2f;
-        500000000   0.25     1.0      1f)]];
+    .engine.model.engine.model.feetier.Create[`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim!flip[(
+        50      0.0006    0.0006    0  0 600f;
+        500     0.00054   0.0006    0  0 600f;
+        1500    0.00048   0.0006    0  0 600f;
+        4500    0.00042   0.0006    0  0 600f;
+        10000   0.00042   0.00054   0  0 600f;
+        20000   0.00036   0.00048   0  0 600f;
+        40000   0.00024   0.00036   0  0 600f;
+        80000   0.00018   0.000300  0  0 600f;
+        150000  0.00012   0.00024   0  0 600f)]];                             // 
 
     .engine.model.instrument.Create[(!) . flip(
         (`iId                   ; 0);                                            
