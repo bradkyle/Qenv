@@ -7,6 +7,7 @@
     // TODO count depth
     // Get levels that are to be updated
     c:0!.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0);(<;(+\;`qty);t`qty))]; //TODO impl max depth
+    // select from `price xasc .engine.model.orderbook.Orderbook where side=1,sums[qty]<=max(min sums qty;100)
     s:c;
 
     // Join the opposing side of the orderbook with the current agent orders
@@ -15,7 +16,7 @@
     thresh:sums[aqty];
     rp:(thresh-prev[thresh])-(thresh-t`size);
     s[`thresh]:thresh; 
-    show 90#"-";
+    show rp;
 
     // Derive the amount that will be replaced per level
     rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
