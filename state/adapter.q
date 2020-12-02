@@ -343,8 +343,9 @@
         if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsts][first amts;num;mside]];
         if[count[amts]>1;dsts,:.state.adapter.amtdist[dsts[1]][amts[1];num;neg[mside]]];
 
-        sid:();
-        red:();
+        red:sid:();
+        if[count[amts]>0;[red,:();sid,:()]];
+        if[count[amts]>0;[red,:();sid,:()]];
 
         // create delta events from target
         if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
