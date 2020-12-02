@@ -18,7 +18,7 @@ Act: {[obs;nactions] enlist(0;rand nactions) };
 .env.start:.z.P;
 
 // Take 100000 steps
-do[100;{
+do[1000;{
 				// pass observations to the agent
 				show .env.step;
 				show `second$(.z.P - .env.start);

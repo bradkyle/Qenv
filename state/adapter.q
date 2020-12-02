@@ -353,13 +353,13 @@
     / ts:{x + (y * z)}[.z.z;(`timespan$(0D00:01:00.000000000)%10)]'[til 10]; 
     ts:{x + (y * z)}[time;dur%num]'[til num];
     mo:num#enlist[`accountId`side`amt`reduce!(aId;side;amt%num;reduce)]; // TODO make cleaner
-    .state.adapter.createMarketOrder . (ts;mo);
+    .state.adapter.createMarketOrder . (time;mo);
     };
 
 
 .state.adapter.marketOrderWrapper                      :{[aId;time;side;amt;reduce]
     mo:enlist`accountId`side`amt`reduce!(aId;side;amt;reduce); // TODO make cleaner  
-    .state.adapter.createMarketOrder[ts;mo];
+    .state.adapter.createMarketOrder[time;mo];
     };
  
 // Action Adapter Mapping // TODO convert to batch, descriptions
