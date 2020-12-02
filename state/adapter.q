@@ -277,6 +277,8 @@
 
     dltState:curr uj (`bkt`side`reduce xkey bk);
 
+    // Derive reduce orders
+    // ------------------------------------------>
     rred:raze{[x] // TODO flatten // TODO check time priority TODO add round off to lot size
         x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
         dlt:abs[(-/)x`tgt`lvlqty];
@@ -284,8 +286,6 @@
         rp:(thresh-prev[thresh])-(thresh-dlt); 
         x[`rp]:min[dlt,x`leaves]^rp; // TODO change to neg?
         :flip x}'[0!select from dltState where lvlqty>tgt];
-    .bam.dltState:dltState;
-    .bam.rred:rred;
 
     if[count[rred]>0;[
             c,:(select accountId, orderId from rred where tgt=0);
@@ -294,7 +294,10 @@
             ];[
                 c,:(select accountId, orderId from rred where (tgt<>0), tgt<=leaves);
                 n,:(select accountId, price:bktPmid, size:tgt, reduce from rred where (tgt<>0), tgt<=leaves); // TODO if too many are open
-        ]]];
+        ]]]];
+
+    // Derive increase orders
+    // ------------------------------------------>
 
     // TODO check time priority
     rinc:raze{[x] // TODO flatten
@@ -307,14 +310,20 @@
     rinc[`otype]:1;
 
     // TODO if too many are open
-    n,:(select accountId, price:bktPmid, size:tgt, reduce from rinc);
+    if[count[rinc]>0;n,:(select accountId, price:bktPmid, size:tgt, reduce from rinc)];
 
     // TODO post processing
     // TODO rate limiting of inter batch requests
     e:(); // TODO randomize batch size?
-    e,:.state.adapter.createOrderBatchCancel[time]'[.state.adapter.createBatches[10;c]]; // todo group into batches (time offset of 0)
-    if[amd;e,:.state.adapter.createOrderBatchAmend[time+`timespan$1e6]'[.state.adapter.createBatches[10;a]]]; // todo group into batches (time offset of ~2)
-    e,:.state.adapter.createOrderBatchNew[time+`timespan$1e6]'[.state.adapter.createBatches[10;n]]; // todo group into batches (time offset of ~2)
+        
+    // todo group into batches (time offset of 0)
+    if[count[c]>0;e,:.state.adapter.createOrderBatchCancel[time]'[.state.adapter.createBatches[10;c]]]; 
+
+    // todo group into batches (time offset of ~2)
+    if[amd and (count[a]>0);e,:.state.adapter.createOrderBatchAmend[time+`timespan$1e6]'[.state.adapter.createBatches[10;a]]]; 
+
+    // todo group into batches (time offset of ~2)
+    if[count[n]>0;e,:.state.adapter.createOrderBatchNew[time+`timespan$1e6]'[.state.adapter.createBatches[10;n]]]; 
     :raze e;
   };
 
