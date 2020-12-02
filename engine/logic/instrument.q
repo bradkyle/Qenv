@@ -80,7 +80,7 @@
 
 
 .engine.logic.instrument.PriceLimit:{[i;x]
-				i:.engine.model.intrument.GetInstrument[];
+				i:.engine.model.instrument.GetInstrument[];
 				i[`plmth]:x[`highest];
 				i[`plmtl]:x[`lowest];
 				.engine.model.instrument.UpdateInstrument i;

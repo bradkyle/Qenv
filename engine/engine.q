@@ -37,8 +37,8 @@ ACCOUNT:();
 .engine.map:()!();
 
 // Public
-.engine.map[`depth]       :{[x] }; //.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.map[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()];
+.engine.map[`trade]       :.engine.logic.trade.Trade[INSTRUMENT;()]; //.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`depth]       :.engine.logic.orderbook.Level[INSTRUMENT];
 .engine.map[`funding]     :.engine.logic.instrument.Funding[INSTRUMENT];
 .engine.map[`mark]        :.engine.logic.instrument.MarkPrice[INSTRUMENT];
 .engine.map[`settlement]  :.engine.logic.instrument.Settlement[INSTRUMENT];
@@ -60,7 +60,6 @@ ACCOUNT:();
 // Todo add slight randomization to incoming trades and 
 // depth during training
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
-    show count x;
     if[count[x]>0;[
         newwm: max x`time;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
