@@ -328,13 +328,15 @@
 .state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsts;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
 
-        bucketsize:2;
+        bktsize:2;
         ticksize:0.1;
 
         // Derive price distribution
         prc:();
-        if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[first bkttyp;.state.bestSidePrice[mside];]];
-        if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[]];
+        if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[
+                          first bkttyp;.state.bestSidePrice[mside];bktsize;ticksize;num;mside]];
+        if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
+                        bkttyp[1];.state.bestSidePrice[neg mside];bktsize;ticksize;num;neg mside]];
 
         // Derive size distribution
         dsts:();
