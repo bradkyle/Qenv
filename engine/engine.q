@@ -122,38 +122,43 @@ ACCOUNT:();
         500000000   0.25     0.50     2f;
         500000000   0.25     1.0      1f)]];
 
-    .engine.model.instrument.Create[(
-        (`state                   ; .conf.Static[0];                                            
-        (`quoteAsset              ; .conf.Static[`BTC];                                         
-        (`baseAsset               ; .conf.Static[`USDT];                                        
-        (`underlyingAsset         ; .conf.Static[`BTCUSDT];                                     
-        (`faceValue               ; .conf.Static[1];                                            
-        (`maxLeverage             ; .conf.Static[125];                                          
-        (`minLeverage             ; .conf.Static[1];                                            
-        (`tickSize                ; .conf.Static[0.01f];                                        
-        (`lotSize                 ; .conf.Static[0.001];                                        
-        (`priceMultiplier         ; .conf.Static[100];                                          
-        (`sizeMultiplier          ; .conf.Static[1000];                                         
-        (`fundingInterval         ; .conf.StaticInterval[480;`minute];                          
-        (`taxed                   ; .conf.Static[0b];                                           
-        (`deleverage              ; .conf.Static[0b];                                           
-        (`capped                  ; .conf.Static[0b];                                           
-        (`usePriceLimits          ; .conf.Static[0b];                                           
-        (`maxPrice                ; .conf.Static[1e6];                                          
-        (`minPrice                ; .conf.Static[0];                                            
-        (`upricelimit             ; .conf.Static[0];                                            
-        (`lpricelimit             ; .conf.Static[0];                                            
-        (`maxOrderSize            ; .conf.Static[1e6];                                          
-        (`minOrderSize            ; .conf.Static[0.001];                                        
-        (`junkOrderSize           ; .conf.Static[0.001];                                        
-        (`contractType            ; .conf.Static[0];                                            
-        (`maxOpenOrders           ; .conf.Static[25];                                           
-        (`maxDepthLevels          ; .conf.Static[100];                                          
-        (`takeOverFee             ; .conf.Static[0];
+    .engine.model.instrument.Create[(!) . flip(
+        (`state                   ; 0);                                            
+        (`quoteAsset              ; `BTC);                                         
+        (`baseAsset               ; `USDT);                                        
+        (`underlyingAsset         ; `BTCUSDT);                                     
+        (`faceValue               ; 1);                                            
+        (`maxLeverage             ; 125);                                          
+        (`minLeverage             ; 1);                                            
+        (`tickSize                ; 0.01f);                                        
+        (`lotSize                 ; 0.001);                                        
+        (`priceMultiplier         ; 100);                                          
+        (`sizeMultiplier          ; 1000);                                         
+        (`fundingInterval         ; 480);                          
+        (`taxed                   ; 0b);                                           
+        (`deleverage              ; 0b);                                           
+        (`capped                  ; 0b);                                           
+        (`usePriceLimits          ; 0b];                                           
+        (`maxPrice                ; 1e6];                                          
+        (`minPrice                ; 0];                                            
+        (`upricelimit             ; 0];                                            
+        (`lpricelimit             ; 0];                                            
+        (`maxOrderSize            ; 1e6];                                          
+        (`minOrderSize            ; 0.001];                                        
+        (`junkOrderSize           ; 0.001];                                        
+        (`contractType            ; 0];                                            
+        (`maxOpenOrders           ; 25];                                           
+        (`maxDepthLevels          ; 100];                                          
+        (`takeOverFee             ; 0];
         )];
 
-    .engine.model.account.Create[];
-    .engine.model.inventory.Create[];
+    .engine.model.account.Create[(
+
+        )];
+
+    .engine.model.inventory.Create[(
+
+        )];
 
     .engine.Emit[`account;]
     .engine.Emit[`inventory;]
