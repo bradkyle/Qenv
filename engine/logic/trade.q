@@ -16,7 +16,6 @@
     thresh:sums[aqty];
     rp:(thresh-prev[thresh])-(thresh-t`size);
     s[`thresh]:thresh; 
-    show rp;
 
     // Derive the amount that will be replaced per level
     rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
@@ -177,3 +176,13 @@
     };
 
 .engine.logic.trade.Trade:{[i;a;t] .engine.logic.trade.trade[i;a]'[flip t]}
+
+
+
+
+
+
+
+
+
+
