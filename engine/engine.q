@@ -32,8 +32,10 @@
 
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
-INSTRUMENT:();
-ACCOUNT:();
+
+.engine.publicWrapper:{};
+.engine.privateWrapper:{};
+
 .engine.map:()!();
 
 // Public
@@ -121,20 +123,26 @@ ACCOUNT:();
         (7; 80000;   0.00018;   0.000300;  0f;  0f; 600);
         (8; 150000;  0.00012;   0.00024;   0f;  0f; 600))];                             //  
 
-    .engine.model.instrument.Create[(!) . flip(
-        (`iId                   ; 0);                                            
-        (`iId                   ; 0)                                            
-        )];
+    .engine.model.instrument.Instrument,:((!) . flip(
+        (`iId                      ; 0);                                           
+        (`cntTyp                   ; 0);
+        (`state                    ; 0);
+        (`faceValue                ; 0);
+        (`markPrice                ; 0);
+        (`mxSize                   ; 0);
+        (`mnPrice                  ; 0);
+        (`mxPrice                  ; 0) 
+        ));
 
-    .engine.model.account.Create[(!) . flip(
-        (`state                   ; 0);                                            
-        (`quoteAsset              ; `BTC);                                         
-        )];
+    / .engine.model.account.Create[(!) . flip(
+    /     (`state                   ; 0);                                            
+    /     (`quoteAsset              ; `BTC);                                         
+    /     )];
 
-    .engine.model.account.Create[(!) . flip(
-        (`state                   ; 0);                                            
-        (`quoteAsset              ; `BTC);                                         
-        )];
+    / .engine.model.account.Create[(!) . flip(
+    /     (`state                   ; 0);                                            
+    /     (`quoteAsset              ; `BTC);                                         
+    /     )];
 
 
     .engine.Emit[`account;]
