@@ -140,7 +140,7 @@
         (`mxPrice                  ; 0) 
         ));
 
-    .engine.model.inventory.Inventory,:flip[(!) . flip(
+    .engine.model.inventory.Inventory,:ivn:flip[(!) . flip(
         (`ivId             ; 0 1);                                            
         (`aId              ; 0 0);                                            
         (`side             ; 1 -1);                                            
@@ -158,7 +158,7 @@
         (`lev              ; 2#0)  
         )];
 
-    .engine.model.account.Account,:(!) . flip(
+    .engine.model.account.Account,:acc:(!) . flip(
         (`aId              ; 0);                                            
         (`lng              ; `.engine.model.inventory.Inventory$0);
         (`srt              ; `.engine.model.inventory.Inventory$1);  
@@ -168,12 +168,12 @@
         (`ft               ; `.engine.model.feetier.FeeTier$0);  
         (`posTyp           ; 0);  
         (`mrgTyp           ; 0);  
-        (`avail            ; 0);  
-        (`bal              ; 0)  
+        (`avail            ; 10);  
+        (`bal              ; 10)  
         );
 
-    / .engine.Emit[`account;]
-    / .engine.Emit[`inventory;]
+    .engine.Emit[`account;]
+    .engine.Emit[`inventory;]
 
     // TODO recreate all models etc to config
     .engine.Advance[events]

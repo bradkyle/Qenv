@@ -70,6 +70,8 @@
 .state.adapter.t2:{2+til[x]}
 .state.adapter.frac:{x%sum[xs]};
 .state.adapter.ramfrac:{
+        show 90#"-";
+        show y;
         xbar[z;((1+x)%sum[x+1])*y]
     };
 
@@ -325,28 +327,31 @@
 // place in order to ameliarate the difference.
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets. mside=major side
-.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsts;amts;reduces]
+.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsttyp;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
 
         bktsize:2;
-        ticksize:0.1;
+        ticksize:1;
         mxfrac:0.1;
 
         // Derive price distribution
         prc:();
         if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[
-                first bkttyp;.state.bestSidePrice[mside];bktsize;ticksize;num;mside]];
-        / if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
-        /                 bkttyp[1];.state.bestSidePrice[neg mside];bktsize;ticksize;num;neg mside]];
+                .state.bestSidePrice[mside];bktsize;ticksize;num;mside;mxfrac]];
+        if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
+                .state.bestSidePrice[neg mside];bktsize;ticksize;num;neg mside;mxfrac]];
 
         // Derive size distribution
         dsts:();
-        if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsts][first amts;num;mside]];
-        if[count[amts]>1;dsts,:.state.adapter.amtdist[dsts[1]][amts[1];num;neg[mside]]];
+        if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsttyp][first amts;num;mside]];
+        if[count[amts]>1;dsts,:.state.adapter.amtdist[dsttyp[1]][amts[1];num;neg[mside]]];
 
         red:sid:();
         if[count[amts]>0;[red,:(num#first[reduces]);sid,:(num#mside)]];
         if[count[amts]>1;[red,:(num#reduces[1]);sid,:(num#neg[mside])]];
+
+        show 90#"-";
+        show dsts;
 
         // create delta events from target
         if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
