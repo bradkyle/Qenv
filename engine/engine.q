@@ -172,8 +172,8 @@
         (`bal              ; 10)  
         );
 
-    .engine.Emit[`account;]
-    .engine.Emit[`inventory;]
+    .engine.Emit[`account;.engine.watermark]'[iv`aId`side`time`balance`frozen`mm]
+    .engine.Emit[`inventory;.engine.watermark;acc`aId`time`bal`avail`dep`wit]
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
