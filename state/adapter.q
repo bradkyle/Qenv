@@ -284,14 +284,17 @@
         rp:(thresh-prev[thresh])-(thresh-dlt); 
         x[`rp]:min[dlt,x`leaves]^rp; // TODO change to neg?
         :flip x}'[0!select from dltState where lvlqty>tgt];
+    .bam.dltState:dltState;
+    .bam.rred:rred;
 
-    c,:(select accountId, orderId from rred where tgt=0);
-    $[amd;[
-        a,:(select accountId, orderId, oprice, tgt from rred where (tgt<>0), tgt<=leaves);    
-    ];[
-        c,:(select accountId, orderId from rred where (tgt<>0), tgt<=leaves);
-        n,:(select accountId, price:bktPmid, size:tgt, reduce from rred where (tgt<>0), tgt<=leaves); // TODO if too many are open
-    ]];
+    if[count[rred]>0;[
+            c,:(select accountId, orderId from rred where tgt=0);
+            $[amd;[
+                a,:(select accountId, orderId, oprice, tgt from rred where (tgt<>0), tgt<=leaves);    
+            ];[
+                c,:(select accountId, orderId from rred where (tgt<>0), tgt<=leaves);
+                n,:(select accountId, price:bktPmid, size:tgt, reduce from rred where (tgt<>0), tgt<=leaves); // TODO if too many are open
+        ]]];
 
     // TODO check time priority
     rinc:raze{[x] // TODO flatten
