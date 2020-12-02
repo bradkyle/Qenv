@@ -2,9 +2,9 @@
 .engine.logic.trade.trade:{[i;a;t]
     isagnt:count[a]>0;
     nside:neg[t[`datum][0]];
-    show isagnt;
 
     // TODO count depth
+    // TODO query hidden qty
     // Get levels that are to be updated
     c:0!.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0);(<;(+\;`qty);t`qty))]; //TODO impl max depth
     // select from `price xasc .engine.model.orderbook.Orderbook where side=1,sums[qty]<=max(min sums qty;100)
