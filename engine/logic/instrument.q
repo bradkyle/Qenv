@@ -84,5 +84,4 @@
 				i[`plmtl]:x[`lowest];
 				.engine.model.instrument.UpdateInstrument i;
 
-				.engine.Emit[`instrument] iv;
 	};
