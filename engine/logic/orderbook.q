@@ -2,6 +2,11 @@
 .engine.logic.orderbook.Level :{[i;l]
         ld:`side`price`qty!flip l[`datum];
         c:0!.engine.model.orderbook.GetLevel[enlist(=;`price;ld`price)]; //TODO impl max depth
+        $[count[c]>0;[
+
+                ];[
+
+                ]];
 
         // Update the depth 
         // change to get levels
