@@ -67,11 +67,11 @@
     bord:.state.limitLeavesByBucket[aIds;bp;1]; // price ascending bids 
 
     f:`accountId`bkt`side`reduce`price`mprice`xprice`leaves!();
-    f[`accountId]:(44#0),(44#1);
-    f[`bkt]:88#til 11;
-    f[`reduce]:88#((22#0b),(22#1b));
-    f[`side]:88#((11#-1),(11#1));
-    f[`price]:88#asc[distinct[raze ap]]; // TODO add bp
+    f[`accountId]:44#0;
+    f[`bkt]:44#til 11;
+    f[`reduce]:44#((22#0b),(22#1b));
+    f[`side]:44#((11#-1),(11#1));
+    f[`price]:44#asc[distinct[raze ap]]; // TODO add bp
     fea:`accountId`bkt`side`reduce xkey flip[.util.Filt[`accountId`bkt`side`reduce`price;f]];
     fea:0^((uj) over (fea;aord;bord));
     fea:.util.Piv[0!fea;`accountId;`bkt`side`reduce;`leaves];
@@ -262,7 +262,10 @@
 /                         account
 / cols[fea] except `accountId // TODO make more efficient, move to C etc
 .state.obs.GetObs :{[step;lookback;aIds]
+    show aIds;
+    .bam.aIds:aIds;
     fea:.state.obs.derive[step;aIds];
+    .bam.fea:fea;
     if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)

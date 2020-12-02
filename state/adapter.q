@@ -69,11 +69,7 @@
 .state.adapter.t1:{1+til[x]}
 .state.adapter.t2:{2+til[x]}
 .state.adapter.frac:{x%sum[xs]};
-.state.adapter.ramfrac:{
-        show 90#"-";
-        show y;
-        xbar[z;((1+x)%sum[x+1])*y]
-    };
+.state.adapter.ramfrac:{xbar[z;((1+x)%sum[x+1])*y]};
 
 .state.adapter.amtdist:()!();
 
@@ -271,14 +267,13 @@
 // TODO better amend logic, clean logic, check max orders, min order size, max order size etc.
 .state.adapter.createDeltaEvents                                    :{[amd;aId;time;prices;sides;reduces;tgts]
     c:a:n:();
-    // check if is list of prices or 
 
-    bk:update bkt:til count bktP from `bktP xasc flip[
-        `bktP`bktPB`bktPmid`side`reduce`tgt!(prices[0;];prices[1;];avg[prices];sides;reduces;tgts)];
+    bk:update bkt:til count bktP from `bktP xasc flip[`bktP`bktPmid`side`reduce`tgt!(prices;avg[prices];sides;reduces;tgts)];
 
     curr:select orderId,leaves,lvlqty:sum leaves,time,oprice:price,accountId by 
-        bkt:bk[`bktP] bin 9h$(price), side, reduce // TODO move logic to state
+    bkt:bk[`bktP] bin price, side, reduce // TODO move logic to state
         from .state.CurrentOrders where accountId=aId;
+    .bam.curr:curr;
 
     dltState:curr uj (`bkt`side`reduce xkey bk);
 
@@ -337,12 +332,15 @@
         // Derive price distribution
         prc:();
         if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[
-                .state.bestSidePrice[mside];bktsize;ticksize;num;mside;mxfrac]];
+                .state.bestSidePrice[mside];bktsize;ticksize;num-1;mside;mxfrac]];
         if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
-                .state.bestSidePrice[neg mside];bktsize;ticksize;num;neg mside;mxfrac]];
+                .state.bestSidePrice[neg mside];bktsize;ticksize;num-1;neg mside;mxfrac]];
 
         // Derive size distribution
         dsts:();
+        show 90#"-";
+        show count amts;
+        show amts;
         if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsttyp][first amts;num;mside]];
         if[count[amts]>1;dsts,:.state.adapter.amtdist[dsttyp[1]][amts[1];num;neg[mside]]];
 

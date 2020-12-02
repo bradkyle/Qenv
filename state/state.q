@@ -71,11 +71,13 @@
     };
 
 .state.getShortAmt              :{[aId]
-    .state.amtBySide[aId;-1]
+    amt:.state.amtBySide[aId;-1];
+    $[count[amt]>0;amt;0f]
     };
 
 .state.getLongAmt               :{[aId]
-    .state.amtBySide[aId;1]
+    amt:.state.amtBySide[aId;-1];
+    $[count[amt]>0;amt;0f]
     };
 
 // Liquidation 
