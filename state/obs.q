@@ -43,7 +43,6 @@
     c:`amt`realizedPnl`avgPrice`unrealizedPnl;
     crs:cross[x;-1 1];
     invn:?[`.state.CurrentInventory;enlist(in;`accountId;x);`accountId`side!`accountId`side;c!c];
-    .bam.invn:invn;
     if[count[invn]<count[x*2];invn,:.bam.inv:{((`accountId`side,x)!(y,(4#0)))}[c]'[crs where not[crs in key[invn][`accountId`side]]]];
     if[count[invn]>0;invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl]];
     :invn;

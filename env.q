@@ -138,6 +138,8 @@
     // inorder to derive the observations, dones and 
     // rewards that are to be sent back to the agent.
     aIds:actions[;0]; // Get the account ID's
+    show aIds;
+    show 99#"-";
     obs:.state.obs.GetObs[step;100;aIds]; // TODO make better
     rwd:.state.rew.GetRewards[step;100;aIds];
     dns:count[aIds]#0b; // TODO move to env and create better!
