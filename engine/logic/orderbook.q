@@ -1,11 +1,14 @@
 
-.engine.logic.orderbook.Level :{[i;l]
-        show count flip l;
-        c:.engine.model.orderbook.GetLevel[enlist(=;`price;l[`price])]; //TODO impl max depth
+.engine.logic.orderbook._Level :{[i;l]
+        if[count[l`datum]=3;ld:`side`price`qty!l`datum];
+        / show price;
+        / show side
+        c:0!.engine.model.orderbook.GetLevel[enlist(=;`price;ld`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
-        $[any[differ'[c`hqty`qty;l`hqty`qty]];[
+        $[(count[c]>0);[
                 o:.engine.model.order.GetOrder[enlist()];
+                show o;
                 $[count[o]>0;[
                         n:count[o];
                         tn:til n;
@@ -64,6 +67,7 @@
                 .engine.Emit[`orderbook;cl!l[cl]];
         ];[
                 / No update occurs, should emit?
+                .engine.model.orderbook.OrderBook,: flip ld;
                 / .engine.model.orderbook.UpdateLevel[];
                 / .engine.Emit[`orderbook] l;
         ]];
@@ -71,3 +75,5 @@
         / .engine.model.orderbook.PruneOrderBook[];
         / .engine.model.order.PruneOrders[];        
         };
+
+.engine.logic.orderbook.Level:{[i;l] .engine.logic.orderbook._Level[i]'[flip l]}
