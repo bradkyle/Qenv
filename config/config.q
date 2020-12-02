@@ -1,5 +1,5 @@
 
-np:.p.import`numpy
+/ np:.p.import`numpy
  
 .conf.sEnv                       :{[]
 
@@ -42,7 +42,7 @@ np:.p.import`numpy
 // Returns a function that samples a normal distribution
 // and converts the result into a timespan value // TODO check
 .conf.NDTimespan :{[mu;sigma]
-    :{`timespan$(first[np[`:random.normal;mu;sigma;1]`])}
+    / :{`timespan$(first[np[`:random.normal;mu;sigma;1]`])}
     };
 
 // Wraps a given configuration 

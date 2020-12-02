@@ -1,6 +1,9 @@
 
 \cd config
 \l config.q
-\l binance_train.q
-if[getenv[`TESTING]="YES";\l configTest.q];
+loadTests   :{
+    // system[sv["";("l ";x;"/testutils.q")]];
+    system[sv["";("l ";x;"/configTest.q")]];
+    };
+if[TESTING;loadTests[system["pwd"][0]]];
 \cd ../
