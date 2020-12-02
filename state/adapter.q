@@ -327,6 +327,7 @@
 // that inevitably occur in volatile markets. mside=major side
 .state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsts;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bucketkinds:static[4];
+
         //best bid
         // best ask
         bucketsize:2;
@@ -334,19 +335,19 @@
 
         // Derive price distribution
         prc:();
-        prc,:.state.adapter.expPcntPriceDistribution[]
-        prc,:.state.adapter.expPcntPriceDistribution[]
+        prc,:.state.adapter.expPcntPriceDistribution[];
+        prc,:.state.adapter.expPcntPriceDistribution[];
 
         // Derive size distribution
         dsts:();
-        .state.adapter.amtdist[dsts[0]][];
-        .state.adapter.amtdist[dsts[1]][];
+        if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsts][first amts;num;mside]];
+        if[count[amts]>1;dsts,:.state.adapter.amtdist[dsts[1]][amts[1];num;neg[mside]]];
 
         sid:();
         red:();
 
         // create delta events from target
-        :.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dst];
+        if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
     };
  
  
@@ -385,7 +386,7 @@
 
 .state.adapter.deriveTradingMargin    :{[aId;useFraction]
     a:.state.CurrentAccount@aId; // TODO move logic to state
-    (a[`balance]*useFraction) - ((-/)a[`balance`available])
+    0^((a[`balance]*useFraction) - ((-/)a[`balance`available]))
     };
 
 // TODO leverage update
@@ -450,6 +451,7 @@
 // Main Adapt Function
 // ---------------------------------------------------------------------------------------->
 
+// TODO error handling
 // Converts a scalar action representing a target state
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
