@@ -15,37 +15,28 @@
 / `reduce`trigger`displayqty
 / (0;0;1000;-1;1;0;0;1;0;0;0;0;1)
 
-.state.adapter.createMarketOrder        : {[t;e]
-        // 8; // NEW ORDER
-        // `NEW:0
-        n:count[e];
-        e:flip value flip e;
-        enlist `time`cmd`kind`datum!(t;n#0;n#8;e)
-    };
-
-.state.adapter.createOrderBatchAmend    : {[t;e]
-        // 9; // AMEND ORDER
-        // `UPDATE:1
-        if[not[count[e]>0];:];
-        e:value flip e;
-        enlist `time`cmd`kind`datum!(t;1;9;e)
-    };
-
-.state.adapter.createOrderBatchCancel   : {[t;e]
-        // 10; // CANCEL ORDER
-        // DELETE:2
-        if[not[count[e]>0];:];
-        e[`clId]:e[`orderId];
-        e:value flip e;
-        enlist `time`cmd`kind`datum!(t;2;10;e)
-    };
-
-.state.adapter.createOrderBatchNew      : {[t;e]
+.state.adapter.cancelOrders : {[t;e]
         // 8; // NEW ORDER
         // `NEW:0
         if[not[count[e]>0];:];
         e:value flip e;
-        enlist `time`cmd`kind`datum!(t;0;8;e)
+        enlist `time`kind`datum!(t;`cancelorder;e)
+    };
+
+.state.adapter.amendOrders : {[t;e]
+        // 8; // NEW ORDER
+        // `NEW:0
+        if[not[count[e]>0];:];
+        e:value flip e;
+        enlist `time`kind`datum!(t;`amendorder;e)
+    };
+
+.state.adapter.newOrders : {[t;e]
+        // 8; // NEW ORDER
+        // `NEW:0
+        if[not[count[e]>0];:];
+        e:value flip e;
+        enlist `time`kind`datum!(t;`neworder;e)
     };
 
 .state.adapter.createDeposit            : {[t;e]
@@ -53,7 +44,7 @@
         // `NEW:0
         if[not[count[e]>0];:];
         e:value flip e;
-        enlist `time`cmd`kind`datum!(t;0;14;e)
+        enlist `time`kind`datum!(t;`deposit;e)
     };
 
 .state.adapter.createWithdraw           : {[t;e]
@@ -61,7 +52,7 @@
         // `NEW:0
         if[not[count[e]>0];:];
         e:value flip e;
-        enlist `time`cmd`kind`datum!(t;0;13;e)
+        enlist `time`kind`datum!(t;`withdraw;e)
     };
 
 // Amount distribution logic
@@ -273,7 +264,6 @@
     curr:select orderId,leaves,lvlqty:sum leaves,time,oprice:price,accountId by 
     bkt:bk[`bktP] bin price, side, reduce // TODO move logic to state
         from .state.CurrentOrders where accountId=aId;
-    .bam.curr:curr;
 
     dltState:curr uj (`bkt`side`reduce xkey bk);
 
@@ -298,7 +288,6 @@
 
     // Derive increase orders
     // ------------------------------------------>
-
     // TODO check time priority
     rinc:raze{[x] // TODO flatten
         x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
@@ -312,18 +301,20 @@
     // TODO if too many are open
     if[count[rinc]>0;n,:(select accountId, price:bktPmid, size:tgt, reduce from rinc)];
 
+    // Compose Events 
+    // ------------------------------------------>
     // TODO post processing
     // TODO rate limiting of inter batch requests
     e:(); // TODO randomize batch size?
         
     // todo group into batches (time offset of 0)
-    if[count[c]>0;e,:.state.adapter.createOrderBatchCancel[time]'[.state.adapter.createBatches[10;c]]]; 
+    if[count[c]>0;e,:.state.adapter.cancelOrders[time]'[.state.adapter.createBatches[10;c]]]; 
 
     // todo group into batches (time offset of ~2)
-    if[amd and (count[a]>0);e,:.state.adapter.createOrderBatchAmend[time+`timespan$1e6]'[.state.adapter.createBatches[10;a]]]; 
+    if[amd and (count[a]>0);e,:.state.adapter.amendOrders[time+`timespan$1e6]'[.state.adapter.createBatches[10;a]]]; 
 
     // todo group into batches (time offset of ~2)
-    if[count[n]>0;e,:.state.adapter.createOrderBatchNew[time+`timespan$1e6]'[.state.adapter.createBatches[10;n]]]; 
+    if[count[n]>0;e,:.state.adapter.newOrders[time+`timespan$1e6]'[.state.adapter.createBatches[10;n]]]; 
     :raze e;
   };
 
@@ -350,18 +341,12 @@
 
         // Derive size distribution
         dsts:();
-        show 90#"-";
-        show count amts;
-        show amts;
         if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsttyp][first amts;num;mside]];
         if[count[amts]>1;dsts,:.state.adapter.amtdist[dsttyp[1]][amts[1];num;neg[mside]]];
 
         red:sid:();
         if[count[amts]>0;[red,:(num#first[reduces]);sid,:(num#mside)]];
         if[count[amts]>1;[red,:(num#reduces[1]);sid,:(num#neg[mside])]];
-
-        show 90#"-";
-        show dsts;
 
         // create delta events from target
         if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
@@ -380,13 +365,13 @@
     / ts:{x + (y * z)}[.z.z;(`timespan$(0D00:01:00.000000000)%10)]'[til 10]; 
     ts:{x + (y * z)}[time;dur%num]'[til num];
     mo:num#enlist[`accountId`side`amt`reduce!(aId;side;amt%num;reduce)]; // TODO make cleaner
-    .state.adapter.createMarketOrder . (time;mo);
+    .state.adapter.newOrders . (time;mo);
     };
 
 
 .state.adapter.marketOrderWrapper                      :{[aId;time;side;amt;reduce]
     mo:enlist`accountId`side`amt`reduce!(aId;side;amt;reduce); // TODO make cleaner  
-    .state.adapter.createMarketOrder[time;mo];
+    .state.adapter.newOrders[time;mo];
     };
  
 // Action Adapter Mapping // TODO convert to batch, descriptions
@@ -461,6 +446,8 @@
           a=20;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
           a=21;  marketfn[-1;samt;1b];                  // market open short; 
           'INVALID_ACTION];
+        if[count[events]>1;.bam.events:events];
+        show events;
         :();
     };
 
