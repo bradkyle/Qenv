@@ -98,8 +98,8 @@
     f[`side]:22#((11#-1),(11#1));
     f[`price]:22#asc[distinct[raze ap]]; // TODO add bp
     fea:`bkt`side xkey flip[.util.Filt[`bkt`side`price;f]];  
-    fea:0^((uj) over (fea;asks;bids));
-    :(0!fea)`size; // TODO add better features, filter where not in buckets
+    fea:0!(0^((uj) over (fea;asks;bids)));
+    :(fea where fea[`bkt]<>-1)`size; // TODO add better features, filter where not in buckets
     / bestask:min asks;
     / bestbid:max bids;
     / asksizes:asks`size;
@@ -128,7 +128,7 @@
     /     bestasksize, // 1
     /     bestbidsize // 1
     / )];
-    };23];
+    };24];
 
 // Trade Feature Sets
 // -----------------------------------------> // TODO better modularity
@@ -272,7 +272,6 @@
     ]];
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
-    .bam.fea:fea;
     .state.FeatureBuffer,:fea;
    / :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
