@@ -3,12 +3,12 @@
     isagnt:count[a]>0;
     nside:neg[t[`datum][0]];
     show isagnt;
-    show nside;
-    show 90#"-";
 
     // TODO count depth
     // Get levels that are to be updated
-    c:.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0))]; //TODO impl max depth
+    c:0!.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0);(<;(+\;`qty);t`qty))]; //TODO impl max depth
+    s:c;
+    show s;
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -16,6 +16,7 @@
     thresh:sums[aqty];
     rp:(thresh-prev[thresh])-(thresh-t`size);
     s[`thresh]:thresh; 
+    show 90#"-";
 
     // Derive the amount that will be replaced per level
     rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
