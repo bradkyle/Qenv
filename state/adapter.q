@@ -333,8 +333,11 @@
         ticksize:0.1;
 
         // Derive price distribution
+        ap:.state.adapter.expPcntPriceDistribution[]
+        bp:.state.adapter.expPcntPriceDistribution[]
 
         // Derive size distribution
+
 
         // create delta events from target
         / :.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dst];
