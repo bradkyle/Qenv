@@ -25,7 +25,6 @@ do[1000;{
 				actions:.policy.Act[.env.obs;21];
 				res:.env.Step[actions];
 				.env.obs:res[0];
-				show .env.obs;
 				rwd:res[1];
 				dns:res[2];
 				.env.step+:1;

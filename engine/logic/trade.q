@@ -1,5 +1,5 @@
 
-.engine.logic.trade.Trade:{[i;a;t]
+.engine.logic.trade._Trade:{[i;a;t]
     isagnt:not[null[a]];
     nside:neg[t`side];
 
@@ -174,3 +174,4 @@
 
 
 
+.engine.logic.trade.Trade:{[i;a;t] .engine.logic.trade._Trade[i;a]'[flip t]}

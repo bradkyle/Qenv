@@ -1,6 +1,8 @@
 
 .engine.logic.orderbook._Level :{[i;l]
-        if[count[l`datum]=3;ld:`side`price`qty!l`datum];
+        .bam.l:l;
+        if[count[l`datum]=3;ld:`side`price`qty`time!raze[l`datum`time]];
+        / ld[`time]:l`time;
         / show price;
         / show side
         c:0!.engine.model.orderbook.GetLevel[enlist(=;`price;ld`price)]; //TODO impl max depth
@@ -63,13 +65,13 @@
                 ]];
                 // todo derive visible qty 
                 // todo remove if o
-                cl:`side`price`qty`time;
-                .engine.Emit[`orderbook;cl!l[cl]];
+                cl:`price`time`side`qty;
+                .engine.Emit[`depth;l[`time];cl!ld[cl]];
         ];[
                 / No update occurs, should emit?
                 .engine.model.orderbook.Orderbook,:enlist `price`side`qty`hqty`iqty`vqty!(ld`price;ld`side;ld`qty;0;0;0);
-                / .engine.model.orderbook.UpdateLevel[];
-                / .engine.Emit[`orderbook] l;
+                cl:`price`time`side`qty;
+                .engine.Emit[`depth;l[`time];cl!ld[cl]];
         ]];
 
         / .engine.model.orderbook.PruneOrderBook[];

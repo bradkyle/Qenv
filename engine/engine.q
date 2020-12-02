@@ -16,14 +16,14 @@
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .engine.GetEgressEvents:{[watermark;frq;per] // TODO should select next batch according to config
-    e:select[per] i, time, kind, datum from .engine.ingress.Events where time > ((watermark | first time)+frq); 
+    e:select[per] i, time, kind, datum from .engine.egress.Events where time < watermark; 
     delete from `.engine.egress.Events where i in e[`i]; 
     enlist[`i] _ e
     };
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
-        .engine.egress.Events,:(event);
+        .engine.egress.Events,:(time;kind;value event);
 				};
 
 .engine.Purge   :{[kind;time;msg;event] 

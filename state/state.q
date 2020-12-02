@@ -303,6 +303,7 @@
 // TODO failure event history!
 // TODO prune, execution event history
 .state._InsertEvents :{ 
+    / show .state.CurrentDepth;
     {
         k:x`kind;
         r:x`datum;
