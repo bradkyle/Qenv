@@ -337,6 +337,8 @@
         bp:.state.adapter.expPcntPriceDistribution[]
 
         // Derive size distribution
+        .state.adapter.amtdist[][];
+        .state.adapter.amtdist[][];
 
 
         // create delta events from target
