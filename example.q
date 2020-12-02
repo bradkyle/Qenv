@@ -23,6 +23,5 @@ do[100;{
 				.env.obs:res[0];
 				rwd:res[1];
 				dns:res[2];
-				show count first .env.obs;
 
 				}[]];

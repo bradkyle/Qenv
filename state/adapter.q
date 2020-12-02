@@ -211,7 +211,7 @@
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of the given inventory.
 .state.adapter.createFlattenSideMarketOrders            :{[aId;side]
-    ivn:.state.getSideOpenInventory[aId;side];
+    ivn:.state.sideOpenInventory[aId;side];
     nside:neg[side];
     :.state.adapter.createMarketOrder[aId;side;ivn`amt];
     };
@@ -220,10 +220,10 @@
 // flatten the current active amount of all inventories for
 // a given account.
 .state.adapter.createFlattenAllMarketOrders             :{[aId] // TODO add times
-    ivn:.state.getOpenInventory[aId];
-    :(.state.adapter.createMarketOrder[aId]'[
+    ivn:.state.allOpenInventory[aId]; // T
+    :if[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[
         .util.NegIvnSide[ivn`side];
-        ivn`amt]);
+        ivn`amt])];
     };
 
 // Creates the set of limit orders that will serve to 
@@ -231,12 +231,12 @@
 // it will be assumed that the orders will be placed at the
 // best price/bucket.
 .state.adapter.createFlattenSideLimitOrders             :{[aId;side] // TODO add time
-    ivn:.state.getOpenInventory[aId]; // T
+    ivn:.state.allOpenInventory[aId]; // T
     bestprice:0;
-    :(.state.adapter.createLimitOrder[aId;
+    :if[count[ivn]>0;(.state.adapter.createLimitOrder[aId;
         .util.NegIvnSide[ivn`side];
         bestprice;
-        ivn`amt]);
+        ivn`amt])];
     };
 
 // Creates the set of limit orders that will serve to 
@@ -247,10 +247,10 @@
 .state.adapter.createFlattenAllLimitOrders              :{[aId] // TODO add time
     ivn:.state.getOpenInventory[aId]; // T
     bestprice:0;
-    :(.state.adapter.createLimitOrder[aId]'[
+    :if[count[ivn]>0;(.state.adapter.createLimitOrder[aId]'[
         .util.NegIvnSide[ivn`side];
         bestprice;
-        ivn`amt]);
+        ivn`amt])];
     };
 
 
@@ -425,7 +425,7 @@
           a=11;  limitfn[1;5;lamt;1b];                  // aggressive close long;
           a=12;  macromarketfn[1;10;lamt;1b];           // market close long;
           a=13;  marketfn[1;lamt;1b];                   // market close long;
-          a=14;  flatfn[accountId];                     // flatten position with market orders
+          a=14;  flatfn[aId];                     // flatten position with market orders
           a=15;  marketfn[-1;samt;1b];                  // market close short;
           a=16;  macromarketfn[-1;10;lamt;1b];          // market close short;
           a=17;  limitfn[-1;5;samt;1b];                 // aggressive close short;
@@ -440,7 +440,6 @@
           a=23;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
           a=27;  marketfn[-1;samt;1b];                  // market open short; 
           'INVALID_ACTION];
-        show events;
         :();
     };
 
