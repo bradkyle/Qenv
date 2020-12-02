@@ -98,9 +98,60 @@ ACCOUNT:();
       `.engine.model.orderbook.OrderBook
     )];
 
-    .engine.model.risktier.Create[];
-    .engine.model.feetier.Create[];
-    .engine.model.instrument.Create[];
+    .engine.model.engine.model.risktier.Create[riskCols!flip[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f;
+        1000000     0.01     0.02     50f;
+        5000000     0.025    0.05     20f;
+        20000000    0.05     0.1      10f;
+        50000000    0.1      0.20     5f;
+        100000000   0.125    0.25     4f;
+        200000000   0.15     0.333    3f;
+        500000000   0.25     0.50     2f;
+        500000000   0.25     1.0      1f)]];
+
+    .engine.model.engine.model.feetier.Create[riskCols!flip[(
+        50000       0.004    0.008    125f;
+        250000      0.005    0.01     100f;
+        1000000     0.01     0.02     50f;
+        5000000     0.025    0.05     20f;
+        20000000    0.05     0.1      10f;
+        50000000    0.1      0.20     5f;
+        100000000   0.125    0.25     4f;
+        200000000   0.15     0.333    3f;
+        500000000   0.25     0.50     2f;
+        500000000   0.25     1.0      1f)]];
+
+    .engine.model.instrument.Create[(
+        (`state                   ; .conf.Static[0];                                            
+        (`quoteAsset              ; .conf.Static[`BTC];                                         
+        (`baseAsset               ; .conf.Static[`USDT];                                        
+        (`underlyingAsset         ; .conf.Static[`BTCUSDT];                                     
+        (`faceValue               ; .conf.Static[1];                                            
+        (`maxLeverage             ; .conf.Static[125];                                          
+        (`minLeverage             ; .conf.Static[1];                                            
+        (`tickSize                ; .conf.Static[0.01f];                                        
+        (`lotSize                 ; .conf.Static[0.001];                                        
+        (`priceMultiplier         ; .conf.Static[100];                                          
+        (`sizeMultiplier          ; .conf.Static[1000];                                         
+        (`fundingInterval         ; .conf.StaticInterval[480;`minute];                          
+        (`taxed                   ; .conf.Static[0b];                                           
+        (`deleverage              ; .conf.Static[0b];                                           
+        (`capped                  ; .conf.Static[0b];                                           
+        (`usePriceLimits          ; .conf.Static[0b];                                           
+        (`maxPrice                ; .conf.Static[1e6];                                          
+        (`minPrice                ; .conf.Static[0];                                            
+        (`upricelimit             ; .conf.Static[0];                                            
+        (`lpricelimit             ; .conf.Static[0];                                            
+        (`maxOrderSize            ; .conf.Static[1e6];                                          
+        (`minOrderSize            ; .conf.Static[0.001];                                        
+        (`junkOrderSize           ; .conf.Static[0.001];                                        
+        (`contractType            ; .conf.Static[0];                                            
+        (`maxOpenOrders           ; .conf.Static[25];                                           
+        (`maxDepthLevels          ; .conf.Static[100];                                          
+        (`takeOverFee             ; .conf.Static[0];
+        )];
+
     .engine.model.account.Create[];
     .engine.model.inventory.Create[];
 

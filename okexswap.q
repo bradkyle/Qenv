@@ -45,8 +45,8 @@
 
 // Engine
 // ---------------------------------------------------------------------------------->
-.conf.Config[`engine;(
-    (`rebalanceHigh               ; .conf.RandomWithin[1500000;100000];                     // The maximum balance for which new rebalances will be triggered
+.conf.Config[`engine;{(
+        (`rebalanceHigh               ; .conf.RandomWithin[1500000;100000]);                     // The maximum balance for which new rebalances will be triggered
     (`rebalanceLow                ; .conf.RandomWithin[1500;0];                             // The minimum balance for which new rebalances will be triggered
     (`maxRebalanceAmt             ; .conf.RandomWithin[15000;0];                            // The maximum balance randomization value
     (`minRebalanceAmt             ; .conf.Static[1];                                        // The minimum balance randomization value
@@ -70,7 +70,7 @@
     (`maxNewOrderBatchSize        ; .conf.Static[10];                                       // The maximum new order batch size
     (`maxAmendOrderBatchSize      ; .conf.Static[10];                                       // The maximum amend order batch size
     (`maxCancelOrderBatchSize     ; .conf.Static[10]                                        // The maximum cancel order batch size
-    )];
+    )}];
 
 // TODO endpoint specific rate limits
 // max self fill count
@@ -185,3 +185,4 @@ feeCols:`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit;
     )];
 
 
+.conf.Reset[];
