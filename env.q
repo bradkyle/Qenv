@@ -97,6 +97,7 @@
 /                    agentId, observation, reward, dones for each agent.
 .env.Step    :{[actions]
     // TODO format actions
+    .env.CurrentStep+:1;
     step:.env.CurrentStep;
     // TODO get current time
 
@@ -141,7 +142,6 @@
     rwd:.state.rew.GetRewards[step;100;aIds];
     dns:count[aIds]#0b; // TODO move to env and create better!
 
-    .env.CurrentStep+:1;
     (obs;rwd;dns)
     };
 

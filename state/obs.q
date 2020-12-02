@@ -128,7 +128,7 @@
     /     bestasksize, // 1
     /     bestbidsize // 1
     / )];
-    };22];
+    };23];
 
 // Trade Feature Sets
 // -----------------------------------------> // TODO better modularity
@@ -268,10 +268,12 @@
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)
             // backwards (randomized fill of buffer)
+            .bam.fb:.state.FeatureBuffer;
             {x[`step]-:y;x:`accountId`step xkey x;x:0f^`float$(x);.state.FeatureBuffer,:{x+:x*rand 0.001;x}x}[fea]'[til[lookback]];
     ]];
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
+    .bam.fea:fea;
     .state.FeatureBuffer,:fea;
    / :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
