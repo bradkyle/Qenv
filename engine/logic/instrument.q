@@ -33,7 +33,7 @@
 //   
 .engine.logic.instrument.MarkPrice:{[i;x]
 				i[`mkprice]:x`datum;
-				iv:.engine.model.inventory.GetInventory[(<;`amt;0)];
+				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 
 				// TODO make simpler
 				upl:.engine.logic.contract.UnrealizedPnl[
@@ -61,8 +61,8 @@
 	};
 
 .engine.logic.instrument.Settlement:{[i;x]
-				iv:.engine.model.inventory.GetInventory[()];
-				a:.engine.model.account.GetAccount[fnd`accountId];
+				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
+
 				a[`mrg]+:iv[`rpnl];
 				iv[`rpnl]:0;
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
@@ -80,7 +80,6 @@
 
 
 .engine.logic.instrument.PriceLimit:{[i;x]
-				i:.engine.model.instrument.GetInstrument[];
 				i[`plmth]:x[`highest];
 				i[`plmtl]:x[`lowest];
 				.engine.model.instrument.UpdateInstrument i;
