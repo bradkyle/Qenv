@@ -165,7 +165,7 @@
         // -------------------------------------------------->
         l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t`time)];
         .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[]
+        .engine.Emit[`depth;]
 
     ];if[count[s]>0;[
         l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;t`time);
