@@ -4,7 +4,6 @@
 				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 				o:flip ordCols!flip x`datum;
 				t:first x`time;
-				.bam.o:o;
 
 				/ if[count[o]>10;:.engine.Purge[o;first x`time;"Invalid batch size: batch size > max batch size"]];
 				if[o[`price] < i[`mnPrice];:.engine.Purge[o;t;"Invalid price: price<mnPrice"]];
