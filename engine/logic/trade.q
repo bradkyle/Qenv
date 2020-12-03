@@ -1,14 +1,14 @@
 
 // TODO process multiple trades
-.engine.logic.trade.Trade:{[i;a;t]
-    show t;
+.engine.logic.trade.Trade:{[i;a;x]
+    t:flip `side`qty!flip x`datum;
     isagnt:count[a]>0;
-    nside:neg[t[`datum][0]];
+    nside:neg[t`side];
 
     // TODO count depth
     // TODO query hidden qty
     // Get levels that are to be updated
-    c:0!.engine.model.orderbook.GetLevel[((=;`side;nside);(>;`qty;0);(<;(+\;`qty);t`qty))]; //TODO impl max depth
+    c:0!.engine.model.orderbook.GetLevel[((in;`side;nside);(>;`qty;0);(<;(+\;`qty);sum[t`qty]))]; //TODO impl max depth
     // select from `price xasc .engine.model.orderbook.Orderbook where side=1,sums[qty]<=max(min sums qty;100)
     s:c;
 
