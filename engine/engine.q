@@ -26,7 +26,7 @@
         .engine.egress.Events,:(time;kind;value event);
 				};
 
-.engine.Purge   :{[kind;time;msg;event] 
+.engine.Purge   :{[event;time;msg] 
         .engine.egress.Events,:(event);
         };
 
