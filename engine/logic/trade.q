@@ -1,5 +1,7 @@
 
-.engine.logic.trade.trade:{[i;a;t]
+// TODO process multiple trades
+.engine.logic.trade.Trade:{[i;a;t]
+    show t;
     isagnt:count[a]>0;
     nside:neg[t[`datum][0]];
 
@@ -175,7 +177,6 @@
     
     };
 
-.engine.logic.trade.Trade:{[i;a;t] .engine.logic.trade.trade[i;a]'[flip t]}
 
 
 
