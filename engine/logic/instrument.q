@@ -32,7 +32,7 @@
 
 //   
 .engine.logic.instrument.MarkPrice:{[i;x]
-				i[`mkprice]:x`datum;
+				i[`mkprice]: last x`datum;
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 
 				// TODO make simpler
@@ -42,7 +42,6 @@
 						i[`faceValue];
 						i[`sizeMultiplier]];
 
-				(upl;iv) fby iv[`aId];
 
 				a:.engine.model.account.GetAccount[distinct iv`aId];
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
