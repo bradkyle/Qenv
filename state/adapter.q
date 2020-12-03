@@ -14,13 +14,13 @@
 / `timeinforce`execInst`size`limitprice`stopprice,
 / `reduce`trigger`displayqty
 / (0;0;1000;-1;1;0;0;1;0;0;0;0;1)
-.state.adapter.ordCols:`clOid`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst;
+.state.adapter.ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 
 .state.adapter.cancelOrders : {[t;e]
         // 8; // NEW ORDER
         // `NEW:0
         if[not[count[e]>0];:];
-        e:value flip e;
+        / e:value flip e;
         enlist `time`kind`datum!(t;`cancelorder;e[.state.adapter.ordCols])
     };
 
@@ -28,16 +28,16 @@
         // 8; // NEW ORDER
         // `NEW:0
         if[not[count[e]>0];:];
-        e:value flip e;
-        enlist `time`kind`datum!(t;`amendorder;e)
+        / e:value flip e;
+        enlist `time`kind`datum!(t;`amendorder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.newOrders : {[t;e]
         // 8; // NEW ORDER
         // `NEW:0
         if[not[count[e]>0];:];
-        e:value flip e;
-        enlist `time`kind`datum!(t;`neworder;e)
+        / e:value flip e;
+        enlist `time`kind`datum!(t;`neworder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.createDeposit            : {[t;e]
@@ -300,7 +300,7 @@
     rinc[`otype]:1;
 
     // TODO if too many are open
-    if[count[rinc]>0;n,:(select accountId, price:bktPmid, size:tgt, reduce from rinc)];
+    if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc)];
 
     // Compose Events 
     // ------------------------------------------>
