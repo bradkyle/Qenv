@@ -3,26 +3,29 @@
 				// Instrument validations
 				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 				o:flip ordCols!flip x`datum;
-				if[count[o]>10;:.engine.Purge[o;first x`time;"Invalid batch size: batch size > max batch size"]];
-				if[o[`price] < i[`mnPrice];:.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
-				if[o[`price] > i[`mxPrice];:.engine.Purge[o;0;"Invalid price: price>mxPrice"]];
-				if[o[`oqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid oqty: oqty<minqty"]];
-				if[o[`oqty] > i[`mxSize];:.engine.Purge[o;0;"Invalid oqty: oqty>maxqty"]];
-				if[(o[`price] mod i[`ticksize])<>0;:.engine.Purge[o;0;"Invalid ticksize"]]; 
-				if[(o[`oqty] mod i[`lotsize])<>0;:.engine.Purge[o;0;"Invalid lotsize"]];
-				if[o[`dqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid dqty: dqty<minsize"]];
-				if[o[`dqty] > i[`mxSize];:.engine.Purge[o;0;"Invalid dqty: dqty>maxsize"]];
-				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;0;"Invalid dqty lot oqty"]]; 
+				t:first x`time;
+				.bam.o:o;
+
+				/ if[count[o]>10;:.engine.Purge[o;first x`time;"Invalid batch size: batch size > max batch size"]];
+				if[o[`price] < i[`mnPrice];:.engine.Purge[o;t;"Invalid price: price<mnPrice"]];
+				if[o[`price] > i[`mxPrice];:.engine.Purge[o;t;"Invalid price: price>mxPrice"]];
+				if[o[`oqty] < i[`mnSize];:.engine.Purge[o;t;"Invalid oqty: oqty<minqty"]];
+				if[o[`oqty] > i[`mxSize];:.engine.Purge[o;t;"Invalid oqty: oqty>maxqty"]];
+				if[(o[`price] mod i[`ticksize])<>0;:.engine.Purge[o;t;"Invalid ticksize"]]; 
+				if[(o[`oqty] mod i[`lotsize])<>0;:.engine.Purge[o;t;"Invalid lotsize"]];
+				if[o[`dqty] < i[`mnSize];:.engine.Purge[o;t;"Invalid dqty: dqty<minsize"]];
+				if[o[`dqty] > i[`mxSize];:.engine.Purge[o;t;"Invalid dqty: dqty>maxsize"]];
+				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;t;"Invalid dqty lot oqty"]]; 
 
 				/ if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
 				/ 	in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
 
 				// Account validations
-				if[a[`bal]<=0;:.engine.Purge[o;0;"Order account has no balance"]];
-				if[a[`avail]<=0;:.engine.Purge[o;0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;:.engine.Purge[o;0;"Account has been disabled"]];
-				if[a[`state]=2;:.engine.Purge[o;0;"Account has been locked for liquidation"]];
+				if[a[`bal]<=0;:.engine.Purge[o;t;"Order account has no balance"]];
+				if[a[`avail]<=0;:.engine.Purge[o;t;"Order account has insufficient available balance"]];
+				if[a[`state]=1;:.engine.Purge[o;t;"Account has been disabled"]];
+				if[a[`state]=2;:.engine.Purge[o;t;"Account has been locked for liquidation"]];
 
 				dlt:o`oqty;
 				vdlt:prd[o[`oqty`price]]; // TODO contract specific 

@@ -287,7 +287,7 @@
     rinc[`otype]:1;
 
     // TODO if too many are open
-    if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc)];
+    if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc where tgt>0)];
 
     // Compose Events 
     // ------------------------------------------>
