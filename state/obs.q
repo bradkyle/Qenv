@@ -216,7 +216,7 @@
 
 .state.obs.fea.funding      :.state.obs.PublicFeatureSet[{
     funding:last[.state.FundingEventHistory];
-    countdown:.util.TimeDiffMin[funding`fundingtime;.state.WaterMark]; // TODO get delta in time
+    countdown:.util.TimeDiffMin[funding`fundingtime;.state.watermark]; // TODO get delta in time
     .state.obs.test.funding:funding;
     raze[(
         (funding[`fundingrate]  | 0f);

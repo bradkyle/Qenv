@@ -17,27 +17,15 @@
 .state.adapter.ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 
 .state.adapter.cancelOrders : {[t;e]
-        // 8; // NEW ORDER
-        // `NEW:0
-        if[not[count[e]>0];:];
-        / e:value flip e;
-        enlist `time`kind`datum!(t;`cancelorder;e[.state.adapter.ordCols])
+    `time`kind`datum!(t;`cancelorder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.amendOrders : {[t;e]
-        // 8; // NEW ORDER
-        // `NEW:0
-        if[not[count[e]>0];:];
-        / e:value flip e;
-        enlist `time`kind`datum!(t;`amendorder;e[.state.adapter.ordCols])
+    `time`kind`datum!(t;`amendorder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.newOrders : {[t;e]
-        // 8; // NEW ORDER
-        // `NEW:0
-        if[not[count[e]>0];:];
-        / e:value flip e;
-        enlist `time`kind`datum!(t;`neworder;e[.state.adapter.ordCols])
+    `time`kind`datum!(t;`neworder;e[.state.adapter.ordCols])
     };
 
 .state.adapter.createDeposit            : {[t;e]
@@ -211,9 +199,7 @@
 // a given account.
 .state.adapter.createFlattenAllMarketOrders             :{[aId] // TODO add times
     ivn:.state.allOpenInventory[aId]; // T
-    :if[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[
-        .util.NegIvnSide[ivn`side];
-        ivn`amt])];
+    :$[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[neg[ivn`side];ivn`amt]);()];
     };
 
 // Creates the set of limit orders that will serve to 
@@ -247,9 +233,10 @@
 // General Order Placement Utilities
 // ---------------------------------------------------------------------------------------->
 
-// TODO add time component to batches
-.state.adapter.createBatches :{[batchSize;x]
-    $[count[x]>batchSize;batchSize cut x; enlist x]
+.state.adapter.createEventBatches :{[r;fn;t;bs]
+    e:fn[t]'[r]; 
+    / :(bs cut e)
+    e
     };
 
 // TODO test
@@ -257,6 +244,7 @@
 // target distribution of orders and the current distribution
 // of limit orders in the order book.
 // TODO better amend logic, clean logic, check max orders, min order size, max order size etc.
+// TODO check time priority
 .state.adapter.createDeltaEvents                                    :{[amd;aId;time;prices;sides;reduces;tgts]
     c:a:n:();
 
@@ -289,7 +277,6 @@
 
     // Derive increase orders
     // ------------------------------------------>
-    // TODO check time priority
     rinc:raze{[x] // TODO flatten
         x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
         x[`reduce`orderId`leaves`time`oprice`otype`accountId]:(
@@ -309,16 +296,17 @@
     e:(); // TODO randomize batch size?
         
     // todo group into batches (time offset of 0)
-    if[count[c]>0;e,:.state.adapter.cancelOrders[time]'[.state.adapter.createBatches[10;c]]]; 
+    if[count[c]>0;e,:.state.adapter.createEventBatches[c;.state.adapter.cancelOrders;time;10]]; 
 
     // todo group into batches (time offset of ~2)
-    if[amd and (count[a]>0);e,:.state.adapter.amendOrders[time+`timespan$1e6]'[.state.adapter.createBatches[10;a]]]; 
+    if[amd and (count[a]>0);e,:.state.adapter.createEventBatches[a;.state.adapter.amendOrders;time;10]]; 
 
     // todo group into batches (time offset of ~2)
-    if[count[n]>0;e,:.state.adapter.newOrders[time+`timespan$1e6]'[.state.adapter.createBatches[10;n]]]; 
-    :raze e;
+    if[count[n]>0;e,:.state.adapter.createEventBatches[n;.state.adapter.newOrders;time;10]]; 
+    e
   };
 
+// TODO testing
 // Derives the delta between the current outstanding/leaves
 // order quantity at a given price level and the static target
 // "desired" order quantity at that price level and generates
@@ -329,7 +317,7 @@
 .state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsttyp;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
 
-        bktsize:2;
+        bktsize:3;
         ticksize:1;
         mxfrac:0.1;
 
@@ -366,13 +354,13 @@
     / ts:{x + (y * z)}[.z.z;(`timespan$(0D00:01:00.000000000)%10)]'[til 10]; 
     ts:{x + (y * z)}[time;dur%num]'[til num];
     mo:num#enlist[`accountId`side`amt`reduce!(aId;side;amt%num;reduce)]; // TODO make cleaner
-    .state.adapter.newOrders . (time;mo);
+    .state.adapter.newOrders . (time;mo)
     };
 
 
 .state.adapter.marketOrderWrapper                      :{[aId;time;side;amt;reduce]
     mo:enlist`accountId`side`amt`reduce!(aId;side;amt;reduce); // TODO make cleaner  
-    .state.adapter.newOrders[time;mo];
+    .state.adapter.newOrders[time;mo]
     };
  
 // Action Adapter Mapping // TODO convert to batch, descriptions
@@ -432,8 +420,8 @@
           a=5;   limitfn[1;`expinc;tdamt;0b];                 // aggressive open long;
           a=6;   limitfn[1;`lininc;tdamt;0b];                 // conservative open long;
           a=7;   limitfn[1;`lininc;lamt;1b];                  // conservative close long;
-          a=8;  limitfn[1;`expinc;lamt;1b];                  // aggressive close long;
-          a=9;  macromarketfn[1;10;lamt;1b];           // market close long;
+          a=8;   limitfn[1;`expinc;lamt;1b];                  // aggressive close long;
+          a=9;   macromarketfn[1;10;lamt;1b];           // market close long;
           a=10;  marketfn[1;lamt;1b];                   // market close long;
           a=11;  flatfn[aId];                     // flatten position with market orders
           a=12;  marketfn[-1;samt;1b];                  // market close short;
@@ -447,9 +435,7 @@
           a=20;  macromarketfn[-1;10;tdamt;0b];         // macro market open short; 
           a=21;  marketfn[-1;samt;1b];                  // market open short; 
           'INVALID_ACTION];
-        if[count[events]>1;.bam.events:events];
-        show events;
-        :();
+        events
     };
 
  
@@ -461,7 +447,7 @@
 // to which the agent will effect a transition into
 // its representative amalgamation of events by way
 // of an adapter. // TODO pair with state account repr
-.state.adapter.Adapt :{[encouragement; actions]
-        :raze .state.adapter.HedgedPathFinder[encouragement;.state.WaterMark]'[actions[;0];actions[;1]];
+.state.adapter.Adapt :{[encouragement; time; actions]
+    :raze .state.adapter.HedgedPathFinder[encouragement;time]'[actions[;0];actions[;1]];
     };
 

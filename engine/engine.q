@@ -33,11 +33,11 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-.engine.publicWrapper:{
+.engine.publicWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
     x[i;y]};
 
-.engine.privateWrapper:{
+.engine.privateWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
     a:?[`.engine.model.account.Account;enlist(=;`aId;0);();()];
     x[i;a;y]};
@@ -63,7 +63,7 @@
 .engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
 
-.engine.multiplex:{@[.engine.map[first x[`kind]];x;show]}; // TODO logging
+.engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
 // depth during training

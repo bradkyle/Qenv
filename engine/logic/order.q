@@ -1,6 +1,8 @@
 
-.engine.logic.order.NewOrder:{[i;a;o]
+.engine.logic.order.NewOrder:{[i;a;x]
 				// Instrument validations
+				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
+				o:ordCols!flip x`datum;
 				if[o[`price] < i[`mnPrice];:.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
 				if[o[`price] > i[`mxPrice];:.engine.Purge[o;0;"Invalid price: price>mxPrice"]];
 				if[o[`oqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid oqty: oqty<minqty"]];

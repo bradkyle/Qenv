@@ -11,7 +11,7 @@
 .state.maxLvls:20;
 .state.DefaultInstrumentId:0;
 .state.clOrdCount:0;
-.state.WaterMark:0N;
+.state.watermark:0N;
 / .state.genNextClOrdId  :.util.IncRet[`.state.clOrdCount];
 
 // Singleton State and Lookback Buffers
@@ -340,7 +340,7 @@
     }'[0!(`kind xgroup x)];
 
     // watermark: select last time from events
-    .state.WaterMark:max x`time;
+    .state.watermark:max x`time;
     };
 
 .state.InsertEvents: {@[.state._InsertEvents;x;show]};
