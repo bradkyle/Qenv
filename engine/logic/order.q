@@ -3,7 +3,7 @@
 				// Instrument validations
 				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 				o:flip ordCols!flip x`datum;
-				if[count[o]>10;:.engine.Purge[o;0;"Invalid batch size: batch size > max batch size"]];
+				if[count[o]>10;:.engine.Purge[o;first x`time;"Invalid batch size: batch size > max batch size"]];
 				if[o[`price] < i[`mnPrice];:.engine.Purge[o;0;"Invalid price: price<mnPrice"]];
 				if[o[`price] > i[`mxPrice];:.engine.Purge[o;0;"Invalid price: price>mxPrice"]];
 				if[o[`oqty] < i[`mnSize];:.engine.Purge[o;0;"Invalid oqty: oqty<minqty"]];

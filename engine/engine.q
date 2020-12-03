@@ -27,7 +27,7 @@
 				};
 
 .engine.Purge   :{[event;time;msg] 
-        .engine.egress.Events,:(event);
+    .engine.egress.Events,:(time;`failure;(msg;event));
         };
 
 / Event Processing logic (Writes)
