@@ -16,10 +16,6 @@
 				if[o[`dqty] > i[`mxSize];:.engine.Purge[o;t;"Invalid dqty: dqty>maxsize"]];
 				if[(o[`dqty] mod i[`lotsize])<>0;.engine.Purge[o;t;"Invalid dqty lot oqty"]]; 
 
-				/ if[(all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and 
-				/ 	in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]];
-
 				// Account validations
 				if[a[`bal]<=0;:.engine.Purge[o;t;"Order account has no balance"]];
 				if[a[`avail]<=0;:.engine.Purge[o;t;"Order account has insufficient available balance"]];
@@ -46,17 +42,20 @@
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 
-				$[(o[`okind]=0);[
-							.engine.logic.account.Fill[];
+				// TODO fix this functionality
+				$[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
+							in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]]);
+							.engine.logic.trade.Match[i;a;o];
 						];[
 							.engine.model.order.CreateOrder o;
 					 		.engine.logic.orderbook.Level[]
 						]];
 
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`order] i;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`order;t;o];
 		};
 
 .engine.logic.order.AmendOrder:{[i;a;o]
@@ -101,13 +100,17 @@
 				.engine.model.instrument.UpdateInstrument i;
 				.engine.model.order.AddOrder o;
 
-				.engine.logic.account.Fill[]
-				.engine.logic.orderbook.Level[]
+				$[(o[`okind]=0);[
+							.engine.logic.trade.Match[i;a;o];
+						];[
+							.engine.model.order.CreateOrder o;
+					 		.engine.logic.orderbook.Level[]
+						]];
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] i;
-				.engine.Emit[`order] i;
+
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`order;t;o];
 		};
 
 .engine.logic.order.CancelOrder:{[i;a;o]
@@ -137,10 +140,9 @@
 				// add depth, add 
 				.engine.logic.orderbook.Level[]
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] i;
-				.engine.Emit[`order] i;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`order;t;o];
 		};
 
 
@@ -170,9 +172,8 @@
 				// add depth, add 
 				.engine.logic.orderbook.Level[]
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] i;
-				.engine.Emit[`order] i;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`order;t;o];
     };
 

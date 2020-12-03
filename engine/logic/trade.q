@@ -1,14 +1,13 @@
 
 // TODO process multiple trades
-.engine.logic.trade.Trade:{[i;a;x]
-    t:flip `side`qty!flip x`datum;
-    isagnt:count[a]>0;
-    nside:neg[t`side];
+.engine.logic.trade.Trade:{[i;x]
+    m:flip `side`qty!flip x`datum;
+    nside:neg[m`side];
 
     // TODO count depth
     // TODO query hidden qty
     // Get levels that are to be updated
-    c:0!.engine.model.orderbook.GetLevel[((in;`side;nside);(>;`qty;0);(<;(+\;`qty);sum[t`qty]))]; //TODO impl max depth
+    c:0!.engine.model.orderbook.GetLevel[((in;`side;nside);(>;`qty;0);(<;(+\;`qty);sum[m`qty]))]; //TODO impl max depth
     // select from `price xasc .engine.model.orderbook.Orderbook where side=1,sums[qty]<=max(min sums qty;100)
     s:c;
 
@@ -16,7 +15,7 @@
     // at that level, creating the trade effected s
     aqty:sum[s[`iqty`hqty`vqty]];
     thresh:sums[aqty];
-    rp:(thresh-prev[thresh])-(thresh-t`size);
+    rp:(thresh-prev[thresh])-(thresh-m`size);
     s[`thresh]:thresh; 
 
     // Derive the amount that will be replaced per level
@@ -33,12 +32,12 @@
     // except they aren't visible.
 
     $[count[o]>0;[
-        s:0!{$[x>0;desc[y];asc[y]]}[neg[t`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
+        s:0!{$[x>0;desc[y];asc[y]]}[neg[m`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[s`orderId]]]];
 
         // Pad s into a matrix
         // for faster operations
-        / padcols:(`offset`size`lqty`dqty`reduce`orderId`side, // TODO make constant?
+        / padcols:(`offsem`size`lqty`dqty`reduce`orderId`side, // TODO make constant?
         /     `accountId`instrumentId`price`status);
         / (s padcols):.util.PadM'[s padcols]; // TODO make faster?
 
@@ -49,7 +48,7 @@
 
         // TODO new display qty
         // Calculate new shifts and max shifts
-        shft:sum[s`offset`lqty]; // the sum of the order offsets and lqty
+        shft:sum[s`offsem`lqty]; // the sum of the order offsets and lqty
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
 
         // TOOD update comments
@@ -68,7 +67,7 @@
         displaydlt:     (ndqty-s[`dqty]); // Derive the change in the order display qty
         lqtydlt:        (nlqty-s[`lqty]); // Derive the change in the order lqty
         hqtydlt:        (nhqty-s[`hqty]); // Derive the change in hidden order qty
-        noffset:        .util.Clip[((-/)s`offset`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
+        noffset:        .util.Clip[((-/)s`offsem`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
         nqty:           .util.Clip[((-/)s`qty`rp)-(sum'[lqtydlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
         nvqty:          nqty+sum'[ndqty]; // Derive the new visible qty as order display qty + the new qty from above
         nshft:          nlqty+noffset; // 
@@ -106,7 +105,7 @@
         numtdslvl:count'[tqty];
         // TODO move into own function.
         s[`mside]:nside; // TODO changes
-        s[`side]:t`side; // TODO changes
+        s[`side]:m`side; // TODO changes
  
         // Derive and apply trades
         // -------------------------------------------------->
@@ -116,7 +115,7 @@
                 numtds#s`tside; // more accurate derivation
                 raze[{x#y}'[numtdslvl;s`price]]; // more accurate derivation
                 tqty;
-                numtds#t`time)];
+                numtds#m`time)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -126,24 +125,12 @@
         // accordingly
 				o:raze'[(s`orderId;s`oprice;noffset;nlqty;ndqty;nstatus;s`time)][;where[msk]];
         .engine.model.order.UpdateOrder o;
-        .engine.Emit[`order] o;
+        .engine.Emit[`order;t;o];
         
  
         // Derive and apply Executions
         // -------------------------------------------------->
 
-        // Apply the set of fills that would satisfy the 
-        // amount of liquidity that is being removed from
-        // the orderbook.
-        .engine.logic.account.Fill[raze'[(
-                numLvls#i`instrumentId; // instrumentId
-                numLvls#a`aId; // accountId
-                s`tside; 
-                s`price;
-                sum'[tqty];
-                count[tqty]#t`reduce;
-                numLvls#t`time)]];
-         
         // Check to see if the lqty of any maker orders
         // hase been update by deriving the delta and if there
         // exists any where the delta is not 0 pass those through
@@ -159,26 +146,45 @@
                     s`oprice;
                     abs[flldlt];
                     s`reduce;
-                    nfll#t`time)];
+                    nfll#m`time)];
                 .engine.logic.account.Fill[x];
             ]];
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t`time)];
+        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#m`time)];
         .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[`depth;]
+        .engine.Emit[`depth;t;l];
 
     ];if[count[s]>0;[
-        l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;t`time);
+        l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;m`time);
         .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[`orderbook] l;
+        .engine.Emit[`depth;t;l];
     ]]];
     
     };
 
 
+.engine.logic.trade.Match:{[i;a;m]
+      
+      
+        // Derive and apply Executions
+        // -------------------------------------------------->
 
+        // Apply the set of fills that would satisfy the 
+        // amount of liquidity that is being removed from
+        // the orderbook.
+        .engine.logic.account.Fill[raze'[(
+                numLvls#i`instrumentId; // instrumentId
+                numLvls#a`aId; // accountId
+                s`tside; 
+                s`price;
+                sum'[tqty];
+                count[tqty]#m`reduce;
+                numLvls#m`time)]];
+      
+      
+    };
 
 
 

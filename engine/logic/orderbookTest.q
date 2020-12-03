@@ -56,7 +56,7 @@
         mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b]};c];
         mck5: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b]};c];
 
-        res:.engine.logic.orderbook.Level[a 0;a 1];
+        res:.engine.logic.orderbook.level[a 0;a 1];
 
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
@@ -66,6 +66,7 @@
     (
         ("No change occurs and thus no update is triggered";(
             (
+                z;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
             );

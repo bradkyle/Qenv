@@ -42,14 +42,10 @@
     a:?[`.engine.model.account.Account;enlist(=;`aId;0);();()];
     x[i;a;y]};
 
-.engine.tradeWrapper:{[x;y]
-    i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    x[i;();y]};
-
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.tradeWrapper[.engine.logic.trade.Trade]; //.engine.logic.orderbook.Level[INSTRUMENT];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade]; //.engine.logic.orderbook.Level[INSTRUMENT];
 .engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
 .engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
 .engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice];

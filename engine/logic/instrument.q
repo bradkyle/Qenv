@@ -1,6 +1,6 @@
 
 // U
-.engine.logic.instrument.liquidate:{[i;a]
+.engine.logic.instrument.liquidate:{[t;i;a]
 		a[`status]:1;
 		lq:();
 		.engine.model.liquidation.AddLiquidation[];
@@ -25,9 +25,9 @@
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] iv;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`funding;t;x];
 			};
 
 //   
@@ -42,7 +42,6 @@
 						i[`faceValue];
 						i[`sizeMultiplier]];
 
-
 				a:.engine.model.account.GetAccount[distinct iv`aId];
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
 				a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
@@ -54,9 +53,9 @@
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] iv;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`mark;t;x];
 	};
 
 .engine.logic.instrument.Settlement:{[i;x]
@@ -72,9 +71,9 @@
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
 
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] iv;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
+				.engine.Emit[`settlement;t;x];
 	};
 
 
@@ -83,4 +82,5 @@
 				i[`plmtl]:x[`lowest];
 				.engine.model.instrument.UpdateInstrument i;
 
+				.engine.Emit[`pricelimit;t;x];
 	};

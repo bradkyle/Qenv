@@ -1,6 +1,5 @@
 
 .engine.logic.orderbook.level :{[i;l]
-        .bam.l:l;
         if[count[l`datum]=3;ld:`side`price`qty`time!raze[l`datum`time]];
         / ld[`time]:l`time;
         / show price;

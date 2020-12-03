@@ -49,7 +49,7 @@
             (
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
-                `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
+                `time`datum!(z;`side`size!(1;1)) // fill
             );
             (); // res 
             (
@@ -77,7 +77,7 @@
             (
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // accxunt
-                `side`size`price`reduce`displayqty`time!(0;1;0;0;0;z) // fill
+                `time`datum!(z;`side`size!(1;1)) // fill
             );
             (); // res 
             (
