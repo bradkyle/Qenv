@@ -1,4 +1,5 @@
 
+// TODO test multiple accounts
 
 .qt.SkpBesTest[27];
 .qt.Unit[
@@ -17,36 +18,39 @@
 
         res:.engine.logic.instrument.Funding[z;a 0;a 1];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck4;m[4];c];
+        .qt.CheckMock[mck5;m[5];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Positive Funding: no accounts";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();`balance`mmr`imr!(0.1;0.03;32)); // account
+                (1b;3;();()); // Emit
                 (1b;1;();`amt`abc!()); // Emit
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();`imr`mmr!(0.1;0.1)); // 
+                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
             ); // mocks 
             () // err 
         ));
         ("Negative Funding: No accounts";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+                (1b;1;();flip(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;3;();`amt`abc!());
@@ -57,15 +61,14 @@
 
             ) // err 
         ));
-
         ("Positive Funding: One account, longs pay shorts";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+            (1b;1;();flip(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;3;();`amt`abc!());
@@ -79,11 +82,11 @@
         ("Negative Funding: One account, shorts pay longs";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+            (1b;1;();flip(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;1;();`amt`abc!()); // Emit
@@ -97,11 +100,11 @@
         ("Positive Funding: Multiple accounts, longs pay shorts";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+            (1b;1;();flip(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;1;();`amt`abc!()); // Emit
@@ -115,11 +118,11 @@
         ("Negative Funding: Multiple accounts, shorts pay longs";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                0.0001
             );
             (); // res 
             (
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
+            (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;1;();`amt`abc!()); // Emit

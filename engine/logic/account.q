@@ -1,4 +1,16 @@
 
+.engine.logic.account.Remargin :{[]
+	  
+			// TODO 
+			feetier:.engine.model.feetier.GetFeeTier[];
+			risktier:.engine.model.risktier.GetRiskTier[];
+
+			a[`feetier]:0;
+
+			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+	  
+	  };
+
 // TODO add fee
 // Fill account
 .engine.logic.account.Fill :{[t;i;a;f] // TODO simple select
@@ -58,9 +70,8 @@
 						iv[`isig];
 						iv[`avgPrice]];	
 
-				// TODO 
-				feetier:.engine.model.feetier.GetFeeTier[];
-				risktier:.engine.model.risktier.GetRiskTier[];
+
+				a:.engine.logic.account.Remargin[i;a];
 
 				// 
 				cost:feetier[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
@@ -85,19 +96,9 @@
 				if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
 				if[a[`state]=2;.engine.Purge[w;0;"Account has been locked for liquidation"]];
 				a[`wit]+:w`wit;
-				feetier:.engine.model.feetier.GetFeeTier[];
-				a[`mkrfee]:feetier[`mkrfee];
-				a[`tkrfee]:feetier[`tkrfee];
-
-				risktier:.engine.model.risktier.GetRiskTier[];
-				a[`imr]:risktier[`imr];
-				a[`mmr]:risktier[`mmr];
-
-				// pos order margin
-				a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.UpdateAccount a;
-
 				.engine.Emit[`account;t;a];
 				};
 
@@ -105,18 +106,9 @@
 				if[a[`state]=1;.engine.Purge[d;0;"Account has been disabled"]];
 				a[`dep]+:d`dep;
 				feetier:.engine.model.feetier.GetFeeTier[];
-				a[`mkrfee]:feetier[`mkrfee];
-				a[`tkrfee]:feetier[`tkrfee];
-
-				risktier:.engine.model.risktier.GetRiskTier[];
-				a[`imr]:risktier[`imr];
-				a[`mmr]:risktier[`mmr];
-
-				// pos order margin
-				a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.UpdateAccount a;
-
 				.engine.Emit[`account;t;a];
 				};
 
@@ -126,19 +118,9 @@
 				if[a[`state]=1;.engine.Purge[l;0;"Account has been disabled"]];
 				if[a[`state]=2;.engine.Purge[l;0;"Account has been locked for liquidation"]];
 				a[`leverage]:l`leverage;
-				feetier:.engine.model.feetier.GetFeeTier[];
-				a[`mkrfee]:feetier[`mkrfee];
-				a[`tkrfee]:feetier[`tkrfee];
-
-				risktier:.engine.model.risktier.GetRiskTier[];
-				a[`imr]:risktier[`imr];
-				a[`mmr]:risktier[`mmr];
-
-				// pos order margin
-				a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.UpdateAccount a;
-
 				.engine.Emit[`account;t;a];
 				};
 

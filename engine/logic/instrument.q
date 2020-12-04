@@ -12,19 +12,23 @@
 // Update 
 .engine.logic.instrument.Funding:{[t;i;x]
 				// i[`funding]
+				fundingrate:first x;
 
-				iv:.engine.model.inventory.GetInventory[()];
+				acc:.engine.model.inventory.GetInventory[()];
 				if[count[iv]>0;[
 					// TODO make simpler
 					fnd:0!select 
 						amtInMarket: sum[amt],
-						fundingCost:((min[(x[`fundingRate];0)]*(amt*isignum)) + (max[(x[`fundingRate];0)]*(amt*isignum)))
-						by aId from iv;  
+						fundingCost:((min[(fundingrate;0)]*(amt*side)) + (max[(fundingrate;0)]*(amt*side)))
+						by aId from enlist iv;  
 
-					a:.engine.model.account.GetAccount[fnd`accountId];
-					a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
-					a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
-					a[`avail]:.engine.logic.account.DeriveAvailable[];
+					a:.engine.model.account.GetAccount[fnd`aId];
+
+					feetier:.engine.model.feetier.GetFeeTier[];
+					risktier:.engine.model.risktier.GetRiskTier[];
+
+					a[`risktier]:risktier;
+					a[`feetier]:feetier;
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
