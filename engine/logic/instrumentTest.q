@@ -639,9 +639,7 @@
 
         mck1: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         res:.engine.logic.instrument.PriceLimit[z;a 0;a 1];
 
