@@ -8,6 +8,7 @@
 				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
 				dlt:$[f`reduce;neg[f`qty];f`qty];
 
+				// TODO make contract agnostic
 				iv[`ordQty]-:f[`qty];
 				iv[`ordVal]-:7h$prd[f[`qty`price]];
 				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
