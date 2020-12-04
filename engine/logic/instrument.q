@@ -1,20 +1,11 @@
 
 // U
-.engine.logic.instrument.liquidate:{[t;i;a]
-		a[`status]:1;
-		lq:();
-		.engine.model.liquidation.AddLiquidation[];
-
-		//  
-		
-	};
-
 // Update 
 .engine.logic.instrument.Funding:{[t;i;x]
 				// i[`funding]
-				fundingrate:first x;
+				fundingrate:last x;
 
-				acc:.engine.model.inventory.GetInventory[()];
+				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 				if[count[iv]>0;[
 					// TODO make simpler
 					fnd:0!select 
@@ -23,12 +14,8 @@
 						by aId from enlist iv;  
 
 					a:.engine.model.account.GetAccount[fnd`aId];
-
-					feetier:.engine.model.feetier.GetFeeTier[];
-					risktier:.engine.model.risktier.GetRiskTier[];
-
-					a[`risktier]:risktier;
-					a[`feetier]:feetier;
+					a:.engine.logic.account.Remargin[i;a];
+					a:.engine.logic.account.Liquidate[i;a where[a[`avail]<0]]; // TODO
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
@@ -43,7 +30,8 @@
 
 //   
 .engine.logic.instrument.MarkPrice:{[t;i;x]
-				i[`mkprice]: last x`datum;
+				markprice:last x;
+				i[`mkprice]:markprice;
 
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 				if[count[iv]>0;[
@@ -54,12 +42,14 @@
 							i[`faceValue];
 							i[`sizeMultiplier]];
 
-					a:.engine.model.account.GetAccount[distinct iv`aId];
-					a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
-					a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
-					a[`avail]:.engine.logic.account.DeriveAvailable[];
+					upm:0!select 
+						amtInMarket: sum[amt],
+						upnl:upl[amt;side;avgPrice]
+						by aId from enlist iv;  
 
-					a:.engine.logic.instrument.liquidate[i;a where[a[`avail]<i[`]]];
+					a:.engine.model.account.GetAccount[upm`aId];
+					a:.engine.logic.account.Remargin[i;a];
+					a:.engine.logic.account.Liquidate[i;a where[a[`avail]<0]]; // TODO
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
@@ -73,15 +63,10 @@
 	};
 
 .engine.logic.instrument.Settlement:{[t;i;x]
-				// i[`funding]
-
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 				if[count[iv]>0;[
 					a[`mrg]+:iv[`rpnl];
 					iv[`rpnl]:0;
-					a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
-					a[`mkrfee`tkrfee]:.engine.logic.account.DeriveFeeTier[][`mkrfee`tkrfee];
-					a[`avail]:.engine.logic.account.DeriveAvailable[];
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
@@ -95,8 +80,10 @@
 
 
 .engine.logic.instrument.PriceLimit:{[t;i;x]
-				i[`plmth]:x[`highest];
-				i[`plmtl]:x[`lowest];
+				highest:last x[0];
+				lowest:last x[1];
+				i[`plmth]:highest;
+				i[`plmtl]:lowest;
 
 				o:.engine.model.order.GetOrder[];
 				if[o;[

@@ -1,5 +1,14 @@
 
-.engine.logic.account.Remargin :{[]
+.engine.logic.account.Liquidate:{[t;i;a]
+		a[`status]:1;
+		lq:();
+		.engine.model.liquidation.AddLiquidation[];
+
+		//  
+		
+	};
+
+.engine.logic.account.Remargin :{[i;a]
 	  
 			// TODO 
 			feetier:.engine.model.feetier.GetFeeTier[];
@@ -8,7 +17,7 @@
 			a[`feetier]:0;
 
 			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
-	  
+			a
 	  };
 
 // TODO add fee
