@@ -345,7 +345,7 @@
     "Global function for creating a new account"];
 
 
-.qt.SkpBesTest[29];
+/ .qt.SkpBesTest[29];
 .qt.Unit[
     ".engine.logic.instrument.Settlement";
     {[c]
@@ -629,7 +629,7 @@
     "Global function for creating a new account"];
 
 
-
+.qt.SkpBesTest[30];
 .qt.Unit[
     ".engine.logic.instrument.PriceLimit";
     {[c]
@@ -637,11 +637,13 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck0: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+
 
         res:.engine.logic.instrument.PriceLimit[z;a 0;a 1];
 
@@ -651,18 +653,35 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        enlist("Update highest/lowest price limit";(
+        ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `fqty`fprice`dlt!(0;1;0) // fill
+                (1000 1000)
             );
             (); // res 
             (
-                (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
-                (1b;3;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("First should succeed";(
+            ( // Mocks
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                (1000 1000)
+            );
+            (); // res 
+            (
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
