@@ -1,13 +1,18 @@
 
 // TODO add fee
 // Fill account
-.engine.logic.account.Fill :{[i;a;f]
-				iv:.engine.model.inventory.GetInventory[`side`aId!(`side;a`aId)];
+.engine.logic.account.Fill :{[t;i;a;f] // TODO simple select
+				iv:.engine.model.inventory.GetInventory[((=;`side;f`side);(=;`aId;a`aId))];
+
+				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
+				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
+				dlt:$[f`reduce;neg[f`qty];f`qty];
+
 				iv[`ordQty]-:f[`qty];
-				iv[`ordVal]:prd[f[`qty`price]];
-				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
-				iv[`amt]+:f[`dlt];
-				iv[`totalEntry]+:max[(f`dlt;0)];
+				iv[`ordVal]-:7h$prd[f[`qty`price]];
+				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
+				iv[`amt]+:dlt;
+				iv[`totalEntry]+:max[(dlt;0)];
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
@@ -52,7 +57,7 @@
 						iv[`isig];
 						iv[`avgPrice]];	
 
-				//  
+				// TODO 
 				feetier:.engine.model.feetier.GetFeeTier[];
 				risktier:.engine.model.risktier.GetRiskTier[];
 
@@ -68,9 +73,8 @@
 				.engine.model.instrument.UpdateInstrument i;
 
 				// Emit events
-				.engine.Emit[`account] a;
-				.engine.Emit[`inventory] iv;
-				.engine.Emit[`instrument] i;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
 				};
 
 

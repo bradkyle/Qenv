@@ -1,8 +1,10 @@
 
 
-.engine.logic.contract.Value      :{[]
-    
-    
+.engine.logic.contract.PricePerContract :{[contractType;price;faceValue]
+  ($[contractType=0;faceValue%price;
+      contractType=1;.engine.logic.contract.linear.ExecCost[price;qty;multiplier];
+      contractType=2;.engine.logic.contract.quanto.ExecCost[price;qty;multiplier];
+      'nyi] | 0)
     }; 
 
 //  UnrealizedPnl

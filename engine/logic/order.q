@@ -32,25 +32,28 @@
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
 				// FeeTier  
-				a[`ft]:.engine.model.feetier.GetFeeTier[];
+				a[`ft]:.engine.model.feetier.GetFeeTier[()];
 
 				// RiskTier
-				a[`rt]:.engine.model.risktier.GetRiskTier[];
+				a[`rt]:.engine.model.risktier.GetRiskTier[()];
 
 				a[`avail]-:sum[(vdlt;lsdlt)];
 
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 
+				/ match:o where [];
+				/ place:o where [];
+
 				// TODO fix this functionality
-				$[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
-							in'[1;o[`execInst]];:.engine.Purge[o;0;"Order had execInst of postOnly"]]);
-							.engine.logic.trade.Match[i;a;o];
-						];[
-							.engine.model.order.CreateOrder o;
-					 		.engine.logic.orderbook.Level[]
-						]];
+				/ $[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
+				/ 			.engine.Purge[o where in[];0;"Order had execInst of postOnly"];
+				/ 			.engine.logic.trade.Match[i;a;o];
+				/ 		];[
+				/ 			.engine.model.order.CreateOrder o;
+				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
+				/ 		]];
 
 
 				.engine.Emit[`account;t;a];

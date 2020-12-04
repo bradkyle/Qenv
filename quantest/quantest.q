@@ -831,7 +831,7 @@ RT:{[ids]
 
 
 cf:{[x]
-    f:last select from .qt.Assertion where state=`FAIL;
+    f:last select from .qt.Assertion where (state=`FAIL) and (caseId=x);
     f[`dscr]:first exec dscr from .qt.Case where caseId=x;
     f
     };
