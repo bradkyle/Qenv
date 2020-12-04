@@ -4,7 +4,6 @@
 		lq:();
 		.engine.model.liquidation.AddLiquidation[];
 
-		//  
 		
 	};
 
@@ -14,8 +13,8 @@
 			feetier:.engine.model.feetier.GetFeeTier[];
 			risktier:.engine.model.risktier.GetRiskTier[];
 
-			a[`feetier]:0;
-			.bam.a:a;
+			a[`feetier]:feetier;
+			a[`riktier]:risktier;
 
 			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			a

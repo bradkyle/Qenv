@@ -26,10 +26,8 @@
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
         mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
-        / mck4: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b;c]};c];
         mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck6: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
-        mck7: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
+        mck7: .qt.M[`.engine.model.account.Remargin;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.account.Fill[z;a 0;a 1;a 2];
 

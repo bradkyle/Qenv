@@ -15,7 +15,6 @@
 
 					a:.engine.model.account.GetAccount[fnd`aId];
 					a:.engine.logic.account.Remargin[i;a];
-					a:.engine.logic.account.Liquidate[i;a where[a[`avail]<0]]; // TODO
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
@@ -49,7 +48,6 @@
 
 					a:.engine.model.account.GetAccount[upm`aId];
 					a:.engine.logic.account.Remargin[i;a];
-					a:.engine.logic.account.Liquidate[i;a where[a[`avail]<0]]; // TODO
 
 					.engine.model.account.UpdateAccount a;
 					.engine.model.inventory.UpdateInventory iv;
