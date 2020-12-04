@@ -15,6 +15,7 @@
 			risktier:.engine.model.risktier.GetRiskTier[];
 
 			a[`feetier]:0;
+			.bam.a:a;
 
 			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			a
