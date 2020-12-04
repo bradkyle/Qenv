@@ -4,6 +4,8 @@
 		a[`status]:1;
 		lq:();
 		.engine.model.liquidation.AddLiquidation[];
+
+		//  
 		
 	};
 
@@ -12,7 +14,7 @@
 				// i[`funding]
 
 				iv:.engine.model.inventory.GetInventory[()];
-				if[iv;[
+				if[count[iv]>0;[
 					// TODO make simpler
 					fnd:0!select 
 						amtInMarket: sum[amt],
@@ -40,7 +42,7 @@
 				i[`mkprice]: last x`datum;
 
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
-				if[iv;[
+				if[count[iv]>0;[
 					// TODO make simpler
 					upl:.engine.logic.contract.UnrealizedPnl[
 							i[`contractType];
@@ -70,7 +72,7 @@
 				// i[`funding]
 
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
-				if[iv;[
+				if[count[iv]>0;[
 					a[`mrg]+:iv[`rpnl];
 					iv[`rpnl]:0;
 					a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];

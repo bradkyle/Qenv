@@ -11,7 +11,7 @@
         mck0: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[1][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
@@ -33,7 +33,7 @@
                 (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
-                (1b;3;();`amt`abc!());
+                (1b;1;();`amt`abc!()); // Emit
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
@@ -48,6 +48,7 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;3;();`amt`abc!());
@@ -66,6 +67,7 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;3;();`amt`abc!());
