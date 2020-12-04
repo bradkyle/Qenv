@@ -37,9 +37,7 @@
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Negative Funding: No accounts";(
             ( // Mocks
@@ -85,9 +83,10 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
-                (1b;3;();`amt`abc!());
+                (1b;1;();`amt`abc!()); // Emit
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
@@ -102,9 +101,10 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
-                (1b;3;();`amt`abc!());
+                (1b;1;();`amt`abc!()); // Emit
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 
@@ -119,9 +119,10 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
-                (1b;3;();`amt`abc!());
+                (1b;1;();`amt`abc!()); // Emit
                 (1b;3;();`imr`mmr!(0.1;0.1));
                 (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
             ); // mocks 

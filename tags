@@ -4,86 +4,31 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	Development	//
-A2C	example/baselines.py	/^from stable_baselines import A2C, ACKTR, PPO2, DDPG, ACER$/;"	i
-ACER	example/baselines.py	/^from stable_baselines import A2C, ACKTR, PPO2, DDPG, ACER$/;"	i
-ACKTR	example/baselines.py	/^from stable_baselines import A2C, ACKTR, PPO2, DDPG, ACER$/;"	i
-CnnLnLstmPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
-CnnLstmPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
-CnnPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
 Config	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
-DDPG	example/baselines.py	/^from stable_baselines import A2C, ACKTR, PPO2, DDPG, ACER$/;"	i
-DummyVecEnv	example/baselines.py	/^from stable_baselines.common.vec_env import SubprocVecEnv, DummyVecEnv$/;"	i
-Env	example/kdbenv.py	/^class Env(gym.Env): $/;"	c
-GapKFold	example/baselines.py	/^from tscv import GapKFold$/;"	i
 ImageBuilder	__init__.py	/^from infra.docker import ImageBuilder$/;"	i
 IngestConfig	__init__.py	/^class IngestConfig():$/;"	c
 IngestWorker	__init__.py	/^class IngestWorker(pulumi.ComponentResource):$/;"	c
 KDBFullSensor	__init__.py	/^class KDBFullSensor(pulumi.ComponentResource):$/;"	c
 KDBSensorSpec	__init__.py	/^class KDBSensorSpec(object):$/;"	c
 Mapping	__init__.py	/^from typing import Mapping, Sequence$/;"	i
-MlpLnLstmPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
-MlpLstmPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
-MlpPolicy	example/baselines.py	/^from stable_baselines.common.policies import MlpLnLstmPolicy, CnnPolicy, MlpPolicy, MlpLstmPolicy,CnnLnLstmPolicy, CnnLstmPolicy$/;"	i
 Output	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
-PPO2	example/baselines.py	/^from stable_baselines import A2C, ACKTR, PPO2, DDPG, ACER$/;"	i
-ParquetFile	example/baselines.py	/^from fastparquet import ParquetFile$/;"	i
-ParquetFile	example/kdbenv.py	/^from fastparquet import ParquetFile$/;"	i
 QenvConfig	__init__.py	/^class QenvConfig():$/;"	c
 QenvWorker	__init__.py	/^class QenvWorker(pulumi.ComponentResource):$/;"	c
 ResourceOptions	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
 Sequence	__init__.py	/^from typing import Mapping, Sequence$/;"	i
-SubprocVecEnv	example/baselines.py	/^from stable_baselines.common.vec_env import SubprocVecEnv, DummyVecEnv$/;"	i
-TrainingEnv	example/baselines.py	/^from env.TrainingEnv import TrainingEnv$/;"	i
-TypicalMMState	example/baselines.py	/^from env.state import TypicalMMState$/;"	i
 __init__	__init__.py	/^    def __init__(self):$/;"	m	class:IngestConfig
 __init__	__init__.py	/^    def __init__(self):$/;"	m	class:IngestWorker
 __init__	__init__.py	/^    def __init__(self):$/;"	m	class:KDBSensorSpec
 __init__	__init__.py	/^    def __init__(self):$/;"	m	class:QenvConfig
 __init__	__init__.py	/^    def __init__(self):$/;"	m	class:QenvWorker
 __init__	__init__.py	/^    def __init__(self,$/;"	m	class:KDBFullSensor
-__init__	example/kdbenv.py	/^    def __init__(self, state, load=True, *args, **kwargs):$/;"	m	class:Env
-_load	example/kdbenv.py	/^    def _load(self):$/;"	m	class:Env
-_load_config	example/kdbenv.py	/^    def _load_config(self):$/;"	m	class:Env
-_next_observation	example/kdbenv.py	/^    def _next_observation(self):$/;"	m	class:Env
-_reward	example/kdbenv.py	/^    def _reward(self):$/;"	m	class:Env
-_step_profit	example/kdbenv.py	/^    def _step_profit(self):$/;"	m	class:Env
-action_space	example/kdbenv.py	/^    def action_space(self):$/;"	m	class:Env
 clean	__init__.py	/^    def clean(self):$/;"	m	class:KDBFullSensor
-collections	example/kdbenv.py	/^import collections$/;"	i
 docker	__init__.py	/^import pulumi_docker as docker$/;"	i
-env	example/baselines.py	/^env = SubprocVecEnv([lambda:env_cls for i in range(len(train_dfs))])$/;"	v
-env_cls	example/baselines.py	/^env_cls = KDBEnv($/;"	v
 export	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
-from_df	example/kdbenv.py	/^    def from_df(df, state, **kwargs):$/;"	m	class:Env
 gcp	__init__.py	/^import pulumi_gcp as gcp$/;"	i
 get_project	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
 get_stack	__init__.py	/^from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions$/;"	i
-gym	example/kdbenv.py	/^import gym$/;"	i
-json	example/kdbenv.py	/^import json$/;"	i
 k8s	__init__.py	/^import pulumi_kubernetes as k8s$/;"	i
-learning_rate	example/baselines.py	/^    learning_rate=CONFIG["learning_rate"],$/;"	v
-load	example/baselines.py	/^    load=False,$/;"	v
-min_balance	example/kdbenv.py	/^    def min_balance(self):$/;"	m	class:Env
-model	example/baselines.py	/^model = PPO2( #TODO mlp policy supports testing$/;"	v
-nminibatches	example/baselines.py	/^    nminibatches=1,$/;"	v
-np	example/kdbenv.py	/^import numpy as np$/;"	i
-num_cols	example/kdbenv.py	/^    def num_cols(self):$/;"	m	class:Env
-observation_space	example/kdbenv.py	/^    def observation_space(self):$/;"	m	class:Env
 os	__init__.py	/^import os$/;"	i
-os	example/baselines.py	/^import os$/;"	i
-pa	example/kdbenv.py	/^import pyarrow as pa$/;"	i
-pq	example/kdbenv.py	/^import pyarrow.parquet as pq $/;"	i
 prand	__init__.py	/^import pulumi_random as prand$/;"	i
-prepare	example/kdbenv.py	/^    def prepare(self, df, logging=False, max_steps=None):$/;"	m	class:Env
-preprocessing	example/kdbenv.py	/^from sklearn import preprocessing$/;"	i
 pulumi	__init__.py	/^import pulumi$/;"	i
-pyarrow	example/kdbenv.py	/^import pyarrow.parquet as pq $/;"	i
-reset	example/kdbenv.py	/^    def reset(self):$/;"	m	class:Env
-sortino_ratio	example/kdbenv.py	/^from empyrical import sortino_ratio$/;"	i
-tensorboard_log	example/baselines.py	/^    tensorboard_log=".\/tensorboard",$/;"	v
-test_env	example/baselines.py	/^test_env = DummyVecEnv([lambda: env_cls.prepare(df=test_df, logging=True, max_steps=20000)])$/;"	v
-tf	example/baselines.py	/^import tensorflow as tf$/;"	i
-train_envs	example/baselines.py	/^train_envs = SubprocVecEnv([lambda: env_cls.prepare(df=train_dfs[idx]) for idx in range(len(train_dfs))])$/;"	v
-training	example/baselines.py	/^    training=True,$/;"	v
-verbose	example/baselines.py	/^    verbose=1,$/;"	v
-wandb	example/kdbenv.py	/^import wandb$/;"	i
