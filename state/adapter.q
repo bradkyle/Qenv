@@ -248,7 +248,8 @@
 .state.adapter.createDeltaEvents                                    :{[amd;aId;time;prices;sides;reduces;tgts]
     c:a:n:();
 
-    bk:update bkt:til count bktP from `bktP xasc flip[`bktP`bktPmid`side`reduce`tgt!(prices;avg[prices];sides;reduces;tgts)];
+    show count each (prices;sides;reduces;tgts);
+    bk:update bkt:til count bktP from `bktP xasc flip[`bktP`side`reduce`tgt!(prices;sides;reduces;tgts)];
 
     curr:select orderId,leaves,lvlqty:sum leaves,time,oprice:price,accountId by 
     bkt:bk[`bktP] bin price, side, reduce // TODO move logic to state
@@ -317,28 +318,30 @@
 .state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsttyp;amts;reduces]
         amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
 
-        bktsize:3;
+        bktsize:2;
         ticksize:1;
         mxfrac:0.1;
 
+        bmprice:.state.bestSidePrice[mside];
+        boprice:.state.bestSidePrice[neg mside];
+
         // Derive price distribution
         prc:();
-        if[count[amts]>0;prc,:.state.adapter.expPcntPriceDistribution[
-                .state.bestSidePrice[mside];bktsize;ticksize;num-1;mside;mxfrac]];
-        if[count[amts]>1;prc,:.state.adapter.expPcntPriceDistribution[
-                .state.bestSidePrice[neg mside];bktsize;ticksize;num-1;neg mside;mxfrac]];
+        if[(count[amts]>0) and bmprice;prc,:.state.adapter.expPcntPriceDistribution[bmprice;bktsize;ticksize;num-1;mside;mxfrac]];
+        if[(count[amts]>1) and boprice;prc,:.state.adapter.expPcntPriceDistribution[boprice;bktsize;ticksize;num-1;neg mside;mxfrac]];
+        show prc;
 
         // Derive size distribution
         dsts:();
-        if[count[amts]>0;dsts,:.state.adapter.amtdist[first dsttyp][first amts;num;mside]];
-        if[count[amts]>1;dsts,:.state.adapter.amtdist[dsttyp[1]][amts[1];num;neg[mside]]];
+        if[(count[amts]>0) and bmprice;dsts,:.state.adapter.amtdist[first dsttyp][first amts;num;mside]];
+        if[(count[amts]>1) and boprice;dsts,:.state.adapter.amtdist[dsttyp[1]][amts[1];num;neg[mside]]];
 
         red:sid:();
-        if[count[amts]>0;[red,:(num#first[reduces]);sid,:(num#mside)]];
-        if[count[amts]>1;[red,:(num#reduces[1]);sid,:(num#neg[mside])]];
+        if[(count[amts]>0) and bmprice;[red,:(num#first[reduces]);sid,:(num#mside)]];
+        if[(count[amts]>1) and boprice;[red,:(num#reduces[1]);sid,:(num#neg[mside])]];
 
         // create delta events from target
-        if[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
+        $[count[dsts]>0;:.state.adapter.createDeltaEvents[amd;aId;time;prc;sid;red;dsts];:()];
     };
  
  

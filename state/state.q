@@ -217,11 +217,13 @@
 .state.CurrentDepth: `price xkey .state.DepthEventHistory;
   
 .state.bestAskPrice                :{
-    ?[`.state.CurrentDepth;enlist(=;`side;-1);();(min;`price)]
+    a:?[`.state.CurrentDepth;enlist(=;`side;-1);();(min;`price)]; 
+    $[a <> 0W;a;0]
     };
 
 .state.bestBidPrice                :{
-    ?[`.state.CurrentDepth;enlist(=;`side;1);();(max;`price)]
+    b:?[`.state.CurrentDepth;enlist(=;`side;1);();(max;`price)];
+    $[b <> -0W;b;0]
     };
 
 .state.bestSidePrice                :{[side]
