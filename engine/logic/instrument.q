@@ -65,6 +65,7 @@
 .engine.logic.instrument.Settlement:{[t;i;x]
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 				if[count[iv]>0;[
+					a:.engine.model.account.GetAccount[iv`aId];
 					a[`mrg]+:iv[`rpnl];
 					iv[`rpnl]:0;
 

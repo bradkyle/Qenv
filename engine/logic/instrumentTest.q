@@ -376,11 +376,11 @@
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
