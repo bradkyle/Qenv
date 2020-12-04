@@ -1,7 +1,8 @@
 
 // TODO test multiple accounts
+// TODO test multiple events
 
-.qt.SkpBesTest[27];
+/ .qt.SkpBesTest[27];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
@@ -34,8 +35,8 @@
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
                 (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;3;();()); // UpdateAccount 
-                (1b;1;();()); // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
                 (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             () // err 
@@ -48,11 +49,10 @@
             (); // res 
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // account
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
                 (1b;3;();()); // Emit
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // 
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -66,11 +66,10 @@
             (); // res 
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // account
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
                 (1b;3;();()); // Emit
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // 
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -84,11 +83,10 @@
             (); // res 
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // account
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
                 (1b;3;();()); // Emit
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // 
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -102,11 +100,10 @@
             (); // res 
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // account
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
                 (1b;3;();()); // Emit
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // 
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -120,11 +117,10 @@
             (); // res 
             (
                 (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // account
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
                 (1b;3;();()); // Emit
-                (1b;1;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // 
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) //
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -134,6 +130,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
+/ .qt.SkpBesTest[28];
 .qt.Unit[
     ".engine.logic.instrument.MarkPrice";
     {[c]
@@ -141,9 +138,10 @@
         a:p`args;
         m:p[`mocks];
 
+        mck0: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
         mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
@@ -157,16 +155,16 @@
     (
         ("Update mark price (decreasing), one account: no positions";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -174,16 +172,16 @@
         ));
         ("Update mark price (increasing), one account: no positions";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -191,16 +189,16 @@
         ));
         ("Update mark price (decreasing), one account: no positions effected";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -208,16 +206,16 @@
         ));
         ("Update mark price (decreasing), one account: no positions effected";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -225,16 +223,16 @@
         ));
         ("Update mark price (decreasing), one account: UPL:0.5";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -242,16 +240,16 @@
         ));
         ("Update mark price (decreasing), one account: UPL:-0.5";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -259,16 +257,16 @@
         ));
         ("Update mark price (increasing), one account: UPL:0.5";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -276,16 +274,16 @@
         ));
         ("Update mark price (increasing), one account: UPL:-0.5";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -293,16 +291,16 @@
         ));
         ("Update mark price (decreasing), one account: liqduiation for tier should occur";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -310,16 +308,16 @@
         ));
         ("Update mark price (increasing), one account: liquidation for tier should occur";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -327,16 +325,16 @@
         ));
         ("First should succeed";(
             ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
+                `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 1000
             );
             (); // res 
             (
-                (1b;1;();enlist(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1;1000;0;1;1;100000;1000;0;0))));
-                (1b;3;();()); // 
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
+                (1b;1;();()); // UpdateAccount 
+                (1b;3;();()); // Emit
+                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
             ); // mocks 
             (
 
@@ -347,6 +345,7 @@
     "Global function for creating a new account"];
 
 
+.qt.SkpBesTest[29];
 .qt.Unit[
     ".engine.logic.instrument.Settlement";
     {[c]
@@ -354,11 +353,13 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck0: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
+
 
         res:.engine.logic.instrument.Settlement[z;a 0;a 1];
 

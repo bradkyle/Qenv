@@ -36,15 +36,17 @@
 				if[count[iv]>0;[
 					// TODO make simpler
 					upl:.engine.logic.contract.UnrealizedPnl[
-							i[`contractType];
+							i[`cntTyp];
 							i[`mkprice];
 							i[`faceValue];
-							i[`sizeMultiplier]];
+							i[`smul]];
 
 					upm:0!select 
 						amtInMarket: sum[amt],
-						upnl:upl[amt;side;avgPrice]
+						upnl:upl'[amt;side;avgPrice]
 						by aId from enlist iv;  
+
+					.bam.upm:upm;
 
 					a:.engine.model.account.GetAccount[upm`aId];
 					a:.engine.logic.account.Remargin[i;a];
