@@ -43,7 +43,7 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("flat to long: UPL: 0, RPL:0 ONE POSITION";(
+        ("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`feetier`risktier!(0;0.1;0;0); // account
@@ -61,7 +61,7 @@
             ); // mocks 
             () // err 
         ));
-        ("long to flat: UPL: 0, RPL:0 ONE POSITION";(
+        ("INVERSE:long to flat: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
                 `aId`balance`feetier`risktier!(0;0.1;0;0); // account
@@ -97,7 +97,7 @@
             ); // mocks 
             () // err 
         ));
-        ("long to longer: UPL (orderLoss): 0.5, RPL:0 ONE POSITION";(
+        ("long to longer: UPL:-0.5, orderLoss: 0.5, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1500;1); // instrument
                 `aId`balance`feetier`risktier!(0;0.1;0;0); // account
