@@ -8,13 +8,13 @@
 	};
 
 // Update 
-.engine.logic.instrument.Funding:{[i;x]
+.engine.logic.instrument.Funding:{[t;i;x]
 				iv:.engine.model.inventory.GetInventory[()];
 				// TODO make simpler
 				fnd:0!select 
-				amtInMarket: sum[amt],
-				fundingCost:((min[(x[`fundingRate];0)]*(amt*isignum)) + (max[(x[`fundingRate];0)]*(amt*isignum)))
-				by accountId from iv;  
+					amtInMarket: sum[amt],
+					fundingCost:((min[(x[`fundingRate];0)]*(amt*isignum)) + (max[(x[`fundingRate];0)]*(amt*isignum)))
+					by aId from iv;  
 
 				a:.engine.model.account.GetAccount[fnd`accountId];
 				a[`imr`mmr]:.engine.logic.account.DeriveRiskTier[][`imr`mmr];
@@ -31,7 +31,7 @@
 			};
 
 //   
-.engine.logic.instrument.MarkPrice:{[i;x]
+.engine.logic.instrument.MarkPrice:{[t;i;x]
 				i[`mkprice]: last x`datum;
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 
@@ -58,7 +58,7 @@
 				.engine.Emit[`mark;t;x];
 	};
 
-.engine.logic.instrument.Settlement:{[i;x]
+.engine.logic.instrument.Settlement:{[t;i;x]
 				iv:.engine.model.inventory.GetInventory[enlist(<;`amt;0)];
 
 				a[`mrg]+:iv[`rpnl];
@@ -77,7 +77,7 @@
 	};
 
 
-.engine.logic.instrument.PriceLimit:{[i;x]
+.engine.logic.instrument.PriceLimit:{[t;i;x]
 				i[`plmth]:x[`highest];
 				i[`plmtl]:x[`lowest];
 				.engine.model.instrument.UpdateInstrument i;

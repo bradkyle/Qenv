@@ -1,6 +1,6 @@
 
 
-/ .qt.SkpBesTest[27];
+.qt.SkpBesTest[27];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
@@ -8,13 +8,14 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
+        mck0: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
+        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[1][3]];c];
         mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
-        res:.engine.logic.instrument.Funding[a 0;a 1];
+        res:.engine.logic.instrument.Funding[z;a 0;a 1];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -29,6 +30,7 @@
             );
             (); // res 
             (
+                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;3;();`balance`mmr`imr!(0.1;0.03;32)); // account
                 (1b;3;();());
                 (1b;3;();`amt`abc!());
@@ -142,7 +144,7 @@
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
-        res:.engine.logic.instrument.MarkPrice[a 0;a 1];
+        res:.engine.logic.instrument.MarkPrice[z;a 0;a 1];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -355,7 +357,7 @@
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
-        res:.engine.logic.instrument.Settlement[a 0;a 1];
+        res:.engine.logic.instrument.Settlement[z;a 0;a 1];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -637,7 +639,7 @@
         mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
         mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
-        res:.engine.logic.instrument.PriceLimit[a 0;a 1];
+        res:.engine.logic.instrument.PriceLimit[z;a 0;a 1];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];

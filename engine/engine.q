@@ -35,12 +35,12 @@
 
 .engine.publicWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    x[i;y]};
+    x[y`time;i;y`datum]};
 
 .engine.privateWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
     a:?[`.engine.model.account.Account;enlist(=;`aId;0);();()];
-    x[i;a;y]};
+    x[y`time;i;a;y`datum]};
 
 .engine.map:()!();
 

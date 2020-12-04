@@ -1,6 +1,6 @@
 
 // TODO process multiple trades
-.engine.logic.trade.Trade:{[i;x]
+.engine.logic.trade.Trade:{[t;i;x]
     m:flip `side`qty!flip x`datum;
     nside:neg[m`side];
 

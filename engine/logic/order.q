@@ -1,5 +1,5 @@
 
-.engine.logic.order.NewOrder:{[i;a;x]
+.engine.logic.order.NewOrder:{[t;i;a;x]
 				// Instrument validations
 				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 				o:flip ordCols!flip x`datum;
@@ -61,7 +61,7 @@
 				.engine.Emit[`order;t;o];
 		};
 
-.engine.logic.order.AmendOrder:{[i;a;o]
+.engine.logic.order.AmendOrder:{[t;i;a;o]
 				c:.engie.logic.order.GetOrder[`oId`cId;o`oId`cId];
 				if[null[c];.engine.Purge[o;0;"Order not found"]];
 				if[not[c[`state] in ()];.engine.Purge[o;0;"update order with terminal state"]];
@@ -116,7 +116,7 @@
 				.engine.Emit[`order;t;o];
 		};
 
-.engine.logic.order.CancelOrder:{[i;a;o]
+.engine.logic.order.CancelOrder:{[t;i;a;o]
 				c:.engie.logic.order.GetOrder[`oId`cId;o`oId`cId];
 				if[null[c];.engine.Purge[o;0;"Order not found"]];
 				if[not[c[`state] in ()];.engine.Purge[o;0;"cancel order with terminal state"]];
@@ -149,7 +149,7 @@
 		};
 
 
-.engine.logic.order.CancelAllOrders:{[i;a;o]
+.engine.logic.order.CancelAllOrders:{[t;i;a;o]
 				c:.engie.logic.order.GetOrder[`aId`state;(a`aId;0)];
 				if[null[c];.engine.Purge[o;0;"No orders found"]];
 				if[not[c[`state] in ()];.engine.Purge[o;0;"cancel order with terminal state"]];
