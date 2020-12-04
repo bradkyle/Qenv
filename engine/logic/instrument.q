@@ -87,7 +87,7 @@
 				i[`plmtl]:lowest;
 
 				o:.engine.model.order.GetOrder[];
-				if[o;[
+				if[count[o]>0;[
 						// cancel orders, send respective updates
 				]];
 
