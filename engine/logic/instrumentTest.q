@@ -629,7 +629,7 @@
     "Global function for creating a new account"];
 
 
-.qt.SkpBesTest[30];
+/ .qt.SkpBesTest[30];
 .qt.Unit[
     ".engine.logic.instrument.PriceLimit";
     {[c]

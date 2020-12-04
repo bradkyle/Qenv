@@ -46,8 +46,6 @@
 						upnl:upl'[amt;side;avgPrice]
 						by aId from enlist iv;  
 
-					.bam.upm:upm;
-
 					a:.engine.model.account.GetAccount[upm`aId];
 					a:.engine.logic.account.Remargin[i;a];
 

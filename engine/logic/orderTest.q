@@ -14,6 +14,7 @@
 // TODO validation and stop orders
 // TODO Check mock called with correct
 /// TODO simulate order loss
+.qt.SkpBesTest[31];
 .qt.Unit[
     ".engine.logic.order.NewOrder";
     {[c]
