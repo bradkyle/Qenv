@@ -18,6 +18,7 @@
                     accountId from .state.AccountEventHistory where time 
                     within (max[time]-(`minute$windowsize);max[time]),accountId in aIds); // TODO window size
 
+    // TODO fill missing accountIds
     :update sortino:.state.rew.sortinoRatio'[returns;0] from r;
 
     };
