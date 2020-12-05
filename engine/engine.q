@@ -131,54 +131,54 @@
         (7; 80000;   0.00018;   0.000300;  0f;  0f; 600);
         (8; 150000;  0.00012;   0.00024;   0f;  0f; 600))];                             //  
 
-    n:count[aIds];
     .engine.model.instrument.Instrument,:((!) . flip(
-        (`iId                      ; til[n]);                                           
-        (`cntTyp                   ; n#0);
-        (`state                    ; n#0);
-        (`faceValue                ; n#0);
-        (`markPrice                ; n#0);
-        (`mxSize                   ; n#0);
-        (`mnPrice                  ; n#0);
-        (`mxPrice                  ; n#0) 
+        (`iId                      ; 0);                                           
+        (`cntTyp                   ; 0);
+        (`state                    ; 0);
+        (`faceValue                ; 0);
+        (`markPrice                ; 0);
+        (`mxSize                   ; 0);
+        (`mnPrice                  ; 0);
+        (`mxPrice                  ; 0) 
         ));
 
+    n:count[aIds];
+    dn:n*2;
     .engine.model.inventory.Inventory,:ivn:flip[(!) . flip(
-        (`ivId             ; 0 1);                                            
-        (`aId              ; 0 0);                                            
-        (`side             ; 1 -1);                                            
-        (`ordQty           ; 2#0);
-        (`ordVal           ; 2#0);
-        (`ordLoss          ; 2#0);
-        (`amt              ; 2#0);
-        (`iw               ; 2#0); // isolated wallet
-        (`mm               ; 2#0);
-        (`posVal           ; 2#0);
-        (`rpnl             ; 2#0);  
-        (`avgPrice         ; 2#0);  
-        (`execCost         ; 2#0);  
-        (`upnl             ; 2#0);  
-        (`lev              ; 2#0)  
+        (`ivId             ; til[dn]);                                            
+        (`aId              ; floor[til[dn]%2]);                                            
+        (`side             ; dn#(1 -1));                                            
+        (`ordQty           ; dn#0);
+        (`ordVal           ; dn#0);
+        (`ordLoss          ; dn#0);
+        (`amt              ; dn#0);
+        (`iw               ; dn#0); // isolated wallet
+        (`mm               ; dn#0);
+        (`posVal           ; dn#0);
+        (`rpnl             ; dn#0);  
+        (`avgPrice         ; dn#0);  
+        (`execCost         ; dn#0);  
+        (`upnl             ; dn#0);  
+        (`lev              ; dn#0)  
         )];
 
     .engine.model.account.Account,:acc:(!) . flip(
-        (`aId              ; 0);                                            
+        (`aId              ; aIds);                                            
         (`lng              ; `.engine.model.inventory.Inventory$0);
         (`srt              ; `.engine.model.inventory.Inventory$1);  
-        (`dep              ; 0);  
-        (`wit              ; 0);  
-        (`rt               ; `.engine.model.risktier.RiskTier$0);  
-        (`ft               ; `.engine.model.feetier.FeeTier$0);  
-        (`posTyp           ; 0);  
-        (`mrgTyp           ; 0);  
-        (`avail            ; 10);  
-        (`bal              ; 10)  
+        (`dep              ; n#0);  
+        (`wit              ; n#0);  
+        (`rt               ; n#`.engine.model.risktier.RiskTier$0);  
+        (`ft               ; n#`.engine.model.feetier.FeeTier$0);  
+        (`posTyp           ; n#0);  
+        (`mrgTyp           ; n#0);  
+        (`avail            ; n#10);  
+        (`bal              ; n#10)  
         );
 
     t:min events`time;
-    .bam.acc:select aId, time:t, bal, avail, dep, mm:0 from acc;
-    .engine.Emit[`account;t;
-        select aId, time:t, bal, avail, dep, mm:0 from acc];
+    .engine.Emit[`account;t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
+    .engine.Emit[`inventory;t]'[select aId, time:t, bal, avail, dep, mm:0 from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
