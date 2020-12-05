@@ -17,9 +17,9 @@ import numpy as np
 import parl
 import six
 import parl
-from atari_model import Model
+from model import Model
 from collections import defaultdict
-from atari_agent import Agent
+from agent import Agent
 from parl.env.atari_wrappers import wrap_deepmind, MonitorEnv, get_wrapper_by_cls
 from parl.env.vector_env import VectorEnv
 import random
