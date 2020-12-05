@@ -13,14 +13,10 @@
 // TODO use reward based upon realized pnl with respect to balance
 .state.rew.GetRewards  :{[step;windowsize;aIds] // TODO configurable window size
     // todo fill
-    ac:([accountId:(0;1)] returns:(0;0));
-
-    r:select returns:0^1_deltas[balance] by accountId from 
+    n:count[aIds]; // todo improve
+    a:select reward:0^.state.rew.sortinoRatio[0^1_deltas[balance];0] by accountId from 
             0!(select[neg[windowsize]] by 1 xbar `minute$time, 
                     accountId from .state.AccountEventHistory where time 
-                    within (max[time]-(`minute$windowsize);max[time]),accountId in aIds); // TODO window size
-
-    // TODO fill missing accountIds
-    :update sortino:.state.rew.sortinoRatio'[returns;0] from r;
-
+                    within (max[time]-(`minute$windowsize);max[time]),accountId in aIds); 
+    0^lj[([accountId:aIds] reward:n#0);a]
     };
