@@ -33,13 +33,13 @@ class Actor(object):
         self.host = host_conf['host']
         self.port = host_conf['port']
 
-        self.envs = []
-        for _ in range(config['env_num']):
-            env = Qenv(host=self.host, port=self.port)
-            self.envs.append(env)
-        self.vector_env = VectorEnv(self.envs)
+        self.env = MultiQenv(
+              num_actors=self.config['num_actors'],
+              host=self.host,
+              port=self.port
+        )
 
-        self.obs_batch = self.vector_env.reset()
+        self.obs_batch = self.env.reset()
 
         obs_shape = env.observation_space.shape
         act_dim = env.action_space.n
@@ -56,14 +56,14 @@ class Actor(object):
 
     def sample(self):
         env_sample_data = {}
-        for env_id in range(self.config['env_num']):
-            env_sample_data[env_id] = defaultdict(list)
+        for actor_id in range(self.config['num_actors']):
+            env_sample_data[actor_id] = defaultdict(list)
 
         for i in range(self.config['sample_batch_steps']):
             actions, behaviour_logits = self.agent.sample(
                 np.stack(self.obs_batch))
             next_obs_batch, reward_batch, done_batch, info_batch = \
-                    self.vector_env.step(actions)
+                    self.env.step(actions)
 
             for env_id in range(self.config['env_num']):
                 env_sample_data[env_id]['obs'].append(self.obs_batch[env_id])
@@ -77,12 +77,12 @@ class Actor(object):
 
         # Merge data of envs
         sample_data = defaultdict(list)
-        for env_id in range(self.config['env_num']):
+        for actor_id in range(self.config['num_actors']):
             for data_name in [
                     'obs', 'actions', 'behaviour_logits', 'rewards', 'dones'
             ]:
                 sample_data[data_name].extend(
-                    env_sample_data[env_id][data_name])
+                    env_sample_data[actor_id][data_name])
 
         # size of sample_data: env_num * sample_batch_steps
         for key in sample_data:
