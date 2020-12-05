@@ -23,31 +23,8 @@ from atari_agent import AtariAgent
 from parl.env.atari_wrappers import wrap_deepmind, MonitorEnv, get_wrapper_by_cls
 from parl.env.vector_env import VectorEnv
 import random
+from qenv import Qenv
 # import qggym
-
-class Qenv(gym.Env):
-    def __init__(self):
-        self.shape = (4, 42, 42)
-        self.port = 5000
-        self.host = "kdbj"
-
-    @property
-    def observation_space(self):
-        return gym.spaces.Box(0, 255, self.shape)
-
-    @property
-    def action_space(self):
-        return gym.spaces.Discrete(17)
-
-    def step(self, actions):
-        with qconnection.QConnection(host=self.host, port=self.port) as q:
-            data = q.sendSync("{.env.Step[x]}",actions)
-        return (np.array(data[0]), data[1], data[2], {})
-
-    def reset(self):
-        with qconnection.QConnection(host=self.host, port=self.port) as q:
-            data = q.sendSync(".env.Reset[]")
-        return np.array(data)
 
 @parl.remote_class
 class Actor(object):
@@ -56,8 +33,7 @@ class Actor(object):
 
         self.envs = []
         for _ in range(config['env_num']):
-            env = Qenv()
-            # env = wrap_deepmind(env, dim=config['env_dim'], obs_format='NCHW')
+            env = Qenv(host="kdbj", port=5000)
             self.envs.append(env)
         self.vector_env = VectorEnv(self.envs)
 
@@ -66,7 +42,7 @@ class Actor(object):
         obs_shape = env.observation_space.shape
         act_dim = env.action_space.n
 
-        model = AtariModel(act_dim)
+        model = AtariModel(act_dim, obs_shape[0])
         algorithm = parl.algorithms.IMPALA(
             model,
             sample_batch_steps=self.config['sample_batch_steps'],

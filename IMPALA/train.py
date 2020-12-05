@@ -27,7 +27,7 @@ from parl.utils.scheduler import PiecewiseScheduler
 from parl.utils.time_stat import TimeStat
 from parl.utils.window_stat import WindowStat
 from parl.utils import machine_info
-
+from qenv import Qenv
 from actor import Actor
 
 
@@ -38,13 +38,12 @@ class Learner(object):
             maxsize=config['sample_queue_max_size'])
 
         #=========== Create Agent ==========
-        env = gym.make(config['env_name'])
-        env = wrap_deepmind(env, dim=config['env_dim'], obs_format='NCHW')
+        env = Qenv(host="kdbj", port=5000)
         obs_shape = env.observation_space.shape
 
         act_dim = env.action_space.n
 
-        model = AtariModel(act_dim)
+        model = AtariModel(act_dim, obs_shape[0])
         algorithm = parl.algorithms.IMPALA(
             model,
             sample_batch_steps=self.config['sample_batch_steps'],

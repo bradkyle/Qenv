@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import numpy as np
 import paddle.fluid as fluid
 import parl
 from parl import layers
@@ -19,22 +19,17 @@ from paddle.fluid.param_attr import ParamAttr
 
 
 class AtariModel(parl.Model):
-    def __init__(self, act_dim):
+    def __init__(self, act_dim, obs_dim):
+        self.obs_dim = obs_dim
+        self.act_dim = act_dim
+        hid1_size = obs_dim * 10
+        hid3_size = act_dim * 10
+        hid2_size = int(np.sqrt(hid1_size * hid3_size))
 
-        self.conv1 = layers.conv2d(
-            num_filters=16, filter_size=4, stride=2, padding=1, act='relu')
-        self.conv2 = layers.conv2d(
-            num_filters=32, filter_size=4, stride=2, padding=2, act='relu')
-        self.conv3 = layers.conv2d(
-            num_filters=256, filter_size=11, stride=1, padding=0, act='relu')
-
-        self.policy_conv = layers.conv2d(
-            num_filters=act_dim,
-            filter_size=1,
-            stride=1,
-            padding=0,
-            act=None,
-            param_attr=ParamAttr(initializer=fluid.initializer.Normal()))
+        self.fc1 = layers.fc(size=hid1_size, act='tanh')
+        self.fc2 = layers.fc(size=hid2_size, act='tanh')
+        self.fc3 = layers.fc(size=hid3_size, act='tanh')
+        self.fc4 = layers.fc(size=act_dim, act='tanh')
 
         self.value_fc = layers.fc(
             size=1,
@@ -48,12 +43,10 @@ class AtariModel(parl.Model):
             policy_logits: B * ACT_DIM
         """
         obs = obs / 255.0
-        conv1 = self.conv1(obs)
-        conv2 = self.conv2(conv1)
-        conv3 = self.conv3(conv2)
-
-        policy_conv = self.policy_conv(conv3)
-        policy_logits = layers.flatten(policy_conv, axis=1)
+        hid1 = self.fc1(obs)
+        hid2 = self.fc2(hid1)
+        hid3 = self.fc3(hid2)
+        policy_logits = self.fc4(hid3)
         return policy_logits
 
     def value(self, obs):
@@ -64,11 +57,9 @@ class AtariModel(parl.Model):
             value: B
         """
         obs = obs / 255.0
-        conv1 = self.conv1(obs)
-        conv2 = self.conv2(conv1)
-        conv3 = self.conv3(conv2)
-
-        flatten = layers.flatten(conv3, axis=1)
-        value = self.value_fc(flatten)
+        hid1 = self.fc1(obs)
+        hid2 = self.fc2(hid1)
+        hid3 = self.fc3(hid2)
+        value = self.value_fc(hid3)
         value = layers.squeeze(value, axes=[1])
         return value
