@@ -22,11 +22,14 @@ from collections import defaultdict
 from atari_agent import AtariAgent
 from parl.env.atari_wrappers import wrap_deepmind, MonitorEnv, get_wrapper_by_cls
 from parl.env.vector_env import VectorEnv
+import random
 # import qggym
 
 class Qenv(gym.Env):
     def __init__(self):
         self.shape = (4, 42, 42)
+        self.port = 5000
+        self.host = "kdbj"
 
     @property
     def observation_space(self):
@@ -37,10 +40,14 @@ class Qenv(gym.Env):
         return gym.spaces.Discrete(17)
 
     def step(self, actions):
-        return (self.reset(), 0.0, False, {})
+        with qconnection.QConnection(host=self.host, port=self.port) as q:
+            data = q.sendSync("{.env.Step[x]}",actions)
+        return (np.array(data[0]), data[1], data[2], {})
 
     def reset(self):
-        return np.random.randint(low=0, high=255, size=self.shape)
+        with qconnection.QConnection(host=self.host, port=self.port) as q:
+            data = q.sendSync(".env.Reset[]")
+        return np.array(data)
 
 @parl.remote_class
 class Actor(object):
