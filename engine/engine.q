@@ -95,7 +95,7 @@
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
     }
 
-.engine.Reset   :{[events]
+.engine.Reset   :{[aIds; events]
     // TODO delete all models 
     .util.table.dropAll[(
       `.engine.ingress.Events,
@@ -131,15 +131,16 @@
         (7; 80000;   0.00018;   0.000300;  0f;  0f; 600);
         (8; 150000;  0.00012;   0.00024;   0f;  0f; 600))];                             //  
 
+    n:count[aIds];
     .engine.model.instrument.Instrument,:((!) . flip(
-        (`iId                      ; 0);                                           
-        (`cntTyp                   ; 0);
-        (`state                    ; 0);
-        (`faceValue                ; 0);
-        (`markPrice                ; 0);
-        (`mxSize                   ; 0);
-        (`mnPrice                  ; 0);
-        (`mxPrice                  ; 0) 
+        (`iId                      ; til[n]);                                           
+        (`cntTyp                   ; n#0);
+        (`state                    ; n#0);
+        (`faceValue                ; n#0);
+        (`markPrice                ; n#0);
+        (`mxSize                   ; n#0);
+        (`mnPrice                  ; n#0);
+        (`mxPrice                  ; n#0) 
         ));
 
     .engine.model.inventory.Inventory,:ivn:flip[(!) . flip(
