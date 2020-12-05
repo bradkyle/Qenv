@@ -178,7 +178,7 @@
 
     t:min events`time;
     .engine.Emit[`account;t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
-    .engine.Emit[`inventory;t]'[select aId, side, time:t, amt, rpnl, dep, mm:0 from ivn];
+    .engine.Emit[`inventory;t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
