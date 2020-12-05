@@ -31,12 +31,16 @@ class MultiQenv(gym.Env):
             action_str = "("+(";".join(["("+str(i)+";"+str(a)+")" for i,a in zip(self.agent_ids, actions)]))+")"
         else:
             raise ValueError("No action")
-        data = self._req(".env.Step["+str()+"]")
-        return (np.reshape(np.array(data[0].items()[0][1].tolist()),(self.pool_size, 136)), data[1].items()[0][0][0], data[2][0], {})
+        data = self._req(".env.Step["+action_str+"]")
+        return (
+              np.reshape(np.array(data[0].items()[0][1].tolist()),(self.pool_size, 136)),
+              np.array([data[1].items()[0][0][0]]),
+              np.array([data[2][0]]),
+              {}
+        )
 
     def reset(self):
-        # agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
-        agent_ids_str = ""
+        agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
         data = self._req(".env.Reset["+agent_ids_str+"]")
         return np.reshape(np.array(data.items()[0][1].tolist()),(self.pool_size, 136))
 
