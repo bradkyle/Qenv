@@ -23,7 +23,7 @@
 // TODO validation
 /  @param config     (JSON) A json string containing the env config 
 /  @return          (List/Vector) The first observation for each agent
-.env.Reset    :{
+.env.Reset    :{[aIds]
     // Reset the current step
     .Q.gc[];
     step:0;

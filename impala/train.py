@@ -27,8 +27,8 @@ from parl.utils.scheduler import PiecewiseScheduler
 from parl.utils.time_stat import TimeStat
 from parl.utils.window_stat import WindowStat
 from parl.utils import machine_info
-from qenv import Qenv
 from actor import Actor
+import qenv
 
 
 class Learner(object):
@@ -39,7 +39,11 @@ class Learner(object):
 
         #=========== Create Agent ==========
         cnf = self.config['env'][0]
-        env = Qenv(host=cnf['host'], port=cnf['port'])
+        env = qenv.MultiQenv(
+              pool_size=self.config['pool_size'],
+              host=cnf['host'],
+              port=cnf['port']
+        )
         obs_shape = env.observation_space.shape
 
         act_dim = env.action_space.n

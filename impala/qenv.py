@@ -6,12 +6,11 @@ from qpython import qconnection
 
 # TODO 
 class MultiQenv(gym.Env):
-    def __init__(self, num_actors, host, port):
-        self.shape = (256,)
+    def __init__(self, pool_size, host, port):
         self.port = port
         self.host = host
-        self.num_actors = num_actors
-        self.agent_ids = list(range(self.num_actors))
+        self.pool_size = pool_size
+        self.agent_ids = list(range(self.pool_size))
 
     def _req(self, qry):
         with qconnection.QConnection(host=self.host, port=self.port) as q:
@@ -33,10 +32,11 @@ class MultiQenv(gym.Env):
         else:
             raise ValueError("No action")
         data = self._req(".env.Step["+str()+"]")
-        return (np.array(data[0].items()[0][1].tolist()), data[1].items()[0][0][0], data[2][0], {})
+        return (np.reshape(np.array(data[0].items()[0][1].tolist()),(self.pool_size, 136)), data[1].items()[0][0][0], data[2][0], {})
 
     def reset(self):
-        agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
+        # agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
+        agent_ids_str = ""
         data = self._req(".env.Reset["+agent_ids_str+"]")
-        return np.array(data.items()[0][1].tolist())
+        return np.reshape(np.array(data.items()[0][1].tolist()),(self.pool_size, 136))
 

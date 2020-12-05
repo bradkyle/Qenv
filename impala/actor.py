@@ -23,7 +23,7 @@ from agent import Agent
 from parl.env.atari_wrappers import wrap_deepmind, MonitorEnv, get_wrapper_by_cls
 from parl.env.vector_env import VectorEnv
 import random
-from qenv import Qenv
+import qenv
 # import qggym
 
 @parl.remote_class
@@ -33,7 +33,7 @@ class Actor(object):
         self.host = host_conf['host']
         self.port = host_conf['port']
 
-        self.env = MultiQenv(
+        self.env = qenv.MultiQenv(
               pool_size=self.config['pool_size'],
               host=self.host,
               port=self.port
@@ -41,8 +41,8 @@ class Actor(object):
 
         self.obs_batch = self.env.reset()
 
-        obs_shape = env.observation_space.shape
-        act_dim = env.action_space.n
+        obs_shape = self.env.observation_space.shape
+        act_dim = self.env.action_space.n
 
         model = Model(act_dim, obs_shape[0])
         algorithm = parl.algorithms.IMPALA(
@@ -65,13 +65,12 @@ class Actor(object):
             next_obs_batch, reward_batch, done_batch, info_batch = \
                     self.env.step(actions)
 
-            for env_id in range(self.config['env_num']):
-                env_sample_data[env_id]['obs'].append(self.obs_batch[env_id])
-                env_sample_data[env_id]['actions'].append(actions[env_id])
-                env_sample_data[env_id]['behaviour_logits'].append(
-                    behaviour_logits[env_id])
-                env_sample_data[env_id]['rewards'].append(reward_batch[env_id])
-                env_sample_data[env_id]['dones'].append(done_batch[env_id])
+            for actor_id in range(self.config['pool_size']):
+                env_sample_data[actor_id]['obs'].append(self.obs_batch[actor_id])
+                env_sample_data[actor_id]['actions'].append(actions[actor_id])
+                env_sample_data[actor_id]['behaviour_logits'].append(behaviour_logits[actor_id])
+                env_sample_data[actor_id]['rewards'].append(reward_batch[actor_id])
+                env_sample_data[actor_id]['dones'].append(done_batch[actor_id])
 
             self.obs_batch = next_obs_batch
 
