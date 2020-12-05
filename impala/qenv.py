@@ -25,9 +25,12 @@ class Qenv(gym.Env):
 
     def step(self, actions):
         data = self._req(".env.Step[enlist(0;"+str(actions)+")]")
-        return (data[0].items()[0][1], data[1].items()[0][0][0], data[2][0], {})
+        return (np.array(data[0].items()[0][1].tolist()), data[1].items()[0][0][0], data[2][0], {})
 
     def reset(self):
         data = self._req(".env.Reset[]")
-        return data.items()[0][1]
+        return np.array(data.items()[0][1].tolist())
 
+class QMultiEnv(gym.Env):
+    def __init__(self, host, port):
+        pass

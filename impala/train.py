@@ -155,7 +155,7 @@ class Learner(object):
             if self.start_time is None:
                 self.start_time = time.time()
 
-            remote_thread = threading.Thread(target=self.run_remote_sample, args=c)
+            remote_thread = threading.Thread(target=self.run_remote_sample, args=(c,))
             remote_thread.setDaemon(True)
             remote_thread.start()
 
