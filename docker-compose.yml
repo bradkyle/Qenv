@@ -1,0 +1,47 @@
+
+version: '3'
+
+services:
+  ingest:
+    image: gcr.io/practice-275123/kdbml:v1.6
+    command: q ingest/ingest.q
+    volumes:
+      - ./:/home/ingest
+    working_dir: /home/ingest
+    ports:
+      - "5000:5000"
+
+  env1:
+    image: gcr.io/practice-275123/kdbml:v1.6
+    command: q server.q
+    volumes:
+      - ./:/home/qenv
+    working_dir: /home/qenv
+    depends_on:
+      - ingest
+    ports:
+      - "5002:5002"
+
+  # environment (exchange) 1 (first actor/actor group)
+  env2:
+    image: gcr.io/practice-275123/kdbml:v1.6
+    command: q server.q
+    volumes:
+      - ./:/home/qenv
+    working_dir: /home/qenv
+    depends_on:
+      - ingest
+    ports:
+      - "5003:5003"
+
+  # environment (exchange) 3 (third actor/actor group)
+  env3:
+    image: gcr.io/practice-275123/kdbml:v1.6
+    command: q server.q
+    volumes:
+      - ./:/home/qenv
+    working_dir: /home/qenv
+    depends_on:
+      - ingest
+    ports:
+      - "5004:5004"

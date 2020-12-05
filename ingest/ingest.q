@@ -1,5 +1,5 @@
-\l /home/data/data/okextest/events/ev
-\l /home/data/data/okextest/events
+\l /home/ingest/data/okextest/events/ev
+\l /home/ingest/data/okextest/events
 
 \p 5000
 
