@@ -98,6 +98,8 @@
 .engine.Reset   :{[events]
     // TODO delete all models 
     .util.table.dropAll[(
+      `.engine.ingress.Events,
+      `.engine.egress.Events,
       `.engine.model.order.Order,
       `.engine.model.account.Account,
       `.engine.model.inventory.Inventory,

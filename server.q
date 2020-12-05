@@ -1,9 +1,7 @@
-
-// load hdbs into seperate q processes
-i:{system"q ",x,"-p "}'[];
-
-// startup engines
-e:{system"q engine.q -p "}'[];
+\p 5000
+\c 5000 5000
+\l init.q
+\l ingest/client.q
 
 
 
