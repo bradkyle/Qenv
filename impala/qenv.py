@@ -33,8 +33,8 @@ class MultiQenv(gym.Env):
             raise ValueError("No action")
         data = self._req(".env.Step["+action_str+"]")
         return (
-              np.reshape(np.array(data[0].items()[0][1].tolist()),(self.pool_size, 136)),
-              np.array([data[1].items()[0][0][0]]),
+              np.reshape(np.array([d[1].tolist() for d in data[0].items()[0]]),(self.pool_size, 136)),
+              np.array([data[1].items()[0]]),
               np.array([data[2][0]]),
               {}
         )
