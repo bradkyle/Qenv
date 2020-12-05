@@ -46,7 +46,7 @@
     / xevents:ingest[1];
     / xsignals:ingest[2];
     xevents: .ingest.Reset[];
-    nevents: .engine.Reset[xevents];
+    nevents: .engine.Reset[aIds;xevents];
 
     // Insert the first set of events into the state 
     // such that the initialz observations therin can
@@ -111,8 +111,8 @@
     / isDone:ingest[0];
     / xevents:ingest[1];
     / xsignals:ingest[2];
-    show .engine.watermark;
-    show .state.watermark;
+    / show .engine.watermark;
+    / show .state.watermark;
 
     // The adapter takes a given action set and creates
     // the set of events that need to transpire to anneal
