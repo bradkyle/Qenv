@@ -34,7 +34,7 @@ class Actor(object):
         self.port = host_conf['port']
 
         self.env = MultiQenv(
-              num_actors=self.config['num_actors'],
+              pool_size=self.config['pool_size'],
               host=self.host,
               port=self.port
         )
@@ -56,7 +56,7 @@ class Actor(object):
 
     def sample(self):
         env_sample_data = {}
-        for actor_id in range(self.config['num_actors']):
+        for actor_id in range(self.config['pool_size']):
             env_sample_data[actor_id] = defaultdict(list)
 
         for i in range(self.config['sample_batch_steps']):
@@ -77,7 +77,7 @@ class Actor(object):
 
         # Merge data of envs
         sample_data = defaultdict(list)
-        for actor_id in range(self.config['num_actors']):
+        for actor_id in range(self.config['pool_size']):
             for data_name in [
                     'obs', 'actions', 'behaviour_logits', 'rewards', 'dones'
             ]:

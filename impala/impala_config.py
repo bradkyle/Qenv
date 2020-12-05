@@ -27,7 +27,7 @@ config = {
 
     #==========  actor config ==========
     'actor_num': 2,
-    'env_num': 1,
+    'pool_size': 1,
     'sample_batch_steps': 50,
 
     #==========  learner config ==========
