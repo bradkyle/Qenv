@@ -7,8 +7,8 @@ class Qenv(gym.Env):
         self.shape = (256,)
         self.port = port
         self.host = host
-        self.obs_space = self._observation_space()
-        self.act_space = self._action_space()
+        # self.obs_space = self._observation_space()
+        # self.act_space = self._action_space()
 
     def _req(self, qry):
         with qconnection.QConnection(host=self.host, port=self.port) as q:
@@ -23,11 +23,11 @@ class Qenv(gym.Env):
         self.act_space
 
     def _observation_space(self):
-        data = self._req(".env.FeatureSpace[]")
+        data = self._req(".env.FeatureSpace")
         return gym.spaces.Box(0, 1, shape=(data,))
 
     def _action_space(self):
-        data = self._req(".env.ActionSpace[]")
+        data = self._req(".env.ActionSpace")
         return gym.spaces.Discrete(data)
 
     def step(self, actions):

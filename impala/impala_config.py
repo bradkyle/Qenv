@@ -20,9 +20,9 @@ config = {
 
     #==========  env config ==========
     'env':[
-            {'host':'env1','port':5000},
-            {'host':'env2','port':5000},
-            {'host':'env3','port':5000},
+        {'host':'env1','port':5000},
+        {'host':'env2','port':5000},
+        {'host':'env3','port':5000},
     ],
 
     #==========  actor config ==========
