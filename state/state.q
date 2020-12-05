@@ -46,7 +46,6 @@
 // therin
 .state.InventoryEventHistory: ( // TODO change side to long 1,2,3
     [accountId:  `long$();side: `long$();time : `datetime$()]
-    isignum             :  `long$();
     amt                 :  `long$();
     realizedPnl         :  `long$();
     avgPrice            :  `long$(); // TODO check all exchanges have
