@@ -19,8 +19,8 @@ import queue
 import time
 import threading
 import parl
-from atari_model import AtariModel
-from atari_agent import AtariAgent
+from model import Model
+from agent import Agent
 from parl.env.atari_wrappers import wrap_deepmind
 from parl.utils import logger, summary, get_gpu_count
 from parl.utils.scheduler import PiecewiseScheduler
@@ -43,7 +43,7 @@ class Learner(object):
 
         act_dim = env.action_space.n
 
-        model = AtariModel(act_dim, obs_shape[0])
+        model = Model(act_dim, obs_shape[0])
         algorithm = parl.algorithms.IMPALA(
             model,
             sample_batch_steps=self.config['sample_batch_steps'],
@@ -51,7 +51,7 @@ class Learner(object):
             vf_loss_coeff=self.config['vf_loss_coeff'],
             clip_rho_threshold=self.config['clip_rho_threshold'],
             clip_pg_rho_threshold=self.config['clip_pg_rho_threshold'])
-        self.agent = AtariAgent(algorithm, obs_shape, act_dim,
+        self.agent = Agent(algorithm, obs_shape, act_dim,
                                 self.learn_data_provider)
 
         if machine_info.is_gpu_available():

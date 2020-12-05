@@ -18,7 +18,7 @@ from parl import layers
 from paddle.fluid.param_attr import ParamAttr
 
 
-class AtariModel(parl.Model):
+class Model(parl.Model):
     def __init__(self, act_dim, obs_dim):
         self.obs_dim = obs_dim
         self.act_dim = act_dim

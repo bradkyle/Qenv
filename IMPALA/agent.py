@@ -19,14 +19,14 @@ from parl import layers
 from parl.utils import machine_info
 
 
-class AtariAgent(parl.Agent):
+class Agent(parl.Agent):
     def __init__(self, algorithm, obs_shape, act_dim,
                  learn_data_provider=None):
         assert isinstance(obs_shape, (list, tuple))
         assert isinstance(act_dim, int)
         self.obs_shape = obs_shape
         self.act_dim = act_dim
-        super(AtariAgent, self).__init__(algorithm)
+        super(Agent, self).__init__(algorithm)
 
         if learn_data_provider:
             self.learn_reader.decorate_tensor_provider(learn_data_provider)

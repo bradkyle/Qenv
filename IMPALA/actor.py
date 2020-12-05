@@ -17,9 +17,9 @@ import numpy as np
 import parl
 import six
 import parl
-from atari_model import AtariModel
+from atari_model import Model
 from collections import defaultdict
-from atari_agent import AtariAgent
+from atari_agent import Agent
 from parl.env.atari_wrappers import wrap_deepmind, MonitorEnv, get_wrapper_by_cls
 from parl.env.vector_env import VectorEnv
 import random
@@ -42,7 +42,7 @@ class Actor(object):
         obs_shape = env.observation_space.shape
         act_dim = env.action_space.n
 
-        model = AtariModel(act_dim, obs_shape[0])
+        model = Model(act_dim, obs_shape[0])
         algorithm = parl.algorithms.IMPALA(
             model,
             sample_batch_steps=self.config['sample_batch_steps'],
@@ -50,7 +50,7 @@ class Actor(object):
             vf_loss_coeff=self.config['vf_loss_coeff'],
             clip_rho_threshold=self.config['clip_rho_threshold'],
             clip_pg_rho_threshold=self.config['clip_pg_rho_threshold'])
-        self.agent = AtariAgent(algorithm, obs_shape, act_dim)
+        self.agent = Agent(algorithm, obs_shape, act_dim)
 
     def sample(self):
         env_sample_data = {}
