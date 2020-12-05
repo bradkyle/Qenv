@@ -8,6 +8,8 @@ services:
     volumes:
       - ./:/home/ingest
     working_dir: /home/ingest
+    networks:
+      - env-net 
     ports:
       - "5000:5000"
 
@@ -19,8 +21,10 @@ services:
     working_dir: /home/qenv
     depends_on:
       - ingest
+    networks:
+      - env-net 
     ports:
-      - "5000:5001"
+      - "5001:5000"
 
   # environment (exchange) 1 (first actor/actor group)
   env2:
@@ -31,8 +35,10 @@ services:
     working_dir: /home/qenv
     depends_on:
       - ingest
+    networks:
+      - env-net 
     ports:
-      - "5000:5002"
+      - "5002:5000"
 
   # environment (exchange) 3 (third actor/actor group)
   env3:
@@ -43,5 +49,11 @@ services:
     working_dir: /home/qenv
     depends_on:
       - ingest
+    networks:
+      - env-net 
     ports:
-      - "5000:5003"
+      - "5003:5000"
+
+networks:
+   env-net:
+      driver: bridge
