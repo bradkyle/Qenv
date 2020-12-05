@@ -7,22 +7,34 @@ class Qenv(gym.Env):
         self.shape = (256,)
         self.port = port
         self.host = host
+        self.obs_space = self._observation_space()
+        self.act_space = self._action_space()
+
+    def _req(self, qry):
+        with qconnection.QConnection(host=self.host, port=self.port) as q:
+            return q.sendSync(qry)
 
     @property
     def observation_space(self):
-        return gym.spaces.Box(0, 255, self.shape)
+        self.obs_space
 
     @property
     def action_space(self):
-        return gym.spaces.Discrete(17)
+        self.act_space
+
+    def _observation_space(self):
+        data = self._req(".env.FeatureSpace[]")
+        return gym.spaces.Box(0, 1, shape=(data,))
+
+    def _action_space(self):
+        data = self._req(".env.ActionSpace[]")
+        return gym.spaces.Discrete(data)
 
     def step(self, actions):
-        with qconnection.QConnection(host=self.host, port=self.port) as q:
-            data = q.sendSync(".env.Step["+str(actions)+"]")
+        data = self._req(".env.Step["+str(actions)+"]")
         return (np.array(data[0]), data[1], data[2], {})
 
     def reset(self):
-        with qconnection.QConnection(host=self.host, port=self.port) as q:
-            data = q.sendSync(".env.Reset[]")
+        data = self._req(".env.Reset[]")
         return np.array(data)
 

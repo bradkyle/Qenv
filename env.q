@@ -63,10 +63,8 @@
     aIds:enlist[0];
     / obs:.state.obs.GetObs[step; .conf.c[`env;`obsWindowSize]; aIds]; // TODO make better
     obs:.state.obs.GetObs[step; 100; aIds]; // TODO make better
-    rwd:count[aIds]#0f;
-    dns:count[aIds]#0b; // TODO move to env and create better!
 
-    (obs;rwd;dns)
+    obs
     };
 
 
@@ -153,8 +151,8 @@
     };
 
 
-
-
+.state.FeatureSpace:136;
+.state.ActionSpace:22;
 
 
 

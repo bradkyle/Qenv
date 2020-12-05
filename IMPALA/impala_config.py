@@ -13,14 +13,19 @@
 # limitations under the License.
 
 config = {
-    'experiment_name': 'Pong',
+    'experiment_name': 'Qenv',
 
     #==========  remote config ==========
     'master_address': 'localhost:8010',
 
     #==========  env config ==========
-    'env_name': 'PongNoFrameskip-v4',
-    'env_dim': 42,
+    'env':{
+        'remotes':[
+            {'host':'','port':5000},
+            {'host':'','port':5000},
+            {'host':'','port':5000},
+        ],
+    },
 
     #==========  actor config ==========
     'actor_num': 2,
