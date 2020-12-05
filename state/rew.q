@@ -18,5 +18,5 @@
             0!(select[neg[windowsize]] by 1 xbar `minute$time, 
                     accountId from .state.AccountEventHistory where time 
                     within (max[time]-(`minute$windowsize);max[time]),accountId in aIds); 
-    0^lj[([accountId:aIds] reward:n#0);a]
+    0^lj[([accountId:aIds] reward:n#0f);a]
     };
