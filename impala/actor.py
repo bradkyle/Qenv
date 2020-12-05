@@ -62,7 +62,7 @@ class Actor(object):
         for i in range(self.config['sample_batch_steps']):
             actions, behaviour_logits = self.agent.sample(
                 np.stack(self.obs_batch))
-            next_obs_batch, reward_batch, done_batch, info_batch = \
+            next_obs_batch, reward_batch, done_batch = \
                     self.env.step(actions)
 
             for actor_id in range(self.config['pool_size']):

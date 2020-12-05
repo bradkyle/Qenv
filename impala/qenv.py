@@ -35,9 +35,8 @@ class MultiQenv(gym.Env):
         data = self._req(".env.Step["+action_str+"]")
         return (
               np.reshape(np.array([d[1].tolist() for d in data[0].items()]),(self.pool_size, 136)),
-              np.array([data[1].items()[0]]),
-              np.array([data[2][0]]),
-              {}
+              np.array([d[1][0] for d in data[1].items()]),
+              np.array(data[2])
         )
 
     # TODO sorted
