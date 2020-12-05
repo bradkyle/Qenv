@@ -13,6 +13,8 @@
 // TODO use reward based upon realized pnl with respect to balance
 .state.rew.GetRewards  :{[step;windowsize;aIds] // TODO configurable window size
     // todo fill
+    ac:([accountId:(0;1)] returns:(0;0));
+
     r:select returns:0^1_deltas[balance] by accountId from 
             0!(select[neg[windowsize]] by 1 xbar `minute$time, 
                     accountId from .state.AccountEventHistory where time 
