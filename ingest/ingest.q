@@ -1,7 +1,7 @@
+\p 5000
 \l /home/ingest/data/okextest/events/ev
 \l /home/ingest/data/okextest/events
 
-\p 5000
 
 .ingest.e:select from depth;
 .ingest.e,:select from trades;

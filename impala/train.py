@@ -38,7 +38,8 @@ class Learner(object):
             maxsize=config['sample_queue_max_size'])
 
         #=========== Create Agent ==========
-        env = Qenv(host="kdbj", port=5000)
+        cnf = self.config['env'][0]
+        env = Qenv(host=cnf['host'], port=cnf['port'])
         obs_shape = env.observation_space.shape
 
         act_dim = env.action_space.n
@@ -148,20 +149,20 @@ class Learner(object):
         logger.info('Waiting for {} remote actors to connect.'.format(
             self.config['actor_num']))
 
-        for i in range(self.config['actor_num']):
+        for i,c in enumerate(self.config['env']):
             self.remote_count += 1
             logger.info('Remote actor count: {}'.format(self.remote_count))
             if self.start_time is None:
                 self.start_time = time.time()
 
-            remote_thread = threading.Thread(target=self.run_remote_sample)
+            remote_thread = threading.Thread(target=self.run_remote_sample, args=c)
             remote_thread.setDaemon(True)
             remote_thread.start()
 
-    def run_remote_sample(self):
+    def run_remote_sample(self, host_conf):
         """ Sample data from remote actor and update parameters of remote actor.
         """
-        remote_actor = Actor(self.config)
+        remote_actor = Actor(self.config, host_conf)
 
         cnt = 0
         remote_actor.set_weights(self.cache_params)

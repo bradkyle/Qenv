@@ -19,13 +19,11 @@ config = {
     'master_address': 'localhost:8010',
 
     #==========  env config ==========
-    'env':{
-        'remotes':[
-            {'host':'','port':5000},
-            {'host':'','port':5000},
-            {'host':'','port':5000},
-        ],
-    },
+    'env':[
+            {'host':'env1','port':5000},
+            {'host':'env2','port':5000},
+            {'host':'env3','port':5000},
+    ],
 
     #==========  actor config ==========
     'actor_num': 2,

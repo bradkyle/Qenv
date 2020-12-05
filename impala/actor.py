@@ -28,12 +28,14 @@ from qenv import Qenv
 
 @parl.remote_class
 class Actor(object):
-    def __init__(self, config):
+    def __init__(self, config, host_conf):
         self.config = config
+        self.host = host_conf['host']
+        self.port = host_conf['port']
 
         self.envs = []
         for _ in range(config['env_num']):
-            env = Qenv(host="kdbj", port=5000)
+            env = Qenv(host=self.host, port=self.port)
             self.envs.append(env)
         self.vector_env = VectorEnv(self.envs)
 
