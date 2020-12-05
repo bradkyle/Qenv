@@ -24,6 +24,7 @@ class MultiQenv(gym.Env):
     def action_space(self):
         return gym.spaces.Discrete(22)
 
+    # TODO sorted
     def step(self, actions):
         if len(actions)==1:
             action_str = "enlist(0;"+str(actions)+")"
@@ -33,14 +34,14 @@ class MultiQenv(gym.Env):
             raise ValueError("No action")
         data = self._req(".env.Step["+action_str+"]")
         return (
-              np.reshape(np.array([d[1].tolist() for d in data[0].items()[0]]),(self.pool_size, 136)),
+              np.reshape(np.array([d[1].tolist() for d in data[0].items()]),(self.pool_size, 136)),
               np.array([data[1].items()[0]]),
               np.array([data[2][0]]),
               {}
         )
 
+    # TODO sorted
     def reset(self):
         agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
         data = self._req(".env.Reset["+agent_ids_str+"]")
-        return np.reshape(np.array(data.items()[0][1].tolist()),(self.pool_size, 136))
-
+        return np.reshape(np.array([d[1].tolist() for d in data.items()]),(self.pool_size, 136))

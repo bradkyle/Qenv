@@ -60,7 +60,6 @@
     // inorder to derive the observations, dones and 
     // rewards that are to be sent back to the agent.
     / aIds:.conf.c[`env;`accountIds]; // Get the account ID's
-    aIds:enlist[0];
     / obs:.state.obs.GetObs[step; .conf.c[`env;`obsWindowSize]; aIds]; // TODO make better
     obs:.state.obs.GetObs[step; 100; aIds]; // TODO make better
 
