@@ -145,7 +145,6 @@
     n:count[aIds];
     dn:n*2;
     .engine.model.inventory.Inventory,:ivn:flip[(!) . flip(
-        (`ivId             ; til[dn]);                                            
         (`aId              ; floor[til[dn]%2]);                                            
         (`side             ; dn#(1 -1));                                            
         (`ordQty           ; dn#0);
