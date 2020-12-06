@@ -11,7 +11,7 @@ services:
     networks:
       - env-net 
     ports:
-      - "5000:5000"
+      - "4999:4999"
 
   env1:
     image: gcr.io/practice-275123/kdbml:v1.6
