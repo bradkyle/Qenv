@@ -23,7 +23,7 @@
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
-        .engine.egress.Events,:(time;kind;value event);
+        .engine.egress.Events,:(time;kind;event);
 				};
 
 .engine.Purge   :{[event;time;msg] 
@@ -174,10 +174,12 @@
         (`avail            ; n?10);  
         (`bal              ; n?10)  
         ));
+    .bam.acc:acc;
 
+    // TODO make cleaner
     t:min events`time;
-    .engine.Emit[`account;t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
-    .engine.Emit[`inventory;t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
+    {.engine.Emit[`account;x;value y]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
+    {.engine.Emit[`inventory;x;value y]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]

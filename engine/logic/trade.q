@@ -10,6 +10,7 @@
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
+    n:count[x];
     s:0!.engine.model.orderbook.GetLevel[((=;`side;s);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
@@ -153,22 +154,20 @@
         .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`depth;t;l];
 
+        ];.engine.Emit'[n#`trade;t;x]];
 
-        ];[
-
-        ]];
 
         // Return the fills that would have occurred
         // Apply the set of fills that would satisfy the 
         // amount of liquidity that is being removed from
         // the orderbook.
-        raze'[(numLvls#ciId; // instrumentId
-            numLvls#caId; // accountId
-            state`tside; 
-            state`price;
-            sum'[tqty];
-            count[tqty]#reduce;
-            numLvls#fillTime)]
+        / raze'[(numLvls#ciId; // instrumentId
+        /     numLvls#caId; // accountId
+        /     state`tside; 
+        /     state`price;
+        /     sum'[tqty];
+        /     count[tqty]#reduce;
+        /     numLvls#fillTime)]
     
     };
 
