@@ -46,14 +46,14 @@
 				/ place:o where [];
 
 				// TODO fix this functionality
-				/ $[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-				/ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
-				/ 			.engine.Purge[o where in[];0;"Order had execInst of postOnly"];
-				/ 			.engine.logic.trade.Match[i;a;o];
-				/ 		];[
-				/ 			.engine.model.order.CreateOrder o;
-				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
-				/ 		]];
+				$[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
+							.engine.Purge[o where in[];0;"Order had execInst of postOnly"];
+							.engine.logic.trade.Match[i;a;o];
+						];[
+							.engine.model.order.CreateOrder o;
+							.engine.logic.orderbook.Level[select sum oqty by side, price from o]
+						]];
 
 
 				.engine.Emit[`account;t;a];
