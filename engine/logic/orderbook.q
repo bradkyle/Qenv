@@ -94,7 +94,7 @@
                         ];[
                                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                                 lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
-                                .engine.model.orderbook.UpdateLevels[flip(raze'[(
+                                .engine.model.orderbook.UpdateLevel[flip(raze'[(
                                         state`price;
                                         state`mside;
                                         nqty;
