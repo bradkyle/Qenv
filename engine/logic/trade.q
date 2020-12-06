@@ -121,9 +121,9 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
-				o:raze'[(s`orderId;s`oprice;noffset;nlqty;ndqty;nstatus;s`time)][;where[msk]];
-        .engine.model.order.UpdateOrder o;
-        .engine.Emit[`order;t;o];
+        o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
+        / .engine.model.order.UpdateOrder[flip[o]];
+        / .engine.Emit[`order;t;o];
         
  
         // Derive and apply Executions
