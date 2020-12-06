@@ -81,7 +81,7 @@
                                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
 
                                 lvlcols:`price`side`qty`hqty`iqty`vqty`time;
-                                .engine.model.orderbook.UpdateLevel[lvlcols!(0^raze'[.util.PadM'[(
+                                .engine.model.orderbook.Update[lvlcols!(0^raze'[.util.PadM'[(
                                         state`price;
                                         state`side;
                                         state`tgt;
@@ -94,7 +94,7 @@
                         ];[
                                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                                 lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
-                                .engine.model.orderbook.UpdateLevel[flip(raze'[(
+                                .engine.model.orderbook.Update[flip(raze'[(
                                         state`price;
                                         state`mside;
                                         nqty;
@@ -108,7 +108,7 @@
         ];[
                 / No update occurs, should emit?
                 cl:`price`side`qty;
-                .engine.model.orderbook.UpdateLevel[cl!s[cl]];
+                .engine.model.orderbook.Update[flip cl!s[cl]];
                 .engine.Emit[`depth]'[t;flip s[cl]];
         ]];
 

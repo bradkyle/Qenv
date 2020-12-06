@@ -11,8 +11,8 @@
 
 .engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$())
 
-.engine.model.orderbook.GetLevel:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
-.engine.model.orderbook.UpdateLevel:.engine.model.common.Update[`.engine.model.orderbook.Orderbook];
+.engine.model.orderbook.Get:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
+.engine.model.orderbook.Update:.engine.model.common.Update[`.engine.model.orderbook.Orderbook];
 .engine.model.orderbook.Delete:.engine.model.common.Delete[`.engine.model.orderbook.Orderbook];
 
 
