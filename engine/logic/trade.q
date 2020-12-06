@@ -174,11 +174,14 @@
 
 // TODO process multiple trades
 .engine.logic.trade.Trade:{[t;i;x]
+        .bam.t:t;
+        .bam.x:x;
+        .bam.i:i;
         s:(x[;0]>0);
         b:x where s;
         a:x where not s;
-        .engine.logic.trade.Take[1;t where b;i;x where b];
-        .engine.logic.trade.Take[-1;t where a;i;x where a];
+        if[count[b]>0;.engine.logic.trade.Take[1;t where b;i;x where b]];
+        if[count[a]>0;.engine.logic.trade.Take[-1;t where a;i;x where a]];
     };
 
 
@@ -187,8 +190,8 @@
         b:x where s;
         a:x where not s;
         f:();
-        f,:.engine.logic.trade.Take[1;t where b;i;x where b];
-        f,:.engine.logic.trade.Take[-1;t where a;i;x where a];
+        if[count[b]>0;f,.engine.logic.trade.Take[1;t where b;i;x where b]];
+        if[count[a]>0;f,.engine.logic.trade.Take[-1;t where a;i;x where a]];
       
         // Derive and apply Executions
         // -------------------------------------------------->
