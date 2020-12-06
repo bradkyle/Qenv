@@ -1,10 +1,9 @@
 
-.engine.logic.orderbook.level :{[t;i;l]
-        if[count[l`datum]=3;ld:`side`price`qty`time!raze[l`datum`time]];
+.engine.logic.orderbook.Level :{[t;i;l]
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.GetLevel[enlist(=;`price;ld`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;ld`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
@@ -77,4 +76,3 @@
         / .engine.model.order.PruneOrders[];        
         };
 
-.engine.logic.orderbook.Level:{[t;i;l] show "HELLO";.bam.l:l;.engine.logic.orderbook.level[i]'[flip l]}
