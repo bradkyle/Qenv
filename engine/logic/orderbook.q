@@ -69,7 +69,7 @@
 
                                 // Update the orders
                                 ocols:`orderId`price`offset`leaves`displayqty`status`time;
-                                .engine.model.order.UpdateOrders[ocols!(0^raze'[.util.PadM'[(
+                                .engine.model.order.UpdateOrder[ocols!(0^raze'[.util.PadM'[(
                                         state`orderId;
                                         raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
                                         noffset;
@@ -77,10 +77,9 @@
                                         state`displayqty;
                                         state`status;
                                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
-                                // TODO emit events
 
                                 lvlcols:`price`side`tgt`hqty`iqty`vqty`time;
-                                .engine.model.orderbook.UpdateLevels[lvlcols!(0^raze'[.util.PadM'[(
+                                .engine.model.orderbook.UpdateLevel[lvlcols!(0^raze'[.util.PadM'[(
                                         state`price;
                                         state`side;
                                         state`tgt;
