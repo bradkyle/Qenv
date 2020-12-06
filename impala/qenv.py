@@ -11,6 +11,7 @@ class MultiQenv(gym.Env):
         self.host = host
         self.pool_size = pool_size
         self.agent_ids = list(range(self.pool_size))
+        self.num_fea = 138
 
     def _req(self, qry):
         with qconnection.QConnection(host=self.host, port=self.port) as q:
@@ -18,7 +19,7 @@ class MultiQenv(gym.Env):
 
     @property
     def observation_space(self):
-        return gym.spaces.Box(0, 1, shape=(136,))
+        return gym.spaces.Box(0, 1, shape=(self.num_fea,))
 
     @property
     def action_space(self):
@@ -34,7 +35,7 @@ class MultiQenv(gym.Env):
             raise ValueError("No action")
         data = self._req(".env.Step["+action_str+"]")
         return (
-              np.reshape(np.array([d[1].tolist() for d in data[0].items()]),(self.pool_size, 136)),
+              np.reshape(np.array([d[1].tolist() for d in data[0].items()]),(self.pool_size, self.num_fea)),
               np.array([d[1][0] for d in data[1].items()]),
               np.array(data[2])
         )
@@ -43,4 +44,4 @@ class MultiQenv(gym.Env):
     def reset(self):
         agent_ids_str = "("+";".join([str(a) for a in self.agent_ids])+")"
         data = self._req(".env.Reset["+agent_ids_str+"]")
-        return np.reshape(np.array([d[1].tolist() for d in data.items()]),(self.pool_size, 136))
+        return np.reshape(np.array([d[1].tolist() for d in data.items()]),(self.pool_size, self.num_fea))
