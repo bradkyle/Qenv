@@ -122,8 +122,6 @@
         // as a result of the trade and amends them 
         // accordingly
 				o:raze'[(s`orderId;s`oprice;noffset;nlqty;ndqty;nstatus;s`time)][;where[msk]];
-        .bam.o:o;
-        .bam.msk:msk;
         .engine.model.order.UpdateOrder o;
         .engine.Emit[`order;t;o];
         
