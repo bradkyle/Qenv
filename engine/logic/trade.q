@@ -170,7 +170,12 @@
 
 
 .engine.logic.trade.Match:{[i;a;m]
-      
+        s:(x[;0]>0);
+        b:x where s;
+        a:x where not s;
+        f:();
+        f,:.engine.logic.trade.Take[1;t where b;i;x where b];
+        f,:.engine.logic.trade.Take[-1;t where a;i;x where a];
       
         // Derive and apply Executions
         // -------------------------------------------------->
@@ -178,16 +183,7 @@
         // Apply the set of fills that would satisfy the 
         // amount of liquidity that is being removed from
         // the orderbook.
-        .engine.logic.account.Fill[raze'[(
-                numLvls#i`instrumentId; // instrumentId
-                numLvls#a`aId; // accountId
-                s`tside; 
-                s`price;
-                sum'[tqty];
-                count[tqty]#m`reduce;
-                numLvls#m`time)]];
-      
-      
+        if[count[f]>0;.engine.logic.account.Fill[f]];
     };
 
 
