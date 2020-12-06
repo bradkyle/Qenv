@@ -68,6 +68,8 @@
                                     .util.Clip[0^s[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                                     .util.Clip[s[`vqty]-mxshft] // last qty - maximum shift // TODO
                                     )]];
+                                show notAgentQty;
+                                show dneg;
 
                                 // Derive the deltas in the agent order offsets as if there
                                 // were a uniform distribution of cancellations throughout
