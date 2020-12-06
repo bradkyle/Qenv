@@ -92,17 +92,10 @@
 
                                 .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
                         ];[
-                                state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
-                                lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
-                                .engine.model.orderbook.Update[flip(raze'[(
-                                        state`price;
-                                        state`mside;
-                                        nqty;
-                                        nhqty;
-                                        niqty;
-                                        nvqty)])];
-                                // todo derive visible qty 
-                                .engine.Emit[`depth]'[l[`time];ld[`price`side`vqty]];
+                                / No update occurs, should emit?
+                                cl:`price`side`qty;
+                                .engine.model.orderbook.Update[flip cl!s[cl]];
+                                .engine.Emit[`depth]'[t;flip s[cl]];
                         ]];
                 ]];
         ];[
