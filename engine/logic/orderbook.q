@@ -68,7 +68,7 @@
                                 numordlvl:count'[noffset];
 
                                 // Update the orders
-                                ocols:`orderId`price`offset`leaves`displayqty`status`time;
+                                ocols:`oId`price`offset`lqty`dqty`state;
                                 .engine.model.order.UpdateOrder[ocols!(0^raze'[.util.PadM'[(
                                         state`orderId;
                                         raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
@@ -78,7 +78,7 @@
                                         state`status;
                                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
 
-                                lvlcols:`price`side`tgt`hqty`iqty`vqty`time;
+                                lvlcols:`price`side`qty`hqty`iqty`vqty`time;
                                 .engine.model.orderbook.UpdateLevel[lvlcols!(0^raze'[.util.PadM'[(
                                         state`price;
                                         state`side;
@@ -88,7 +88,7 @@
                                         nvqty;
                                         lsttime)]])];
 
-                                / .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                                .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
                         ];[
                                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                                 lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
@@ -100,9 +100,7 @@
                                         niqty;
                                         nvqty)])];
                                 // todo derive visible qty 
-                                // todo remove if o
-                                / cl:`price`time`side`qty;
-                                / .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                                .engine.Emit[`depth]'[l[`time];ld[`price`side`vqty]];
                         ]];
                 ]];
         ];[
