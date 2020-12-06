@@ -8,10 +8,12 @@
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
+                dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty`nqty)]]]]);
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 if[count[dneg]>0;[
                         o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
                         if[count[o]>0;[
+                                s:`time xasc 0!uj[lj[`side`price xkey d;`side`price xkey c];`side`price xgroup o]; // TODO grouping
                                 n:count[o];
                                 tn:til n;
 
@@ -60,7 +62,9 @@
                                 .engine.model.order.UpdateOrder o;
                                 .engine.model.orderbook.UpdateLevel l;
 
-                        ]];
+                                ];[
+
+                                ]];
                 ]];
                 // todo derive visible qty 
                 // todo remove if o
