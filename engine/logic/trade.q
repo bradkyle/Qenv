@@ -1,4 +1,26 @@
 
+// TODO set max price for sums
+.engine.logic.trade.Take:{[]
+    // Get the current levels for the side  
+    s:0!.engine.model.orderbook.GetLevel[((in;`side;side);(>;`qty;0);(<;(+\;`qty);sum[m`qty]))]; //TODO impl max depth
+
+    aqty:sum[s[`iqty`hqty`vqty]];
+    thresh:sums[aqty];
+
+    // Join the opposing side of the orderbook with the current agent orders
+    // at that level, creating the trade effected s
+    aqty:sum[s[`iqty`hqty`vqty]];
+    thresh:sums[aqty];
+    rp:(thresh-prev[thresh])-(thresh-m`size);
+    s[`thresh]:thresh; 
+
+    // Derive the amount that will be replaced per level
+    rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
+    s[`rp]:rp1; 
+
+
+    };
+
 // TODO process multiple trades
 .engine.logic.trade.Trade:{[t;i;x]
     m:flip `side`qty!flip x`datum;
@@ -23,13 +45,14 @@
     s[`rp]:rp1; 
 
     // Get the current active orders at the prices 
-		o:.engine.model.order.GetOrder[enlist(in;`price;s`price)];
+    o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
     
     // Hidden order qty i.e. derived from data 
     // is always at the front of the queue.
     // Iceberg orders placed by agents have a 
     // typical offset and function like normal orders
     // except they aren't visible.
+    
 
     $[count[o]>0;[
         s:0!{$[x>0;desc[y];asc[y]]}[neg[m`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
