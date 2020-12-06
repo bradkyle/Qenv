@@ -110,7 +110,7 @@
                 .engine.Emit[`depth;l[`time];cl!ld[cl]];
         ]];
 
-        / .engine.model.orderbook.PruneOrderBook[];
-        / .engine.model.order.PruneOrders[];        
+        .engine.model.orderbook.Delete[enlist()];
+        .engine.model.order.Delete[(();())];        
         };
 
