@@ -10,20 +10,30 @@
         c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;s`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
-        .bam.c:c;
-        .bam.s:s;
         $[(count[c]>0);[
                 s[`nqty]:s`qty;
                 s:lj[`side`price xgroup s;`side`price xkey c];
-                .bam.ss:s;
                 dlts:(-/)(0!.bam.ss)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
-                if[any[dneg<0];[ // TODO also check for side
+                $[any[dneg<0];[ // TODO also check for side
                         o:.engine.model.order.Get[((=;`okind;1);(in;`price;key[s]`price);(in;`state;(0 1));(>;`oqty;0))];
+
+                        cl:`price`side`qty;
+                        .engine.model.orderbook.Update[flip cl!s[cl]];
+                        .engine.Emit[`depth]'[t;flip s[cl]];
+
                         if[count[o]>0;[
-                                s:`time xasc 0!uj[s;`side`price xgroup o]; // TODO grouping
+                                p:distinct (0!o)`price;
+                                s where not[p]
+                                
+                                // upsert non order levels here
+
+
+                                .bam.p:p;
+                                s:`time xasc 0!lj[`side`price xgroup o;s]; // TODO grouping
                                 // Deltas in visqty etc 
                                 msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
+                                .bam.ss:s;
                                 // Pad state into a matrix
                                 // for faster operations
                                 padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
@@ -97,12 +107,11 @@
                                         lsttime)]])];
 
                                 .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
-                        ];[
-                                / No update occurs, should emit?
-                                cl:`price`side`qty;
-                                .engine.model.orderbook.Update[flip cl!s[cl]];
-                                .engine.Emit[`depth]'[t;flip s[cl]];
                         ]];
+                ];[
+                cl:`price`side`qty;
+                .engine.model.orderbook.Update[flip cl!s[cl]];
+                .engine.Emit[`depth]'[t;flip s[cl]];
                 ]];
         ];[
                 / No update occurs, should emit?
