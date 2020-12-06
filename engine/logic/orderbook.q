@@ -7,7 +7,7 @@
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
-                o:.engine.model.order.GetOrder[enlist()];
+                o:.engine.model.order.GetOrder[()];
                 $[count[o]>0;[
                         n:count[o];
                         tn:til n;

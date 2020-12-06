@@ -13,3 +13,8 @@
 
 .engine.model.orderbook.GetLevel:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
 .engine.model.orderbook.UpdateLevel:.engine.model.common.Update[`.engine.model.orderbook.Orderbook];
+
+.engine.model.orderbook.Prune:{[]
+				  
+				};
+
