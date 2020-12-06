@@ -178,20 +178,20 @@
         .bam.x:x;
         .bam.i:i;
         s:(x[;0]>0);
-        b:x where s;
-        a:x where not s;
-        if[count[b]>0;.engine.logic.trade.Take[1;t where b;i;x where b]];
-        if[count[a]>0;.engine.logic.trade.Take[-1;t where a;i;x where a]];
+        b:where s;
+        a:where not s;
+        if[count[b]>0;.engine.logic.trade.Take[1;t b;i;x b]];
+        if[count[a]>0;.engine.logic.trade.Take[-1;t a;i;x a]];
     };
 
 
 .engine.logic.trade.Match:{[i;a;m]
-        s:(x[;0]>0);
-        b:x where s;
-        a:x where not s;
         f:();
-        if[count[b]>0;f,.engine.logic.trade.Take[1;t where b;i;x where b]];
-        if[count[a]>0;f,.engine.logic.trade.Take[-1;t where a;i;x where a]];
+        s:(x[;0]>0);
+        b:where s;
+        a:where not s;
+        if[count[b]>0;f,:.engine.logic.trade.Take[1;t b;i;x b]];
+        if[count[a]>0;f,:.engine.logic.trade.Take[-1;t a;i;x a]];
       
         // Derive and apply Executions
         // -------------------------------------------------->
