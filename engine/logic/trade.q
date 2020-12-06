@@ -169,7 +169,7 @@
                 state`price;
                 sum'[tqty];
                 count[tqty]#reduce;
-                numLvls#fillTime)]]
+                numLvls#fillTime)]
     
     };
 

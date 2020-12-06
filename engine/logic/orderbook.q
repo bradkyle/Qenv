@@ -88,7 +88,7 @@
                                         nvqty;
                                         lsttime)]])];
 
-                                .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                                / .engine.Emit[`depth;l[`time];cl!ld[cl]];
                         ];[
                                 state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
                                 lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
@@ -101,8 +101,8 @@
                                         nvqty)])];
                                 // todo derive visible qty 
                                 // todo remove if o
-                                cl:`price`time`side`qty;
-                                .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                                / cl:`price`time`side`qty;
+                                / .engine.Emit[`depth;l[`time];cl!ld[cl]];
                         ]];
                 ]];
         ];[
