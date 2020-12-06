@@ -96,6 +96,7 @@
                                         noffset;
                                         )]][;where[msk]]];
 
+                                // TODO update vqty
                                 // TODO derive nqty rather
                                 lvlcols:`price`side`qty`hqty`iqty`vqty;
                                 .engine.model.orderbook.Update[flip lvlcols!raze'[.util.PadM'[(

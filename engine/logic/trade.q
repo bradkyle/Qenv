@@ -30,6 +30,7 @@
         (in;`state;(0 1));(>;`oqty;0))];
 
     $[count[o]>0;[
+        show "YDF";
         s:0!{$[x>0;desc[y];asc[y]]}[nside;ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
 
