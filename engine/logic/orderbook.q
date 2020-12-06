@@ -77,4 +77,4 @@
         / .engine.model.order.PruneOrders[];        
         };
 
-.engine.logic.orderbook.Level:{[i;l] .engine.logic.orderbook.level[i]'[flip l]}
+.engine.logic.orderbook.Level:{[t;i;l] show "HELLO";.bam.l:l;.engine.logic.orderbook.level[i]'[flip l]}
