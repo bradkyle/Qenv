@@ -1,6 +1,11 @@
 
 // TODO set max price for sums
-.engine.logic.trade.Take:{[]
+// Hidden order qty i.e. derived from data 
+// is always at the front of the queue.
+// Iceberg orders placed by agents have a 
+// typical offset and function like normal orders
+// except they aren't visible.
+.engine.logic.trade.Take:{[s;t;i;x]
     // Get the current levels for the side  
     s:0!.engine.model.orderbook.GetLevel[((in;`side;side);(>;`qty;0);(<;(+\;`qty);sum[m`qty]))]; //TODO impl max depth
 
@@ -15,44 +20,13 @@
     s[`thresh]:thresh; 
 
     // Derive the amount that will be replaced per level
-    rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
-    s[`rp]:rp1; 
-
-
-    };
-
-// TODO process multiple trades
-.engine.logic.trade.Trade:{[t;i;x]
-    m:flip `side`qty!flip x`datum;
-    nside:neg[m`side];
-
-    // TODO count depth
-    // TODO query hidden qty
-    // Get levels that are to be updated
-    c:0!.engine.model.orderbook.GetLevel[((in;`side;nside);(>;`qty;0);(<;(+\;`qty);sum[m`qty]))]; //TODO impl max depth
-    // select from `price xasc .engine.model.orderbook.Orderbook where side=1,sums[qty]<=max(min sums qty;100)
-    s:c;
-
-    // Join the opposing side of the orderbook with the current agent orders
-    // at that level, creating the trade effected s
-    aqty:sum[s[`iqty`hqty`vqty]];
-    thresh:sums[aqty];
-    rp:(thresh-prev[thresh])-(thresh-m`size);
-    s[`thresh]:thresh; 
-
-    // Derive the amount that will be replaced per level
-    rp1:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
-    s[`rp]:rp1; 
+    s[`rp]:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
 
     // Get the current active orders at the prices 
-    o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
-    
-    // Hidden order qty i.e. derived from data 
-    // is always at the front of the queue.
-    // Iceberg orders placed by agents have a 
-    // typical offset and function like normal orders
-    // except they aren't visible.
-    
+    o:.engine.model.order.GetOrder[(
+        (=;`okind;1);
+        (in;`price;s[`price] where (s[`rp]>0));
+        (in;`status;(0 1));(>;`oqty;0))];
 
     $[count[o]>0;[
         s:0!{$[x>0;desc[y];asc[y]]}[neg[m`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
@@ -179,12 +153,19 @@
         .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`depth;t;l];
 
-    ];if[count[s]>0;[
-        l:(s`price;s`mside;nqty;nhqty;niqty;nvqty;m`time);
-        .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[`depth;t;l];
-    ]]];
+        ];[
+
+        ]];
     
+    };
+
+// TODO process multiple trades
+.engine.logic.trade.Trade:{[t;i;x]
+    s:(x[;0]>0);
+    b:x where s;
+    a:x where not s;
+    .engine.logic.trade.Take[1;t where b;i;x where b];
+    .engine.logic.trade.Take[-1;t where a;i;x where a];
     };
 
 
