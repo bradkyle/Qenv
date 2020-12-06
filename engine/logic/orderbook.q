@@ -3,6 +3,7 @@
         .bam.ol:l;
         .bam.ot:t;
         s:flip `side`price`qty!flip l;
+        s[`time]:t;
         / ld[`time]:l`time;
         / show price;
         / show side
@@ -17,23 +18,23 @@
                 .bam.ss:s;
                 dlts:(-/)(0!.bam.ss)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
-                if[any[dneg<0];[
-                        o:.engine.model.order.Get[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
+                if[any[dneg<0];[ // TODO also check for side
+                        o:.engine.model.order.Get[((=;`okind;1);(in;`price;key[s]`price);(in;`state;(0 1));(>;`oqty;0))];
                         if[count[o]>0;[
                                 s:`time xasc 0!uj[s;`side`price xgroup o]; // TODO grouping
                                 // Deltas in visqty etc 
-                                msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
+                                msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
                                 // Pad state into a matrix
                                 // for faster operations
                                 padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
                                     `accountId`instrumentId`price`status);
-                                (state padcols):.util.PadM'[state padcols];
+                                (s padcols):.util.PadM'[s padcols];
 
-                                maxN:max count'[state`offset];
+                                maxN:max count'[s`offset];
                                 tmaxN:til maxN;
-                                numLvls:count[state`offset];
+                                numLvls:count[s`offset];
 
-                                shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
+                                shft:sum[s`offset`leaves]; // the sum of the order offsets and leaves
                                 mxshft:max'[shft];
 
                                 // The Minimum offset should be the minimum shft
@@ -42,7 +43,7 @@
                                 // a hidden order qty it should represent this
                                 // offset (hidden order qty derived from data)
                                 // is always put at the front of the queue.
-                                mnoffset: (0,'-1_'(state`leaves))+raze[.util.PadM[state`hqty]]; // TODO this should be nshft
+                                mnoffset: (0,'-1_'(s`leaves))+raze[.util.PadM[s`hqty]]; // TODO this should be nshft
 
                                 // Derive the non agent qtys that
                                 // make up the orderbook // TODO add hqty, iqty to this.
@@ -50,9 +51,9 @@
                                 // from historic data and as such the nascent cancellations
                                 // are functionally ignored.
                                 notAgentQty:flip .util.PadM[raze'[(
-                                    0^state[`offset][;0]; // Use the first offset as the first non agent qty
-                                    .util.Clip[0^state[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
-                                    .util.Clip[state[`vqty]-mxshft] // last qty - maximum shift // TODO
+                                    0^s[`offset][;0]; // Use the first offset as the first non agent qty
+                                    .util.Clip[0^s[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
+                                    .util.Clip[s[`vqty]-mxshft] // last qty - maximum shift // TODO
                                     )]];
 
                                 // Derive the deltas in the agent order offsets as if there
@@ -65,8 +66,8 @@
                                 offsetdlts: sums'[-1_'(floor[(notAgentQty%(sum'[notAgentQty]))*dneg])]; // TODO sums
                                 
                                 // Offset deltas are derived adn added to the current offset
-                                noffset: {?[x>y;x;y]}'[mnoffset;state[`offset] + offsetdlts];
-                                nshft:   state[`leaves]+noffset;
+                                noffset: {?[x>y;x;y]}'[mnoffset;s[`offset] + offsetdlts];
+                                nshft:   s[`lqty]+noffset;
                                 
                                 // Calculate the new vis qty
                                 nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]]; // TODO make faster
