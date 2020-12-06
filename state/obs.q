@@ -38,16 +38,11 @@
 // Inventory Feature Sets
 // ----------------------------------------->
 
+// TODO better appriximation
 // TODO derive approx liquidation price  
 .state.obs.fea.inventory      :.state.obs.PrivateFeatureSet[{
-    c:`amt`realizedPnl`avgPrice`unrealizedPnl;
-    crs:cross[x;-1 1];
-    invn:?[`.state.CurrentInventory;enlist(in;`accountId;x);`accountId`side!`accountId`side;c!c];
-    show "BAM";
-    if[count[invn]<count[x*2];invn,:.bam.inv:{((`accountId`side,x)!(y,(4#0)))}[c]'[crs where not[crs in key[invn][`accountId`side]]]];
-    if[count[invn]>0;invn:.util.Piv[0!invn;`accountId;`side;`amt`realizedPnl`unrealizedPnl]];
-    :invn;
-    };6];   
+    .util.Piv[0!select from .state.CurrentInventory;`accountId;`side;`amt`realizedPnl`avgPrice`unrealizedPnl]
+    };8];   
 
 
 // Order Feature Sets
