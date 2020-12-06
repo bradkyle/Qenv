@@ -115,9 +115,9 @@
                                 .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
                         ]];
                 ];[
-                cl:`price`side`qty;
-                .engine.model.orderbook.Update[flip cl!s[cl]];
-                .engine.Emit[`depth]'[t;flip s[cl]];
+                        cl:`price`side`qty;
+                        .engine.model.orderbook.Update[flip cl!s[cl]];
+                        .engine.Emit[`depth]'[t;flip s[cl]];
                 ]];
         ];[
                 / No update occurs, should emit?
