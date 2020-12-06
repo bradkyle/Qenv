@@ -1,14 +1,14 @@
 
 .engine.logic.orderbook.Level :{[t;i;l]
-        l:`time`side`price`qty!(t;l);
+        s:`side`price`qty!flip l;
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;ld`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;l`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
-                o:.engine.model.order.GetOrder[((in;`price;l[]);();())];
+                o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
                 $[count[o]>0;[
                         n:count[o];
                         tn:til n;
