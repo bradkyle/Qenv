@@ -14,12 +14,20 @@
                         o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
                         if[count[o]>0;[
                                 s:`time xasc 0!uj[lj[`side`price xkey d;`side`price xkey c];`side`price xgroup o]; // TODO grouping
-                                n:count[o];
-                                tn:til n;
+                                // Deltas in visqty etc 
+                                msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
+                                // Pad state into a matrix
+                                // for faster operations
+                                padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
+                                    `accountId`instrumentId`price`status);
+                                (state padcols):.util.PadM'[state padcols];
 
-                                // Get the shift
-                                shft:sum'[o`offset`leaves]; // the sum of the order offsets and leaves
-                                mxshft:max[shft];
+                                maxN:max count'[state`offset];
+                                tmaxN:til maxN;
+                                numLvls:count[state`offset];
+
+                                shft:sum[state`offset`leaves]; // the sum of the order offsets and leaves
+                                mxshft:max'[shft];
 
                                 // The Minimum offset should be the minimum shft
                                 // of the preceeding orders in the queue i.e. so
@@ -59,17 +67,45 @@
                                 lsttime:max'[state`time]; // TODO apply to each order
                                 numordlvl:count'[noffset];
 
-                                .engine.model.order.UpdateOrder o;
-                                .engine.model.orderbook.UpdateLevel l;
+                                // Update the orders
+                                ocols:`orderId`price`offset`leaves`displayqty`status`time;
+                                .engine.model.order.UpdateOrders[ocols!(0^raze'[.util.PadM'[(
+                                        state`orderId;
+                                        raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
+                                        noffset;
+                                        state`leaves;
+                                        state`displayqty;
+                                        state`status;
+                                        raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
+                                // TODO emit events
 
-                                ];[
+                                lvlcols:`price`side`tgt`hqty`iqty`vqty`time;
+                                .engine.model.orderbook.UpdateLevels[lvlcols!(0^raze'[.util.PadM'[(
+                                        state`price;
+                                        state`side;
+                                        state`tgt;
+                                        state`hqty;
+                                        state`iqty;
+                                        nvqty;
+                                        lsttime)]])];
 
-                                ]];
+                                .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                        ];[
+                                state[`vqty]:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]];                
+                                lvlcols:`price`side`tgt`hqty`iqty`vqty`time;                
+                                .engine.model.orderbook.UpdateLevels[flip(raze'[(
+                                        state`price;
+                                        state`mside;
+                                        nqty;
+                                        nhqty;
+                                        niqty;
+                                        nvqty)])];
+                                // todo derive visible qty 
+                                // todo remove if o
+                                cl:`price`time`side`qty;
+                                .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                        ]];
                 ]];
-                // todo derive visible qty 
-                // todo remove if o
-                cl:`price`time`side`qty;
-                .engine.Emit[`depth;l[`time];cl!ld[cl]];
         ];[
                 / No update occurs, should emit?
                 .engine.model.orderbook.Orderbook,:enlist `price`side`qty`hqty`iqty`vqty!(ld`price;ld`side;ld`qty;0;0;0);
