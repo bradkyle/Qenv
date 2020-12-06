@@ -1,6 +1,6 @@
 
-.engine.model.inventory.Inventory:([ivId:`long$()] 
-   aId:`long$();side:`long$();ordQty:`long$();ordVal:`long$();ordLoss:`long$();amt:`long$();iw:`long$();mm:`long$();
+.engine.model.inventory.Inventory:([aId:`long$();side:`long$()]
+   ordQty:`long$();ordVal:`long$();ordLoss:`long$();amt:`long$();iw:`long$();mm:`long$();
    posVal:`long$();rpnl:`long$();avgPrice:`long$();execCost:`long$();upnl:`long$();lev:`long$());
 
 .engine.model.inventory.Create:.engine.model.common.Create[`.engine.model.inventory.Inventory];

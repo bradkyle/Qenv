@@ -161,19 +161,19 @@
         (`lev              ; dn#0)  
         )];
 
-    .engine.model.account.Account,:acc:(!) . flip(
+    .engine.model.account.Account,:acc:flip((!) . flip(
         (`aId              ; aIds);                                            
-        (`lng              ; `.engine.model.inventory.Inventory$0);
-        (`srt              ; `.engine.model.inventory.Inventory$1);  
+        (`lng              ; `.engine.model.inventory.Inventory$(flip(aIds;n#1)));
+        (`srt              ; `.engine.model.inventory.Inventory$(flip(aIds;n#-1)));
         (`dep              ; n#0);  
         (`wit              ; n#0);  
         (`rt               ; n#`.engine.model.risktier.RiskTier$0);  
         (`ft               ; n#`.engine.model.feetier.FeeTier$0);  
         (`posTyp           ; n#0);  
         (`mrgTyp           ; n#0);  
-        (`avail            ; n#10);  
-        (`bal              ; n#10)  
-        );
+        (`avail            ; n?10);  
+        (`bal              ; n?10)  
+        ));
 
     t:min events`time;
     .engine.Emit[`account;t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
