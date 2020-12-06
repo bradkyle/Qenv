@@ -9,20 +9,18 @@
     // Get the current levels for the side  
     sides:x[;0];
     qtys:x[;1];
+    tot:sum qtys;
     s:0!.engine.model.orderbook.GetLevel[((=;`side;s);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
-
-    aqty:sum[s[`iqty`hqty`vqty]];
-    thresh:sums[aqty];
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
     aqty:sum[s[`iqty`hqty`vqty]];
     thresh:sums[aqty];
-    rp:(thresh-prev[thresh])-(thresh-qtys);
+    rp:(thresh-prev[thresh])-(thresh-tot);
     s[`thresh]:thresh; 
 
     // Derive the amount that will be replaced per level
-    s[`rp]:min[(t[`size];first[aqty])]^rp; // TODO check that rp is correct
+    s[`rp]:min[(tot;first[aqty])]^rp; // TODO check that rp is correct
 
     // Get the current active orders at the prices 
     o:.engine.model.order.GetOrder[(
