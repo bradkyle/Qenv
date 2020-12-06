@@ -162,7 +162,7 @@
         // Apply the set of fills that would satisfy the 
         // amount of liquidity that is being removed from
         // the orderbook.
-        .engine.logic.fill.ApplyFills[raze'[(
+        raze'[(
                 numLvls#ciId; // instrumentId
                 numLvls#caId; // accountId
                 state`tside; 
