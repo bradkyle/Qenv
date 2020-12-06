@@ -5,12 +5,13 @@
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{[s;t;i;x]
+.engine.logic.trade.Take:{[sx;t;i;x]
     // Get the current levels for the side  
+    nside:neg[sx];
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
-    s:0!.engine.model.orderbook.GetLevel[((=;`side;s);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
+    s:0!.engine.model.orderbook.GetLevel[((=;`side;sx);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -22,7 +23,6 @@
     // Derive the amount that will be replaced per level
     s[`rp]:min[(tot;first[aqty])]^rp; // TODO check that rp is correct
 
-    .bam.s:s;
     // Get the current active orders at the prices 
     o:.engine.model.order.GetOrder[(
         (=;`okind;1);
@@ -30,7 +30,7 @@
         (in;`state;(0 1));(>;`oqty;0))];
 
     $[count[o]>0;[
-        s:0!{$[x>0;desc[y];asc[y]]}[neg[m`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
+        s:0!{$[x>0;desc[y];asc[y]]}[nside;ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
         msk:raze[.util.PadM[{x#1}'[count'[s`orderId]]]];
 
         // Pad s into a matrix
@@ -46,7 +46,7 @@
 
         // TODO new display qty
         // Calculate new shifts and max shifts
-        shft:sum[s`offsem`lqty]; // the sum of the order offsets and lqty
+        shft:sum[s`offset`lqty]; // the sum of the order offsets and lqty
         mxshft:{$[x>1;max[y];x=1;y;0]}'[maxN;shft]; // the max shft for each price
 
         // TOOD update comments
@@ -65,7 +65,7 @@
         displaydlt:     (ndqty-s[`dqty]); // Derive the change in the order display qty
         lqtydlt:        (nlqty-s[`lqty]); // Derive the change in the order lqty
         hqtydlt:        (nhqty-s[`hqty]); // Derive the change in hidden order qty
-        noffset:        .util.Clip[((-/)s`offsem`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
+        noffset:        .util.Clip[((-/)s`offset`rp)]; // Subtract the replaced amount and clip<0 (offset includes hqty)
         nqty:           .util.Clip[((-/)s`qty`rp)-(sum'[lqtydlt]+hqtydlt)]; // qty -rp - qty attributed to other qtys
         nvqty:          nqty+sum'[ndqty]; // Derive the new visible qty as order display qty + the new qty from above
         nshft:          nlqty+noffset; // 
@@ -103,7 +103,7 @@
         numtdslvl:count'[tqty];
         // TODO move into own function.
         s[`mside]:nside; // TODO changes
-        s[`side]:m`side; // TODO changes
+        / s[`side]:`side; // TODO changes
  
         // Derive and apply trades
         // -------------------------------------------------->
