@@ -41,7 +41,7 @@
                                 pdcl:`oId`side`price`offset`oqty`lqty`reduce`acc`state;
                                 (s pdcl):.util.PadM'[s pdcl];
 
-                                // 
+                                //  
                                 maxN:max count'[s`offset];
                                 tmaxN:til maxN;
                                 numLvls:count[s`offset];
@@ -87,6 +87,9 @@
                                 mxnshft:max'[nshft];
                                 lsttime:max'[s`time]; // TODO apply to each order
                                 numordlvl:count'[noffset];
+                                .bam.ss:s;
+                                .bam.noffset:noffset;
+                                .bam.msk:msk;
 
                                 // Update the orders
                                 ocols:`oId`price`offset`lqty`dqty`state;
