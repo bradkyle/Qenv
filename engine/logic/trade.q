@@ -22,11 +22,12 @@
     // Derive the amount that will be replaced per level
     s[`rp]:min[(tot;first[aqty])]^rp; // TODO check that rp is correct
 
+    .bam.s:s;
     // Get the current active orders at the prices 
     o:.engine.model.order.GetOrder[(
         (=;`okind;1);
         (in;`price;s[`price] where (s[`rp]>0));
-        (in;`status;(0 1));(>;`oqty;0))];
+        (in;`state;(0 1));(>;`oqty;0))];
 
     $[count[o]>0;[
         s:0!{$[x>0;desc[y];asc[y]]}[neg[m`side];ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
