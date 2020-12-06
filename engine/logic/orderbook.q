@@ -19,16 +19,15 @@
                         p:key[s]`price;
                         o:.engine.model.order.Get[((=;`okind;1);(in;`price;p);(in;`state;(0 1));(>;`oqty;0))];
                         op:distinct (0!o)`price;
-                        cnd:in[p;op];
+                        cnd:in[p;op] and (dneg<0);
                         crs:(0!s) where cnd;
-                        // TODO crss dneg
 
                         // TODO get last qty by time check!!!
                         cl:`price`side`qty;
                         .engine.model.orderbook.Update[flip cl!crs[cl]];
                         .engine.Emit[`depth]'[last'[crs`time];flip crs[cl]];
 
-                        if[count[o]>0;[
+                        if[any[cnd];[
                                 s:(0!s) where not cnd;        
                                 s[`iId]:i[`iId];
                                 dneg:dneg where cnd;
@@ -91,6 +90,7 @@
 
                                 // Update the orders
                                 ocols:`oId`price`offset`lqty`dqty`state;
+                                .bam.noffset:noffset;
                                 .engine.model.order.Update[ocols!(0^raze'[.util.PadM'[(
                                         s`oId;
                                         raze[{x#y}'[numordlvl;s`price]]; // TODO make faster/fix
