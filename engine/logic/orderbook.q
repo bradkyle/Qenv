@@ -13,7 +13,7 @@
         $[(count[c]>0);[
                 s[`nqty]:s`qty;
                 s:lj[`side`price xgroup s;`side`price xkey c];
-                dlts:(-/)(0!.bam.ss)[`qty`nqty];
+                dlts:(-/)(0!s)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 $[any[dneg<0];[ // TODO also check for side
                         p:key[s]`price;
@@ -21,29 +21,34 @@
                         op:distinct (0!o)`price;
                         cnd:in[p;op];
                         crs:(0!s) where cnd;
+                        // TODO crss dneg
 
+                        // TODO get last qty by time check!!!
                         cl:`price`side`qty;
                         .engine.model.orderbook.Update[flip cl!crs[cl]];
                         .engine.Emit[`depth]'[last'[crs`time];flip crs[cl]];
 
                         if[count[o]>0;[
                                 s:(0!s) where not cnd;        
+                                s[`iId]:i[`iId];
+                                dneg:dneg where cnd;
                                 // upsert non order levels here
                                 s:`time xasc 0!lj[`side`price xgroup o;`side`price xkey s]; // TODO grouping
                                 // Deltas in visqty etc 
                                 msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
-                                .bam.ss:s;
+
                                 // Pad state into a matrix
                                 // for faster operations
-                                padcols:(`offset`size`leaves`reduce`orderId`side, // TODO make constant?
-                                    `accountId`instrumentId`price`status);
-                                (s padcols):.util.PadM'[s padcols];
+                                pdcl:`oId`side`price`offset`oqty`lqty`reduce`acc`state;
+                                (s pdcl):.util.PadM'[s pdcl];
 
+                                // 
                                 maxN:max count'[s`offset];
                                 tmaxN:til maxN;
                                 numLvls:count[s`offset];
 
-                                shft:sum[s`offset`leaves]; // the sum of the order offsets and leaves
+                                // 
+                                shft:sum[s`offset`lqty]; // the sum of the order offsets and leaves
                                 mxshft:max'[shft];
 
                                 // The Minimum offset should be the minimum shft
@@ -52,7 +57,7 @@
                                 // a hidden order qty it should represent this
                                 // offset (hidden order qty derived from data)
                                 // is always put at the front of the queue.
-                                mnoffset: (0,'-1_'(s`leaves))+raze[.util.PadM[s`hqty]]; // TODO this should be nshft
+                                mnoffset: (0,'-1_'(s`lqty))+raze[.util.PadM[s`hqty]]; // TODO this should be nshft
 
                                 // Derive the non agent qtys that
                                 // make up the orderbook // TODO add hqty, iqty to this.
@@ -79,29 +84,29 @@
                                 nshft:   s[`lqty]+noffset;
                                 
                                 // Calculate the new vis qty
-                                nvqty:  sum'[raze'[flip[raze[enlist(state`tgt`displayqty)]]]]; // TODO make faster
+                                nvqty:  sum'[raze'[flip[raze[enlist(s`tgt`displayqty)]]]]; // TODO make faster
                                 mxnshft:max'[nshft];
-                                lsttime:max'[state`time]; // TODO apply to each order
+                                lsttime:max'[s`time]; // TODO apply to each order
                                 numordlvl:count'[noffset];
 
                                 // Update the orders
                                 ocols:`oId`price`offset`lqty`dqty`state;
                                 .engine.model.order.Update[ocols!(0^raze'[.util.PadM'[(
-                                        state`orderId;
-                                        raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
+                                        s`oId;
+                                        raze[{x#y}'[numordlvl;s`price]]; // TODO make faster/fix
                                         noffset;
-                                        state`leaves;
-                                        state`displayqty;
-                                        state`status;
+                                        s`leaves;
+                                        s`displayqty;
+                                        s`status;
                                         raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
 
                                 lvlcols:`price`side`qty`hqty`iqty`vqty`time;
                                 .engine.model.orderbook.Update[lvlcols!(0^raze'[.util.PadM'[(
-                                        state`price;
-                                        state`side;
-                                        state`tgt;
-                                        state`hqty;
-                                        state`iqty;
+                                        s`price;
+                                        s`side;
+                                        s`nqty;
+                                        s`hqty;
+                                        s`iqty;
                                         nvqty;
                                         lsttime)]])];
 
