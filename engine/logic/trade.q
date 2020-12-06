@@ -144,15 +144,15 @@
                     s`oprice;
                     abs[flldlt];
                     s`reduce;
-                    nfll#m`time)];
+                    nfll#t)];
                 .engine.logic.account.Fill[x];
             ]];
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#m`time)];
+        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t)];
         .engine.model.orderbook.UpdateLevel l;
-        .engine.Emit[`depth;t;l];
+        / .engine.Emit[`depth;t;l];
 
         ];.engine.Emit[`trade]'[t;x]];
 
