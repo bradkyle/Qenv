@@ -94,14 +94,14 @@
                                 // Update the orders
                                 ocols:`oId`price`offset`lqty`dqty`state;
                                 .bam.noffset:noffset;
-                                .engine.model.order.Update[ocols!(0^raze'[.util.PadM'[(
+                                .engine.model.order.Update[flip ocols!raze'[.util.PadM'[(
                                         s`oId;
                                         raze[{x#y}'[numordlvl;s`price]]; // TODO make faster/fix
                                         noffset;
-                                        s`leaves;
-                                        s`displayqty;
-                                        s`status;
-                                        raze[{x#y}'[numordlvl;lsttime]])]][;where[msk]])];
+                                        s`lqty;
+                                        s`dqty;
+                                        s`state;
+                                        )]][;where[msk]]];
 
                                 lvlcols:`price`side`qty`hqty`iqty`vqty`time;
                                 .engine.model.orderbook.Update[lvlcols!(0^raze'[.util.PadM'[(
