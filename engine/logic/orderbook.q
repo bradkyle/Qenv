@@ -1,10 +1,12 @@
 
 .engine.logic.orderbook.Level :{[t;i;l]
-        s:`side`price`nqty!flip l;
+        .bam.ol:l;
+        .bam.ot:t;
+        s:`side`price`qty!flip l;
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;l`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;s`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
@@ -105,9 +107,9 @@
                 ]];
         ];[
                 / No update occurs, should emit?
-                .engine.model.orderbook.Orderbook,:enlist `price`side`qty`hqty`iqty`vqty!(ld`price;ld`side;ld`qty;0;0;0);
-                cl:`price`time`side`qty;
-                .engine.Emit[`depth;l[`time];cl!ld[cl]];
+                cl:`price`side`qty;
+                .engine.model.orderbook.UpdateLevel[cl!s[cl]];
+                .engine.Emit[`depth]'[t;flip s[cl]];
         ]];
 
         .engine.model.orderbook.Delete[enlist()];
