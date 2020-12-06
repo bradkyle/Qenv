@@ -103,15 +103,14 @@
                                         s`state;
                                         )]][;where[msk]]];
 
-                                lvlcols:`price`side`qty`hqty`iqty`vqty`time;
-                                .engine.model.orderbook.Update[lvlcols!(0^raze'[.util.PadM'[(
+                                lvlcols:`price`side`qty`hqty`iqty`vqty;
+                                .engine.model.orderbook.Update[flip lvlcols!raze'[.util.PadM'[(
                                         s`price;
                                         s`side;
-                                        s`nqty;
+                                        s`qty;
                                         s`hqty;
                                         s`iqty;
-                                        nvqty;
-                                        lsttime)]])];
+                                        nvqty)]]];
 
                                 .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
                         ]];
