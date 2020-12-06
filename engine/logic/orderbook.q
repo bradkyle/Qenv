@@ -16,21 +16,20 @@
                 dlts:(-/)(0!.bam.ss)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 $[any[dneg<0];[ // TODO also check for side
-                        o:.engine.model.order.Get[((=;`okind;1);(in;`price;key[s]`price);(in;`state;(0 1));(>;`oqty;0))];
+                        p:key[s]`price;
+                        o:.engine.model.order.Get[((=;`okind;1);(in;`price;p);(in;`state;(0 1));(>;`oqty;0))];
+                        op:distinct (0!o)`price;
+                        cnd:in[p;op];
+                        crs:(0!s) where cnd;
 
                         cl:`price`side`qty;
-                        .engine.model.orderbook.Update[flip cl!s[cl]];
-                        .engine.Emit[`depth]'[t;flip s[cl]];
+                        .engine.model.orderbook.Update[flip cl!crs[cl]];
+                        .engine.Emit[`depth]'[last'[crs`time];flip crs[cl]];
 
                         if[count[o]>0;[
-                                p:distinct (0!o)`price;
-                                s where not[p]
-                                
+                                s:(0!s) where not cnd;        
                                 // upsert non order levels here
-
-
-                                .bam.p:p;
-                                s:`time xasc 0!lj[`side`price xgroup o;s]; // TODO grouping
+                                s:`time xasc 0!lj[`side`price xgroup o;`side`price xkey s]; // TODO grouping
                                 // Deltas in visqty etc 
                                 msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
                                 .bam.ss:s;
