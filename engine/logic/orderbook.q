@@ -121,6 +121,5 @@
         ]];
 
         / .engine.model.orderbook.Delete[enlist()];
-        / .engine.model.order.Delete[(();())];        
         };
 
