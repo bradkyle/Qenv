@@ -13,7 +13,7 @@
 				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
 				einst:`long$());
 
-.engine.model.order.GetOrder:.engine.model.common.Get[`.engine.model.order.Order];
-.engine.model.order.UpdateOrder:.engine.model.common.Update[`.engine.model.order.Order];
-.engine.model.order.CreateOrder:.engine.model.common.Create[`.engine.model.order.Order];
+.engine.model.order.Get:.engine.model.common.Get[`.engine.model.order.Order];
+.engine.model.order.Update:.engine.model.common.Update[`.engine.model.order.Order];
+.engine.model.order.Create:.engine.model.common.Create[`.engine.model.order.Order];
 .engine.model.order.Delete:.engine.model.common.Delete[`.engine.model.order.Order];

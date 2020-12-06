@@ -2,20 +2,25 @@
 .engine.logic.orderbook.Level :{[t;i;l]
         .bam.ol:l;
         .bam.ot:t;
-        s:`side`price`qty!flip l;
+        s:flip `side`price`qty!flip l;
         / ld[`time]:l`time;
         / show price;
         / show side
         c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;s`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
+        .bam.c:c;
+        .bam.s:s;
         $[(count[c]>0);[
-                dlts:1_'(deltas'[raze'[flip[raze[enlist(state`qty`nqty)]]]]);
+                s[`nqty]:s`qty;
+                s:lj[`side`price xgroup s;`side`price xkey c];
+                .bam.ss:s;
+                dlts:(-/)(0!.bam.ss)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
-                if[count[dneg]>0;[
-                        o:.engine.model.order.GetOrder[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
+                if[any[dneg<0];[
+                        o:.engine.model.order.Get[((=;`okind;1);(in;`price;l`price);(in;`status;(0 1));(>;`oqty;0))];
                         if[count[o]>0;[
-                                s:`time xasc 0!uj[lj[`side`price xkey d;`side`price xkey c];`side`price xgroup o]; // TODO grouping
+                                s:`time xasc 0!uj[s;`side`price xgroup o]; // TODO grouping
                                 // Deltas in visqty etc 
                                 msk:raze[.util.PadM[{x#1}'[count'[state`orderId]]]];
                                 // Pad state into a matrix
@@ -71,7 +76,7 @@
 
                                 // Update the orders
                                 ocols:`oId`price`offset`lqty`dqty`state;
-                                .engine.model.order.UpdateOrder[ocols!(0^raze'[.util.PadM'[(
+                                .engine.model.order.Update[ocols!(0^raze'[.util.PadM'[(
                                         state`orderId;
                                         raze[{x#y}'[numordlvl;state`price]]; // TODO make faster/fix
                                         noffset;
