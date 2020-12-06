@@ -31,7 +31,7 @@
 
     $[count[o]>0;[
         s:0!{$[x>0;desc[y];asc[y]]}[nside;ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
-        msk:raze[.util.PadM[{x#1}'[count'[s`orderId]]]];
+        msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
 
         // Pad s into a matrix
         // for faster operations
@@ -108,12 +108,12 @@
         // Derive and apply trades
         // -------------------------------------------------->
 
+        // TODO better derivation
         // TODO emit trade events
-        .engine.Emit[`trade] raze'[( // TODO derive the prices at each level before
+        .engine.Emit[`trade]'[numtds#t;( // TODO derive the prices at each level before
                 numtds#s`tside; // more accurate derivation
                 raze[{x#y}'[numtdslvl;s`price]]; // more accurate derivation
-                tqty;
-                numtds#m`time)];
+                tqty)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -122,6 +122,8 @@
         // as a result of the trade and amends them 
         // accordingly
 				o:raze'[(s`orderId;s`oprice;noffset;nlqty;ndqty;nstatus;s`time)][;where[msk]];
+        .bam.o:o;
+        .bam.msk:msk;
         .engine.model.order.UpdateOrder o;
         .engine.Emit[`order;t;o];
         
