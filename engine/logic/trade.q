@@ -10,7 +10,6 @@
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
-    n:count[x];
     s:0!.engine.model.orderbook.GetLevel[((=;`side;s);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
@@ -154,7 +153,7 @@
         .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`depth;t;l];
 
-        ];.engine.Emit'[n#`trade;t;x]];
+        ];.engine.Emit[`trade]'[t;x]];
 
 
         // Return the fills that would have occurred
