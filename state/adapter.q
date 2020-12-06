@@ -197,7 +197,7 @@
 // Creates the set of market orders that will serve to 
 // flatten the current active amount of all inventories for
 // a given account.
-.state.adapter.createFlattenAllMarketOrders             :{[aId] // TODO add times
+.state.adapter.createFlattenAllMarketOrders             :{[aId] // TODO LENGTH ERROR !!!!!!!!!!!!!!
     / ivn:.state.allOpenInventory[aId]; // T
     / :$[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[neg[ivn`side];ivn`amt]);()];
     ()
