@@ -92,15 +92,12 @@
                                 .bam.msk:msk;
 
                                 // Update the orders
-                                ocols:`oId`price`offset`lqty`dqty`state;
+                                ocols:`oId`price`offset;
                                 .bam.noffset:noffset;
                                 .engine.model.order.Update[flip ocols!raze'[.util.PadM'[(
                                         s`oId;
                                         raze[{x#y}'[numordlvl;s`price]]; // TODO make faster/fix
                                         noffset;
-                                        s`lqty;
-                                        s`dqty;
-                                        s`state;
                                         )]][;where[msk]]];
 
                                 lvlcols:`price`side`qty`hqty`iqty`vqty;
@@ -112,7 +109,9 @@
                                         s`iqty;
                                         nvqty)]]];
 
-                                .engine.Emit[`depth]'[l[`time];ld[`price`side`qty]];
+                                .bam.ss:s;
+                                .bam.lt:lsttime;
+                                .engine.Emit[`depth]'[l[`time];s[`price`side`qty]];
                         ]];
                 ];[
                         cl:`price`side`qty;
