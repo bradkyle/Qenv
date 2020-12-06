@@ -153,9 +153,23 @@
         .engine.model.orderbook.UpdateLevel l;
         .engine.Emit[`depth;t;l];
 
+
         ];[
 
         ]];
+
+        // Return the fills that would have occurred
+        // Apply the set of fills that would satisfy the 
+        // amount of liquidity that is being removed from
+        // the orderbook.
+        .engine.logic.fill.ApplyFills[raze'[(
+                numLvls#ciId; // instrumentId
+                numLvls#caId; // accountId
+                state`tside; 
+                state`price;
+                sum'[tqty];
+                count[tqty]#reduce;
+                numLvls#fillTime)]]
     
     };
 
