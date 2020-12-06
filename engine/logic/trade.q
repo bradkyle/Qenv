@@ -7,7 +7,9 @@
 // except they aren't visible.
 .engine.logic.trade.Take:{[s;t;i;x]
     // Get the current levels for the side  
-    s:0!.engine.model.orderbook.GetLevel[((in;`side;side);(>;`qty;0);(<;(+\;`qty);sum[m`qty]))]; //TODO impl max depth
+    sides:x[;0];
+    qtys:x[;1];
+    s:0!.engine.model.orderbook.GetLevel[((=;`side;s);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
 
     aqty:sum[s[`iqty`hqty`vqty]];
     thresh:sums[aqty];
@@ -16,7 +18,7 @@
     // at that level, creating the trade effected s
     aqty:sum[s[`iqty`hqty`vqty]];
     thresh:sums[aqty];
-    rp:(thresh-prev[thresh])-(thresh-m`size);
+    rp:(thresh-prev[thresh])-(thresh-qtys);
     s[`thresh]:thresh; 
 
     // Derive the amount that will be replaced per level
@@ -185,7 +187,7 @@
     };
 
 
-.engine.logic.trade.Match:{[i;a;m]
+.engine.logic.trade.Match:{[t;i;a;m]
         f:();
         s:(x[;0]>0);
         b:where s;
