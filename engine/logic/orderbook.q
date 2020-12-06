@@ -1,29 +1,24 @@
 
 .engine.logic.orderbook.Level :{[t;i;l]
-        .bam.ol:l;
-        .bam.ot:t;
         s:flip `side`price`qty!flip l;
         s[`time]:t;
         / ld[`time]:l`time;
         / show price;
         / show side
         c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;s`price)]; //TODO impl max depth
-        .bam.c:c;
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
                 s[`nqty]:s`qty;
                 s:lj[`side`price xgroup s;`side`price xkey c];
                 dlts:(-/)(0!s)[`qty`nqty];
-                .bam.dlts:dlts;
                 dneg:sum'[{x where[x<0]}'[dlts]];
-                .bam.dneg:dneg;
                 $[any[dneg<0];[ // TODO also check for side
                         p:key[s]`price;
                         o:.engine.model.order.Get[((=;`okind;1);(in;`price;p);(in;`state;(0 1));(>;`oqty;0))];
                         op:distinct (0!o)`price;
                         cnd:in[p;op] and (dneg<0);
-                        crs:(0!s) where cnd;
+                        crs:(0!s) where not cnd;
 
                         // TODO get last qty by time check!!!
                         cl:`price`side`qty;
@@ -31,11 +26,13 @@
                         .engine.Emit[`depth]'[last'[crs`time];flip crs[cl]];
 
                         if[any[cnd];[
-                                s:(0!s) where not cnd;        
+                                s:(0!s) where cnd;        
                                 s[`iId]:i[`iId];
+                                s[`time]:max'[s`time];
                                 dneg:dneg where cnd;
                                 // upsert non order levels here
                                 s:`time xasc 0!lj[`side`price xgroup o;`side`price xkey s]; // TODO grouping
+
                                 // Deltas in visqty etc 
                                 msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
 
@@ -71,8 +68,6 @@
                                     .util.Clip[0^s[`offset][;1_(tmaxN)] - 0^shft[;-1_(tmaxN)]]; //
                                     .util.Clip[s[`vqty]-mxshft] // last qty - maximum shift // TODO
                                     )]];
-                                show notAgentQty;
-                                show dneg;
 
                                 // Derive the deltas in the agent order offsets as if there
                                 // were a uniform distribution of cancellations throughout
@@ -92,19 +87,16 @@
                                 mxnshft:max'[nshft];
                                 lsttime:max'[s`time]; // TODO apply to each order
                                 numordlvl:count'[noffset];
-                                .bam.ss:s;
-                                .bam.noffset:noffset;
-                                .bam.msk:msk;
 
                                 // Update the orders
                                 ocols:`oId`price`offset;
-                                .bam.noffset:noffset;
                                 .engine.model.order.Update[flip ocols!raze'[.util.PadM'[(
                                         s`oId;
                                         raze[{x#y}'[numordlvl;s`price]]; // TODO make faster/fix
                                         noffset;
                                         )]][;where[msk]]];
 
+                                // TODO derive nqty rather
                                 lvlcols:`price`side`qty`hqty`iqty`vqty;
                                 .engine.model.orderbook.Update[flip lvlcols!raze'[.util.PadM'[(
                                         s`price;
@@ -114,8 +106,7 @@
                                         s`iqty;
                                         nvqty)]]];
 
-                                .bam.sss:s;
-                                .engine.Emit[`depth]'[l[`time];s[`price`side`qty]];
+                                .engine.Emit[`depth]'[s[`time];flip s[`price`side`qty]];
                         ]];
                 ];[
                         cl:`price`side`qty;
