@@ -161,11 +161,11 @@
 
 // TODO process multiple trades
 .engine.logic.trade.Trade:{[t;i;x]
-    s:(x[;0]>0);
-    b:x where s;
-    a:x where not s;
-    .engine.logic.trade.Take[1;t where b;i;x where b];
-    .engine.logic.trade.Take[-1;t where a;i;x where a];
+        s:(x[;0]>0);
+        b:x where s;
+        a:x where not s;
+        .engine.logic.trade.Take[1;t where b;i;x where b];
+        .engine.logic.trade.Take[-1;t where a;i;x where a];
     };
 
 
