@@ -8,7 +8,7 @@
 // lqty: leaves qty
 // dqty: display qty 
 .engine.model.order.Order:([oId:`long$()] 
-				acc:`.engine.model.account.Account$();invn:`.engine.model.inventory.Inventory$();price:`long$();lprice:`long$();
+				side:`long$();acc:`.engine.model.account.Account$();invn:`.engine.model.inventory.Inventory$();price:`long$();lprice:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
 				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
 				einst:`long$();status:`long$());
