@@ -198,8 +198,9 @@
 // flatten the current active amount of all inventories for
 // a given account.
 .state.adapter.createFlattenAllMarketOrders             :{[aId] // TODO add times
-    ivn:.state.allOpenInventory[aId]; // T
-    :$[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[neg[ivn`side];ivn`amt]);()];
+    / ivn:.state.allOpenInventory[aId]; // T
+    / :$[count[ivn]>0;(.state.adapter.createMarketOrder[aId]'[neg[ivn`side];ivn`amt]);()];
+    ()
     };
 
 // Creates the set of limit orders that will serve to 
@@ -451,6 +452,6 @@
 // its representative amalgamation of events by way
 // of an adapter. // TODO pair with state account repr
 .state.adapter.Adapt :{[encouragement; time; actions]
-    :raze .state.adapter.HedgedPathFinder[encouragement;time]'[actions[;0];actions[;1]];
+    :raze{.Q.trp[.state.adapter.HedgedPathFinder[0.0;x;y];z;{show["error: ",x,"\nbacktrace:\n",.Q.sbt y]}]}[time]'[actions[;0];actions[;1]];
     };
 
