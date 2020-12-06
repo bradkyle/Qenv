@@ -1,6 +1,6 @@
 
 .engine.logic.orderbook.Level :{[t;i;l]
-        l:`time`side`price`qty!();
+        l:`time`side`price`qty!(t;l);
         / ld[`time]:l`time;
         / show price;
         / show side
