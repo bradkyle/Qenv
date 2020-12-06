@@ -109,8 +109,6 @@
                                         s`iqty;
                                         nvqty)]]];
 
-                                .bam.ss:s;
-                                .bam.lt:lsttime;
                                 .engine.Emit[`depth]'[l[`time];s[`price`side`qty]];
                         ]];
                 ];[
