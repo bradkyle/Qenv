@@ -1,5 +1,6 @@
 
 .engine.logic.orderbook.Level :{[t;i;l]
+        l:`time`side`price`qty!();
         / ld[`time]:l`time;
         / show price;
         / show side
@@ -7,7 +8,7 @@
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
-                o:.engine.model.order.GetOrder[()];
+                o:.engine.model.order.GetOrder[((in;`price;l[]);();())];
                 $[count[o]>0;[
                         n:count[o];
                         tn:til n;

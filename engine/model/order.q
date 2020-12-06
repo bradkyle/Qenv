@@ -11,7 +11,7 @@
 				acc:`.engine.model.account.Account$();invn:`.engine.model.inventory.Inventory$();price:`long$();lprice:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
 				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
-				einst:`long$());
+				einst:`long$();status:`long$());
 
 .engine.model.order.GetOrder:.engine.model.common.Get[`.engine.model.order.Order];
 .engine.model.order.UpdateOrder:.engine.model.common.Update[`.engine.model.order.Order];
