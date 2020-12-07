@@ -5,7 +5,6 @@
 .engine.ingress.Events      :.common.event.Event;
 .engine.egress.Events       :.common.event.Event;
 
-
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .engine.GetIngressEvents   :{[watermark;frq;per] // TODO should select next batch according to config
@@ -46,7 +45,7 @@
 
 .engine.privateWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    a:?[`.engine.model.account.Account;enlist(=;`aId;0);();()];
+    a:?[`.engine.model.account.Account;enlist(=;`aId;y`aId);();()];
     x[y`time;i;a;y`datum]};
 
 .engine.map:()!();
