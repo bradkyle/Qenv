@@ -88,7 +88,7 @@
             ( // Mocks
                 .util.testutils.makeInstrument[]; // instrument
                 .util.testutils.makeAccount[];
-                `qty`price`reduce`ismaker`side!(1;1000;0b;1b;1) // fill
+                .util.testutils.makeAccount[]
             );
             (); // res 
             (
