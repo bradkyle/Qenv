@@ -43,12 +43,6 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 /     (3_5#p));
 
 / .qt.SkpBesTest[35];
-                (1b;1;();.util.testutils.makeInventory[]); // GetInventory
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
-                (1b;2;();.util.testutils.makeEvent[]); // Emit
-                (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
-                (1b;1;();.util.testutils.makeFeetier[]) // GetFeeTier
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
