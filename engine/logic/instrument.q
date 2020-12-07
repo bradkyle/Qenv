@@ -1,5 +1,4 @@
 
-// U
 // Update 
 .engine.logic.instrument.Funding:{
 				// i[`funding]
@@ -27,7 +26,7 @@
 				.engine.Emit[`funding;t;x];
 			};
 
-//   
+// 
 .engine.logic.instrument.MarkPrice:{
 				markprice:last x;
 				i[`mkprice]:markprice;
