@@ -17,7 +17,8 @@
 			x[`feetier]:feetier`ftId;
 			x[`riktier]:risktier`rtId;
 
-
+			lngmm:0;
+			srtmm:0;
 
 			x:update 
 			  avail:((bal-
@@ -25,7 +26,6 @@
 			  	((lng.ordQty+srt.ordQty)-(lng.ordLoss+srt.ordLoss))) | 0)
 				from x;
 
-			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			x
 	  };
 
