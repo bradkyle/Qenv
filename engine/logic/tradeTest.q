@@ -45,13 +45,13 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        (("1a) Prj;essTrade SELL: jfderbjjv has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
+        (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
                 1;
+                4#z;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
-                `time`datum!(z;`side`size!(1;1)) // fill
+                ((1 76);(1 76);(1 2);(1 1))
             );
             (); // res 
             (
@@ -77,6 +77,7 @@
         (("1b) ProcessTrade SELL: arderbdhk has agent hidden lrders, lvl1 size > qty, trade dwesn't fill agent", // 13
           "rrder, trade executiyn <= agent irder pffset, fill is agent");(
             (
+                1;
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
                 `balance`mmr`imr!(0.1;0.03;32); // accxunt
                 `time`datum!(z;`side`size!(1;1)) // fill

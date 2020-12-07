@@ -177,7 +177,6 @@
         (`avail            ; n?10);  
         (`bal              ; n?10)  
         ));
-    .bam.acc:acc;
 
     // TODO make cleaner
     t:min events`time;

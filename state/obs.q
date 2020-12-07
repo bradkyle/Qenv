@@ -259,9 +259,7 @@
 / cols[fea] except `accountId // TODO make more efficient, move to C etc
 .state.obs.GetObs :{[step;lookback;aIds]
     show aIds;
-    .bam.aIds:aIds;
     fea:.state.obs.derive[step;aIds];
-    .bam.fea:fea;
     if[((step=0) or (count[.state.FeatureBuffer]<count[aIds]));[
             // If the env is on the first step then generate 
             // a lookback buffer (TODO with decreasing noise?)
@@ -271,7 +269,6 @@
     fea:`accountId`step xkey fea;
     fea:0f^`float$(fea);
     .state.FeatureBuffer,:fea;
-    .bam.fb:.state.FeatureBuffer;
    / :last'[flip'[.ml.minmaxscaler'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]]
     :last'[flip'[{raze'[x]}'[`accountId xgroup (enlist[`step] _ (`step xasc 0!.state.FeatureBuffer))]]]
     };
