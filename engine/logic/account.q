@@ -6,18 +6,15 @@
 		.engine.model.account.Update[];
 		// Partial Liquidation
 		$[(a[`rt][`id]>=3);[
-
 				.engine.EmitA[];
 				.engine.model.liquidation.Create[lq];
 				.engine.logic.forceorder.New[]	
 				];[
-					
 				.engine.EmitA[];
 				.engine.model.liquidation.Create[lq];
 				.engine.logic.forceorder.New[]	
 				]];
 
-		
 		x	
 	};
 
