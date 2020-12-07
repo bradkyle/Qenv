@@ -207,6 +207,12 @@ dozc:{x+y}[doz];
     .util.testutils.makeDefaultsRecords[`.engine.model.orderbook.Orderbook;cl;vl]
     };
 
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeTake :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); aId:`long$(); iId:`long$() side:`long$(); isagent:`boolean$());cl;vl]
+    };
 
 // Check Utils
 // -------------------------------------------------------------->
