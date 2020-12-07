@@ -63,6 +63,8 @@
 						iv[`isig];
 						iv[`avgPrice]];	
 
+				//TODO posVal
+
 				// Remargin account
 				a:.engine.logic.account.Remargin[i;a];
 
