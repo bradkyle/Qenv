@@ -5,7 +5,7 @@
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{[sx;i;x]
+.engine.logic.trade.Take:{
     // Get the current levels for the side  
     nside:neg[sx];
     sides:x[;0];
@@ -177,7 +177,7 @@
 
 // TODO check if has liquidity before doing take else just gen trades
 // TODO process multiple trades
-.engine.logic.trade.Trade:{[t;i;x]
+.engine.logic.trade.Trade:{
         s:(x[;0]>0);
         b:where s;
         a:where not s;
@@ -186,7 +186,7 @@
     };
 
 
-.engine.logic.trade.Match:{[t;i;a;m]
+.engine.logic.trade.Match:{
         s:(x[;0]>0);
         b:where s;
         a:where not s;
