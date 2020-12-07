@@ -40,12 +40,10 @@
 
         // Pad s into a matrix
         // for faster operations
-        / padcols:(`offsem`size`lqty`dqty`reduce`orderId`side, // TODO make constant?
-        /     `accountId`instrumentId`price`status);
-        / (s padcols):.util.PadM'[s padcols]; // TODO make faster?
+        pdcl:`oId`side`price`offset`oqty`lqty`reduce`acc`state;
+        (s pdcl):.util.PadM'[s pdcl];
 
         // Useful counts 
-        .bam.s:s;
         maxN:max count'[s`offset];
         tmaxN:til maxN;
         numLvls:count[s`offset];
