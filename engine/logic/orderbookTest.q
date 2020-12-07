@@ -65,11 +65,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     {`args`eRes`mocks`err!x};
     (
         enlist("No change occurs and thus no update is triggered";(
-            (
-                z;
-                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                ()    
-            );
+            .util.testutils.makeLevel[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();( // .orderbook.Get

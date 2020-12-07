@@ -49,13 +49,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     (
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-            (
-                1;
-                0b;
-                4#z;
-                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                ((1 76);(1 76);(1 2);(1 1))
-            );
+            .util.testutils.makeTake[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();( // .orderbook.Get
