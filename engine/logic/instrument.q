@@ -57,7 +57,7 @@
 
 				// 
 				.engine.model.instrument.Update i;
-				.engine.Emit[`mark;t;x];
+				.engine.Emit[`mark;last t;last x];
 	};
 
 .engine.logic.instrument.Settlement:{[t;i;x]

@@ -139,7 +139,7 @@
         (`cntTyp                   ; 0);
         (`state                    ; 0);
         (`faceValue                ; 0);
-        (`markPrice                ; 0);
+        (`mkprice                  ; 0);
         (`mxSize                   ; 0);
         (`mnPrice                  ; 0);
         (`mxPrice                  ; 0) 

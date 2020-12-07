@@ -1,5 +1,5 @@
 
-.engine.model.instrument.Instrument:([iId:`long$()] cntTyp:`long$();state:`long$();faceValue:`long$();markPrice:`long$();
+.engine.model.instrument.Instrument:([iId:`long$()] cntTyp:`long$();state:`long$();faceValue:`long$();mkprice:`long$();
 				plmts:`long$();plmtb:`long$();lotSize:`long$();tickSize:`long$();mnSize:`long$();
   			mxSize:`long$();mnPrice:`long$();mxPrice:`long$();
 				bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$());
