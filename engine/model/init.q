@@ -8,6 +8,8 @@
 \l inventory.q
 \l account.q
 \l order.q
+\l fill.q
+\l trade.q
 
 
 \cd ../

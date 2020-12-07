@@ -23,8 +23,8 @@
 
 // TODO add fee
 // Fill account
-.engine.logic.account.Fill :{[t;i;a;f] // TODO simple select
-				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;a`aId))];
+.engine.logic.account.Fill :{[f] // TODO simple select
+				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;f`aId))];
 
 				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
 				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
@@ -38,7 +38,7 @@
 				iv[`totalEntry]+:max[(dlt;0)];
 
 				// Calculate fees
-				fee:first ?[a;();();$[f[`ismaker];`ft.mkrfee;`ft.tkrfee]];
+				fee:first ?[f;();();$[f[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
 				cost:fee * f[`qty];
 
 				// Derive the cost resulting from commisison

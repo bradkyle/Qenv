@@ -60,8 +60,8 @@
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        / mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        / mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck2: .qt.OM[`.engine.model.account.Update;c];
+        mck3: .qt.OM[`.engine.model.inventory.Update;c];
         mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         res:.engine.logic.account.Fill[z;a 0;a 1;a 2];
@@ -77,7 +77,7 @@
             ( // Mocks
                 .util.testutils.makeInstrument[]; // instrument
                 .util.testutils.makeAccount[];
-                .util.testutils.makeFill[]
+                .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId;enlist(1000;1;100;0b;0b;0;0)]
             );
             (); // res 
             (
