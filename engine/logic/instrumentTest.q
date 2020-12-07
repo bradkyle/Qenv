@@ -30,11 +30,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             () // err 
         ));
@@ -42,11 +41,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             (
 
@@ -56,11 +54,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             (
 
@@ -70,11 +67,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             (
 
@@ -84,11 +80,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             (
 
@@ -98,11 +93,10 @@
             .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
             (); // res 
             (
-                (1b;1;();flip(enlist(`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl`side!(0;1;1000;0;1;1;100000;1000;0;0;-1))));  
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))); // GetAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;3;();()); // Emit
-                (1b;1;();flip(enlist(`balance`mmr`imr!(0.1;0.03;32)))) // Remargin 
+                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+                (1b;3;.util.testutils.makeEvent[];()) // Emit
             ); // mocks 
             (
 
