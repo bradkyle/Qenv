@@ -3,7 +3,7 @@
 / vdlt:prd[o[`oqty`price]]; // TODO contract specific 
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
-.engine.logic.order.New:{
+.engine.logic.forceorder.New:{
 				dlt:o`oqty;
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]+:.engine.logic.contract.Value[];
@@ -20,14 +20,14 @@
 				.engine.logic.trade.Match[mkt];
 
 				lmt:o where not cnd;
-				.engine.model.order.CreateOrder lmt;
+				.engine.model.forceorder.CreateOrder lmt;
 
 				.engine.EmitA[`inventory;t;iv];
 				.engine.EmitA[`account;t;a];
 				.engine.EmitA[`order;t;o];
 		};
 
-.engine.logic.order.Amend:{
+.engine.logic.forceorder.Amend:{
 				dlt:(-/)(c`oqty;o`oqty);
 				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
@@ -39,15 +39,15 @@
 				.engine.logic.trade.Match[mkt];
 
 				lmt:o where not cnd;
-				.engine.model.order.CreateOrder lmt;
+				.engine.model.forceorder.CreateOrder lmt;
 
 				.engine.EmitA[`inventory;t;iv];
 				.engine.EmitA[`account;t;a];
 				.engine.EmitA[`order;t;o];
 		};
 
-.engine.logic.order.Cancel:{
-				c:.engine.model.order.Get[];
+.engine.logic.forceorder.Cancel:{
+				c:.engine.model.forceorder.Get[];
 				dlt:neg[c`oQty];
 				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
@@ -59,7 +59,7 @@
 				.engine.model.account.UpdateAccount a;
 				.engine.model.inventory.UpdateInventory iv;
 				.engine.model.instrument.UpdateInstrument i;
-				.engine.model.order.AddOrder o;
+				.engine.model.forceorder.AddOrder o;
 
 				cnd:o[`okind]=0;
 				mkt:o where cnd;
@@ -77,7 +77,7 @@
 		};
 
 
-.engine.logic.order.CancelAll:{
+.engine.logic.forceorder.CancelAll:{
 				dlt:neg[sum[c`oQty]];
 				iv:.engine.model.inventory.GetInventory[];
 				iv[`ordQty]:0;
