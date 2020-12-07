@@ -1,4 +1,9 @@
 
+.engine.logic.order.NewForce:{[]
+	  
+	  
+	  };
+
 / vdlt:prd[o[`oqty`price]]; // TODO contract specific 
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
