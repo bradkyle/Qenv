@@ -74,31 +74,19 @@
         ("Deposit Account disabled:should fail";(
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Deposit Account locked:should fail";(
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Deposit Success: Update fee tier, risk tier, avail";(
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ))
     );
@@ -114,8 +102,6 @@
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.account.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
 				res:.engine.valid.account.Leverage[a 0;a 1;a 2];
 
@@ -128,51 +114,31 @@
         ("Leverage no balance:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage insufficient balance:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Account disabled:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Account locked:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
             .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
+            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ))
     );
