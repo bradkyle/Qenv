@@ -6,7 +6,6 @@
 		
 	};
 
-
 .engine.logic.account.Remargin :{
 
 			x[`ft]:.engine.model.feetier.Get[(
@@ -19,7 +18,8 @@
 				(>;`mxlev;x`);
         (=;`i;(*:;`i))))];
 
-			// lng.mm = 
+			// todo liquidation price, bankruptcy price
+			// TODO check the amount incurred from the commizzion
 			x:update 
 			  avail:((bal-
 					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
