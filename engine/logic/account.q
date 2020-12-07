@@ -17,6 +17,8 @@
 			x[`feetier]:feetier`ftId;
 			x[`riktier]:risktier`rtId;
 
+			// lng.mm = 
+
 			x:update 
 			  avail:((bal-
 					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
