@@ -4,6 +4,7 @@
 \l table.q
 \l batch.q
 \l numpy.q
+\l log4q.q 
 
 loadTests   :{
     system[sv["";("l ";x;"/batchTest.q")]];
