@@ -114,10 +114,10 @@
 
         // TODO better derivation
         // TODO emit trade events
-        .engine.Emit[`trade]'[numtds#t;( // TODO derive the prices at each level before
-                numtds#s`tside; // more accurate derivation
-                raze[{x#y}'[numtdslvl;s`price]]; // more accurate derivation
-                tqty)];
+        / .engine.Emit[`trade]'[numtds#t;flip( // TODO derive the prices at each level before
+        /         numtds#sx; // more accurate derivation
+        /         raze[{x#y}'[numtds;s`price]]; // more accurate derivation
+        /         raze tqty)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
