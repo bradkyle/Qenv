@@ -1,7 +1,7 @@
 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
-		lq:();
+		lq:([lqid:`long$()]);
 
 		.engine.model.account.Update[];
 		// Partial Liquidation

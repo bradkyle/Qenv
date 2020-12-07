@@ -25,8 +25,34 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("update leverage sufficient balance without positions";());
-        ("update leverage sufficient balance without positions";())
+        ("Remargin account no orders";(
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Remargin account orders";(
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
