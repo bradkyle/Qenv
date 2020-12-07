@@ -10,8 +10,8 @@
 .engine.logic.account.Remargin :{[i;a]
 	  
 			// TODO 
-			feetier:.engine.model.feetier.Get[];
-			risktier:.engine.model.risktier.Get[];
+			feetier:.engine.model.feetier.Get[()];
+			risktier:.engine.model.risktier.Get[()];
 
 			a[`feetier]:feetier;
 			a[`riktier]:risktier;

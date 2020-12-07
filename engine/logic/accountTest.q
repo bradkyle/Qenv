@@ -1,6 +1,19 @@
 
 .qt.Unit[
-    ".engine.logic.account.DeriveRiskTier";
+    ".engine.logic.account.Liquidate";
+    {[c]
+				.qt.RunUnit[c;.engine.logic.account.DeriveRiskTier];
+    };
+    {[p] :`args`eRes`mocks`err!p};
+    (
+        ("update leverage sufficient balance without positions";());
+        ("update leverage sufficient balance without positions";())
+    );
+    ({};{};{};{});
+    "Global function for creating a new account"];
+
+.qt.Unit[
+    ".engine.logic.account.Remargin";
     {[c]
 				.qt.RunUnit[c;.engine.logic.account.DeriveRiskTier];
     };
@@ -15,7 +28,7 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-/ .qt.SkpBesTest[24];
+.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Fill";
     {[c]
@@ -23,11 +36,10 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
         mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck7: .qt.M[`.engine.model.account.Remargin;{[a;b] a}[m[6][3]];c];
 
         res:.engine.logic.account.Fill[z;a 0;a 1;a 2];
 
