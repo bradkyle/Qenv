@@ -14,7 +14,6 @@
 				.engine.model.liquidation.Create[lq];
 				.engine.logic.forceorder.New[]	
 				]];
-
 		x	
 	};
 
