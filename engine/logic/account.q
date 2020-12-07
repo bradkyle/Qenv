@@ -17,10 +17,13 @@
 			x[`feetier]:feetier`ftId;
 			x[`riktier]:risktier`rtId;
 
-			// (lnt.ordQty + srt.ordQty)
-			// (lng.ordLoss + srt.ordLoss)
-			// (lng.mm + srt.mm)
-			// (lng.upnl + srt.upnl)
+
+
+			x:update 
+			  avail:((bal-
+					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
+			  	((lng.ordQty+srt.ordQty)-(lng.ordLoss+srt.ordLoss))) | 0)
+				from x;
 
 			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			x
