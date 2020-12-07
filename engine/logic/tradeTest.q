@@ -80,7 +80,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
                   0 110;
                   0 0))
                 );
-                (1b;1;();`amt`abc!()); // Emit
+                (1b;1;();())// Emit
                 (1b;1;();(0.1;0.1)); // Updategrder
                 (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
                 (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
