@@ -44,7 +44,7 @@
     e[`iId]:`.engine.model.instrument.Instrument$0;
     x[e]};
 
-.engine.privateWrapper:{[x;y;z]
+.engine.privateWrapper:{[v;x;y;z]
     e:y!flip z;
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
@@ -62,15 +62,15 @@
 .engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit;`highest`lowest];
 
 // Account
-.engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw;enlist`withdraw];
-.engine.map[`deposit]     :.engine.privateWrapper[.engine.logic.account.Deposit;enlist`deposit];
-.engine.map[`leverage]    :.engine.privateWrapper[.engine.logic.account.Leverage;enlist`leverage];
+.engine.map[`withdraw]    :.engine.privateWrapper[.engine.valid.account.Withdraw;.engine.logic.account.Withdraw;enlist`withdraw];
+.engine.map[`deposit]     :.engine.privateWrapper[.engine.valid.account.Deposit;.engine.logic.account.Deposit;enlist`deposit];
+.engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage;enlist`leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder;`clId`];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;`oId`clId];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;`oId`clId];
-.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders;()];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.NewOrder;.engine.logic.order.NewOrder;`clId`];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.AmendOrder;.engine.logic.order.AmendOrder;`oId`clId];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.CancelOrder;.engine.logic.order.CancelOrder;`oId`clId];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
