@@ -2,7 +2,7 @@
 .engine.logic.account.Liquidate:{[t;i;a]
 		a[`status]:1;
 		lq:();
-		.engine.model.liquidation.AddLiquidation[];
+		.engine.model.liquidation.Create[];
 
 		
 	};
