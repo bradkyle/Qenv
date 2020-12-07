@@ -47,10 +47,6 @@
 		};
 
 .engine.logic.order.AmendOrder:{
-				c:.engie.logic.order.GetOrder[`oId`cId;o`oId`cId];
-				if[null[c];.engine.Purge[o;0;"Order not found"]];
-				if[not[c[`state] in ()];.engine.Purge[o;0;"update order with terminal state"]];
-				o:c^o;
 
 				dlt:(-/)(c`oqty;o`oqty);
 
