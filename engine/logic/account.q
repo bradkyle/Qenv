@@ -8,7 +8,10 @@
 		// Full Liquidation
 
 		.engine.model.account.Update a;
-		.engine.model.liquidation.Create[];
+		.engine.
+
+		.engine.model.liquidation.Create[lq];
+		
 		
 	};
 
