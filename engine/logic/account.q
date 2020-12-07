@@ -39,7 +39,6 @@
 
 .engine.logic.account.Deposit:{
 				a[`dep]+:d`dep;
-				feetier:.engine.model.feetier.GetFeeTier[];
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
