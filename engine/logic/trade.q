@@ -156,6 +156,8 @@
 
         ];.engine.Emit[`trade]'[t;x]];
 
+        // TODO recurse
+
 
         // Return the fills that would have occurred
         // Apply the set of fills that would satisfy the 
