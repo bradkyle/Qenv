@@ -250,6 +250,14 @@
         x[`rp]:min[dlt,x`leaves]^rp; // TODO change to neg?
         :flip x}'[0!select from dltState where lvlqty>tgt];
       
+    if[count[rred]>0;[
+            c,:(select accountId, orderId from rred where tgt=0);
+            $[amd;[
+                a,:(select accountId, orderId, oprice, tgt from rred where (tgt<>0), tgt<=leaves);    
+            ];[
+                c,:(select accountId, orderId from rred where (tgt<>0), tgt<=leaves);
+                n,:(select accountId, price:bktPmid, size:tgt, reduce from rred where (tgt<>0), tgt<=leaves); // TODO if too many are open
+        ]]]];
     };
 
 .state.adapter.increaseDeltas                                       :{
@@ -261,6 +269,7 @@
         :flip x}'[0!select from dltState where lvlqty<tgt];
     rinc[`accountId]:aId;
     rinc[`otype]:1;
+    if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc where tgt>0)];
     };
 
 // TODO test
@@ -285,37 +294,13 @@
     // ------------------------------------------>
     rred:.state.adapter.reduceDeltas[];
 
-    if[count[rred]>0;[
-            c,:(select accountId, orderId from rred where tgt=0);
-            $[amd;[
-                a,:(select accountId, orderId, oprice, tgt from rred where (tgt<>0), tgt<=leaves);    
-            ];[
-                c,:(select accountId, orderId from rred where (tgt<>0), tgt<=leaves);
-                n,:(select accountId, price:bktPmid, size:tgt, reduce from rred where (tgt<>0), tgt<=leaves); // TODO if too many are open
-        ]]]];
-
     // Derive increase orders
     // ------------------------------------------>
     rinc:.state.adapter.increaseDeltas[];
 
-    // TODO if too many are open
-    if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc where tgt>0)];
-
     // Compose Events 
     // ------------------------------------------>
-    // TODO post processing
-    // TODO rate limiting of inter batch requests
-    e:(); // TODO randomize batch size?
-        
-    // todo group into batches (time offset of 0)
-    if[count[c]>0;e,:.state.adapter.createEventBatches[c;.state.adapter.cancelOrders;time;10]]; 
-
-    // todo group into batches (time offset of ~2)
-    if[amd and (count[a]>0);e,:.state.adapter.createEventBatches[a;.state.adapter.amendOrders;time;10]]; 
-
-    // todo group into batches (time offset of ~2)
-    if[count[n]>0;e,:.state.adapter.createEventBatches[n;.state.adapter.newOrders;time;10]]; 
-    e
+    .state.adapter.createEventBatches[rinc,rred]        
   };
 
 // TODO testing
