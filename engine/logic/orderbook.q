@@ -1,7 +1,5 @@
 
-.engine.logic.orderbook.Level :{[i;l]
-        s:flip `side`price`qty!flip l;
-        s[`time]:t;
+.engine.logic.orderbook.Level :{
         / ld[`time]:l`time;
         / show price;
         / show side
