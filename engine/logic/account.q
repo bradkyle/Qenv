@@ -3,8 +3,6 @@
 		a[`status]:1;
 		lq:();
 		.engine.model.liquidation.Create[];
-
-
 		
 	};
 
