@@ -26,21 +26,21 @@
 				vdlt:prd[o[`oqty`price]]; // TODO contract specific 
 				lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 
-				iv:.engine.model.inventory.GetInventory[(();())];
+				iv:.engine.model.inventory.Get[(();())];
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]+:vdlt;
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 
 				// FeeTier  
-				a[`ft]:.engine.model.feetier.GetFeeTier[()];
+				a[`ft]:.engine.model.feetier.Get[()];
 
 				// RiskTier
-				a[`rt]:.engine.model.risktier.GetRiskTier[()];
+				a[`rt]:.engine.model.risktier.Get[()];
 
 				a[`avail]-:sum[(vdlt;lsdlt)];
 
-				.engine.model.account.UpdateAccount a;
-				.engine.model.inventory.UpdateInventory iv;
+				.engine.model.account.Update a;
+				.engine.model.inventory.Update iv;
 
 				/ match:o where [];
 				/ place:o where [];
@@ -89,19 +89,19 @@
 
 				dlt:(-/)(c`oqty;o`oqty);
 
-				iv:.engine.model.inventory.GetInventory[];
+				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]:prd[f[`fqty`fprice]];
 				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
 
 				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
-				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				a[`imr`mmr]:.engine.model.risktier.Get[][`imr`mmr];
 				a[`avail]:.engine.logic.account.DeriveAvailable[];
 
-				.engine.model.account.UpdateAccount a;
-				.engine.model.inventory.UpdateInventory iv;
-				.engine.model.instrument.UpdateInstrument i;
-				.engine.model.order.AddOrder o;
+				.engine.model.account.Update a;
+				.engine.model.inventory.Update iv;
+				.engine.model.instrument.Update i;
+				.engine.model.order.Create o;
 
 				$[(o[`okind]=0);[
 							.engine.logic.trade.Match[i;a;o];
@@ -126,13 +126,13 @@
 				if[a[`state]=2;.engine.Purge[0;"Account has been locked for liquidation"]];
 
 				dlt:neg[c`oQty];
-				iv:.engine.model.inventory.GetInventory[];
+				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]:prd[f[`fqty`fprice]];
 				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
 
 				a[`mkrfee`tkrfee]:.engine.model.feetier.FeeTier[][`mkrfee`tkrfee];
-				a[`imr`mmr]:.engine.model.risktier.RiskTier[][`imr`mmr];
+				a[`imr`mmr]:.engine.model.risktier.Get[][`imr`mmr];
 				a[`avail]:.engine.logic.account.DeriveAvailable[];
 
 				.engine.model.account.UpdateAccount a;
