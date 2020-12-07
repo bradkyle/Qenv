@@ -39,11 +39,13 @@
 / -------------------------------------------------------------------->
 
 .engine.publicWrapper:{[x;y;z]
+    e:y!flip z;
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     x[e]};
 
 .engine.privateWrapper:{[x;y;z]
+    e:y!flip z;
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$x[`aId];
