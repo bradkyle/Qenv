@@ -7,8 +7,34 @@
     };
     {[p] :`args`eRes`mocks`err!p};
     (
-        ("update leverage sufficient balance without positions";());
-        ("update leverage sufficient balance without positions";())
+        ("Liquidation of > tier 3 account";(
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ));
+        ("Liquidation of < tier 3 account";(
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            (); // res 
+            (
+                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
+                (1b;1;();());
+                (1b;3;();`amt`abc!());
+                (1b;3;();`imr`mmr!(0.1;0.1));
+                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+            ); // mocks 
+            (
+
+            ) // err 
+        ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
@@ -169,11 +195,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Deposit Account disabled:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -187,11 +209,7 @@
             ) // err 
         ));
         ("Deposit Account locked:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -205,11 +223,7 @@
             ) // err 
         ));
         ("Deposit Success: Update fee tier, risk tier, avail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -247,11 +261,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Leverage no balance:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -265,11 +275,7 @@
             ) // err 
         ));
         ("Leverage insufficient balance:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -283,11 +289,7 @@
             ) // err 
         ));
         ("Leverage Account disabled:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -301,11 +303,7 @@
             ) // err 
         ));
         ("Leverage Account locked:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -319,11 +317,7 @@
             ) // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
