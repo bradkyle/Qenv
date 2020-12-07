@@ -6,6 +6,7 @@
 // rt: RiskTier
 // ft: FeeTier
 .engine.model.account.Account:([aId:`long$()] 
+  iId:`.engine.model.instrument.Instrument$();
   lng:`.engine.model.inventory.Inventory$();srt:`.engine.model.inventory.Inventory$();
   rt:`.engine.model.risktier.Risktier$();ft:`.engine.model.feetier.Feetier$();
   dep:`long$();wit:`long$();

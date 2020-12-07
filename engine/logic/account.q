@@ -17,7 +17,6 @@
 			x[`feetier]:feetier`ftId;
 			x[`riktier]:risktier`rtId;
 
-			a[`]
 			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			x
 	  };
