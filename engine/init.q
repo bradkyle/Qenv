@@ -2,6 +2,7 @@
 \l testutils.q
 \l model/init.q
 \l logic/init.q
+\l valid/init.q
 \l engine.q
 
 loadTests   :{

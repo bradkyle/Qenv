@@ -3,12 +3,12 @@
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.Get[enlist(in;`price;s`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.Get[enlist(in;`price;x`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
-                s[`nqty]:s`qty;
-                s:lj[`side`price xgroup s;`side`price xkey c];
+                x[`nqty]:x`qty;
+                s:lj[`side`price xgroup x;`side`price xkey c];
                 dlts:(-/)(0!s)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 $[any[dneg<0];[ // TODO also check for side

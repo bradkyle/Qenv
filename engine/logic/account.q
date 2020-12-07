@@ -8,11 +8,11 @@
 		$[(a[`rt][`id]>=3);[
 				.engine.EmitA[];
 				.engine.model.liquidation.Create[lq];
-				.engine.logic.forceorder.New[]	
+				.engine.logic.order.New[]	
 				];[
 				.engine.EmitA[];
 				.engine.model.liquidation.Create[lq];
-				.engine.logic.forceorder.New[]	
+				.engine.logic.order.New[]	
 				]];
 		x	
 	};
@@ -23,11 +23,11 @@
 				(>;`vol;x`);
 				(>;`bal;x`);
 				(>;`ref;x`);
-        (=;`i;(*:;`i))))]; 
+				(=;`i;(*:;`i)))]; 
 			x[`rt]:.engine.model.risktier.Get[(
 				(>;`mxamt;x`);
 				(>;`mxlev;x`);
-        (=;`i;(*:;`i))))];
+				(=;`i;(*:;`i)))];
 
 			// todo liquidation price, bankruptcy price
 			// TODO check the amount incurred from the commizzion
@@ -41,26 +41,26 @@
 	  };
 
 .engine.logic.account.Withdraw:{
-				a[`wit]+:w`wit;
-				a[`bal]-:w`wit;
-				a:.engine.logic.account.Remargin[i;a];
-
+				a:.engine.model.account.Get[x`aId];
+				a[`wit]+:x`wit;
+				a[`bal]-:x`wit;
+				a:.engine.logic.account.Remargin[x;a];
 				.engine.model.account.Update a;
 				.engine.EmitA[`account;t;a];
 				};
 
 .engine.logic.account.Deposit:{
-				a[`dep`bal]+:d`dep;
-				a:.engine.logic.account.Remargin[i;a];
-
+				a:.engine.model.account.Get[x`aId];
+				a[`dep`bal]+:x`dep;
+				a:.engine.logic.account.Remargin[x`aId;a];
 				.engine.model.account.Update a;
 				.engine.EmitA[`account;t;a];
 				};
 
 .engine.logic.account.Leverage:{
-				a[`leverage]:l`leverage;
-				a:.engine.logic.account.Remargin[i;a];
-
+				a:.engine.model.account.Get[x`aId];
+				a[`leverage]:x`leverage;
+				a:.engine.logic.account.Remargin[x;a];
 				.engine.model.account.Update a;
 				.engine.EmitA[`account;t;a];
 				};

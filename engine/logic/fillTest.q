@@ -25,17 +25,12 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
-            ( // Mocks
-                .util.testutils.makeInstrument[]; // instrument
-                .util.testutils.makeAccount[];
-                .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId;enlist(1000;1;100;0b;0b;0;0)]
-            );
+            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;enlist(1000;1;100;0b;0b;0;0;0)]
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // GetInventory
+                (1b;1;();.util.testutils.makeInventory[]); // GetInventory
                 (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[];());  
-                (1b;1;.util.testutils.makeInstrument[];()); // Update Instrument 
+                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
                 (1b;2;();.util.testutils.makeEvent[]); // Emit
                 (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
                 (1b;1;();.util.testutils.makeFeetier[]) // GetFeeTier
