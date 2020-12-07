@@ -63,6 +63,7 @@
 .engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
 
+/ .engine.multiplex:{.Q.sbt[.engine.map[first x[`kind]];x;{show[.Q.sbt y]}]}; // TODO logging
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
