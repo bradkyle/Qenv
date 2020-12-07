@@ -1,4 +1,9 @@
 
+.engine.logic.contract.Value :{[]
+    
+    
+    };
+
 
 .engine.logic.contract.PricePerContract :{[contractType;price;faceValue]
   ($[contractType=0;faceValue%price;

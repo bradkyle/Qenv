@@ -47,11 +47,12 @@
 		};
 
 .engine.logic.order.CancelOrder:{
+				c:();
 				dlt:neg[c`oQty];
 				iv:.engine.model.inventory.Get[];
-				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[f[`fqty`fprice]];
-				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`ordQty]-:dlt;
+				iv[`ordVal]-:.engine.logic.contract.Value[];
+				iv[`ordLoss]:.engine.logic.contract.Loss[];
 
 				.engine.model.account.Remargin[];
 
@@ -79,9 +80,9 @@
 .engine.logic.order.CancelAllOrders:{
 				dlt:neg[sum[c`oQty]];
 				iv:.engine.model.inventory.GetInventory[];
-				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[f[`fqty`fprice]];
-				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`ordQty]:0;
+				iv[`ordVal]:0;
+				iv[`ordLoss]:0;
 
 				.engine.model.account.Remargin[];
 
