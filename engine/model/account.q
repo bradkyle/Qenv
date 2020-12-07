@@ -12,5 +12,5 @@
   avail:`long$();bal:`long$());
 
 .engine.model.account.Create:.engine.model.common.Create[`.engine.model.account.Account];
-.engine.model.account.GetAccount:.engine.model.common.Get[`.engine.model.account.Account];
-.engine.model.account.UpdateAccount:.engine.model.common.Update[`.engine.model.account.Account];
+.engine.model.account.Get:.engine.model.common.Get[`.engine.model.account.Account];
+.engine.model.account.Update:.engine.model.common.Update[`.engine.model.account.Account];

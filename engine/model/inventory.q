@@ -4,5 +4,5 @@
    posVal:`long$();rpnl:`long$();avgPrice:`long$();execCost:`long$();upnl:`long$();lev:`long$());
 
 .engine.model.inventory.Create:.engine.model.common.Create[`.engine.model.inventory.Inventory];
-.engine.model.inventory.GetInventory:.engine.model.common.Get[`.engine.model.inventory.Inventory];
-.engine.model.inventory.UpdateInventory:.engine.model.common.Update[`.engine.model.inventory.Inventory];
+.engine.model.inventory.Get:.engine.model.common.Get[`.engine.model.inventory.Inventory];
+.engine.model.inventory.Update:.engine.model.common.Update[`.engine.model.inventory.Inventory];
