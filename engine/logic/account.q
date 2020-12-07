@@ -17,6 +17,11 @@
 			x[`feetier]:feetier`ftId;
 			x[`riktier]:risktier`rtId;
 
+			// (lnt.ordQty + srt.ordQty)
+			// (lng.ordLoss + srt.ordLoss)
+			// (lng.mm + srt.mm)
+			// (lng.upnl + srt.upnl)
+
 			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			x
 	  };
