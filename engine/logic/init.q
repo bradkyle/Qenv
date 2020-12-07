@@ -10,6 +10,7 @@
 \l trade.q
 
 .logic.loadTests   :{
+    system[sv["";("l ";x;"/testutils.q")]];
     .contract.loadTests[sv["/";(x;"contract")]];
     / system[sv["";("l ";path;"/testutils.q")]];
     system[sv["";("l ";x;"/accountTest.q")]];

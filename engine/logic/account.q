@@ -109,7 +109,7 @@
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
+				.engine.EmitA[`account;t;a];
 				};
 
 .engine.logic.account.Deposit:{[t;i;a;d]
@@ -119,7 +119,7 @@
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
+				.engine.EmitA[`account;t;a];
 				};
 
 .engine.logic.account.Leverage:{[t;i;a;l]
@@ -131,7 +131,7 @@
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
+				.engine.EmitA[`account;t;a];
 				};
 
 

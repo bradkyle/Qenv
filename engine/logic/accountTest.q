@@ -92,13 +92,13 @@
             );
             (); // res 
             (
-                (1b;1;();`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(2;2000;0;0;0;0;0;0;0)); // GetInventory
+                (1b;1;();.engine.testutils.makeAccounts[]); // GetInventory
                 (1b;1;enlist(enlist(`aId`balance`feetier`risktier!(0;0.1;0;0)));()); // Update Account
-                (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
-                (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
-                (1b;2;();`amt`abc!()); // Emit
-                (1b;1;();`imr`mmr!(0.1;0.1)); // GetRiskTier
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // GetFeeTier
+                (1b;1;.engine.testutils.makeInventory[];());  
+                (1b;1;.engine.testutils.makeInstrument[];()); // Update Instrument 
+                (1b;2;();.engine.testutils.makeEvent[]); // Emit
+                (1b;1;();.engine.testutils.makeRisktier[]); // GetRiskTier
+                (1b;1;();.engine.testutils.makeFeetier[]) // GetFeeTier
             ); // mocks 
             () // err 
         ))

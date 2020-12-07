@@ -94,7 +94,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeOrders          :{[cl;vl]
+.util.testutils.makeOrder          :{[cl;vl]
     $[count[vl]>0;.util.testutils.makeDefaultsRecords[`.engine.model.order.Order;cl;vl];()]
     };
 
@@ -103,7 +103,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeAccounts        :{[cl;vl]
+.util.testutils.makeAccount        :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.engine.model.account.Account;cl;vl]
     };
 
@@ -113,7 +113,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeInventories     :{[cl;vl]
+.util.testutils.makeInventory     :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.engine.model.inventory.Inventory;cl;vl]
     };
 
@@ -123,7 +123,7 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeInstruments     :{[cl;vl]
+.util.testutils.makeInstrument     :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.engine.model.instrument.Instrument;cl;vl]
     };
 
@@ -133,8 +133,22 @@ dozc:{x+y}[doz];
 /  @param x (Order/List) The orders that are to be checked
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
-.util.testutils.makeEvents          :{[cl;vl]
+.util.testutils.makeEvent          :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.common.event.Event;cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeRisktier       :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.risktier.Risktier;cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeFeetier        :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.risktier.Feetier;cl;vl]
     };
 
 // Check Utils
