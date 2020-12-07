@@ -22,6 +22,12 @@
 			x
 	  };
 
+.engine.logic.account.InplaceRemargin :{[]
+		  
+		  
+		};
+
+
 .engine.logic.account.Withdraw:{
 				a[`wit]+:w`wit;
 				a:.engine.logic.account.Remargin[i;a];
