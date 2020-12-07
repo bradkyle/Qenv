@@ -23,12 +23,12 @@
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
-        .engine.egress.Events,:(time;kind;event);
-				};
+    .engine.egress.Events,:(time;kind;event);
+		};
 
 .engine.Purge   :{[event;time;msg] 
     .engine.egress.Events,:(time;`failure;(msg;event));
-        };
+    };
 
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
