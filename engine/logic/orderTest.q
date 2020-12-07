@@ -52,7 +52,7 @@
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;.util.testutils.makeAccount[`aId`bal`avail`ft`rt;(0;2000;1000;1;1)];()); // Update Account
+                (1b;1;.util.testutils.makeAccount[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
                 (1b;1;.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0)];()); // Inventory 
                 (1b;1;.util.testutils.makeOrder[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];()); // CreateOrder 
                 (1b;3;.util.testutils.makeEvent[];()) // Emit
@@ -64,7 +64,7 @@
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;.util.testutils.makeAccount[`aId`bal`avail`ft`rt;(0;2000;1000;1;1)];()); // Update Account
+                (1b;1;.util.testutils.makeAccount[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
                 (1b;1;.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0)];()); // Inventory 
                 (1b;1;.util.testutils.makeOrder[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];()); // CreateOrder 
                 (1b;3;.util.testutils.makeEvent[];()) // Emit
