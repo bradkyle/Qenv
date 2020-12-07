@@ -56,7 +56,7 @@
         ("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
-                `aId`balance`feetier`risktier!(0;0.1;0;0); // account
+                `aId`balance`feetier`risktier!(0;0.1;`.engine.model.feetier.FeeTier$0;.engine.model.risktier.RiskTier$0); // account
                 `qty`price`reduce`ismaker`side!(1;1000;0b;1b;1) // fill
             );
             (); // res 

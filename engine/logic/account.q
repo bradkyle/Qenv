@@ -13,8 +13,8 @@
 			feetier:.engine.model.feetier.Get[()];
 			risktier:.engine.model.risktier.Get[()];
 
-			a[`feetier]:feetier;
-			a[`riktier]:risktier;
+			/ a[`feetier]:feetier;
+			/ a[`riktier]:risktier;
 
 			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			a
@@ -82,8 +82,9 @@
 
 				a:.engine.logic.account.Remargin[i;a];
 
+				.bam.a:a;
 				// 
-				cost:feetier[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
+				cost:?[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
 
 				// Derive the cost resulting from commisison
 				iv[`rpnl]-:`long$(cost*f[`qty]);
