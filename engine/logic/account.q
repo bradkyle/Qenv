@@ -12,6 +12,7 @@
 			x[`ft]:.engine.model.feetier.Get[(
 				(>;`vol;x`);
 				(>;`bal;x`);
+				(>;`ref;x`);
         (=;`i;(*:;`i))))]; //TODO impl max depth
 			x[`rt]:.engine.model.risktier.Get[(
 				(>;`mxamt;x`);
