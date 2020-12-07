@@ -3,6 +3,10 @@
 		a[`status]:1;
 		lq:();
 
+		// Partial Liquidation
+
+		// Full Liquidation
+
 		.engine.model.account.Update a;
 		.engine.model.liquidation.Create[];
 		
