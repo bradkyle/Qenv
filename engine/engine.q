@@ -38,7 +38,6 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-
 .engine.publicWrapper:{[x;y]
     i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
     x[y`time;i;y`datum]};
@@ -65,9 +64,9 @@
 
 // Ordering
 .engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder;`clId`];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;`oId`clId``];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;`aId`oId`clId];
-.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders;enlist`aId];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;`oId`clId];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;`oId`clId];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders;()];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
