@@ -4,6 +4,7 @@
 		lq:();
 		.engine.model.liquidation.Create[];
 
+
 		
 	};
 
@@ -18,7 +19,6 @@
 			x[`riktier]:risktier`rtId;
 
 			// lng.mm = 
-
 			x:update 
 			  avail:((bal-
 					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
