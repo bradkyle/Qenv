@@ -13,11 +13,11 @@
 				(>;`vol;x`);
 				(>;`bal;x`);
 				(>;`ref;x`);
-        (=;`i;(*:;`i))))]; //TODO impl max depth
+        (=;`i;(*:;`i))))]; 
 			x[`rt]:.engine.model.risktier.Get[(
 				(>;`mxamt;x`);
 				(>;`mxlev;x`);
-        (=;`i;(*:;`i))))]; //TODO impl max depth
+        (=;`i;(*:;`i))))];
 
 			// lng.mm = 
 			x:update 
