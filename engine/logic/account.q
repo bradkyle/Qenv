@@ -28,6 +28,7 @@
 
 .engine.logic.account.Withdraw:{
 				a[`wit]+:w`wit;
+				a[`bal]-:w`wit;
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
@@ -35,7 +36,7 @@
 				};
 
 .engine.logic.account.Deposit:{
-				a[`dep]+:d`dep;
+				a[`dep`bal]+:d`dep;
 				a:.engine.logic.account.Remargin[i;a];
 
 				.engine.model.account.Update a;
