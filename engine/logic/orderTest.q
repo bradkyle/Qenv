@@ -48,11 +48,7 @@
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul`mxPrice`mnPrice`mxSize`mnSize`ticksize`lotsize!(0;1;1000;1;7h$1e8;0;7h$1e8;0;1;1); // instrument
-                `aId`bal`avail!(0;2000;2000); // account
-                `oqty`price`dlt`reduce`dqty!(1;1000;1;1b;1) // fill
-            );
+            .util.testutils.makeOrder[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice!(2;0;0;0;0;0;0)); // GetInventory
