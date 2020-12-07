@@ -82,9 +82,8 @@
 
 				a:.engine.logic.account.Remargin[i;a];
 
-				.bam.a:a;
 				// 
-				cost:?[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
+				cost:?[a;();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]] * f[`qty];
 
 				// Derive the cost resulting from commisison
 				iv[`rpnl]-:`long$(cost*f[`qty]);
