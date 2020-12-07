@@ -1,5 +1,13 @@
 
 .engine.valid.order.NewOrder:{[]
+				$[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+						all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
+						[
+							.engine.logic.trade.Match[i;a;o];
+						];[
+							.engine.model.order.CreateOrder o;
+							.engine.logic.orderbook.Level[select sum oqty by side, price from o]
+						]];
 				/ if[count[o]>10;:.engine.Purge[o;first x`time;"Invalid batch size: batch size > max batch size"]];
 				if[o[`price] < i[`mnPrice];:.engine.Purge[o;t;"Invalid price: price<mnPrice"]];
 				if[o[`price] > i[`mxPrice];:.engine.Purge[o;t;"Invalid price: price>mxPrice"]];
