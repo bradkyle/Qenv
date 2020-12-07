@@ -1,4 +1,5 @@
 
+// Events will be passed with aId
 .engine.logic.order.NewOrder:{[t;i;a;x]
 				// Instrument validations
 				ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
