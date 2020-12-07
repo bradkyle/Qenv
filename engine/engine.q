@@ -59,15 +59,15 @@
 .engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit;`highest`lowest];
 
 // Account
-.engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw];
-.engine.map[`deposit]     :.engine.privateWrapper[.engine.logic.account.Deposit];
-.engine.map[`leverage]    :.engine.privateWrapper[.engine.logic.account.Leverage];
+.engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw;enlist`withdraw];
+.engine.map[`deposit]     :.engine.privateWrapper[.engine.logic.account.Deposit;enlist`deposit];
+.engine.map[`leverage]    :.engine.privateWrapper[.engine.logic.account.Leverage;enlist`leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
-.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder;``];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders;];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
 .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
