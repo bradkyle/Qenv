@@ -422,17 +422,6 @@ dozc:{x+y}[doz];
 
     };
 
-
-// More default utils
-// -------------------------------------------------------------->
-
-.util.testutils.defaultAccounts:.util.testutils.genAccount[];
-.util.testutils.defaultAccount:first .util.testutils.defaultAccounts;
-.util.testutils.defaultAccountID:.util.testutils.defaultAccount`accountId;
-.util.testutils.defaultInstruments:.util.testutils.genInstrument[];
-.util.testutils.defaultInstrument:first .util.testutils.defaultInstruments;
-.util.testutils.defaultInstrumentID:.util.testutils.defaultInstrument`instrumentId;
-
 // More default utils
 // -------------------------------------------------------------->
 .util.testutils.revertOrderBook     :{
