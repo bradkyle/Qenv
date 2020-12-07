@@ -11,7 +11,11 @@
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
-    s:0!.engine.model.orderbook.Get[((=;`side;sx);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
+    s:0!.engine.model.orderbook.Get[(
+        (=;`side;sx);
+        (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
+        (|;(<;(+\;`qty);sum[qtys]);
+        (=;`i;(*:;`i))))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -40,6 +44,7 @@
         / (s padcols):.util.PadM'[s padcols]; // TODO make faster?
 
         // Useful counts 
+        .bam.s:s;
         maxN:max count'[s`offset];
         tmaxN:til maxN;
         numLvls:count[s`offset];

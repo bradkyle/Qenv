@@ -56,9 +56,12 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
             (); // res 
             (
                 (1b;1;();(
-                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
-                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
-                  `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
+                [price:enlist 1538150] 
+                    side:enlist(1);
+                    qty:enlist 4797;
+                    hqty:enlist 1000;
+                    iqty:enlist 100; // TODO fix
+                    vqty:enlist 4897 // TODO fix
                 ));
                 (1b;1;();
                   1!flip (ocols!(
@@ -80,7 +83,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
                   0 110;
                   0 0))
                 );
-                (1b;1;();())// Emit
+                (1b;1;();()); // Emit
                 (1b;1;();(0.1;0.1)); // Updategrder
                 (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
                 (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
