@@ -24,7 +24,12 @@
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
-    .engine.egress.Events,:(time;kind;event);
+    .engine.egress.Events,:(time;kind;event;0n);
+		};
+
+// ReInserts events into the egress event buffer
+.engine.EmitA           :{[kind;time;event;aId]
+    .engine.egress.Events,:(time;kind;event;aId);
 		};
 
 .engine.Purge   :{[event;time;msg] 
@@ -96,7 +101,7 @@
       .engine.ingress.Events:events;::];
     .engine.process[.engine.GetIngressEvents[.engine.watermark;`second$5;950]];
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
-    }
+    };
 
 .engine.Reset   :{[aIds; events]
     // TODO delete all models 
@@ -180,12 +185,12 @@
 
     // TODO make cleaner
     t:min events`time;
-    {.engine.Emit[`account;x;value y]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
-    {.engine.Emit[`inventory;x;value y]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
+    {.engine.EmitA[`account;x;value y;y`aId]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
+    {.engine.EmitA[`inventory;x;value y;y`aId]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
-    }
+    };
 
 
 
