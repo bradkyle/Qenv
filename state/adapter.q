@@ -240,16 +240,39 @@
     e
     };
 
+.state.adapter.reduceDeltas                                         :{
+
+    rred:raze{[x] // TODO flatten // TODO check time priority TODO add round off to lot size
+        x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
+        dlt:abs[(-/)x`tgt`lvlqty];
+        thresh:sums[x`leaves];
+        rp:(thresh-prev[thresh])-(thresh-dlt); 
+        x[`rp]:min[dlt,x`leaves]^rp; // TODO change to neg?
+        :flip x}'[0!select from dltState where lvlqty>tgt];
+      
+    };
+
+.state.adapter.increaseDeltas                                       :{
+    rinc:raze{[x] // TODO flatten
+        x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
+        x[`reduce`orderId`leaves`time`oprice`otype`accountId]:(
+            enlist'[x`reduce`orderId`leaves`time`oprice`otype`accountId]);
+        x[`rp]:abs[(-/)x`tgt`lvlqty];
+        :flip x}'[0!select from dltState where lvlqty<tgt];
+    rinc[`accountId]:aId;
+    rinc[`otype]:1;
+    };
+
 // TODO test
 // Used for amelierating the difference between a
 // target distribution of orders and the current distribution
 // of limit orders in the order book.
 // TODO better amend logic, clean logic, check max orders, min order size, max order size etc.
 // TODO check time priority
-.state.adapter.createDeltaEvents                                    :{[amd;aId;time;prices;sides;reduces;tgts]
+// mdd;mad;time;prices;sides;reduces;tgts
+.state.adapter.createDeltaEvents                                    :{
     c:a:n:();
 
-    show count each (prices;sides;reduces;tgts);
     bk:update bkt:til count bktP from `bktP xasc flip[`bktP`side`reduce`tgt!(prices;sides;reduces;tgts)];
 
     curr:select orderId,leaves,lvlqty:sum leaves,time,oprice:price,accountId by 
@@ -260,13 +283,7 @@
 
     // Derive reduce orders
     // ------------------------------------------>
-    rred:raze{[x] // TODO flatten // TODO check time priority TODO add round off to lot size
-        x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
-        dlt:abs[(-/)x`tgt`lvlqty];
-        thresh:sums[x`leaves];
-        rp:(thresh-prev[thresh])-(thresh-dlt); 
-        x[`rp]:min[dlt,x`leaves]^rp; // TODO change to neg?
-        :flip x}'[0!select from dltState where lvlqty>tgt];
+    rred:.state.adapter.reduceDeltas[];
 
     if[count[rred]>0;[
             c,:(select accountId, orderId from rred where tgt=0);
@@ -279,14 +296,7 @@
 
     // Derive increase orders
     // ------------------------------------------>
-    rinc:raze{[x] // TODO flatten
-        x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
-        x[`reduce`orderId`leaves`time`oprice`otype`accountId]:(
-            enlist'[x`reduce`orderId`leaves`time`oprice`otype`accountId]);
-        x[`rp]:abs[(-/)x`tgt`lvlqty];
-        :flip x}'[0!select from dltState where lvlqty<tgt];
-    rinc[`accountId]:aId;
-    rinc[`otype]:1;
+    rinc:.state.adapter.increaseDeltas[];
 
     // TODO if too many are open
     if[count[rinc]>0;n,:(select aId:accountId, price:bktPmid, oqty:tgt, reduce from rinc where tgt>0)];
@@ -316,13 +326,8 @@
 // place in order to ameliarate the difference.
 // Bucketing order qty's prevents needless order update requests
 // that inevitably occur in volatile markets. mside=major side
-.state.adapter.createBucketLimitOrdersDeltaDistribution             :{[static;mside;dsttyp;amts;reduces]
-        amd:static[0];aId:static[1];time:static[2];num:static[3];bkttyp:static[4];
-
-        bktsize:2;
-        ticksize:1;
-        mxfrac:0.1;
-
+// amd;aId;time;num;bkttyp;mside;dsttyp;amts;reduces;bktsize;ticksize;mxfrac
+.state.adapter.createBucketLimitOrdersDeltaDistribution             :{
         bmprice:.state.bestSidePrice[mside];
         boprice:.state.bestSidePrice[neg mside];
 
