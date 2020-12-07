@@ -7,13 +7,13 @@
 				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
 				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
 				dlt:$[f`reduce;neg[f`qty];f`qty];
+				iv[`amt]+:dlt;
+				iv[`totalEntry]+:max[(dlt;0)];
 
 				// TODO make contract agnostic
 				iv[`ordQty]-:f[`qty];
 				iv[`ordVal]-:7h$prd[f[`qty`price]];
 				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
-				iv[`amt]+:dlt;
-				iv[`totalEntry]+:max[(dlt;0)];
 
 				// Calculate fees
 				fee:first ?[f;();();$[f[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
