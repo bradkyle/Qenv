@@ -317,7 +317,7 @@
             ) // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
+            .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
