@@ -33,14 +33,14 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 
         mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        / mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
-        mck5: .qt.M[`.engine.logic.account.Fill;{[a;b] a}[m[2][3]];c];
+        mck5: .qt.M[`.engine.logic.account.Fill;{[a;b;c;d]};c];
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3];
+        res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3;a 4];
 
-        .qt.CheckMock[mck3;m[2];c];
+        / .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
         .qt.CheckMock[mck6;m[5];c];
@@ -51,6 +51,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
                 1;
+                0b;
                 4#z;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 ((1 76);(1 76);(1 2);(1 1))
@@ -89,9 +90,9 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
                   ();
                   ()
                 );()); // .engine.Emit
-                (1b;1;();(0.1;0.1)); // UpdateOrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+                (1b;1;(1);()); // UpdateOrder
+                (1b;1;();()); // Fill
+                (1b;1;();()) // UpdateLevel
             ); // mscks 
             (
 
@@ -101,6 +102,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
                 1;
+                0b;
                 4#z;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 ((1 76);(1 76);(1 2);(1 1))
@@ -136,9 +138,9 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
                     0 0))
                 );
                 (1b;1;();()); // Emit
-                (1b;1;();(0.1;0.1)); // UpdateOrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+                (1b;1;();()); // UpdateOrder
+                (1b;1;();()); // Fill
+                (1b;1;();()) // UpdateLevel
             ); // mscks 
             (
 

@@ -127,7 +127,7 @@
         // as a result of the trade and amends them 
         // accordingly
         // TODO full order cols
-        o:raze'[(s`oId;s`opric.bam.x[;1]e;noffset;nlqty;ndqty;nstatus)][;where[msk]];
+        o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
         .engine.model.order.Update[flip `oId`price`offset`lqty`dqty`state!o];
         .engine.Emit[`order;last t]'[flip o];
         
@@ -173,20 +173,6 @@
         ];.engine.Emit[`trade]'[t;x]];
 
         // TODO recurse
-
-
-        // Return the fills that would have occurred
-        // Apply the set of fills that would satisfy the 
-        // amount of liquidity that is being removed from
-        // the orderbook.
-        / raze'[(numLvls#ciId; // instrumentId
-        /     numLvls#caId; // accountId
-        /     state`tside; 
-        /     state`price;
-        /     sum'[tqty];
-        /     count[tqty]#reduce;
-        /     numLvls#fillTime)]
-    
     };
 
 // TODO check if has liquidity before doing take else just gen trades
