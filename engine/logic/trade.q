@@ -5,7 +5,7 @@
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{[sx;t;i;x]
+.engine.logic.trade.Take:{[sx;a;t;i;x]
     // Get the current levels for the side  
     nside:neg[sx];
     sides:x[;0];
@@ -126,7 +126,7 @@
         // as a result of the trade and amends them 
         // accordingly
         // TODO full order cols
-        o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
+        o:raze'[(s`oId;s`opric.bam.x[;1]e;noffset;nlqty;ndqty;nstatus)][;where[msk]];
         .engine.model.order.Update[flip `oId`price`offset`lqty`dqty`state!o];
         .engine.Emit[`order;last t]'[flip o];
         
@@ -141,6 +141,7 @@
         flldlt:(nlqty-s`lqty);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
+                show 90#"BAM";
                 nfll:count[flldlt];
 								x:raze'[(
                     i`iId;
@@ -183,26 +184,17 @@
         s:(x[;0]>0);
         b:where s;
         a:where not s;
-        if[count[b]>0;.engine.logic.trade.Take[1;t b;i;x b]];
-        if[count[a]>0;.engine.logic.trade.Take[-1;t a;i;x a]];
+        if[count[b]>0;.engine.logic.trade.Take[1;0b;t b;i;x b]];
+        if[count[a]>0;.engine.logic.trade.Take[-1;0b;t a;i;x a]];
     };
 
 
 .engine.logic.trade.Match:{[t;i;a;m]
-        f:();
         s:(x[;0]>0);
         b:where s;
         a:where not s;
-        if[count[b]>0;f,:.engine.logic.trade.Take[1;t b;i;x b]];
-        if[count[a]>0;f,:.engine.logic.trade.Take[-1;t a;i;x a]];
-      
-        // Derive and apply Executions
-        // -------------------------------------------------->
-
-        // Apply the set of fills that would satisfy the 
-        // amount of liquidity that is being removed from
-        // the orderbook.
-        if[count[f]>0;.engine.logic.account.Fill[f]];
+        if[count[b]>0;.engine.logic.trade.Take[1;a;t b;i;x b]];
+        if[count[a]>0;.engine.logic.trade.Take[-1;a;t a;i;x a]];
     };
 
 
