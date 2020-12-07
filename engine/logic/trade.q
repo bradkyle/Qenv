@@ -181,10 +181,6 @@
 // TODO check if has liquidity before doing take else just gen trades
 // TODO process multiple trades
 .engine.logic.trade.Trade:{[t;i;x]
-        show 90#"BAM";
-        .bam.t:t;
-        .bam.x:x;
-        .bam.i:i;
         s:(x[;0]>0);
         b:where s;
         a:where not s;
