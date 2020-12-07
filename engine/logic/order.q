@@ -12,15 +12,14 @@
 				.engine.model.inventory.Update iv;
 				a:.engine.model.account.Remargin[];
 
-				// TODO fix this functionality
-				$[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-					all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);[
-							.engine.Purge[o where in[];0;"Order had execInst of postOnly"];
-							.engine.logic.trade.Match[i;a;o];
-						];[
-							.engine.model.order.CreateOrder o;
-							.engine.logic.orderbook.Level[select sum oqty by side, price from o]
-						]];
+				cnd:[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+						all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
+						
+				.engine.logic.trade.Match[i;a;o];
+
+				lmt:where cnd;
+				.engine.model.order.CreateOrder o;
+				.engine.logic.orderbook.Level[select sum oqty by side, price from o]
 
 				.engine.Emit[`inventory;t;iv];
 				.engine.Emit[`account;t;a];
