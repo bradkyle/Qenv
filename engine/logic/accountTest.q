@@ -60,15 +60,13 @@
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        / mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        / mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
         mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         res:.engine.logic.account.Fill[z;a 0;a 1;a 2];
 
         .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
         / .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
         .qt.RestoreMocks[];

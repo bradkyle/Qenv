@@ -82,11 +82,13 @@
 
 				a:.engine.logic.account.Remargin[i;a];
 
-				// 
-				cost:?[a;();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]] * f[`qty];
+				// Calculate fees
+				fee:first ?[a;();();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]];
+				cost:fee * f[`qty];
 
 				// Derive the cost resulting from commisison
 				iv[`rpnl]-:`long$(cost*f[`qty]);
+				.bam.a:a;
 
 				// Update datums
 				.engine.model.account.Update a;
