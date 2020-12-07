@@ -138,7 +138,7 @@
         // Apply the set of fills that would satisfy the 
         // amount of liquidity that is being removed from
         // the orderbook.
-        if[a;.engine.logic.account.Fill[raze'[(
+        if[a;.engine.logic.fill.Fill[raze'[(
                 numLvls#i[`iId]; // instrumentId
                 numLvls#caId; // accountId
                 state`tside; 
@@ -155,7 +155,7 @@
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
                 nfll:count[flldlt];
-                .engine.logic.account.Fill[raze'[(
+                .engine.logic.fill.Fill[raze'[(
                     i`iId;
                     s`acc;
                     s`oside;

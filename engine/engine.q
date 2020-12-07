@@ -67,9 +67,9 @@
 .engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage;enlist`leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.NewOrder;.engine.logic.order.NewOrder;`clId`];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.AmendOrder;.engine.logic.order.AmendOrder;`oId`clId];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.CancelOrder;.engine.logic.order.CancelOrder;`oId`clId];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New;`clId`];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.Amend;.engine.logic.order.Amend;`oId`clId];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel;`oId`clId];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging

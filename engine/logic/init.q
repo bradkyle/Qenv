@@ -8,6 +8,7 @@
 \l orderbook.q 
 \l order.q 
 \l trade.q
+\l fill.q 
 
 .logic.loadTests   :{
     system[sv["";("l ";x;"/testutils.q")]];
@@ -18,6 +19,7 @@
     system[sv["";("l ";x;"/orderTest.q")]];
     system[sv["";("l ";x;"/orderbookTest.q")]];
     system[sv["";("l ";x;"/tradeTest.q")]];
+    system[sv["";("l ";x;"/fillTest.q")]];
     };
 
 \cd ../

@@ -2,29 +2,31 @@
 // TODO add fee
 // Fill account
 .engine.logic.account.Fill :{ // TODO simple select
-				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;f`aId))];
+
+				a:.engine.model.inventory.Get[enlist(=;`aId;x`aId)];
+				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
 
 				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
 				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
-				dlt:$[f`reduce;neg[f`qty];f`qty];
+				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 
 				// derive the order values 
-				iv[`ordQty]-:f`qty;
-				iv[`ordVal]-:.engine.logic.contract.Value[f`qty;f`price];
+				iv[`ordQty]-:x`qty;
+				iv[`ordVal]-:.engine.logic.contract.Value[x`qty;x`price];
 				iv[`ordLoss]-:.engine.logic.contract.Loss[];
 
 				// Derive the cost resulting from commisison
-				fee:first ?[f;();();$[f[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
-				cost:fee * f[`qty];
-				iv[`rpnl]-:`long$(cost*f[`qty]);
+				fee:first ?[x;();();$[x[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
+				cost:fee * x[`qty];
+				iv[`rpnl]-:`long$(cost*x[`qty]);
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
 						i[`cntTyp];
-						f[`price];
-						f[`qty];
+						x[`price];
+						x[`qty];
 						i[`smul]]; 
 
 				/ / Calculates the average price of entry for 
@@ -39,10 +41,10 @@
 
 				/ / If the fill reduces the position, calculate the 
 				/ / resultant pnl 
-				if[f[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
+				if[x[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
 						i[`cntTyp];
-						f[`qty];
-						f[`price];
+						x[`qty];
+						x[`price];
 						iv[`isig];
 						iv[`avgPrice];
 						i[`faceValue];
