@@ -119,6 +119,6 @@
                 .engine.Emit[`depth]'[t;flip s[cl]];
         ]];
 
-        / .engine.model.orderbook.Delete[enlist()];
+        .engine.model.orderbook.Delete[enlist(<=;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0)]; //TODO impl max depth
         };
 
