@@ -2,7 +2,7 @@
 / vdlt:prd[o[`oqty`price]]; // TODO contract specific 
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
-.engine.logic.order.NewOrder:{
+.engine.logic.order.New:{
 				dlt:o`oqty;
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]+:.engine.logic.contract.Value[];
@@ -26,7 +26,7 @@
 				.engine.EmitA[`order;t;o];
 		};
 
-.engine.logic.order.AmendOrder:{
+.engine.logic.order.Amend:{
 				dlt:(-/)(c`oqty;o`oqty);
 				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
@@ -45,7 +45,7 @@
 				.engine.EmitA[`order;t;o];
 		};
 
-.engine.logic.order.CancelOrder:{
+.engine.logic.order.Cancel:{
 				c:.engine.model.order.Get[];
 				dlt:neg[c`oQty];
 				iv:.engine.model.inventory.Get[];
@@ -76,7 +76,7 @@
 		};
 
 
-.engine.logic.order.CancelAllOrders:{
+.engine.logic.order.CancelAll:{
 				dlt:neg[sum[c`oQty]];
 				iv:.engine.model.inventory.GetInventory[];
 				iv[`ordQty]:0;

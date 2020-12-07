@@ -6,9 +6,10 @@
 		// Partial Liquidation
 		$[(a[`rt][`id]>=3);[
 
-				.engine.logic.forceorder.NewForceOrder[]	
+				.engine.logic.forceorder.New[]	
 				];[
 					
+				.engine.logic.forceorder.New[]	
 				]];
 
 		.engine.EmitA[];
