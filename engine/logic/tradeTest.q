@@ -23,21 +23,22 @@
 // TODO fills 3 levels
 // TODO test different instrument
 // TODO test with different accounts
+.qt.SkpBesTest[36];
 .qt.Unit[
-    ".engine.logic.trade.Trade";
+    ".engine.logic.trade.Take";
     {[c]
         p:c[`params];
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.orderbook.GetLevel;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[1][3]];c];
+        mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
         mck3: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck4: .qt.M[`.engine.model.order.UpdateOrder;{[a;b]};c];
+        mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
         mck5: .qt.M[`.engine.logic.account.Fill;{[a;b] a}[m[2][3]];c];
-        mck6: .qt.M[`.engine.model.orderbook.UpdateLevel;{[a;b]};c];
+        mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.trade.Trade[a 0;a 1;a 2];
+        res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -47,6 +48,7 @@
         (("1a) Prj;essTrade SELL: jfderbjjv has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             (
+                1;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
                 `aId`balance`mmr`imr!(0;0.1;0.03;32); // accjhnt
                 `time`datum!(z;`side`size!(1;1)) // fill

@@ -42,7 +42,7 @@
 /     nxt;
 /     (3_5#p));
 
-.qt.SkpBesTest[35];
+/ .qt.SkpBesTest[35];
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
@@ -56,7 +56,7 @@
         mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
         mck5: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.orderbook.level[a 0;a 1];
+        res:.engine.logic.orderbook.Level[a 0;a 1];
 
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
@@ -90,7 +90,7 @@
                 (0b;0;();()) // UpdateLevel
             ); // mscks 
             () // err 
-        ));
+        ))
     );
     ({};{};{};{});
     ("Given a depth update which consists of a table of time,side,price",
