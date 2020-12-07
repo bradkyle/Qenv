@@ -8,6 +8,7 @@
 / hidden qty  (only for data depth updates)
 / iceberg qty (only for agent orders)
 // Visible qty (including order qty)=(qty+displayqty)
+// TODO add num liquidations at level as a feature
 
 .engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$())
 
