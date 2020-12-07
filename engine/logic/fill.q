@@ -11,9 +11,9 @@
 				iv[`totalEntry]+:max[(dlt;0)];
 
 				// TODO make contract agnostic
-				iv[`ordQty]-:f[`qty];
-				iv[`ordVal]-:7h$prd[f[`qty`price]];
-				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
+				iv[`ordQty]-:f`qty;
+				iv[`ordVal]-:.engine.logic.contract.Value[f`qty;f`price];
+				iv[`ordLoss]-:.engine.logic.contract.Loss[];
 
 				// Calculate fees
 				fee:first ?[f;();();$[f[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
