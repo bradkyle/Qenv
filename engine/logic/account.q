@@ -14,11 +14,12 @@
 			feetier:.engine.model.feetier.Get[()];
 			risktier:.engine.model.risktier.Get[()];
 
-			/ a[`feetier]:feetier;
-			/ a[`riktier]:risktier;
+			x[`feetier]:feetier`ftId;
+			x[`riktier]:risktier`rtId;
 
+			a[`]
 			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
-			a
+			x
 	  };
 
 .engine.logic.account.Withdraw:{
