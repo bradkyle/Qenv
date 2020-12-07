@@ -7,7 +7,8 @@
 // ft: FeeTier
 .engine.model.account.Account:([aId:`long$()] 
   lng:`.engine.model.inventory.Inventory$();srt:`.engine.model.inventory.Inventory$();
-  dep:`long$();wit:`long$();rt:`.engine.model.risktier.Risktier$();ft:`.engine.model.feetier.Feetier$();
+  rt:`.engine.model.risktier.Risktier$();ft:`.engine.model.feetier.Feetier$();
+  dep:`long$();wit:`long$();
   posTyp:`long$();mrgTyp:`long$();
   avail:`long$();bal:`long$());
 
