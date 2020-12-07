@@ -51,12 +51,12 @@
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade]; //.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
-.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
-.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice];
-.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
-.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade;`size`qty`price]; 
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;`size`qty`price];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;enlist`fundingrate];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice;enlist`markprice];
+.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement;()];
+.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit;`highest`lowest];
 
 // Account
 .engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw];
