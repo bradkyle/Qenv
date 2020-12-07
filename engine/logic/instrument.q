@@ -47,6 +47,8 @@
 
 					a:.engine.model.account.Get[upm`aId];
 					a:.engine.logic.account.Remargin[i;a];
+					
+					.engine.logic.account.Liquidate[]
 
 					.engine.model.account.Update a;
 					.engine.model.inventory.Update iv;
@@ -63,7 +65,7 @@
 				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
 				if[count[iv]>0;[
 					a:.engine.model.account.Get[iv`aId];
-					a[`mrg]+:iv[`rpnl];
+					a[`bal]+:iv[`rpnl];
 					iv[`rpnl]:0;
 
 					.engine.model.account.Update a;

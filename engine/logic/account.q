@@ -1,18 +1,21 @@
 
 .engine.logic.account.Liquidate:{
-		a[`status]:1;
+		x[`status]:1;
 		lq:();
 
 		// Partial Liquidation
+		$[a[`rt][`id]>=3;[
+
+				];[
+
+				]];
 
 		// Full Liquidation
 
-		.engine.model.account.Update a;
-		.engine.
-
+		.engine.EmitA[];
 		.engine.model.liquidation.Create[lq];
 		
-		
+		x	
 	};
 
 .engine.logic.account.Remargin :{

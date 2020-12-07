@@ -22,14 +22,13 @@
         a:p`args;
         m:p[`mocks];
 
-        mck0: .qt.M[`.engine.Purge;{[a;b;c] show c};c];
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.model.inventory.UpdateInventory;{[a;b;c]};c];
-        mck5: .qt.M[`.engine.model.order.CreateOrder;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck5: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
         mck6: .qt.M[`.engine.Emit;{[a;b]};c];
-        mck7: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[5][3]];c];
-        mck8: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[6][3]];c];
+        mck7: .qt.M[`.engine.model.risktier.Get;{[a;b] a}[m[5][3]];c];
+        mck8: .qt.M[`.engine.model.feetier.Get;{[a;b] a}[m[6][3]];c];
         mck9: .qt.M[`.engine.logic.account.Fill;{[a;b]};c];
         mck10: .qt.M[`.engine.logic.orderbook.Level;{[a;b]};c];
 
@@ -334,7 +333,6 @@
 .qt.Unit[
     ".engine.logic.order.AmendOrder";
     {[c]
-        .qt.RunUnit[c;.engine.logic.order.AmendOrder];
 
     };
     {[p] :`args`eRes`mocks`err!p};
@@ -507,7 +505,6 @@
 .qt.Unit[
     ".engine.logic.order.CancelOrder";
     {[c]
-        .qt.RunUnit[c;.engine.logic.order.CancelOrder];
 
     };
     {[p] :`args`eRes`mocks`err!p};
@@ -527,7 +524,6 @@
 .qt.Unit[
     ".engine.logic.order.CancelAllOrders";
     {[c]
-        .qt.RunUnit[c;.engine.logic.order.CancelAllOrders];
 
     };
     {[p] :`args`eRes`mocks`err!p};
