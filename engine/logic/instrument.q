@@ -1,7 +1,7 @@
 
 // U
 // Update 
-.engine.logic.instrument.Funding:{[t;i;x]
+.engine.logic.instrument.Funding:{
 				// i[`funding]
 				fundingrate:last x;
 
@@ -28,7 +28,7 @@
 			};
 
 //   
-.engine.logic.instrument.MarkPrice:{[t;i;x]
+.engine.logic.instrument.MarkPrice:{
 				markprice:last x;
 				i[`mkprice]:markprice;
 
@@ -60,7 +60,7 @@
 				.engine.Emit[`mark;last t;last x];
 	};
 
-.engine.logic.instrument.Settlement:{[t;i;x]
+.engine.logic.instrument.Settlement:{
 				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
 				if[count[iv]>0;[
 					a:.engine.model.account.Get[iv`aId];
@@ -78,7 +78,7 @@
 	};
 
 
-.engine.logic.instrument.PriceLimit:{[t;i;x]
+.engine.logic.instrument.PriceLimit:{
 				highest:last x[0];
 				lowest:last x[1];
 				i[`plmth]:highest;
