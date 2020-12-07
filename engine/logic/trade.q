@@ -5,7 +5,7 @@
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{[sx;a;t;i;x]
+.engine.logic.trade.Take:{[sx;i;x]
     // Get the current levels for the side  
     nside:neg[sx];
     sides:x[;0];
