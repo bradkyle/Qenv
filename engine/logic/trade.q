@@ -11,6 +11,7 @@
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
+    // TODO add limit to match
     s:0!.engine.model.orderbook.Get[(
         (=;`side;sx);
         (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
