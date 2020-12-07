@@ -95,8 +95,8 @@
 				.engine.model.inventory.Update iv;
 
 				// Emit events
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
+				.engine.EmitA[`account;t;a`aId;a];
+				.engine.EmitA[`inventory;t;iv`aId;iv];
 				};
 
 
