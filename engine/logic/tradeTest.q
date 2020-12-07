@@ -1,4 +1,4 @@
-
+ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`dqty`lqty`offset`einst;
 // TODO integration tests
 
 // TODO no liquidity
@@ -60,11 +60,26 @@
                   `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000);
                   `price`side`qty`hqty`iqty`vqty!(1000;1;1000;1000;1000;1000)
                 ));
-                (1b;1;();(
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
-                ));
+                (1b;1;();
+                  1!flip (ocols!(
+                  2 3;
+                  1 1;
+                  0 0;
+                  1538150 1538150;
+                  0 0;
+                  0 0;
+                  0 0;
+                  0 0;
+                  1 1;
+                  0 0;
+                  00b;
+                  0 0;
+                  100 100;
+                  100 100;
+                  100 100;
+                  0 110;
+                  0 0))
+                );
                 (1b;1;();`amt`abc!()); // Emit
                 (1b;1;();(0.1;0.1)); // Updategrder
                 (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
