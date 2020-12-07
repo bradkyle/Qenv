@@ -1,14 +1,13 @@
 
+/ vdlt:prd[o[`oqty`price]]; // TODO contract specific 
+/ lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
 .engine.logic.order.NewOrder:{
 				dlt:o`oqty;
-				vdlt:prd[o[`oqty`price]]; // TODO contract specific 
-				lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
-
-				iv:.engine.model.inventory.Get[(();())];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]+:vdlt;
-				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
+				iv[`ordVal]+:.engine.logic.contract.Value[];
+				iv[`ordLoss]+:.engine.logic.contract.Loss[];
+
 				.engine.model.inventory.Update iv;
 				a:.engine.model.account.Remargin[];
 
@@ -31,8 +30,8 @@
 				dlt:(-/)(c`oqty;o`oqty);
 				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
-				iv[`ordVal]:prd[f[`fqty`fprice]];
-				iv[`ordLoss]:min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];
+				iv[`ordVal]+:.engine.logic.contract.Value[];
+				iv[`ordLoss]+:.engine.logic.contract.Loss[];
 
 				cnd:o[`okind]=0;
 				mkt:o where cnd;
@@ -50,9 +49,9 @@
 				c:();
 				dlt:neg[c`oQty];
 				iv:.engine.model.inventory.Get[];
-				iv[`ordQty]-:dlt;
-				iv[`ordVal]-:.engine.logic.contract.Value[];
-				iv[`ordLoss]:.engine.logic.contract.Loss[];
+				iv[`ordQty]+:dlt;
+				iv[`ordVal]+:.engine.logic.contract.Value[];
+				iv[`ordLoss]+:.engine.logic.contract.Loss[];
 
 				.engine.model.account.Remargin[];
 
