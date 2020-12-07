@@ -38,14 +38,16 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-.engine.publicWrapper:{[x;y]
-    i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    x[y`time;i;y`datum]};
+.engine.publicWrapper:{[x;y;z]
+    e[`time]:z[`time];
+    e[`iId]:`.engine.model.instrument.Instrument$0;
+    x[e]};
 
-.engine.privateWrapper:{[x;y]
-    i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    a:?[`.engine.model.account.Account;enlist(=;`aId;y`aId);();()];
-    x[y`time;i;a;y`datum]};
+.engine.privateWrapper:{[x;y;z]
+    e[`time]:z[`time];
+    e[`iId]:`.engine.model.instrument.Instrument$0;
+    e[`aId]:`.engine.model.account.Account$x[`aId];
+    x[e]};
 
 .engine.map:()!();
 
