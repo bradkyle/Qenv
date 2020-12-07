@@ -50,11 +50,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Withdraw no balance:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -68,11 +64,7 @@
             ) // err 
         ));
         ("Withdraw insufficient balance:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -86,11 +78,7 @@
             ) // err 
         ));
         ("Withdraw Account disabled:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -104,11 +92,7 @@
             ) // err 
         ));
         ("Withdraw Account locked:should fail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
@@ -122,11 +106,7 @@
             ) // err 
         ));
         ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            ( // Mocks
-                `cntTyp`faceValue`mkprice`smul!(0;1;1000;0); // instrument
-                `balance`mmr`imr!(0.1;0.03;32); // account
-                `fqty`fprice`dlt!(0;1;0) // fill
-            );
+            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
