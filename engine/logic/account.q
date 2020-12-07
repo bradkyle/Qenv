@@ -1,5 +1,5 @@
 
-.engine.logic.account.Liquidate:{[t;i;a]
+.engine.logic.account.Liquidate:{[a]
 		a[`status]:1;
 		lq:();
 		.engine.model.liquidation.Create[];
@@ -8,7 +8,7 @@
 	};
 
 
-.engine.logic.account.Remargin :{[i;a]
+.engine.logic.account.Remargin :{[a]
 	  
 			// TODO 
 			feetier:.engine.model.feetier.Get[()];
@@ -100,7 +100,7 @@
 				};
 
 
-.engine.logic.account.Withdraw:{[t;i;a;w]
+.engine.logic.account.Withdraw:{[w]
 				if[a[`bal]<=0;.engine.Purge[w;0;"Order account has no balance"]];
 				if[a[`available]<=0;.engine.Purge[w;0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
@@ -112,7 +112,7 @@
 				.engine.EmitA[`account;t;a];
 				};
 
-.engine.logic.account.Deposit:{[t;i;a;d]
+.engine.logic.account.Deposit:{[d]
 				if[a[`state]=1;.engine.Purge[d;0;"Account has been disabled"]];
 				a[`dep]+:d`dep;
 				feetier:.engine.model.feetier.GetFeeTier[];

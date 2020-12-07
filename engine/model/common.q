@@ -1,4 +1,12 @@
 
+.engine.model.common.Public  :([]
+  
+  );
+
+.engine.model.commmon.Private :([]
+	  
+	);
+
 .engine.model.common.Get     :{[tbl;cnd]
 	?[tbl;cnd;0b;()] 
 	};
