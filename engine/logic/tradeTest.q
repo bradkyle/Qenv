@@ -1,4 +1,3 @@
-ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`dqty`lqty`offset`einst;
 // TODO integration tests
 
 // TODO no liquidity

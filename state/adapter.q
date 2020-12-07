@@ -241,7 +241,6 @@
     };
 
 .state.adapter.reduceDeltas                                         :{
-
     rred:raze{[x] // TODO flatten // TODO check time priority TODO add round off to lot size
         x[`tgt`lvlqty]:0^x[`tgt`lvlqty];
         dlt:abs[(-/)x`tgt`lvlqty];
