@@ -65,8 +65,8 @@
 
 // Ordering
 .engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder;`clId`];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;`oId`clId];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;`oId`clId];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder;`oId`clId``];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder;`aId`oId`clId];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders;enlist`aId];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
