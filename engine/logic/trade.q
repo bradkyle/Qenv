@@ -155,7 +155,7 @@
 
         // Derive and apply order book updates
         // -------------------------------------------------->
-        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t)];
+        l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty)];
         .engine.model.orderbook.Update l;
         / .engine.Emit[`depth;t;l];
 
