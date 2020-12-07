@@ -43,6 +43,12 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 /     (3_5#p));
 
 / .qt.SkpBesTest[35];
+                (1b;1;();.util.testutils.makeInventory[]); // GetInventory
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
+                (1b;2;();.util.testutils.makeEvent[]); // Emit
+                (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
+                (1b;1;();.util.testutils.makeFeetier[]) // GetFeeTier
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
@@ -68,37 +74,11 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
         .util.testutils.makeLevel[`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0)];
             (); // res 
             (
-                (1b;1;();( // .orderbook.Get
-                    [price:1000-til 10] 
-                    side:(10#1);
-                    qty:10#1000;
-                    hqty:((10 20),(8#10));
-                    iqty:((170 170),(8#0)); // TODO fix
-                    vqty:((1030 1030),(8#1000)) // TODO fix
-                ));
-                (1b;1;(); // .order.Get
-                  1!flip (ocols!(
-                    2 3;
-                    1 1;
-                    0 0;
-                    1538150 1538150;
-                    0 0;
-                    0 0;
-                    0 0;
-                    0 0;
-                    1 1;
-                    0 0;
-                    00b;
-                    0 0;
-                    100 100;
-                    100 100;
-                    100 100;
-                    0 110;
-                    0 0))
-                );
-                (0b;0;();()); // Emit
-                (0b;0;();()); // Updategrder
-                (0b;0;();()) // UpdateLevel
+                (1b;1;();.util.testutils.makeLevel[]);
+                (1b;1;();.util.testutils.makeOrder[]);
+                (0b;0;.util.testutils.makeEvent[];()); // Emit
+                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
+                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
             ); // mscks 
             () // err 
         ))
