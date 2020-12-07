@@ -15,15 +15,15 @@
 				cnd:[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 						all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
 						
-				.engine.logic.trade.Match[i;a;o];
+				mkt:o where cnd;
+				.engine.logic.trade.Match[mkt];
 
-				lmt:where cnd;
-				.engine.model.order.CreateOrder o;
-				.engine.logic.orderbook.Level[select sum oqty by side, price from o]
+				lmt:o where not cnd;
+				.engine.model.order.CreateOrder lmt;
 
-				.engine.Emit[`inventory;t;iv];
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`order;t;o];
+				.engine.EmitA[`inventory;t;iv];
+				.engine.EmitA[`account;t;a];
+				.engine.EmitA[`order;t;o];
 		};
 
 .engine.logic.order.AmendOrder:{
@@ -41,9 +41,9 @@
 						]];
 
 
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
-				.engine.Emit[`order;t;o];
+				.engine.EmitA[`inventory;t;iv];
+				.engine.EmitA[`account;t;a];
+				.engine.EmitA[`order;t;o];
 		};
 
 .engine.logic.order.CancelOrder:{
@@ -63,9 +63,9 @@
 				// add depth, add 
 				.engine.logic.orderbook.Level[]
 
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
-				.engine.Emit[`order;t;o];
+				.engine.EmitA[`inventory;t;iv];
+				.engine.EmitA[`account;t;a];
+				.engine.EmitA[`order;t;o];
 		};
 
 
@@ -86,8 +86,8 @@
 				// add depth, add 
 				.engine.logic.orderbook.Level[]
 
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
-				.engine.Emit[`order;t;o];
+				.engine.EmitA[`inventory;t;iv];
+				.engine.EmitA[`account;t;a];
+				.engine.EmitA[`order;t;o];
     };
 
