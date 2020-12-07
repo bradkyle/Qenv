@@ -69,17 +69,6 @@
         .qt.CheckMock[mck1;m[0];c];
         / .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
-        .qt.RestoreMocks[];
-
-        .util.table.dropAll[(
-          `.engine.ingress.Events,
-          `.engine.egress.Events,
-          `.engine.model.order.Order,
-          `.engine.model.account.Account,
-          `.engine.model.inventory.Inventory,
-          `.engine.model.instrument.Instrument,
-          `.engine.model.orderbook.OrderBook
-        )];
 
     };
     {[p] :`args`eRes`mocks`err!p};
@@ -88,7 +77,7 @@
             ( // Mocks
                 .util.testutils.makeInstrument[]; // instrument
                 .util.testutils.makeAccount[];
-                .util.testutils.makeAccount[]
+                .util.testutils.makeFill[]
             );
             (); // res 
             (
