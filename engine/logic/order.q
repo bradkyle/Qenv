@@ -10,7 +10,6 @@
 				iv[`ordVal]+:vdlt;
 				iv[`ordLoss]:min[(prd[(i`mkprice;iv`ordQty)]-iv[`ordVal];0)];
 				.engine.model.inventory.Update iv;
-				.engine.Emit[`inventory;t;iv];
 				a:.engine.model.account.Remargin[];
 
 				// TODO fix this functionality
@@ -23,7 +22,7 @@
 				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
 				/ 		]];
 
-
+				.engine.Emit[`inventory;t;iv];
 				.engine.Emit[`account;t;a];
 				.engine.Emit[`order;t;o];
 		};
