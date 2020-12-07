@@ -214,6 +214,27 @@ dozc:{x+y}[doz];
     .util.testutils.makeDefaultsRecords[([] time:`datetime$(); aId:`long$(); iId:`long$() side:`long$());cl;vl]
     };
 
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeLiquidation:{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.liquidation.Liquidation;cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeRiskTier:{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.risktier.RiskTier;cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeFeeTier:{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.feetier.FeeTier;cl;vl]
+    };
+
 // Check Utils
 // -------------------------------------------------------------->
 

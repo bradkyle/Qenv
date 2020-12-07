@@ -3,7 +3,7 @@
 .qt.Unit[
     ".engine.logic.account.Liquidate";
     {[c]
-				.qt.RunUnit[c;.engine.logic.account.DeriveRiskTier];
+
     };
     {[p] :`args`eRes`mocks`err!p};
     (
@@ -11,29 +11,21 @@
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeLiquidation[];()); // Update Account
+                (1b;1;.util.testutils.makeOrder[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Liquidation of < tier 3 account";(
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeLiquidation[];()); // Update Account
+                (1b;1;.util.testutils.makeOrder[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
     );
     ({};{};{};{});
@@ -55,29 +47,19 @@
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeFeetier[]); // Update Account
+                (1b;1;.util.testutils.makeRisktier[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Remargin account orders";(
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeFeetier[]); // Update Account
+                (1b;1;.util.testutils.makeRisktier[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
     );
     ({};{};{};{});
@@ -105,39 +87,29 @@
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Withdraw insufficient balance:should fail";(
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Withdraw Account disabled:should fail";(
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
             (
 
@@ -147,29 +119,21 @@
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
     );
     ({};{};{};{});
@@ -198,43 +162,31 @@
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Deposit Account locked:should fail";(
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Deposit Success: Update fee tier, risk tier, avail";(
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
     );
     ({};{};{};{});
@@ -264,71 +216,51 @@
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Leverage insufficient balance:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Leverage Account disabled:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Leverage Account locked:should fail";(
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
             .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();`mrg`mmr`imr!(0.1;0.03;32)); // account
-                (1b;1;();());
-                (1b;3;();`amt`abc!());
-                (1b;3;();`imr`mmr!(0.1;0.1));
-                (1b;3;();`mkrfee`tkrfee!(0.1;0.1))
+                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
     );
     "Global function for creating a new account"];
