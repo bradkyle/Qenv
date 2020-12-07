@@ -10,8 +10,8 @@
 .engine.logic.account.Remargin :{[i;a]
 	  
 			// TODO 
-			feetier:.engine.model.feetier.GetFeeTier[];
-			risktier:.engine.model.risktier.GetRiskTier[];
+			feetier:.engine.model.feetier.Get[];
+			risktier:.engine.model.risktier.Get[];
 
 			a[`feetier]:feetier;
 			a[`riktier]:risktier;
@@ -23,7 +23,7 @@
 // TODO add fee
 // Fill account
 .engine.logic.account.Fill :{[t;i;a;f] // TODO simple select
-				iv:.engine.model.inventory.GetInventory[((=;`side;f`side);(=;`aId;a`aId))];
+				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;a`aId))];
 
 				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
 				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
@@ -89,9 +89,9 @@
 				iv[`rpnl]-:`long$(cost*f[`qty]);
 
 				// Update datums
-				.engine.model.account.UpdateAccount a;
-				.engine.model.inventory.UpdateInventory iv;
-				.engine.model.instrument.UpdateInstrument i;
+				.engine.model.account.Update a;
+				.engine.model.inventory.Update iv;
+				.engine.model.instrument.Update i;
 
 				// Emit events
 				.engine.Emit[`account;t;a];
@@ -107,7 +107,7 @@
 				a[`wit]+:w`wit;
 				a:.engine.logic.account.Remargin[i;a];
 
-				.engine.model.account.UpdateAccount a;
+				.engine.model.account.Update a;
 				.engine.Emit[`account;t;a];
 				};
 
@@ -117,7 +117,7 @@
 				feetier:.engine.model.feetier.GetFeeTier[];
 				a:.engine.logic.account.Remargin[i;a];
 
-				.engine.model.account.UpdateAccount a;
+				.engine.model.account.Update a;
 				.engine.Emit[`account;t;a];
 				};
 
@@ -129,7 +129,7 @@
 				a[`leverage]:l`leverage;
 				a:.engine.logic.account.Remargin[i;a];
 
-				.engine.model.account.UpdateAccount a;
+				.engine.model.account.Update a;
 				.engine.Emit[`account;t;a];
 				};
 
