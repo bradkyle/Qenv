@@ -114,10 +114,10 @@
 
         // TODO better derivation
         // TODO emit trade events
-        / .engine.Emit[`trade]'[numtds#t;flip( // TODO derive the prices at each level before
-        /         numtds#sx; // more accurate derivation
-        /         raze[{x#y}'[numtds;s`price]]; // more accurate derivation
-        /         raze tqty)];
+        .engine.Emit[`trade;last t]'[flip( // TODO derive the prices at each level before
+                numtds#sx; // more accurate derivation
+                raze[{x#y}'[numtds;s`price]]; // more accurate derivation
+                raze tqty)];
         
         // Derive and apply order updates
         // -------------------------------------------------->
@@ -125,9 +125,10 @@
         // Derives the set of order updates that will occur
         // as a result of the trade and amends them 
         // accordingly
+        // TODO full order cols
         o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
-        .engine.model.order.Update[flip[o]];
-        .engine.Emit[`order;t;flip o];
+        .engine.model.order.Update[flip `oId`price`offset`lqty`dqty`state!o];
+        .engine.Emit[`order;last t]'[flip o];
         
  
         // Derive and apply Executions

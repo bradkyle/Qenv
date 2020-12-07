@@ -23,7 +23,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 // TODO fills 3 levels
 // TODO test different instrument
 // TODO test with different accounts
-.qt.SkpBesTest[36];
+/ .qt.SkpBesTest[36];
 .qt.Unit[
     ".engine.logic.trade.Take";
     {[c]
@@ -40,8 +40,6 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 
         res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];

@@ -1,4 +1,4 @@
-
+ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`dqty`lqty`offset`einst;
 // TODO process depth updates without orders
 
 // TODO check orders event by time
@@ -42,7 +42,7 @@
 /     nxt;
 /     (3_5#p));
 
-/ .qt.SkpBesTest[35];
+.qt.SkpBesTest[35];
 .qt.Unit[
     ".engine.logic.orderbook.Level";
     {[c]
@@ -68,7 +68,7 @@
             (
                 z;
                 `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                `price`side`qty`hqty`iqty`vqty`time!(1000;1;1000;1000;1000;1000;z)
+                ()    
             );
             (); // res 
             (
@@ -80,11 +80,26 @@
                     iqty:((170 170),(8#0)); // TODO fix
                     vqty:((1030 1030),(8#1000)) // TODO fix
                 ));
-                (1b;1;();(
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;0;0b);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;110;0b);
-                  `oId`side`acc`ivn`price`okind`state`oqty`lqty`dqty`einst`offset`reduce!(0;-1;0;0;1000;0;0;100;100;100;0;220;0b)
-                ));
+                (1b;1;(); // .order.Get
+                  1!flip (ocols!(
+                    2 3;
+                    1 1;
+                    0 0;
+                    1538150 1538150;
+                    0 0;
+                    0 0;
+                    0 0;
+                    0 0;
+                    1 1;
+                    0 0;
+                    00b;
+                    0 0;
+                    100 100;
+                    100 100;
+                    100 100;
+                    0 110;
+                    0 0))
+                );
                 (0b;0;();()); // Emit
                 (0b;0;();()); // Updategrder
                 (0b;0;();()) // UpdateLevel
