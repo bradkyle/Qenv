@@ -16,7 +16,7 @@
 			/ a[`feetier]:feetier;
 			/ a[`riktier]:risktier;
 
-			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
+			/ a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
 			a
 	  };
 
@@ -35,6 +35,10 @@
 				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
+
+				// Calculate fees
+				fee:first ?[a;();();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]];
+				cost:fee * f[`qty];
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
@@ -79,16 +83,13 @@
 						iv[`isig];
 						iv[`avgPrice]];	
 
-
+				// Remargin account
 				a:.engine.logic.account.Remargin[i;a];
 
-				// Calculate fees
-				fee:first ?[a;();();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]];
-				cost:fee * f[`qty];
+				.bam.a:a;
 
 				// Derive the cost resulting from commisison
 				iv[`rpnl]-:`long$(cost*f[`qty]);
-				.bam.a:a;
 
 				// Update datums
 				.engine.model.account.Update a;
