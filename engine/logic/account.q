@@ -8,13 +8,15 @@
 
 
 .engine.logic.account.Remargin :{
-	  
-			// TODO 
-			feetier:.engine.model.feetier.Get[()];
-			risktier:.engine.model.risktier.Get[()];
 
-			x[`feetier]:feetier`ftId;
-			x[`riktier]:risktier`rtId;
+			x[`ft]:.engine.model.feetier.Get[(
+				(>;`vol;x`);
+				(>;`bal;x`);
+        (=;`i;(*:;`i))))]; //TODO impl max depth
+			x[`rt]:.engine.model.risktier.Get[(
+				(>;`mxamt;x`);
+				(>;`mxlev;x`);
+        (=;`i;(*:;`i))))]; //TODO impl max depth
 
 			// lng.mm = 
 			x:update 

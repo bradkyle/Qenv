@@ -4,6 +4,10 @@
     
     };
 
+  .engine.logic.contract.Loss  :{[]
+    min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0];  
+    }
+
 
 .engine.logic.contract.PricePerContract :{[contractType;price;faceValue]
   ($[contractType=0;faceValue%price;
