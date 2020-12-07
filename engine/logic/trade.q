@@ -122,7 +122,7 @@
         // as a result of the trade and amends them 
         // accordingly
         o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
-        .engine.model.order.UpdateOrder[flip[o]];
+        .engine.model.order.Update[flip[o]];
         .engine.Emit[`order;t;o];
         
  
@@ -151,7 +151,7 @@
         // Derive and apply order book updates
         // -------------------------------------------------->
         l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty;nobupd#t)];
-        .engine.model.orderbook.UpdateLevel l;
+        .engine.model.orderbook.Update l;
         / .engine.Emit[`depth;t;l];
 
         ];.engine.Emit[`trade]'[t;x]];
