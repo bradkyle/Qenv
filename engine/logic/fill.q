@@ -10,16 +10,14 @@
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 
-				// TODO make contract agnostic
+				// derive the order values 
 				iv[`ordQty]-:f`qty;
 				iv[`ordVal]-:.engine.logic.contract.Value[f`qty;f`price];
 				iv[`ordLoss]-:.engine.logic.contract.Loss[];
 
-				// Calculate fees
+				// Derive the cost resulting from commisison
 				fee:first ?[f;();();$[f[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
 				cost:fee * f[`qty];
-
-				// Derive the cost resulting from commisison
 				iv[`rpnl]-:`long$(cost*f[`qty]);
 
 				// Calc
@@ -56,7 +54,7 @@
 
 				/ / If the position is changed, calculate the resultant
 				/ / unrealized pnl
-				iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ // TODO
+				iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ 
 						i[`cntTyp]; 
 						i[`mkprice];
 						i[`faceValue];
