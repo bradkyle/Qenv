@@ -4,13 +4,11 @@
 		lq:();
 
 		// Partial Liquidation
-		$[a[`rt][`id]>=3;[
+		$[(a[`rt][`id]>=3);[
 
 				];[
-
+					
 				]];
-
-		// Full Liquidation
 
 		.engine.EmitA[];
 		.engine.model.liquidation.Create[lq];
