@@ -46,7 +46,7 @@
 		};
 
 .engine.logic.order.CancelOrder:{
-				c:();
+				c:.engine.model.order.Get[];
 				dlt:neg[c`oQty];
 				iv:.engine.model.inventory.Get[];
 				iv[`ordQty]+:dlt;
