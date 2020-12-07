@@ -11,7 +11,7 @@
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
-    s:0!.engine.model.orderbook.GetLevel[((=;`side;sx);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
+    s:0!.engine.model.orderbook.Get[((=;`side;sx);(>;`qty;0);(<;(+\;`qty);sum[qtys]))]; //TODO impl max depth
 
     // Join the opposing side of the orderbook with the current agent orders
     // at that level, creating the trade effected s
@@ -24,7 +24,7 @@
     s[`rp]:min[(tot;first[aqty])]^rp; // TODO check that rp is correct
 
     // Get the current active orders at the prices 
-    o:.engine.model.order.GetOrder[(
+    o:.engine.model.order.Get[(
         (=;`okind;1);
         (in;`price;s[`price] where (s[`rp]>0));
         (in;`state;(0 1));(>;`oqty;0))];

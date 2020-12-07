@@ -5,7 +5,7 @@
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.GetLevel[enlist(in;`price;s`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.Get[enlist(in;`price;s`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
