@@ -265,9 +265,9 @@ dozc:{x+y}[doz];
 
 // Resets the all the tables used in the engine.
 .util.testutils.resetEngineTables      :{
-    .util.table.dropAll[(`.engine.model.order.Order`.engine.model.orderbook.OrderBook,
+    .util.table.dropAll[(`.engine.model.order.Order`.engine.model.orderbook.Orderbook,
                 `.engine.model.instrument.Instrument`.engine.model.account.Account,
-                `.inventory.Inventory`.event.Event)];
+                `.engine.model.inventory.Inventory)];
     };
 
 // Resets all the tables used in maintaining State
