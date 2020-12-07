@@ -8,7 +8,7 @@
 	};
 
 
-.engine.logic.account.Remargin :{[a]
+.engine.logic.account.Remargin :{
 	  
 			// TODO 
 			feetier:.engine.model.feetier.Get[()];
@@ -23,7 +23,7 @@
 
 // TODO add fee
 // Fill account
-.engine.logic.account.Fill :{[f] // TODO simple select
+.engine.logic.account.Fill :{ // TODO simple select
 				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;f`aId))];
 
 				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
@@ -100,7 +100,7 @@
 				};
 
 
-.engine.logic.account.Withdraw:{[w]
+.engine.logic.account.Withdraw:{
 				if[a[`bal]<=0;.engine.Purge[w;0;"Order account has no balance"]];
 				if[a[`available]<=0;.engine.Purge[w;0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
@@ -112,7 +112,7 @@
 				.engine.EmitA[`account;t;a];
 				};
 
-.engine.logic.account.Deposit:{[d]
+.engine.logic.account.Deposit:{
 				if[a[`state]=1;.engine.Purge[d;0;"Account has been disabled"]];
 				a[`dep]+:d`dep;
 				feetier:.engine.model.feetier.GetFeeTier[];
@@ -122,7 +122,7 @@
 				.engine.EmitA[`account;t;a];
 				};
 
-.engine.logic.account.Leverage:{[t;i;a;l]
+.engine.logic.account.Leverage:{
 				if[a[`bal]<=0;.engine.Purge[l;0;"Order account has no balance"]];
 				if[a[`available]<=0;.engine.Purge[l;0;"Order account has insufficient available balance"]];
 				if[a[`state]=1;.engine.Purge[l;0;"Account has been disabled"]];
