@@ -83,19 +83,15 @@
 				lowest:last x[1];
 				i[`plmth]:highest;
 				i[`plmtl]:lowest;
+				.engine.model.instrument.Update i;
+				.engine.Emit[`pricelimit;t;x];
 
 				o:.engine.model.order.Get[(|;
 					(=;`side;(&;1;((';~:;<);`price;i`highest)));
 					(=;`side;(&;-1;((';~:;>);`price;i`lowest)))
 					)];
 
-				if[count[o]>0;[
-						// cancel orders, send respective updates
-						.engine.logic.order.CancelOrder[o];
-				]];
-
-				.engine.model.instrument.Update i;
-				.engine.Emit[`pricelimit;t;x];
+				if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 	};
 
 
