@@ -1,7 +1,7 @@
 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
-		lq:([lqid:`long$()]);
+		/ lq:([lqid:`long$()]);
 
 		.engine.model.account.Update[];
 		// Partial Liquidation
@@ -59,7 +59,7 @@
 
 .engine.logic.account.Leverage:{
 				a:.engine.model.account.Get[x`aId];
-				a[`leverage]:x`leverage;
+				a[`leverage]:x`lev;
 				a:.engine.logic.account.Remargin[x;a];
 				.engine.model.account.Update a;
 				.engine.EmitA[`account;t;a];

@@ -64,8 +64,8 @@ dozc:{x+y}[doz];
 /  @param ref (Symbol) The symbol reference to the table
 /  @param cl (List[Symbol]) The list of symbols indicating columns
 /  @param vl (List[List[Any]]) The list of lists to populate with. 
-.util.testutils.makeDefaultsRecords  :{[ref;cl;vl] // TODO inter with actual cols
-    r:.util.NullRowDict[ref];
+.util.testutils.makeDefaultsRecords  :{[tab;cl;vl] // TODO inter with actual cols
+    r:.util.NullRowDict[tab];
     cvl:count[vl]; 
     :$[cvl>1;[rx:(cvl#enlist[r]);rx[cl]:flip[vl];:rx];[r[cl]:first[vl];:r]]};
 
@@ -156,6 +156,55 @@ dozc:{x+y}[doz];
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeFill           :{[cl;vl]
     .util.testutils.makeDefaultsRecords[`.engine.model.fill.Fill;cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeWithdraw :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); aId:`long$(); iId:`long$(); wit:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeDeposit :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); aId:`long$(); iId:`long$(); dep:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeLeverage :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); aId:`long$(); iId:`long$(); lev:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeFunding :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); iId:`long$(); fundingrate:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeMark :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); iId:`long$(); markprice:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeSettlement :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[([] time:`datetime$(); iId:`long$());cl;vl]
+    };
+
+/  @param x (Order/List) The orders that are to be checked
+/  @param y (Case) The case that the assertions belong to
+/  @param z (List[String]) The params that are being checked 
+.util.testutils.makeLevel :{[cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.orderbook.Orderbook;cl;vl]
     };
 
 

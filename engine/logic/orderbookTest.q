@@ -52,11 +52,11 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 
         mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
-        mck3: .qt.M[`.engine.Emit;{[a;b]};c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
         mck5: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.orderbook.Level[a 0;a 1];
+        res:.engine.logic.orderbook.Level[a];
 
         .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
@@ -65,7 +65,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     {`args`eRes`mocks`err!x};
     (
         enlist("No change occurs and thus no update is triggered";(
-            .util.testutils.makeLevel[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+        .util.testutils.makeLevel[`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0)];
             (); // res 
             (
                 (1b;1;();( // .orderbook.Get
