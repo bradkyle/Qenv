@@ -37,8 +37,11 @@
 				iv[`totalEntry]+:max[(dlt;0)];
 
 				// Calculate fees
-				fee:first ?[a;();();$[f[`ismaker];`feetier.mkrfee;`feetier.tkrfee]];
+				fee:first ?[a;();();$[f[`ismaker];`ft.mkrfee;`ft.tkrfee]];
 				cost:fee * f[`qty];
+
+				// Derive the cost resulting from commisison
+				iv[`rpnl]-:`long$(cost*f[`qty]);
 
 				// Calc
 				iv[`execCost]+: .engine.logic.contract.ExecCost[
@@ -86,15 +89,9 @@
 				// Remargin account
 				a:.engine.logic.account.Remargin[i;a];
 
-				.bam.a:a;
-
-				// Derive the cost resulting from commisison
-				iv[`rpnl]-:`long$(cost*f[`qty]);
-
 				// Update datums
 				.engine.model.account.Update a;
 				.engine.model.inventory.Update iv;
-				.engine.model.instrument.Update i;
 
 				// Emit events
 				.engine.Emit[`account;t;a];

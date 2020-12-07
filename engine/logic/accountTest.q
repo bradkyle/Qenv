@@ -71,18 +71,28 @@
         .qt.CheckMock[mck5;m[4];c];
         .qt.RestoreMocks[];
 
+        .util.table.dropAll[(
+          `.engine.ingress.Events,
+          `.engine.egress.Events,
+          `.engine.model.order.Order,
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+          `.engine.model.instrument.Instrument,
+          `.engine.model.orderbook.OrderBook
+        )];
+
     };
     {[p] :`args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ( // Mocks
                 `cntTyp`faceValue`mkprice`smul!(0;1;1000;1); // instrument
-                `aId`balance`feetier`risktier!(0;1;`.engine.model.feetier.FeeTier$enlist 0;`.engine.model.risktier.RiskTier$0); // account
+                (0;1;`.engine.model.feetier.FeeTier$enlist 0;`.engine.model.risktier.RiskTier$0); // account
                 `qty`price`reduce`ismaker`side!(1;1000;0b;1b;1) // fill
             );
             (); // res 
             (
-                (1b;1;();`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(2;2000;0;0;0;0;0;0;0)); // GetInventory
+                (1b;1;();`aId`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(2;2000;0;0;0;0;0;0;0)); // GetInventory
                 (1b;1;enlist(enlist(`aId`balance`feetier`risktier!(0;0.1;0;0)));()); // Update Account
                 (1b;1;enlist(enlist(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice`rpnl`upnl!(1;1000;0;1;1;100000;1000;0;0)));());  
                 (1b;1;enlist(enlist(`cntTyp`faceValue`mkprice`smul!(0;1;1000;1)));()); // Update Instrument 
