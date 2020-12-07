@@ -1,3 +1,4 @@
+.log4q.a[hopen `:engine.log;`ERROR`WARN`FATAL]
 
 // TODO mappings
 .engine.watermark           :0N;
@@ -64,7 +65,7 @@
 .engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
 
-.engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;show[.Q.sbt y]}]}; // TODO logging
+.engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
 / .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
