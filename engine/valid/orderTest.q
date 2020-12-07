@@ -57,7 +57,7 @@
     (
         // Decreasing in size stays at same price
         ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								(19);();();()
+                ();();();()
         )); 
         ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
 								();();();()
