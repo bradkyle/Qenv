@@ -105,8 +105,8 @@
         tqty:{s:sums[y];q:.util.Clip[?[(x-s)>=0;y;x-(s-y)]];q where[q>0]}'[s`rp;splt]; 
         numtds:count[raze[tqty]];
         numtdslvl:count'[tqty];
-        // TODO move into own function.
         s[`mside]:nside; // TODO changes
+        // TODO move into own function.
         / s[`side]:`side; // TODO changes
  
         // Derive and apply trades
@@ -127,7 +127,7 @@
         // accordingly
         o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
         .engine.model.order.Update[flip[o]];
-        .engine.Emit[`order;t;o];
+        .engine.Emit[`order;t;flip o];
         
  
         // Derive and apply Executions
