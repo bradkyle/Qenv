@@ -53,6 +53,12 @@
         res:.engine.logic.account.Remargin[p`args];
 				.qt.A[res;~;p[`eRes];"res";c];
 
+        .util.table.dropAll[(
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
