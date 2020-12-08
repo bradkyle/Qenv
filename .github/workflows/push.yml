@@ -1,5 +1,6 @@
 jobs:
-  minikube-test:
+  test:
+    if: github.ref == ''
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -20,4 +21,20 @@ jobs:
         dvc pull ... 
     - name: Deploy Training
         pulumi up
-     
+
+  train: 
+    if: github.ref == ''
+    runs-on: ubuntu-latest
+
+  staging:
+    if: github.ref == ''
+    runs-on: ubuntu-latest
+
+  tertiary:
+    if: github.ref == ''
+
+  secondary:
+    if: github.ref == ''
+
+  primary:
+    if: github.ref == ''
