@@ -2,9 +2,18 @@ name: train-my-model
 on: [push]
 jobs:
   build:
-    name: Build and run unit tests/integration tests
+    name: Build the qenv containers and run unit tests 
+    runs-on: ubuntu-latest
+    steps:
+      - name:
 
-  test:
+  unit:
+    name: Build and run unit tests/integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name:
+
+  e2e:
     name: Create a minikube cluster for end to end deployment 
     runs-on: ubuntu-latest
     steps:
@@ -31,11 +40,17 @@ jobs:
 
   alpha:
     name: Deploy the tierone production cluster to the configured remote
+    steps:
+      - name: Pulumi up 
 
   beta:
     name: Deploy the tiertwo production cluster to the configured remote
+    steps:
+      - name: Pulumi up 
     
   prime:
     name: Deploy the tiertwo production cluster to the configured remote
+    steps:
+      - name: Pulumi up 
 
   
