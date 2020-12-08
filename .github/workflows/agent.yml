@@ -1,5 +1,5 @@
 jobs:
-  test:
+  testagent:
     if: github.ref == ''
     runs-on: ubuntu-latest
     steps:
@@ -22,19 +22,19 @@ jobs:
     - name: Deploy Training
         pulumi up
 
-  train: 
+  trainagent: 
     if: github.ref == ''
     runs-on: ubuntu-latest
 
-  staging:
+  stageagent:
     if: github.ref == ''
     runs-on: ubuntu-latest
 
-  tertiary:
+  deploytier1:
     if: github.ref == ''
 
-  secondary:
+  deploytier2:
     if: github.ref == ''
 
-  primary:
+  deploytier3:
     if: github.ref == ''
