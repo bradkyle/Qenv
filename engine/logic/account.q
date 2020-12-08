@@ -4,7 +4,7 @@
 			`.engine.model.feetier.Feetier$ft
 	  };
 
-.engine.logic.account.GetRisktier:{[ivnamt]
+.engine.logic.account.GetRisktier:{[ivnamt;ivlev]
 			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>ivnamt) or i=0)[`rtId];
 			`.engine.model.risktier.Risktier$rt
 		};
@@ -40,30 +40,46 @@
 	  };
 
 .engine.logic.account.Withdraw:{
-		![`.engine.model.account.Account;];
-				a:.engine.model.account.Get[x`aId];
-				a[`wit]+:x[`withdraw];
-				a[`bal]-:x[`withdraw];
-				a:.engine.logic.account.Remargin[a];
-				.engine.model.account.Update a;
-				.engine.EmitA[`account;t;a];
-				};
+			update
+				wit:wit+x[`withdrawn],
+				bal:bal-x[`withdrawn],
+				avail:.engine.logic.account.GetAvailable[
+					bal-x[`withdrawn],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss],
+				from .engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a]
+			};
 
 .engine.logic.account.Deposit:{
-				a:.engine.model.account.Get[x`aId];
-				a[`dep`bal]+:x`dep;
-				a:.engine.logic.account.Remargin[x`aId;a];
-				.engine.model.account.Update a;
-				.engine.EmitA[`account;t;a];
-				};
+			update
+				dep:dep+x[`deposit],
+				bal:bal+x[`deposit],
+				avail:.engine.logic.account.GetAvailable[
+					bal+x[`deposit],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss],
+				from .engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a];
+			};
 
 .engine.logic.account.Leverage:{
-				a:.engine.model.account.Get[x`aId];
-				a[`leverage]:x`lev;
-				a:.engine.logic.account.Remargin[x;a];
-				.engine.model.account.Update a;
-				.engine.EmitA[`account;t;a];
-				};
+			update
+				lev:x[`leverage],
+				avail:.engine.logic.account.GetAvailable[
+					bal+x[`deposit],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss],
+				rt:.engine.logic.account.GetRisktier[];
+				from .engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a];
+			};
 
 
 

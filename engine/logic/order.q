@@ -32,6 +32,7 @@
 				iv[`ordQty]+:dlt;
 				iv[`ordVal]+:.engine.logic.contract.Value[];
 				iv[`ordLoss]+:.engine.logic.contract.Loss[];
+				
 
 				cnd:o[`okind]=0;
 				mkt:o where cnd;
