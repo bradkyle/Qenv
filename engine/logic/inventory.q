@@ -8,17 +8,6 @@
 		  
 		};
 
-.engine.logic.inventory.ApplyMarkPrice:{[]
-				update upl:.engine.logic.contract.UnrealizedPnl[
-						iId.cntTyp,	
-						iId.mkprice,
-						iId.faceValue,
-						iId.smul,
-						amt,
-						side,
-						avgPrice,
-					] from `.engine.model.inventory.Inventory where amt>0;
-		};
 
 // TODO add fee
 // Fill account

@@ -15,14 +15,11 @@
 					a:.engine.model.account.Get[fnd`aId];
 					a:.engine.logic.account.Remargin[i;a];
 
-					.engine.model.account.Update a;
-					.engine.model.inventory.Update iv;
-					.engine.Emit[`account;t;a];
-					.engine.Emit[`inventory;t;iv];
 				]];
 
 				// Update instrument
-				.engine.model.instrument.Update i;
+				.engine.EmitA[`account;t;a];
+				.engine.EmitA[`inventory;t;iv];
 				.engine.Emit[`funding;t;x];
 			};
 
@@ -30,33 +27,45 @@
 .engine.logic.instrument.MarkPrice:{
 				markprice:last x;
 				update 
-				  mkprice:x[`markprice] 
-				  from `.engine.model.instrument.Instrument
-					where iId=x[`iId];
+				  	mkprice:x[`markprice] 
+				  	from `.engine.model.instrument.Instrument
+						where iId=x[`iId];
 
-				.engine.logic.inventory.ApplyMarkPrice[];
-				.engine.logic.account.ApplyRemargin[];
+				update 
+					  upl:.engine.logic.contract.UnrealizedPnl[
+								iId.cntTyp,	
+								iId.mkprice,
+								iId.faceValue,
+								iId.smul,
+								amt,
+								side,
+								avgPrice]
+						from `.engine.model.inventory.Inventory 
+						where (iId=x`iId) and (amt>0);
 
-				.engine.Emit[`mark;last t;last x];
-				.engine.Emit[`inventory;last t;last x];
+				update
+						avail:0
+						from `.engine.model.account.Account 
+						where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
+
+				.engine.EmitA[`account;last t;last x];
+				.engine.EmitA[`inventory;last t;last x];
 				.engine.Emit[`mark;last t;last x];
 	};
 
 .engine.logic.instrument.Settlement:{
 				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
 
-				if[count[iv]>0;[
-					a:.engine.model.account.Get[iv`aId];
-					a[`bal]+:iv[`rpnl];
-					iv[`rpnl]:0;
+				update 
+					bal:bal+(lng.rpnl+srt.rpnl)
+				from `.engine.model.account.Account;
 
-					.engine.model.account.Update a;
-					.engine.model.inventory.Update iv;
-					.engine.Emit[`account;t;a];
-					.engine.Emit[`inventory;t;iv];
-				]];
+				update
+					rpnl:0
+				from `.engine.model.inventory.Inventory;
 
-				.engine.model.instrument.Update i;
+				.engine.Emit[`account;t;a];
+				.engine.Emit[`inventory;t;iv];
 				.engine.Emit[`settlement;t;x];
 	};
 
