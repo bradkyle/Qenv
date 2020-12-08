@@ -53,6 +53,8 @@
 
         a[`lng]:`.engine.model.inventory.Inventory$(0 1);
         a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
+        a[`rt]:`.engine.model.risktier.Risktier$0;
+        a[`ft]:`.engine.model.feetier.Feetier$0;
 
         res:.engine.logic.account.Remargin[a];
 				.qt.A[res;~;p[`eRes];"res";c];
