@@ -22,6 +22,10 @@
         a:p`args;
         m:p[`mocks];
 
+        .engine.model.inventory.Inventory,:s[`inventory];
+        .engine.model.feetier.Feetier,:s[`feetier];
+        .engine.model.risktier.Risktier,:s[`risktier];
+
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.account.Update;c];
         mck3: .qt.OM[`.engine.model.inventory.Update;c];
@@ -32,10 +36,21 @@
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck5;m[4];c];
 
+        .util.table.dropAll[(
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+
     };
-    {[p] `args`eRes`mocks`err!p};
+    {[p] `setup`args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
+            ((!) . flip(
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
+                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
             .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;
                 enlist(1000;1;100;0b;0b;0;0;0)];
             (); // res 
