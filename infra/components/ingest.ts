@@ -18,7 +18,7 @@ export class Ingest extends pulumi.ComponentResource {
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
-        const deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+        const deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
             spec: {
                 selector: {matchLabels: appLabels},
                 replicas: 1,
