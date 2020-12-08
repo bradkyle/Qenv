@@ -4,18 +4,9 @@
 				// i[`funding]
 				fundingrate:last x;
 
-				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
-				if[count[iv]>0;[
-					// TODO make simpler
-					fnd:0!select 
-						amtInMarket: sum[amt],
-						fundingCost:((min[(fundingrate;0)]*(amt*side)) + (max[(fundingrate;0)]*(amt*side)))
-						by aId from enlist iv;  
+				update
+					rpnl:0;
 
-					a:.engine.model.account.Get[fnd`aId];
-					a:.engine.logic.account.Remargin[i;a];
-
-				]];
 
 				// Update instrument
 				.engine.EmitA[`account;t;a];
