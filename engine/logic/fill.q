@@ -6,8 +6,6 @@
 				a:.engine.model.inventory.Get[enlist(=;`aId;x`aId)];
 				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
 
-				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
-				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
