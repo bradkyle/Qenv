@@ -49,6 +49,7 @@
         mck2: .qt.M[`.engine.model.risktier.Get;{[a]};c];
 
         res:.engine.logic.account.Remargin[p`args];
+				.qt.A[res;~;p[`eRes];"res";c];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
