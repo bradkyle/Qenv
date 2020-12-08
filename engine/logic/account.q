@@ -1,4 +1,18 @@
 
+.engine.logic.account.GetFeetier:{[avol]
+			ft:first (select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>avol) or i=0)[`ftId];
+			`.engine.model.feetier.Feetier$ft
+	  };
+
+.engine.logic.account.GetRisktier:{[ivnamt]
+			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>ivnamt) or i=0)[`rtId];
+			`.engine.model.risktier.Risktier$rt
+		};
+
+.engine.logic.account.GetAvailable:{[bal;mm;upnl;oqty;oloss]
+			bal-(mm+upnl)+(ordQty-ordLoss)
+		};
+
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
 		.engine.model.account.Update[];
@@ -16,20 +30,17 @@
 	};
 
 .engine.logic.account.Remargin :{
-			tot:exec (+/)(lng.amt;srt.amt) from x;
-			ft:first (select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>x`vol) or i=0)[`ftId];
-			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>tot) or i=0)[`rtId];
-			x[`ft]:`.engine.model.feetier.Feetier$ft;
-			x[`rt]:`.engine.model.risktier.Risktier$rt;
-
 			update 
-			  avail:((bal-
-					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
-			  	((lng.ordQty+srt.ordQty)-(lng.ordLoss+srt.ordLoss))) | 0)
-				from x
+			ft:.engine.logic.account.GetFeetier[vol],
+			rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
+			avail:.engine.logic.account.GetAvailable[
+				bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
+				lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
+			from x
 	  };
 
 .engine.logic.account.Withdraw:{
+		![`.engine.model.account.Account;];
 				a:.engine.model.account.Get[x`aId];
 				a[`wit]+:x[`withdraw];
 				a[`bal]-:x[`withdraw];
