@@ -42,6 +42,10 @@
 .qt.Unit[
     ".engine.logic.account.Remargin";
     {[c]
+        p:c[`params];
+        a:p`args;
+        m:p[`mocks];
+
         mck1: .qt.M[`.engine.model.feetier.Get;{[a]};c];
         mck2: .qt.M[`.engine.model.risktier.Get;{[a]};c];
 
@@ -54,10 +58,10 @@
     (
         ("Remargin account no orders";(
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (
                 (1b;1;();.util.testutils.makeFeetier[]); // Update Account
-                (1b;1;.util.testutils.makeRisktier[];()) // Update Account
+                (1b;1;();.util.testutils.makeRisktier[]) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -66,7 +70,7 @@
             (); // res 
             (
                 (1b;1;();.util.testutils.makeFeetier[]); // Update Account
-                (1b;1;.util.testutils.makeRisktier[];()) // Update Account
+                (1b;1;();.util.testutils.makeRisktier[]) // Update Account
             ); // mocks 
             () // err 
         ))
