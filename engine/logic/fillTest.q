@@ -37,7 +37,7 @@
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;
-                enlist(1000;1;100;0b;0b;0;`.engine.model.account.Account$0;`.engine.model.instrument.Instrument$0)];
+                enlist(1000;1;100;0b;0b;0;0;0)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[
