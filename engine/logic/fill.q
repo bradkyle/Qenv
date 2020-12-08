@@ -11,12 +11,12 @@
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
-				show .engine.logic.contract.Value[x`qty;x`price];
 
 				// derive the order values 
+				val:.engine.logic.contract.Value[x`qty;x`price];
+				iv[`ordLoss]-:.engine.logic.contract.Loss[i`mkprice;x`qty;val];
 				iv[`ordQty]-:x`qty;
-				iv[`ordVal]-:.engine.logic.contract.Value[x`qty;x`price];
-				iv[`ordLoss]-:.engine.logic.contract.Loss[];
+				iv[`ordVal]-:val;
 
 				// Derive the cost resulting from commisison
 				fee:first ?[x;();();$[x[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
