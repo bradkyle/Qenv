@@ -263,3 +263,7 @@ if __name__ == '__main__':
         time.sleep(config['log_metrics_interval_s'])
 
         learner.log_metrics()
+        # TODO cml logging
+        # TODO dvc save model 
+
+
