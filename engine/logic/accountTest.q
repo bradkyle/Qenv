@@ -43,15 +43,12 @@
     ".engine.logic.account.Remargin";
     {[c]
         p:c[`params];
+        s:p[`setup];
         m:p[`mocks];
 
         .engine.model.inventory.Inventory,:s[`inventory];
         .engine.model.feetier.Feetier,:s[`feetier];
         .engine.model.risktier.Risktier,:s[`risktier];
-        a[`srt]:`.enigne.model.inventory.Inventory$0;
-        a[`lng]:`.enigne.model.inventory.Inventory$1;
-        a[`rt]:`.enigne.model.risktier.Risktier$0;
-        a[`ft]:`.enigne.model.risktier.Risktier$0;
 
         res:.engine.logic.account.Remargin[p`args];
 				.qt.A[res;~;p[`eRes];"res";c];
@@ -60,21 +57,22 @@
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Remargin account no orders";(
-            (!) . flip(
-                (`inventory;.util.testutils.makeInventory[]); // Update Account
-                (`feetier;.util.testutils.makeFeetier[]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[]) // Update Account
-            );
+            ((!) . flip(
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss;flip(0 0;-1 1;0 0;0 0;0 0;0 0)]); 
+                (`feetier;.util.testutils.makeFeetier[`vol`bal`ref;flip(0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`amt`lev;flip(0 0;0 0)]) // Update Account
+            ));
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // mocks 
             () // err 
         ));
         ("Remargin account orders";(
-            (
-                .util.testutils.makeFeetier[]; // Update Account
-                .util.testutils.makeRisktier[] // Update Account
-            );
+            ((!) . flip(
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss;flip(0 0;-1 1;0 0;0 0;0 0;0 0)]); 
+                (`feetier;.util.testutils.makeFeetier[`vol`bal`ref;flip(0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`amt`lev;flip(0 0;0 0)]) // Update Account
+            ));
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (); // mocks 

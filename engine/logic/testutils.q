@@ -148,7 +148,7 @@ dozc:{x+y}[doz];
 /  @param y (Case) The case that the assertions belong to
 /  @param z (List[String]) The params that are being checked 
 .util.testutils.makeFeetier        :{[cl;vl]
-    .util.testutils.makeDefaultsRecords[`.engine.model.risktier.Feetier;cl;vl]
+    .util.testutils.makeDefaultsRecords[`.engine.model.feetier.Feetier;cl;vl]
     };
 
 /  @param x (Order/List) The orders that are to be checked
