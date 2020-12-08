@@ -26,7 +26,7 @@
 				.engine.Emit[`funding;t;x];
 			};
 
-// 
+// Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
 				markprice:last x;
 				i[`mkprice]:markprice;

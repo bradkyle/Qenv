@@ -45,33 +45,39 @@
         p:c[`params];
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.feetier.Get;{[a]};c];
-        mck2: .qt.M[`.engine.model.risktier.Get;{[a]};c];
+        .engine.model.inventory.Inventory,:s[`inventory];
+        .engine.model.feetier.Feetier,:s[`feetier];
+        .engine.model.risktier.Risktier,:s[`risktier];
+        a[`srt]:`.enigne.model.inventory.Inventory$0;
+        a[`lng]:`.enigne.model.inventory.Inventory$1;
+        a[`rt]:`.enigne.model.risktier.Risktier$0;
+        a[`ft]:`.enigne.model.risktier.Risktier$0;
 
         res:.engine.logic.account.Remargin[p`args];
 				.qt.A[res;~;p[`eRes];"res";c];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Remargin account no orders";(
+            (!) . flip(
+                (`inventory;.util.testutils.makeInventory[]); // Update Account
+                (`feetier;.util.testutils.makeFeetier[]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[]) // Update Account
+            );
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            (
-                (1b;1;();.util.testutils.makeFeetier[]); // Update Account
-                (1b;1;();.util.testutils.makeRisktier[]) // Update Account
-            ); // mocks 
+            (); // mocks 
             () // err 
         ));
         ("Remargin account orders";(
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (
-                (1b;1;();.util.testutils.makeFeetier[]); // Update Account
-                (1b;1;();.util.testutils.makeRisktier[]) // Update Account
-            ); // mocks 
+                .util.testutils.makeFeetier[]; // Update Account
+                .util.testutils.makeRisktier[] // Update Account
+            );
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            (); // mocks 
             () // err 
         ))
     );
