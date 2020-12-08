@@ -28,12 +28,15 @@
             .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;enlist(1000;1;100;0b;0b;0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[]); // GetInventory
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
+                (1b;1;();.util.testutils.makeInventory[
+                    `amt`totalEntry`ordQty`ordVal`ordLoss`rpnl`execCost`avgPrice`reduce`amt`upnl;
+                    enlist(0;0;0;0;0;0;0;0;0;0;0)
+                ]); // GetInventory
                 (1b;2;();.util.testutils.makeEvent[]); // Emit
                 (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
-                (1b;1;();.util.testutils.makeFeetier[]) // GetFeeTier
+                (1b;1;();.util.testutils.makeFeetier[]); // GetFeeTier
+                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeInventory[];()) // Update Inventory 
             ); // mocks 
             () // err 
         ))
