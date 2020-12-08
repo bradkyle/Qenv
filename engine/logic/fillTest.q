@@ -1,5 +1,14 @@
 
 .engine.model.instrument.Instrument,:.util.testutils.makeInstrument[`iId`mkprice;enlist(0;100)];
+
+.engine.model.risktier.RiskTier,:.util.testutils.makeRiskTier[`rtid`mxamt`mmr`imr`maxlev;(
+    (0; 50000;       0.004;    0.008;    125);
+    (1; 250000;      0.005;    0.01;     100))]; 
+
+.engine.model.feetier.FeeTier,:.util.testutils.makeFeeTier[`ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim;(
+    (0; 50;      0.0006;    0.0006;    0f;  0f; 600);
+    (1; 500;     0.00054;   0.0006;    0f;  0f; 600)];                             //  
+
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
@@ -10,7 +19,6 @@
         p:c[`params];
         a:p`args;
         m:p[`mocks];
-        p[`setup][];
 
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.account.Update;c];
@@ -21,15 +29,11 @@
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck5;m[4];c];
-        p[`teardown][];
 
     };
-    {[p] `setup`args`eRes`mocks`err`teardown!p};
+    {[p] `args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
-            {
-
-            };
             .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;
               enlist(1000;1;100;0b;0b;0;0;`.engine.model.instrument.Instrument$0)];
             (); // res 
@@ -44,10 +48,7 @@
                 (1b;1;.util.testutils.makeAccount[];()); // Update Account
                 (1b;1;.util.testutils.makeInventory[];()) // Update Inventory 
             ); // mocks 
-            (); // err 
-            {
-
-            }
+            () // err 
         ))
         / ("INVERSE:long to flat: UPL: 0, RPL:0 ONE POSITION";(
         /     ( // Mocks
