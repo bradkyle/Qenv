@@ -1,13 +1,28 @@
 
 // TODO add fee
 // Fill account
-.engine.logic.fill.Fill :{ // TODO simple select
+.engine.logic.inventory.Fill:{ // TODO simple select
 				a:.engine.model.inventory.Get[enlist(=;`aId;x`aId)];
 				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
 				i:.engine.model.instrument.Get[((=;`side;x`side);(=;`aId;x`aId))];
 
 				update 
-					totalEntry:totalEntry+max[];
+					amt:amt+dlt,
+					totalEntry:totalEntry+max[],
+					ordLoss:ordLoss - .engine.logic.contract.Loss[],
+					ordQty:ordQty - x[`qty],
+					ordVal:ordVal - val,
+					rpnl: rpnl + sum(
+						$[x[`ismaker]; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
+						$[x[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
+							iId.cntTyp;
+							x[`qty];
+							x[`price];
+							isig;
+							avgPrice;
+							iId.faceValue;
+							iId.smul];
+
 
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
