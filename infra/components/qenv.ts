@@ -13,8 +13,8 @@ export interface QenvArgs {
 export class Qenv extends pulumi.ComponentResource {
 
     constructor(name: string,
+                isMinikube: boolean,
                 args: QenvArgs,
-                isMinikube: string,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("qenv:kubernetes-ts-multicloud:demo-app", name, args, opts);
 
@@ -85,7 +85,7 @@ export class Qenv extends pulumi.ComponentResource {
         const frontend = new k8s.core.v1.Service(name, {
             metadata: { labels: qenv.spec.template.metadata.labels },
             spec: {
-                type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
+                type: isMinikube ? "ClusterIP" : "LoadBalancer",
                 ports: [{ port: 5000, targetPort: 5000, protocol: "TCP" }],
                 selector: appLabels,
             },

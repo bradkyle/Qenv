@@ -10,7 +10,6 @@ export interface IngestArgs {
 }
 
 export class Ingest extends pulumi.ComponentResource {
-    public appUrl: pulumi.Output<string>;
 
     constructor(name: string,
                 args: IngestArgs,
