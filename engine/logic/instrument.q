@@ -31,7 +31,11 @@
 				markprice:last x;
 				i[`mkprice]:markprice;
 
-				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
+				![`.engine.model.inventory.Inventory;
+					enlist(>;`amt;0);0b;
+					()
+					]
+
 				if[count[iv]>0;[
 					// TODO make simpler
 					upl:.engine.logic.contract.UnrealizedPnl[

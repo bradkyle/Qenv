@@ -52,7 +52,7 @@
 					lng.upnl+srt.upnl,
 					lng.ordQty+srt.ordQty,
 					lng.ordLoss+srt.ordLoss],
-				from .engine.model.account.Account where aId=x[`aId];
+				from `.engine.model.account.Account where aId=x[`aId];
 			.engine.EmitA[`account;t;a]
 			};
 
@@ -66,7 +66,7 @@
 					lng.upnl+srt.upnl,
 					lng.ordQty+srt.ordQty,
 					lng.ordLoss+srt.ordLoss],
-				from .engine.model.account.Account where aId=x[`aId];
+				from `.engine.model.account.Account where aId=x[`aId];
 			.engine.EmitA[`account;t;a];
 			};
 
@@ -80,7 +80,7 @@
 					lng.ordQty+srt.ordQty,
 					lng.ordLoss+srt.ordLoss],
 				rt:.engine.logic.account.GetRisktier[];
-				from .engine.model.account.Account where aId=x[`aId];
+				from `.engine.model.account.Account where aId=x[`aId];
 			.engine.EmitA[`account;t;a];
 			};
 
