@@ -26,7 +26,11 @@
 				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
 				(=;`i;(*:;`i)));();()][`ftId]; 
 
-			tot:first value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]];
+			show ?[x;();();eny[`amt;`srt.amt]];
+
+
+			tot:first ?[x;();();eny[`amt;((+\);`srt.amt;`lng.amt)]];
+			show 90#"=";
 			show tot;
 
 			// TODO derive leverage
