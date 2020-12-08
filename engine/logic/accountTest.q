@@ -43,7 +43,6 @@
     ".engine.logic.account.Remargin";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.feetier.Get;{[a]};c];
@@ -83,13 +82,12 @@
     ".engine.logic.account.Withdraw";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
 
         mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck2: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.account.Withdraw[a 0;a 1;a 2];
+        res:.engine.logic.account.Withdraw[p`args];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
