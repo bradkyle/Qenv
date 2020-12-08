@@ -1,4 +1,5 @@
 
+.engine.model.instrument.Instrument,:.util.testutils.makeInstrument[`iId`mkprice;enlist(0;100)];
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
@@ -18,14 +19,14 @@
         res:.engine.logic.account.Fill[a];
 
         .qt.CheckMock[mck1;m[0];c];
-        / .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
 
     };
     {[p] `args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
-            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;enlist(1000;1;100;0b;0b;0;0;0)];
+            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;
+              enlist(1000;1;100;0b;0b;0;0;`.engine.model.instrument.Instrument$0)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[

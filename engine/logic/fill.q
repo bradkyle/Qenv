@@ -14,7 +14,7 @@
 
 				// derive the order values 
 				val:.engine.logic.contract.Value[x`qty;x`price];
-				iv[`ordLoss]-:.engine.logic.contract.Loss[i`mkprice;x`qty;val];
+				iv[`ordLoss]-:.engine.logic.contract.Loss[mkprice;x`qty;val];
 				iv[`ordQty]-:x`qty;
 				iv[`ordVal]-:val;
 
