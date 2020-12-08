@@ -67,7 +67,7 @@
         ));
         ("Remargin account orders";(
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
+            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             (
                 (1b;1;();.util.testutils.makeFeetier[]); // Update Account
                 (1b;1;();.util.testutils.makeRisktier[]) // Update Account
