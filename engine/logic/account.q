@@ -21,22 +21,11 @@
 				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
 				(=;`i;(*:;`i)));();eny[`ftId;(first;`ftId)]]; 
 
-			// Update the account fee tiers
-			x[`ft]:first ?[`.engine.model.feetier.Feetier;
-				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
-				(=;`i;(*:;`i)));();()][`ftId]; 
-
-			show ?[x;();();eny[`amt;`srt.amt]];
-
-
-			tot:first ?[x;();();eny[`amt;((+\);`srt.amt;`lng.amt)]];
-			show 90#"=";
-			show tot;
-
-			// TODO derive leverage
-			// Update the account risk tiers
-			x[`rt]:first [?[`.engine.model.risktier.Risktier;
-					enlist(|;(>;`amt;tot);(=;`i;(*:;`i)));();()]][`rtId];
+			tot:select sum 
+			ft:value select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>x`vol) or i=0;
+			rt:value select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>((+\)(lng.amt;srt.amt))) or i=0;
+			x[`ft]:`.engine.model.feetier.Feetier$ft;
+			show rt;
 
 			update 
 			  avail:((bal-
