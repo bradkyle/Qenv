@@ -64,7 +64,7 @@
         )); 
         ("Amend limit order (last in queue), smaller than previous, should update offsets, depth etc.";(
 								();();();()
-        ));
+        ))
     );
     ({};{};{};{});
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
