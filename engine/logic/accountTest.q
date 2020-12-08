@@ -54,7 +54,7 @@
         a[`lng]:`.engine.model.inventory.Inventory$(0 1);
         a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
 
-        res:.engine.logic.account.Remargin[p`args];
+        res:.engine.logic.account.Remargin[a];
 				.qt.A[res;~;p[`eRes];"res";c];
 
         .util.table.dropAll[(
@@ -68,7 +68,7 @@
     (
         ("Remargin account no orders";(
             ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0)]); 
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;0 0;0 0)]) // Update Account
             ));
@@ -79,9 +79,9 @@
         ));
         ("Remargin account orders";(
             ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss;flip(0 0;-1 1;0 0;0 0;0 0;0 0)]); 
-                (`feetier;.util.testutils.makeFeetier[`vol`bal`ref;flip(0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`amt`lev;flip(0 0;0 0)]) // Update Account
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0)]); 
+                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;0 0;0 0)]) // Update Account
             ));
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];

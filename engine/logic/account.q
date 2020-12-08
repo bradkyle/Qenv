@@ -23,12 +23,10 @@
 				(>;`ref;x`ref);
 				(=;`i;(*:;`i)));();enw `ftId]; 
 
-			show ?[x;();();enw `lng]; // TODO
-
+			// TODO derive leverage
 			// Update the account risk tiers
-			x[`rt]:value ?[`.engine.model.risktier.RiskTier;(
-				(>;`amt;value ?[x;();();enlist[`a]!enlist(sum;`srt.amt;`lng.amt)]);
-				(>;`lev;value ?[x;();();enlist[`b]!enlist(avg;`srt.lev`lng.lev)]); // TODO
+			x[`rt]:value ?[`.engine.model.risktier.Risktier;(
+				(>;`amt;value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]]);
 				(=;`i;(*:;`i)));();enw `rtId];
 
 			update 
