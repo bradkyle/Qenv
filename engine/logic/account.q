@@ -16,15 +16,20 @@
 	};
 
 .engine.logic.account.Remargin :{
-			x[`ft]:.engine.model.feetier.Get[(
+			// Update the account fee tiers
+			x[`ft]:value ?[`.engine.model.feetier.Feetier;(
 				(>;`vol;x`vol);
 				(>;`bal;x`bal);
 				(>;`ref;x`ref);
-				(=;`i;(*:;`i)))]; 
-			x[`rt]:.engine.model.risktier.Get[(
-				(>;`mxamt;x`amt);
-				(>;`mxlev;x`lev);
-				(=;`i;(*:;`i)))];
+				(=;`i;(*:;`i)));();enw `ftId]; 
+
+			show ?[x;();();enw `lng]; // TODO
+
+			// Update the account risk tiers
+			x[`rt]:value ?[`.engine.model.risktier.RiskTier;(
+				(>;`amt;value ?[x;();();enlist[`a]!enlist(sum;`srt.amt;`lng.amt)]);
+				(>;`lev;value ?[x;();();enlist[`b]!enlist(avg;`srt.lev`lng.lev)]); // TODO
+				(=;`i;(*:;`i)));();enw `rtId];
 
 			update 
 			  avail:((bal-

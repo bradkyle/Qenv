@@ -1,4 +1,5 @@
 \cd util
+\l extend.q
 \l util.q
 \l indicators.q
 \l table.q
