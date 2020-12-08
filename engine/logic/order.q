@@ -5,7 +5,6 @@
 .engine.logic.order.New:{
 				.engine.logic.inventory.ApplyOrderDelta[o`oqty;o`price;];
 
-
 				cnd:o[`okind]=0;
 				/ cnd:[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 				/ 		all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);

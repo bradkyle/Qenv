@@ -5,8 +5,12 @@
 				fundingrate:last x;
 
 				update
-					rpnl:0;
+					rpnl:rpnl+();
 
+				update
+						avail:0
+						from `.engine.model.account.Account 
+						where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
 
 				// Update instrument
 				.engine.EmitA[`account;t;a];
