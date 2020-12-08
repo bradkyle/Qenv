@@ -18,25 +18,20 @@
 .engine.logic.account.Remargin :{
 
 			x[`ft]:.engine.model.feetier.Get[(
-				(>;`vol;x`);
-				(>;`bal;x`);
-				(>;`ref;x`);
+				(>;`vol;x`vol);
+				(>;`bal;x`bal);
+				(>;`ref;x`ref);
 				(=;`i;(*:;`i)))]; 
 			x[`rt]:.engine.model.risktier.Get[(
-				(>;`mxamt;x`);
-				(>;`mxlev;x`);
+				(>;`mxamt;x`amt);
+				(>;`mxlev;x`lev);
 				(=;`i;(*:;`i)))];
 
-			// todo liquidation price, bankruptcy price
-			// TODO check the amount incurred from the commizzion
-			![x;();0b;`avail`()];
-			x:update 
+			update 
 			  avail:((bal-
 					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
 			  	((lng.ordQty+srt.ordQty)-(lng.ordLoss+srt.ordLoss))) | 0)
-				from x;
-
-			x
+				from x
 	  };
 
 .engine.logic.account.Withdraw:{
