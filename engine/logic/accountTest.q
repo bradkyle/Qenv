@@ -42,11 +42,13 @@
 .qt.Unit[
     ".engine.logic.account.Remargin";
     {[c]
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
-        mck2: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.model.risktier.Get;{[a;b] a}[m[3][3]];c];
+        mck1: .qt.M[`.engine.model.feetier.Get;{[a]};c];
+        mck2: .qt.M[`.engine.model.risktier.Get;{[a]};c];
 
-        res:.engine.logic.account.Remargin[a 0;a 1;a 2];
+        res:.engine.logic.account.Remargin[p`args];
+
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
