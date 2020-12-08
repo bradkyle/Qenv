@@ -22,10 +22,6 @@ jobs:
     - name: Deploy Training
         pulumi up
 
-  train: 
-    if: github.ref == ''
-    runs-on: ubuntu-latest
-
   stage:
     if: github.ref == ''
     runs-on: ubuntu-latest
