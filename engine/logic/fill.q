@@ -11,6 +11,7 @@
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
+				show .engine.logic.contract.Value[x`qty;x`price];
 
 				// derive the order values 
 				iv[`ordQty]-:x`qty;
