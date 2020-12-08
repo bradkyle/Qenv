@@ -1,26 +1,19 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 
-// Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
-// running on minikube, and if so, create only services of type ClusterIP.
-const config = new pulumi.Config();
-const isMinikube = config.require("isMinikube");
-
-// nginx container, replicated 1 time.
-const appName = "nginx";
-
 // Arguments for the demo app.
-export interface DemoAppArgs {
+export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
 }
 
-export class DemoApp extends pulumi.ComponentResource {
+export class Qenv extends pulumi.ComponentResource {
     public appUrl: pulumi.Output<string>;
 
     constructor(name: string,
-                args: DemoAppArgs,
+                args: QenvArgs,
+                isMinikube: string,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("qenv:kubernetes-ts-multicloud:demo-app", name, args, opts);
 
@@ -60,11 +53,11 @@ export class DemoApp extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
 
         // Allocate an IP to the nginx Deployment.
-        const frontend = new k8s.core.v1.Service(appName, {
+        const frontend = new k8s.core.v1.Service(name, {
             metadata: { labels: qenv.spec.template.metadata.labels },
             spec: {
                 type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
-                ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
+                ports: [{ port: 5000, targetPort: 5000, protocol: "TCP" }],
                 selector: appLabels,
             },
         });
