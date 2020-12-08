@@ -2,10 +2,6 @@
 // TODO add fee
 // Fill account
 .engine.logic.inventory.Fill:{ // TODO simple select
-				a:.engine.model.inventory.Get[enlist(=;`aId;x`aId)];
-				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
-				i:.engine.model.instrument.Get[((=;`side;x`side);(=;`aId;x`aId))];
-
 				update 
 					amt:amt+dlt,
 					totalEntry:totalEntry+max[],
