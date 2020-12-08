@@ -1,10 +1,10 @@
 
-.engine.logic.contract.Value :{[]
-    
+.engine.logic.contract.Value :{[qty;price]
+     
     };
 
 .engine.logic.contract.Loss  :{[]
-  min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0]  
+    min[prd[i`mkprice;iv`ordQty]-iv[`ordVal];0]  
     };
 
 
