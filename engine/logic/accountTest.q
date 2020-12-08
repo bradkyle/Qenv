@@ -47,23 +47,25 @@
         m:p[`mocks];
         a:p[`args];
 
-        .engine.model.inventory.Inventory,:s[`inventory];
-        .engine.model.feetier.Feetier,:s[`feetier];
-        .engine.model.risktier.Risktier,:s[`risktier];
-
-        a[`lng]:`.engine.model.inventory.Inventory$(0 1);
-        a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
-        a[`rt]:`.engine.model.risktier.Risktier$0;
-        a[`ft]:`.engine.model.feetier.Feetier$0;
-
-        res:.engine.logic.account.Remargin[a];
-				.qt.A[res;~;p[`eRes];"res";c];
-
         .util.table.dropAll[(
           `.engine.model.inventory.Inventory,
           `.engine.model.risktier.RiskTier,
           `.engine.model.feetier.Feetier
         )];
+
+        .engine.model.inventory.Inventory,:s[`inventory];
+        .engine.model.feetier.Feetier,:s[`feetier];
+        .engine.model.risktier.Risktier,:s[`risktier];
+
+        a:update
+            srt:`.engine.model.inventory.Inventory!0,
+            lng:`.engine.model.inventory.Inventory!1,
+            rt:`.engine.model.risktier.Risktier!0,
+            ft:`.engine.model.feetier.Feetier!0 from a;
+
+        res:.engine.logic.account.Remargin[a];
+				.qt.A[res;~;p[`eRes];"res";c];
+
 
     };
     {[p] :`setup`args`eRes`mocks`err!p};

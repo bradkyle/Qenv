@@ -16,9 +16,9 @@
 	};
 
 .engine.logic.account.Remargin :{
-			tot:exec (+\)(lng.amt;srt.amt) from x;
-			ft:value select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>x`vol) or i=0;
-			rt:value select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>tot) or i=0;
+			tot:exec (+/)(lng.amt;srt.amt) from x;
+			ft:first (select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>x`vol) or i=0)[`ftId];
+			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>tot) or i=0)[`rtId];
 			x[`ft]:`.engine.model.feetier.Feetier$ft;
 			x[`rt]:`.engine.model.risktier.Risktier$rt;
 
