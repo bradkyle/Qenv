@@ -6,10 +6,12 @@
 				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
 				i:.engine.model.instrument.Get[((=;`side;x`side);(=;`aId;x`aId))];
 
+				update 
+					totalEntry:totalEntry+max[];
+
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
-
 
 				// derive the order values 
 				val:.engine.logic.contract.Value[x`qty;x`price];
