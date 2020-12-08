@@ -7,7 +7,9 @@
 						where iId=x[`iId];
 
 				update
-					rpnl:rpnl+();
+						rpnl:rpnl+(posVal * x[`fundingRate] * side)
+						from `.engine.model.inventory.Inventory
+						where iId=x[`iId] and amt>0;
 
 				update
 						avail:0
