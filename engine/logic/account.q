@@ -24,10 +24,8 @@
 			// TODO derive leverage
 			// Update the account risk tiers
 			x[`rt]:`.engine.model.risktier.Risktier$value ?[`.engine.model.risktier.Risktier;
-				enlist(|;
-					(>;`amt;first value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]]);
-					(=;`i;(*:;`i))
-					);();eny[`rtId;(min;`rtId)]];
+				enlist(|;(>;`amt;first value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]]);
+					(=;`i;(*:;`i)));();eny[`rtId;(min;`rtId)]];
 
 			update 
 			  avail:((bal-
