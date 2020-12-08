@@ -104,7 +104,7 @@
     "Global function for creating a new account"];
  
 
-.qt.SkpBesTest[25];
+/ .qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
@@ -140,7 +140,7 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        enlist("Withdraw no balance:should fail";(
+       ("Withdraw no balance:should fail";(
             ((!) . flip(
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
@@ -154,7 +154,7 @@
                 (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
             () // err 
-        ))
+        ));
         / ("Withdraw insufficient balance:should fail";(
         /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
         /     (); // res 
