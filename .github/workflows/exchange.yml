@@ -16,11 +16,11 @@ jobs:
         minikube update-context
         kubectl cluster-info
         kubectl get pods -n kube-system
-    - name: Pull Test Data
+    - name: Deploy Containers 
       run: |
-        dvc pull ... 
-    - name: Deploy Training
         pulumi up
+    - name: Run End to End Tests
+        docker run
 
   stage:
     if: github.ref == ''
