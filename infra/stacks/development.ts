@@ -4,21 +4,22 @@ import * as pulumi from "@pulumi/pulumi";
 import * as ingest from "../components/ingest"
 import * as qenv from "../components/qenv"
 import * as impala from "../components/impala"
+import * as local from "../components/lclcluster"
 
-// Arguments for the demo app.
-export interface DevStackArgs {
-    provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag: string; // Tag for the kuard image to deploy.
-    staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
-}
+const ingest_deployment = new ingest.Ingest("test",{
+    provider:local.provider,    
+    imageTag:"latest",
+});
 
-export class DevStack extends pulumi.ComponentResource {
-    constructor(name: string,
-                args: DevStackArgs,
-                opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
+const qenv_deployment = new qenv.Qenv("test",{
+    provider:local.provider,    
+    imageTag:"latest",
+});
 
-    }
-}
-//
-// deploy impala, qenv, ingest
+
+const impala_deployment = new impala.Impala("test",{
+    provider:local.provider,    
+    imageTag:"latest",
+});
+
+

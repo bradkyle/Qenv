@@ -5,11 +5,12 @@ import * as pulumi from "@pulumi/pulumi";
 export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
-    staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
+    numEnvs: number; 
+    ingestHost: string;
+    poolSize:number;
 }
 
 export class Qenv extends pulumi.ComponentResource {
-    public appUrl: pulumi.Output<string>;
 
     constructor(name: string,
                 args: QenvArgs,
