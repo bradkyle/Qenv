@@ -17,7 +17,7 @@
 
 .engine.logic.account.Remargin :{
 			// Update the account fee tiers
-			x[`ft]:.engine.model.feetier.Feetier$value ?[`.engine.model.feetier.Feetier;
+			x[`ft]:`.engine.model.feetier.Feetier$value ?[`.engine.model.feetier.Feetier;
 				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
 				(=;`i;(*:;`i)));();eny[`ftId;(first;`ftId)]]; 
 
