@@ -11,7 +11,7 @@
 					ordVal:ordVal - val,
 					rpnl: rpnl + sum(
 						$[x[`ismaker]; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
-						$[x[`reduce];.engine.logic.contract.RealizedPnl[
+						$[not x[`reduce];0;.engine.logic.contract.RealizedPnl[
 							iId.cntTyp;
 							x[`qty];
 							x[`price];
