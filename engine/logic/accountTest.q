@@ -65,8 +65,8 @@
         ("Remargin account no orders";(
             ((!) . flip(
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss;flip(0 0;-1 1;0 0;0 0;0 0;0 0)]); 
-                (`feetier;.util.testutils.makeFeetier[`vol`bal`ref;flip(0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`amt`lev;flip(0 0;0 0)]) // Update Account
+                (`feetier;.util.testutils.makeFeetier[`ftid`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtid`amt`lev;flip(0 1;0 0;0 0)]) // Update Account
             ));
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];

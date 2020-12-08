@@ -1,15 +1,15 @@
 
-.engine.model.instrument.Instrument,:.util.testutils.makeInstrument[`iId`mkprice`smul;enlist(0;100;100)];
+/ .engine.model.instrument.Instrument,:.util.testutils.makeInstrument[`iId`mkprice`smul;enlist(0;100;100)];
 
-.engine.model.risktier.Risktier,:.util.testutils.makeRiskTier[`rtid`mxamt`mmr`imr`maxlev;(
-    (0; 50000;       0.004;    0.008;    125);
-    (1; 250000;      0.005;    0.01;     100))]; 
+/ .engine.model.risktier.Risktier,:.util.testutils.makeRiskTier[`rtid`mxamt`mmr`imr`maxlev;(
+/     (0; 50000;       0.004;    0.008;    125);
+/     (1; 250000;      0.005;    0.01;     100))]; 
 
-.engine.model.feetier.Feetier,:.util.testutils.makeFeeTier[`ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim;(
-    (0; 50;      0.0006;    0.0006;    0f;  0f; 600);
-    (1; 500;     0.00054;   0.0006;    0f;  0f; 600))];                             //  
+/ .engine.model.feetier.Feetier,:.util.testutils.makeFeeTier[`ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim;(
+/     (0; 50;      0.0006;    0.0006;    0f;  0f; 600);
+/     (1; 500;     0.00054;   0.0006;    0f;  0f; 600))];                             //  
 
-.engine.model.account.Account,:.util.testutils.makeAccount[`aId`ft`rt;enlist(0;0;0)]
+/ .engine.model.account.Account,:.util.testutils.makeAccount[`aId`ft`rt;enlist(0;0;0)]
 
 // TODO full integration
 // TODO test rpnl and upnl
