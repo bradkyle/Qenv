@@ -39,12 +39,13 @@
 
 .engine.logic.order.Cancel:{
 				c:.engine.model.order.Get[enlist(|;();())];
-
-				.engine.logic.inventory.ApplyOrderDelta[neg[sum[c`oQty]];x`price];
-				.engine.model.account.Remargin[];
+				.engine.model.order.RemoveOrder c`oId;
 
 				// add depth, add 
 				.engine.logic.orderbook.Level[]
+
+				.engine.logic.inventory.ApplyOrderDelta[neg[sum[c`oQty]];x`price];
+				.engine.model.account.Remargin[];
 
 				.engine.EmitA[`inventory;t;iv];
 				.engine.EmitA[`account;t;a];
