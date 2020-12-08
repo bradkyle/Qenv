@@ -72,8 +72,8 @@
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
             (); // mocks 
             () // err 
         ))
