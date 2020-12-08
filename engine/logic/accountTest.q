@@ -3,7 +3,14 @@
 .qt.Unit[
     ".engine.logic.account.Liquidate";
     {[c]
+        mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
+        mck2: .qt.M[`.engine.model.liquidation.Create;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.logic.order.New;{[a;b]};c];
 
+        res:.engine.logic.account.Remargin[a 0;a 1;a 2];
+
+        .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck2;m[1];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
@@ -31,13 +38,13 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
+.qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Remargin";
     {[c]
         mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck2: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.model.risktier.Get;{[a;b] a}[m[3][3]];c];
-        mck5: .qt.M[`.engine.model.feetier.Get;{[a;b] a}[m[4][3]];c];
+        mck3: .qt.M[`.engine.model.risktier.Get;{[a;b] a}[m[3][3]];c];
 
         res:.engine.logic.account.Remargin[a 0;a 1;a 2];
     };

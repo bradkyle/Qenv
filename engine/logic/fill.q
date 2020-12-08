@@ -2,15 +2,14 @@
 // TODO add fee
 // Fill account
 .engine.logic.account.Fill :{ // TODO simple select
-
 				a:.engine.model.inventory.Get[enlist(=;`aId;x`aId)];
 				iv:.engine.model.inventory.Get[((=;`side;x`side);(=;`aId;x`aId))];
+				i:.engine.model.instrument.Get[((=;`side;x`side);(=;`aId;x`aId))];
 
 				dlt:$[x`reduce;neg[x`qty];x`qty];
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 
-				mkprice:?[x;();();`iId.mkprice];
 
 				// derive the order values 
 				val:.engine.logic.contract.Value[x`qty;x`price];
