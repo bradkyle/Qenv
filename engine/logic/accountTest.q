@@ -83,8 +83,8 @@
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
             (); // mocks 
             () // err 
         ));
@@ -94,8 +94,8 @@
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
             (); // mocks 
             () // err 
         ))
@@ -109,70 +109,94 @@
     ".engine.logic.account.Withdraw";
     {[c]
         p:c[`params];
+        s:p[`setup];
         m:p[`mocks];
+        a:p[`args];
+
+        .util.table.dropAll[(
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+
+        .engine.model.inventory.Inventory,:s[`inventory];
+        .engine.model.feetier.Feetier,:s[`feetier];
+        .engine.model.risktier.Risktier,:s[`risktier];
 
         mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck2: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.model.account.Get;{[a;b] a}[m[0][3]];c];
+
+        a:update
+            srt:`.engine.model.inventory.Inventory!0,
+            lng:`.engine.model.inventory.Inventory!1,
+            rt:`.engine.model.risktier.Risktier!0,
+            ft:`.engine.model.feetier.Feetier!0 from a;
 
         res:.engine.logic.account.Withdraw[p`args];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Withdraw no balance:should fail";(
+        enlist("Withdraw no balance:should fail";(
+            ((!) . flip(
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
+                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
             .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
-            () // err 
-        ));
-        ("Withdraw insufficient balance:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
-            () // err 
-        ));
-        ("Withdraw Account disabled:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Withdraw Account locked:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
-            ); // mocks 
-            () // err 
-        ));
-        ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
+                (1b;1;();.util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)]); // Get Account
                 (1b;1;.util.testutils.makeAccount[];()); // Update Account
                 (1b;1;.util.testutils.makeEvent[];()) // Update Account
             ); // mocks 
             () // err 
         ))
+        / ("Withdraw insufficient balance:should fail";(
+        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
+        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
+        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Withdraw Account disabled:should fail";(
+        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
+        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
+        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
+        /     ); // mocks 
+        /     (
+
+        /     ) // err 
+        / ));
+        / ("Withdraw Account locked:should fail";(
+        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
+        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
+        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
+        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
+        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
+        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
+        /     ); // mocks 
+        /     () // err 
+        / ))
     );
     ({};{};{};{});
     "Process a batch of signal events"];
