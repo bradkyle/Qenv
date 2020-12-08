@@ -14,6 +14,9 @@ const ingest_deployment = new ingest.Ingest("test",{
 const qenv_deployment = new qenv.Qenv("test",{
     provider:local.provider,    
     imageTag:"latest",
+    numEnvs:3,
+    ingestHost:"",
+    poolSize:4
 });
 
 
