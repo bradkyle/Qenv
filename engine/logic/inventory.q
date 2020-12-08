@@ -20,9 +20,6 @@
 							iId.faceValue;
 							iId.smul]])
 
-
-
-
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 

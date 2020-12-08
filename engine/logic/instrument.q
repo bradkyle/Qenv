@@ -31,37 +31,22 @@
 				markprice:last x;
 				i[`mkprice]:markprice;
 
-				![`.engine.model.inventory.Inventory;
-					enlist(>;`amt;0);0b;
-					()
-					]
+				update upl:.engine.logic.contract.UnrealizedPnl[
+						iId.cntTyp,	
+						iId.mkprice,
+						iId.faceValue,
+						iId.smul,
+						amt,
+						side,
+						avgPrice,
+					] from `.engine.model.inventory.Inventory where amt>0;
 
-				if[count[iv]>0;[
-					// TODO make simpler
-					upl:.engine.logic.contract.UnrealizedPnl[
-							i[`cntTyp];
-							i[`mkprice];
-							i[`faceValue];
-							i[`smul]];
+				update 
+					avail: .engine.logc.account.GetAvailable[] 
+					from `.engine.model.account.Account;
 
-					upm:0!select 
-						amtInMarket: sum[amt],
-						upnl:upl'[amt;side;avgPrice]
-						by aId from enlist iv;  
-
-					a:.engine.model.account.Get[upm`aId];
-					a:.engine.logic.account.Remargin[i;a];
-					
-					.engine.logic.account.Liquidate[]
-
-					.engine.model.account.Update a;
-					.engine.model.inventory.Update iv;
-					.engine.Emit[`account;t;a];
-					.engine.Emit[`inventory;t;iv];
-				]];
-
-				// 
-				.engine.model.instrument.Update i;
+				.engine.Emit[`mark;last t;last x];
+				.engine.Emit[`inventory;last t;last x];
 				.engine.Emit[`mark;last t;last x];
 	};
 
