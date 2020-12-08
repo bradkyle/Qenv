@@ -13,9 +13,6 @@
 			bal-(mm+upnl)+(ordQty-ordLoss)
 		};
 
-// 
-// ----------------------------------------------------------------------->
-
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
 		.engine.model.account.Update[];

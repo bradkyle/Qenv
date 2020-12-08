@@ -12,9 +12,13 @@
 						where iId=x[`iId] and amt>0;
 
 				update
-						avail:0
-						from `.engine.model.account.Account 
-						where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
+					ft:.engine.logic.account.GetFeetier[vol],
+					rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
+					avail:.engine.logic.account.GetAvailable[
+							bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
+							lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
+					from `.engine.model.account.Account 
+					where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
 
 				// Update instrument
 				.engine.EmitA[`account;t;a];
@@ -42,9 +46,13 @@
 						where (iId=x`iId) and (amt>0);
 
 				update
-						avail:0
-						from `.engine.model.account.Account 
-						where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
+					ft:.engine.logic.account.GetFeetier[vol],
+					rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
+					avail:.engine.logic.account.GetAvailable[
+							bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
+							lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
+					from `.engine.model.account.Account 
+					where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
 
 				.engine.EmitA[`account;last t;last x];
 				.engine.EmitA[`inventory;last t;last x];
