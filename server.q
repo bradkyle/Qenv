@@ -1,3 +1,4 @@
+system"sleep 10";
 \cd /home/qenv
 \p 5000
 \c 5000 5000
