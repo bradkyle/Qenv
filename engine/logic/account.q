@@ -16,16 +16,11 @@
 	};
 
 .engine.logic.account.Remargin :{
-
-			show value ?[`.engine.model.feetier.Feetier;
-				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
-				(=;`i;(*:;`i)));();eny[`ftId;(first;`ftId)]]; 
-
-			tot:select sum 
+			tot:exec (+\)(lng.amt;srt.amt) from x;
 			ft:value select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>x`vol) or i=0;
-			rt:value select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>((+\)(lng.amt;srt.amt))) or i=0;
+			rt:value select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>tot) or i=0;
 			x[`ft]:`.engine.model.feetier.Feetier$ft;
-			show rt;
+			x[`rt]:`.engine.model.risktier.Risktier$rt;
 
 			update 
 			  avail:((bal-
