@@ -1,8 +1,10 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-				// i[`funding]
-				fundingrate:last x;
+				update 
+				  	fundingrate:x[`fundingrate] 
+				  	from `.engine.model.instrument.Instrument
+						where iId=x[`iId];
 
 				update
 					rpnl:rpnl+();
@@ -20,7 +22,6 @@
 
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
-				markprice:last x;
 				update 
 				  	mkprice:x[`markprice] 
 				  	from `.engine.model.instrument.Instrument
@@ -49,8 +50,6 @@
 	};
 
 .engine.logic.instrument.Settlement:{
-				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
-
 				update 
 					bal:bal+(lng.rpnl+srt.rpnl)
 				from `.engine.model.account.Account;
@@ -66,11 +65,12 @@
 
 
 .engine.logic.instrument.PriceLimit:{
-				highest:last x[0];
-				lowest:last x[1];
-				i[`plmth]:highest;
-				i[`plmtl]:lowest;
-				.engine.model.instrument.Update i;
+				update 
+					highest:x[`highest], 
+					lowest:x[`lowest] 
+				  from `.engine.model.instrument.Instrument
+					where iId=x[`iId];
+
 				.engine.Emit[`pricelimit;t;x];
 
 				o:.engine.model.order.Get[(|;
