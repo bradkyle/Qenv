@@ -29,7 +29,10 @@
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
 				markprice:last x;
-				![];
+				update 
+				  mkprice:x[`markprice] 
+				  from `.engine.model.instrument.Instrument
+					where iId=x[`iId];
 
 				.engine.logic.inventory.ApplyMarkPrice[];
 				.engine.logic.account.ApplyRemargin[];
@@ -41,6 +44,7 @@
 
 .engine.logic.instrument.Settlement:{
 				iv:.engine.model.inventory.Get[enlist(<;`amt;0)];
+
 				if[count[iv]>0;[
 					a:.engine.model.account.Get[iv`aId];
 					a[`bal]+:iv[`rpnl];
