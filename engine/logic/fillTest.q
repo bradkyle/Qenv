@@ -26,6 +26,9 @@
         .engine.model.feetier.Feetier,:s[`feetier];
         .engine.model.risktier.Risktier,:s[`risktier];
 
+        a[`lng]:`.engine.model.inventory.Inventory$(0 1);
+        a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
+
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.account.Update;c];
         mck3: .qt.OM[`.engine.model.inventory.Update;c];
