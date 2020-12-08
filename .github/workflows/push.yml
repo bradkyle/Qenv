@@ -16,8 +16,8 @@ jobs:
           minikube version: 'v1.13.1'
           kubernetes version: 'v1.19.2'
           github token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Interact with the cluster
-        run: kubectl get nodes
+      - name: Deploy the testing cluster with pulumi 
+        run: pulumi up 
 
   train:
     name: Deploy the training cluster to the configured remote
