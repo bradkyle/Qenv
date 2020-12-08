@@ -12,6 +12,8 @@
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 
+				mkprice:?[x;();();`iId.mkprice];
+
 				// derive the order values 
 				val:.engine.logic.contract.Value[x`qty;x`price];
 				iv[`ordLoss]-:.engine.logic.contract.Loss[i`mkprice;x`qty;val];
