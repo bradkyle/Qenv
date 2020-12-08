@@ -1,5 +1,6 @@
-import {DevStack} from "./stacks/development"
-// import {TestStack} from "./stacks/testing"
-// import {StageStack} from "./stacks/staging"
-// import {ProdStack} from "./stacks/production"
+import * as dev from "./stacks/development"
+import * as prd from "./stacks/production"
+import * as stg from "./stacks/staging"
+import * as tst from "./stacks/testing"
+
 

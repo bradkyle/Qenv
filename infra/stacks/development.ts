@@ -1,6 +1,9 @@
 
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
+import * as ingest from "../components/ingest"
+import * as qenv from "../components/qenv"
+import * as impala from "../components/impala"
 
 // Arguments for the demo app.
 export interface DevStackArgs {
