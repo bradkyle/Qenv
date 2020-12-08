@@ -38,7 +38,7 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
-.qt.SkpBesTest[24];
+/ .qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Remargin";
     {[c]
@@ -46,6 +46,7 @@
         s:p[`setup];
         m:p[`mocks];
         a:p[`args];
+        r:p[`eRes];
 
         .util.table.dropAll[(
           `.engine.model.inventory.Inventory,
@@ -63,21 +64,38 @@
             rt:`.engine.model.risktier.Risktier!0,
             ft:`.engine.model.feetier.Feetier!0 from a;
 
+        r:update
+            srt:`.engine.model.inventory.Inventory!0,
+            lng:`.engine.model.inventory.Inventory!1,
+            rt:`.engine.model.risktier.Risktier!0,
+            ft:`.engine.model.feetier.Feetier!0 from r;
+
         res:.engine.logic.account.Remargin[a];
-				.qt.A[res;~;p[`eRes];"res";c];
+        .qt.A[res;~;r;"res";c];
 
 
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        enlist("Remargin account no orders";(
+        ("Remargin account no orders";(
             ((!) . flip(
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
             .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
+            (); // mocks 
+            () // err 
+        ));
+        ("Remargin account no orders";(
+            ((!) . flip(
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
+                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
             .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
+            .util.testutils.makeAccount[`aId`iId`withdraw`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
             (); // mocks 
             () // err 
         ))
@@ -86,6 +104,7 @@
     "Global function for creating a new account"];
  
 
+.qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]

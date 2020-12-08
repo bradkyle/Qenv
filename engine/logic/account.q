@@ -30,7 +30,6 @@
 	  };
 
 .engine.logic.account.Withdraw:{
-				a:.engine.model.account.Get[x`aId];
 				a[`wit]+:x`wit;
 				a[`bal]-:x`wit;
 				a:.engine.logic.account.Remargin[x;a];
@@ -39,7 +38,6 @@
 				};
 
 .engine.logic.account.Deposit:{
-				a:.engine.model.account.Get[x`aId];
 				a[`dep`bal]+:x`dep;
 				a:.engine.logic.account.Remargin[x`aId;a];
 				.engine.model.account.Update a;
@@ -47,7 +45,6 @@
 				};
 
 .engine.logic.account.Leverage:{
-				a:.engine.model.account.Get[x`aId];
 				a[`leverage]:x`lev;
 				a:.engine.logic.account.Remargin[x;a];
 				.engine.model.account.Update a;
