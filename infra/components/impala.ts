@@ -36,7 +36,7 @@ const nginx = new k8s.apps.v1.Deployment(appName, {
 // limitations under the License.
 
 // Arguments for the demo app.
-export interface DemoAppArgs {
+export interface ImpalaArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
@@ -46,13 +46,13 @@ export class DemoApp extends pulumi.ComponentResource {
     public appUrl: pulumi.Output<string>;
 
     constructor(name: string,
-                args: DemoAppArgs,
+                args: ImpalaArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
 
         // Create the kuard Deployment.
-        const appLabels = {app: "kuard"};
-        const deployment = new k8s.apps.v1.Deployment(`${name}-demo-app`, {
+        const appLabels = {app: "qenv"};
+        const deployment = new k8s.apps.v1.Deployment(`${name}-parl-impala`, {
             spec: {
                 selector: {matchLabels: appLabels},
                 replicas: 1,
@@ -61,8 +61,8 @@ export class DemoApp extends pulumi.ComponentResource {
                     spec: {
                         containers: [
                             {
-                                name: "kuard",
-                                image: `gcr.io/kuar-demo/kuard-amd64:${args.imageTag}`,
+                                name: "impala",
+                                image: `thorad/parl:${args.imageTag}`,
                                 ports: [{containerPort: 8080, name: "http"}],
                                 livenessProbe: {
                                     httpGet: {path: "/healthy", port: "http"},
@@ -85,23 +85,6 @@ export class DemoApp extends pulumi.ComponentResource {
             },
         }, {provider: args.provider, parent: this});
 
-        // Create a LoadBalancer Service to expose the kuard Deployment.
-        const service = new k8s.core.v1.Service(`${name}-demo-app`, {
-            spec: {
-                loadBalancerIP: args.staticAppIP, // Required for AKS - automatic LoadBalancer still in preview.
-                selector: appLabels,
-                ports: [{port: 80, targetPort: 8080}],
-                type: "LoadBalancer",
-            },
-        }, {provider: args.provider, parent: this});
-
-        // The address appears in different places depending on the Kubernetes service provider.
-        let address = service.status.loadBalancer.ingress[0].hostname;
-        if (name === "gke" || name === "aks") {
-            address = service.status.loadBalancer.ingress[0].ip;
-        }
-
-        this.appUrl = pulumi.interpolate`http://${address}:${service.spec.ports[0].port}`;
 
         this.registerOutputs();
     }
