@@ -29,21 +29,10 @@
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
 				markprice:last x;
-				i[`mkprice]:markprice;
+				![];
 
-				update upl:.engine.logic.contract.UnrealizedPnl[
-						iId.cntTyp,	
-						iId.mkprice,
-						iId.faceValue,
-						iId.smul,
-						amt,
-						side,
-						avgPrice,
-					] from `.engine.model.inventory.Inventory where amt>0;
-
-				update 
-					avail: .engine.logc.account.GetAvailable[] 
-					from `.engine.model.account.Account;
+				.engine.logic.inventory.ApplyMarkPrice[];
+				.engine.logic.account.ApplyRemargin[];
 
 				.engine.Emit[`mark;last t;last x];
 				.engine.Emit[`inventory;last t;last x];
