@@ -17,17 +17,17 @@
 
 .engine.logic.account.Remargin :{
 			// Update the account fee tiers
-			x[`ft]:value ?[`.engine.model.feetier.Feetier;(
-				(>;`vol;x`vol);
-				(>;`bal;x`bal);
-				(>;`ref;x`ref);
-				(=;`i;(*:;`i)));();enw `ftId]; 
+			show .engine.model.feetier.Feetier$value ?[`.engine.model.feetier.Feetier;
+				enlist(|;((&;(&;(>;`vol;x`vol);(>;`bal;x`bal));(>;`ref;x`ref)));
+				(=;`i;(*:;`i)));();eny[`ftId;(first;`ftId)]]; 
 
 			// TODO derive leverage
 			// Update the account risk tiers
-			x[`rt]:value ?[`.engine.model.risktier.Risktier;(
-				(>;`amt;value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]]);
-				(=;`i;(*:;`i)));();enw `rtId];
+			x[`rt]:`.engine.model.risktier.Risktier$value ?[`.engine.model.risktier.Risktier;
+				enlist(|;
+					(>;`amt;first value ?[x;();();eny[`a;((+\);`srt.amt;`lng.amt)]]);
+					(=;`i;(*:;`i))
+					);();eny[`rtId;(min;`rtId)]];
 
 			update 
 			  avail:((bal-

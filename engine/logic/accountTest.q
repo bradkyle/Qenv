@@ -66,22 +66,11 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Remargin account no orders";(
+        enlist("Remargin account no orders";(
             ((!) . flip(
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;0 0;0 0)]) // Update Account
-            ));
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // mocks 
-            () // err 
-        ));
-        ("Remargin account orders";(
-            ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0)]); 
-                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;0 0;0 0)]) // Update Account
+                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
             .util.testutils.makeAccount[`aId`iId`withdraw;enlist(0;0;0)];
