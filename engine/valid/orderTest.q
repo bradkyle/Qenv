@@ -1,6 +1,6 @@
 
 .qt.Unit[
-    ".engine.logic.order.NewOrder";
+    ".engine.valid.order.NewOrder";
     {[c]
         p:c[`params];
         a:p`args;
@@ -8,7 +8,7 @@
 
         mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
 
-        res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
+        res:.engine.valid.order.NewOrder[a];
 
         .qt.CheckMock[mck0;m[7];c];
         .qt.RestoreMocks[];
@@ -49,7 +49,7 @@
 // TODO test change in display qty, side, price, execInst
 // TODO test with clOrdId
 .qt.Unit[
-    ".engine.logic.order.AmendOrder";
+    ".engine.valid.order.AmendOrder";
     {[c]
 
     };
@@ -71,7 +71,7 @@
 
 
 .qt.Unit[
-    ".engine.logic.order.CancelOrder";
+    ".engine.valid.order.CancelOrder";
     {[c]
 
     };
@@ -90,7 +90,7 @@
 
 
 .qt.Unit[
-    ".engine.logic.order.CancelAllOrders";
+    ".engine.valid.order.CancelAllOrders";
     {[c]
 
     };
