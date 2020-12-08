@@ -19,7 +19,9 @@ jobs:
     - name: Deploy Containers 
       run: |
         pulumi up
-    - name: Run End to End Tests
+    - name: Rest Tests
+        docker run
+    - name: Websocket Tests
         docker run
 
   stage:

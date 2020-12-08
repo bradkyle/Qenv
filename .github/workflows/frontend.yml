@@ -1,0 +1,32 @@
+jobs:
+  test:
+    if: github.ref == ''
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: opsgang/ga-setup-minikube@v0.1.1
+      with:
+        minikube-version: 1.4.0
+        k8s-version: 1.15.1
+    - name: Minikube Setup 
+      run: |
+        minikube config set vm-driver docker
+        minikube config set kubernetes-version v1.15.1
+        minikube start
+        minikube update-context
+        kubectl cluster-info
+        kubectl get pods -n kube-system
+    - name: Deploy Containers 
+      run: |
+        pulumi up
+    - name: Frontend Automation Tests 
+        docker run
+    - name: Websocket Tests
+        docker run
+
+  stage:
+    if: github.ref == ''
+    runs-on: ubuntu-latest
+
+  deploy:
+    if: github.ref == ''
