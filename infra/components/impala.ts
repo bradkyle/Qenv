@@ -13,7 +13,7 @@ export class Impala extends pulumi.ComponentResource {
     constructor(name: string,
                 args: ImpalaArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
+        super("beast:beast:impala", name, args, opts);
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {

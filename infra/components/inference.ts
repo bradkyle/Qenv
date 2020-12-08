@@ -1,20 +1,21 @@
+
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
 // Arguments for the demo app.
-export interface IngestArgs {
+export interface InferenceArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
 }
 
-export class Ingest extends pulumi.ComponentResource {
+export class Inference extends pulumi.ComponentResource {
 
     constructor(name: string,
-                args: IngestArgs,
+                args: InferenceArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("beast:qenv:ingest", name, args, opts);
+        super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
         //
         // Create a Secret to hold the MariaDB credentials.
         const kdbSecret = new k8s.core.v1.Secret("mariadb", {
@@ -27,7 +28,7 @@ export class Ingest extends pulumi.ComponentResource {
         }, { provider: args.provider });
 
         // Create a ConfigMap to hold the MariaDB configuration.
-        const ingestCM = new k8s.core.v1.ConfigMap("ingest", {
+        const inferenceCM = new k8s.core.v1.ConfigMap("inference", {
             data: {
             "my.cnf": `
             [mysqld]

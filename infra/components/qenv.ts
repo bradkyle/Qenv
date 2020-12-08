@@ -16,7 +16,7 @@ export class Qenv extends pulumi.ComponentResource {
                 isMinikube: boolean,
                 args: QenvArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("qenv:kubernetes-ts-multicloud:demo-app", name, args, opts);
+        super("beast:qenv:qenv", name, args, opts);
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const qenvCM = new k8s.core.v1.ConfigMap("qenv", {

@@ -6,23 +6,25 @@ import * as qenv from "../components/qenv"
 import * as impala from "../components/impala"
 import * as local from "../components/lclcluster"
 
-const ingest_deployment = new ingest.Ingest("test",{
-    provider:local.provider,    
-    imageTag:"latest",
-});
+export function setup() {
 
-const qenv_deployment = new qenv.Qenv("test",true,{
-    provider:local.provider,    
-    imageTag:"latest",
-    numEnvs:2,
-    ingestHost:"",
-    poolSize:2
-});
+        const ingest_deployment = new ingest.Ingest("test",{
+            provider:local.provider,    
+            imageTag:"latest",
+        });
 
-
-const impala_deployment = new impala.Impala("test",{
-    provider:local.provider,    
-    imageTag:"latest",
-});
+        const qenv_deployment = new qenv.Qenv("test",true,{
+            provider:local.provider,    
+            imageTag:"latest",
+            numEnvs:2,
+            ingestHost:"",
+            poolSize:2
+        });
 
 
+        const impala_deployment = new impala.Impala("test",{
+            provider:local.provider,    
+            imageTag:"latest",
+        });
+
+};
