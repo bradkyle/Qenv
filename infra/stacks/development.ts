@@ -9,20 +9,20 @@ import * as local from "../components/lclcluster"
 const ingest_deployment = new ingest.Ingest("test",{
     provider:local.provider,    
     imageTag:"latest",
-});
+},{});
 
 const qenv_deployment = new qenv.Qenv("test",{
     provider:local.provider,    
     imageTag:"latest",
-    numEnvs:3,
+    numEnvs:2,
     ingestHost:"",
-    poolSize:4
-});
+    poolSize:2
+},{});
 
 
 const impala_deployment = new impala.Impala("test",{
     provider:local.provider,    
     imageTag:"latest",
-});
+},{});
 
 

@@ -15,8 +15,35 @@ export class Impala extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
 
+        // Create a ConfigMap to hold the MariaDB configuration.
+        const impalaCM = new k8s.core.v1.ConfigMap("impala", {
+            data: {
+            "my.cnf": `
+            [mysqld]
+            skip-name-resolve
+            explicit_defaults_for_timestamp
+            basedir=/opt/bitnami/mariadb
+            port=3306
+            socket=/opt/bitnami/mariadb/tmp/mysql.sock
+            tmpdir=/opt/bitnami/mariadb/tmp
+            max_allowed_packet=16M
+            bind-address=0.0.0.0
+            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+            log-error=/opt/bitnami/mariadb/logs/mysqld.log
+            character-set-server=UTF8
+            collation-server=utf8_general_ci
+            [client]
+            port=3306
+            socket=/opt/bitnami/mariadb/tmp/mysql.sock
+            default-character-set=UTF8
+            [manager]
+            port=3306
+            socket=/opt/bitnami/mariadb/tmp/mysql.sock
+            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+            `}}, { provider: args.provider });
+
         // Create the kuard Deployment.
-        const appLabels = {app: "qenv"};
+        const appLabels = {app: "impala"};
         const deployment = new k8s.apps.v1.Deployment(`${name}-parl-impala`, {
             spec: {
                 selector: {matchLabels: appLabels},
