@@ -29,6 +29,7 @@
 
 			// todo liquidation price, bankruptcy price
 			// TODO check the amount incurred from the commizzion
+			![x;();0b;`avail`()];
 			x:update 
 			  avail:((bal-
 					((lng.mm + srt.mm) + (lng.upnl + srt.upnl)) + 
