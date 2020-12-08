@@ -2,9 +2,10 @@
 // TODO add fee
 // Fill account
 .engine.logic.inventory.Fill:{ // TODO simple select
+				dlt:$[x`reduce;neg[x`qty];x`qty];
 				update 
 					amt:amt+dlt,
-					totalEntry:totalEntry+max[],
+					totalEntry:totalEntry+max[(dlt;0)],
 					ordLoss:ordLoss - .engine.logic.contract.Loss[],
 					ordQty:ordQty - x[`qty],
 					ordVal:ordVal - val,
@@ -20,7 +21,7 @@
 							iId.smul];
 
 
-				dlt:$[x`reduce;neg[x`qty];x`qty];
+
 				iv[`amt]+:dlt;
 				iv[`totalEntry]+:max[(dlt;0)];
 
