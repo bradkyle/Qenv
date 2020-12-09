@@ -125,6 +125,8 @@ export class Sensor extends pulumi.ComponentResource {
             },
         }, {provider: args.provider, parent: this});
 
+        // TODO a secodary container that services requests
+
         // args.monitoring.addMonitor();
         this.persistImage = new docker.Image(`${name}-persist-image`, {
             imageName: (args.sensor.imageName || "thorad/persist"),

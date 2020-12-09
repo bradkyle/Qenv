@@ -22,7 +22,7 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
     public readonly kdbsecret: k8s.core.v1.Secret; 
-    public readonly gcssecret: k8s.core.v1.Secret; 
+    // public readonly gcssecret: k8s.core.v1.Secret; 
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
@@ -49,22 +49,6 @@ export class Ingest extends pulumi.ComponentResource {
                 "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
             }
         }, { provider: args.provider });
-
-
-        const gcsaccount = new gcp.serviceaccount.Account("service_account", {
-            accountId: "service_account_id",
-            displayName: "Service Account",
-        });
-
-        const gcskey = new gcp.serviceaccount.Key("mykey", {
-            serviceAccountId: gcsaccount.name,
-            publicKeyType: "TYPE_X509_PEM_FILE",
-        });
-
-        // this.gcssecret = new k8s.core.v1.Secret("ingest", {
-        //     data: gcskey.privateKey
-        //   }, { provider: args.provider });
-
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
