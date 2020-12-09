@@ -3,7 +3,7 @@ system"sleep 10";
 \p 5000
 \c 5000 5000
 \l init.q
-\l ingest/client.q
+\l ingest.q
 show "Server Running...";
 
 
