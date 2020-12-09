@@ -56,16 +56,14 @@ export class Ingest extends pulumi.ComponentResource {
             displayName: "Service Account",
         });
 
-        const mykey = new gcp.serviceaccount.Key("mykey", {
+        const gcskey = new gcp.serviceaccount.Key("mykey", {
             serviceAccountId: gcsaccount.name,
             publicKeyType: "TYPE_X509_PEM_FILE",
         });
 
-        this.gcssecret = new k8s.core.v1.Secret("ingest", {
-            stringData: {
-                "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
-            }
-        }, { provider: args.provider });
+        // this.gcssecret = new k8s.core.v1.Secret("ingest", {
+        //     data: gcskey.privateKey
+        //   }, { provider: args.provider });
 
 
         // Create the kuard Deployment.
@@ -124,7 +122,7 @@ export class Ingest extends pulumi.ComponentResource {
                                         name: "KDB_PASS",
                                         valueFrom: {
                                             secretKeyRef: {
-                                                name: this.secret.metadata.name,
+                                                name: this.kdbsecret.metadata.name,
                                                 key: "kdb-password"
                                             }
                                         }

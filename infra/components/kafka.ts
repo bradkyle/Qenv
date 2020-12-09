@@ -23,14 +23,6 @@ export class KafkaOperator extends pulumi.ComponentResource {
         super("beast:sensor:sensor", name, args, opts);
 
         // Deploy the bitnami/wordpress chart.
-        const prometheus = new k8s.helm.v3.Chart("prometheus", {
-            chart: "kube-prometheus-stack",
-            fetchOpts: {
-                repo: "https://prometheus-community.github.io/helm-charts",
-            },
-        });
-
-        // Deploy the bitnami/wordpress chart.
         const strimzi = new k8s.helm.v3.Chart("strimzi", {
             chart: "strimzi-kafka-operator",
             fetchOpts: {
