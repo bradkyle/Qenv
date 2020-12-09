@@ -18,10 +18,9 @@ export class Impala extends pulumi.ComponentResource {
         // Create a ConfigMap to hold the MariaDB configuration.
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {
             data: {
-            "my.cnf": `
-            {
+            "config.py": `
+            config = {
                 'experiment_name': 'Qenv',
-
                 'master_address': 'localhost:8010',
                 'env':[
                     {'host':'env1','port':5000},
@@ -30,6 +29,7 @@ export class Impala extends pulumi.ComponentResource {
                 ],
                 'actor_num': 2,
                 'pool_size': 4,
+                'num_steps':500000,
                 'sample_batch_steps': 50,
                 'train_batch_size': 1000,
                 'sample_queue_max_size': 8,
@@ -47,36 +47,102 @@ export class Impala extends pulumi.ComponentResource {
 
         // Create the kuard Deployment.
         const appLabels = {app: "impala"};
-        const deployment = new k8s.apps.v1.Deployment(`${name}-parl-impala`, {
+        const deployment = new k8s.apps.v1.StatefulSet(`${name}-impala`, {
             spec: {
-                selector: {matchLabels: appLabels},
+                selector: {
+                    matchLabels: appLabels,
+                },
+                serviceName: "impala",
+                updateStrategy :{
+                    type: "RollingUpdate"
+                },
                 replicas: 1,
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
+                        serviceAccountName: "default",
+                        securityContext: {
+                            fsGroup: 1001,
+                            runAsUser: 1001
+                        },
+                        affinity: {
+                            podAntiAffinity: {
+                                preferredDuringSchedulingIgnoredDuringExecution: [
+                                    {
+                                        weight: 1,
+                                        podAffinityTerm: {
+                                            topologyKey: "kubernetes.io/hostname",
+                                            labelSelector: {
+                                                matchLabels: {
+                                                    app: "impala",
+                                                    release: "example"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
                         containers: [
                             {
                                 name: "impala",
                                 image: `thorad/parl:${args.imageTag}`,
-                                ports: [{containerPort: 8080, name: "http"}],
-                                livenessProbe: {
-                                    httpGet: {path: "/healthy", port: "http"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
-                                readinessProbe: {
-                                    httpGet: {path: "/ready", port: "http"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
+                                imagePullPolicy: "IfNotPresent",
+                                env: [
+                                    { 
+                                        name: "NUM_WORKERS", 
+                                        value: "2" 
+                                    },
+                                    { 
+                                        name: "CONFIG_PATH", 
+                                        value: "/impala/config.py" 
+                                    }
+                                ],
+                                volumeMounts: [
+                                    {
+                                        name: "data",
+                                        mountPath: "/ingest/data"
+                                    },
+                                    {
+                                        name: "config",
+                                        mountPath: "/impala/config.py",
+                                        subPath: "config.py"
+                                    }
+                                ]
                             },
                         ],
+                        volumes: [
+                            {
+                                name: "config",
+                                configMap: {
+                                    name: impalaCM.metadata.name 
+                                }
+                            }
+                        ]
                     },
                 },
+                volumeClaimTemplates: [
+                    {
+                        metadata: {
+                            name: "data",
+                            labels: {
+                                app: "ingest",
+                                component: "master",
+                                release: "example",
+                            }
+                        },
+                        spec: {
+                            accessModes: [
+                                "ReadWriteOnce"
+                            ],
+                            resources: {
+                                requests: {
+                                    storage: "8Gi"
+                                }
+                            }
+                        }
+                    }
+                ]
             },
         }, {provider: args.provider, parent: this});
 

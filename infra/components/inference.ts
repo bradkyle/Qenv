@@ -27,33 +27,6 @@ export class Inference extends pulumi.ComponentResource {
             }
         }, { provider: args.provider });
 
-        // Create a ConfigMap to hold the MariaDB configuration.
-        const inferenceCM = new k8s.core.v1.ConfigMap("inference", {
-            data: {
-            "my.cnf": `
-            [mysqld]
-            skip-name-resolve
-            explicit_defaults_for_timestamp
-            basedir=/opt/bitnami/mariadb
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            tmpdir=/opt/bitnami/mariadb/tmp
-            max_allowed_packet=16M
-            bind-address=0.0.0.0
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            log-error=/opt/bitnami/mariadb/logs/mysqld.log
-            character-set-server=UTF8
-            collation-server=utf8_general_ci
-            [client]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            default-character-set=UTF8
-            [manager]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            `}}, { provider: args.provider });
-
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
         const deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
@@ -147,14 +120,6 @@ export class Inference extends pulumi.ComponentResource {
                                 ]
                             },
                         ],
-                        volumes: [
-                            {
-                                name: "config",
-                                configMap: {
-                                    name: ingestCM.metadata.name
-                                }
-                            }
-                        ]
                     },
                 },
                 volumeClaimTemplates: [

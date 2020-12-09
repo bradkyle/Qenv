@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import gym
 import numpy as np
 import os
@@ -29,6 +30,7 @@ from parl.utils.window_stat import WindowStat
 from parl.utils import machine_info
 from actor import Actor
 import qenv
+import importlib
 
 
 class Learner(object):
@@ -254,7 +256,11 @@ class Learner(object):
 
 
 if __name__ == '__main__':
-    from impala_config import config
+    parser = argparse.ArgumentParser(description='Impala multi agent trainer')
+    parser.add_argument('-config', '--config_path', default=os.getenv('CONFIG_PATH') or "dummy.py", type=str, help='')
+
+    args = parser.parse_args()
+    config = importlib.import_module(args.config_path)
 
     learner = Learner(config)
     assert config['log_metrics_interval_s'] > 0
