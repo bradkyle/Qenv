@@ -6,20 +6,23 @@ import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
 // import * as dkr from "./docker"
 
+export enum StorageProvider {
+    GCS,
+    AWS,
+}
+
 export interface PersistArgs {
     imageName?:string;
     dockerfile?:string;
     dockercontext?:string;
+    dataMountPath:string;
+    storageProvider?:StorageProvider
 }
 
 export interface SensorArgs {
     imageName?:string;
     dockerfile?:string;
     dockercontext?:string;
-}
-
-export interface StorageArgs {
-    dataMountPath:string;
 }
 
 // Arguments for the demo app.
@@ -30,13 +33,14 @@ export interface SensorPipelineArgs {
     pullPolicy?:string
     sensor: SensorArgs;
     persist: PersistArgs;
-    storage: StorageArgs;
 }
 
 export class Sensor extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly persistImage: docker.Image; 
     public readonly sensorImage: docker.Image; 
+    public readonly sensor: k8s.apps.v1.Deployment;
+    public readonly persist: k8s.apps.v1.Deployment;
 
     constructor(name: string,
                 args: SensorPipelineArgs,
@@ -67,7 +71,7 @@ export class Sensor extends pulumi.ComponentResource {
 
         // Create the kuard Deployment.
         const sensorLabels = {app: "sensor"}; // TODO change to statefulset
-        const sensor = new k8s.apps.v1.Deployment(`${name}-sensor`, {
+        this.sensor = new k8s.apps.v1.Deployment(`${name}-sensor`, {
             spec: {
                 selector: {matchLabels: sensorLabels},
                 replicas: 1,
@@ -112,7 +116,7 @@ export class Sensor extends pulumi.ComponentResource {
 
         // Create the persist Deployment.
         const persistLabels = {app: "persist"}; // TODO change to statefulset
-        const persist = new k8s.apps.v1.Deployment(`${name}-persist`, {
+        this.persist = new k8s.apps.v1.Deployment(`${name}-persist`, {
             spec: {
                 selector: {matchLabels: persistLabels },
                 replicas: 1,
@@ -176,7 +180,7 @@ export class Sensor extends pulumi.ComponentResource {
                                             mountPath: "/ingest/data"
                                         },
                                     ],
-                                    lifecycle:{
+                                    lifecycle:(args.persist.storageProvider === StorageProvider.GCS ? {
                                         postStart :{
                                             exec : {
                                                 command: [
@@ -185,7 +189,7 @@ export class Sensor extends pulumi.ComponentResource {
                                                     "-o", 
                                                     "nonempty", 
                                                     this.bucket.name, 
-                                                    args.storage.dataMountPath
+                                                    args.persist.dataMountPath
                                                 ]
                                             }
                                         },
@@ -194,11 +198,11 @@ export class Sensor extends pulumi.ComponentResource {
                                                 command: [
                                                     "fusermount", 
                                                     "-u", 
-                                                    args.storage.dataMountPath
+                                                    args.persist.dataMountPath
                                                 ]
                                             }
                                         }
-                                    }
+                                    } : {})
                                 },
                         ]
                     },

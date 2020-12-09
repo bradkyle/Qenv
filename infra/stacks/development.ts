@@ -18,18 +18,18 @@ export function setup(config:DevConfig) {
             imageTag:"latest",
         });
 
-        const qenv_deployment = new qenv.Qenv("test",{
-            provider:local.provider,    
-            numEnvs:2,
-            ingestHost:"",
-            poolSize:2,
-            port:5000,
-        });
+        // const qenv_deployment = new qenv.Qenv("test",{
+        //     provider:local.provider,    
+        //     numEnvs:2,
+        //     ingestHost:"",
+        //     poolSize:2,
+        //     port:5000,
+        // });
 
 
-        const impala_deployment = new impala.Impala("test",{
-            provider:local.provider,    
-            imageTag:"latest",
-        });
+        // const impala_deployment = new impala.Impala("test",{
+        //     provider:local.provider,    
+        //     imageTag:"latest",
+        // });
 
 };
