@@ -19,27 +19,30 @@ export class Impala extends pulumi.ComponentResource {
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {
             data: {
             "my.cnf": `
-            [mysqld]
-            skip-name-resolve
-            explicit_defaults_for_timestamp
-            basedir=/opt/bitnami/mariadb
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            tmpdir=/opt/bitnami/mariadb/tmp
-            max_allowed_packet=16M
-            bind-address=0.0.0.0
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            log-error=/opt/bitnami/mariadb/logs/mysqld.log
-            character-set-server=UTF8
-            collation-server=utf8_general_ci
-            [client]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            default-character-set=UTF8
-            [manager]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+            {
+                'experiment_name': 'Qenv',
+
+                'master_address': 'localhost:8010',
+                'env':[
+                    {'host':'env1','port':5000},
+                    {'host':'env2','port':5000},
+                    {'host':'env3','port':5000},
+                ],
+                'actor_num': 2,
+                'pool_size': 4,
+                'sample_batch_steps': 50,
+                'train_batch_size': 1000,
+                'sample_queue_max_size': 8,
+                'gamma': 0.99,
+                'lr_scheduler': [(0, 0.001), (20000, 0.0005), (40000, 0.0001)],
+                'entropy_coeff_scheduler': [(0, -0.01)],
+                'vf_loss_coeff': 0.5,
+                'clip_rho_threshold': 1.0,
+                'clip_pg_rho_threshold': 1.0,
+                'get_remote_metrics_interval': 10,
+                'log_metrics_interval_s': 10,
+                'params_broadcast_interval': 5,
+            }
             `}}, { provider: args.provider });
 
         // Create the kuard Deployment.

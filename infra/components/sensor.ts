@@ -1,10 +1,13 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
+import * as kafka from "./kafka"
+// import * as dkr from "./docker"
 
 // Arguments for the demo app.
 export interface SensorArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
+    kafka:kafka.KafkaOperator,
     imageTag: string; // Tag for the kuard image to deploy.
 }
 
@@ -13,101 +16,77 @@ export class Sensor extends pulumi.ComponentResource {
     constructor(name: string,
                 args: SensorArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:demo-app", name, args, opts);
+        super("beast:sensor:sensor", name, args, opts);
+
+        const kafkaTopic = args.kafka.addTopic("",{}); 
+
         //
         // Create a Secret to hold the MariaDB credentials.
         const kdbSecret = new k8s.core.v1.Secret("kdb", {
             stringData: {
-                "kdb-root-password": new random.RandomPassword("mariadb-root-pw", {
-                    length: 12}).result,
-                "kdb-password": new random.RandomPassword("mariadb-pw", {
-                    length: 12}).result
+                "kdb-password": new random.RandomPassword("mariadb-pw", {length: 12}).result
             }
         }, { provider: args.provider });
 
-        // Create a ConfigMap to hold the MariaDB configuration.
-        const sensorCM = new k8s.core.v1.ConfigMap("sensor", {
-            data: {
-            "my.cnf": `
-            [mysqld]
-            skip-name-resolve
-            explicit_defaults_for_timestamp
-            basedir=/opt/bitnami/mariadb
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            tmpdir=/opt/bitnami/mariadb/tmp
-            max_allowed_packet=16M
-            bind-address=0.0.0.0
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            log-error=/opt/bitnami/mariadb/logs/mysqld.log
-            character-set-server=UTF8
-            collation-server=utf8_general_ci
-            [client]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            default-character-set=UTF8
-            [manager]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            `}}, { provider: args.provider });
 
         // Create the kuard Deployment.
-        const appLabels = {app: "sensor"};
-        const deployment = new k8s.apps.v1.StatefulSet(`${name}-sensor`, {
+        const sensorLabels = {app: "sensor"}; // TODO change to statefulset
+        const sensor = new k8s.apps.v1.Deployment(`${name}-sensor`, {
             spec: {
-                selector: {
-                    matchLabels: appLabels,
-                },
-                serviceName: "ingest",
-                updateStrategy :{
-                    type: "RollingUpdate"
-                },
+                selector: {matchLabels: sensorLabels},
                 replicas: 1,
                 template: {
-                    metadata: {labels: appLabels},
+                    metadata: {labels: sensorLabels},
                     spec: {
-                        serviceAccountName: "default",
-                        securityContext: {
-                            fsGroup: 1001,
-                            runAsUser: 1001
-                        },
-                        affinity: {
-                            podAntiAffinity: {
-                                preferredDuringSchedulingIgnoredDuringExecution: [
-                                    {
-                                        weight: 1,
-                                        podAffinityTerm: {
-                                            topologyKey: "kubernetes.io/hostname",
-                                            labelSelector: {
-                                                matchLabels: {
-                                                    app: "ingest",
-                                                    release: "example"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        },
                         containers: [
                             {
-                                name: "ingest",
-                                image: `thorad/ingest:${args.imageTag}`,
-                                imagePullPolicy: "IfNotPresent",
+                                name: "sensor",
+                                image: `thorad/sensor:${args.imageTag}`,
+                                ports: [{containerPort: 8080, name: "kdb"}],
+                                livenessProbe: {
+                                    httpGet: {path: "/healthy", port: "kdb"},
+                                    initialDelaySeconds: 5,
+                                    timeoutSeconds: 1,
+                                    periodSeconds: 10,
+                                    failureThreshold: 3,
+                                },
+                                readinessProbe: {
+                                    httpGet: {path: "/ready", port: "kdb"},
+                                    initialDelaySeconds: 5,
+                                    timeoutSeconds: 1,
+                                    periodSeconds: 10,
+                                    failureThreshold: 3,
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        }, {provider: args.provider, parent: this});
+
+        // args.monitoring.addMonitor();
+
+        // Create the persist Deployment.
+        const persistLabels = {app: "persist"}; // TODO change to statefulset
+        const persist = new k8s.apps.v1.Deployment(`${name}-persist`, {
+            spec: {
+                selector: {matchLabels: persistLabels },
+                replicas: 1,
+                template: {
+                    metadata: {labels: persistLabels},
+                    spec: {
+                        containers: [
+                            {
+                                name: "persist",
+                                image: `thorad/persist:${args.imageTag}`,
+                                ports: [{containerPort: 8080, name: "kdb"}],
                                 env: [
-                                    {
-                                        name: "KDB_ROOT_PASSWORD",
-                                        valueFrom: {
-                                            secretKeyRef: {
-                                                name: kdbSecret.metadata.name,
-                                                key: "kdb-root-password"
-                                            }
-                                        }
+                                    { 
+                                        name: "KDB_USER", 
+                                        value: "ingest" 
                                     },
-                                    { name: "MARIADB_USER", value: "bn_wordpress" },
                                     {
-                                        name: "KDB_PASSWORD",
+                                        name: "KDB_PASS",
                                         valueFrom: {
                                             secretKeyRef: {
                                                 name: kdbSecret.metadata.name,
@@ -115,9 +94,23 @@ export class Sensor extends pulumi.ComponentResource {
                                             }
                                         }
                                     },
-                                    { name: "MARIADB_DATABASE", value: "bitnami_wordpress" }
+                                    { 
+                                        name: "KAFKA_HOST", 
+                                        value: "/ingest/data" 
+                                    },
+                                    { 
+                                        name: "KAFKA_PORT", 
+                                        value: "/ingest/data" 
+                                    },
+                                    { 
+                                        name: "KAFKA_TOPIC", 
+                                        value: "/ingest/data" 
+                                    },
+                                    { 
+                                        name: "KAFKA_GROUP", 
+                                        value: "/ingest/data" 
+                                    }
                                 ],
-                                ports: [{containerPort: 5000, name: "kdb"}],
                                 livenessProbe: {
                                     httpGet: {path: "/healthy", port: "kdb"},
                                     initialDelaySeconds: 5,
@@ -135,50 +128,17 @@ export class Sensor extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "data",
-                                        mountPath: "/bitnami/mariadb"
+                                        mountPath: "/ingest/data"
                                     },
-                                    {
-                                        name: "config",
-                                        mountPath: "/opt/bitnami/mariadb/conf/my.cnf",
-                                        subPath: "my.cnf"
-                                    }
                                 ]
                             },
                         ],
-                        volumes: [
-                            {
-                                name: "config",
-                                configMap: {
-                                    name: ingestCM.metadata.name
-                                }
-                            }
-                        ]
                     },
                 },
-                volumeClaimTemplates: [
-                    {
-                        metadata: {
-                            name: "data",
-                            labels: {
-                                app: "ingest",
-                                component: "master",
-                                release: "example",
-                            }
-                        },
-                        spec: {
-                            accessModes: [
-                                "ReadWriteOnce"
-                            ],
-                            resources: {
-                                requests: {
-                                    storage: "8Gi"
-                                }
-                            }
-                        }
-                    }
-                ]
+
             },
         }, {provider: args.provider, parent: this});
+
 
         this.registerOutputs();
     }
