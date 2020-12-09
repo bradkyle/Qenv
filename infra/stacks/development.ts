@@ -16,6 +16,9 @@ export function setup(config:DevConfig) {
             dataMountPath: "/ingest/data",
             provider:local.provider,    
             imageTag:"latest",
+            ports:[5000],
+            isMinikube:true,
+            replicas:1
         });
 
         // const qenv_deployment = new qenv.Qenv("test",{
