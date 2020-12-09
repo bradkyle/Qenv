@@ -1,6 +1,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
+import * as gcp from "@pulumi/gcp";
 
 // Arguments for the demo app.
 export interface IngestArgs {
@@ -15,7 +16,9 @@ export class Ingest extends pulumi.ComponentResource {
                 args: IngestArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
-        //
+            
+        const data_bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+
         // Create a Secret to hold the MariaDB credentials.
         const kdbSecret = new k8s.core.v1.Secret("ingest", {
             stringData: {
