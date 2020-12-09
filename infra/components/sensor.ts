@@ -7,6 +7,7 @@ import * as docker from "@pulumi/docker";
 // import * as dkr from "./docker"
 
 export enum StorageProvider {
+    LCL,
     GCS,
     AWS,
 }

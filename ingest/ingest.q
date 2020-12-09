@@ -1,4 +1,9 @@
-\p 4999 
+\p 5000 
+
+show system"ls /home/ingest";
+show system"ls /home/ingest/data";
+show system"ls /home/ingest/data/events";
+
 \l /home/ingest/data/okextest/events/ev
 \l /home/ingest/data/okextest/events
 
@@ -15,3 +20,7 @@
 	.ingest.e:`time xasc .ingest.e;
 	};
 
+.ingest.Ingest[];
+show count .ingest.e;
+
+.ingest.Reset: {:.ingest.e};
