@@ -94,6 +94,10 @@ export class Impala extends pulumi.ComponentResource {
                                         value: "2" 
                                     },
                                     { 
+                                        name: "LOG_PATH", 
+                                        value: "/ingest/data" 
+                                    },
+                                    { 
                                         name: "CONFIG_PATH", 
                                         value: "/impala/config.py" 
                                     }

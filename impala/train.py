@@ -31,13 +31,17 @@ from parl.utils import machine_info
 from actor import Actor
 import qenv
 import importlib
+import time
+import datetime
 
 
 class Learner(object):
     def __init__(self, config):
         self.config = config
         self.sample_data_queue = queue.Queue(
-            maxsize=config['sample_queue_max_size'])
+            maxsize=config['sample_queue_max_size']
+        )
+        self.log_count = 0
 
         #=========== Create Agent ==========
         cnf = self.config['env'][0]
@@ -252,24 +256,30 @@ class Learner(object):
             if value is not None:
                 summary.add_scalar(key, value, self.sample_total_steps)
 
+        # save the parameters of agent to ./model_dir
+        timestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        path = self.ckp_path+"/"+str(log_count)+timestr
+        if not os.path.exists(path):
+                os.makedirs(path)
+        self.agent.save(path)
+
         logger.info(metric)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Impala multi agent trainer')
-    parser.add_argument('-config', '--config_path', default=os.getenv('CONFIG_PATH') or "dummy.py", type=str, help='')
+    parser.add_argument('-cp', '--config_path', default=os.getenv('CONFIG_PATH') or "default_config.py", type=str)
+    parser.add_argument('-lp', '--log_path', default=os.getenv('LOG_PATH') or "./log", type=str)
+    parser.add_argument('-ckp', '--ckp_path', default=os.getenv('CKP_PATH') or "./ckp", type=str)
 
     args = parser.parse_args()
     config = importlib.import_module(args.config_path)
+    logger.set_dir(args.log_path)
 
     learner = Learner(config)
-    assert config['log_metrics_interval_s'] > 0
+    assert config['log_metrics_interval_s'] > 10
 
     while True:
         time.sleep(config['log_metrics_interval_s'])
-
         learner.log_metrics()
-        # TODO cml logging
-        # TODO dvc save model 
-
 
