@@ -9,18 +9,27 @@ export interface IngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
+    isMinikube?: boolean;
+    replicas?: number;
+    gcpBucket?:gcp.storage.Bucket;
+    dataMountPath:string;
+    pullPolicy?:string
 }
 
 export class Ingest extends pulumi.ComponentResource {
+    public readonly bucket: gcp.storage.Bucket; 
+    public readonly image: docker.Image; 
+    public readonly secret: k8s.core.v1.Secret; 
+    public readonly deployment: k8s.apps.v1.StatefulSet; 
 
     constructor(name: string,
                 args: IngestArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
-        const data_bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
-        const image = new docker.Image(`${name}-ingest-image`, {
+        this.image = new docker.Image(`${name}-ingest-image`, {
             imageName: "thorad/ingest",
             build: {
                 dockerfile: "./ingest/Dockerfile",
@@ -30,7 +39,7 @@ export class Ingest extends pulumi.ComponentResource {
         });
 
         // Create a Secret to hold the MariaDB credentials.
-        const kdbSecret = new k8s.core.v1.Secret("ingest", {
+        this.secret = new k8s.core.v1.Secret("ingest", {
             stringData: {
                 "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
             }
@@ -38,7 +47,7 @@ export class Ingest extends pulumi.ComponentResource {
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
-        const deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
+        this.deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
             spec: {
                 selector: {
                     matchLabels: appLabels,
@@ -78,7 +87,7 @@ export class Ingest extends pulumi.ComponentResource {
                             {
                                 name: "ingest",
                                 image: `thorad/ingest:${args.imageTag}`,
-                                imagePullPolicy: "IfNotPresent",
+                                imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 
                                         name: "KDB_USER", 
@@ -88,7 +97,7 @@ export class Ingest extends pulumi.ComponentResource {
                                         name: "KDB_PASS",
                                         valueFrom: {
                                             secretKeyRef: {
-                                                name: kdbSecret.metadata.name,
+                                                name: this.secret.metadata.name,
                                                 key: "kdb-password"
                                             }
                                         }
@@ -99,7 +108,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: "/ingest/data" 
+                                        value: args.dataMountPath 
                                     }
                                 ],
                                 ports: [{containerPort: 5000, name: "kdb"}],
@@ -120,9 +129,32 @@ export class Ingest extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "data",
-                                        mountPath: "/ingest/data"
+                                        mountPath: args.dataMountPath 
                                     },
-                                ]
+                                ],
+                                // lifecycle:{
+                                //     postStart :{
+                                //         exec : {
+                                //             command: [
+                                //                 "gcsfuse", 
+                                //                 "--implicit-dirs", 
+                                //                 "-o", 
+                                //                 "nonempty", 
+                                //                 this.bucket.name, 
+                                //                 args.dataMountPath
+                                //             ]
+                                //         }
+                                //     },
+                                //     preStop:{
+                                //         exec : {
+                                //             command: [
+                                //                 "fusermount", 
+                                //                 "-u", 
+                                //                 args.dataMountPath 
+                                //             ]
+                                //         }
+                                //     }
+                                // }
                             },
                         ],
                     },

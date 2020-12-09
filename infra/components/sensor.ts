@@ -2,23 +2,51 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 import * as kafka from "./kafka"
+import * as gcp from "@pulumi/gcp";
+import * as docker from "@pulumi/docker";
 // import * as dkr from "./docker"
 
-// Arguments for the demo app.
+export interface PersistArgs {
+    imageName?:string;
+    dockerfile?:string;
+    dockercontext?:string;
+}
+
 export interface SensorArgs {
+    imageName?:string;
+    dockerfile?:string;
+    dockercontext?:string;
+}
+
+export interface StorageArgs {
+    dataMountPath:string;
+}
+
+// Arguments for the demo app.
+export interface SensorPipelineArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     kafka:kafka.KafkaOperator,
-    imageTag: string; // Tag for the kuard image to deploy.
+    topicName?:string;
+    pullPolicy?:string
+    sensor: SensorArgs;
+    persist: PersistArgs;
+    storage: StorageArgs;
 }
 
 export class Sensor extends pulumi.ComponentResource {
+    public readonly bucket: gcp.storage.Bucket; 
+    public readonly persistImage: docker.Image; 
+    public readonly sensorImage: docker.Image; 
 
     constructor(name: string,
-                args: SensorArgs,
+                args: SensorPipelineArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:sensor:sensor", name, args, opts);
 
-        const kafkaTopic = args.kafka.addTopic("",{}); 
+        const kafkaTopic = args.kafka.addTopic((args.topicName || `${name}-topic`),{}); 
+
+        //The bucket into which data should be persisted 
+        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
         //
         // Create a Secret to hold the MariaDB credentials.
@@ -28,6 +56,14 @@ export class Sensor extends pulumi.ComponentResource {
             }
         }, { provider: args.provider });
 
+        this.sensorImage = new docker.Image(`${name}-sensor-image`, {
+            imageName: (args.sensor.imageName || "thorad/sensor"),
+            build: {
+                dockerfile: args.sensor.dockerfile,
+                context: args.sensor.dockercontext,
+            },
+            skipPush: false,
+        });
 
         // Create the kuard Deployment.
         const sensorLabels = {app: "sensor"}; // TODO change to statefulset
@@ -40,8 +76,8 @@ export class Sensor extends pulumi.ComponentResource {
                     spec: {
                         containers: [
                             {
-                                name: "sensor",
-                                image: `thorad/sensor:${args.imageTag}`,
+                                name:`${name}-sensor`, 
+                                image: this.persistImage.imageName,
                                 ports: [{containerPort: 8080, name: "kdb"}],
                                 livenessProbe: {
                                     httpGet: {path: "/healthy", port: "kdb"},
@@ -65,6 +101,14 @@ export class Sensor extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
 
         // args.monitoring.addMonitor();
+        this.persistImage = new docker.Image(`${name}-persist-image`, {
+            imageName: (args.sensor.imageName || "thorad/persist"),
+            build: {
+                dockerfile: args.sensor.dockerfile,
+                context: args.sensor.dockercontext,
+            },
+            skipPush: false,
+        });
 
         // Create the persist Deployment.
         const persistLabels = {app: "persist"}; // TODO change to statefulset
@@ -75,64 +119,88 @@ export class Sensor extends pulumi.ComponentResource {
                 template: {
                     metadata: {labels: persistLabels},
                     spec: {
-                        containers: [
-                            {
-                                name: "persist",
-                                image: `thorad/persist:${args.imageTag}`,
-                                ports: [{containerPort: 8080, name: "kdb"}],
-                                env: [
-                                    { 
-                                        name: "KDB_USER", 
-                                        value: "ingest" 
-                                    },
+                        containers:                             [
                                     {
-                                        name: "KDB_PASS",
-                                        valueFrom: {
-                                            secretKeyRef: {
-                                                name: kdbSecret.metadata.name,
-                                                key: "kdb-password"
+                                    name:`${name}-persist`, 
+                                    image: this.persistImage.imageName,
+                                    ports: [{containerPort: 8080, name: "kdb"}],
+                                    imagePullPolicy:(args.pullPolicy || "Always"), 
+                                    env: [
+                                        { 
+                                            name: "KDB_USER", 
+                                            value: "ingest" 
+                                        },
+                                        {
+                                            name: "KDB_PASS",
+                                            valueFrom: {
+                                                secretKeyRef: {
+                                                    name: kdbSecret.metadata.name,
+                                                    key: "kdb-password"
+                                                }
+                                            }
+                                        },
+                                        { 
+                                            name: "KAFKA_HOST", 
+                                            value: "/ingest/data" 
+                                        },
+                                        { 
+                                            name: "KAFKA_PORT", 
+                                            value: "/ingest/data" 
+                                        },
+                                        { 
+                                            name: "KAFKA_TOPIC", 
+                                            value: "/ingest/data" 
+                                        },
+                                        { 
+                                            name: "KAFKA_GROUP", 
+                                            value: "/ingest/data" 
+                                        }
+                                    ],
+                                    livenessProbe: {
+                                        httpGet: {path: "/healthy", port: "kdb"},
+                                        initialDelaySeconds: 5,
+                                        timeoutSeconds: 1,
+                                        periodSeconds: 10,
+                                        failureThreshold: 3,
+                                    },
+                                    readinessProbe: {
+                                        httpGet: {path: "/ready", port: "kdb"},
+                                        initialDelaySeconds: 5,
+                                        timeoutSeconds: 1,
+                                        periodSeconds: 10,
+                                        failureThreshold: 3,
+                                    },
+                                    volumeMounts: [
+                                        {
+                                            name: "data",
+                                            mountPath: "/ingest/data"
+                                        },
+                                    ],
+                                    lifecycle:{
+                                        postStart :{
+                                            exec : {
+                                                command: [
+                                                    "gcsfuse", 
+                                                    "--implicit-dirs", 
+                                                    "-o", 
+                                                    "nonempty", 
+                                                    this.bucket.name, 
+                                                    args.storage.dataMountPath
+                                                ]
+                                            }
+                                        },
+                                        preStop:{
+                                            exec : {
+                                                command: [
+                                                    "fusermount", 
+                                                    "-u", 
+                                                    args.storage.dataMountPath
+                                                ]
                                             }
                                         }
-                                    },
-                                    { 
-                                        name: "KAFKA_HOST", 
-                                        value: "/ingest/data" 
-                                    },
-                                    { 
-                                        name: "KAFKA_PORT", 
-                                        value: "/ingest/data" 
-                                    },
-                                    { 
-                                        name: "KAFKA_TOPIC", 
-                                        value: "/ingest/data" 
-                                    },
-                                    { 
-                                        name: "KAFKA_GROUP", 
-                                        value: "/ingest/data" 
                                     }
-                                ],
-                                livenessProbe: {
-                                    httpGet: {path: "/healthy", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
                                 },
-                                readinessProbe: {
-                                    httpGet: {path: "/ready", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
-                                volumeMounts: [
-                                    {
-                                        name: "data",
-                                        mountPath: "/ingest/data"
-                                    },
-                                ]
-                            },
-                        ],
+                        ]
                     },
                 },
 

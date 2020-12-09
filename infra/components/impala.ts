@@ -57,6 +57,9 @@ export class Impala extends pulumi.ComponentResource {
             }
             `}}, { provider: args.provider });
 
+        // TODO create node pool here
+        // TODO convert this to job?
+
         // Create the kuard Deployment.
         const appLabels = {app: "impala"};
         const deployment = new k8s.apps.v1.StatefulSet(`${name}-impala`, {

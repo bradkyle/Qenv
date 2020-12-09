@@ -6,19 +6,24 @@ import * as qenv from "../components/qenv"
 import * as impala from "../components/impala"
 import * as local from "../components/lclcluster"
 
-export function setup() {
+export interface DevConfig {
+
+}
+
+export function setup(config:DevConfig) {
 
         const ingest_deployment = new ingest.Ingest("ingest",{
+            dataMountPath: "/ingest/data",
             provider:local.provider,    
             imageTag:"latest",
         });
 
-        const qenv_deployment = new qenv.Qenv("test",true,{
+        const qenv_deployment = new qenv.Qenv("test",{
             provider:local.provider,    
-            imageTag:"latest",
             numEnvs:2,
             ingestHost:"",
-            poolSize:2
+            poolSize:2,
+            port:5000,
         });
 
 

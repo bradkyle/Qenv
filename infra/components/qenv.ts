@@ -1,25 +1,35 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as docker from "@pulumi/docker";
+import * as k8stypes from "@pulumi/kubernetes/types/input";
 
 // Arguments for the demo app.
 export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag: string; // Tag for the kuard image to deploy.
-    numEnvs: number; 
     ingestHost: string;
-    poolSize:number;
+    numEnvs?: number; 
+    port?: number; 
+    poolSize?:number;
+    allocateIpAddress?: boolean;
+    resources?: k8stypes.core.v1.ResourceRequirements;
+    isMinikube?: boolean;
+    replicas?: number;
 }
 
 export class Qenv extends pulumi.ComponentResource {
+    public readonly deployment: k8s.apps.v1.Deployment;
+    public readonly service: k8s.core.v1.Service;
+    public readonly image: docker.Image;
+    public readonly ipAddress?: pulumi.Output<string>;
+    public readonly port: number;
 
     constructor(name: string,
-                isMinikube: boolean,
                 args: QenvArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:qenv", name, args, opts);
 
-        const image = new docker.Image(`${name}-qenv-image`, {
+        this.port = args.port || 5000;
+        this.image = new docker.Image(`${name}-qenv-image`, {
             imageName: "thorad/qenv",
             build: {
                 dockerfile: "./qenv/Dockerfile",
@@ -56,20 +66,21 @@ export class Qenv extends pulumi.ComponentResource {
             `}}, { provider: args.provider });
 
 
+        // TODO change to statefulset
         // Create the kuard Deployment.
         const appLabels = {app: "qenv"}; // TODO change to statefulset
-        const qenv = new k8s.apps.v1.Deployment(`${name}-qenv`, {
+        this.deployment = new k8s.apps.v1.Deployment(`${name}-qenv`, {
             spec: {
                 selector: {matchLabels: appLabels},
-                replicas: 1,
+                replicas: args.replicas || 1,
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
                         containers: [
                             {
                                 name: "qenv",
-                                image: `thorad/qenv:${args.imageTag}`,
-                                ports: [{containerPort: 5000, name: "kdb"}],
+                                image: this.image.imageName, 
+                                ports: [{containerPort: this.port, name: "kdb"}],
                                 livenessProbe: {
                                     httpGet: {path: "/healthy", port: "kdb"},
                                     initialDelaySeconds: 5,
@@ -84,6 +95,7 @@ export class Qenv extends pulumi.ComponentResource {
                                     periodSeconds: 10,
                                     failureThreshold: 3,
                                 },
+                                resources: args.resources || { requests: { cpu: "100m", memory: "100Mi" } },
                             },
                         ],
                     },
@@ -92,20 +104,20 @@ export class Qenv extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
 
         // Allocate an IP to the nginx Deployment.
-        const frontend = new k8s.core.v1.Service(name, {
-            metadata: { labels: qenv.spec.template.metadata.labels },
+        this.service = new k8s.core.v1.Service(name, {
+            metadata: { labels: this.deployment.spec.template.metadata.labels },
             spec: {
-                type: isMinikube ? "ClusterIP" : "LoadBalancer",
-                ports: [{ port: 5000, targetPort: 5000, protocol: "TCP" }],
+                type: args.isMinikube ? "ClusterIP" : "LoadBalancer",
+                ports: [{ port: this.port, targetPort: this.port, protocol: "TCP" }],
                 selector: appLabels,
             },
         });
 
-        // The address appears in different places depending on the Kubernetes service provider.
-        // let address = service.status.loadBalancer.ingress[0].hostname;
-        // if (name === "gke" || name === "aks") {
-        //     address = service.status.loadBalancer.ingress[0].ip;
-        // }
+        if (args.allocateIpAddress) {
+            this.ipAddress = args.isMinikube ?
+                this.service.spec.clusterIP :
+                this.service.status.loadBalancer.ingress[0].ip;
+        }
 
         // this.appUrl = pulumi.interpolate`http://${address}:${service.spec.ports[0].port}`;
 
