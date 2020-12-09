@@ -17,12 +17,9 @@ export class Ingest extends pulumi.ComponentResource {
         super("beast:qenv:ingest", name, args, opts);
         //
         // Create a Secret to hold the MariaDB credentials.
-        const kdbSecret = new k8s.core.v1.Secret("mariadb", {
+        const kdbSecret = new k8s.core.v1.Secret("ingest", {
             stringData: {
-                "kdb-root-password": new random.RandomPassword("mariadb-root-pw", {
-                    length: 12}).result,
-                "kdb-password": new random.RandomPassword("mariadb-pw", {
-                    length: 12}).result
+                "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
             }
         }, { provider: args.provider });
 
@@ -97,18 +94,12 @@ export class Ingest extends pulumi.ComponentResource {
                                 image: `thorad/ingest:${args.imageTag}`,
                                 imagePullPolicy: "IfNotPresent",
                                 env: [
-                                    {
-                                        name: "KDB_ROOT_PASSWORD",
-                                        valueFrom: {
-                                            secretKeyRef: {
-                                                name: kdbSecret.metadata.name,
-                                                key: "kdb-root-password"
-                                            }
-                                        }
+                                    { 
+                                        name: "KDB_USER", 
+                                        value: "ingest" 
                                     },
-                                    { name: "MARIADB_USER", value: "bn_wordpress" },
                                     {
-                                        name: "KDB_PASSWORD",
+                                        name: "KDB_PASS",
                                         valueFrom: {
                                             secretKeyRef: {
                                                 name: kdbSecret.metadata.name,
@@ -116,7 +107,14 @@ export class Ingest extends pulumi.ComponentResource {
                                             }
                                         }
                                     },
-                                    { name: "MARIADB_DATABASE", value: "bitnami_wordpress" }
+                                    { 
+                                        name: "DVC_REMOTE", 
+                                        value: "/ingest/data" 
+                                    },
+                                    { 
+                                        name: "DATA_PATH", 
+                                        value: "/ingest/data" 
+                                    }
                                 ],
                                 ports: [{containerPort: 5000, name: "kdb"}],
                                 livenessProbe: {
@@ -136,12 +134,12 @@ export class Ingest extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "data",
-                                        mountPath: "/bitnami/mariadb"
+                                        mountPath: "/ingest/data"
                                     },
                                     {
                                         name: "config",
-                                        mountPath: "/opt/bitnami/mariadb/conf/my.cnf",
-                                        subPath: "my.cnf"
+                                        mountPath: "/ingest/conf/ingest.cnf",
+                                        subPath: "ingest.cnf"
                                     }
                                 ]
                             },
