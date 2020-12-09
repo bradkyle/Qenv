@@ -21,7 +21,8 @@ export interface IngestArgs {
 export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
-    public readonly secret: k8s.core.v1.Secret; 
+    public readonly kdbsecret: k8s.core.v1.Secret; 
+    public readonly gcssecret: k8s.core.v1.Secret; 
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
@@ -43,11 +44,29 @@ export class Ingest extends pulumi.ComponentResource {
         });
 
         // Create a Secret to hold the MariaDB credentials.
-        this.secret = new k8s.core.v1.Secret("ingest", {
+        this.kdbsecret = new k8s.core.v1.Secret("ingest", {
             stringData: {
                 "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
             }
         }, { provider: args.provider });
+
+
+        const gcsaccount = new gcp.serviceaccount.Account("service_account", {
+            accountId: "service_account_id",
+            displayName: "Service Account",
+        });
+
+        const mykey = new gcp.serviceaccount.Key("mykey", {
+            serviceAccountId: gcsaccount.name,
+            publicKeyType: "TYPE_X509_PEM_FILE",
+        });
+
+        this.gcssecret = new k8s.core.v1.Secret("ingest", {
+            stringData: {
+                "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
+            }
+        }, { provider: args.provider });
+
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
@@ -83,6 +102,14 @@ export class Ingest extends pulumi.ComponentResource {
                                 ]
                             }
                         },
+                        volumes :[
+                            {
+                                name: "google-cloud-key",
+                                secret : {
+
+                                }
+                            }
+                        ],
                         containers: [
                             {
                                 name: "ingest",
@@ -107,6 +134,10 @@ export class Ingest extends pulumi.ComponentResource {
                                         value: "/ingest/data" 
                                     },
                                     { 
+                                        name: "GOOGLE_APPLICATION_CREDENTIALS", 
+                                        value: "/var/secrets/google/key.json" 
+                                    },
+                                    { 
                                         name: "DATA_PATH", 
                                         value: args.dataMountPath 
                                     }
@@ -128,9 +159,9 @@ export class Ingest extends pulumi.ComponentResource {
                                 // },
                                 volumeMounts: [
                                     {
-                                        name: "data",
-                                        mountPath: args.dataMountPath 
-                                    },
+                                        name: "google-cloud-key",
+                                        mountPath: "/var/secrets/google"
+                                    }
                                 ],
                                 lifecycle:{
                                     postStart :{

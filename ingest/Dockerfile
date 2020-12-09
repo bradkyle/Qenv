@@ -25,4 +25,4 @@ RUN mkdir -p /home/ingest
 RUN mkdir -p /home/ingest/data
 WORKDIR /home/ingest
 ADD . /home/ingest
-ENTRYPOINT["entrypoint.sh"]
+CMD q ingest.q
