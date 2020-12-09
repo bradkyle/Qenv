@@ -65,6 +65,7 @@ export class Qenv extends pulumi.ComponentResource {
             pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
             `}}, { provider: args.provider });
 
+        // TODO gcloud service account key
 
         // TODO change to statefulset
         // Create the kuard Deployment.

@@ -50,10 +50,30 @@ export class Sensor extends pulumi.ComponentResource {
 
         const kafkaTopic = args.kafka.addTopic((args.topicName || `${name}-topic`),{}); 
 
+        // MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE.
         //The bucket into which data should be persisted 
-        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        this.bucket = new gcp.storage.Bucket(`${name}-bucket`,{
+            name:`${name}-bucket`,
+            location: "US",
+            storageClass: "REGIONAL",
+            uniformBucketLevelAccess: true,
+            versioning:{
+                  enabled:false,
+            },
+            logging: {
+                logBucket:"",
+            }, 
+            lifecycleRules:[
+                {
+                    action: {type: "SetStorageClass", storageClass: "Archive"},
+                    condition: {
+                        age: 7,
+                        matchesStorageClasses: ["Coldline", "Nearline", "Standard"],
+                    }
+                },
+            ],
+        });
 
-        //
         // Create a Secret to hold the MariaDB credentials.
         const kdbSecret = new k8s.core.v1.Secret("kdb", {
             stringData: {

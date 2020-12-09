@@ -20,14 +20,14 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
     public readonly secret: k8s.core.v1.Secret; 
-    public readonly deployment: k8s.apps.v1.StatefulSet; 
+    public readonly deployment: k8s.apps.v1.Deployment; 
 
     constructor(name: string,
                 args: IngestArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
-        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        this.bucket = gcp.storage.Bucket.get("axiommulti", "axiommulti");
 
         this.image = new docker.Image(`${name}-ingest-image`, {
             imageName: "thorad/ingest",
@@ -47,14 +47,10 @@ export class Ingest extends pulumi.ComponentResource {
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
-        this.deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
+        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
             spec: {
                 selector: {
                     matchLabels: appLabels,
-                },
-                serviceName: "ingest",
-                updateStrategy :{
-                    type: "RollingUpdate"
                 },
                 replicas: 1,
                 template: {
@@ -112,75 +108,53 @@ export class Ingest extends pulumi.ComponentResource {
                                     }
                                 ],
                                 ports: [{containerPort: 5000, name: "kdb"}],
-                                livenessProbe: {
-                                    httpGet: {path: "/healthy", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
-                                readinessProbe: {
-                                    httpGet: {path: "/ready", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
+                                // livenessProbe: {
+                                //     httpGet: {path: "/healthy", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
+                                // readinessProbe: {
+                                //     httpGet: {path: "/ready", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
                                 volumeMounts: [
                                     {
                                         name: "data",
                                         mountPath: args.dataMountPath 
                                     },
                                 ],
-                                // lifecycle:{
-                                //     postStart :{
-                                //         exec : {
-                                //             command: [
-                                //                 "gcsfuse", 
-                                //                 "--implicit-dirs", 
-                                //                 "-o", 
-                                //                 "nonempty", 
-                                //                 this.bucket.name, 
-                                //                 args.dataMountPath
-                                //             ]
-                                //         }
-                                //     },
-                                //     preStop:{
-                                //         exec : {
-                                //             command: [
-                                //                 "fusermount", 
-                                //                 "-u", 
-                                //                 args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     }
-                                // }
+                                lifecycle:{
+                                    postStart :{
+                                        exec : {
+                                            command: [
+                                                "gcsfuse", 
+                                                "--implicit-dirs", 
+                                                "-o", 
+                                                "nonempty", 
+                                                this.bucket.name, 
+                                                args.dataMountPath
+                                            ]
+                                        }
+                                    },
+                                    preStop:{
+                                        exec : {
+                                            command: [
+                                                "fusermount", 
+                                                "-u", 
+                                                args.dataMountPath 
+                                            ]
+                                        }
+                                    }
+                                }
                             },
                         ],
                     },
                 },
-                volumeClaimTemplates: [
-                    {
-                        metadata: {
-                            name: "data",
-                            labels: {
-                                app: "ingest",
-                                component: "master",
-                                release: "example",
-                            }
-                        },
-                        spec: {
-                            accessModes: [
-                                "ReadWriteOnce"
-                            ],
-                            resources: {
-                                requests: {
-                                    storage: "8Gi"
-                                }
-                            }
-                        }
-                    }
-                ]
             },
         }, {provider: args.provider, parent: this});
 

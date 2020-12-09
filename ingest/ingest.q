@@ -3,6 +3,11 @@
 \l /home/ingest/data/okextest/events
 
 .ingest.e:();
+show "depth: ", string count depth;
+show "trade: ", string count trades;
+show "settlement: ", string count settlement;
+show "pricerange: ", string count pricerange;
+show "mark: ", string count mark;
 
 .ingest.Ingest:{[frm;to;cache]
 	.ingest.e:select from depth;
