@@ -1,9 +1,4 @@
 \p 5000 
-
-show system"ls /home/ingest";
-show system"ls /home/ingest/data";
-show system"ls /home/ingest/data/events";
-
 \l /home/ingest/data/okextest/events/ev
 \l /home/ingest/data/okextest/events
 
