@@ -1,5 +1,6 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
+import * as docker from "@pulumi/docker";
 
 // Arguments for the demo app.
 export interface QenvArgs {
@@ -17,6 +18,15 @@ export class Qenv extends pulumi.ComponentResource {
                 args: QenvArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:qenv", name, args, opts);
+
+        const image = new docker.Image(`${name}-qenv-image`, {
+            imageName: "thorad/qenv",
+            build: {
+                dockerfile: "./qenv/Dockerfile",
+                context: "./qenv/",
+            },
+            skipPush: false,
+        });
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const qenvCM = new k8s.core.v1.ConfigMap("qenv", {

@@ -5,6 +5,7 @@
     },
     "dependencies": {
         "@pulumi/aws": "^3.19.0",
+        "@pulumi/docker": "^2.5.0",
         "@pulumi/gcp": "^4.5.0",
         "@pulumi/github": "^2.3.0",
         "@pulumi/kubernetes": "^2.0.0",

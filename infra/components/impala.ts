@@ -1,6 +1,7 @@
 
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
+import * as docker from "@pulumi/docker";
 
 // Arguments for the demo app.
 export interface ImpalaArgs {
@@ -14,6 +15,17 @@ export class Impala extends pulumi.ComponentResource {
                 args: ImpalaArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:impala:train", name, args, opts);
+
+        const image = new docker.Image(`${name}-impala-image`, {
+            imageName: "thorad/impala",
+            build: {
+                dockerfile: "./impala/Dockerfile",
+                context: "./impala/",
+            },
+            skipPush: false,
+        });
+    
+        const envs = "";
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {
@@ -95,7 +107,11 @@ export class Impala extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "LOG_PATH", 
-                                        value: "/ingest/data" 
+                                        value: "/impala/data/log" 
+                                    },
+                                    { 
+                                        name: "CKP_PATH", 
+                                        value: "/impala/data/ckp" 
                                     },
                                     { 
                                         name: "CONFIG_PATH", 
@@ -105,7 +121,7 @@ export class Impala extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "data",
-                                        mountPath: "/ingest/data"
+                                        mountPath: "/impala/data"
                                     },
                                     {
                                         name: "config",
@@ -130,7 +146,7 @@ export class Impala extends pulumi.ComponentResource {
                         metadata: {
                             name: "data",
                             labels: {
-                                app: "ingest",
+                                app: "impala",
                                 component: "master",
                                 release: "example",
                             }

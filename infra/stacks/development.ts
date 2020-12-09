@@ -8,7 +8,7 @@ import * as local from "../components/lclcluster"
 
 export function setup() {
 
-        const ingest_deployment = new ingest.Ingest("test",{
+        const ingest_deployment = new ingest.Ingest("ingest",{
             provider:local.provider,    
             imageTag:"latest",
         });
