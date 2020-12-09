@@ -21,8 +21,8 @@ RUN apt-get install -y google-cloud-sdk
 
 FROM deps as run
 
-RUN mkdir -p /home/ingest
-RUN mkdir -p /home/ingest/data
-WORKDIR /home/ingest
-ADD . /home/ingest
+RUN mkdir -p /ingest
+RUN mkdir -p /ingest/data
+WORKDIR /ingest
+ADD . /ingest
 CMD q ingest.q

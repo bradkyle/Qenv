@@ -1,6 +1,6 @@
 \p 5000 
-\l /home/ingest/data/okextest/events/ev
-\l /home/ingest/data/okextest/events
+\l /home/ingest/testdata/events/ev
+\l /home/ingest/testdata/events
 
 .ingest.e:();
 show "depth: ", string count depth;
@@ -8,8 +8,9 @@ show "trade: ", string count trades;
 show "settlement: ", string count settlement;
 show "pricerange: ", string count pricerange;
 show "mark: ", string count mark;
+show "funding: ", string count funding;
 
-.ingest.Ingest:{[frm;to;cache]
+.ingest.Ingest:{
 	.ingest.e:select from depth;
 	.ingest.e,:select from trades;
 	.ingest.e,:select from settlement;
@@ -21,6 +22,5 @@ show "mark: ", string count mark;
 	};
 
 .ingest.Ingest[];
-show count .ingest.e;
-
-.ingest.Reset: {:.ingest.e};
+.ingest.Reset: 		{:.ingest.e};
+.ingest.GetBatch: {};
