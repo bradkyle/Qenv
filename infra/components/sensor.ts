@@ -145,6 +145,10 @@ export class Sensor extends pulumi.ComponentResource {
                                             }
                                         },
                                         { 
+                                            name: "PULL_INTERVAL", 
+                                            value: "1800" 
+                                        },
+                                        { 
                                             name: "KAFKA_HOST", 
                                             value: "/ingest/data" 
                                         },
@@ -175,12 +179,6 @@ export class Sensor extends pulumi.ComponentResource {
                                         periodSeconds: 10,
                                         failureThreshold: 3,
                                     },
-                                    volumeMounts: [
-                                        {
-                                            name: "data",
-                                            mountPath: "/ingest/data"
-                                        },
-                                    ],
                                     lifecycle:(args.persist.storageProvider === StorageProvider.GCS ? {
                                         postStart :{
                                             exec : {

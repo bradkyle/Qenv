@@ -60,11 +60,11 @@ export class Ingest extends pulumi.ComponentResource {
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
-                        serviceAccountName: "default",
-                        securityContext: {
-                            fsGroup: 1001,
-                            runAsUser: 1001
-                        },
+                        // serviceAccountName: "default",
+                        // securityContext: {
+                        //     fsGroup: 1001,
+                        //     runAsUser: 1001
+                        // },
                         affinity: {
                             podAntiAffinity: {
                                 preferredDuringSchedulingIgnoredDuringExecution: [
