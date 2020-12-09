@@ -12,7 +12,7 @@ export interface DevConfig {
 
 export function setup(config:DevConfig) {
 
-        const ingest_deployment = new ingest.Ingest("ingest",{
+        const i = new ingest.Ingest("ingest",{
             dataMountPath: "/ingest/data",
             provider:local.provider,    
             imageTag:"latest",
@@ -21,16 +21,13 @@ export function setup(config:DevConfig) {
             replicas:1
         });
 
-        // const qenv_deployment = new qenv.Qenv("test",{
-        //     provider:local.provider,    
-        //     numEnvs:2,
-        //     ingestHost:"",
-        //     poolSize:2,
-        //     port:5000,
-        // });
+        const q = new qenv.Qenv("test",{
+            provider:local.provider,    
+            numEnvs:2,
+            ingestService:i.service.metadata.name,
+        });
 
-
-        // const impala_deployment = new impala.Impala("test",{
+        // const b = new impala.Impala("test",{
         //     provider:local.provider,    
         //     imageTag:"latest",
         // });

@@ -6,10 +6,9 @@ import * as k8stypes from "@pulumi/kubernetes/types/input";
 // Arguments for the demo app.
 export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    ingestHost: string;
+    ingestService: pulumi.Output<string>;
     numEnvs?: number; 
     port?: number; 
-    poolSize?:number;
     allocateIpAddress?: boolean;
     resources?: k8stypes.core.v1.ResourceRequirements;
     isMinikube?: boolean;
@@ -41,32 +40,11 @@ export class Qenv extends pulumi.ComponentResource {
         // Create a ConfigMap to hold the MariaDB configuration.
         const qenvCM = new k8s.core.v1.ConfigMap("qenv", {
             data: {
-            "my.cnf": `
-            [mysqld]
-            skip-name-resolve
-            explicit_defaults_for_timestamp
-            basedir=/opt/bitnami/mariadb
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            tmpdir=/opt/bitnami/mariadb/tmp
-            max_allowed_packet=16M
-            bind-address=0.0.0.0
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            log-error=/opt/bitnami/mariadb/logs/mysqld.log
-            character-set-server=UTF8
-            collation-server=utf8_general_ci
-            [client]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            default-character-set=UTF8
-            [manager]
-            port=3306
-            socket=/opt/bitnami/mariadb/tmp/mysql.sock
-            pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-            `}}, { provider: args.provider });
+            "trainconfig.q": `
+            random:()
+        `}}, { provider: args.provider });
 
         // TODO gcloud service account key
-
         // TODO change to statefulset
         // Create the kuard Deployment.
         const appLabels = {app: "qenv"}; // TODO change to statefulset
@@ -82,21 +60,27 @@ export class Qenv extends pulumi.ComponentResource {
                                 name: "qenv",
                                 image: this.image.imageName, 
                                 ports: [{containerPort: this.port, name: "kdb"}],
-                                livenessProbe: {
-                                    httpGet: {path: "/healthy", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
-                                readinessProbe: {
-                                    httpGet: {path: "/ready", port: "kdb"},
-                                    initialDelaySeconds: 5,
-                                    timeoutSeconds: 1,
-                                    periodSeconds: 10,
-                                    failureThreshold: 3,
-                                },
-                                resources: args.resources || { requests: { cpu: "100m", memory: "100Mi" } },
+                                env: [
+                                    { 
+                                        name: "INGEST_HOST", 
+                                        value: args.ingestService 
+                                    },
+                                ],
+                                // livenessProbe: {
+                                //     httpGet: {path: "/healthy", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
+                                // readinessProbe: {
+                                //     httpGet: {path: "/ready", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
+                                resources: args.resources || { requests: { cpu: "100m", memory: "1000Mi" } },
                             },
                         ],
                     },

@@ -23,7 +23,7 @@ export class ThanosOperator extends pulumi.ComponentResource {
         super("beast:sensor:sensor", name, args, opts);
 
         // Deploy the bitnami/wordpress chart.
-        const prometheus = new k8s.helm.v3.Chart("thanos", {
+        const thanos = new k8s.helm.v3.Chart("thanos", {
             chart: "kube-prometheus-stack",
             fetchOpts: {
                 repo: "https://prometheus-community.github.io/helm-charts",

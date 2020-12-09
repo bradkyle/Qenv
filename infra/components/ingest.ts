@@ -61,11 +61,6 @@ export class Ingest extends pulumi.ComponentResource {
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
-                        // serviceAccountName: "default",
-                        // securityContext: {
-                        //     fsGroup: 1001,
-                        //     runAsUser: 1001
-                        // },
                         affinity: {
                             podAntiAffinity: {
                                 preferredDuringSchedulingIgnoredDuringExecution: [
@@ -84,14 +79,14 @@ export class Ingest extends pulumi.ComponentResource {
                                 ]
                             }
                         },
-                        volumes :[
-                            {
-                                name: "google-cloud-key",
-                                secret : {
+                        // volumes :[
+                        //     {
+                        //         name: "google-cloud-key",
+                        //         secret : {
 
-                                }
-                            }
-                        ],
+                        //         }
+                        //     }
+                        // ],
                         containers: [
                             {
                                 name: "ingest",
@@ -139,12 +134,12 @@ export class Ingest extends pulumi.ComponentResource {
                                 //     periodSeconds: 10,
                                 //     failureThreshold: 3,
                                 // },
-                                volumeMounts: [
-                                    {
-                                        name: "google-cloud-key",
-                                        mountPath: "/var/secrets/google"
-                                    }
-                                ],
+                                // volumeMounts: [
+                                //     {
+                                //         name: "google-cloud-key",
+                                //         mountPath: "/var/secrets/google"
+                                //     }
+                                // ],
                                 lifecycle:{
                                     postStart :{
                                         exec : {
