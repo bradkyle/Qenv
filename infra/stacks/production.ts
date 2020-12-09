@@ -44,8 +44,8 @@ export function setup(config:PrdConfig) {
 
         // Create Kubernetes clusters.
         // Note: Comment out lines for any cluster you don't want to deploy.
-        const aksCluster = new aks.AksCluster("multicloud", {});
-        const eksCluster = new eks.EksCluster("multicloud", {});
+        // const aksCluster = new aks.AksCluster("multicloud", {});
+        // const eksCluster = new eks.EksCluster("multicloud", {});
         const gkeCluster = new gke.GkeCluster("multicloud", {});
 
         // Create a list of named clusters where the demo app will be deployed.
@@ -56,8 +56,8 @@ export function setup(config:PrdConfig) {
         }
         const clusters: Cluster[] = [
             // Note: Comment out lines for any cluster you don't want to deploy.
-            {name: "aks", provider: aksCluster.provider, staticAppIP: aksCluster.staticAppIP},
-            {name: "eks", provider: eksCluster.provider},
+            // {name: "aks", provider: aksCluster.provider, staticAppIP: aksCluster.staticAppIP},
+            // {name: "eks", provider: eksCluster.provider},
             {name: "gke", provider: gkeCluster.provider},
             {name: "local", provider: local.provider},
         ];

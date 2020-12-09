@@ -54,11 +54,12 @@ export class Impala extends pulumi.ComponentResource {
                 'get_remote_metrics_interval': 10,
                 'log_metrics_interval_s': 10,
                 'params_broadcast_interval': 5,
-            }
-            `}}, { provider: args.provider });
+            }`}}, { provider: args.provider });
 
         // TODO create node pool here
         // TODO convert this to job?
+        // xparl start --port 8010 --cpu_num ${NUM_WORKERS}
+
 
         // Create the kuard Deployment.
         const appLabels = {app: "impala"};
@@ -131,7 +132,31 @@ export class Impala extends pulumi.ComponentResource {
                                         mountPath: "/impala/config.py",
                                         subPath: "config.py"
                                     }
-                                ]
+                                ],
+                                lifecycle:{
+                                    postStart :{
+                                        exec : {
+                                            command: [
+                                                "gcsfuse", 
+                                                "--implicit-dirs", 
+                                                "-o", 
+                                                "nonempty", 
+                                                this.bucket.name, 
+                                                args.stateMountPath
+                                            ]
+                                        }
+                                    },
+                                    preStop:{
+                                        exec : {
+                                            command: [
+                                                "fusermount", 
+                                                "-u", 
+                                                args.stateMountPath
+                                            ]
+                                        }
+                                    }
+                                }
+
                             },
                         ],
                         volumes: [

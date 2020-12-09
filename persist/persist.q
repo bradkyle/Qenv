@@ -35,3 +35,12 @@ upd:{[msg]
 // Subscribe to topic1 and topic2 with different callbacks from a single client
 .kfk.Subscribe[client;`$ktopic;enlist .kfk.PARTITION_UA;upd]
 
+
+.z.ts :{
+  // Get a batch from kafka 
+
+  // write the files to google cloud storage in a partitioned manner
+
+  // ack/progress the consumer watermark 
+
+  };

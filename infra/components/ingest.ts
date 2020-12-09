@@ -119,7 +119,9 @@ export class Ingest extends pulumi.ComponentResource {
                                         value: args.dataMountPath 
                                     }
                                 ],
-                                ports: [{containerPort: 5000, name: "kdb"}],
+                                ports: [
+                                      {containerPort: 5000, name: "kdb"}
+                                ],
                                 // livenessProbe: {
                                 //     httpGet: {path: "/healthy", port: "kdb"},
                                 //     initialDelaySeconds: 5,
@@ -171,7 +173,7 @@ export class Ingest extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
 
 
-        this.service = new k8s.core.v1.Service(name, {
+        this.service = new k8s.core.v1.Service(`${name}-ingest`, {
             metadata: {
                 name: name,
                 labels: this.deployment.metadata.labels,
@@ -179,9 +181,6 @@ export class Ingest extends pulumi.ComponentResource {
             spec: {
                 ports: args.ports && args.ports.map(p => ({ port: p, targetPort: p })),
                 selector: this.deployment.spec.template.metadata.labels,
-                // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
-                // running on minikube, and if so, create only services of type ClusterIP.
-                type: args.allocateIpAddress ? (args.isMinikube ? "ClusterIP" : "LoadBalancer") : undefined,
             },
         }, { parent: this });
 
