@@ -37,13 +37,11 @@ show "mark: ", string count mark;
 show "funding: ", string count funding;
 
 
-.ingest.GetBatch			:{[qid;i]
+.ingest.GetBatch			:{[i]
 	tbls:`depth`trades`settlement`pricerange`mark`funding;
 	/ chr:.ingest.ordinals[i];
-	e:`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[i]'[tbls];
-	.ingest.h(`res;(qid;e));
-	show count e;
-	.Q.gc[];
-
+	`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[i]'[tbls]
 	};
 
+if[not system"t";system"t 30"];
+.z.ts:{.Q.gc[]}

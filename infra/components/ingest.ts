@@ -64,7 +64,7 @@ export class Ingest extends pulumi.ComponentResource {
         this.keyfilepath = "/var/secrets/google/key.json";
 
         const episodeLength = 48;
-        const maxEpisodes = 5;
+        const maxEpisodes = 2;
 
         const storage = new gcs.Storage();
         const batches = listFiles(
