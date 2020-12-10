@@ -98,6 +98,7 @@ export class MIngest extends pulumi.ComponentResource {
         const storage = new gcs.Storage();
 
         let fls = listFiles(storage, "axiomdata", batchSize, maxBatches);
+        console.log(fls);
 
         let files = [445855, 445856, 445857];  
         let batches = _.chunk(files, batchSize);

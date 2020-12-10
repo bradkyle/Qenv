@@ -36,9 +36,8 @@ export class Impala extends pulumi.ComponentResource {
                 'experiment_name': 'Qenv',
                 'master_address': 'localhost:8010',
                 'env':[
-                    {'host':'env1','port':5000},
-                    {'host':'env2','port':5000},
-                    {'host':'env3','port':5000},
+                    {'host':'qenv-0-qenv','port':5000},
+                    {'host':'qenv-1-qenv','port':5000},
                 ],
                 'actor_num': 2,
                 'pool_size': 4,
@@ -71,7 +70,7 @@ export class Impala extends pulumi.ComponentResource {
                 },
                 serviceName: "impala",
                 updateStrategy :{
-                    type: "RollingUpdate"
+                    // type: "RollingUpdate"
                 },
                 replicas: 1,
                 template: {
@@ -98,7 +97,7 @@ export class Impala extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "CONFIG_PATH", 
-                                        value: "/impala/config.py" 
+                                        value: "/impala/config/config.py" 
                                     }
                                 ],
                                 volumeMounts: [

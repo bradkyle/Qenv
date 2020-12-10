@@ -27,9 +27,9 @@ export function setup(config:DevConfig) {
             ingestService:i.service.metadata.name,
         });
 
-        // const b = new impala.Impala("test",{
-        //     provider:local.provider,    
-        //     imageTag:"latest",
-        // });
+        const b = new impala.Impala("test",{
+            provider:local.provider,    
+            imageTag:"latest",
+        });
 
 };

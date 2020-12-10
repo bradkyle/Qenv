@@ -26,6 +26,10 @@ getfirst : {
 	select min start from slave
 	};
 
+getlast : {
+	select max end from slave
+	};
+
 request :{
 	slv:gethost[7h$x];
 	req:".ingest.GetBatch[",string[x],"]";
