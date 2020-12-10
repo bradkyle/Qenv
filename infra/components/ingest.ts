@@ -21,7 +21,6 @@ export interface IngestArgs {
 export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
-    public readonly kdbsecret: k8s.core.v1.Secret; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
@@ -34,7 +33,7 @@ export class Ingest extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
-        this.bucket = gcp.storage.Bucket.get("axiommulti", "axiommulti");
+        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
         this.image = new docker.Image(`${name}-ingest-image`, {
             imageName: "thorad/ingest",
@@ -44,13 +43,6 @@ export class Ingest extends pulumi.ComponentResource {
             },
             skipPush: false,
         });
-
-        // Create a Secret to hold the MariaDB credentials.
-        this.kdbsecret = new k8s.core.v1.Secret("ingest", {
-            stringData: {
-                "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
-            }
-        }, { provider: args.provider });
 
         this.keyfilepath = "/var/secrets/google/key.json";
 
@@ -97,23 +89,6 @@ export class Ingest extends pulumi.ComponentResource {
                                 image: `thorad/ingest:${args.imageTag}`,
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
-                                    { 
-                                        name: "KDB_USER", 
-                                        value: "ingest" 
-                                    },
-                                    {
-                                        name: "KDB_PASS",
-                                        valueFrom: {
-                                            secretKeyRef: {
-                                                name: this.kdbsecret.metadata.name,
-                                                key: "kdb-password"
-                                            }
-                                        }
-                                    },
-                                    { 
-                                        name: "DVC_REMOTE", 
-                                        value: "/ingest/data" 
-                                    },
                                     { 
                                         name: "GOOGLE_APPLICATION_CREDENTIALS", 
                                         value: this.keyfilepath 
