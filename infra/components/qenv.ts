@@ -94,7 +94,7 @@ export class Qenv extends pulumi.ComponentResource {
                 labels: this.deployment.metadata.labels,
             },
             spec: {
-                ports: [{name:"kdb", port:5000, targetPort:"kdb"}], 
+                ports: [{name:"kdb", port:this.port, targetPort:"kdb"}], 
                 selector: this.deployment.spec.template.metadata.labels,
             },
         }, { parent: this });
