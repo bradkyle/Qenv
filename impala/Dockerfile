@@ -22,9 +22,10 @@ RUN apt-get install -y google-cloud-sdk
 RUN pip install --upgrade gym gym[atari] atari_py paddlepaddle parl qpython
 
 FROM base as run
-RUN mkdir -p /home/impala
-WORKDIR /home/impala
-ADD . /home/impala 
-RUN chmod +x /home/impala/entrypoint.sh
+RUN mkdir -p /impala
+RUN mkdir -p /impala/config
+WORKDIR /impala
+ADD . /impala 
+RUN chmod +x /impala/entrypoint.sh
 CMD ["/bin/bash"]
 

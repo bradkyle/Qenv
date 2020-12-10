@@ -45,7 +45,7 @@ export class Qenv extends pulumi.ComponentResource {
         };
 
         // Create a ConfigMap to hold the MariaDB configuration.
-        const qenvCM = new k8s.core.v1.ConfigMap("qenv", {
+        const qenvCM = new k8s.core.v1.ConfigMap(`${name}-qenv`, {
             data: {
             "trainconfig.q": `
             random:()
@@ -54,7 +54,7 @@ export class Qenv extends pulumi.ComponentResource {
         // TODO gcloud service account key
         // TODO change to statefulset
         // Create the kuard Deployment.
-        const appLabels = {app: "qenv"}; // TODO change to statefulset
+        const appLabels = {app: `${name}-qenv`}; // TODO change to statefulset
         this.deployment = new k8s.apps.v1.Deployment(`${name}-qenv`, {
             spec: {
                 selector: {matchLabels: appLabels},
@@ -95,9 +95,9 @@ export class Qenv extends pulumi.ComponentResource {
             },
         }, {provider: args.provider, parent: this});
 
-        this.service = new k8s.core.v1.Service(`${name}-gate`, {
+        this.service = new k8s.core.v1.Service(`${name}-qenv`, {
             metadata: {
-                name: "qenv",
+                name: `${name}-qenv`,
                 labels: this.deployment.metadata.labels,
             },
             spec: {

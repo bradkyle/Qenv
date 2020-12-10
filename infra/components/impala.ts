@@ -10,13 +10,14 @@ export interface ImpalaArgs {
 }
 
 export class Impala extends pulumi.ComponentResource {
+    public readonly image: docker.Image; 
 
     constructor(name: string,
                 args: ImpalaArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:impala:train", name, args, opts);
 
-        const image = new docker.Image(`${name}-impala-image`, {
+        this.image = new docker.Image(`${name}-impala-image`, {
             imageName: "thorad/impala",
             build: {
                 dockerfile: "./impala/Dockerfile",
@@ -80,7 +81,7 @@ export class Impala extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "impala",
-                                image: `thorad/parl:${args.imageTag}`,
+                                image: this.image.imageName,
                                 imagePullPolicy: "IfNotPresent",
                                 env: [
                                     { 
@@ -107,7 +108,7 @@ export class Impala extends pulumi.ComponentResource {
                                     },
                                     {
                                         name: "config",
-                                        mountPath: "/impala/config.py",
+                                        mountPath: "/impala/config/config.py",
                                         subPath: "config.py"
                                     }
                                 ],

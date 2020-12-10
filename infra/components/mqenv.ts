@@ -39,7 +39,7 @@ export class MQenv extends pulumi.ComponentResource {
         });
 
         this.qenvs = {};
-        for(let i=0;i<args.numEnvs;i++) {
+        for(let i=0;i<(args.numEnvs || 1);i++) {
             let s = i.toString();
             let sname = (`qenv-${s}`);
             // let datapaths = batch.map(c => this.bucket.url+"/okex/events/"+c.toString());
