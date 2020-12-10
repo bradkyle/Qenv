@@ -88,21 +88,17 @@ export class Qenv extends pulumi.ComponentResource {
             },
         }, {provider: args.provider, parent: this});
 
-        // Allocate an IP to the nginx Deployment.
-        this.service = new k8s.core.v1.Service(name, {
-            metadata: { labels: this.deployment.spec.template.metadata.labels },
-            spec: {
-                type: args.isMinikube ? "ClusterIP" : "LoadBalancer",
-                ports: [{ port: this.port, targetPort: this.port, protocol: "TCP" }],
-                selector: appLabels,
+        this.service = new k8s.core.v1.Service(`${name}-gate`, {
+            metadata: {
+                name: "qenv",
+                labels: this.deployment.metadata.labels,
             },
-        });
+            spec: {
+                ports: [{name:"kdb", port:5000, targetPort:"kdb"}], 
+                selector: this.deployment.spec.template.metadata.labels,
+            },
+        }, { parent: this });
 
-        if (args.allocateIpAddress) {
-            this.ipAddress = args.isMinikube ?
-                this.service.spec.clusterIP :
-                this.service.status.loadBalancer.ingress[0].ip;
-        }
 
         // this.appUrl = pulumi.interpolate`http://${address}:${service.spec.ports[0].port}`;
 
