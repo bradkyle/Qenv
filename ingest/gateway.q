@@ -2,25 +2,19 @@
 // Load config and try to make connections to 
 // slave processes.
 // ------------------------------------------------>
-servers :(
+slave:(
 	[serverId: `long$()]
-	serverHost:`symbol$();
-	serverPort: `long$();
-	ordinalStart:`long$();
-	ordinalEnd:`long$());
+	host:`symbol$();
+	port: `long$();
+	start:`long$();
+	end:`long$());
 
-configure :{[]
-	confpath: getenv[`CONFIGPATH];
-	conf:.j.k raze read0 (`$confpath); 
-	lf:`serverId`serverPort`ordinalStart`ordinalEnd;
-	conf[lf]:7h$conf[lf];
-	conf[`serverHost]:`$conf[`serverHost];
-	servers,:conf;
-	};
-
-register :{[]
-
-	};
+confpath: getenv[`CONFIGPATH];
+conf:.j.k raze read0 (`$confpath); 
+lf:`serverId`port`start`end;
+conf[lf]:7h$conf[lf];
+conf[`host]:`$conf[`host];
+slave,:conf;
 
 // Allow for queries to be made via gateway
 // ------------------------------------------------>
@@ -35,6 +29,7 @@ queries:([qid:`u#`int$()]
 		time_received:`time$();
 		time_returned:`time$();
 		slave_handle:`int$();
+		slave:`slave$();
 		location:`symbol$()
 		);
 

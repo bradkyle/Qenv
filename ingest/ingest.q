@@ -16,11 +16,11 @@ hrs:hrs where not null hrs;
 .ingest.ordinalNum: count distinct hrs;
 .ingest.ordinalLength:.ingest.ordinalEnd-.ingest.ordinalStart;
 
-.ingest.state:((!) . flip (
+.ingest.state:((!) . flip(
 	(`ordinalStart; .ingest.ordinalStart);
 	(`ordinalEnd; .ingest.ordinalEnd);
 	(`ordinalNum; .ingest.ordinalNum);
-	(`ordinalLength; .ingest.ordinalLength));
+	(`ordinalLength; .ingest.ordinalLength)));
 show .ingest.state;
 
 .ingest.e:();
