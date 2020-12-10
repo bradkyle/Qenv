@@ -1,3 +1,4 @@
+
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
@@ -40,6 +41,7 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
+    public readonly gateway: k8s.apps.v1.Deployment; 
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
@@ -75,17 +77,92 @@ export class Ingest extends pulumi.ComponentResource {
         console.log(batches);
 
         // TODO create a gateway and register ordinal paths as a conf file
-
-        // Create the kuard Deployment.
-        const appLabels = {app: "ingest"};
-        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+        const gatewayLabels = {app: "ingest"};
+        this.gateway = new k8s.apps.v1.Deployment(`${name}-ingest`, {
             spec: {
                 selector: {
-                    matchLabels: appLabels,
+                    matchLabels: gatewayLabels,
                 },
                 replicas: args.replicas,
                 template: {
-                    metadata: {labels: appLabels},
+                    metadata: {labels: gatewayLabels},
+                    spec: {
+                        containers: [
+                            {
+                                name: "ingest",
+                                image: `thorad/ingest:${args.imageTag}`,
+                                imagePullPolicy:(args.pullPolicy || "Always"), 
+                                env: [
+                                    { 
+                                        name: "GOOGLE_APPLICATION_CREDENTIALS", 
+                                        value: this.keyfilepath 
+                                    },
+                                    { 
+                                        name: "DATA_PATH", 
+                                        value: args.dataMountPath 
+                                    }
+                                ],
+                                ports: [
+                                      {containerPort: 5000, name: "kdb"}
+                                ],
+                                // livenessProbe: {
+                                //     httpGet: {path: "/healthy", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
+                                // readinessProbe: {
+                                //     httpGet: {path: "/ready", port: "kdb"},
+                                //     initialDelaySeconds: 5,
+                                //     timeoutSeconds: 1,
+                                //     periodSeconds: 10,
+                                //     failureThreshold: 3,
+                                // },
+                                // volumeMounts: [
+                                //     {
+                                //         name: "google-cloud-key",
+                                //         mountPath: "/var/secrets/google"
+                                //     }
+                                // ],
+                                // lifecycle:{
+                                //     postStart :{
+                                //         exec : {
+                                //             command: [
+                                //                 "poststart.sh", 
+                                //                 "-k",this.keyfilepath, 
+                                //                 "-b",this.bucket.name, 
+                                //                 "-m",args.dataMountPath 
+                                //             ]
+                                //         }
+                                //     },
+                                //     preStop:{
+                                //         exec : {
+                                //             command: [
+                                //                 "fusermount", 
+                                //                 "-u", 
+                                //                 args.dataMountPath 
+                                //             ]
+                                //         }
+                                //     }
+                                // }
+                            },
+                        ],
+                    },
+                },
+            },
+        }, {provider: args.provider, parent: this});
+
+        // Create the kuard Deployment.
+        var ingestLabels = {app: "ingest"};
+        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+            spec: {
+                selector: {
+                    matchLabels: ingestLabels,
+                },
+                replicas: args.replicas,
+                template: {
+                    metadata: {labels: ingestLabels},
                     spec: {
                         affinity: {
                             podAntiAffinity: {
@@ -180,7 +257,7 @@ export class Ingest extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
 
 
-        this.service = new k8s.core.v1.Service(`${name}-ingest`, {
+        this.service = new k8s.core.v1.Service(`${name}-gateway`, {
             metadata: {
                 name: name,
                 labels: this.deployment.metadata.labels,

@@ -1,7 +1,18 @@
 \p 5000 
-show system "pwd";
-\l  /ingest/testdata/events/ev
+// TODO make parameterizeable
+\l /ingest/testdata/events/ev
 \l /ingest/testdata/events
+
+hrs:system"ls /ingest/testdata/events"
+/ @[]
+
+.ingest.ordinalStart: min hrs;
+.ingest.ordinalEnd: max hrs;
+.ingest.numOrdinals: count distinct hrs;
+.ingest.ordinalLength:.ingest.ordinalEnd-.ingest.ordinalStart;
+if[.ingest.numOrdinals<>.ingest.ordinalLength;show "Missing ordinals"];
+
+// TODO register with gateway
 
 .ingest.e:();
 show "depth: ", string count depth;
@@ -24,4 +35,14 @@ show "funding: ", string count funding;
 
 .ingest.Ingest[];
 .ingest.Reset: 		{:.ingest.e};
-.ingest.GetBatch: {};
+
+.ingest.GetBatch: {[hdl;i]
+	tbls:`depth`trade`settlement`pricerange`mark`funding;
+	.ingest.
+	e:`time xasc raze{?[x;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[chr]'[tbls];
+	/ hdl();
+	show count e;
+	.Q.gc[];
+	};
+
+.ingest
