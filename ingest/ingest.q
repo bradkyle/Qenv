@@ -1,7 +1,7 @@
 \p 5000 
 show system "pwd";
-\l /home/ingest/testdata/events/ev
-\l /home/ingest/testdata/events
+\l  /ingest/testdata/events/ev
+\l /ingest/testdata/events
 
 .ingest.e:();
 show "depth: ", string count depth;

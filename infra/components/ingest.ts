@@ -3,6 +3,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
+import * as gcs from "@google-cloud/storage";
 
 // Arguments for the demo app.
 export interface IngestArgs {
@@ -18,6 +19,18 @@ export interface IngestArgs {
     allocateIpAddress?: boolean;
 }
 
+async function listFiles(storage:gcs.Storage, bucketName:string, episodeLength:number):Promise<string[]> {
+    let outs:string[] = []; 
+    // Lists files in the bucket
+    const [files] = await storage.bucket(bucketName).getFiles();
+
+    console.log('Files:');
+    files.forEach(file => {
+        outs.push(file.name);
+    });
+    return outs;
+}
+
 export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
@@ -26,7 +39,6 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
-
 
     constructor(name: string,
                 args: IngestArgs,
@@ -44,7 +56,17 @@ export class Ingest extends pulumi.ComponentResource {
             skipPush: false,
         });
 
+
         this.keyfilepath = "/var/secrets/google/key.json";
+
+        const episodeLength = 48;
+        const maxEpisodes = 5;
+
+        const storage = new gcs.Storage();
+        const batches = listFiles(storage, "axiomdata", episodeLength).catch(console.error);
+        console.log(batches);
+
+        // TODO create a gateway and register ordinal paths as a conf file
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
@@ -121,27 +143,27 @@ export class Ingest extends pulumi.ComponentResource {
                                 //         mountPath: "/var/secrets/google"
                                 //     }
                                 // ],
-                                lifecycle:{
-                                    postStart :{
-                                        exec : {
-                                            command: [
-                                                "poststart.sh", 
-                                                "-k",this.keyfilepath, 
-                                                "-b",this.bucket.name, 
-                                                "-m",args.dataMountPath 
-                                            ]
-                                        }
-                                    },
-                                    preStop:{
-                                        exec : {
-                                            command: [
-                                                "fusermount", 
-                                                "-u", 
-                                                args.dataMountPath 
-                                            ]
-                                        }
-                                    }
-                                }
+                                // lifecycle:{
+                                //     postStart :{
+                                //         exec : {
+                                //             command: [
+                                //                 "poststart.sh", 
+                                //                 "-k",this.keyfilepath, 
+                                //                 "-b",this.bucket.name, 
+                                //                 "-m",args.dataMountPath 
+                                //             ]
+                                //         }
+                                //     },
+                                //     preStop:{
+                                //         exec : {
+                                //             command: [
+                                //                 "fusermount", 
+                                //                 "-u", 
+                                //                 args.dataMountPath 
+                                //             ]
+                                //         }
+                                //     }
+                                // }
                             },
                         ],
                     },
