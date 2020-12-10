@@ -1,9 +1,7 @@
 \p 5000 
 // TODO make parameterizeable
 // ingest/testdata/events/
-master: `$getenv[`MASTER];
-host: getenv[`HOSTNAME];
-path: getenv[`DATAPATH];
+path: getenv[`DATA_PATH];
 system["l ",path,"/ev"];
 system["l ",path];
 
@@ -17,16 +15,11 @@ hrs:hrs where not null hrs;
 .ingest.ordinalNum: count distinct hrs;
 .ingest.ordinalLength:.ingest.end-.ingest.start;
 
-// TODO try until done
-.ingest.h:neg hopen `:gate:5000;
-/ .ingest.h(`register;(host;5000;.ingest.start;.ingest.end));
-
 .ingest.state:((!) . flip(
 	(`ordinalStart; .ingest.start);
 	(`ordinalEnd; .ingest.end);
 	(`ordinalNum; .ingest.ordinalNum);
 	(`ordinalLength; .ingest.ordinalLength)));
-show .ingest.state;
 
 .ingest.e:();
 show "depth: ", string count depth;
@@ -35,7 +28,6 @@ show "settlement: ", string count settlement;
 show "pricerange: ", string count pricerange;
 show "mark: ", string count mark;
 show "funding: ", string count funding;
-
 
 .ingest.GetBatch			:{[i]
 	tbls:`depth`trades`settlement`pricerange`mark`funding;

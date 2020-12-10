@@ -18,6 +18,7 @@ export interface IngestArgs {
     ports?: number[];
     allocateIpAddress?: boolean;
     testing?: boolean;
+    gcpDataPath?: string
 }
 
 export class Ingest extends pulumi.ComponentResource {
@@ -28,6 +29,7 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
+    public readonly datapaths: string[];
 
     constructor(name: string,
                 args: IngestArgs,
@@ -57,9 +59,19 @@ export class Ingest extends pulumi.ComponentResource {
 
         // TODO create a gateway and register ordinal paths as a conf file
         // for (i of)
+        const appLabels = {app: "ingest"};
+        this.datapaths = [];
+
+        // gsutil -m cp -r data.list
+        const ingestConfig = new k8s.core.v1.ConfigMap(`${name}-ingest`, {
+            metadata: { labels: appLabels },
+            data: { "data.list": JSON.stringify(this.datapaths)},
+        });
+
+        const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 
         // Create the kuard Deployment.
-        const appLabels = {app: "ingest"};
+        // gsutil pull 
         this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
             spec: {
                 selector: {
@@ -69,32 +81,18 @@ export class Ingest extends pulumi.ComponentResource {
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
-                        affinity: {
-                            podAntiAffinity: {
-                                preferredDuringSchedulingIgnoredDuringExecution: [
-                                    {
-                                        weight: 1,
-                                        podAffinityTerm: {
-                                            topologyKey: "kubernetes.io/hostname",
-                                            labelSelector: {
-                                                matchLabels: {
-                                                    app: "ingest",
-                                                    release: "example"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
+                        volumes :[
+                            {
+                                name: "google-cloud-key",
+                                secret : {}
+                            },
+                            {
+                                name: "data-list",
+                                configMap: {
+                                    name: ingestConfigName
+                                }
                             }
-                        },
-                        // volumes :[
-                        //     {
-                        //         name: "google-cloud-key",
-                        //         secret : {
-
-                        //         }
-                        //     }
-                        // ],
+                        ],
                         containers: [
                             {
                                 name: "ingest",
@@ -127,12 +125,16 @@ export class Ingest extends pulumi.ComponentResource {
                                 //     periodSeconds: 10,
                                 //     failureThreshold: 3,
                                 // },
-                                // volumeMounts: [
-                                //     {
-                                //         name: "google-cloud-key",
-                                //         mountPath: "/var/secrets/google"
-                                //     }
-                                // ],
+                                volumeMounts: [
+                                    {
+                                        name: "google-cloud-key",
+                                        mountPath: "/var/secrets/google"
+                                    },
+                                    {
+                                        name: "data-list",
+                                        mountPath: "/ingest"
+                                    }
+                                ],
                                 // lifecycle:{
                                 //     postStart :{
                                 //         exec : {

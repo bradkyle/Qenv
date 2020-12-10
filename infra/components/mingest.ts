@@ -69,9 +69,9 @@ export class MIngest extends pulumi.ComponentResource {
         this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
         this.gateImage = new docker.Image(`${name}-gate-image`, {
-            imageName: "thorad/ingest",
+            imageName: "thorad/gate",
             build: {
-                dockerfile: "./ingest/Dockerfile",
+                dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
             },
             skipPush: false,
@@ -80,7 +80,7 @@ export class MIngest extends pulumi.ComponentResource {
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
             imageName: "thorad/ingest",
             build: {
-                dockerfile: "./ingest/Dockerfile",
+                dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",
             },
             skipPush: false,
@@ -101,33 +101,30 @@ export class MIngest extends pulumi.ComponentResource {
             batchSize, 
             maxBatches).catch(console.error);
 
-
         let files = [445855, 445856, 445857];  
         let batches = _.chunk(files, batchSize);
-        console.log(batches)
 
         this.conf = [];
         this.servants = {};
-
         for(let i=0;i<batches.length;i++) {
             let batch = batches[i];
-            console.log(batch);
             let s = i.toString();
             let sname = (`ingest-${s}`);
+            let datapaths = batch.map(c => this.bucket.url+"/okex/events/"+c.toString());
+            datapaths.push(this.bucket.url+"/okex/events/ev");
+            console.log(datapaths);
+            this.servants[name] = new ingest.Ingest(sname, {
+                provider: args.provider,  
+                image: this.ingestImage,
+                gcpBucket: this.bucket,
+                dataMountPath:this.mountDataPath
+            });
             this.conf.push({
                 sId: i,
                 host: sname,
                 port: 5000,
                 start: _.min(batch), 
                 end: _.max(batch)
-            });
-            console.log(this.conf);
-            
-            this.servants[name] = new ingest.Ingest(sname, {
-                provider: args.provider,  
-                image: this.ingestImage,
-                gcpBucket: this.bucket,
-                dataMountPath:this.mountDataPath
             });
         };
         console.log(JSON.stringify(this.conf));
@@ -156,13 +153,9 @@ export class MIngest extends pulumi.ComponentResource {
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 
-                                        name: "GOOGLE_APPLICATION_CREDENTIALS", 
-                                        value: this.keyfilepath 
+                                        name: "CONFIGPATH", 
+                                        value: "/gate/config.json" 
                                     },
-                                    { 
-                                        name: "DATA_PATH", 
-                                        value: args.dataMountPath 
-                                    }
                                 ],
                                 ports: [
                                       {containerPort: 5000, name: "kdb"}
@@ -184,7 +177,7 @@ export class MIngest extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "gate-configs",
-                                        mountPath: "/ingest"
+                                        mountPath: "/gate"
                                     }
                                 ],
                             },
