@@ -41,7 +41,7 @@ show "funding: ", string count funding;
 	tbls:`depth`trades`settlement`pricerange`mark`funding;
 	/ chr:.ingest.ordinals[i];
 	e:`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[i]'[tbls];
-	.ingest.h(qid;e);
+	.ingest.h(`res;(qid;e));
 	show count e;
 	.Q.gc[];
 
