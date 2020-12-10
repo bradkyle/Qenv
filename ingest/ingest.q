@@ -1,4 +1,5 @@
 \p 5000 
+show system "pwd";
 \l /home/ingest/testdata/events/ev
 \l /home/ingest/testdata/events
 

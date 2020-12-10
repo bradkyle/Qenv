@@ -26,6 +26,8 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
+    public readonly keyfilepath: string;
+
 
     constructor(name: string,
                 args: IngestArgs,
@@ -49,6 +51,8 @@ export class Ingest extends pulumi.ComponentResource {
                 "kdb-password": new random.RandomPassword("kdb-pw", {length: 12}).result
             }
         }, { provider: args.provider });
+
+        this.keyfilepath = "/var/secrets/google/key.json";
 
         // Create the kuard Deployment.
         const appLabels = {app: "ingest"};
@@ -112,7 +116,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "GOOGLE_APPLICATION_CREDENTIALS", 
-                                        value: "/var/secrets/google/key.json" 
+                                        value: this.keyfilepath 
                                     },
                                     { 
                                         name: "DATA_PATH", 
@@ -146,12 +150,10 @@ export class Ingest extends pulumi.ComponentResource {
                                     postStart :{
                                         exec : {
                                             command: [
-                                                "gcsfuse", 
-                                                "--implicit-dirs", 
-                                                "-o", 
-                                                "nonempty", 
-                                                this.bucket.name, 
-                                                args.dataMountPath
+                                                "poststart.sh", 
+                                                "-k",this.keyfilepath, 
+                                                "-b",this.bucket.name, 
+                                                "-m",args.dataMountPath 
                                             ]
                                         }
                                     },
