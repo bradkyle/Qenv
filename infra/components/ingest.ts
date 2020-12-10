@@ -8,33 +8,16 @@ import * as gcs from "@google-cloud/storage";
 // Arguments for the demo app.
 export interface IngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag: string; // Tag for the kuard image to deploy.
+    imageTag?: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
     isMinikube?: boolean;
     replicas?: number;
     gcpBucket?:gcp.storage.Bucket;
-    dataMountPath:string;
+    dataMountPath?:string;
     pullPolicy?:string
     ports?: number[];
     allocateIpAddress?: boolean;
     testing?: boolean;
-}
-
-async function listFiles(
-    storage:gcs.Storage, 
-    bucketName:string, 
-    episodeLength:number, 
-    maxEpisodes:number
-  ):Promise<string[]> {
-    let outs:string[] = []; 
-    // Lists files in the bucket
-    const [files] = await storage.bucket(bucketName).getFiles();
-
-    console.log('Files:');
-    files.forEach(file => {
-        outs.push(file.name);
-    });
-    return outs;
 }
 
 export class Ingest extends pulumi.ComponentResource {
@@ -116,7 +99,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: (args.testing ? this.testDataPath : this.mountDataPath) 
+                                        value: args.dataMountPath 
                                     }
                                 ],
                                 ports: [

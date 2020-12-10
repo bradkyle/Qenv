@@ -5,9 +5,10 @@ import * as random from "@pulumi/random";
 import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
 import * as gcs from "@google-cloud/storage";
+import * as ingest from "./ingest";
 
 // Arguments for the demo app.
-export interface IngestArgs {
+export interface IngestClusterArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
@@ -37,9 +38,8 @@ async function listFiles(
     return outs;
 }
 
-export class Ingest extends pulumi.ComponentResource {
+export class IngestCluster extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
-    public readonly image: docker.Image; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
     public readonly gateway: k8s.apps.v1.Deployment; 
     public readonly deployment: k8s.apps.v1.Deployment; 
@@ -48,9 +48,12 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly keyfilepath: string;
     public readonly mountDataPath: string;
     public readonly testDataPath: string;
+    public readonly gateImage: docker.Image; 
+    public readonly ingestImage: docker.Image; 
+    public readonly servants: Record<string, ingest.Ingest>; 
 
     constructor(name: string,
-                args: IngestArgs,
+                args: IngestClusterArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
@@ -81,12 +84,24 @@ export class Ingest extends pulumi.ComponentResource {
         const maxEpisodes = 5;
 
         const storage = new gcs.Storage();
-        const batches = listFiles(
+        const batches = [];
+
+        // if (args.testing)
+
+        listFiles(
             storage, 
             "axiomdata", 
             episodeLength, 
             maxEpisodes).catch(console.error);
-        console.log(batches);
+
+        for(let i=0;i<batches.length;i++) {
+            let name = 'ingest-${i}';
+            this.servants[name] = new ingest.Ingest(name, {
+                provider:args.provider,  
+                imageTag:"latest",
+                dataMountPath:"",
+            })
+        };
 
         // TODO create a gateway and register ordinal paths as a conf file
         const gatewayLabels = {app: "ingest"};
@@ -95,7 +110,7 @@ export class Ingest extends pulumi.ComponentResource {
                 selector: {
                     matchLabels: gatewayLabels,
                 },
-                replicas: args.replicas,
+                replicas: (args.replicas || 1),
                 template: {
                     metadata: {labels: gatewayLabels},
                     spec: {
