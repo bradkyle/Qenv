@@ -43,19 +43,40 @@ send_query:{[hdl]
 	];
  };
 
+send_result:{[qid;result]
+	query:queries[qid;`query];
+	client_handle:queries[qid;`client_handle];
+	client_callback_function:queries[qid;`client_callback_function];
+	client_handle(client_callback_function;qid;query;result);
+	/break[];
+	queries[qid;`location`time_returned]:(`client;.z.T);
+	 }; 
+
 mkurl:{[host;port] `$sv[":";("";string[host];string[port])]}
 gethost:{first value raze (select first mkurl'[host;port] from slave where x within(start;end))}
 
 request :{
 	show x;
 	slv:gethost[7h$x[1]];
+	new_qid:1^1+exec last qid from queries; /assign id to new query
+	req:".ingest.GetBatch[",string[new_qid],";",string[x[1]],"]";
+	`queries upsert (new_qid;req;(neg .z.w);x[2];.z.T;0Nt;0N;`master);
 	h:neg[hopen slv];
-	req:".ingest.GetBatch[0;",string[x[1]],"]";
 	h req;
 	};
 
 response :{
-	show x[1]
+		qid:x[1];
+		result:x[2];
+		/try to send result back to client
+		.[send_result;
+			(qid;result);
+			{[qid;error]queries[qid;`location`time_returned]:(`client_failure;.z.T)}[qid]
+		 ];
+		h[w]:1_h[w];
+		/drop the first query id from the slave list in dict h
+		/send oldest unsent query to slave
+		send_query[w];
 	};
 
 .z.ps:{[x]
