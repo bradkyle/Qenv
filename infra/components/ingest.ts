@@ -8,7 +8,7 @@ import * as gcs from "@google-cloud/storage";
 // Arguments for the demo app.
 export interface IngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag?: string; // Tag for the kuard image to deploy.
+    image?: docker.Image; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
     isMinikube?: boolean;
     replicas?: number;
@@ -36,14 +36,18 @@ export class Ingest extends pulumi.ComponentResource {
             
         this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
-        this.image = new docker.Image(`${name}-ingest-image`, {
-            imageName: "thorad/ingest",
-            build: {
-                dockerfile: "./ingest/Dockerfile",
-                context: "./ingest/",
-            },
-            skipPush: false,
-        });
+        if(args.image){
+            this.image = args.image;
+        } else {
+            this.image = new docker.Image(`${name}-ingest-image`, {
+                imageName: "thorad/ingest",
+                build: {
+                    dockerfile: "./ingest/Dockerfile",
+                    context: "./ingest/",
+                },
+                skipPush: false,
+            });
+        };
 
         this.keyfilepath = "/var/secrets/google/key.json";
 
@@ -90,7 +94,7 @@ export class Ingest extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "ingest",
-                                image: `thorad/ingest:${args.imageTag}`,
+                                image: this.image.imageName,
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 

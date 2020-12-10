@@ -6,6 +6,7 @@ import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
 import * as gcs from "@google-cloud/storage";
 import * as ingest from "./ingest";
+import * as _ from "lodash";
 
 // Arguments for the demo app.
 export interface MIngestArgs {
@@ -80,27 +81,40 @@ export class MIngest extends pulumi.ComponentResource {
         this.testDataPath = "/ingest/testdata/events"
         this.mountDataPath = args.dataMountPath + "/events"
 
-        const episodeLength = 48;
-        const maxEpisodes = 5;
+        const batchSize = 2;
+        const maxBatches = 5;
 
         const storage = new gcs.Storage();
-        const batches = [];
-
-        // if (args.testing)
 
         listFiles(
             storage, 
             "axiomdata", 
-            episodeLength, 
-            maxEpisodes).catch(console.error);
+            batchSize, 
+            maxBatches).catch(console.error);
+
+
+        let files = [445855, 445856, 445857];  
+        let batches = _.chunk(files, batchSize);
+        console.log(batches)
 
         this.servants = {};
         for(let i=0;i<batches.length;i++) {
+            let batch = batches[i];
+            console.log(batch);
             let name = 'ingest-${i}';
+            let conf = {
+                sId: i,
+                host: name,
+                port: 5000,
+                start: _.max(batch), 
+                end: _.min(batch)
+            };
+            console.log(conf);
+            
             this.servants[name] = new ingest.Ingest(name, {
-                provider:args.provider,  
-                imageTag:"latest",
-                dataMountPath:"",
+                provider: args.provider,  
+                image: this.ingestImage,
+                dataMountPath:this.mountDataPath
             });
         };
 
