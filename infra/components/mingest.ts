@@ -8,7 +8,7 @@ import * as gcs from "@google-cloud/storage";
 import * as ingest from "./ingest";
 
 // Arguments for the demo app.
-export interface IngestClusterArgs {
+export interface MIngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
@@ -38,10 +38,9 @@ async function listFiles(
     return outs;
 }
 
-export class IngestCluster extends pulumi.ComponentResource {
+export class MIngest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
-    public readonly gateway: k8s.apps.v1.Deployment; 
     public readonly deployment: k8s.apps.v1.Deployment; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
@@ -53,7 +52,7 @@ export class IngestCluster extends pulumi.ComponentResource {
     public readonly servants: Record<string, ingest.Ingest>; 
 
     constructor(name: string,
-                args: IngestClusterArgs,
+                args: MIngestArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
@@ -77,6 +76,7 @@ export class IngestCluster extends pulumi.ComponentResource {
             skipPush: false,
         });
 
+        this.keyfilepath = "/var/secrets/google/key.json";
         this.testDataPath = "/ingest/testdata/events"
         this.mountDataPath = args.dataMountPath + "/events"
 
@@ -94,18 +94,19 @@ export class IngestCluster extends pulumi.ComponentResource {
             episodeLength, 
             maxEpisodes).catch(console.error);
 
+        this.servants = {};
         for(let i=0;i<batches.length;i++) {
             let name = 'ingest-${i}';
             this.servants[name] = new ingest.Ingest(name, {
                 provider:args.provider,  
                 imageTag:"latest",
                 dataMountPath:"",
-            })
+            });
         };
 
         // TODO create a gateway and register ordinal paths as a conf file
         const gatewayLabels = {app: "ingest"};
-        this.gateway = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
             spec: {
                 selector: {
                     matchLabels: gatewayLabels,
