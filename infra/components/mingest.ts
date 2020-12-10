@@ -64,12 +64,13 @@ export class MIngest extends pulumi.ComponentResource {
     constructor(name: string,
                 args: MIngestArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("beast:qenv:ingest", name, args, opts);
+        super("beast:qenv:gate", name, args, opts);
             
         this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        const ts=Date.now();
 
         this.gateImage = new docker.Image(`${name}-gate-image`, {
-            imageName: "thorad/gate",
+            imageName: "thorad/gate:d"+ts.toString(),
             build: {
                 dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
@@ -78,7 +79,7 @@ export class MIngest extends pulumi.ComponentResource {
         });
 
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
-            imageName: "thorad/ingest",
+            imageName: "thorad/ingest:d"+ts.toString(),
             build: {
                 dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",
@@ -129,7 +130,7 @@ export class MIngest extends pulumi.ComponentResource {
         };
         console.log(JSON.stringify(this.conf));
 
-        const appLabels = {app: "ingest"};
+        const appLabels = {app: "gate"};
         const gateConfig = new k8s.core.v1.ConfigMap(`${name}-gate`, {
             metadata: { labels: appLabels },
             data: { "config.json": JSON.stringify(this.conf)},
@@ -154,10 +155,10 @@ export class MIngest extends pulumi.ComponentResource {
                                 env: [
                                     { 
                                         name: "CONFIGPATH", 
-                                        value: "/gate/config.json" 
+                                        value: "/gate/config/config.json" 
                                     },
                                 ],
-                                ports: [
+                                ports:[
                                       {containerPort: 5000, name: "kdb"}
                                 ],
                                 // livenessProbe: {
@@ -177,7 +178,7 @@ export class MIngest extends pulumi.ComponentResource {
                                 volumeMounts: [
                                     {
                                         name: "gate-configs",
-                                        mountPath: "/gate"
+                                        mountPath: "/gate/config"
                                     }
                                 ],
                             },
@@ -194,7 +195,7 @@ export class MIngest extends pulumi.ComponentResource {
                 labels: this.deployment.metadata.labels,
             },
             spec: {
-                ports: args.ports && args.ports.map(p => ({ port: p, targetPort: p })),
+                ports: [{name:"kdb", port:5000, targetPort:"kdb"}], 
                 selector: this.deployment.spec.template.metadata.labels,
             },
         }, { parent: this });

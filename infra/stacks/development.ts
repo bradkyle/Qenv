@@ -13,7 +13,7 @@ export interface DevConfig {
 export function setup(config:DevConfig) {
 
         const i = new ingest.MIngest("ingest",{
-            dataMountPath: "/ingest/data",
+            dataMountPath: "/ingest/testdata",
             provider:local.provider,    
             imageTag:"latest",
             ports:[5000],

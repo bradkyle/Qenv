@@ -17,6 +17,17 @@ kfk_cfg:(!) . flip(
     );
 client:.kfk.Consumer[kfk_cfg];
 
+
+hour:{`int$sum 24 1*@[;0;-;1970.01.01] `date`hh$x};
+persist:{[outpath;sympath;table;x]
+  x[`hr]:.Q.fc[{hour'[x]}] x[`time];
+  {[outpath;sympath;table;x]
+    x:flip x;
+    hr:first distinct x`hr; 
+    path:sv[`;(outpath;(`$string[hr]);table;`$"")];
+    path upsert .Q.en[sympath;] x;
+    }[outpath;sympath;table] peach 0!(`hr xgroup x);
+
 // reads from kafka topic  
 // and writes to partitioned table 
 // that can then be transitioned to 

@@ -2,7 +2,7 @@
 confpath: getenv[`CONFIGPATH];
 show system"ls";
 show system"pwd";
-show configpath;
+show confpath;
 // Load config and try to make connections to 
 // slave processes.
 // ------------------------------------------------>

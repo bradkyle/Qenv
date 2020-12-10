@@ -41,12 +41,14 @@ export class Ingest extends pulumi.ComponentResource {
         } else {
             this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
         }
+        const ts = Date.now();
 
         if(args.image){
+            console.log("Using cached image");
             this.image = args.image;
         } else {
             this.image = new docker.Image(`${name}-ingest-image`, {
-                imageName: "thorad/ingest",
+                imageName: "thorad/ingest:d"+ts.toString(),
                 build: {
                     dockerfile: "./ingest/Dockerfile",
                     context: "./ingest/",
@@ -61,6 +63,12 @@ export class Ingest extends pulumi.ComponentResource {
         // for (i of)
         const appLabels = {app: "ingest"};
         this.datapaths = [];
+
+        // const gcloudKey = new k8s.core.v1.ConfigMap(`${name}-gcloud-key`, {
+        //     metadata: { labels: appLabels },
+        //     data: { "data.list": JSON.stringify(this.datapaths)},
+        // });
+        // const gcloudKeyName = gcloudKey.metadata.apply(m => m.name);
 
         // gsutil -m cp -r data.list
         const ingestConfig = new k8s.core.v1.ConfigMap(`${name}-ingest`, {
@@ -81,10 +89,10 @@ export class Ingest extends pulumi.ComponentResource {
                     metadata: {labels: appLabels},
                     spec: {
                         volumes :[
-                            {
-                                name: "google-cloud-key",
-                                secret : {}
-                            },
+                            // {
+                            //     name: "google-cloud-key",
+                            //     secret : {}
+                            // },
                             {
                                 name: "data-list",
                                 configMap: {
@@ -125,13 +133,13 @@ export class Ingest extends pulumi.ComponentResource {
                                 //     failureThreshold: 3,
                                 // },
                                 volumeMounts: [
-                                    {
-                                        name: "google-cloud-key",
-                                        mountPath: "/var/secrets/google"
-                                    },
+                                    // {
+                                    //     name: "google-cloud-key",
+                                    //     mountPath: "/var/secrets/google"
+                                    // },
                                     {
                                         name: "data-list",
-                                        mountPath: "/ingest"
+                                        mountPath: "/ingest/config/datalist"
                                     }
                                 ],
                                 // lifecycle:{
@@ -169,7 +177,7 @@ export class Ingest extends pulumi.ComponentResource {
                 labels: this.deployment.metadata.labels,
             },
             spec: {
-                ports: args.ports && args.ports.map(p => ({ port: p, targetPort: p })),
+                ports: [{name:"kdb", port:5000, targetPort:"kdb"}], 
                 selector: this.deployment.spec.template.metadata.labels,
             },
         }, { parent: this });
