@@ -54,7 +54,16 @@ export class Ingest extends pulumi.ComponentResource {
             
         this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
 
-        this.image = new docker.Image(`${name}-ingest-image`, {
+        this.gateImage = new docker.Image(`${name}-gate-image`, {
+            imageName: "thorad/ingest",
+            build: {
+                dockerfile: "./ingest/Dockerfile",
+                context: "./ingest/",
+            },
+            skipPush: false,
+        });
+
+        this.ingestImage = new docker.Image(`${name}-ingest-image`, {
             imageName: "thorad/ingest",
             build: {
                 dockerfile: "./ingest/Dockerfile",
