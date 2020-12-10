@@ -1,0 +1,16 @@
+[
+				{
+					"serverId":0,
+					"serverHost":"ingest1",
+					"serverPort":5000,
+					"ordinalStart":0,
+					"ordinalEnd":48
+				},
+				{
+					"serverId":1,
+					"serverHost":"ingest2",
+					"serverPort":5000,
+					"ordinalStart":49,
+					"ordinalEnd":96
+				}
+]

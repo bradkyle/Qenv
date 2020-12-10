@@ -1,18 +1,27 @@
 \p 5000 
 // TODO make parameterizeable
-\l /ingest/testdata/events/ev
-\l /ingest/testdata/events
+// ingest/testdata/events/
+master: `$getenv[`MASTER];
+path: getenv[`DATAPATH];
+system["l ",path,"/ev"];
+system["l ",path];
 
-hrs:system"ls /ingest/testdata/events"
-/ @[]
+hrs:system["ls ",path];
+hrs:raze{@["I"$;x;show]}'[hrs];
+hrs:hrs where not null hrs;
 
+.ingest.ordinals:distinct hrs;
 .ingest.ordinalStart: min hrs;
 .ingest.ordinalEnd: max hrs;
-.ingest.numOrdinals: count distinct hrs;
+.ingest.ordinalNum: count distinct hrs;
 .ingest.ordinalLength:.ingest.ordinalEnd-.ingest.ordinalStart;
-if[.ingest.numOrdinals<>.ingest.ordinalLength;show "Missing ordinals"];
 
-// TODO register with gateway
+.ingest.state:((!) . flip (
+	(`ordinalStart; .ingest.ordinalStart);
+	(`ordinalEnd; .ingest.ordinalEnd);
+	(`ordinalNum; .ingest.ordinalNum);
+	(`ordinalLength; .ingest.ordinalLength));
+show .ingest.state;
 
 .ingest.e:();
 show "depth: ", string count depth;
@@ -22,27 +31,13 @@ show "pricerange: ", string count pricerange;
 show "mark: ", string count mark;
 show "funding: ", string count funding;
 
-.ingest.Ingest:{
-	.ingest.e:select from depth;
-	.ingest.e,:select from trades;
-	.ingest.e,:select from settlement;
-	.ingest.e,:select from pricerange;
-	.ingest.e,:select from mark;
-	.ingest.e,:select from funding;
-	.ingest.e: select time, kind, datum from .ingest.e;
-	.ingest.e:`time xasc .ingest.e;
-	};
 
-.ingest.Ingest[];
-.ingest.Reset: 		{:.ingest.e};
-
-.ingest.GetBatch: {[hdl;i]
-	tbls:`depth`trade`settlement`pricerange`mark`funding;
-	.ingest.
-	e:`time xasc raze{?[x;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[chr]'[tbls];
+.ingest.GetBatch			:{[hdl;i]
+	tbls:`depth`trades`settlement`pricerange`mark`funding;
+	chr:.ingest.ordinals[i];
+	e:`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[chr]'[tbls];
 	/ hdl();
 	show count e;
 	.Q.gc[];
 	};
 
-.ingest
