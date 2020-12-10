@@ -22,6 +22,10 @@ slave,:conf;
 mkurl:{[host;port] `$sv[":";("";string[host];string[port])]}
 gethost:{first value raze (select first mkurl'[host;port] from slave where x within(start;end))}
 
+getfirst : {
+	select min start from slave
+	};
+
 request :{
 	slv:gethost[7h$x];
 	req:".ingest.GetBatch[",string[x],"]";
@@ -29,3 +33,6 @@ request :{
 	h req
 	};
 
+reset: {
+	request[first[(select min start from slave)`start]]
+	}

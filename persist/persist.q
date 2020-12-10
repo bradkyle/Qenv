@@ -48,10 +48,12 @@ upd:{[msg]
 
 
 .z.ts :{
-  // Get a batch from kafka 
+  // write events in memory to google cloud storage
 
   // write the files to google cloud storage in a partitioned manner
 
   // ack/progress the consumer watermark 
 
   };
+
+// Get current offset, read until last offset write to storage and leave

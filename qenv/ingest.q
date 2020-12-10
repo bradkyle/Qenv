@@ -1,5 +1,4 @@
 
 .ingest.h:hopen`:gate:5000
-.ingest.Reset :{[]
-	.ingest.h"request[",string[x],"]"
-		};
+.ingest.Reset 	 :{.ingest.h"reset[]"};
+.ingest.Advance  :{.ingest.h"request[",string[x],"]"}

@@ -30,21 +30,22 @@ export interface ServantSpec {
     end?: number
 }
 
-async function listFiles(
+function listFiles(
     storage:gcs.Storage, 
     bucketName:string, 
     episodeLength:number, 
     maxEpisodes:number
-  ):Promise<string[]> {
+  ):string[] {
     let outs:string[] = []; 
     // Lists files in the bucket
-    const [files] = await storage.bucket(bucketName).getFiles();
-
-    console.log('Files:');
-    files.forEach(file => {
-        outs.push(file.name);
-    });
-    return outs;
+    storage.bucket(bucketName).getFiles().then(files => {
+        console.log('Files:');
+        files.forEach(file => {
+            outs.push(file.name);
+        });
+    }).catch(console.error);
+    console.log(outs);
+    return outs; 
 }
 
 export class MIngest extends pulumi.ComponentResource {
@@ -96,11 +97,7 @@ export class MIngest extends pulumi.ComponentResource {
 
         const storage = new gcs.Storage();
 
-        // listFiles(
-        //     storage, 
-        //     "axiomdata", 
-        //     batchSize, 
-        //     maxBatches).catch(console.error);
+        let fls = listFiles(storage, "axiomdata", batchSize, maxBatches);
 
         let files = [445855, 445856, 445857];  
         let batches = _.chunk(files, batchSize);
@@ -191,7 +188,7 @@ export class MIngest extends pulumi.ComponentResource {
 
         this.service = new k8s.core.v1.Service(`${name}-gate`, {
             metadata: {
-                name: name,
+                name: "gate",
                 labels: this.deployment.metadata.labels,
             },
             spec: {
