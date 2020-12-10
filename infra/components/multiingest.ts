@@ -46,6 +46,8 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
+    public readonly mountDataPath: string;
+    public readonly testDataPath: string;
 
     constructor(name: string,
                 args: IngestArgs,
@@ -72,7 +74,8 @@ export class Ingest extends pulumi.ComponentResource {
             skipPush: false,
         });
 
-        this.keyfilepath = "/var/secrets/google/key.json";
+        this.testDataPath = "/ingest/testdata/events"
+        this.mountDataPath = args.dataMountPath + "/events"
 
         const episodeLength = 48;
         const maxEpisodes = 5;
@@ -134,137 +137,12 @@ export class Ingest extends pulumi.ComponentResource {
                                 //         mountPath: "/var/secrets/google"
                                 //     }
                                 // ],
-                                // lifecycle:{
-                                //     postStart :{
-                                //         exec : {
-                                //             command: [
-                                //                 "poststart.sh", 
-                                //                 "-k",this.keyfilepath, 
-                                //                 "-b",this.bucket.name, 
-                                //                 "-m",args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     },
-                                //     preStop:{
-                                //         exec : {
-                                //             command: [
-                                //                 "fusermount", 
-                                //                 "-u", 
-                                //                 args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     }
-                                // }
                             },
                         ],
                     },
                 },
             },
         }, {provider: args.provider, parent: this});
-
-        // Create the kuard Deployment.
-        var ingestLabels = {app: "ingest"};
-        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
-            spec: {
-                selector: {
-                    matchLabels: ingestLabels,
-                },
-                replicas: args.replicas,
-                template: {
-                    metadata: {labels: ingestLabels},
-                    spec: {
-                        affinity: {
-                            podAntiAffinity: {
-                                preferredDuringSchedulingIgnoredDuringExecution: [
-                                    {
-                                        weight: 1,
-                                        podAffinityTerm: {
-                                            topologyKey: "kubernetes.io/hostname",
-                                            labelSelector: {
-                                                matchLabels: {
-                                                    app: "ingest",
-                                                    release: "example"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        // volumes :[
-                        //     {
-                        //         name: "google-cloud-key",
-                        //         secret : {
-
-                        //         }
-                        //     }
-                        // ],
-                        containers: [
-                            {
-                                name: "ingest",
-                                image: `thorad/ingest:${args.imageTag}`,
-                                imagePullPolicy:(args.pullPolicy || "Always"), 
-                                env: [
-                                    { 
-                                        name: "GOOGLE_APPLICATION_CREDENTIALS", 
-                                        value: this.keyfilepath 
-                                    },
-                                    { 
-                                        name: "DATA_PATH", 
-                                        value: args.dataMountPath 
-                                    }
-                                ],
-                                ports: [
-                                      {containerPort: 5000, name: "kdb"}
-                                ],
-                                // livenessProbe: {
-                                //     httpGet: {path: "/healthy", port: "kdb"},
-                                //     initialDelaySeconds: 5,
-                                //     timeoutSeconds: 1,
-                                //     periodSeconds: 10,
-                                //     failureThreshold: 3,
-                                // },
-                                // readinessProbe: {
-                                //     httpGet: {path: "/ready", port: "kdb"},
-                                //     initialDelaySeconds: 5,
-                                //     timeoutSeconds: 1,
-                                //     periodSeconds: 10,
-                                //     failureThreshold: 3,
-                                // },
-                                // volumeMounts: [
-                                //     {
-                                //         name: "google-cloud-key",
-                                //         mountPath: "/var/secrets/google"
-                                //     }
-                                // ],
-                                // lifecycle:{
-                                //     postStart :{
-                                //         exec : {
-                                //             command: [
-                                //                 "poststart.sh", 
-                                //                 "-k",this.keyfilepath, 
-                                //                 "-b",this.bucket.name, 
-                                //                 "-m",args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     },
-                                //     preStop:{
-                                //         exec : {
-                                //             command: [
-                                //                 "fusermount", 
-                                //                 "-u", 
-                                //                 args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     }
-                                // }
-                            },
-                        ],
-                    },
-                },
-            },
-        }, {provider: args.provider, parent: this});
-
 
         this.service = new k8s.core.v1.Service(`${name}-gateway`, {
             metadata: {
