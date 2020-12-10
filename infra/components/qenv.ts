@@ -7,6 +7,7 @@ import * as k8stypes from "@pulumi/kubernetes/types/input";
 export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     ingestService: pulumi.Output<string>;
+    image?:docker.Image;
     numEnvs?: number; 
     port?: number; 
     allocateIpAddress?: boolean;
@@ -28,14 +29,20 @@ export class Qenv extends pulumi.ComponentResource {
         super("beast:qenv:qenv", name, args, opts);
 
         this.port = args.port || 5000;
-        this.image = new docker.Image(`${name}-qenv-image`, {
-            imageName: "thorad/qenv",
-            build: {
-                dockerfile: "./qenv/Dockerfile",
-                context: "./qenv/",
-            },
-            skipPush: false,
-        });
+
+        if(args.image){
+            console.log("Using cached image");
+            this.image = args.image;
+        } else {
+            this.image = new docker.Image(`${name}-qenv-image`, {
+                imageName: "thorad/qenv",
+                build: {
+                    dockerfile: "./qenv/Dockerfile",
+                    context: "./qenv/",
+                },
+                skipPush: false,
+            });
+        };
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const qenvCM = new k8s.core.v1.ConfigMap("qenv", {
@@ -105,3 +112,17 @@ export class Qenv extends pulumi.ComponentResource {
         this.registerOutputs();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

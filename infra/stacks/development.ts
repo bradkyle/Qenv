@@ -2,7 +2,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as ingest from "../components/mingest"
-import * as qenv from "../components/qenv"
+import * as qenv from "../components/mqenv"
 import * as impala from "../components/impala"
 import * as local from "../components/lclcluster"
 
@@ -21,7 +21,7 @@ export function setup(config:DevConfig) {
             replicas:1
         });
 
-        const q = new qenv.Qenv("test",{
+        const q = new qenv.MQenv("test",{
             provider:local.provider,    
             numEnvs:2,
             ingestService:i.service.metadata.name,
