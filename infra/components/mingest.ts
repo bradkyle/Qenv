@@ -22,6 +22,14 @@ export interface MIngestArgs {
     allocateIpAddress?: boolean;
 }
 
+export interface ServantSpec {
+    sId?: number,
+    host?: string,
+    port?: number,
+    start?: number,
+    end?: number
+}
+
 async function listFiles(
     storage:gcs.Storage, 
     bucketName:string, 
@@ -51,6 +59,7 @@ export class MIngest extends pulumi.ComponentResource {
     public readonly gateImage: docker.Image; 
     public readonly ingestImage: docker.Image; 
     public readonly servants: Record<string, ingest.Ingest>; 
+    public readonly conf: Array<ServantSpec>; 
 
     constructor(name: string,
                 args: MIngestArgs,
@@ -97,37 +106,48 @@ export class MIngest extends pulumi.ComponentResource {
         let batches = _.chunk(files, batchSize);
         console.log(batches)
 
+        this.conf = [];
         this.servants = {};
+
         for(let i=0;i<batches.length;i++) {
             let batch = batches[i];
             console.log(batch);
-            let name = 'ingest-${i}';
-            let conf = {
+            let s = i.toString();
+            let sname = (`ingest-${s}`);
+            this.conf.push({
                 sId: i,
-                host: name,
+                host: sname,
                 port: 5000,
-                start: _.max(batch), 
-                end: _.min(batch)
-            };
-            console.log(conf);
+                start: _.min(batch), 
+                end: _.max(batch)
+            });
+            console.log(this.conf);
             
-            this.servants[name] = new ingest.Ingest(name, {
+            this.servants[name] = new ingest.Ingest(sname, {
                 provider: args.provider,  
                 image: this.ingestImage,
+                gcpBucket: this.bucket,
                 dataMountPath:this.mountDataPath
             });
         };
+        console.log(JSON.stringify(this.conf));
+
+        const appLabels = {app: "ingest"};
+        const gateConfig = new k8s.core.v1.ConfigMap(`${name}-gate`, {
+            metadata: { labels: appLabels },
+            data: { "config.json": JSON.stringify(this.conf)},
+        });
+        const gateConfigName = gateConfig.metadata.apply(m => m.name);
 
         // TODO create a gateway and register ordinal paths as a conf file
-        const gatewayLabels = {app: "ingest"};
-        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+        this.deployment = new k8s.apps.v1.Deployment(`${name}-gate`, {
             spec: {
                 selector: {
-                    matchLabels: gatewayLabels,
+                    matchLabels: appLabels,
                 },
                 replicas: (args.replicas || 1),
                 template: {
-                    metadata: {labels: gatewayLabels},
+                    metadata: {labels: appLabels},
                     spec: {
                         containers: [
                             {
@@ -161,14 +181,15 @@ export class MIngest extends pulumi.ComponentResource {
                                 //     periodSeconds: 10,
                                 //     failureThreshold: 3,
                                 // },
-                                // volumeMounts: [
-                                //     {
-                                //         name: "google-cloud-key",
-                                //         mountPath: "/var/secrets/google"
-                                //     }
-                                // ],
+                                volumeMounts: [
+                                    {
+                                        name: "gate-configs",
+                                        mountPath: "/ingest"
+                                    }
+                                ],
                             },
                         ],
+                        volumes: [{ name: "gate-configs", configMap: { name: gateConfigName } }],
                     },
                 },
             },

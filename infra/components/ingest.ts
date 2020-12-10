@@ -34,7 +34,11 @@ export class Ingest extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:ingest", name, args, opts);
             
-        this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        if (args.gcpBucket) {
+            this.bucket = args.gcpBucket;
+        } else {
+            this.bucket = gcp.storage.Bucket.get("axiomdata", "axiomdata");
+        }
 
         if(args.image){
             this.image = args.image;
