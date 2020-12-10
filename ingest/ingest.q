@@ -2,6 +2,7 @@
 // TODO make parameterizeable
 // ingest/testdata/events/
 master: `$getenv[`MASTER];
+host: getenv[`HOSTNAME];
 path: getenv[`DATAPATH];
 system["l ",path,"/ev"];
 system["l ",path];
@@ -11,14 +12,18 @@ hrs:raze{@["I"$;x;show]}'[hrs];
 hrs:hrs where not null hrs;
 
 .ingest.ordinals:distinct hrs;
-.ingest.ordinalStart: min hrs;
-.ingest.ordinalEnd: max hrs;
+.ingest.start: min hrs;
+.ingest.end: max hrs;
 .ingest.ordinalNum: count distinct hrs;
-.ingest.ordinalLength:.ingest.ordinalEnd-.ingest.ordinalStart;
+.ingest.ordinalLength:.ingest.end-.ingest.start;
+
+// TODO try until done
+.ingest.h:neg hopen `:gate:5000;
+/ .ingest.h(`register;(host;5000;.ingest.start;.ingest.end));
 
 .ingest.state:((!) . flip(
-	(`ordinalStart; .ingest.ordinalStart);
-	(`ordinalEnd; .ingest.ordinalEnd);
+	(`ordinalStart; .ingest.start);
+	(`ordinalEnd; .ingest.end);
 	(`ordinalNum; .ingest.ordinalNum);
 	(`ordinalLength; .ingest.ordinalLength)));
 show .ingest.state;
@@ -34,10 +39,11 @@ show "funding: ", string count funding;
 
 .ingest.GetBatch			:{[hdl;i]
 	tbls:`depth`trades`settlement`pricerange`mark`funding;
-	chr:.ingest.ordinals[i];
-	e:`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[chr]'[tbls];
-	/ hdl();
+	/ chr:.ingest.ordinals[i];
+	e:`time xasc raze{?[y;enlist(=;`hr;x);0b;`time`kind`datum!`time`kind`datum]}[i]'[tbls];
+	.ingest.h(`res;e);
 	show count e;
 	.Q.gc[];
+
 	};
 

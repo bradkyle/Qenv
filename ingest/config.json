@@ -1,16 +1,16 @@
 [
 				{
-					"serverId":0,
+					"sId":0,
 					"host":"ingest1",
 					"port":5000,
-					"start":0,
-					"end":48
+					"start":445855,
+					"end":445856
 				},
 				{
-					"serverId":0,
-					"host":"ingest1",
+					"sId":1,
+					"host":"ingest2",
 					"port":5000,
-					"start":0,
-					"end":48
+					"start":445857,
+					"end":445857
 				}
 ]
