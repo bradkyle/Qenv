@@ -77,28 +77,6 @@ export class Impala extends pulumi.ComponentResource {
                     metadata: {labels: appLabels},
                     spec: {
                         serviceAccountName: "default",
-                        securityContext: {
-                            fsGroup: 1001,
-                            runAsUser: 1001
-                        },
-                        affinity: {
-                            podAntiAffinity: {
-                                preferredDuringSchedulingIgnoredDuringExecution: [
-                                    {
-                                        weight: 1,
-                                        podAffinityTerm: {
-                                            topologyKey: "kubernetes.io/hostname",
-                                            labelSelector: {
-                                                matchLabels: {
-                                                    app: "impala",
-                                                    release: "example"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        },
                         containers: [
                             {
                                 name: "impala",
@@ -133,29 +111,29 @@ export class Impala extends pulumi.ComponentResource {
                                         subPath: "config.py"
                                     }
                                 ],
-                                lifecycle:{
-                                    postStart :{
-                                        exec : {
-                                            command: [
-                                                "gcsfuse", 
-                                                "--implicit-dirs", 
-                                                "-o", 
-                                                "nonempty", 
-                                                this.bucket.name, 
-                                                args.stateMountPath
-                                            ]
-                                        }
-                                    },
-                                    preStop:{
-                                        exec : {
-                                            command: [
-                                                "fusermount", 
-                                                "-u", 
-                                                args.stateMountPath
-                                            ]
-                                        }
-                                    }
-                                }
+                                // lifecycle:{
+                                //     postStart :{
+                                //         exec : {
+                                //             command: [
+                                //                 "gcsfuse", 
+                                //                 "--implicit-dirs", 
+                                //                 "-o", 
+                                //                 "nonempty", 
+                                //                 this.bucket.name, 
+                                //                 args.stateMountPath
+                                //             ]
+                                //         }
+                                //     },
+                                //     preStop:{
+                                //         exec : {
+                                //             command: [
+                                //                 "fusermount", 
+                                //                 "-u", 
+                                //                 args.stateMountPath
+                                //             ]
+                                //         }
+                                //     }
+                                // }
 
                             },
                         ],

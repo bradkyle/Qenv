@@ -138,6 +138,7 @@ export class Sensor extends pulumi.ComponentResource {
         });
 
         // Create the persist Deployment.
+        // TODO write to local disk then move older than x days
         const persistLabels = {app: "persist"}; // TODO change to statefulset
         this.persist = new k8s.apps.v1.Deployment(`${name}-persist`, {
             spec: {

@@ -67,7 +67,6 @@ export class Ingest extends pulumi.ComponentResource {
             metadata: { labels: appLabels },
             data: { "data.list": JSON.stringify(this.datapaths)},
         });
-
         const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 
         // Create the kuard Deployment.
@@ -139,10 +138,10 @@ export class Ingest extends pulumi.ComponentResource {
                                 //     postStart :{
                                 //         exec : {
                                 //             command: [
-                                //                 "poststart.sh", 
-                                //                 "-k",this.keyfilepath, 
-                                //                 "-b",this.bucket.name, 
-                                //                 "-m",args.dataMountPath 
+                                //                 "gsutil", 
+                                //                 "-m","cp",
+                                //                 "-R",this.datapathsfile, 
+                                //                 this.dataMountPath
                                 //             ]
                                 //         }
                                 //     },

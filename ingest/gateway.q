@@ -1,4 +1,8 @@
 \p 5000
+confpath: getenv[`CONFIGPATH];
+show system"ls";
+show system"pwd";
+show configpath;
 // Load config and try to make connections to 
 // slave processes.
 // ------------------------------------------------>
@@ -9,7 +13,6 @@ slave:(
 	start:`long$();
 	end:`long$());
 
-confpath: getenv[`CONFIGPATH];
 conf:.j.k raze read0 (`$confpath); 
 lf:`sId`port`start`end;
 conf[lf]:7h$conf[lf];

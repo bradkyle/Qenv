@@ -95,11 +95,11 @@ export class MIngest extends pulumi.ComponentResource {
 
         const storage = new gcs.Storage();
 
-        listFiles(
-            storage, 
-            "axiomdata", 
-            batchSize, 
-            maxBatches).catch(console.error);
+        // listFiles(
+        //     storage, 
+        //     "axiomdata", 
+        //     batchSize, 
+        //     maxBatches).catch(console.error);
 
         let files = [445855, 445856, 445857];  
         let batches = _.chunk(files, batchSize);
@@ -110,10 +110,10 @@ export class MIngest extends pulumi.ComponentResource {
             let batch = batches[i];
             let s = i.toString();
             let sname = (`ingest-${s}`);
-            let datapaths = batch.map(c => this.bucket.url+"/okex/events/"+c.toString());
-            datapaths.push(this.bucket.url+"/okex/events/ev");
-            console.log(datapaths);
-            this.servants[name] = new ingest.Ingest(sname, {
+            // let datapaths = batch.map(c => this.bucket.url+"/okex/events/"+c.toString());
+            // datapaths.push(this.bucket.url+"/okex/events/ev");
+            // console.log(datapaths);
+            this.servants[sname] = new ingest.Ingest(sname, {
                 provider: args.provider,  
                 image: this.ingestImage,
                 gcpBucket: this.bucket,
@@ -148,8 +148,8 @@ export class MIngest extends pulumi.ComponentResource {
                     spec: {
                         containers: [
                             {
-                                name: "ingest",
-                                image: `thorad/ingest:${args.imageTag}`,
+                                name: "gate",
+                                image: this.gateImage.imageName, 
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 
@@ -188,7 +188,7 @@ export class MIngest extends pulumi.ComponentResource {
             },
         }, {provider: args.provider, parent: this});
 
-        this.service = new k8s.core.v1.Service(`${name}-gateway`, {
+        this.service = new k8s.core.v1.Service(`${name}-gate`, {
             metadata: {
                 name: name,
                 labels: this.deployment.metadata.labels,
