@@ -61,15 +61,11 @@ export class Impala extends pulumi.ComponentResource {
     "master_address": "localhost:8010",
     "env": [
         {
-            "host": "env1",
+            "host": "qenv-0-qenv",
             "port": 5000
         },
         {
-            "host": "env2",
-            "port": 5000
-        },
-        {
-            "host": "env3",
+            "host": "qenv-1-qenv",
             "port": 5000
         }
     ],

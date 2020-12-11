@@ -46,11 +46,11 @@ export class Qenv extends pulumi.ComponentResource {
         };
 
         // Create a ConfigMap to hold the MariaDB configuration.
-        const qenvCM = new k8s.core.v1.ConfigMap(`${name}-qenv`, {
-            data: {
-            "trainconfig.q": `
-            random:()
-        `}}, { provider: args.provider });
+        // const qenvCM = new k8s.core.v1.ConfigMap(`${name}-qenv`, {
+        //     data: {
+        //     "trainconfig.q": `
+        //     random:()
+        // `}}, { provider: args.provider });
 
         // TODO gcloud service account key
         // TODO change to statefulset
@@ -66,7 +66,7 @@ export class Qenv extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "qenv",
-                                image: this.image.imageName, 
+                                image: "gcr.io/beast-298015/qenv:latest",
                                 ports: [{containerPort: this.port, name: "kdb"}],
                                 env: [
                                     { 
@@ -88,7 +88,7 @@ export class Qenv extends pulumi.ComponentResource {
                                 //     periodSeconds: 10,
                                 //     failureThreshold: 3,
                                 // },
-                                resources: args.resources || { requests: { cpu: "100m", memory: "1000Mi" } },
+                                // resources: args.resources || { requests: { cpu: "100m", memory: "1000Mi" } },
                             },
                         ],
                     },

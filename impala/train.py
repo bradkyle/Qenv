@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import json
 import argparse
 import gym
 import numpy as np
@@ -273,11 +273,12 @@ if __name__ == '__main__':
     parser.add_argument('-ckp', '--ckp_path', default=os.getenv('CKP_PATH') or "./ckp", type=str)
 
     args = parser.parse_args()
-    config = json.load(args.config_path)
+    with open(args.config_path) as j:
+        config = json.load(j)
     logger.set_dir(args.log_path)
 
     learner = Learner(config)
-    assert config['log_metrics_interval_s'] > 10
+    assert config['log_metrics_interval_s'] > 0
 
     while True:
         time.sleep(config['log_metrics_interval_s'])
