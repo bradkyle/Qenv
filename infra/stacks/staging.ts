@@ -29,6 +29,7 @@ export function setup(conf:StgConfig) {
             nodeConfig: {
                 machineType: "n1-standard-4",
                 oauthScopes: [
+                    "https://www.googleapis.com/auth/cloud-platform",
                     "https://www.googleapis.com/auth/compute",
                     "https://www.googleapis.com/auth/servicecontrol",
                     "https://www.googleapis.com/auth/service.management.readonly",
