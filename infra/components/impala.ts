@@ -20,8 +20,9 @@ export class Impala extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:impala:train", name, args, opts);
 
+        const ts = Date.now();
         this.image = new docker.Image(`${name}-impala-image`, {
-            imageName: "gcr.io/beast-298015/impala:latest",
+            imageName: "gcr.io/beast-298015/qenv:"+ts.toString(),
             build: {
                 dockerfile: "./impala/Dockerfile",
                 context: "./impala/",

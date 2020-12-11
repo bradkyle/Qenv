@@ -30,12 +30,23 @@ export function setup(conf:StgConfig) {
                 machineType: "n1-standard-4",
                 oauthScopes: [
                     "https://www.googleapis.com/auth/compute",
+                    "https://www.googleapis.com/auth/servicecontrol",
+                    "https://www.googleapis.com/auth/service.management.readonly",
                     "https://www.googleapis.com/auth/devstorage.read_only",
                     "https://www.googleapis.com/auth/logging.write",
                     "https://www.googleapis.com/auth/monitoring"
                 ],
             },
         });
+
+        // const my_repo = new gcp.artifactregistry.Repository("my-repo", {
+        //     location: "us-central1",
+        //     repositoryId: "my-repository",
+        //     description: "example docker repository",
+        //     format: "DOCKER",
+        // }, {
+        //     provider: google_beta,
+        // });
 
         // Export the Cluster name
         const clusterName = cluster.name;
@@ -48,31 +59,31 @@ export function setup(conf:StgConfig) {
             apply(([ name, endpoint, masterAuth ]) => {
                 const context = `${gcp.config.project}_${gcp.config.zone}_${name}`;
                 return `apiVersion: v1
-        clusters:
-        - cluster:
-            certificate-authority-data: ${masterAuth.clusterCaCertificate}
-            server: https://${endpoint}
-          name: ${context}
-        contexts:
-        - context:
-            cluster: ${context}
-            user: ${context}
-          name: ${context}
-        current-context: ${context}
-        kind: Config
-        preferences: {}
-        users:
-        - name: ${context}
-          user:
-            auth-provider:
-              config:
-                cmd-args: config config-helper --format=json
-                cmd-path: gcloud
-                expiry-key: '{.credential.token_expiry}'
-                token-key: '{.credential.access_token}'
-              name: gcp
-        `;
-            });
+clusters:
+- cluster:
+    certificate-authority-data: ${masterAuth.clusterCaCertificate}
+    server: https://${endpoint}
+  name: ${context}
+contexts:
+- context:
+    cluster: ${context}
+    user: ${context}
+  name: ${context}
+current-context: ${context}
+kind: Config
+preferences: {}
+users:
+- name: ${context}
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: gcloud
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
+`;
+        });
 
         // Create a Kubernetes provider instance that uses our cluster from above.
         const provider = new k8s.Provider(name, {
@@ -85,20 +96,20 @@ export function setup(conf:StgConfig) {
             imageTag:"latest",
             ports:[5000],
             isMinikube:false,
-            skipPush:true,
+            skipPush:false,
             replicas:1
         });
 
         const q = new qenv.MQenv("test",{
             provider:provider,    
             numEnvs:2,
-            skipPush:true,
+            skipPush:false,
             ingestService:i.service.metadata.name,
         });
 
         const b = new impala.Impala("test",{
             provider:provider,    
-            skipPush:true,
+            skipPush:false,
             imageTag:"latest",
         });
 

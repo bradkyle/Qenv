@@ -49,7 +49,7 @@ export class Ingest extends pulumi.ComponentResource {
             this.image = args.image;
         } else {
             this.image = new docker.Image(`${name}-ingest-image`, {
-                imageName: "thorad/ingest",
+                imageName: "thorad/ingest:latest",
                 build: {
                     dockerfile: "./ingest/Dockerfile",
                     context: "./ingest/",

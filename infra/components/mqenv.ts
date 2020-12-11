@@ -28,16 +28,21 @@ export class MQenv extends pulumi.ComponentResource {
                 args: MQenvArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:qenv:qenv", name, args, opts);
+        const ts=Date.now();
 
         this.port = args.port || 5000;
         this.qenvImage = new docker.Image(`${name}-qenv-image`, {
-            imageName: "gcr.io/beast-298015/qenv:latest",
+            imageName: "gcr.io/beast-298015/qenv:"+ts.toString(),
             build: {
                 dockerfile: "./qenv/Dockerfile",
                 context: "./qenv/",
             },
             skipPush:(args.skipPush || true),
         });
+
+        console.log(this.qenvImage.imageName);
+        console.log(args.skipPush);
+        console.log('-----------------------------------');
 
         this.qenvs = {};
         for(let i=0;i<(args.numEnvs || 1);i++) {
