@@ -17,11 +17,15 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
+export interface GkeClusterArgs {
+}
+
 export class GkeCluster extends pulumi.ComponentResource {
     public cluster: gcp.container.Cluster;
     public provider: k8s.Provider;
 
     constructor(name: string,
+                args: GkeClusterArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:kubernetes-ts-multicloud:GkeCluster", name, {}, opts);
 
@@ -46,13 +50,17 @@ export class GkeCluster extends pulumi.ComponentResource {
             masterAuth: {username: "example-user", password: password},
         }, {parent: this});
 
+        console.log(gcp.config.project);
+        console.log(gcp.config.zone);
+
         const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+            project:gcp.config.project,
             cluster: k8sCluster.name,
             initialNodeCount: 2,
             location: k8sCluster.location,
             nodeConfig: {
                 preemptible: true,
-                machineType: "n1-standard-1",
+                machineType: "n1-standard-4",
                 oauthScopes: [
                     "https://www.googleapis.com/auth/compute",
                     "https://www.googleapis.com/auth/devstorage.read_only",
@@ -76,31 +84,30 @@ export class GkeCluster extends pulumi.ComponentResource {
             ([name, endpoint, auth]) => {
             const context = `${gcp.config.project}_${gcp.config.zone}_${name}`;
             return `apiVersion: v1
-    clusters:
-    - cluster:
-        certificate-authority-data: ${auth.clusterCaCertificate}
-        server: https://${endpoint}
-      name: ${context}
-    contexts:
-    - context:
-        cluster: ${context}
-        user: ${context}
-      name: ${context}
-    current-context: ${context}
-    kind: Config
-    preferences: {}
-    users:
-    - name: ${context}
-      user:
-        auth-provider:
-          config:
-            cmd-args: config config-helper --format=json
-            cmd-path: gcloud
-            expiry-key: '{.credential.token_expiry}'
-            token-key: '{.credential.access_token}'
-          name: gcp
-    `;
-        });
+            clusters:
+            - cluster:
+                certificate-authority-data: ${auth.clusterCaCertificate}
+                server: https://${endpoint}
+              name: ${context}
+            contexts:
+            - context:
+                cluster: ${context}
+                user: ${context}
+              name: ${context}
+            current-context: ${context}
+            kind: Config
+            preferences: {}
+            users:
+            - name: ${context}
+              user:
+                auth-provider:
+                  config:
+                    cmd-args: config config-helper --format=json
+                    cmd-path: gcloud
+                    expiry-key: '{.credential.token_expiry}'
+                    token-key: '{.credential.access_token}'
+                  name: gcp
+            `;});
 
         // Export a Kubernetes provider instance that uses our cluster from above.
         this.provider = new k8s.Provider("gke", {kubeconfig: k8sConfig}, {

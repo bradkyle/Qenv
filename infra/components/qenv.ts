@@ -14,6 +14,7 @@ export interface QenvArgs {
     resources?: k8stypes.core.v1.ResourceRequirements;
     isMinikube?: boolean;
     replicas?: number;
+    skipPush?: boolean;
 }
 
 export class Qenv extends pulumi.ComponentResource {
@@ -40,7 +41,7 @@ export class Qenv extends pulumi.ComponentResource {
                     dockerfile: "./qenv/Dockerfile",
                     context: "./qenv/",
                 },
-                skipPush: false,
+                skipPush: args.skipPush,
             });
         };
 

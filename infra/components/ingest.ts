@@ -18,6 +18,7 @@ export interface IngestArgs {
     ports?: number[];
     allocateIpAddress?: boolean;
     testing?: boolean;
+    skipPush?: boolean;
     gcpDataPath?: string
 }
 
@@ -48,12 +49,12 @@ export class Ingest extends pulumi.ComponentResource {
             this.image = args.image;
         } else {
             this.image = new docker.Image(`${name}-ingest-image`, {
-                imageName: "thorad/ingest:d"+ts.toString(),
+                imageName: "thorad/ingest",
                 build: {
                     dockerfile: "./ingest/Dockerfile",
                     context: "./ingest/",
                 },
-                skipPush: false,
+                skipPush:(args.skipPush || true),
             });
         };
 

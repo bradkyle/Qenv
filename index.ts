@@ -4,4 +4,6 @@ import * as prd from "./infra/stacks/production";
 import * as stg from "./infra/stacks/staging";
 import * as tst from "./infra/stacks/testing";
 
-dev.setup()
+// const env = pulumi.getStack();
+// const infra = new pulumi.StackReference(`acmecorp/infra/${env}`);
+stg.setup({})

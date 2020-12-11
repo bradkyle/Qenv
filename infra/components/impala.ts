@@ -8,6 +8,7 @@ import * as gcp from "@pulumi/gcp";
 export interface ImpalaArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
     imageTag: string; // Tag for the kuard image to deploy.
+    skipPush?: boolean;
 }
 
 export class Impala extends pulumi.ComponentResource {
@@ -25,7 +26,7 @@ export class Impala extends pulumi.ComponentResource {
                 dockerfile: "./impala/Dockerfile",
                 context: "./impala/",
             },
-            skipPush: false,
+            skipPush:(args.skipPush || true),
         });
     
         const envs = {};
@@ -103,7 +104,7 @@ export class Impala extends pulumi.ComponentResource {
                             {
                                 name: "impala",
                                 image: this.image.imageName,
-                                imagePullPolicy: "Never",
+                                imagePullPolicy: "IfNotPresent",
                                 env: [
                                     { 
                                         name: "NUM_WORKERS", 

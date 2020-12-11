@@ -20,6 +20,7 @@ export interface MIngestArgs {
     pullPolicy?:string
     ports?: number[];
     allocateIpAddress?: boolean;
+    skipPush?: boolean;
 }
 
 export interface ServantSpec {
@@ -76,7 +77,7 @@ export class MIngest extends pulumi.ComponentResource {
                 dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
             },
-            skipPush: false,
+            skipPush:(args.skipPush || true),
         });
 
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
@@ -85,7 +86,7 @@ export class MIngest extends pulumi.ComponentResource {
                 dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",
             },
-            skipPush: false,
+            skipPush:(args.skipPush || true),
         });
 
         this.keyfilepath = "/var/secrets/google/key.json";
