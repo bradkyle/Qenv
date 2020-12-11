@@ -133,7 +133,7 @@ export class MIngest extends pulumi.ComponentResource {
         const gateConfig = new k8s.core.v1.ConfigMap(`${name}-gate`, {
             metadata: { labels: appLabels },
             data: { "config.json": JSON.stringify(this.conf)},
-        });
+        }, {provider: args.provider, parent: this});
         const gateConfigName = gateConfig.metadata.apply(m => m.name);
 
         // TODO create a gateway and register ordinal paths as a conf file

@@ -75,7 +75,7 @@ export class Ingest extends pulumi.ComponentResource {
         const ingestConfig = new k8s.core.v1.ConfigMap(`${name}-ingest`, {
             metadata: { labels: appLabels },
             data: { "data.list": JSON.stringify(this.datapaths)},
-        });
+        }, {provider: args.provider, parent: this});
         const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 
         // Create the kuard Deployment.
