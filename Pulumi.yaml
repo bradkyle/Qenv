@@ -4,7 +4,7 @@ description: training cluster for qenv
 # beast-298015 
 template:
   config:
-    gcp:project: beast-298015
+    gcp:project:       
       description: The Google Cloud project to deploy into
     gcp:zone:
       description: The Google Cloud zone

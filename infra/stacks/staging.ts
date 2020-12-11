@@ -5,12 +5,19 @@ import * as ingest from "../components/mingest"
 import * as qenv from "../components/mqenv"
 import * as impala from "../components/impala"
 import * as cluster from "../components/gkecluster"
+import * as gcp from "@pulumi/gcp";
+import { Config } from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
+
 
 export interface StgConfig {
 
 }
 
-export function setup(config:StgConfig) {
+export function setup(conf:StgConfig) {
+
+    gcp.container.getEngineVersions().then(it => it.latestMasterVersion);
+
         const c = new cluster.GkeCluster("gke",{
 
         }); 
