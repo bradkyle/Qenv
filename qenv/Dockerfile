@@ -1,4 +1,4 @@
-FROM kdb32
+FROM thorad/kdb32
 
 RUN mkdir -p /home/impala
 WORKDIR /home/qenv

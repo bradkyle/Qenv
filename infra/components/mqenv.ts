@@ -30,7 +30,7 @@ export class MQenv extends pulumi.ComponentResource {
 
         this.port = args.port || 5000;
         this.qenvImage = new docker.Image(`${name}-qenv-image`, {
-            imageName: "thorad/qenv",
+            imageName: "gcr.io/beast-298015/qenv:latest",
             build: {
                 dockerfile: "./qenv/Dockerfile",
                 context: "./qenv/",

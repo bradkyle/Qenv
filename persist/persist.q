@@ -36,9 +36,6 @@ events:();
 upd:{[msg]
   msg[`data]:"c"$msg[`data];
   msg[`rcvtime]:.z.p;
-  if[count[events];[
-      path:.Q.par[`:data;];
-    ]];
 
 
   };

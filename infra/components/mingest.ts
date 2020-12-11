@@ -71,7 +71,7 @@ export class MIngest extends pulumi.ComponentResource {
         const ts=Date.now();
 
         this.gateImage = new docker.Image(`${name}-gate-image`, {
-            imageName: "thorad/gate:d"+ts.toString(),
+            imageName: "gcr.io/beast-298015/gate:latest",
             build: {
                 dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
@@ -80,7 +80,7 @@ export class MIngest extends pulumi.ComponentResource {
         });
 
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
-            imageName: "thorad/ingest:d"+ts.toString(),
+            imageName: "gcr.io/beast-298015/ingest:latest",
             build: {
                 dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",

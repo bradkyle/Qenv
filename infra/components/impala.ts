@@ -2,6 +2,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as docker from "@pulumi/docker";
+import * as gcp from "@pulumi/gcp";
 
 // Arguments for the demo app.
 export interface ImpalaArgs {
@@ -11,6 +12,7 @@ export interface ImpalaArgs {
 
 export class Impala extends pulumi.ComponentResource {
     public readonly image: docker.Image; 
+    // public readonly nodepool: gcp.container.Nodepool;
 
     constructor(name: string,
                 args: ImpalaArgs,
@@ -18,7 +20,7 @@ export class Impala extends pulumi.ComponentResource {
         super("beast:impala:train", name, args, opts);
 
         this.image = new docker.Image(`${name}-impala-image`, {
-            imageName: "thorad/impala",
+            imageName: "gcr.io/beast-298015/impala:latest",
             build: {
                 dockerfile: "./impala/Dockerfile",
                 context: "./impala/",
@@ -26,7 +28,27 @@ export class Impala extends pulumi.ComponentResource {
             skipPush: false,
         });
     
-        const envs = "";
+        const envs = {};
+
+        // this.nodepool = new gcp.container.NodePool("", {
+        //     cluster:args.cluster.name,
+        //     version:"",
+        //     initialNodeCount:1,
+        //     nodeConfig: {
+        //         machineType: "",
+        //         oauthScopes: [
+        //             "https://www.googleapis.com/auth/compute",
+        //             "https://www.googleapis.com/auth/devstorage.read_only",
+        //             "https://www.googleapis.com/auth/logging.write",
+        //             "https://www.googleapis.com/auth/monitoring",
+        //         ],
+        //         guestAccelerators: [{
+                    // type: "nvidia-tesla-k80",
+                    // count: 1,
+                // }],
+        //         labels: {"instanceType": "n1-standard-1"},
+        //     }
+        // });
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {
@@ -81,7 +103,7 @@ export class Impala extends pulumi.ComponentResource {
                             {
                                 name: "impala",
                                 image: this.image.imageName,
-                                imagePullPolicy: "IfNotPresent",
+                                imagePullPolicy: "Never",
                                 env: [
                                     { 
                                         name: "NUM_WORKERS", 
@@ -107,8 +129,8 @@ export class Impala extends pulumi.ComponentResource {
                                     },
                                     {
                                         name: "config",
-                                        mountPath: "/impala/config/config.py",
-                                        subPath: "config.py"
+                                        mountPath: "/impala/config",
+                                        // subPath: "config.py"
                                     }
                                 ],
                                 // lifecycle:{
