@@ -2,7 +2,7 @@
     "version": 3,
     "deployment": {
         "manifest": {
-            "time": "2020-12-11T16:58:27.556931008Z",
+            "time": "2020-12-11T17:29:07.609780885Z",
             "magic": "2f4aa5305780ac57d33f36df2f5c12f857dacccb60fbfcd2a2202621eba9c2af",
             "version": "v2.15.4"
         },
@@ -22,18 +22,6 @@
                 "type": "pulumi:pulumi:Stack"
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::test-qenv-image",
-                "custom": false,
-                "type": "docker:image:Image",
-                "outputs": {
-                    "baseImageName": "gcr.io/beast-298015/qenv:latest",
-                    "digest": "gcr.io/beast-298015/qenv:latest-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1",
-                    "id": "gcr.io/beast-298015/qenv:latest-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1",
-                    "imageName": "gcr.io/beast-298015/qenv:latest-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1"
-                },
-                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
-            },
-            {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:qenv::qenv-0",
                 "custom": false,
                 "type": "beast:qenv:qenv",
@@ -42,7 +30,7 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::pulumi:providers:gcp::default_4_5_2",
                 "custom": true,
-                "id": "d933d493-4461-44dc-923b-19ce492612ab",
+                "id": "21ae0648-9560-49cb-93d0-d30dbd5c1da8",
                 "type": "pulumi:providers:gcp",
                 "inputs": {
                     "project": "beast-298015",
@@ -56,15 +44,15 @@
                 }
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::test-impala-image",
+                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:gate::ingest",
                 "custom": false,
-                "type": "docker:image:Image",
-                "outputs": {
-                    "baseImageName": "gcr.io/beast-298015/impala:latest",
-                    "digest": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
-                    "id": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
-                    "imageName": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71"
-                },
+                "type": "beast:qenv:gate",
+                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
+            },
+            {
+                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest::ingest-1",
+                "custom": false,
+                "type": "beast:qenv:ingest",
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
@@ -74,9 +62,15 @@
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::beast:impala:train::test",
+                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::ingest-ingest-image",
                 "custom": false,
-                "type": "beast:impala:train",
+                "type": "docker:image:Image",
+                "outputs": {
+                    "baseImageName": "gcr.io/beast-298015/ingest:1607707486130",
+                    "digest": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                    "id": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                    "imageName": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31"
+                },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
@@ -84,10 +78,10 @@
                 "custom": false,
                 "type": "docker:image:Image",
                 "outputs": {
-                    "baseImageName": "gcr.io/beast-298015/gate:latest",
-                    "digest": "gcr.io/beast-298015/gate:latest-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
-                    "id": "gcr.io/beast-298015/gate:latest-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
-                    "imageName": "gcr.io/beast-298015/gate:latest-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca"
+                    "baseImageName": "gcr.io/beast-298015/gate:1607707486130",
+                    "digest": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
+                    "id": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
+                    "imageName": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca"
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
@@ -98,33 +92,39 @@
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::ingest-ingest-image",
-                "custom": false,
-                "type": "docker:image:Image",
-                "outputs": {
-                    "baseImageName": "gcr.io/beast-298015/ingest:latest",
-                    "digest": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
-                    "id": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
-                    "imageName": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31"
-                },
-                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
-            },
-            {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:qenv::test",
                 "custom": false,
                 "type": "beast:qenv:qenv",
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest::ingest-1",
+                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::test-impala-image",
                 "custom": false,
-                "type": "beast:qenv:ingest",
+                "type": "docker:image:Image",
+                "outputs": {
+                    "baseImageName": "gcr.io/beast-298015/qenv:1607707486231",
+                    "digest": "gcr.io/beast-298015/qenv:1607707486231-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
+                    "id": "gcr.io/beast-298015/qenv:1607707486231-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
+                    "imageName": "gcr.io/beast-298015/qenv:1607707486231-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71"
+                },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:gate::ingest",
+                "urn": "urn:pulumi:dev::QenvBeast::beast:impala:train::test",
                 "custom": false,
-                "type": "beast:qenv:gate",
+                "type": "beast:impala:train",
+                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
+            },
+            {
+                "urn": "urn:pulumi:dev::QenvBeast::docker:image:Image::test-qenv-image",
+                "custom": false,
+                "type": "docker:image:Image",
+                "outputs": {
+                    "baseImageName": "gcr.io/beast-298015/qenv:1607707486201",
+                    "digest": "gcr.io/beast-298015/qenv:1607707486201-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1",
+                    "id": "gcr.io/beast-298015/qenv:1607707486201-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1",
+                    "imageName": "gcr.io/beast-298015/qenv:1607707486201-d12a56e0d08b0df0ef17be82d4b96fe8cb09bf323de45b650ca9192a0e21e5c1"
+                },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev"
             },
             {
@@ -156,12 +156,12 @@
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
                 "external": true,
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:gcp::default_4_5_2::d933d493-4461-44dc-923b-19ce492612ab"
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:gcp::default_4_5_2::21ae0648-9560-49cb-93d0-d30dbd5c1da8"
             },
             {
                 "urn": "urn:pulumi:dev::QenvBeast::gcp:container/cluster:Cluster::helloworld",
                 "custom": true,
-                "id": "projects/beast-298015/locations/us-central1-a/clusters/helloworld-816ab4e",
+                "id": "projects/beast-298015/locations/us-central1-a/clusters/helloworld-fdada31",
                 "type": "gcp:container/cluster:Cluster",
                 "inputs": {
                     "__defaults": [
@@ -182,7 +182,7 @@
                     "enableTpu": false,
                     "initialNodeCount": 2,
                     "minMasterVersion": "1.17.14-gke.1200",
-                    "name": "helloworld-816ab4e",
+                    "name": "helloworld-fdada31",
                     "network": "default",
                     "nodeConfig": {
                         "__defaults": [
@@ -190,6 +190,7 @@
                         ],
                         "machineType": "n1-standard-4",
                         "oauthScopes": [
+                            "https://www.googleapis.com/auth/cloud-platform",
                             "https://www.googleapis.com/auth/compute",
                             "https://www.googleapis.com/auth/servicecontrol",
                             "https://www.googleapis.com/auth/service.management.readonly",
@@ -223,7 +224,7 @@
                         "enabled": false,
                         "resourceLimits": []
                     },
-                    "clusterIpv4Cidr": "10.48.0.0/14",
+                    "clusterIpv4Cidr": "10.16.0.0/14",
                     "clusterTelemetry": {
                         "type": "ENABLED"
                     },
@@ -243,11 +244,11 @@
                     "enableLegacyAbac": false,
                     "enableShieldedNodes": false,
                     "enableTpu": false,
-                    "endpoint": "34.70.153.172",
-                    "id": "projects/beast-298015/locations/us-central1-a/clusters/helloworld-816ab4e",
+                    "endpoint": "35.239.123.58",
+                    "id": "projects/beast-298015/locations/us-central1-a/clusters/helloworld-fdada31",
                     "initialNodeCount": 2,
                     "instanceGroupUrls": [
-                        "https://www.googleapis.com/compute/beta/projects/beast-298015/zones/us-central1-a/instanceGroups/gke-helloworld-816ab4e-default-pool-832bd108-grp"
+                        "https://www.googleapis.com/compute/beta/projects/beast-298015/zones/us-central1-a/instanceGroups/gke-helloworld-fdada31-default-pool-d76cca53-grp"
                     ],
                     "ipAllocationPolicy": null,
                     "labelFingerprint": "a9dc16a7",
@@ -260,7 +261,7 @@
                             "issueClientCertificate": false
                         },
                         "clientKey": "",
-                        "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLekNDQWhPZ0F3SUJBZ0lSQUp4bml4aGUxeHlSWFpBcVlJUktBK1l3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa01Ea3hZMlZrWTJVdFl6UXdZaTAwWXpWaExXRTBNV1l0WXpoaU16UTROalEyTURjMwpNQjRYRFRJd01USXhNVEUxTkRZMU5sb1hEVEkxTVRJeE1ERTJORFkxTmxvd0x6RXRNQ3NHQTFVRUF4TWtNRGt4ClkyVmtZMlV0WXpRd1lpMDBZelZoTFdFME1XWXRZemhpTXpRNE5qUTJNRGMzTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdzA1blVlK1FLZjNZUTFZb1hld2tNQUhwR2hkOFFwYTdRK3V2N2Z3Nwp6QzA1RjNiUjJEN09ReFdSR3pwQlN6aWxSU01zcjN5dHdPdHVCdnJpUUtMTEFYTjlidm9JMjhQc0QrdW83WldNCkNCemorV25rMXZxM1pGUHp1NVRQd1Nxb3FYY3RRVnRRV2p3MjlKaEhXajVENER1ci9lSFVaNjYzeHoxRXZoa1EKOGl5Nm9PV2dyQmhSSWZVMUFycmlNVHdPdHl0eHJ3Ty91azJMMHZ0cnB0WmZ0SFhybkZKdlAvWER3SVpRT3B6WQpHSy9NajNxN2hkRGFLZTIvSW1NRUhGQ0dSTm5TVi9yaWEvaTRYdnVhSG83dHliV1pCTC9WbFNDQkJkKzMyT0hwCm9BWkFYVjU3Tlo3WDdnK3JPZXZqZFlvU2JkUHZSMStuY1ErQ1ljUTlCdmFwNVFJREFRQUJvMEl3UURBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVURzSW85cHQwZ3p5RgpFbllpVmx3dlRJeXY1N2t3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUZyYkxXNkhMelQxdWJHaHRRRjhpUHRFCkdoNCsxVkhqV2NITXR0bWtHRGlSRnd5QXdqSFI5S3VDV3hmVDAybWxaMjI2czNpQ1MxQ1ZuRktTQVF4cmdacEYKT0E1K25GWHFEeWRqbVhHVVgxYUwzcUExSVdYbmdSSCs0dDdJays5bzQ0L05LNWlhYTZ4RGp3R0lrcDFuWm4vYgprdGZpVDFkMXErQjQ2VVZGT1pTU3QyMG1NZWl5N3U4NXNuNy9SV3QvcHloN0xQUml1Tmt3UUlqeU96eVhkSVZYCnRXTCsrb3phR0Fnd1J2MWREMEtEbjVZazBPS1lSb2RLWS9TWmhmM2VkOWNPZ2NISmViR1JUSjBMMEVVZDUrWmgKWXdlWUg3ZTFyUUtoRVF3Qk9CYzJUc0V0WkRWYllpSnl2c0FTNmV3eG5obHI0Q21xV25DZ3dhbkdYaWdzcnFRPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
+                        "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLakNDQWhLZ0F3SUJBZ0lRSkRnczZrd0loL1QvSGZ4aHFkSVBkekFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlSbE9EaGpZalJqWkMxak1tUmxMVFEyTkdJdE9UTmlaaTFpWkRsa1pEbGpNREF3TlRFdwpIaGNOTWpBeE1qRXhNVFl5TlRBd1doY05NalV4TWpFd01UY3lOVEF3V2pBdk1TMHdLd1lEVlFRREV5UmxPRGhqCllqUmpaQzFqTW1SbExUUTJOR0l0T1ROaVppMWlaRGxrWkRsak1EQXdOVEV3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUM0d0pPUUpLT1EvaDVONCsxRnpBLzlTWk9wb2lXTmtoY3BaeFZwUDBCVwpFYkpwY01QQzhsZjhuN0kyekJwbHpkTG43dVYwOUdWbmhLT3YveDAzZjloeGU3aklvVThJN0d2REoybVFjWllvCjNUeGpyM2RsdUVlN2gxMVZPZ1lyUnl2QzFZWjJnNkwrb1dFVXNUR080WFlUK2s4QXp2NG5kZnk4NEhla2pvbFkKOG1jWXRXK0VDS09SS3NCMDNHbWVoR1lnL1VuaGhVd3dBK2RQY3dtblZ3K0h4TlJZTTY4S2ZDM1dmc1hneVdrcwpnYktzK0hvK0VRQVBERU9JQmc5ZVR6N1ZEQ2QxdGp1dHR1SGxuNnUyWlQ3b1hBemVzUE1sa3N3blV1YnhFZnMrCkswc2F2azFRTWlZY3gvOTk0TWdIb0UwaHhUVU44WGdVL2Q3eXJzVS9iamNCQWdNQkFBR2pRakJBTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRc3hyUFpXUlluRE52OQo0WXJLK0JTaUVNSjN2REFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBZkV5aFM5NUQ2VmZUNHU0VGpjY3BXRWE4Cmk3Q050Nnd3ZEhzZVR0N0toZFVxcFV6U0RDZHFmc3krWGZKNzBrWTEwVksxMVozT0ZHam1EM3lvaHNEbm0wa2kKYnV1NWNPUDZqYVA0b01YN2p0WFgvbDM2ZDNqd1U5blRyd09EYTl4c3ZaSHc3QWgwTFN5bW10NXBRamFpOU9pVwpWN0NNbmhKSTZWK211UllVSWpldGJBMmg2RHlYbU9mWEo3Rk1DWTMwL05uUjg0WUhnRElHRGdhVUY3bmNTVENZCmRaM1FpZzA3SkxEbEw0eTEySVo4WC9LdUhnKzEvTTRhUTlwOGtSTGFTOTBGcS9FUEhyUlhwclJnRE5xUXdBTG8KbmtURllzMG1Yc2FuRnVIc1ZLRHAxN1FXTTNWYURRNklyT1M4NE5xWm96am95S29LMWFuTWgxNmNYRmxPK0E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
                         "password": "",
                         "username": ""
                     },
@@ -268,7 +269,7 @@
                     "masterVersion": "1.17.14-gke.1200",
                     "minMasterVersion": "1.17.14-gke.1200",
                     "monitoringService": "monitoring.googleapis.com/kubernetes",
-                    "name": "helloworld-816ab4e",
+                    "name": "helloworld-fdada31",
                     "network": "projects/beast-298015/global/networks/default",
                     "networkPolicy": {
                         "enabled": false,
@@ -294,6 +295,7 @@
                             "https://www.googleapis.com/auth/monitoring",
                             "https://www.googleapis.com/auth/devstorage.read_only",
                             "https://www.googleapis.com/auth/logging.write",
+                            "https://www.googleapis.com/auth/cloud-platform",
                             "https://www.googleapis.com/auth/compute",
                             "https://www.googleapis.com/auth/service.management.readonly",
                             "https://www.googleapis.com/auth/servicecontrol"
@@ -315,7 +317,7 @@
                             "autoscaling": null,
                             "initialNodeCount": 2,
                             "instanceGroupUrls": [
-                                "https://www.googleapis.com/compute/v1/projects/beast-298015/zones/us-central1-a/instanceGroupManagers/gke-helloworld-816ab4e-default-pool-832bd108-grp"
+                                "https://www.googleapis.com/compute/v1/projects/beast-298015/zones/us-central1-a/instanceGroupManagers/gke-helloworld-fdada31-default-pool-d76cca53-grp"
                             ],
                             "management": {
                                 "autoRepair": true,
@@ -343,6 +345,7 @@
                                     "https://www.googleapis.com/auth/monitoring",
                                     "https://www.googleapis.com/auth/devstorage.read_only",
                                     "https://www.googleapis.com/auth/logging.write",
+                                    "https://www.googleapis.com/auth/cloud-platform",
                                     "https://www.googleapis.com/auth/compute",
                                     "https://www.googleapis.com/auth/service.management.readonly",
                                     "https://www.googleapis.com/auth/servicecontrol"
@@ -386,15 +389,15 @@
                     },
                     "resourceLabels": {},
                     "resourceUsageExportConfig": null,
-                    "selfLink": "https://container.googleapis.com/v1beta1/projects/beast-298015/zones/us-central1-a/clusters/helloworld-816ab4e",
-                    "servicesIpv4Cidr": "10.51.240.0/20",
+                    "selfLink": "https://container.googleapis.com/v1beta1/projects/beast-298015/zones/us-central1-a/clusters/helloworld-fdada31",
+                    "servicesIpv4Cidr": "10.19.240.0/20",
                     "subnetwork": "projects/beast-298015/regions/us-central1/subnetworks/default",
                     "tpuIpv4CidrBlock": "",
                     "verticalPodAutoscaling": null,
                     "workloadIdentityConfig": null
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:gcp::default_4_5_2::d933d493-4461-44dc-923b-19ce492612ab",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:gcp::default_4_5_2::21ae0648-9560-49cb-93d0-d30dbd5c1da8",
                 "propertyDependencies": {
                     "initialNodeCount": null,
                     "minMasterVersion": null,
@@ -405,13 +408,13 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld",
                 "custom": true,
-                "id": "01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "id": "fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "type": "pulumi:providers:kubernetes",
                 "inputs": {
-                    "kubeconfig": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLekNDQWhPZ0F3SUJBZ0lSQUp4bml4aGUxeHlSWFpBcVlJUktBK1l3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa01Ea3hZMlZrWTJVdFl6UXdZaTAwWXpWaExXRTBNV1l0WXpoaU16UTROalEyTURjMwpNQjRYRFRJd01USXhNVEUxTkRZMU5sb1hEVEkxTVRJeE1ERTJORFkxTmxvd0x6RXRNQ3NHQTFVRUF4TWtNRGt4ClkyVmtZMlV0WXpRd1lpMDBZelZoTFdFME1XWXRZemhpTXpRNE5qUTJNRGMzTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdzA1blVlK1FLZjNZUTFZb1hld2tNQUhwR2hkOFFwYTdRK3V2N2Z3Nwp6QzA1RjNiUjJEN09ReFdSR3pwQlN6aWxSU01zcjN5dHdPdHVCdnJpUUtMTEFYTjlidm9JMjhQc0QrdW83WldNCkNCemorV25rMXZxM1pGUHp1NVRQd1Nxb3FYY3RRVnRRV2p3MjlKaEhXajVENER1ci9lSFVaNjYzeHoxRXZoa1EKOGl5Nm9PV2dyQmhSSWZVMUFycmlNVHdPdHl0eHJ3Ty91azJMMHZ0cnB0WmZ0SFhybkZKdlAvWER3SVpRT3B6WQpHSy9NajNxN2hkRGFLZTIvSW1NRUhGQ0dSTm5TVi9yaWEvaTRYdnVhSG83dHliV1pCTC9WbFNDQkJkKzMyT0hwCm9BWkFYVjU3Tlo3WDdnK3JPZXZqZFlvU2JkUHZSMStuY1ErQ1ljUTlCdmFwNVFJREFRQUJvMEl3UURBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVURzSW85cHQwZ3p5RgpFbllpVmx3dlRJeXY1N2t3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUZyYkxXNkhMelQxdWJHaHRRRjhpUHRFCkdoNCsxVkhqV2NITXR0bWtHRGlSRnd5QXdqSFI5S3VDV3hmVDAybWxaMjI2czNpQ1MxQ1ZuRktTQVF4cmdacEYKT0E1K25GWHFEeWRqbVhHVVgxYUwzcUExSVdYbmdSSCs0dDdJays5bzQ0L05LNWlhYTZ4RGp3R0lrcDFuWm4vYgprdGZpVDFkMXErQjQ2VVZGT1pTU3QyMG1NZWl5N3U4NXNuNy9SV3QvcHloN0xQUml1Tmt3UUlqeU96eVhkSVZYCnRXTCsrb3phR0Fnd1J2MWREMEtEbjVZazBPS1lSb2RLWS9TWmhmM2VkOWNPZ2NISmViR1JUSjBMMEVVZDUrWmgKWXdlWUg3ZTFyUUtoRVF3Qk9CYzJUc0V0WkRWYllpSnl2c0FTNmV3eG5obHI0Q21xV25DZ3dhbkdYaWdzcnFRPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\n    server: https://34.70.153.172\n  name: beast-298015_us-central1-a_helloworld-816ab4e\ncontexts:\n- context:\n    cluster: beast-298015_us-central1-a_helloworld-816ab4e\n    user: beast-298015_us-central1-a_helloworld-816ab4e\n  name: beast-298015_us-central1-a_helloworld-816ab4e\ncurrent-context: beast-298015_us-central1-a_helloworld-816ab4e\nkind: Config\npreferences: {}\nusers:\n- name: beast-298015_us-central1-a_helloworld-816ab4e\n  user:\n    auth-provider:\n      config:\n        cmd-args: config config-helper --format=json\n        cmd-path: gcloud\n        expiry-key: '{.credential.token_expiry}'\n        token-key: '{.credential.access_token}'\n      name: gcp\n"
+                    "kubeconfig": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLakNDQWhLZ0F3SUJBZ0lRSkRnczZrd0loL1QvSGZ4aHFkSVBkekFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlSbE9EaGpZalJqWkMxak1tUmxMVFEyTkdJdE9UTmlaaTFpWkRsa1pEbGpNREF3TlRFdwpIaGNOTWpBeE1qRXhNVFl5TlRBd1doY05NalV4TWpFd01UY3lOVEF3V2pBdk1TMHdLd1lEVlFRREV5UmxPRGhqCllqUmpaQzFqTW1SbExUUTJOR0l0T1ROaVppMWlaRGxrWkRsak1EQXdOVEV3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUM0d0pPUUpLT1EvaDVONCsxRnpBLzlTWk9wb2lXTmtoY3BaeFZwUDBCVwpFYkpwY01QQzhsZjhuN0kyekJwbHpkTG43dVYwOUdWbmhLT3YveDAzZjloeGU3aklvVThJN0d2REoybVFjWllvCjNUeGpyM2RsdUVlN2gxMVZPZ1lyUnl2QzFZWjJnNkwrb1dFVXNUR080WFlUK2s4QXp2NG5kZnk4NEhla2pvbFkKOG1jWXRXK0VDS09SS3NCMDNHbWVoR1lnL1VuaGhVd3dBK2RQY3dtblZ3K0h4TlJZTTY4S2ZDM1dmc1hneVdrcwpnYktzK0hvK0VRQVBERU9JQmc5ZVR6N1ZEQ2QxdGp1dHR1SGxuNnUyWlQ3b1hBemVzUE1sa3N3blV1YnhFZnMrCkswc2F2azFRTWlZY3gvOTk0TWdIb0UwaHhUVU44WGdVL2Q3eXJzVS9iamNCQWdNQkFBR2pRakJBTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRc3hyUFpXUlluRE52OQo0WXJLK0JTaUVNSjN2REFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBZkV5aFM5NUQ2VmZUNHU0VGpjY3BXRWE4Cmk3Q050Nnd3ZEhzZVR0N0toZFVxcFV6U0RDZHFmc3krWGZKNzBrWTEwVksxMVozT0ZHam1EM3lvaHNEbm0wa2kKYnV1NWNPUDZqYVA0b01YN2p0WFgvbDM2ZDNqd1U5blRyd09EYTl4c3ZaSHc3QWgwTFN5bW10NXBRamFpOU9pVwpWN0NNbmhKSTZWK211UllVSWpldGJBMmg2RHlYbU9mWEo3Rk1DWTMwL05uUjg0WUhnRElHRGdhVUY3bmNTVENZCmRaM1FpZzA3SkxEbEw0eTEySVo4WC9LdUhnKzEvTTRhUTlwOGtSTGFTOTBGcS9FUEhyUlhwclJnRE5xUXdBTG8KbmtURllzMG1Yc2FuRnVIc1ZLRHAxN1FXTTNWYURRNklyT1M4NE5xWm96am95S29LMWFuTWgxNmNYRmxPK0E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\n    server: https://35.239.123.58\n  name: beast-298015_us-central1-a_helloworld-fdada31\ncontexts:\n- context:\n    cluster: beast-298015_us-central1-a_helloworld-fdada31\n    user: beast-298015_us-central1-a_helloworld-fdada31\n  name: beast-298015_us-central1-a_helloworld-fdada31\ncurrent-context: beast-298015_us-central1-a_helloworld-fdada31\nkind: Config\npreferences: {}\nusers:\n- name: beast-298015_us-central1-a_helloworld-fdada31\n  user:\n    auth-provider:\n      config:\n        cmd-args: config config-helper --format=json\n        cmd-path: gcloud\n        expiry-key: '{.credential.token_expiry}'\n        token-key: '{.credential.access_token}'\n      name: gcp\n"
                 },
                 "outputs": {
-                    "kubeconfig": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLekNDQWhPZ0F3SUJBZ0lSQUp4bml4aGUxeHlSWFpBcVlJUktBK1l3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa01Ea3hZMlZrWTJVdFl6UXdZaTAwWXpWaExXRTBNV1l0WXpoaU16UTROalEyTURjMwpNQjRYRFRJd01USXhNVEUxTkRZMU5sb1hEVEkxTVRJeE1ERTJORFkxTmxvd0x6RXRNQ3NHQTFVRUF4TWtNRGt4ClkyVmtZMlV0WXpRd1lpMDBZelZoTFdFME1XWXRZemhpTXpRNE5qUTJNRGMzTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdzA1blVlK1FLZjNZUTFZb1hld2tNQUhwR2hkOFFwYTdRK3V2N2Z3Nwp6QzA1RjNiUjJEN09ReFdSR3pwQlN6aWxSU01zcjN5dHdPdHVCdnJpUUtMTEFYTjlidm9JMjhQc0QrdW83WldNCkNCemorV25rMXZxM1pGUHp1NVRQd1Nxb3FYY3RRVnRRV2p3MjlKaEhXajVENER1ci9lSFVaNjYzeHoxRXZoa1EKOGl5Nm9PV2dyQmhSSWZVMUFycmlNVHdPdHl0eHJ3Ty91azJMMHZ0cnB0WmZ0SFhybkZKdlAvWER3SVpRT3B6WQpHSy9NajNxN2hkRGFLZTIvSW1NRUhGQ0dSTm5TVi9yaWEvaTRYdnVhSG83dHliV1pCTC9WbFNDQkJkKzMyT0hwCm9BWkFYVjU3Tlo3WDdnK3JPZXZqZFlvU2JkUHZSMStuY1ErQ1ljUTlCdmFwNVFJREFRQUJvMEl3UURBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVURzSW85cHQwZ3p5RgpFbllpVmx3dlRJeXY1N2t3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUZyYkxXNkhMelQxdWJHaHRRRjhpUHRFCkdoNCsxVkhqV2NITXR0bWtHRGlSRnd5QXdqSFI5S3VDV3hmVDAybWxaMjI2czNpQ1MxQ1ZuRktTQVF4cmdacEYKT0E1K25GWHFEeWRqbVhHVVgxYUwzcUExSVdYbmdSSCs0dDdJays5bzQ0L05LNWlhYTZ4RGp3R0lrcDFuWm4vYgprdGZpVDFkMXErQjQ2VVZGT1pTU3QyMG1NZWl5N3U4NXNuNy9SV3QvcHloN0xQUml1Tmt3UUlqeU96eVhkSVZYCnRXTCsrb3phR0Fnd1J2MWREMEtEbjVZazBPS1lSb2RLWS9TWmhmM2VkOWNPZ2NISmViR1JUSjBMMEVVZDUrWmgKWXdlWUg3ZTFyUUtoRVF3Qk9CYzJUc0V0WkRWYllpSnl2c0FTNmV3eG5obHI0Q21xV25DZ3dhbkdYaWdzcnFRPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\n    server: https://34.70.153.172\n  name: beast-298015_us-central1-a_helloworld-816ab4e\ncontexts:\n- context:\n    cluster: beast-298015_us-central1-a_helloworld-816ab4e\n    user: beast-298015_us-central1-a_helloworld-816ab4e\n  name: beast-298015_us-central1-a_helloworld-816ab4e\ncurrent-context: beast-298015_us-central1-a_helloworld-816ab4e\nkind: Config\npreferences: {}\nusers:\n- name: beast-298015_us-central1-a_helloworld-816ab4e\n  user:\n    auth-provider:\n      config:\n        cmd-args: config config-helper --format=json\n        cmd-path: gcloud\n        expiry-key: '{.credential.token_expiry}'\n        token-key: '{.credential.access_token}'\n      name: gcp\n"
+                    "kubeconfig": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLakNDQWhLZ0F3SUJBZ0lRSkRnczZrd0loL1QvSGZ4aHFkSVBkekFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlSbE9EaGpZalJqWkMxak1tUmxMVFEyTkdJdE9UTmlaaTFpWkRsa1pEbGpNREF3TlRFdwpIaGNOTWpBeE1qRXhNVFl5TlRBd1doY05NalV4TWpFd01UY3lOVEF3V2pBdk1TMHdLd1lEVlFRREV5UmxPRGhqCllqUmpaQzFqTW1SbExUUTJOR0l0T1ROaVppMWlaRGxrWkRsak1EQXdOVEV3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUM0d0pPUUpLT1EvaDVONCsxRnpBLzlTWk9wb2lXTmtoY3BaeFZwUDBCVwpFYkpwY01QQzhsZjhuN0kyekJwbHpkTG43dVYwOUdWbmhLT3YveDAzZjloeGU3aklvVThJN0d2REoybVFjWllvCjNUeGpyM2RsdUVlN2gxMVZPZ1lyUnl2QzFZWjJnNkwrb1dFVXNUR080WFlUK2s4QXp2NG5kZnk4NEhla2pvbFkKOG1jWXRXK0VDS09SS3NCMDNHbWVoR1lnL1VuaGhVd3dBK2RQY3dtblZ3K0h4TlJZTTY4S2ZDM1dmc1hneVdrcwpnYktzK0hvK0VRQVBERU9JQmc5ZVR6N1ZEQ2QxdGp1dHR1SGxuNnUyWlQ3b1hBemVzUE1sa3N3blV1YnhFZnMrCkswc2F2azFRTWlZY3gvOTk0TWdIb0UwaHhUVU44WGdVL2Q3eXJzVS9iamNCQWdNQkFBR2pRakJBTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRc3hyUFpXUlluRE52OQo0WXJLK0JTaUVNSjN2REFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBZkV5aFM5NUQ2VmZUNHU0VGpjY3BXRWE4Cmk3Q050Nnd3ZEhzZVR0N0toZFVxcFV6U0RDZHFmc3krWGZKNzBrWTEwVksxMVozT0ZHam1EM3lvaHNEbm0wa2kKYnV1NWNPUDZqYVA0b01YN2p0WFgvbDM2ZDNqd1U5blRyd09EYTl4c3ZaSHc3QWgwTFN5bW10NXBRamFpOU9pVwpWN0NNbmhKSTZWK211UllVSWpldGJBMmg2RHlYbU9mWEo3Rk1DWTMwL05uUjg0WUhnRElHRGdhVUY3bmNTVENZCmRaM1FpZzA3SkxEbEw0eTEySVo4WC9LdUhnKzEvTTRhUTlwOGtSTGFTOTBGcS9FUEhyUlhwclJnRE5xUXdBTG8KbmtURllzMG1Yc2FuRnVIc1ZLRHAxN1FXTTNWYURRNklyT1M4NE5xWm96am95S29LMWFuTWgxNmNYRmxPK0E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\n    server: https://35.239.123.58\n  name: beast-298015_us-central1-a_helloworld-fdada31\ncontexts:\n- context:\n    cluster: beast-298015_us-central1-a_helloworld-fdada31\n    user: beast-298015_us-central1-a_helloworld-fdada31\n  name: beast-298015_us-central1-a_helloworld-fdada31\ncurrent-context: beast-298015_us-central1-a_helloworld-fdada31\nkind: Config\npreferences: {}\nusers:\n- name: beast-298015_us-central1-a_helloworld-fdada31\n  user:\n    auth-provider:\n      config:\n        cmd-args: config config-helper --format=json\n        cmd-path: gcloud\n        expiry-key: '{.credential.token_expiry}'\n        token-key: '{.credential.access_token}'\n      name: gcp\n"
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
                 "dependencies": [
@@ -426,7 +429,7 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::impala",
                 "custom": true,
-                "id": "default/impala-3852urpn",
+                "id": "default/impala-5xa44r6f",
                 "type": "kubernetes:core/v1:ConfigMap",
                 "inputs": {
                     "apiVersion": "v1",
@@ -441,7 +444,7 @@
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "impala-3852urpn",
+                        "name": "impala-5xa44r6f",
                         "namespace": "default"
                     }
                 },
@@ -460,7 +463,7 @@
                             "labels": {
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "impala-3852urpn",
+                            "name": "impala-5xa44r6f",
                             "namespace": "default"
                         }
                     },
@@ -471,162 +474,22 @@
                     "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"config.py\":\"\\n            config = {\\n                'experiment_name': 'Qenv',\\n                'master_address': 'localhost:8010',\\n                'env':[\\n                    {'host':'qenv-0-qenv','port':5000},\\n                    {'host':'qenv-1-qenv','port':5000},\\n                ],\\n                'actor_num': 2,\\n                'pool_size': 4,\\n                'num_steps':500000,\\n                'sample_batch_steps': 50,\\n                'train_batch_size': 1000,\\n                'sample_queue_max_size': 8,\\n                'gamma': 0.99,\\n                'lr_scheduler': [(0, 0.001), (20000, 0.0005), (40000, 0.0001)],\\n                'entropy_coeff_scheduler': [(0, -0.01)],\\n                'vf_loss_coeff': 0.5,\\n                'clip_rho_threshold': 1.0,\\n                'clip_pg_rho_threshold': 1.0,\\n                'get_remote_metrics_interval': 10,\\n                'log_metrics_interval_s': 10,\\n                'params_broadcast_interval': 5,\\n            }\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"impala-3852urpn\",\"namespace\":\"default\"}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"config.py\":\"\\n            config = {\\n                'experiment_name': 'Qenv',\\n                'master_address': 'localhost:8010',\\n                'env':[\\n                    {'host':'qenv-0-qenv','port':5000},\\n                    {'host':'qenv-1-qenv','port':5000},\\n                ],\\n                'actor_num': 2,\\n                'pool_size': 4,\\n                'num_steps':500000,\\n                'sample_batch_steps': 50,\\n                'train_batch_size': 1000,\\n                'sample_queue_max_size': 8,\\n                'gamma': 0.99,\\n                'lr_scheduler': [(0, 0.001), (20000, 0.0005), (40000, 0.0001)],\\n                'entropy_coeff_scheduler': [(0, -0.01)],\\n                'vf_loss_coeff': 0.5,\\n                'clip_rho_threshold': 1.0,\\n                'clip_pg_rho_threshold': 1.0,\\n                'get_remote_metrics_interval': 10,\\n                'log_metrics_interval_s': 10,\\n                'params_broadcast_interval': 5,\\n            }\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"impala-5xa44r6f\",\"namespace\":\"default\"}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:00Z",
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "impala-3852urpn",
+                        "name": "impala-5xa44r6f",
                         "namespace": "default",
-                        "resourceVersion": "984",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/impala-3852urpn",
-                        "uid": "0f334d93-1642-49a7-964e-1e6f7b0d94d3"
+                        "resourceVersion": "956",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/impala-5xa44r6f",
+                        "uid": "7681bff6-ca02-4eea-ae72-59addc20b968"
                     }
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
-                "propertyDependencies": {
-                    "apiVersion": null,
-                    "data": null,
-                    "kind": null
-                }
-            },
-            {
-                "urn": "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::qenv-0-qenv",
-                "custom": true,
-                "id": "default/qenv-0-qenv-85k08u56",
-                "type": "kubernetes:core/v1:ConfigMap",
-                "inputs": {
-                    "apiVersion": "v1",
-                    "data": {
-                        "trainconfig.q": "\n            random:()\n        "
-                    },
-                    "kind": "ConfigMap",
-                    "metadata": {
-                        "annotations": {
-                            "pulumi.com/autonamed": "true"
-                        },
-                        "labels": {
-                            "app.kubernetes.io/managed-by": "pulumi"
-                        },
-                        "name": "qenv-0-qenv-85k08u56",
-                        "namespace": "default"
-                    }
-                },
-                "outputs": {
-                    "__initialApiVersion": "v1",
-                    "__inputs": {
-                        "apiVersion": "v1",
-                        "data": {
-                            "trainconfig.q": "\n            random:()\n        "
-                        },
-                        "kind": "ConfigMap",
-                        "metadata": {
-                            "annotations": {
-                                "pulumi.com/autonamed": "true"
-                            },
-                            "labels": {
-                                "app.kubernetes.io/managed-by": "pulumi"
-                            },
-                            "name": "qenv-0-qenv-85k08u56",
-                            "namespace": "default"
-                        }
-                    },
-                    "apiVersion": "v1",
-                    "data": {
-                        "trainconfig.q": "\n            random:()\n        "
-                    },
-                    "kind": "ConfigMap",
-                    "metadata": {
-                        "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"trainconfig.q\":\"\\n            random:()\\n        \"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"qenv-0-qenv-85k08u56\",\"namespace\":\"default\"}}\n",
-                            "pulumi.com/autonamed": "true"
-                        },
-                        "creationTimestamp": "2020-12-11T16:50:00Z",
-                        "labels": {
-                            "app.kubernetes.io/managed-by": "pulumi"
-                        },
-                        "name": "qenv-0-qenv-85k08u56",
-                        "namespace": "default",
-                        "resourceVersion": "985",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/qenv-0-qenv-85k08u56",
-                        "uid": "51b20a03-103a-405f-bb99-9e06a77b8fc1"
-                    }
-                },
-                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
-                "propertyDependencies": {
-                    "apiVersion": null,
-                    "data": null,
-                    "kind": null
-                }
-            },
-            {
-                "urn": "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::qenv-1-qenv",
-                "custom": true,
-                "id": "default/qenv-1-qenv-fz5syb10",
-                "type": "kubernetes:core/v1:ConfigMap",
-                "inputs": {
-                    "apiVersion": "v1",
-                    "data": {
-                        "trainconfig.q": "\n            random:()\n        "
-                    },
-                    "kind": "ConfigMap",
-                    "metadata": {
-                        "annotations": {
-                            "pulumi.com/autonamed": "true"
-                        },
-                        "labels": {
-                            "app.kubernetes.io/managed-by": "pulumi"
-                        },
-                        "name": "qenv-1-qenv-fz5syb10",
-                        "namespace": "default"
-                    }
-                },
-                "outputs": {
-                    "__initialApiVersion": "v1",
-                    "__inputs": {
-                        "apiVersion": "v1",
-                        "data": {
-                            "trainconfig.q": "\n            random:()\n        "
-                        },
-                        "kind": "ConfigMap",
-                        "metadata": {
-                            "annotations": {
-                                "pulumi.com/autonamed": "true"
-                            },
-                            "labels": {
-                                "app.kubernetes.io/managed-by": "pulumi"
-                            },
-                            "name": "qenv-1-qenv-fz5syb10",
-                            "namespace": "default"
-                        }
-                    },
-                    "apiVersion": "v1",
-                    "data": {
-                        "trainconfig.q": "\n            random:()\n        "
-                    },
-                    "kind": "ConfigMap",
-                    "metadata": {
-                        "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"trainconfig.q\":\"\\n            random:()\\n        \"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"qenv-1-qenv-fz5syb10\",\"namespace\":\"default\"}}\n",
-                            "pulumi.com/autonamed": "true"
-                        },
-                        "creationTimestamp": "2020-12-11T16:50:00Z",
-                        "labels": {
-                            "app.kubernetes.io/managed-by": "pulumi"
-                        },
-                        "name": "qenv-1-qenv-fz5syb10",
-                        "namespace": "default",
-                        "resourceVersion": "986",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/qenv-1-qenv-fz5syb10",
-                        "uid": "abeddcae-02ff-445f-bbb4-197b9062cddc"
-                    }
-                },
-                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "data": null,
@@ -636,7 +499,7 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:core/v1:ConfigMap::ingest-1-ingest",
                 "custom": true,
-                "id": "default/ingest-1-ingest-yflp9kta",
+                "id": "default/ingest-1-ingest-36eotzkb",
                 "type": "kubernetes:core/v1:ConfigMap",
                 "inputs": {
                     "apiVersion": "v1",
@@ -652,7 +515,7 @@
                             "app": "ingest",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-1-ingest-yflp9kta",
+                        "name": "ingest-1-ingest-36eotzkb",
                         "namespace": "default"
                     }
                 },
@@ -672,7 +535,7 @@
                                 "app": "ingest",
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "ingest-1-ingest-yflp9kta",
+                            "name": "ingest-1-ingest-36eotzkb",
                             "namespace": "default"
                         }
                     },
@@ -683,23 +546,23 @@
                     "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"data.list\":\"[]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"ingest\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-1-ingest-yflp9kta\",\"namespace\":\"default\"}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"data.list\":\"[]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"ingest\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-1-ingest-36eotzkb\",\"namespace\":\"default\"}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:01Z",
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
                         "labels": {
                             "app": "ingest",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-1-ingest-yflp9kta",
+                        "name": "ingest-1-ingest-36eotzkb",
                         "namespace": "default",
-                        "resourceVersion": "987",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-1-ingest-yflp9kta",
-                        "uid": "3cdc4503-e0bc-425a-99c3-805bf5e8e690"
+                        "resourceVersion": "957",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-1-ingest-36eotzkb",
+                        "uid": "48974cef-8890-4e9d-8248-038da9e90675"
                     }
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest::ingest-1",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "data": null,
@@ -710,7 +573,7 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:core/v1:ConfigMap::ingest-0-ingest",
                 "custom": true,
-                "id": "default/ingest-0-ingest-ox2ogrm4",
+                "id": "default/ingest-0-ingest-rbhubgwr",
                 "type": "kubernetes:core/v1:ConfigMap",
                 "inputs": {
                     "apiVersion": "v1",
@@ -726,7 +589,7 @@
                             "app": "ingest",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-0-ingest-ox2ogrm4",
+                        "name": "ingest-0-ingest-rbhubgwr",
                         "namespace": "default"
                     }
                 },
@@ -746,7 +609,7 @@
                                 "app": "ingest",
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "ingest-0-ingest-ox2ogrm4",
+                            "name": "ingest-0-ingest-rbhubgwr",
                             "namespace": "default"
                         }
                     },
@@ -757,23 +620,23 @@
                     "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"data.list\":\"[]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"ingest\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-0-ingest-ox2ogrm4\",\"namespace\":\"default\"}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"data.list\":\"[]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"ingest\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-0-ingest-rbhubgwr\",\"namespace\":\"default\"}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:01Z",
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
                         "labels": {
                             "app": "ingest",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-0-ingest-ox2ogrm4",
+                        "name": "ingest-0-ingest-rbhubgwr",
                         "namespace": "default",
-                        "resourceVersion": "990",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-0-ingest-ox2ogrm4",
-                        "uid": "afa7bfa5-9275-4c61-b95a-1491f2e0a177"
+                        "resourceVersion": "958",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-0-ingest-rbhubgwr",
+                        "uid": "8df9ed1a-d841-4da2-8bfa-6891d170e276"
                     }
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest::ingest-0",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "data": null,
@@ -784,7 +647,7 @@
             {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:core/v1:ConfigMap::ingest-gate",
                 "custom": true,
-                "id": "default/ingest-gate-ijp369ff",
+                "id": "default/ingest-gate-5ms19ejq",
                 "type": "kubernetes:core/v1:ConfigMap",
                 "inputs": {
                     "apiVersion": "v1",
@@ -800,7 +663,7 @@
                             "app": "gate",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-gate-ijp369ff",
+                        "name": "ingest-gate-5ms19ejq",
                         "namespace": "default"
                     }
                 },
@@ -820,7 +683,7 @@
                                 "app": "gate",
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "ingest-gate-ijp369ff",
+                            "name": "ingest-gate-5ms19ejq",
                             "namespace": "default"
                         }
                     },
@@ -831,23 +694,23 @@
                     "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"config.json\":\"[{\\\"sId\\\":0,\\\"host\\\":\\\"ingest-0\\\",\\\"port\\\":5000,\\\"start\\\":445855,\\\"end\\\":445856},{\\\"sId\\\":1,\\\"host\\\":\\\"ingest-1\\\",\\\"port\\\":5000,\\\"start\\\":445857,\\\"end\\\":445857}]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"gate\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-gate-ijp369ff\",\"namespace\":\"default\"}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"config.json\":\"[{\\\"sId\\\":0,\\\"host\\\":\\\"ingest-0\\\",\\\"port\\\":5000,\\\"start\\\":445855,\\\"end\\\":445856},{\\\"sId\\\":1,\\\"host\\\":\\\"ingest-1\\\",\\\"port\\\":5000,\\\"start\\\":445857,\\\"end\\\":445857}]\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app\":\"gate\",\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-gate-5ms19ejq\",\"namespace\":\"default\"}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:01Z",
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
                         "labels": {
                             "app": "gate",
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-gate-ijp369ff",
+                        "name": "ingest-gate-5ms19ejq",
                         "namespace": "default",
-                        "resourceVersion": "991",
-                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-gate-ijp369ff",
-                        "uid": "be563680-0b93-4e82-9537-605092441f2e"
+                        "resourceVersion": "960",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/ingest-gate-5ms19ejq",
+                        "uid": "95794765-45da-4935-b4c4-c109d0b537db"
                     }
                 },
                 "parent": "urn:pulumi:dev::QenvBeast::beast:qenv:gate::ingest",
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "data": null,
@@ -856,13 +719,16 @@
                 }
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::beast:impala:train$kubernetes:apps/v1:StatefulSet::test-impala",
+                "urn": "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::qenv-1-qenv",
                 "custom": true,
-                "id": "default/test-impala-zetoi14v",
-                "type": "kubernetes:apps/v1:StatefulSet",
+                "id": "default/qenv-1-qenv-cmyx609j",
+                "type": "kubernetes:core/v1:ConfigMap",
                 "inputs": {
-                    "apiVersion": "apps/v1",
-                    "kind": "StatefulSet",
+                    "apiVersion": "v1",
+                    "data": {
+                        "trainconfig.q": "\n            random:()\n        "
+                    },
+                    "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
                             "pulumi.com/autonamed": "true"
@@ -870,100 +736,18 @@
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "test-impala-zetoi14v",
+                        "name": "qenv-1-qenv-cmyx609j",
                         "namespace": "default"
-                    },
-                    "spec": {
-                        "replicas": 1,
-                        "selector": {
-                            "matchLabels": {
-                                "app": "impala"
-                            }
-                        },
-                        "serviceName": "impala",
-                        "template": {
-                            "metadata": {
-                                "labels": {
-                                    "app": "impala"
-                                }
-                            },
-                            "spec": {
-                                "containers": [
-                                    {
-                                        "env": [
-                                            {
-                                                "name": "NUM_WORKERS",
-                                                "value": "2"
-                                            },
-                                            {
-                                                "name": "LOG_PATH",
-                                                "value": "/impala/data/log"
-                                            },
-                                            {
-                                                "name": "CKP_PATH",
-                                                "value": "/impala/data/ckp"
-                                            },
-                                            {
-                                                "name": "CONFIG_PATH",
-                                                "value": "/impala/config/config.py"
-                                            }
-                                        ],
-                                        "image": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
-                                        "imagePullPolicy": "IfNotPresent",
-                                        "name": "impala",
-                                        "volumeMounts": [
-                                            {
-                                                "mountPath": "/impala/data",
-                                                "name": "data"
-                                            },
-                                            {
-                                                "mountPath": "/impala/config",
-                                                "name": "config"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                "serviceAccountName": "default",
-                                "volumes": [
-                                    {
-                                        "configMap": {
-                                            "name": "impala-3852urpn"
-                                        },
-                                        "name": "config"
-                                    }
-                                ]
-                            }
-                        },
-                        "updateStrategy": {},
-                        "volumeClaimTemplates": [
-                            {
-                                "metadata": {
-                                    "labels": {
-                                        "app": "impala",
-                                        "component": "master",
-                                        "release": "example"
-                                    },
-                                    "name": "data"
-                                },
-                                "spec": {
-                                    "accessModes": [
-                                        "ReadWriteOnce"
-                                    ],
-                                    "resources": {
-                                        "requests": {
-                                            "storage": "8Gi"
-                                        }
-                                    }
-                                }
-                            }
-                        ]
                     }
                 },
                 "outputs": {
-                    "__initialApiVersion": "apps/v1",
+                    "__initialApiVersion": "v1",
                     "__inputs": {
-                        "apiVersion": "apps/v1",
-                        "kind": "StatefulSet",
+                        "apiVersion": "v1",
+                        "data": {
+                            "trainconfig.q": "\n            random:()\n        "
+                        },
+                        "kind": "ConfigMap",
                         "metadata": {
                             "annotations": {
                                 "pulumi.com/autonamed": "true"
@@ -971,253 +755,113 @@
                             "labels": {
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "test-impala-zetoi14v",
+                            "name": "qenv-1-qenv-cmyx609j",
                             "namespace": "default"
-                        },
-                        "spec": {
-                            "replicas": 1,
-                            "selector": {
-                                "matchLabels": {
-                                    "app": "impala"
-                                }
-                            },
-                            "serviceName": "impala",
-                            "template": {
-                                "metadata": {
-                                    "labels": {
-                                        "app": "impala"
-                                    }
-                                },
-                                "spec": {
-                                    "containers": [
-                                        {
-                                            "env": [
-                                                {
-                                                    "name": "NUM_WORKERS",
-                                                    "value": "2"
-                                                },
-                                                {
-                                                    "name": "LOG_PATH",
-                                                    "value": "/impala/data/log"
-                                                },
-                                                {
-                                                    "name": "CKP_PATH",
-                                                    "value": "/impala/data/ckp"
-                                                },
-                                                {
-                                                    "name": "CONFIG_PATH",
-                                                    "value": "/impala/config/config.py"
-                                                }
-                                            ],
-                                            "image": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
-                                            "imagePullPolicy": "IfNotPresent",
-                                            "name": "impala",
-                                            "volumeMounts": [
-                                                {
-                                                    "mountPath": "/impala/data",
-                                                    "name": "data"
-                                                },
-                                                {
-                                                    "mountPath": "/impala/config",
-                                                    "name": "config"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "serviceAccountName": "default",
-                                    "volumes": [
-                                        {
-                                            "configMap": {
-                                                "name": "impala-3852urpn"
-                                            },
-                                            "name": "config"
-                                        }
-                                    ]
-                                }
-                            },
-                            "updateStrategy": {},
-                            "volumeClaimTemplates": [
-                                {
-                                    "metadata": {
-                                        "labels": {
-                                            "app": "impala",
-                                            "component": "master",
-                                            "release": "example"
-                                        },
-                                        "name": "data"
-                                    },
-                                    "spec": {
-                                        "accessModes": [
-                                            "ReadWriteOnce"
-                                        ],
-                                        "resources": {
-                                            "requests": {
-                                                "storage": "8Gi"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
                         }
                     },
-                    "apiVersion": "apps/v1",
-                    "kind": "StatefulSet",
+                    "apiVersion": "v1",
+                    "data": {
+                        "trainconfig.q": "\n            random:()\n        "
+                    },
+                    "kind": "ConfigMap",
                     "metadata": {
                         "annotations": {
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"StatefulSet\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"test-impala-zetoi14v\",\"namespace\":\"default\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"impala\"}},\"serviceName\":\"impala\",\"template\":{\"metadata\":{\"labels\":{\"app\":\"impala\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"NUM_WORKERS\",\"value\":\"2\"},{\"name\":\"LOG_PATH\",\"value\":\"/impala/data/log\"},{\"name\":\"CKP_PATH\",\"value\":\"/impala/data/ckp\"},{\"name\":\"CONFIG_PATH\",\"value\":\"/impala/config/config.py\"}],\"image\":\"gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"impala\",\"volumeMounts\":[{\"mountPath\":\"/impala/data\",\"name\":\"data\"},{\"mountPath\":\"/impala/config\",\"name\":\"config\"}]}],\"serviceAccountName\":\"default\",\"volumes\":[{\"configMap\":{\"name\":\"impala-3852urpn\"},\"name\":\"config\"}]}},\"updateStrategy\":{},\"volumeClaimTemplates\":[{\"metadata\":{\"labels\":{\"app\":\"impala\",\"component\":\"master\",\"release\":\"example\"},\"name\":\"data\"},\"spec\":{\"accessModes\":[\"ReadWriteOnce\"],\"resources\":{\"requests\":{\"storage\":\"8Gi\"}}}}]}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"trainconfig.q\":\"\\n            random:()\\n        \"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"qenv-1-qenv-cmyx609j\",\"namespace\":\"default\"}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:03Z",
-                        "generation": 1,
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "test-impala-zetoi14v",
+                        "name": "qenv-1-qenv-cmyx609j",
                         "namespace": "default",
-                        "resourceVersion": "3606",
-                        "selfLink": "/apis/apps/v1/namespaces/default/statefulsets/test-impala-zetoi14v",
-                        "uid": "35a0f278-6073-4070-b30a-0222fca64a21"
-                    },
-                    "spec": {
-                        "podManagementPolicy": "OrderedReady",
-                        "replicas": 1,
-                        "revisionHistoryLimit": 10,
-                        "selector": {
-                            "matchLabels": {
-                                "app": "impala"
-                            }
-                        },
-                        "serviceName": "impala",
-                        "template": {
-                            "metadata": {
-                                "labels": {
-                                    "app": "impala"
-                                }
-                            },
-                            "spec": {
-                                "containers": [
-                                    {
-                                        "env": [
-                                            {
-                                                "name": "NUM_WORKERS",
-                                                "value": "2"
-                                            },
-                                            {
-                                                "name": "LOG_PATH",
-                                                "value": "/impala/data/log"
-                                            },
-                                            {
-                                                "name": "CKP_PATH",
-                                                "value": "/impala/data/ckp"
-                                            },
-                                            {
-                                                "name": "CONFIG_PATH",
-                                                "value": "/impala/config/config.py"
-                                            }
-                                        ],
-                                        "image": "gcr.io/beast-298015/impala:latest-089ae0dfcf8424e9dda4b9d873258cd5cbc88b2256a1b4c26bd81cff9f1b0a71",
-                                        "imagePullPolicy": "IfNotPresent",
-                                        "name": "impala",
-                                        "resources": {},
-                                        "terminationMessagePath": "/dev/termination-log",
-                                        "terminationMessagePolicy": "File",
-                                        "volumeMounts": [
-                                            {
-                                                "mountPath": "/impala/data",
-                                                "name": "data"
-                                            },
-                                            {
-                                                "mountPath": "/impala/config",
-                                                "name": "config"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                "dnsPolicy": "ClusterFirst",
-                                "restartPolicy": "Always",
-                                "schedulerName": "default-scheduler",
-                                "securityContext": {},
-                                "serviceAccount": "default",
-                                "serviceAccountName": "default",
-                                "terminationGracePeriodSeconds": 30,
-                                "volumes": [
-                                    {
-                                        "configMap": {
-                                            "defaultMode": 420,
-                                            "name": "impala-3852urpn"
-                                        },
-                                        "name": "config"
-                                    }
-                                ]
-                            }
-                        },
-                        "updateStrategy": {
-                            "rollingUpdate": {
-                                "partition": 0
-                            },
-                            "type": "RollingUpdate"
-                        },
-                        "volumeClaimTemplates": [
-                            {
-                                "apiVersion": "v1",
-                                "kind": "PersistentVolumeClaim",
-                                "metadata": {
-                                    "labels": {
-                                        "app": "impala",
-                                        "component": "master",
-                                        "release": "example"
-                                    },
-                                    "name": "data"
-                                },
-                                "spec": {
-                                    "accessModes": [
-                                        "ReadWriteOnce"
-                                    ],
-                                    "resources": {
-                                        "requests": {
-                                            "storage": "8Gi"
-                                        }
-                                    },
-                                    "volumeMode": "Filesystem"
-                                },
-                                "status": {
-                                    "phase": "Pending"
-                                }
-                            }
-                        ]
-                    },
-                    "status": {
-                        "collisionCount": 0,
-                        "currentReplicas": 1,
-                        "currentRevision": "test-impala-zetoi14v-7769bdfcf7",
-                        "observedGeneration": 1,
-                        "readyReplicas": 1,
-                        "replicas": 1,
-                        "updateRevision": "test-impala-zetoi14v-7769bdfcf7",
-                        "updatedReplicas": 1
+                        "resourceVersion": "961",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/qenv-1-qenv-cmyx609j",
+                        "uid": "f3efb06e-b650-4e9f-9fa6-c124b1c9da65"
                     }
                 },
-                "parent": "urn:pulumi:dev::QenvBeast::beast:impala:train::test",
-                "dependencies": [
-                    "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::impala"
-                ],
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
-                    "kind": null,
-                    "spec": [
-                        "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::impala"
-                    ]
+                    "data": null,
+                    "kind": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::QenvBeast::kubernetes:core/v1:ConfigMap::qenv-0-qenv",
+                "custom": true,
+                "id": "default/qenv-0-qenv-vp0ucll5",
+                "type": "kubernetes:core/v1:ConfigMap",
+                "inputs": {
+                    "apiVersion": "v1",
+                    "data": {
+                        "trainconfig.q": "\n            random:()\n        "
+                    },
+                    "kind": "ConfigMap",
+                    "metadata": {
+                        "annotations": {
+                            "pulumi.com/autonamed": "true"
+                        },
+                        "labels": {
+                            "app.kubernetes.io/managed-by": "pulumi"
+                        },
+                        "name": "qenv-0-qenv-vp0ucll5",
+                        "namespace": "default"
+                    }
                 },
-                "aliases": [
-                    "urn:pulumi:dev::QenvBeast::beast:impala:train$kubernetes:apps/v1beta1:StatefulSet::test-impala",
-                    "urn:pulumi:dev::QenvBeast::beast:impala:train$kubernetes:apps/v1beta2:StatefulSet::test-impala"
-                ]
+                "outputs": {
+                    "__initialApiVersion": "v1",
+                    "__inputs": {
+                        "apiVersion": "v1",
+                        "data": {
+                            "trainconfig.q": "\n            random:()\n        "
+                        },
+                        "kind": "ConfigMap",
+                        "metadata": {
+                            "annotations": {
+                                "pulumi.com/autonamed": "true"
+                            },
+                            "labels": {
+                                "app.kubernetes.io/managed-by": "pulumi"
+                            },
+                            "name": "qenv-0-qenv-vp0ucll5",
+                            "namespace": "default"
+                        }
+                    },
+                    "apiVersion": "v1",
+                    "data": {
+                        "trainconfig.q": "\n            random:()\n        "
+                    },
+                    "kind": "ConfigMap",
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"trainconfig.q\":\"\\n            random:()\\n        \"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"qenv-0-qenv-vp0ucll5\",\"namespace\":\"default\"}}\n",
+                            "pulumi.com/autonamed": "true"
+                        },
+                        "creationTimestamp": "2020-12-11T17:28:15Z",
+                        "labels": {
+                            "app.kubernetes.io/managed-by": "pulumi"
+                        },
+                        "name": "qenv-0-qenv-vp0ucll5",
+                        "namespace": "default",
+                        "resourceVersion": "964",
+                        "selfLink": "/api/v1/namespaces/default/configmaps/qenv-0-qenv-vp0ucll5",
+                        "uid": "d3154df5-046d-425a-a6da-38f0bc593c13"
+                    }
+                },
+                "parent": "urn:pulumi:dev::QenvBeast::pulumi:pulumi:Stack::QenvBeast-dev",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
+                "propertyDependencies": {
+                    "apiVersion": null,
+                    "data": null,
+                    "kind": null
+                }
             },
             {
                 "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:apps/v1:Deployment::ingest-1-ingest",
                 "custom": true,
-                "id": "default/ingest-1-ingest-ojqvpdmx",
+                "id": "default/ingest-1-ingest-8nfw5nv6",
                 "type": "kubernetes:apps/v1:Deployment",
                 "inputs": {
                     "apiVersion": "apps/v1",
@@ -1229,7 +873,7 @@
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-1-ingest-ojqvpdmx",
+                        "name": "ingest-1-ingest-8nfw5nv6",
                         "namespace": "default"
                     },
                     "spec": {
@@ -1257,7 +901,7 @@
                                                 "value": "/ingest/testdata/events"
                                             }
                                         ],
-                                        "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                        "image": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
                                         "imagePullPolicy": "Always",
                                         "name": "ingest",
                                         "ports": [
@@ -1277,7 +921,7 @@
                                 "volumes": [
                                     {
                                         "configMap": {
-                                            "name": "ingest-1-ingest-yflp9kta"
+                                            "name": "ingest-1-ingest-36eotzkb"
                                         },
                                         "name": "data-list"
                                     }
@@ -1298,7 +942,7 @@
                             "labels": {
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "ingest-1-ingest-ojqvpdmx",
+                            "name": "ingest-1-ingest-8nfw5nv6",
                             "namespace": "default"
                         },
                         "spec": {
@@ -1326,7 +970,7 @@
                                                     "value": "/ingest/testdata/events"
                                                 }
                                             ],
-                                            "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                            "image": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
                                             "imagePullPolicy": "Always",
                                             "name": "ingest",
                                             "ports": [
@@ -1346,7 +990,7 @@
                                     "volumes": [
                                         {
                                             "configMap": {
-                                                "name": "ingest-1-ingest-yflp9kta"
+                                                "name": "ingest-1-ingest-36eotzkb"
                                             },
                                             "name": "data-list"
                                         }
@@ -1360,19 +1004,19 @@
                     "metadata": {
                         "annotations": {
                             "deployment.kubernetes.io/revision": "1",
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-1-ingest-ojqvpdmx\",\"namespace\":\"default\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"ingest\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"ingest\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"GOOGLE_APPLICATION_CREDENTIALS\",\"value\":\"/var/secrets/google/key.json\"},{\"name\":\"DATA_PATH\",\"value\":\"/ingest/testdata/events\"}],\"image\":\"gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31\",\"imagePullPolicy\":\"Always\",\"name\":\"ingest\",\"ports\":[{\"containerPort\":5000,\"name\":\"kdb\"}],\"volumeMounts\":[{\"mountPath\":\"/ingest/config/datalist\",\"name\":\"data-list\"}]}],\"volumes\":[{\"configMap\":{\"name\":\"ingest-1-ingest-yflp9kta\"},\"name\":\"data-list\"}]}}}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-1-ingest-8nfw5nv6\",\"namespace\":\"default\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"ingest\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"ingest\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"GOOGLE_APPLICATION_CREDENTIALS\",\"value\":\"/var/secrets/google/key.json\"},{\"name\":\"DATA_PATH\",\"value\":\"/ingest/testdata/events\"}],\"image\":\"gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31\",\"imagePullPolicy\":\"Always\",\"name\":\"ingest\",\"ports\":[{\"containerPort\":5000,\"name\":\"kdb\"}],\"volumeMounts\":[{\"mountPath\":\"/ingest/config/datalist\",\"name\":\"data-list\"}]}],\"volumes\":[{\"configMap\":{\"name\":\"ingest-1-ingest-36eotzkb\"},\"name\":\"data-list\"}]}}}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:04Z",
+                        "creationTimestamp": "2020-12-11T17:28:18Z",
                         "generation": 1,
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-1-ingest-ojqvpdmx",
+                        "name": "ingest-1-ingest-8nfw5nv6",
                         "namespace": "default",
-                        "resourceVersion": "1031",
-                        "selfLink": "/apis/apps/v1/namespaces/default/deployments/ingest-1-ingest-ojqvpdmx",
-                        "uid": "70e334ef-1de1-46e1-9e49-09e8a8fa3c84"
+                        "resourceVersion": "1008",
+                        "selfLink": "/apis/apps/v1/namespaces/default/deployments/ingest-1-ingest-8nfw5nv6",
+                        "uid": "aef9372e-1a56-478a-b6de-5e28d1d3c57b"
                     },
                     "spec": {
                         "progressDeadlineSeconds": 600,
@@ -1409,7 +1053,7 @@
                                                 "value": "/ingest/testdata/events"
                                             }
                                         ],
-                                        "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                        "image": "gcr.io/beast-298015/ingest:1607707486130-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
                                         "imagePullPolicy": "Always",
                                         "name": "ingest",
                                         "ports": [
@@ -1439,7 +1083,7 @@
                                     {
                                         "configMap": {
                                             "defaultMode": 420,
-                                            "name": "ingest-1-ingest-yflp9kta"
+                                            "name": "ingest-1-ingest-36eotzkb"
                                         },
                                         "name": "data-list"
                                     }
@@ -1450,17 +1094,17 @@
                     "status": {
                         "conditions": [
                             {
-                                "lastTransitionTime": "2020-12-11T16:50:04Z",
-                                "lastUpdateTime": "2020-12-11T16:50:04Z",
+                                "lastTransitionTime": "2020-12-11T17:28:18Z",
+                                "lastUpdateTime": "2020-12-11T17:28:18Z",
                                 "message": "Deployment does not have minimum availability.",
                                 "reason": "MinimumReplicasUnavailable",
                                 "status": "False",
                                 "type": "Available"
                             },
                             {
-                                "lastTransitionTime": "2020-12-11T16:50:04Z",
-                                "lastUpdateTime": "2020-12-11T16:50:04Z",
-                                "message": "ReplicaSet \"ingest-1-ingest-ojqvpdmx-7dc46fbbdd\" is progressing.",
+                                "lastTransitionTime": "2020-12-11T17:28:18Z",
+                                "lastUpdateTime": "2020-12-11T17:28:18Z",
+                                "message": "ReplicaSet \"ingest-1-ingest-8nfw5nv6-5555c799f\" is progressing.",
                                 "reason": "ReplicaSetUpdated",
                                 "status": "True",
                                 "type": "Progressing"
@@ -1477,11 +1121,10 @@
                     "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:core/v1:ConfigMap::ingest-1-ingest"
                 ],
                 "initErrors": [
-                    "resource default/ingest-1-ingest-ojqvpdmx was successfully created, but the Kubernetes API server reported that it failed to fully initialize or become live: Resource operation was cancelled for \"ingest-1-ingest-ojqvpdmx\"",
-                    "Minimum number of live Pods was not attained",
-                    "[Pod ingest-1-ingest-ojqvpdmx-7dc46fbbdd-2v45z]: containers with unready status: [ingest] -- [ImagePullBackOff] Back-off pulling image \"gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31\""
+                    "resource default/ingest-1-ingest-8nfw5nv6 was successfully created, but the Kubernetes API server reported that it failed to fully initialize or become live: Resource operation was cancelled for \"ingest-1-ingest-8nfw5nv6\"",
+                    "Minimum number of live Pods was not attained"
                 ],
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "kind": null,
@@ -1496,9 +1139,9 @@
                 ]
             },
             {
-                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:apps/v1:Deployment::ingest-0-ingest",
+                "urn": "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:apps/v1:Deployment::ingest-gate",
                 "custom": true,
-                "id": "default/ingest-0-ingest-hmfyi6sm",
+                "id": "default/ingest-gate-zkparx2v",
                 "type": "kubernetes:apps/v1:Deployment",
                 "inputs": {
                     "apiVersion": "apps/v1",
@@ -1510,19 +1153,20 @@
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-0-ingest-hmfyi6sm",
+                        "name": "ingest-gate-zkparx2v",
                         "namespace": "default"
                     },
                     "spec": {
+                        "replicas": 1,
                         "selector": {
                             "matchLabels": {
-                                "app": "ingest"
+                                "app": "gate"
                             }
                         },
                         "template": {
                             "metadata": {
                                 "labels": {
-                                    "app": "ingest"
+                                    "app": "gate"
                                 }
                             },
                             "spec": {
@@ -1530,17 +1174,13 @@
                                     {
                                         "env": [
                                             {
-                                                "name": "GOOGLE_APPLICATION_CREDENTIALS",
-                                                "value": "/var/secrets/google/key.json"
-                                            },
-                                            {
-                                                "name": "DATA_PATH",
-                                                "value": "/ingest/testdata/events"
+                                                "name": "CONFIGPATH",
+                                                "value": "/gate/config/config.json"
                                             }
                                         ],
-                                        "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                        "image": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
                                         "imagePullPolicy": "Always",
-                                        "name": "ingest",
+                                        "name": "gate",
                                         "ports": [
                                             {
                                                 "containerPort": 5000,
@@ -1549,8 +1189,8 @@
                                         ],
                                         "volumeMounts": [
                                             {
-                                                "mountPath": "/ingest/config/datalist",
-                                                "name": "data-list"
+                                                "mountPath": "/gate/config",
+                                                "name": "gate-configs"
                                             }
                                         ]
                                     }
@@ -1558,9 +1198,9 @@
                                 "volumes": [
                                     {
                                         "configMap": {
-                                            "name": "ingest-0-ingest-ox2ogrm4"
+                                            "name": "ingest-gate-5ms19ejq"
                                         },
-                                        "name": "data-list"
+                                        "name": "gate-configs"
                                     }
                                 ]
                             }
@@ -1579,19 +1219,20 @@
                             "labels": {
                                 "app.kubernetes.io/managed-by": "pulumi"
                             },
-                            "name": "ingest-0-ingest-hmfyi6sm",
+                            "name": "ingest-gate-zkparx2v",
                             "namespace": "default"
                         },
                         "spec": {
+                            "replicas": 1,
                             "selector": {
                                 "matchLabels": {
-                                    "app": "ingest"
+                                    "app": "gate"
                                 }
                             },
                             "template": {
                                 "metadata": {
                                     "labels": {
-                                        "app": "ingest"
+                                        "app": "gate"
                                     }
                                 },
                                 "spec": {
@@ -1599,17 +1240,13 @@
                                         {
                                             "env": [
                                                 {
-                                                    "name": "GOOGLE_APPLICATION_CREDENTIALS",
-                                                    "value": "/var/secrets/google/key.json"
-                                                },
-                                                {
-                                                    "name": "DATA_PATH",
-                                                    "value": "/ingest/testdata/events"
+                                                    "name": "CONFIGPATH",
+                                                    "value": "/gate/config/config.json"
                                                 }
                                             ],
-                                            "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                            "image": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
                                             "imagePullPolicy": "Always",
-                                            "name": "ingest",
+                                            "name": "gate",
                                             "ports": [
                                                 {
                                                     "containerPort": 5000,
@@ -1618,8 +1255,8 @@
                                             ],
                                             "volumeMounts": [
                                                 {
-                                                    "mountPath": "/ingest/config/datalist",
-                                                    "name": "data-list"
+                                                    "mountPath": "/gate/config",
+                                                    "name": "gate-configs"
                                                 }
                                             ]
                                         }
@@ -1627,9 +1264,9 @@
                                     "volumes": [
                                         {
                                             "configMap": {
-                                                "name": "ingest-0-ingest-ox2ogrm4"
+                                                "name": "ingest-gate-5ms19ejq"
                                             },
-                                            "name": "data-list"
+                                            "name": "gate-configs"
                                         }
                                     ]
                                 }
@@ -1641,19 +1278,19 @@
                     "metadata": {
                         "annotations": {
                             "deployment.kubernetes.io/revision": "1",
-                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-0-ingest-hmfyi6sm\",\"namespace\":\"default\"},\"spec\":{\"selector\":{\"matchLabels\":{\"app\":\"ingest\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"ingest\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"GOOGLE_APPLICATION_CREDENTIALS\",\"value\":\"/var/secrets/google/key.json\"},{\"name\":\"DATA_PATH\",\"value\":\"/ingest/testdata/events\"}],\"image\":\"gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31\",\"imagePullPolicy\":\"Always\",\"name\":\"ingest\",\"ports\":[{\"containerPort\":5000,\"name\":\"kdb\"}],\"volumeMounts\":[{\"mountPath\":\"/ingest/config/datalist\",\"name\":\"data-list\"}]}],\"volumes\":[{\"configMap\":{\"name\":\"ingest-0-ingest-ox2ogrm4\"},\"name\":\"data-list\"}]}}}}\n",
+                            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"pulumi.com/autonamed\":\"true\"},\"labels\":{\"app.kubernetes.io/managed-by\":\"pulumi\"},\"name\":\"ingest-gate-zkparx2v\",\"namespace\":\"default\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"gate\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"gate\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"CONFIGPATH\",\"value\":\"/gate/config/config.json\"}],\"image\":\"gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca\",\"imagePullPolicy\":\"Always\",\"name\":\"gate\",\"ports\":[{\"containerPort\":5000,\"name\":\"kdb\"}],\"volumeMounts\":[{\"mountPath\":\"/gate/config\",\"name\":\"gate-configs\"}]}],\"volumes\":[{\"configMap\":{\"name\":\"ingest-gate-5ms19ejq\"},\"name\":\"gate-configs\"}]}}}}\n",
                             "pulumi.com/autonamed": "true"
                         },
-                        "creationTimestamp": "2020-12-11T16:50:05Z",
+                        "creationTimestamp": "2020-12-11T17:28:19Z",
                         "generation": 1,
                         "labels": {
                             "app.kubernetes.io/managed-by": "pulumi"
                         },
-                        "name": "ingest-0-ingest-hmfyi6sm",
+                        "name": "ingest-gate-zkparx2v",
                         "namespace": "default",
-                        "resourceVersion": "1043",
-                        "selfLink": "/apis/apps/v1/namespaces/default/deployments/ingest-0-ingest-hmfyi6sm",
-                        "uid": "e1ec1c81-0ced-4401-bae7-ce38de056538"
+                        "resourceVersion": "1029",
+                        "selfLink": "/apis/apps/v1/namespaces/default/deployments/ingest-gate-zkparx2v",
+                        "uid": "6ea9a55d-c545-4dbb-b587-27040b4c881f"
                     },
                     "spec": {
                         "progressDeadlineSeconds": 600,
@@ -1661,7 +1298,7 @@
                         "revisionHistoryLimit": 10,
                         "selector": {
                             "matchLabels": {
-                                "app": "ingest"
+                                "app": "gate"
                             }
                         },
                         "strategy": {
@@ -1674,7 +1311,7 @@
                         "template": {
                             "metadata": {
                                 "labels": {
-                                    "app": "ingest"
+                                    "app": "gate"
                                 }
                             },
                             "spec": {
@@ -1682,17 +1319,13 @@
                                     {
                                         "env": [
                                             {
-                                                "name": "GOOGLE_APPLICATION_CREDENTIALS",
-                                                "value": "/var/secrets/google/key.json"
-                                            },
-                                            {
-                                                "name": "DATA_PATH",
-                                                "value": "/ingest/testdata/events"
+                                                "name": "CONFIGPATH",
+                                                "value": "/gate/config/config.json"
                                             }
                                         ],
-                                        "image": "gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31",
+                                        "image": "gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca",
                                         "imagePullPolicy": "Always",
-                                        "name": "ingest",
+                                        "name": "gate",
                                         "ports": [
                                             {
                                                 "containerPort": 5000,
@@ -1705,8 +1338,8 @@
                                         "terminationMessagePolicy": "File",
                                         "volumeMounts": [
                                             {
-                                                "mountPath": "/ingest/config/datalist",
-                                                "name": "data-list"
+                                                "mountPath": "/gate/config",
+                                                "name": "gate-configs"
                                             }
                                         ]
                                     }
@@ -1720,9 +1353,9 @@
                                     {
                                         "configMap": {
                                             "defaultMode": 420,
-                                            "name": "ingest-0-ingest-ox2ogrm4"
+                                            "name": "ingest-gate-5ms19ejq"
                                         },
-                                        "name": "data-list"
+                                        "name": "gate-configs"
                                     }
                                 ]
                             }
@@ -1731,17 +1364,17 @@
                     "status": {
                         "conditions": [
                             {
-                                "lastTransitionTime": "2020-12-11T16:50:05Z",
-                                "lastUpdateTime": "2020-12-11T16:50:05Z",
+                                "lastTransitionTime": "2020-12-11T17:28:19Z",
+                                "lastUpdateTime": "2020-12-11T17:28:19Z",
                                 "message": "Deployment does not have minimum availability.",
                                 "reason": "MinimumReplicasUnavailable",
                                 "status": "False",
                                 "type": "Available"
                             },
                             {
-                                "lastTransitionTime": "2020-12-11T16:50:05Z",
-                                "lastUpdateTime": "2020-12-11T16:50:05Z",
-                                "message": "ReplicaSet \"ingest-0-ingest-hmfyi6sm-79d46c9b87\" is progressing.",
+                                "lastTransitionTime": "2020-12-11T17:28:19Z",
+                                "lastUpdateTime": "2020-12-11T17:28:19Z",
+                                "message": "ReplicaSet \"ingest-gate-zkparx2v-587fd946b8\" is progressing.",
                                 "reason": "ReplicaSetUpdated",
                                 "status": "True",
                                 "type": "Progressing"
@@ -1753,27 +1386,27 @@
                         "updatedReplicas": 1
                     }
                 },
-                "parent": "urn:pulumi:dev::QenvBeast::beast:qenv:ingest::ingest-0",
+                "parent": "urn:pulumi:dev::QenvBeast::beast:qenv:gate::ingest",
                 "dependencies": [
-                    "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:core/v1:ConfigMap::ingest-0-ingest"
+                    "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:core/v1:ConfigMap::ingest-gate"
                 ],
                 "initErrors": [
-                    "resource default/ingest-0-ingest-hmfyi6sm was successfully created, but the Kubernetes API server reported that it failed to fully initialize or become live: Resource operation was cancelled for \"ingest-0-ingest-hmfyi6sm\"",
+                    "resource default/ingest-gate-zkparx2v was successfully created, but the Kubernetes API server reported that it failed to fully initialize or become live: Resource operation was cancelled for \"ingest-gate-zkparx2v\"",
                     "Minimum number of live Pods was not attained",
-                    "[Pod ingest-0-ingest-hmfyi6sm-79d46c9b87-rhplr]: containers with unready status: [ingest] -- [ImagePullBackOff] Back-off pulling image \"gcr.io/beast-298015/ingest:latest-8bc6ee43e66b86593c7d425eaf0fb8fd8e3be83d8ff1af5463097b5afed62b31\""
+                    "[Pod ingest-gate-zkparx2v-587fd946b8-5bqsv]: containers with unready status: [gate] -- [ErrImagePull] manifest for gcr.io/beast-298015/gate:1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca not found: manifest unknown: Failed to fetch \"1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca\" from request \"/v2/beast-298015/gate/manifests/1607707486130-985aed62fcf29a74984149c192e0e10cf82f05ecc75a40776e77e4e7c25faeca\"."
                 ],
-                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::01379895-43ca-4b5e-af7b-8964c4d5faec",
+                "provider": "urn:pulumi:dev::QenvBeast::pulumi:providers:kubernetes::helloworld::fc9282ca-3d75-4e43-bc6e-75ebd5c03107",
                 "propertyDependencies": {
                     "apiVersion": null,
                     "kind": null,
                     "spec": [
-                        "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:core/v1:ConfigMap::ingest-0-ingest"
+                        "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:core/v1:ConfigMap::ingest-gate"
                     ]
                 },
                 "aliases": [
-                    "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:apps/v1beta1:Deployment::ingest-0-ingest",
-                    "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:apps/v1beta2:Deployment::ingest-0-ingest",
-                    "urn:pulumi:dev::QenvBeast::beast:qenv:ingest$kubernetes:extensions/v1beta1:Deployment::ingest-0-ingest"
+                    "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:apps/v1beta1:Deployment::ingest-gate",
+                    "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:apps/v1beta2:Deployment::ingest-gate",
+                    "urn:pulumi:dev::QenvBeast::beast:qenv:gate$kubernetes:extensions/v1beta1:Deployment::ingest-gate"
                 ]
             }
         ],

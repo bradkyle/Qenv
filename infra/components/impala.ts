@@ -12,7 +12,7 @@ export interface ImpalaArgs {
 }
 
 export class Impala extends pulumi.ComponentResource {
-    public readonly image: docker.Image; 
+    // public readonly image: docker.Image; 
     // public readonly nodepool: gcp.container.Nodepool;
 
     constructor(name: string,
@@ -21,14 +21,14 @@ export class Impala extends pulumi.ComponentResource {
         super("beast:impala:train", name, args, opts);
 
         const ts = Date.now();
-        this.image = new docker.Image(`${name}-impala-image`, {
-            imageName: "gcr.io/beast-298015/qenv:"+ts.toString(),
-            build: {
-                dockerfile: "./impala/Dockerfile",
-                context: "./impala/",
-            },
-            skipPush:(args.skipPush || true),
-        });
+        // this.image = new docker.Image(`${name}-impala-image`, {
+        //     imageName: "gcr.io/beast-298015/impala:"+ts.toString(),
+        //     build: {
+        //         dockerfile: "./impala/Dockerfile",
+        //         context: "./impala/",
+        //     },
+        //     skipPush:(args.skipPush || true),
+        // });
     
         const envs = {};
 
@@ -104,7 +104,7 @@ export class Impala extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "impala",
-                                image: this.image.imageName,
+                                image: "gcr.io/beast-298015/impala:latest",
                                 imagePullPolicy: "IfNotPresent",
                                 env: [
                                     { 

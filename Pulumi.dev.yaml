@@ -1,4 +1,5 @@
 config:
+  QenvBeast:docker-config-file: /home/thorad/.docker/config.json
   QenvBeast:masterVersion: v1.20.0
   QenvBeast:nodeCount: "2"
   QenvBeast:nodeMachineType: n1-standard-4

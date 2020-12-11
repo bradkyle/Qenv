@@ -72,21 +72,21 @@ export class MIngest extends pulumi.ComponentResource {
         const ts=Date.now();
 
         this.gateImage = new docker.Image(`${name}-gate-image`, {
-            imageName: "gcr.io/beast-298015/gate:"+ts.toString(),
+            imageName: "gcr.io/beast-298015/gate",
             build: {
                 dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
             },
-            skipPush:(args.skipPush || true),
+            skipPush:false
         });
 
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
-            imageName: "gcr.io/beast-298015/ingest:"+ts.toString(),
+            imageName: "gcr.io/beast-298015/ingest:latest",
             build: {
                 dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",
             },
-            skipPush:(args.skipPush || true),
+            skipPush:false,
         });
 
         this.keyfilepath = "/var/secrets/google/key.json";
@@ -149,7 +149,7 @@ export class MIngest extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "gate",
-                                image: this.gateImage.imageName, 
+                                image: "gcr.io/beast-298015/gate:latest",
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 
