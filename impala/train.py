@@ -268,12 +268,12 @@ class Learner(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Impala multi agent trainer')
-    parser.add_argument('-cp', '--config_path', default=os.getenv('CONFIG_PATH') or "default_config.py", type=str)
+    parser.add_argument('-cp', '--config_path', default=os.getenv('CONFIG_PATH') or "config.json", type=str)
     parser.add_argument('-lp', '--log_path', default=os.getenv('LOG_PATH') or "./log", type=str)
     parser.add_argument('-ckp', '--ckp_path', default=os.getenv('CKP_PATH') or "./ckp", type=str)
 
     args = parser.parse_args()
-    config = importlib.import_module(args.config_path)
+    config = json.load(args.config_path)
     logger.set_dir(args.log_path)
 
     learner = Learner(config)

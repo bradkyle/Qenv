@@ -112,6 +112,10 @@ export class Ingest extends pulumi.ComponentResource {
                                         value: this.keyfilepath 
                                     },
                                     { 
+                                        name: "CONFIG_PATH", 
+                                        value: this.keyfilepath 
+                                    },
+                                    { 
                                         name: "DATA_PATH", 
                                         value: args.dataMountPath 
                                     }
