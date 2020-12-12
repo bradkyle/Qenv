@@ -97,7 +97,7 @@ export class Ingest extends pulumi.ComponentResource {
                         serviceAccountName: "default",
                         containers: [
                             {
-                                name: "impala",
+                                name: "ingest",
                                 image: this.image.imageName,
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
@@ -111,7 +111,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: datapath 
+                                        value: "/ingest/testdata/events" 
                                     }
                                 ],
                                 volumeMounts: [
@@ -128,16 +128,16 @@ export class Ingest extends pulumi.ComponentResource {
                                       {containerPort: 5000, name: "kdb"}
                                 ],
                                 lifecycle:{
-                                    postStart :{
-                                        exec : {
-                                            command: [
-                                                "gsutil", "-m", 
-                                                "cp", "-R", 
-                                                "/ingest/config/datalist/data.list", 
-                                                datapath
-                                            ]
-                                        }
-                                    },
+                                    // postStart :{
+                                    //     exec : {
+                                    //         command: [
+                                    //             "gsutil", "-m", 
+                                    //             "cp", "-R", 
+                                    //             "/ingest/config/datalist/data.list", 
+                                    //             datapath
+                                    //         ]
+                                    //     }
+                                    // },
                                     // preStop:{
                                     //     exec : {
                                     //         command: [
