@@ -9,15 +9,24 @@
 
 				iv:?[?[x;();0b;
 						(
-							();
-							();
+							(`.engine.logic.contract.UnrealizedPnl;`cntTyp;`mkprice;`faceValue;`smul;`amt;`side;`avgPrice);
+							(`.engine.logic.contract.RealizedPnl;`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul)
 							()
 						)];();0b;
 					(
-					();
-					(`.engine.logic.contract.UnrealizedPnl;`cntTyp;`mkprice;`faceValue;`smul;`amt;`side;`avgPrice);
-					(`.engine.logic.contract.RealizedPnl;`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul)
+					(`.engine.logic.contract.AvgPrice);
+					(`.engine.logic.contract.ExecCost);
+					(`.engine.logic.contract.Loss);
+					(`.engine.logic.contract.Value);
+					(`ordLoss);
+					(`ordQty);
+					(`ordVal);
+					(`amt);
+					(sum;`ivId.totalEntry;(max;dlt;0))
 					)];
+
+				.engine.model.inventory.Update iv;
+				.engine.EmitA[`inventory;];
 
 			 show select 	
 			 		amt:iv.amt+$[reduce;neg[qty];qty],
@@ -56,15 +65,5 @@
 
 				///TODO posVal
 
-				/// Remargin account
-				/a:.engine.logic.account.Remargin[i;a];
-
-				/// Update datums
-				/.engine.model.account.Update a;
-				/.engine.model.inventory.Update iv;
-
-				/// Emit events
-				/.engine.EmitA[`account;t;a`aId;a];
-				/.engine.EmitA[`inventory;t;iv`aId;iv];
 				};
 
