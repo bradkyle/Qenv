@@ -26,5 +26,5 @@ RUN mkdir -p /ingest/config
 WORKDIR /ingest
 ADD ingest.q .
 ADD ./testdata/ ./testdata/
-ADD gateway.sh .
+ADD getdata.sh .
 CMD q ingest.q

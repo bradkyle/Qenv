@@ -131,7 +131,8 @@ export class Ingest extends pulumi.ComponentResource {
                                     postStart :{
                                         exec : {
                                             command: [
-                                                "getdata.sh", 
+                                                "/bin/sh",
+                                                "./getdata.sh", 
                                                 "/ingest/config/datalist/data.list",
                                                 datapath
                                             ]
