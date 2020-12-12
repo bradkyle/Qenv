@@ -16,28 +16,23 @@
 				show x;
 				.bam.x:x;
 
-				dlt:$[x`reduce;neg[x`qty];x`qty];
-
 			 show select 	
 			 		amt:iv.amt+$[reduce;neg[qty];qty],
-					totalEntry:iv.totalEntry+max[(dlt;0)],
+					totalEntry:iv.totalEntry+max[($[reduce;neg[qty];qty],0)],
 					ordLoss:ordLoss - .engine.logic.contract.Loss[],
 					ordQty:ivId.ordQty - qty,
 					ordVal:ivId.ordVal - val,
-					rpnl: rpnl + sum(
-						$[x[`ismaker]; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
-						$[not x[`reduce];0;.engine.logic.contract.RealizedPnl[
+					rpnl: ivId.rpnl + sum(
+						?[ismaker; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
+						$[not reduce;0;.engine.logic.contract.RealizedPnl[
 							iId.cntTyp;
-							x[`qty];
-							x[`price];
-							isig;
-							avgPrice;
+							qty;
+							price;
+							side;
+							ivId.avgPrice;
 							iId.faceValue;
 							iId.smul]])
 					from x;
-
-				/iv[`amt]+:dlt;
-				/iv[`totalEntry]+:max[(dlt;0)];
 
 				/// derive the order values 
 				/val:.engine.logic.contract.Value[x`qty;x`price];
