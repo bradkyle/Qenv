@@ -257,11 +257,11 @@ class Learner(object):
                 summary.add_scalar(key, value, self.sample_total_steps)
 
         # save the parameters of agent to ./model_dir
-        timestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        path = self.ckp_path+"/"+str(log_count)+timestr
-        if not os.path.exists(path):
-                os.makedirs(path)
-        self.agent.save(path)
+        # timestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        # path = self.ckp_path+"/"+str(log_count)+timestr
+        # if not os.path.exists(path):
+        #         os.makedirs(path)
+        # self.agent.save(path)
 
         logger.info(metric)
 
