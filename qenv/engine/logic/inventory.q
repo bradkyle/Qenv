@@ -59,8 +59,6 @@
 
 					from x;
 
-				// // If the inventory is reduced to zero reset the folowing
-				// // values in the inventory.
     		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 
 				///TODO posVal
