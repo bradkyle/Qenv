@@ -128,16 +128,15 @@ export class Ingest extends pulumi.ComponentResource {
                                       {containerPort: 5000, name: "kdb"}
                                 ],
                                 lifecycle:{
-                                    // postStart :{
-                                    //     exec : {
-                                    //         command: [
-                                    //             "gsutil", "-m", 
-                                    //             "cp", "-R", 
-                                    //             "/ingest/config/datalist/data.list", 
-                                    //             datapath
-                                    //         ]
-                                    //     }
-                                    // },
+                                    postStart :{
+                                        exec : {
+                                            command: [
+                                                "getdata.sh", 
+                                                "/ingest/config/datalist/data.list",
+                                                datapath
+                                            ]
+                                        }
+                                    },
                                     // preStop:{
                                     //     exec : {
                                     //         command: [
@@ -181,7 +180,7 @@ export class Ingest extends pulumi.ComponentResource {
                             ],
                             resources: {
                                 requests: {
-                                    storage: "1Gi"
+                                    storage: "5Gi"
                                 }
                             }
                         }
