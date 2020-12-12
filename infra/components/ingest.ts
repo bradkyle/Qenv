@@ -16,6 +16,7 @@ export interface IngestArgs {
     dataMountPath?:string;
     pullPolicy?:string
     ports?: number[];
+    datapaths?:string[];
     allocateIpAddress?: boolean;
     testing?: boolean;
     skipPush?: boolean;

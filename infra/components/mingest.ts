@@ -34,8 +34,6 @@ export interface ServantSpec {
 function listFiles(
     storage:gcs.Storage, 
     bucketName:string, 
-    episodeLength:number, 
-    maxEpisodes:number
   ):string[] {
     let outs:string[] = []; 
     // Lists files in the bucket
@@ -45,7 +43,7 @@ function listFiles(
             outs.push(file.name);
         });
     }).catch(console.error);
-    console.log(outs);
+    // console.log(outs);
     return outs; 
 }
 
@@ -93,31 +91,36 @@ export class MIngest extends pulumi.ComponentResource {
         this.testDataPath = "/ingest/testdata/events"
         this.mountDataPath = args.dataMountPath + "/events"
 
-        const batchSize = 2;
+        const batchSize = 48;
         const maxBatches = 5;
 
         const storage = new gcs.Storage();
 
-        let fls = listFiles(storage, "axiomdata", batchSize, maxBatches);
-        console.log(fls);
-
-        let files = [445855, 445856, 445857];  
-        let batches = _.chunk(files, batchSize);
+        let files = listFiles(storage, "axiomdata");
+        let names = files.map(f=>f.split("/"));
+        names = names.filter(f=>f.length=3);
+        names = names.filter(f=>f[2]);
+        let nbrs = names.map(Number);
+        nbrs = nbrs.filter(f=>!Number.isNaN(f));
+        nbrs = _.uniq(nbrs);
+        let batches = _.chunk(nbrs, batchSize);
+        batches = _.slice(batches, 0, maxBatches);
+        
 
         this.conf = [];
         this.servants = {};
         for(let i=0;i<batches.length;i++) {
             let batch = batches[i];
+            let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
             let s = i.toString();
             let sname = (`ingest-${s}`);
-            // let datapaths = batch.map(c => this.bucket.url+"/okex/events/"+c.toString());
-            // datapaths.push(this.bucket.url+"/okex/events/ev");
-            // console.log(datapaths);
+            console.log(dirs);
             this.servants[sname] = new ingest.Ingest(sname, {
                 provider: args.provider,  
                 image: this.ingestImage,
                 gcpBucket: this.bucket,
-                dataMountPath:this.mountDataPath
+                dataMountPath:this.mountDataPath,
+                datapaths: dirs
             });
             this.conf.push({
                 sId: i,
