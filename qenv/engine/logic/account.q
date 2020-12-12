@@ -1,17 +1,17 @@
 
 .engine.logic.account.GetFeetier:{[avol]
-			ft:first (select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>avol) or i=0)[`ftId];
-			`.engine.model.feetier.Feetier$ft
-	  };
+   ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>a) or ((i=0) and (vol>a));
+   `.engine.model.feetier.Feetier$((0!ft)`ftId)
+   };
 
 .engine.logic.account.GetRisktier:{[ivnamt;ivlev]
-			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>ivnamt) or i=0)[`rtId];
-			`.engine.model.risktier.Risktier$rt
-		};
+   rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>a) or ((i=0) and (amt>a));
+   `.engine.model.risktier.Risktier$((0!rt)`rtId)
+   };
 
 .engine.logic.account.GetAvailable:{[bal;mm;upnl;oqty;oloss]
-			bal-(mm+upnl)+(ordQty-ordLoss)
-		};
+      bal-(mm+upnl)+(oqty-oloss)
+    };
 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
@@ -57,12 +57,13 @@
 			update
 				dep:dep+x[`deposit],
 				bal:bal+x[`deposit],
-				avail:.engine.logic.account.GetAvailable[
+				avail:.engine.logic.account.GetAvailable'[
 					bal+x[`deposit],
 					lng.mm+srt.mm,
 					lng.upnl+srt.upnl,
 					lng.ordQty+srt.ordQty,
 					lng.ordLoss+srt.ordLoss]
+				rt:.engine.logic.account.GetRisktier'[lng.amt+srt.amt;bal%(lng.amt+srt.amt)];
 				from `.engine.model.account.Account where aId=x[`aId];
 			.engine.EmitA[`account;t;a];
 			};
@@ -70,13 +71,13 @@
 .engine.logic.account.Leverage:{
 			update
 				lev:x[`leverage],
-				avail:.engine.logic.account.GetAvailable[
+				avail:.engine.logic.account.GetAvailable'[
 					bal+x[`deposit],
 					lng.mm+srt.mm,
 					lng.upnl+srt.upnl,
 					lng.ordQty+srt.ordQty,
 					lng.ordLoss+srt.ordLoss]
-				rt:.engine.logic.account.GetRisktier[];
+				rt:.engine.logic.account.GetRisktier'[lng.amt+srt.amt;bal%(lng.amt+srt.amt)];
 				from `.engine.model.account.Account where aId=x[`aId];
 			.engine.EmitA[`account;t;a];
 			};
