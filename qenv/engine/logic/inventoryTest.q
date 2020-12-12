@@ -14,13 +14,14 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-/ .qt.SkpBesTest[37];
+.qt.SkpBesTest[37];
 .qt.Unit[
-    ".engine.logic.account.Fill";
+    ".engine.logic.inventory.Fill";
     {[c]
         p:c[`params];
         a:p`args;
         m:p[`mocks];
+        s:p[`setup];
 
         .engine.model.inventory.Inventory,:s[`inventory];
         .engine.model.feetier.Feetier,:s[`feetier];
@@ -34,7 +35,7 @@
         mck3: .qt.OM[`.engine.model.inventory.Update;c];
         mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.account.Fill[a];
+        res:.engine.logic.inventory.Fill[a];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck5;m[4];c];
@@ -54,8 +55,7 @@
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;
-                enlist(1000;1;100;0b;0b;0;0;0)];
+            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;enlist(1000;1;100;0b;0b;0;0;0)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[

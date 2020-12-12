@@ -384,6 +384,10 @@ M   :{[target;replacement;case]
     .qt.MM[target;replacement;0b;0;();case]
       };
 
+OM  :{[target;case]
+    .qt.M[target;get target;case]      
+    }
+
 //Creates a standalone mock that can be used in functions 
 // as a callback whereby parameters can be checked etc.
 MS :{[fn;case]

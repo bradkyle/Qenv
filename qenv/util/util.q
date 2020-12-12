@@ -90,7 +90,7 @@
 /     ];[(x+:1);x]]};
 
 .util.ColTypes:{
-    if[type[x]=11h;x:get x];
+    if[type[x] in (-11 11h);x:get x];
     type'[value ((0!(get x))@-1)]
     };
 
@@ -100,8 +100,8 @@
     };
 
 .util.NullRowDict:{
-    if[type[x]=11h;x:get x];
-    cols[x]!(value (0!(get x))@-1)
+    if[type[x] in (-11 11h);x:get x];
+    cols[x]!(value (0!x)@-1)
     };
 
 .util.TimeDiffMin:{[nxt;cur]

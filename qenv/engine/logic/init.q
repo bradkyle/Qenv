@@ -19,7 +19,7 @@
     system[sv["";("l ";x;"/orderTest.q")]];
     system[sv["";("l ";x;"/orderbookTest.q")]];
     system[sv["";("l ";x;"/tradeTest.q")]];
-    system[sv["";("l ";x;"/fillTest.q")]];
+    system[sv["";("l ";x;"/inventoryTest.q")]];
     };
 
 \cd ../
