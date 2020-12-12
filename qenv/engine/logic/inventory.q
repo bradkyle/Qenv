@@ -1,13 +1,4 @@
 
-.engine.logic.inventory.OrderDelta:{[]
-	  
-	  
-	  };
-
-.engine.logic.inventory.ApplyOrderDelta:{[]
-		  
-		};
-
 // TODO move to fill file
 // TODO add fee
 // Fill account
@@ -31,48 +22,18 @@
 							side;
 							ivId.avgPrice;
 							iId.faceValue;
-							iId.smul]])
-					from x;
-
-				/// Derive the cost resulting from commisison
-				/fee:first ?[x;();();$[x[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
-				/cost:fee * x[`qty];
-				/iv[`rpnl]-:`long$(cost*x[`qty]);
-
-				/// Calc
-				/iv[`execCost]+: .engine.logic.contract.ExecCost[
-				/		i[`cntTyp];
-				/		x[`price];
-				/		x[`qty];
-				/		i[`smul]]; 
-
-				// / Calculates the average price of entry for 
-				// / the current postion, used in calculating 
-				// / realized and unrealized pnl.
-				/iv[`avgPrice]: .engine.logic.contract.AvgPrice[
-				/		i[`cntTyp];
-				/		iv[`isig];
-				/		iv[`execCost];
-				/		iv[`totalEntry];
-				/		i[`smul]]; 
-
-				// / If the fill reduces the position, calculate the 
-				// / resultant pnl 
-				/if[x[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
-				/		i[`cntTyp];
-				/		x[`qty];
-				/		x[`price];
-				/		iv[`isig];
-				/		iv[`avgPrice];
-				/		i[`faceValue];
-				/		i[`smul]]];
-
-				// // If the inventory is reduced to zero reset the folowing
-				// // values in the inventory.
-    		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
-
-				// / If the position is changed, calculate the resultant
-				// / unrealized pnl
+							iId.smul]]),
+					avgPrice:.engine.logic.contract.AvgPrice[
+							iId.cntTyp,
+							side,
+							ivId.execCost, // TODO defer
+							ivId.totalEntry, // TODO defer
+							iId.smul],
+					execCost:ivId.execCost+.engine.contract.ExecCost[
+						.iId.cntTyp,
+						price,
+						qty,
+						.iId.smul],
 				/iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ 
 				/		i[`cntTyp]; 
 				/		i[`mkprice];
@@ -81,6 +42,14 @@
 				/		iv[`amt];
 				/		iv[`isig];
 				/		iv[`avgPrice]];	
+
+
+
+					from x;
+
+				// // If the inventory is reduced to zero reset the folowing
+				// // values in the inventory.
+    		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 
 				///TODO posVal
 
