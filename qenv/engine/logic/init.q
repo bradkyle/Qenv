@@ -8,7 +8,7 @@
 \l orderbook.q 
 \l order.q 
 \l trade.q
-\l fill.q 
+\l inventory.q 
 
 .logic.loadTests   :{
     system[sv["";("l ";x;"/testutils.q")]];
