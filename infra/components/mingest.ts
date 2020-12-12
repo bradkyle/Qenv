@@ -38,10 +38,10 @@ function listFiles(
     let outs:string[] = []; 
     // Lists files in the bucket
     storage.bucket(bucketName).getFiles().then(files => {
-        console.log('Files:');
-        files.forEach(file => {
+        files[0].forEach(file => {
             outs.push(file.name);
         });
+        console.log(outs.length);
     }).catch(console.error);
     // console.log(outs);
     return outs; 
@@ -97,15 +97,17 @@ export class MIngest extends pulumi.ComponentResource {
         const storage = new gcs.Storage();
 
         let files = listFiles(storage, "axiomdata");
+        console.log(files);
         let names = files.map(f=>f.split("/"));
         names = names.filter(f=>f.length=3);
         names = names.filter(f=>f[2]);
+        console.log(names);
         let nbrs = names.map(Number);
         nbrs = nbrs.filter(f=>!Number.isNaN(f));
         nbrs = _.uniq(nbrs);
         let batches = _.chunk(nbrs, batchSize);
         batches = _.slice(batches, 0, maxBatches);
-        
+        console.log(batches.length);
 
         this.conf = [];
         this.servants = {};
