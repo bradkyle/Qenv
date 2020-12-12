@@ -23,52 +23,57 @@
         m:p[`mocks];
         s:p[`setup];
 
+        / a[`lng]:`.engine.model.inventory.Inventory$(0 1);
+        / a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
+
+        .engine.model.account.Account,:s[`account];
         .engine.model.inventory.Inventory,:s[`inventory];
         .engine.model.feetier.Feetier,:s[`feetier];
         .engine.model.risktier.Risktier,:s[`risktier];
 
-        a[`lng]:`.engine.model.inventory.Inventory$(0 1);
-        a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
+        .bam.a:a;
+        a[`aId]:`.engine.model.account.Account$a[`aId];
+        a[`iId]:`.engine.model.account.Account$a[`iId];
+        a[`ivId]:`.engine.model.inventory.Inventory$flip[a[`aId`side]];
 
-        mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.OM[`.engine.model.account.Update;c];
-        mck3: .qt.OM[`.engine.model.inventory.Update;c];
-        mck5: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
+        mck1: .qt.OM[`.engine.model.account.Update;c];
+        mck2: .qt.OM[`.engine.model.inventory.Update;c];
+        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         res:.engine.logic.inventory.Fill[a];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck5;m[4];c];
+        .qt.CheckMock[mck1;m[1];c]; // 
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
 
-        .util.table.dropAll[(
-          `.engine.egress.Events;
-          `.engine.model.inventory.Inventory,
-          `.engine.model.risktier.RiskTier,
-          `.engine.model.feetier.Feetier
-        )];
+        / .util.table.dropAll[(
+        /   `.engine.egress.Events;
+        /   `.engine.model.inventory.Inventory,
+        /   `.engine.model.risktier.RiskTier,
+        /   `.engine.model.feetier.Feetier
+        / )];
 
     };
     {[p] `setup`args`eRes`mocks`err!p};
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ((!) . flip(
+            (`account;.util.testutils.makeAccount[`aId`avail`bal;enlist(0;0;0)]); 
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeFill[`price`side`qty`reduce`ismaker`oId`aId`iId;enlist(1000;1;100;0b;0b;0;0;0)];
+            .util.testutils.makeFill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[
                     `amt`totalEntry`ordQty`ordVal`ordLoss`rpnl`execCost`avgPrice`reduce`amt`upnl;
                     enlist(0;0;0;0;0;0;0;0;0;0;0)
                 ]); // GetInventory
-                (1b;2;();.util.testutils.makeEvent[]); // Emit
-                (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
-                (1b;1;();.util.testutils.makeFeetier[]); // GetFeeTier
                 (1b;1;.util.testutils.makeAccount[`aId`iId`lng`srt`rt`ft`avail`bal;enlist(0;0;0;0;0;0;0;0)];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[];()) // Update Inventory 
+                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
+                (1b;2;();.util.testutils.makeEvent[]) // Emit
             ); // mocks 
             () // err 
         ))

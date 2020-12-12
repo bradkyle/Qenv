@@ -8,27 +8,33 @@
 		  
 		};
 
-
+// TODO move to fill file
 // TODO add fee
 // Fill account
 .engine.logic.inventory.Fill:{ // TODO simple select
+
+				show x;
+				.bam.x:x;
+
 				dlt:$[x`reduce;neg[x`qty];x`qty];
-				/update 
-				/	amt:amt+dlt,
-				/	totalEntry:totalEntry+max[(dlt;0)],
-				/	ordLoss:ordLoss - .engine.logic.contract.Loss[],
-				/	ordQty:ordQty - x[`qty],
-				/	ordVal:ordVal - val,
-				/	rpnl: rpnl + sum(
-				/		$[x[`ismaker]; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
-				/		$[not x[`reduce];0;.engine.logic.contract.RealizedPnl[
-				/			iId.cntTyp;
-				/			x[`qty];
-				/			x[`price];
-				/			isig;
-				/			avgPrice;
-				/			iId.faceValue;
-				/			iId.smul]])
+
+			 show select 	
+			 		amt:iv.amt+$[reduce;neg[qty];qty],
+					totalEntry:iv.totalEntry+max[(dlt;0)],
+					ordLoss:ordLoss - .engine.logic.contract.Loss[],
+					ordQty:ivId.ordQty - qty,
+					ordVal:ivId.ordVal - val,
+					rpnl: rpnl + sum(
+						$[x[`ismaker]; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
+						$[not x[`reduce];0;.engine.logic.contract.RealizedPnl[
+							iId.cntTyp;
+							x[`qty];
+							x[`price];
+							isig;
+							avgPrice;
+							iId.faceValue;
+							iId.smul]])
+					from x;
 
 				/iv[`amt]+:dlt;
 				/iv[`totalEntry]+:max[(dlt;0)];
