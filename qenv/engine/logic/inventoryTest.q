@@ -41,6 +41,7 @@
         .qt.CheckMock[mck5;m[4];c];
 
         .util.table.dropAll[(
+          `.engine.egress.Events;
           `.engine.model.inventory.Inventory,
           `.engine.model.risktier.RiskTier,
           `.engine.model.feetier.Feetier
