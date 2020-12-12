@@ -64,7 +64,7 @@ export class Ingest extends pulumi.ComponentResource {
         // TODO create a gateway and register ordinal paths as a conf file
         // for (i of)
         const appLabels = {app: "ingest"};
-        this.datapaths = [];
+        this.datapaths = (args.datapaths || []);
 
         // const gcloudKey = new k8s.core.v1.ConfigMap(`${name}-gcloud-key`, {
         //     metadata: { labels: appLabels },
@@ -75,7 +75,7 @@ export class Ingest extends pulumi.ComponentResource {
         // gsutil -m cp -r data.list
         const ingestConfig = new k8s.core.v1.ConfigMap(`${name}-ingest`, {
             metadata: { labels: appLabels },
-            data: { "data.list": JSON.stringify(this.datapaths)},
+            data: { "data.list": this.datapaths.join("\n")},
         }, {provider: args.provider, parent: this});
         const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 

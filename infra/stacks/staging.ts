@@ -92,7 +92,7 @@ users:
         });
 
         const i = new ingest.MIngest("ingest",{
-            dataMountPath: "/ingest/testdata",
+            dataMountPath: "/ingest/data",
             provider:provider,    
             imageTag:"latest",
             ports:[5000],

@@ -50,8 +50,8 @@ function getBatches(
 export class MIngest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
-    public deployment?: k8s.apps.v1.Deployment; 
-    public service?: k8s.core.v1.Service;
+    public deployment: k8s.apps.v1.Deployment; 
+    public service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
     public readonly mountDataPath: string;
