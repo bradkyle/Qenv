@@ -21,7 +21,7 @@
 					totalEntry:iv.totalEntry+max[($[reduce;neg[qty];qty],0)],
 					ordLoss:ordLoss - .engine.logic.contract.Loss[],
 					ordQty:ivId.ordQty - qty,
-					ordVal:ivId.ordVal - val,
+					ordVal:ivId.ordVal - .engine.logic.contract.Value[qty;price],
 					rpnl: ivId.rpnl + sum(
 						?[ismaker; aId.ft.mkrfee; aId.ft.tkrfee]*x[`qty];
 						$[not reduce;0;.engine.logic.contract.RealizedPnl[
@@ -33,12 +33,6 @@
 							iId.faceValue;
 							iId.smul]])
 					from x;
-
-				/// derive the order values 
-				/val:.engine.logic.contract.Value[x`qty;x`price];
-				/iv[`ordLoss]-:.engine.logic.contract.Loss[mkprice;x`qty;val];
-				/iv[`ordQty]-:x`qty;
-				/iv[`ordVal]-:val;
 
 				/// Derive the cost resulting from commisison
 				/fee:first ?[x;();();$[x[`ismaker];`aId.ft.mkrfee;`aId.ft.tkrfee]];
