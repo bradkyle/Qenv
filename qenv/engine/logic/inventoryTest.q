@@ -38,6 +38,7 @@
         res:.engine.logic.inventory.Fill[a];
 
         .qt.CheckMock[mck1;m[0];c];
+        .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck5;m[4];c];
 
         .util.table.dropAll[(
