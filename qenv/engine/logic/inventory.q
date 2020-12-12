@@ -11,7 +11,6 @@
 						(
 							(`.engine.logic.contract.UnrealizedPnl;`cntTyp;`mkprice;`faceValue;`smul;`amt;`side;`avgPrice);
 							(`.engine.logic.contract.RealizedPnl;`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul)
-							()
 						)];();0b;
 					(
 					(`.engine.logic.contract.AvgPrice);
