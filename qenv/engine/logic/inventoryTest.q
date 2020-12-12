@@ -65,7 +65,7 @@
                 (1b;2;();.util.testutils.makeEvent[]); // Emit
                 (1b;1;();.util.testutils.makeRisktier[]); // GetRiskTier
                 (1b;1;();.util.testutils.makeFeetier[]); // GetFeeTier
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
+                (1b;1;.util.testutils.makeAccount[`aId`iId`lng`srt`rt`ft`avail`bal;enlist(0;0;0;0;0;0;0;0)];()); // Update Account
                 (1b;1;.util.testutils.makeInventory[];()) // Update Inventory 
             ); // mocks 
             () // err 
