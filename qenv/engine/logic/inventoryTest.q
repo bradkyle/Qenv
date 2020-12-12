@@ -26,14 +26,14 @@
         / a[`lng]:`.engine.model.inventory.Inventory$(0 1);
         / a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
 
+        .engine.model.instrument.Instrument,:s[`instrument];
         .engine.model.account.Account,:s[`account];
         .engine.model.inventory.Inventory,:s[`inventory];
         .engine.model.feetier.Feetier,:s[`feetier];
         .engine.model.risktier.Risktier,:s[`risktier];
 
-        .bam.a:a;
         a[`aId]:`.engine.model.account.Account$a[`aId];
-        a[`iId]:`.engine.model.account.Account$a[`iId];
+        a[`iId]:`.engine.model.instrument.Instrument$a[`iId];
         a[`ivId]:`.engine.model.inventory.Inventory$flip[a[`aId`side]];
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
@@ -59,7 +59,8 @@
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ((!) . flip(
-            (`account;.util.testutils.makeAccount[`aId`avail`bal;enlist(0;0;0)]); 
+                (`account;.util.testutils.makeAccount[`aId`avail`bal;enlist(0;0;0)]); 
+                (`instrument;.util.testutils.makeInstrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
                 (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
