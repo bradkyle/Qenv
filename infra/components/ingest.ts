@@ -133,7 +133,7 @@ export class Ingest extends pulumi.ComponentResource {
                                             command: [
                                                 "gsutil", "-m", 
                                                 "cp", "-R", 
-                                                this.bucket.name, 
+                                                "/ingest/config/datalist/data.list", 
                                                 datapath
                                             ]
                                         }
