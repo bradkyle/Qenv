@@ -4,9 +4,9 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
-import * as gcs from "@google-cloud/storage";
 import * as ingest from "./ingest";
 import * as _ from "lodash";
+const execSync = require('child_process').execSync;
 
 // Arguments for the demo app.
 export interface MIngestArgs {
@@ -31,27 +31,30 @@ export interface ServantSpec {
     end?: number
 }
 
-function listFiles(
-    storage:gcs.Storage, 
-    bucketName:string, 
-  ):string[] {
-    let outs:string[] = []; 
+function getBatches(
+    bucketPath:string, 
+    batchSize:number,
+    maxBatches:number,
+  ):number[][] {
     // Lists files in the bucket
-    storage.bucket(bucketName).getFiles().then(files => {
-        files[0].forEach(file => {
-            outs.push(file.name);
-        });
-        console.log(outs.length);
-    }).catch(console.error);
-    // console.log(outs);
-    return outs; 
+    let files:string[] = execSync("gsutil ls "+bucketPath).toString("utf8").split("\n");
+    let names = files.map(f=>f.split("/"));
+    console.log(names);
+    let nbrs = names.map(f=>f[5]).map(Number);
+    nbrs = nbrs.filter(f=>!Number.isNaN(f));
+    nbrs = _.uniq(nbrs);
+    console.log(nbrs.length);
+    let batches:number[][] = _.chunk(nbrs, batchSize);
+    console.log(batches);
+    batches = _.slice(batches, 0, maxBatches);
+    return batches;
 }
 
 export class MIngest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
-    public readonly deployment: k8s.apps.v1.Deployment; 
-    public readonly service: k8s.core.v1.Service;
+    public deployment?: k8s.apps.v1.Deployment; 
+    public service?: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
     public readonly mountDataPath: string;
@@ -94,45 +97,36 @@ export class MIngest extends pulumi.ComponentResource {
         const batchSize = 48;
         const maxBatches = 5;
 
-        const storage = new gcs.Storage();
-
-        let files = listFiles(storage, "axiomdata");
-        console.log(files);
-        let names = files.map(f=>f.split("/"));
-        names = names.filter(f=>f.length=3);
-        names = names.filter(f=>f[2]);
-        console.log(names);
-        let nbrs = names.map(Number);
-        nbrs = nbrs.filter(f=>!Number.isNaN(f));
-        nbrs = _.uniq(nbrs);
-        let batches = _.chunk(nbrs, batchSize);
-        batches = _.slice(batches, 0, maxBatches);
-        console.log(batches.length);
-
         this.conf = [];
         this.servants = {};
-        for(let i=0;i<batches.length;i++) {
-            let batch = batches[i];
-            let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
-            let s = i.toString();
-            let sname = (`ingest-${s}`);
-            console.log(dirs);
-            this.servants[sname] = new ingest.Ingest(sname, {
-                provider: args.provider,  
-                image: this.ingestImage,
-                gcpBucket: this.bucket,
-                dataMountPath:this.mountDataPath,
-                datapaths: dirs
-            });
-            this.conf.push({
-                sId: i,
-                host: sname,
-                port: 5000,
-                start: _.min(batch), 
-                end: _.max(batch)
-            });
+        let batches = getBatches("gs://axiomdata/okex/events/", batchSize, maxBatches);
+        console.log("------------------------------------");
+        console.log(batches);
+
+        if (batches && batches.length>0){
+            console.log(batches);
+            for(let i=0;i<batches.length;i++) {
+                let batch = batches[i];
+                let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
+                let s = i.toString();
+                let sname = (`ingest-${s}`);
+                console.log(dirs);
+                this.servants[sname] = new ingest.Ingest(sname, {
+                    provider: args.provider,  
+                    image: this.ingestImage,
+                    gcpBucket: this.bucket,
+                    dataMountPath:this.mountDataPath,
+                    datapaths: dirs
+                });
+                this.conf.push({
+                    sId: i,
+                    host: sname,
+                    port: 5000,
+                    start: _.min(batch), 
+                    end: _.max(batch)
+                });
+            };
         };
-        console.log(JSON.stringify(this.conf));
 
         const appLabels = {app: "gate"};
         const gateConfig = new k8s.core.v1.ConfigMap(`${name}-gate`, {
@@ -204,6 +198,8 @@ export class MIngest extends pulumi.ComponentResource {
             },
         }, { parent: this });
 
-        this.registerOutputs();
+
+            this.registerOutputs();
+
     }
 }
