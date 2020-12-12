@@ -36,13 +36,6 @@
     // return obs
     .state.Reset[];
 
-    // TODO
-    / ingest:.ingest.Reset[
-    /     .conf.c[`ingest;`master];
-    /     .env.Episode;
-    /     .conf.c[`ingest;`kinds];
-    /     .env.Watermark;
-    /     .env.Watermark+.conf.c[`ingest;`pullWindow]]; 
     / xevents:ingest[1];
     / xsignals:ingest[2];
     xevents: .ingest.Reset[];

@@ -6,4 +6,5 @@ import * as tst from "./infra/stacks/testing";
 
 // const env = pulumi.getStack();
 // const infra = new pulumi.StackReference(`acmecorp/infra/${env}`);
-stg.setup({})
+dev.setup({})
+// stg.setup({})
