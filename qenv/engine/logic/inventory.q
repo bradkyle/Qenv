@@ -7,6 +7,18 @@
 				show x;
 				.bam.x:x;
 
+				iv:?[?[x;();0b;
+						(
+							();
+							();
+							()
+						)];();0b;
+					(
+					();
+					(`.engine.logic.contract.UnrealizedPnl;`cntTyp;`mkprice;`faceValue;`smul;`amt;`side;`avgPrice);
+					(`.engine.logic.contract.RealizedPnl;`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul)
+					)];
+
 			 show select 	
 			 		amt:iv.amt+$[reduce;neg[qty];qty],
 					totalEntry:iv.totalEntry+max[($[reduce;neg[qty];qty],0)],
@@ -34,15 +46,6 @@
 						price,
 						qty,
 						.iId.smul],
-				/iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ 
-				/		i[`cntTyp]; 
-				/		i[`mkprice];
-				/		i[`faceValue];
-				/		i[`smul];
-				/		iv[`amt];
-				/		iv[`isig];
-				/		iv[`avgPrice]];	
-
 
 
 					from x;
