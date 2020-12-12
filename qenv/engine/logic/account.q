@@ -1,22 +1,10 @@
 
-.engine.logic.account.GetFeetier:{[avol]
-   ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>a) or ((i=0) and (vol>a));
-   `.engine.model.feetier.Feetier$((0!ft)`ftId)
-   };
-
-.engine.logic.account.GetRisktier:{[ivnamt;ivlev]
-   rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>a) or ((i=0) and (amt>a));
-   `.engine.model.risktier.Risktier$((0!rt)`rtId)
-   };
-
-.engine.logic.account.GetAvailable:{[bal;mm;upnl;oqty;oloss]
-      bal-(mm+upnl)+(oqty-oloss)
-    };
-
 .engine.logic.account.Liquidate:{[t;i;a]
 		a[`status]:1;
 		lq:();
 		.engine.model.liquidation.AddLiquidation[];
+
+		
 	};
 
 .engine.logic.account.Remargin :{[i;a]
