@@ -17,3 +17,5 @@
 .engine.model.order.Update:.engine.model.common.Update[`.engine.model.order.Order];
 .engine.model.order.Create:.engine.model.common.Create[`.engine.model.order.Order];
 .engine.model.order.Delete:.engine.model.common.Delete[`.engine.model.order.Order];
+
+ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;

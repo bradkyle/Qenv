@@ -1,4 +1,12 @@
 
+.engine.logic.contract.Value :{[qty;price]
+    qty*price         
+    };
+
+.engine.logic.contract.Loss  :{[markprice;qty;val]
+  min[(prd[(markprice;qty)]-val;0)]  
+    };
+
 
 .engine.logic.contract.PricePerContract :{[contractType;price;faceValue]
   ($[contractType=0;faceValue%price;

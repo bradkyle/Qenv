@@ -1,16 +1,14 @@
 
-.engine.logic.orderbook.Level :{[t;i;l]
-        s:flip `side`price`qty!flip l;
-        s[`time]:t;
+.engine.logic.orderbook.Level :{
         / ld[`time]:l`time;
         / show price;
         / show side
-        c:0!.engine.model.orderbook.Get[enlist(in;`price;s`price)]; //TODO impl max depth
+        c:0!.engine.model.orderbook.Get[enlist(in;`price;x`price)]; //TODO impl max depth
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
-                s[`nqty]:s`qty;
-                s:lj[`side`price xgroup s;`side`price xkey c];
+                x[`nqty]:x`qty;
+                s:lj[`side`price xgroup x;`side`price xkey c];
                 dlts:(-/)(0!s)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 $[any[dneg<0];[ // TODO also check for side
@@ -121,6 +119,6 @@
                 .engine.Emit[`depth]'[t;flip s[cl]];
         ]];
 
-        / .engine.model.orderbook.Delete[enlist()];
+        .engine.model.orderbook.Delete[enlist(<=;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0)]; //TODO impl max depth
         };
 

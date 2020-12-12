@@ -1,137 +1,85 @@
 
-.engine.logic.account.Liquidate:{[t;i;a]
-		a[`status]:1;
-		lq:();
-		.engine.model.liquidation.AddLiquidation[];
-
-		
-	};
-
-.engine.logic.account.Remargin :{[i;a]
-	  
-			// TODO 
-			feetier:.engine.model.feetier.Get[];
-			risktier:.engine.model.risktier.Get[];
-
-			a[`feetier]:feetier;
-			a[`riktier]:risktier;
-
-			a[`avail]:((a[`balance]-sum[a`posMargin`unrealizedPnl`orderMargin`openLoss]) | 0);
-			a
+.engine.logic.account.GetFeetier:{[avol]
+			ft:first (select[1;<vol] ftId from .engine.model.feetier.Feetier where (vol>avol) or i=0)[`ftId];
+			`.engine.model.feetier.Feetier$ft
 	  };
 
-// TODO add fee
-// Fill account
-.engine.logic.account.Fill :{[t;i;a;f] // TODO simple select
-				iv:.engine.model.inventory.Get[((=;`side;f`side);(=;`aId;a`aId))];
+.engine.logic.account.GetRisktier:{[ivnamt;ivlev]
+			rt:first (select[1;<rtId] rtId from .engine.model.risktier.Risktier where (amt>ivnamt) or i=0)[`rtId];
+			`.engine.model.risktier.Risktier$rt
+		};
 
-				/ ppc:.engine.logic.contract.PricePerContract[i[`cntTyp];f`price;i`faceValue];
-				/ mpc:.engine.logic.contract.PricePerContract[i[`cntTyp];i`mkprice;i`faceValue];
-				dlt:$[f`reduce;neg[f`qty];f`qty];
+.engine.logic.account.GetAvailable:{[bal;mm;upnl;oqty;oloss]
+			bal-(mm+upnl)+(ordQty-ordLoss)
+		};
 
-				// TODO make contract agnostic
-				iv[`ordQty]-:f[`qty];
-				iv[`ordVal]-:7h$prd[f[`qty`price]];
-				iv[`ordLoss]:max[(7h$(prd[(iv`ordQty;i`mkprice)]-iv[`ordVal]);0)];
-				iv[`amt]+:dlt;
-				iv[`totalEntry]+:max[(dlt;0)];
+.engine.logic.account.Liquidate:{
+		x[`status]:1;
+		.engine.model.account.Update[];
+		// Partial Liquidation
+		$[(a[`rt][`id]>=3);[
+				.engine.EmitA[];
+				.engine.model.liquidation.Create[lq];
+				.engine.logic.order.New[]	
+				];[
+				.engine.EmitA[];
+				.engine.model.liquidation.Create[lq];
+				.engine.logic.order.New[]	
+				]];
+		x	
+	};
 
-				// Calc
-				iv[`execCost]+: .engine.logic.contract.ExecCost[
-						i[`cntTyp];
-						f[`price];
-						f[`qty];
-						i[`smul]]; 
+.engine.logic.account.Remargin :{
+			update 
+			ft:.engine.logic.account.GetFeetier[vol],
+			rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
+			avail:.engine.logic.account.GetAvailable[
+				bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
+				lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
+			from x
+	  };
 
-				/ / Calculates the average price of entry for 
-				/ / the current postion, used in calculating 
-				/ / realized and unrealized pnl.
-				iv[`avgPrice]: .engine.logic.contract.AvgPrice[
-						i[`cntTyp];
-						iv[`isig];
-						iv[`execCost];
-						iv[`totalEntry];
-						i[`smul]]; 
+.engine.logic.account.Withdraw:{
+			update
+				wit:wit+x[`withdrawn],
+				bal:bal-x[`withdrawn],
+				avail:.engine.logic.account.GetAvailable[
+					bal-x[`withdrawn],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss]
+				from `.engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a]
+			};
 
-				/ / If the fill reduces the position, calculate the 
-				/ / resultant pnl 
-				if[f[`reduce];iv[`rpnl]+:.engine.logic.contract.RealizedPnl[
-						i[`cntTyp];
-						f[`qty];
-						f[`price];
-						iv[`isig];
-						iv[`avgPrice];
-						i[`faceValue];
-						i[`smul]]];
+.engine.logic.account.Deposit:{
+			update
+				dep:dep+x[`deposit],
+				bal:bal+x[`deposit],
+				avail:.engine.logic.account.GetAvailable[
+					bal+x[`deposit],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss]
+				from `.engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a];
+			};
 
-				/ // If the inventory is reduced to zero reset the folowing
-				/ // values in the inventory.
-    		if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
-
-				/ / If the position is changed, calculate the resultant
-				/ / unrealized pnl
-				iv[`upnl]: .engine.logic.contract.UnrealizedPnl[ // TODO
-						i[`cntTyp]; 
-						i[`mkprice];
-						i[`faceValue];
-						i[`smul];
-						iv[`amt];
-						iv[`isig];
-						iv[`avgPrice]];	
-
-
-				a:.engine.logic.account.Remargin[i;a];
-
-				// 
-				cost:feetier[$[f[`ismaker];`mkrfee;`tkrfee]] * f[`qty];
-
-				// Derive the cost resulting from commisison
-				iv[`rpnl]-:`long$(cost*f[`qty]);
-
-				// Update datums
-				.engine.model.account.Update a;
-				.engine.model.inventory.Update iv;
-				.engine.model.instrument.Update i;
-
-				// Emit events
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
-				};
-
-
-.engine.logic.account.Withdraw:{[t;i;a;w]
-				if[a[`bal]<=0;.engine.Purge[w;0;"Order account has no balance"]];
-				if[a[`available]<=0;.engine.Purge[w;0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
-				if[a[`state]=2;.engine.Purge[w;0;"Account has been locked for liquidation"]];
-				a[`wit]+:w`wit;
-				a:.engine.logic.account.Remargin[i;a];
-
-				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
-				};
-
-.engine.logic.account.Deposit:{[t;i;a;d]
-				if[a[`state]=1;.engine.Purge[d;0;"Account has been disabled"]];
-				a[`dep]+:d`dep;
-				feetier:.engine.model.feetier.GetFeeTier[];
-				a:.engine.logic.account.Remargin[i;a];
-
-				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
-				};
-
-.engine.logic.account.Leverage:{[t;i;a;l]
-				if[a[`bal]<=0;.engine.Purge[l;0;"Order account has no balance"]];
-				if[a[`available]<=0;.engine.Purge[l;0;"Order account has insufficient available balance"]];
-				if[a[`state]=1;.engine.Purge[l;0;"Account has been disabled"]];
-				if[a[`state]=2;.engine.Purge[l;0;"Account has been locked for liquidation"]];
-				a[`leverage]:l`leverage;
-				a:.engine.logic.account.Remargin[i;a];
-
-				.engine.model.account.Update a;
-				.engine.Emit[`account;t;a];
-				};
+.engine.logic.account.Leverage:{
+			update
+				lev:x[`leverage],
+				avail:.engine.logic.account.GetAvailable[
+					bal+x[`deposit],
+					lng.mm+srt.mm,
+					lng.upnl+srt.upnl,
+					lng.ordQty+srt.ordQty,
+					lng.ordLoss+srt.ordLoss]
+				rt:.engine.logic.account.GetRisktier[];
+				from `.engine.model.account.Account where aId=x[`aId];
+			.engine.EmitA[`account;t;a];
+			};
 
 
 

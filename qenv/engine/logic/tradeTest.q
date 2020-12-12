@@ -1,4 +1,3 @@
-ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`dqty`lqty`offset`einst;
 // TODO integration tests
 
 // TODO no liquidity
@@ -33,14 +32,14 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
 
         mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        / mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
-        mck5: .qt.M[`.engine.logic.account.Fill;{[a;b] a}[m[2][3]];c];
+        mck5: .qt.M[`.engine.logic.account.Fill;{[a;b;c;d]};c];
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3];
+        res:.engine.logic.trade.Take[a 0;a 1;a 2;a 3;a 4];
 
-        .qt.CheckMock[mck3;m[2];c];
+        / .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
         .qt.CheckMock[mck5;m[4];c];
         .qt.CheckMock[mck6;m[5];c];
@@ -49,100 +48,29 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     (
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-            (
-                1;
-                4#z;
-                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                ((1 76);(1 76);(1 2);(1 1))
-            );
+            .util.testutils.makeTake[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
-                (1b;1;();( // .orderbook.Get
-                [price:enlist 1538150] 
-                    side:enlist(1);
-                    qty:enlist 4797;
-                    hqty:enlist 1000;
-                    iqty:enlist 100; // TODO fix
-                    vqty:enlist 4897 // TODO fix
-                ));
-                (1b;1;(); // .order.Get
-                  1!flip (ocols!(
-                    2 3;
-                    1 1;
-                    0 0;
-                    1538150 1538150;
-                    0 0;
-                    0 0;
-                    0 0;
-                    0 0;
-                    1 1;
-                    0 0;
-                    00b;
-                    0 0;
-                    100 100;
-                    100 100;
-                    100 100;
-                    0 110;
-                    0 0))
-                );
-                (1b;1;(
-                  ();
-                  ()
-                );()); // .engine.Emit
-                (1b;1;();(0.1;0.1)); // UpdateOrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+                (1b;1;();.util.testutils.makeLevel[]);
+                (1b;1;();.util.testutils.makeOrder[]);
+                (0b;0;.util.testutils.makeEvent[];()); // Emit
+                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
+                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
             ); // mscks 
-            (
-
-            ) // err 
+            () // err 
         ));
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-            (
-                1;
-                4#z;
-                `iId`cntTyp`faceValue`mkprice`smul!(0;0;1;1000;0); // instrument
-                ((1 76);(1 76);(1 2);(1 1))
-            );
+            .util.testutils.makeTake[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
-                (1b;1;();(
-                [price:enlist 1538150] 
-                    side:enlist(1);
-                    qty:enlist 4797;
-                    hqty:enlist 1000;
-                    iqty:enlist 100; // TODO fix
-                    vqty:enlist 4897 // TODO fix
-                ));
-                (1b;1;();
-                  1!flip (ocols!(
-                    2 3;
-                    1 1;
-                    0 0;
-                    1538150 1538150;
-                    0 0;
-                    0 0;
-                    0 0;
-                    0 0;
-                    1 1;
-                    0 0;
-                    00b;
-                    0 0;
-                    100 100;
-                    100 100;
-                    100 100;
-                    0 110;
-                    0 0))
-                );
-                (1b;1;();()); // Emit
-                (1b;1;();(0.1;0.1)); // UpdateOrder
-                (1b;1;();`imr`mmr!(0.1;0.1)); // Fill
-                (1b;1;();`mkrfee`tkrfee!(0.1;0.1)) // UpdateLevel
+                (1b;1;();.util.testutils.makeLevel[]);
+                (1b;1;();.util.testutils.makeOrder[]);
+                (0b;0;.util.testutils.makeEvent[];()); // Emit
+                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
+                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
             ); // mscks 
-            (
-
-            ) // err 
+            () // err 
         ))
         / (("1c) PrjmessTrade SELL: jjderb;;d has agent hidden ;hders, lvl1 size > qty, trade partially fills agent", // 14
         /   ";kder, trade executi;l >= agent ;qder ;wfset, fill is agent (partially fills iceberg ;eder < displayqty)");(

@@ -5,12 +5,13 @@
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{[sx;a;t;i;x]
+.engine.logic.trade.Take:{
     // Get the current levels for the side  
     nside:neg[sx];
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
+
     // TODO add limit to match
     s:0!.engine.model.orderbook.Get[(
         (=;`side;sx);
@@ -126,13 +127,25 @@
         // as a result of the trade and amends them 
         // accordingly
         // TODO full order cols
-        o:raze'[(s`oId;s`opric.bam.x[;1]e;noffset;nlqty;ndqty;nstatus)][;where[msk]];
+        o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
         .engine.model.order.Update[flip `oId`price`offset`lqty`dqty`state!o];
         .engine.Emit[`order;last t]'[flip o];
         
  
-        // Derive and apply Executions
+        // Derive and apply Fills 
         // -------------------------------------------------->
+
+        // Apply the set of fills that would satisfy the 
+        // amount of liquidity that is being removed from
+        // the orderbook.
+        if[a;.engine.logic.fill.Fill[raze'[(
+                numLvls#i[`iId]; // instrumentId
+                numLvls#caId; // accountId
+                state`tside; 
+                state`price;
+                sum'[tqty];
+                count[tqty]#reduce;
+                numLvls#fillTime)]]];
 
         // Check to see if the lqty of any maker orders
         // hase been update by deriving the delta and if there
@@ -141,17 +154,15 @@
         flldlt:(nlqty-s`lqty);
         isfll:raze[flldlt]<>0;
         if[any[isfll];[
-                show 90#"BAM";
                 nfll:count[flldlt];
-								x:raze'[(
+                .engine.logic.fill.Fill[raze'[(
                     i`iId;
                     s`acc;
                     s`oside;
                     s`oprice;
                     abs[flldlt];
                     s`reduce;
-                    nfll#t)];
-                .engine.logic.account.Fill[x];
+                    nfll#t)]];
             ]];
 
         // Derive and apply order book updates
@@ -162,25 +173,11 @@
         ];.engine.Emit[`trade]'[t;x]];
 
         // TODO recurse
-
-
-        // Return the fills that would have occurred
-        // Apply the set of fills that would satisfy the 
-        // amount of liquidity that is being removed from
-        // the orderbook.
-        / raze'[(numLvls#ciId; // instrumentId
-        /     numLvls#caId; // accountId
-        /     state`tside; 
-        /     state`price;
-        /     sum'[tqty];
-        /     count[tqty]#reduce;
-        /     numLvls#fillTime)]
-    
     };
 
 // TODO check if has liquidity before doing take else just gen trades
 // TODO process multiple trades
-.engine.logic.trade.Trade:{[t;i;x]
+.engine.logic.trade.Trade:{
         s:(x[;0]>0);
         b:where s;
         a:where not s;
@@ -189,7 +186,7 @@
     };
 
 
-.engine.logic.trade.Match:{[t;i;a;m]
+.engine.logic.trade.Match:{
         s:(x[;0]>0);
         b:where s;
         a:where not s;

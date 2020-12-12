@@ -5,7 +5,6 @@
 .engine.ingress.Events      :.common.event.Event;
 .engine.egress.Events       :.common.event.Event;
 
-
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .engine.GetIngressEvents   :{[watermark;frq;per] // TODO should select next batch according to config
@@ -24,7 +23,12 @@
 
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
-    .engine.egress.Events,:(time;kind;event);
+    .engine.egress.Events,:(time;kind;event;0n);
+		};
+
+// ReInserts events into the egress event buffer
+.engine.EmitA           :{[kind;time;event;aId]
+    .engine.egress.Events,:(time;kind;event;aId);
 		};
 
 .engine.Purge   :{[event;time;msg] 
@@ -34,39 +38,42 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
+.engine.publicWrapper:{[x;y;z]
+    e:y!flip z;
+    e[`time]:z[`time];
+    e[`iId]:`.engine.model.instrument.Instrument$0;
+    x[e]};
 
-.engine.publicWrapper:{[x;y]
-    i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    x[y`time;i;y`datum]};
-
-.engine.privateWrapper:{[x;y]
-    i:?[`.engine.model.instrument.Instrument;enlist(=;`iId;0);();()];
-    a:?[`.engine.model.account.Account;enlist(=;`aId;0);();()];
-    x[y`time;i;a;y`datum]};
+.engine.privateWrapper:{[v;x;y;z]
+    e:y!flip z;
+    e[`time]:z[`time];
+    e[`iId]:`.engine.model.instrument.Instrument$0;
+    e[`aId]:`.engine.model.account.Account$x[`aId];
+    x[e]};
 
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade]; //.engine.logic.orderbook.Level[INSTRUMENT];
-.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
-.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
-.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice];
-.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
-.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade;`size`qty`price]; 
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;`size`qty`price];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;enlist`fundingrate];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.MarkPrice;enlist`markprice];
+.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement;()];
+.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit;`highest`lowest];
 
 // Account
-.engine.map[`withdraw]    :.engine.privateWrapper[.engine.logic.account.Withdraw];
-.engine.map[`deposit]     :.engine.privateWrapper[.engine.logic.account.Deposit];
-.engine.map[`leverage]    :.engine.privateWrapper[.engine.logic.account.Leverage];
+.engine.map[`withdraw]    :.engine.privateWrapper[.engine.valid.account.Withdraw;.engine.logic.account.Withdraw;enlist`withdraw];
+.engine.map[`deposit]     :.engine.privateWrapper[.engine.valid.account.Deposit;.engine.logic.account.Deposit;enlist`deposit];
+.engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage;enlist`leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.logic.order.NewOrder];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.logic.order.AmendOrder];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.logic.order.CancelOrder];
-.engine.map[`cancelall]   :.engine.privateWrapper[.engine.logic.order.CancelAllOrders];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New;`clId`];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.Amend;.engine.logic.order.Amend;`oId`clId];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel;`oId`clId];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
 
-.engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
-/ .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
+/ .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
+.engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
 
 // Todo add slight randomization to incoming trades and 
 // depth during training
@@ -96,7 +103,7 @@
       .engine.ingress.Events:events;::];
     .engine.process[.engine.GetIngressEvents[.engine.watermark;`second$5;950]];
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
-    }
+    };
 
 .engine.Reset   :{[aIds; events]
     // TODO delete all models 
@@ -180,12 +187,12 @@
 
     // TODO make cleaner
     t:min events`time;
-    {.engine.Emit[`account;x;value y]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
-    {.engine.Emit[`inventory;x;value y]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
+    {.engine.EmitA[`account;x;value y;y`aId]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
+    {.engine.EmitA[`inventory;x;value y;y`aId]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
-    }
+    };
 
 
 
