@@ -39,13 +39,10 @@ function getBatches(
     // Lists files in the bucket
     let files:string[] = execSync("gsutil ls "+bucketPath).toString("utf8").split("\n");
     let names = files.map(f=>f.split("/"));
-    console.log(names);
     let nbrs = names.map(f=>f[5]).map(Number);
     nbrs = nbrs.filter(f=>!Number.isNaN(f));
     nbrs = _.uniq(nbrs);
-    console.log(nbrs.length);
     let batches:number[][] = _.chunk(nbrs, batchSize);
-    console.log(batches);
     batches = _.slice(batches, 0, maxBatches);
     return batches;
 }
@@ -95,22 +92,19 @@ export class MIngest extends pulumi.ComponentResource {
         this.mountDataPath = args.dataMountPath + "/events"
 
         const batchSize = 48;
-        const maxBatches = 5;
+        const maxBatches = 2;
 
         this.conf = [];
         this.servants = {};
         let batches = getBatches("gs://axiomdata/okex/events/", batchSize, maxBatches);
-        console.log("------------------------------------");
-        console.log(batches);
 
         if (batches && batches.length>0){
-            console.log(batches);
             for(let i=0;i<batches.length;i++) {
                 let batch = batches[i];
                 let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
                 let s = i.toString();
                 let sname = (`ingest-${s}`);
-                console.log(dirs);
+                // console.log(dirs);
                 this.servants[sname] = new ingest.Ingest(sname, {
                     provider: args.provider,  
                     image: this.ingestImage,
@@ -198,8 +192,6 @@ export class MIngest extends pulumi.ComponentResource {
             },
         }, { parent: this });
 
-
-            this.registerOutputs();
-
+        this.registerOutputs();
     }
 }

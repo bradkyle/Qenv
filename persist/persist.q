@@ -17,7 +17,7 @@ kfk_cfg:(!) . flip(
     );
 client:.kfk.Consumer[kfk_cfg];
 
-
+// Writes data to hourly buckets
 hour:{`int$sum 24 1*@[;0;-;1970.01.01] `date`hh$x};
 persist:{[outpath;sympath;table;x]
   x[`hr]:.Q.fc[{hour'[x]}] x[`time];

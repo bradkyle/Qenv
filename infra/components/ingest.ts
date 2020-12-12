@@ -27,7 +27,7 @@ export class Ingest extends pulumi.ComponentResource {
     public readonly bucket: gcp.storage.Bucket; 
     public readonly image: docker.Image; 
     // public readonly gcssecret: k8s.core.v1.Secret; 
-    public readonly deployment: k8s.apps.v1.Deployment; 
+    public readonly deployment: k8s.apps.v1.StatefulSet; 
     public readonly service: k8s.core.v1.Service;
     public readonly ipAddress?: pulumi.Output<string>;
     public readonly keyfilepath: string;
@@ -79,32 +79,25 @@ export class Ingest extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
         const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 
-        // Create the kuard Deployment.
-        // gsutil pull 
-        this.deployment = new k8s.apps.v1.Deployment(`${name}-ingest`, {
+
+        const datapath = (args.dataMountPath || "/ingest/data");
+        this.deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
             spec: {
                 selector: {
                     matchLabels: appLabels,
                 },
-                replicas: args.replicas,
+                serviceName: "ingest",
+                updateStrategy :{
+                    // type: "RollingUpdate"
+                },
+                replicas: 1,
                 template: {
                     metadata: {labels: appLabels},
                     spec: {
-                        volumes :[
-                            // {
-                            //     name: "google-cloud-key",
-                            //     secret : {}
-                            // },
-                            {
-                                name: "data-list",
-                                configMap: {
-                                    name: ingestConfigName
-                                }
-                            }
-                        ],
+                        serviceAccountName: "default",
                         containers: [
                             {
-                                name: "ingest",
+                                name: "impala",
                                 image: this.image.imageName,
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
@@ -118,61 +111,82 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: args.dataMountPath 
+                                        value: datapath 
+                                    }
+                                ],
+                                volumeMounts: [
+                                    {
+                                        name: "data-list",
+                                        mountPath: "/ingest/config/datalist"
+                                    },
+                                    {
+                                        name:"data",
+                                        mountPath:datapath
                                     }
                                 ],
                                 ports: [
                                       {containerPort: 5000, name: "kdb"}
                                 ],
-                                // livenessProbe: {
-                                //     httpGet: {path: "/healthy", port: "kdb"},
-                                //     initialDelaySeconds: 5,
-                                //     timeoutSeconds: 1,
-                                //     periodSeconds: 10,
-                                //     failureThreshold: 3,
-                                // },
-                                // readinessProbe: {
-                                //     httpGet: {path: "/ready", port: "kdb"},
-                                //     initialDelaySeconds: 5,
-                                //     timeoutSeconds: 1,
-                                //     periodSeconds: 10,
-                                //     failureThreshold: 3,
-                                // },
-                                volumeMounts: [
-                                    // {
-                                    //     name: "google-cloud-key",
-                                    //     mountPath: "/var/secrets/google"
-                                    // },
-                                    {
-                                        name: "data-list",
-                                        mountPath: "/ingest/config/datalist"
-                                    }
-                                ],
-                                // lifecycle:{
-                                //     postStart :{
-                                //         exec : {
-                                //             command: [
-                                //                 "gsutil", 
-                                //                 "-m","cp",
-                                //                 "-R",this.datapathsfile, 
-                                //                 this.dataMountPath
-                                //             ]
-                                //         }
-                                //     },
-                                //     preStop:{
-                                //         exec : {
-                                //             command: [
-                                //                 "fusermount", 
-                                //                 "-u", 
-                                //                 args.dataMountPath 
-                                //             ]
-                                //         }
-                                //     }
-                                // }
+                                lifecycle:{
+                                    postStart :{
+                                        exec : {
+                                            command: [
+                                                "gsutil", "-m", 
+                                                "cp", "-R", 
+                                                this.bucket.name, 
+                                                datapath
+                                            ]
+                                        }
+                                    },
+                                    // preStop:{
+                                    //     exec : {
+                                    //         command: [
+                                    //             "fusermount", 
+                                    //             "-u", 
+                                    //             args.stateMountPath
+                                    //         ]
+                                    //     }
+                                    // }
+                                }
+
                             },
+                        ],
+                        volumes :[
+                            // {
+                            //     name: "google-cloud-key",
+                            //     secret : {}
+                            // },
+                            {
+                                name: "data-list",
+                                configMap: {
+                                    name: ingestConfigName
+                                }
+                            }
                         ],
                     },
                 },
+                volumeClaimTemplates: [
+                    {
+                        metadata: {
+                            name: "data",
+                            labels: {
+                                app: "ingest",
+                                component: "master",
+                                release: "example",
+                            }
+                        },
+                        spec: {
+                            accessModes: [
+                                "ReadWriteOnce"
+                            ],
+                            resources: {
+                                requests: {
+                                    storage: "1Gi"
+                                }
+                            }
+                        }
+                    }
+                ]
             },
         }, {provider: args.provider, parent: this});
 
