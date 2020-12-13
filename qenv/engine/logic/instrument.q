@@ -2,7 +2,7 @@
 // Update 
 .engine.logic.instrument.Funding:{
 
-			i:flip ![x;();0b;`kind`wit`bal`avail!(
+			ins:flip ![x;();0b;`kind`wit`bal`avail!(
 				`fundingrate;	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
@@ -19,6 +19,10 @@
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
+
+			.engine.model.account.Update acc;
+			.engine.model.inventory.Update ivn;
+			.engine.model.instrument.Update ins
 
 			// Update instrument
 			.engine.EmitA[`account;t;a];
@@ -46,6 +50,10 @@
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
+			.engine.model.account.Update acc;
+			.engine.model.inventory.Update ivn;
+			.engine.model.instrument.Update ins
+
 			// Update instrument
 			.engine.EmitA[`account;t;a];
 			.engine.EmitA[`inventory;t;iv];
@@ -70,6 +78,10 @@
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
+
+			.engine.model.account.Update acc;
+			.engine.model.inventory.Update ivn;
+			.engine.model.instrument.Update ins
 
 			// Update instrument
 			.engine.EmitA[`account;t;a];
