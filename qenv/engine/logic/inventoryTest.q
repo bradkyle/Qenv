@@ -32,10 +32,6 @@
         .engine.model.feetier.Feetier,:s[`feetier];
         .engine.model.risktier.Risktier,:s[`risktier];
 
-        a[`aId]:`.engine.model.account.Account$a[`aId];
-        a[`iId]:`.engine.model.instrument.Instrument$a[`iId];
-        a[`ivId]:`.engine.model.inventory.Inventory$flip[a[`aId`side]];
-
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
@@ -57,18 +53,18 @@
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ((!) . flip(
-                (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-                (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-                (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
-                (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
-                (`order;.model.Order[]) // Update Account
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+                (`order;()) // Update Account
             ));
-            .model.Fill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z)];
+            (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z));
             (); // res 
             (
-                (1b;1;.model.Inventory[];()); // UpdateInventory 
-                (1b;2;(.event.Inventory[];.event.Fill[]);()) // Emit
+                (1b;1;();()); // UpdateInventory 
+                (1b;2;(();());()) // Emit
             ); // mocks 
             () // err 
         ))
