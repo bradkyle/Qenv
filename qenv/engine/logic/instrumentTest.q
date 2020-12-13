@@ -118,12 +118,8 @@
         a:p`args;
         m:p[`mocks];
 
-        mck0: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[0][3]];c];
-        mck1: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
+        mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.model.risktier.GetRiskTier;{[a;b] a}[m[3][3]];c];
-        mck5: .qt.M[`.engine.model.feetier.GetFeeTier;{[a;b] a}[m[4][3]];c];
 
         res:.engine.logic.instrument.MarkPrice[z;a 0;a 1];
 
@@ -134,13 +130,18 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Update mark price (decreasing), one account: no positions";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+            ((!) . flip(
+            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
+            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
+            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
+            .event.Mark[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
+            (1b;1;.model.Account[];()); // UpdateAccount 
+            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
             ); // mocks 
             () // err 
         ));
