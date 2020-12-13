@@ -19,7 +19,6 @@
 				.engine.logic.trade.Match ?[o;();0b;()];
 
 				.engine.model.order.CreateOrder l; 
-				.engine.model.orderbook.Update o;
 				.engine.EmitA[`order;t;o];
 
 				.engine.Emit .event.Account[]; 
