@@ -23,17 +23,7 @@
 				  
 	};
 
-.model.Failure :{}
-.model.Account :{}
-.model.Inventory :{}
-.model.Deposit :{}
-.model.Withdraw :{}
-.model.Funding : {}
-.model.Mark:{}
-.model.Settlement:{}
-.model.PriceLimit :{}
-.model.Level:{}
-.model.Trade:{}
-.model.Order:{}
-.model.Instrument:{}
-.model.Fill:{}
+.model.Model:{[tb;cl;vl]
+    cvl:count[vl]; 
+    $[cvl>1;[rx:(cvl#enlist[tb]);rx[cl]:flip[vl];:flip rx];[r[cl]:first[vl];:tb]]
+    };

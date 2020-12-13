@@ -3,4 +3,14 @@
 	ismaker:`boolean$();side:`long$();iId:`.engine.model.instrument.Instrument$();
   oId:`.engine.model.order.Order$();ivId:`.engine.model.inventory.Inventory$();
   aId:`.engine.model.account.Account$());
+.engine.model.fill.r:.util.NullRowDict[`.engine.model.fill.Fill];
 
+.model.Fill:{[cl;vl]
+    //if[null cl;cl:key .fill.r]; // TODO check
+    x:.model.Model[.fill.r;cl;vl];
+    x[`aId]:`.engine.model.account.Account$x[`aId];
+    x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId];
+    x[`oId]:`.engine.model.order.Order$x[`oId];
+    x[`iId]:`.engine.model.inventory.Inventory$x[`iId];
+    x
+    };

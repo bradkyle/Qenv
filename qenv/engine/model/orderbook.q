@@ -11,9 +11,14 @@
 // TODO add num liquidations at level as a feature
 
 .engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$();time:`datetime$());
+.engine.model.orderbook.r:.util.NullRowDict[`.engine.model.orderbook.Orderbook];
 
 .engine.model.orderbook.Get:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
 .engine.model.orderbook.Update:.engine.model.common.Update[`.engine.model.orderbook.Orderbook];
 .engine.model.orderbook.Delete:.engine.model.common.Delete[`.engine.model.orderbook.Orderbook];
 
-
+.model.Level:{[cl;vl]
+    //if[null cl;cl:key .fill.r]; // TODO check
+    x:.model.Model[.engine.model.order.r;cl;vl];  
+    x
+    };
