@@ -21,6 +21,7 @@
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
 				.engine.model.inventory.Update flip scl[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;iv];
 
+				// Account, Fill
 				.engine.Emit Event[(iv`kind;15h$iv`time;flip iv`aId`side;7h$iv`aId)];
 				.engine.Emit Event[(x`kind;15h$x`time;flip x`aId`side;7h$x`aId)];
 				};
