@@ -105,18 +105,18 @@
                                         s`iqty;
                                         nvqty)]]];
 
-                                .engine.Emit[`depth]'[s[`time];flip s[`price`side`qty]];
+                                .engine.Emit .event.Level[];
                         ]];
                 ];[
                         ocl:`price`side`qty;
                         .engine.model.orderbook.Update[flip cl[ocl;s]];
-                        .engine.Emit[`depth]'[t;flip s[ocl]];
+                        .engine.Emit .event.Level[];
                 ]];
         ];[
                 / No update occurs, should emit?
                 ocl:`price`side`qty;
                 .engine.model.orderbook.Update[flip cl[ocl;s]];
-                .engine.Emit[`depth]'[t;flip s[ocl]];
+                .engine.Emit .event.Level[];
         ]];
 
         .engine.model.orderbook.Delete[enlist(<=;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0)]; //TODO impl max depth

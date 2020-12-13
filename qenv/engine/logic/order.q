@@ -19,9 +19,9 @@
 				.engine.model.orderbook.Update o;
 				.engine.EmitA[`order;t;o];
 
-				.engine.Emit AccountEvent[]; 
-				.engine.Emit InventoryEvent[]; 
-				.engine.Emit OrderEvent[]; 
+				.engine.Emit .event.Account[]; 
+				.engine.Emit .event.Inventory[]; 
+				.engine.Emit .event.Order[]; 
 		};
 
 .engine.logic.order.Amend:{
@@ -43,9 +43,9 @@
 				.engine.model.orderbook.Update o;
 				.engine.EmitA[`order;t;o];
 
-				.engine.Emit AccountEvent[]; 
-				.engine.Emit InventoryEvent[]; 
-				.engine.Emit OrderEvent[]; 
+				.engine.Emit .event.Account[]; 
+				.engine.Emit .event.Inventory[]; 
+				.engine.Emit .event.Order[]; 
 		};
 
 .engine.logic.order.Cancel:{
@@ -65,9 +65,9 @@
 				.engine.model.orderbook.Update o;
 				.engine.EmitA[`order;t;o];
 
-				.engine.Emit AccountEvent[]; 
-				.engine.Emit InventoryEvent[]; 
-				.engine.Emit OrderEvent[]; 
+				.engine.Emit .event.Account[]; 
+				.engine.Emit .event.Inventory[]; 
+				.engine.Emit .event.Order[]; 
 		};
 
 
@@ -88,8 +88,8 @@
 				.engine.model.orderbook.Update o;
 				.engine.EmitA[`order;t;o];
 
-				.engine.Emit AccountEvent[]; 
-				.engine.Emit InventoryEvent[]; 
-				.engine.Emit OrderEvent[]; 
+				.engine.Emit .event.Account[]; 
+				.engine.Emit .event.Inventory[]; 
+				.engine.Emit .event.Order[]; 
     };
 

@@ -45,4 +45,4 @@
 .event.Trade:{}
 .event.Order:{}
 .event.Instrument:{}
-
+.event.Fill:{}
