@@ -73,11 +73,11 @@
     (
        enlist("Withdraw no balance:should fail";(
             ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
-                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
+                (`feetier;.model.Account[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+                (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeWithdraw[`aId`iId`wit;enlist(0;0;0)];
+            .event.Withdraw[`aId`iId`wit;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -151,7 +151,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Deposit Account disabled:should fail";(
-            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Deposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -160,7 +160,7 @@
             () // err 
         ));
         ("Deposit Account locked:should fail";(
-            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Deposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -169,7 +169,7 @@
             () // err 
         ));
         ("Deposit Success: Update fee tier, risk tier, avail";(
-            .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Deposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -202,7 +202,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Leverage no balance:should fail";(
-            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Leverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -211,7 +211,7 @@
             () // err 
         ));
         ("Leverage insufficient balance:should fail";(
-            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Leverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -220,7 +220,7 @@
             () // err 
         ));
         ("Leverage Account disabled:should fail";(
-            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Leverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -229,7 +229,7 @@
             () // err 
         ));
         ("Leverage Account locked:should fail";(
-            .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
+            .event.Leverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
@@ -238,7 +238,7 @@
             () // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
+            .event.Leverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // Update Account
