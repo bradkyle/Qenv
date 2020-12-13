@@ -531,10 +531,11 @@ dozc:{x+y}[doz];
 
 //
 .engine.testutils.SwitchSetupModels :{[]
+    k:x[0];
     $[
-        k=`inventory;[];
-        k=`account;[];
-        k=`order;[];
+        k=`inventory;[.engine.model.inventory.Inventory,:.model.Inventory . x[1]];
+        k=`account;[.engine.model.account.Account,:.model.Account . x[1]];
+        k=`order;[.engine.model.order.Order,:.model.Order . x[1]];
         k=`trade;[];
         k=`instrument;[];
         k=`fill;[];
