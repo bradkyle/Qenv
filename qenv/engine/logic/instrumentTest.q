@@ -2,7 +2,7 @@
 // TODO test multiple accounts
 // TODO test multiple events
 
-/ .qt.SkpBesTest[27];
+.qt.SkpBesTest[27];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
@@ -10,98 +10,102 @@
         a:p`args;
         m:p[`mocks];
 
-        mck0: .qt.M[`.engine.model.inventory.GetInventory;{[a;b] a}[m[0][3]];c];
-        mck1: .qt.M[`.engine.model.account.GetAccount;{[a;b] a}[m[1][3]];c];
-        mck2: .qt.M[`.engine.model.account.UpdateAccount;{[a;b]};c];
+        mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.logic.account.Remargin;{[a;b;c] a}[m[4][3]];c];
 
         res:.engine.logic.instrument.Funding[z;a 0;a 1];
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
-        .qt.CheckMock[mck2;m[2];c];
-        .qt.CheckMock[mck3;m[3];c];
-        .qt.CheckMock[mck4;m[4];c];
     };
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Positive Funding: no accounts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0.0001)];
+            ((!) . flip(
+            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
+            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
+            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
+            .event.Funding[`iId`fundingrate;enlist(0;0.0001)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
+            (1b;1;.model.Account[];()); // UpdateAccount 
+            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
             ); // mocks 
             () // err 
         ));
         ("Negative Funding: No accounts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;-0.0001)];
+            ((!) . flip(
+            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
+            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
+            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
+            .event.Funding[`iId`fundingrate;enlist(0;0.0001)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Positive Funding: One account, longs pay shorts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Negative Funding: One account, shorts pay longs";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Positive Funding: Multiple accounts, longs pay shorts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            (
-
-            ) // err 
-        ));
-        ("Negative Funding: Multiple accounts, shorts pay longs";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
+                (1b;1;.model.Account[];()); // UpdateAccount 
+                (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
             ); // mocks 
             (
 
             ) // err 
         ))
+        / ("Positive Funding: One account, longs pay shorts";(
+        /     .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     (
+
+        /     ) // err 
+        / ));
+        / ("Negative Funding: One account, shorts pay longs";(
+        /     .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     (
+
+        /     ) // err 
+        / ));
+        / ("Positive Funding: Multiple accounts, longs pay shorts";(
+        /     .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     (
+
+        /     ) // err 
+        / ));
+        / ("Negative Funding: Multiple accounts, shorts pay longs";(
+        /     .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     (
+
+        /     ) // err 
+        / ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
