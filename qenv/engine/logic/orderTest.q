@@ -22,33 +22,26 @@
         a:p`args;
         m:p[`mocks];
 
-        mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck5: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
-        mck6: .qt.M[`.engine.Emit;{[a;b;c]};c];
-        mck7: .qt.M[`.engine.model.risktier.Get;{[a;b] a}[m[5][3]];c];
-        mck8: .qt.M[`.engine.model.feetier.Get;{[a;b] a}[m[6][3]];c];
-        mck9: .qt.M[`.engine.logic.account.Fill;{[a;b]};c];
-        mck10: .qt.M[`.engine.logic.orderbook.Level;{[a;b]};c];
+        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.order.NewOrder[a 0;a 1;a 2];
+        res:.engine.logic.order.NewOrder a;
 
-        .qt.CheckMock[mck0;m[7];c];
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
-        .qt.CheckMock[mck5;m[3];c];
-        .qt.CheckMock[mck6;m[4];c];
-        .qt.CheckMock[mck7;m[5];c];
-        .qt.CheckMock[mck8;m[6];c];
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck4;m[4];c];
         .qt.RestoreMocks[];
 
     };
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
-            .util.testutils.makeOrder[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            .event.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
@@ -60,7 +53,7 @@
             () // err 
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
-            .util.testutils.makeOrder[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            .event.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
