@@ -25,5 +25,5 @@
 
 .model.Model:{[tb;cl;vl]
     cvl:count[vl]; 
-    $[cvl>1;[rx:(cvl#enlist[tb]);rx[cl]:flip[vl];:flip rx];[r[cl]:first[vl];:tb]]
+    $[cvl>1;[rx:(cvl#enlist[tb]);rx[cl]:flip[vl];:flip rx];[tb[cl]:first[vl];:tb]]
     };

@@ -40,24 +40,24 @@
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
-            .model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;.model.Account[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
-                (1b;1;.model.Inventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0)];()); // Inventory 
-                (1b;1;.model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];()); // CreateOrder 
-                (1b;3;(.event.Account[];.event.Inventory[];.event.Order[]);()) // Emit
+                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
+                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
+                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
+                (1b;3;(();();());()) // Emit
             ); // mocks 
             () // err 
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
-            .model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;.model.Account[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
-                (1b;1;.model.Inventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0)];()); // Inventory 
-                (1b;1;.model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];()); // CreateOrder 
-                (1b;3;(.event.Account[];.event.Inventory[];.event.Order[]);()) // Emit
+                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
+                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0)];()); // Inventory 
+                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];()); // CreateOrder 
+                (1b;3;(();());()) // Emit
             ); // mocks 
             () // err 
         ))
