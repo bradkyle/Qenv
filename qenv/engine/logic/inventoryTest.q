@@ -73,7 +73,7 @@
                     enlist(0;0;0;0;0;0;0;0;0;0;0)
                 ]); // GetInventory
                 (1b;1;.util.testutils.makeAccount[`aId`iId`lng`srt`rt`ft`avail`bal;enlist(0;0;0;0;0;0;0;0)];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[];()); // Update Inventory 
+                (1b;1;.util.testutils.makeInventory[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;()];()); // Update Inventory 
                 (1b;2;();.util.testutils.makeEvent[]) // Emit
             ); // mocks 
             () // err 

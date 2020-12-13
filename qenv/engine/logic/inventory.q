@@ -19,6 +19,7 @@
 				();0b;`upnl`rpnl!(
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
+				.bam.iv:iv;
 				.engine.model.inventory.Update flip scl[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;iv];
 
 				// Account, Fill

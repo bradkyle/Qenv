@@ -173,7 +173,7 @@
         l:raze'[(s`price;s`mside;nqty;nhqty;niqty;nvqty)];
         .engine.model.orderbook.Update[flip `price`side`qty`hqty`iqty`vqty!l];
 
-        ];[.engine.Emit TradeEvent[]];
+        ];[.engine.Emit TradeEvent[]]];
 
         // TODO recurse
     };
