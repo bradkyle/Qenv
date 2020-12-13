@@ -6,8 +6,8 @@
 // TODO     		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 .engine.logic.inventory.Fill:{ // TODO simple select
 				x:flip x;
-				.bam.x:x;
-				s:![![x;();0b;`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt!(
+				iv:flip ![![x;();0b;`kind`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt!(
+						(enlist`inventory);
 						((';`.engine.logic.contract.AvgPrice);`iId.cntTyp;`side;`ivId.execCost;`ivId.totEnt;`iId.smul); // TODO dependent
 						((';`.engine.logic.contract.ExecCost);`iId.cntTyp;`price;`qty;`iId.smul);
 						(-;`ivId.ordLoss;(`.engine.logic.contract.Loss;`iId.mkprice;`qty;((+/);`qty;`price)));
@@ -19,10 +19,9 @@
 				();0b;`upnl`rpnl!(
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
-				iv:flip scl[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;s];
-				.engine.model.inventory.Update iv;
+				.engine.model.inventory.Update flip scl[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;iv];
 
-				.engine.EmitA[s`kind;s`time;flip s`aId`side`time`amt`rpnl`avgPrice`upnl;s`aId];
-				.engine.EmitA[x`kind;x`time;flip x`time`price`qty`side;x`aId];
+				.engine.Emit Event[(iv`kind;15h$iv`time;flip iv`aId`side;7h$iv`aId)];
+				.engine.Emit Event[(x`kind;15h$x`time;flip x`aId`side;7h$x`aId)];
 				};
 

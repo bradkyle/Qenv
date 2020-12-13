@@ -28,7 +28,8 @@
 
 // ReInserts events into the egress event buffer
 .engine.EmitA           :{[kind;time;event;aId]
-    .engine.egress.Events,:(time;kind;event;aId);
+    .bam.a:(kind;time;event;aId);
+    .engine.egress.Events,:flip `time`kind`event`aId!(15h$time;kind;event;7h$aId);
 		};
 
 .engine.Purge   :{[event;time;msg] 
