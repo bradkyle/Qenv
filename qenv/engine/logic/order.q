@@ -8,7 +8,6 @@
 					(+;`ivId.ordLoss;);
 					(+;`ivId.ordVal;);
 					(+;`ivId.ordQty;);
-					()
 					)];
 
 				acc: 	![x;();0b;`aId`avail`rt()];
