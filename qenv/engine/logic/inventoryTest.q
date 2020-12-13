@@ -61,11 +61,11 @@
             ((!) . flip(
                 (`account;.util.testutils.makeAccount[`aId`avail`bal;enlist(0;0;0)]); 
                 (`instrument;.util.testutils.makeInstrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
+                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
                 (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .util.testutils.makeFill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0)];
+            .util.testutils.makeFill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[

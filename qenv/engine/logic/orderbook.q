@@ -19,9 +19,9 @@
                         crs:(0!s) where not cnd;
 
                         // TODO get last qty by time check!!!
-                        cl:`price`side`qty;
-                        .engine.model.orderbook.Update[flip cl!crs[cl]];
-                        .engine.Emit[`depth]'[last'[crs`time];flip crs[cl]];
+                        ocl:`price`side`qty;
+                        .engine.model.orderbook.Update[flip cl[ocl;crs]];
+                        .engine.Emit[`depth]'[last'[crs`time];flip crs[ocl]];
 
                         if[any[cnd];[
                                 s:(0!s) where cnd;        
@@ -108,15 +108,15 @@
                                 .engine.Emit[`depth]'[s[`time];flip s[`price`side`qty]];
                         ]];
                 ];[
-                        cl:`price`side`qty;
-                        .engine.model.orderbook.Update[flip cl!s[cl]];
-                        .engine.Emit[`depth]'[t;flip s[cl]];
+                        ocl:`price`side`qty;
+                        .engine.model.orderbook.Update[flip cl[ocl;s]];
+                        .engine.Emit[`depth]'[t;flip s[ocl]];
                 ]];
         ];[
                 / No update occurs, should emit?
-                cl:`price`side`qty;
-                .engine.model.orderbook.Update[flip cl!s[cl]];
-                .engine.Emit[`depth]'[t;flip s[cl]];
+                ocl:`price`side`qty;
+                .engine.model.orderbook.Update[flip cl[ocl;s]];
+                .engine.Emit[`depth]'[t;flip s[ocl]];
         ]];
 
         .engine.model.orderbook.Delete[enlist(<=;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0)]; //TODO impl max depth

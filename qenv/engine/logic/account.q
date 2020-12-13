@@ -13,6 +13,7 @@
       bal-(mm+upnl)+(oqty-oloss)
     };
 
+// TODO 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
 		.engine.model.account.Update[];
@@ -29,6 +30,7 @@
 		x	
 	};
 
+//
 .engine.logic.account.Remargin :{
 			update 
 			ft:.engine.logic.account.GetFeetier[vol],
