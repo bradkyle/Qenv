@@ -1,94 +1,96 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-				update 
-				  	fundingrate:x[`fundingrate] 
-				  	from `.engine.model.instrument.Instrument
-						where iId=x[`iId];
 
-				update
-						rpnl:rpnl+(posVal * x[`fundingRate] * side)
-						from `.engine.model.inventory.Inventory
-						where iId=x[`iId] and amt>0;
+			i:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				update
-					ft:.engine.logic.account.GetFeetier[vol],
-					rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
-					avail:.engine.logic.account.GetAvailable[
-							bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
-							lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
-					from `.engine.model.account.Account 
-					where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
+			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				// Update instrument
-				.engine.EmitA[`account;t;a];
-				.engine.EmitA[`inventory;t;iv];
-				.engine.Emit[`funding;t;x];
-			};
+			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+				(+;`aId.dep;`dep);	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
+
+			// Update instrument
+			.engine.EmitA[`account;t;a];
+			.engine.EmitA[`inventory;t;iv];
+			.engine.Emit[`funding;t;x];
+		};
 
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
-				update 
-				  	mkprice:x[`markprice] 
-				  	from `.engine.model.instrument.Instrument
-						where iId=x[`iId];
+			i:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				update 
-					  upl:.engine.logic.contract.UnrealizedPnl[
-								iId.cntTyp,	
-								iId.mkprice,
-								iId.faceValue,
-								iId.smul,
-								amt,
-								side,
-								avgPrice]
-						from `.engine.model.inventory.Inventory 
-						where (iId=x`iId) and (amt>0);
+			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				update
-					ft:.engine.logic.account.GetFeetier[vol],
-					rt:.engine.logic.account.GetRisktier[lng.amt+srt.amt],
-					avail:.engine.logic.account.GetAvailable[
-							bal;lng.mm+srt.mm;lng.upnl+srt.upnl;
-							lng.ordQty+srt.ordQty;lng.ordLoss+srt.ordLoss]
-					from `.engine.model.account.Account 
-					where iId=x[`iId] and ((lng.amt>0) or (srt.amt>0));
+			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+				(+;`aId.dep;`dep);	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				.engine.EmitA[`account;last t;last x];
-				.engine.EmitA[`inventory;last t;last x];
-				.engine.Emit[`mark;last t;last x];
+			// Update instrument
+			.engine.EmitA[`account;t;a];
+			.engine.EmitA[`inventory;t;iv];
+			.engine.Emit[`funding;t;x];
 	};
 
 .engine.logic.instrument.Settlement:{
-				update 
-					bal:bal+(lng.rpnl+srt.rpnl)
-				from `.engine.model.account.Account;
+			i:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				update
-					rpnl:0
-				from `.engine.model.inventory.Inventory;
+			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				.engine.Emit[`account;t;a];
-				.engine.Emit[`inventory;t;iv];
-				.engine.Emit[`settlement;t;x];
+			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+				(+;`aId.dep;`dep);	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
+
+			// Update instrument
+			.engine.EmitA[`account;t;a];
+			.engine.EmitA[`inventory;t;iv];
+			.engine.Emit[`funding;t;x];
 	};
 
 
 .engine.logic.instrument.PriceLimit:{
-				update 
-					highest:x[`highest], 
-					lowest:x[`lowest] 
-				  from `.engine.model.instrument.Instrument
-					where iId=x[`iId];
+		i:flip ![x;();0b;`kind`wit`bal`avail!(
+				`fundingrate;	
+				(+;`aId.bal;`dep);	
+				(`.engine.logic.account.GetAvailable;)
+			)];
 
-				.engine.Emit[`pricelimit;t;x];
+		o:flip ![?[]];	
 
-				o:.engine.model.order.Get[(|;
-					(=;`side;(&;1;((';~:;<);`price;i`highest)));
-					(=;`side;(&;-1;((';~:;>);`price;i`lowest)))
-					)];
+		.engine.model.instrument.Update i;
+		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 
-				if[count[o]>0;.engine.logic.order.CancelOrder[o]];
+		.engine.Emit[`pricelimit;t;x];
 	};
 
 
