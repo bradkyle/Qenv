@@ -36,9 +36,10 @@
 				(-;`aId.bal;`wit);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
+			.engine.model.account.Update acc;
 
-			.engine.Emit[`account;t;a]
-			.engine.Emit[`withdraw;t;a]
+			.engine.Emit AccountEvent[]; 
+			.engine.Emit WithdrawEvent[]; 
 			};
 
 .engine.logic.account.Deposit:{
@@ -47,9 +48,10 @@
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
+			.engine.model.account.Update acc;
 
-			.engine.EmitA[`account;t;a];
-			.engine.Emit[`deposit;t;a]
+			.engine.Emit AccountEvent[]; 
+			.engine.Emit DepositEvent[]; 
 			};
 
 .engine.logic.account.Leverage:{
@@ -58,8 +60,9 @@
 				();
 				(`.engine.logic.account.GetAvailable;)
 			)];
+			.engine.model.account.Update acc;
 
-			.engine.EmitA[`account;t;a];
+			.engine.Emit AccountEvent[]; 
 			};
 
 

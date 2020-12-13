@@ -194,3 +194,4 @@
         if[count[b]>0;.engine.logic.trade.Take[1;a;t b;i;x b]];
         if[count[a]>0;.engine.logic.trade.Take[-1;a;t a;i;x a]];
     };
+
