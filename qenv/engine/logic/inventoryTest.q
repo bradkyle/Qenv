@@ -21,16 +21,7 @@
         p:c[`params];
         a:p`args;
         m:p[`mocks];
-        s:p[`setup];
-
-        / a[`lng]:`.engine.model.inventory.Inventory$(0 1);
-        / a[`srt]:`.engine.model.inventory.Inventory$(0 -1);
-
-        .engine.model.instrument.Instrument,:s[`instrument];
-        .engine.model.account.Account,:s[`account];
-        .engine.model.inventory.Inventory,:s[`inventory];
-        .engine.model.feetier.Feetier,:s[`feetier];
-        .engine.model.risktier.Risktier,:s[`risktier];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
