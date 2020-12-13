@@ -46,3 +46,4 @@
 .event.Order:{}
 .event.Instrument:{}
 .event.Fill:{}
+.event.Liquidation:{}

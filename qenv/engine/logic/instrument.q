@@ -8,13 +8,14 @@
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
-				`fundingrate;	
+			// TODO select from  inventory where open 
+			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
+			ivn:flip ![ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+			acc:flip ![ivn;();0b;`kind`dep`bal`avail!(
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
@@ -38,8 +39,9 @@
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
-				`fundingrate;	
+			// TODO check if can uj
+			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
+			ivn:flip ![ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
@@ -67,8 +69,8 @@
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			ivn:flip ![x;();0b;`kind`wit`bal`avail!(
-				`fundingrate;	
+			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
+			ivn:flip ![ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];

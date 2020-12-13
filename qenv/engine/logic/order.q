@@ -3,11 +3,15 @@
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
 .engine.logic.order.New:{
-				acc: 	![x;();0b;`aId`avail`rt()];
 
-				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
-
+				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty!(
+					(+;`ivId.ordLoss;);
+					(+;`ivId.ordVal;);
+					(+;`ivId.ordQty;);
+					()
 					)];
+
+				acc: 	![x;();0b;`aId`avail`rt()];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;

@@ -18,17 +18,9 @@
 		x[`status]:1;
 
 		.engine.model.account.Update[];
-		// Partial Liquidation
-		$[(a[`rt][`id]>=3);[
-				.engine.EmitA[];
-				.engine.model.liquidation.Create[lq];
-				.engine.logic.order.New[]	
-				];[
-				.engine.EmitA[];
-				.engine.model.liquidation.Create[lq];
-				.engine.logic.order.New[]	
-				]];
-		x	
+
+		// TODO
+		x
 	};
 
 .engine.logic.account.Withdraw:{
@@ -65,10 +57,6 @@
 
 			.engine.Emit .event.Account[]; 
 			};
-
-
-
-
 
 
 
