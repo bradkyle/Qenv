@@ -32,6 +32,8 @@
 /*******************************************************
 /Construction
 
+.event.Event: {}
+
 .event.Failure :{}
 .event.Account :{}
 .event.Inventory :{}
