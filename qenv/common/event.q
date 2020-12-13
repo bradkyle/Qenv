@@ -108,7 +108,8 @@
 .common.event.Event  :([] // TODO .common.event.Add failure to table
     time        :`datetime$();
     kind        :`symbol$();
-    datum       :());
+		datum       :();
+    aId         :`long$());
 // TODO set table attributes
 
 

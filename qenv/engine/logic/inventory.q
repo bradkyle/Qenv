@@ -22,7 +22,7 @@
 				iv:flip scl[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;s];
 				.engine.model.inventory.Update iv;
 
-				.engine.EmitA[`inventory]'[s`time;flip s`aId`side`time`amt`rpnl`avgPrice`upnl;s`aId];
-				.engine.EmitA[`fill]'[x`time;x;x`aId];
+				.engine.EmitA[s`kind;s`time;flip s`aId`side`time`amt`rpnl`avgPrice`upnl;s`aId];
+				.engine.EmitA[x`kind;x`time;flip x`time`price`qty`side;x`aId];
 				};
 
