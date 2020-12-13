@@ -188,8 +188,11 @@
 
     // TODO make cleaner
     t:min events`time;
-    {.engine.EmitA[`account;x;value y;y`aId]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
-    {.engine.EmitA[`inventory;x;value y;y`aId]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
+    .engine.Emit .event.Account[];
+    .engine.Emit .event.Inventory[];
+
+    / {.engine.EmitA[`account;x;value y;y`aId]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
+    / {.engine.EmitA[`inventory;x;value y;y`aId]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
 
     // TODO recreate all models etc to config
     .engine.Advance[events]
