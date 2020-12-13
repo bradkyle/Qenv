@@ -27,7 +27,7 @@
     {[p] :`args`eRes`mocks`err!p};
     (
         ("Positive Funding: no accounts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0.0001)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
@@ -38,7 +38,7 @@
             () // err 
         ));
         ("Negative Funding: No accounts";(
-            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
+            .util.testutils.makeFunding[`iId`fundingrate;enlist(0;-0.0001)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
