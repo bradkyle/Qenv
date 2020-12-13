@@ -18,7 +18,6 @@
 				();0b;`upnl`rpnl!(
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))]];
-
 				.engine.model.inventory.Update iv; 
 				.engine.Emit .event.Inventory[iv];
 				.engine.Emit .event.Fill[x] 

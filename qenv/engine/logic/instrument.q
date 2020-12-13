@@ -26,9 +26,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[]; 
-			.engine.Emit .event.Inventory[]; 
-			.engine.Emit .event.Funding[]; 
+			.engine.Emit .event.Account[acc]; 
+			.engine.Emit .event.Inventory[ivn]; 
+			.engine.Emit .event.Funding[x]; 
 		};
 
 // Apply mark price update 
@@ -57,9 +57,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[]; 
-			.engine.Emit .event.Inventory[]; 
-			.engine.Emit .event.Mark[]; 
+			.engine.Emit .event.Account[acc]; 
+			.engine.Emit .event.Inventory[ivn]; 
+			.engine.Emit .event.Mark[x]; 
 	};
 
 .engine.logic.instrument.Settlement:{
@@ -86,9 +86,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[]; 
-			.engine.Emit .event.Inventory[]; 
-			.engine.Emit .event.Settlement[]; 
+			.engine.Emit .event.Account[acc]; 
+			.engine.Emit .event.Inventory[ivn]; 
+			.engine.Emit .event.Settlement[x]; 
 	};
 
 
@@ -104,7 +104,7 @@
 		.engine.model.instrument.Update i;
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 
-		.engine.Emit .event.PriceLimit[]; 
+		.engine.Emit .event.PriceLimit[x]; 
 	};
 
 
