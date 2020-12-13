@@ -121,9 +121,8 @@
         mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.instrument.MarkPrice[z;a 0;a 1];
+        res:.engine.logic.instrument.MarkPrice a; 
 
-        .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
@@ -146,115 +145,120 @@
             () // err 
         ));
         ("Update mark price (increasing), one account: no positions";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+            ((!) . flip(
+            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
+            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
+            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
+            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+            ));
+            .event.Mark[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (decreasing), one account: no positions effected";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (decreasing), one account: no positions effected";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (decreasing), one account: UPL:0.5";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (decreasing), one account: UPL:-0.5";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (increasing), one account: UPL:0.5";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (increasing), one account: UPL:-0.5";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (decreasing), one account: liqduiation for tier should occur";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("Update mark price (increasing), one account: liquidation for tier should occur";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
-            ); // mocks 
-            () // err 
-        ));
-        ("First should succeed";(
-            .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
-            (); // res 
-            (
-                (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
-                (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
-                (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
-                (1b;3;.util.testutils.makeEvent[];()) // Emit
+            (1b;1;.model.Account[];()); // UpdateAccount 
+            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
             ); // mocks 
             () // err 
         ))
+        / ("Update mark price (decreasing), one account: no positions effected";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (decreasing), one account: no positions effected";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (decreasing), one account: UPL:0.5";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (decreasing), one account: UPL:-0.5";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (increasing), one account: UPL:0.5";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (increasing), one account: UPL:-0.5";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (decreasing), one account: liqduiation for tier should occur";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("Update mark price (increasing), one account: liquidation for tier should occur";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ));
+        / ("First should succeed";(
+        /     .util.testutils.makeMark[`iId`markprice;enlist(0;0)];
+        /     (); // res 
+        /     (
+        /         (1b;1;();.util.testutils.makeInventory[`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(2;0;0;0;0;0;0)]); // GetInventory
+        /         (1b;1;();.util.testutils.makeAccount[]); // GetAccount 
+        /         (1b;1;.util.testutils.makeAccount[];()); // UpdateAccount 
+        /         (1b;3;.util.testutils.makeEvent[];()) // Emit
+        /     ); // mocks 
+        /     () // err 
+        / ))
     );
     ({};{};{};{});
     "Global function for creating a new account"];
