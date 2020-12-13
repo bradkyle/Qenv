@@ -38,71 +38,6 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
-/ .qt.SkpBesTest[24];
-.qt.Unit[
-    ".engine.logic.account.Remargin";
-    {[c]
-        p:c[`params];
-        s:p[`setup];
-        m:p[`mocks];
-        a:p[`args];
-        r:p[`eRes];
-
-        .util.table.dropAll[(
-          `.engine.model.inventory.Inventory,
-          `.engine.model.risktier.RiskTier,
-          `.engine.model.feetier.Feetier
-        )];
-
-        .engine.model.inventory.Inventory,:s[`inventory];
-        .engine.model.feetier.Feetier,:s[`feetier];
-        .engine.model.risktier.Risktier,:s[`risktier];
-
-        a:update
-            srt:`.engine.model.inventory.Inventory!0,
-            lng:`.engine.model.inventory.Inventory!1,
-            rt:`.engine.model.risktier.Risktier!0,
-            ft:`.engine.model.feetier.Feetier!0 from a;
-
-        r:update
-            srt:`.engine.model.inventory.Inventory!0,
-            lng:`.engine.model.inventory.Inventory!1,
-            rt:`.engine.model.risktier.Risktier!0,
-            ft:`.engine.model.feetier.Feetier!0 from r;
-
-        res:.engine.logic.account.Remargin[a];
-        .qt.A[res;~;r;"res";c];
-
-
-    };
-    {[p] :`setup`args`eRes`mocks`err!p};
-    (
-        ("Remargin account no orders";(
-            ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
-                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
-            ));
-            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
-            (); // mocks 
-            () // err 
-        ));
-        ("Remargin account no orders";(
-            ((!) . flip(
-                (`inventory;.util.testutils.makeInventory[`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
-                (`feetier;.util.testutils.makeFeetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.util.testutils.makeRisktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
-            ));
-            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)];
-            .util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt`avail;enlist(0;0;0;1;0;0;0;0)];
-            (); // mocks 
-            () // err 
-        ))
-    );
-    ({};{};{};{});
-    "Global function for creating a new account"];
- 
 
 / .qt.SkpBesTest[25];
 .qt.Unit[
@@ -145,9 +80,8 @@
             .util.testutils.makeWithdraw[`aId`iId`wit;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[`aId`iId`wit`lng`srt`ft`rt;enlist(0;0;0;1;0;0;0)]); // Get Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;(.event.Account[],.event.Withdraw[]);()) // Update Account
             ); // mocks 
             () // err 
         ))
@@ -220,9 +154,8 @@
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;(.event.Account[],.event.Deposit[]);()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -230,9 +163,8 @@
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;(.event.Account[],.event.Deposit[]);()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -240,9 +172,8 @@
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;(.event.Account[],.event.Deposit[]);()) // Update Account
             ); // mocks 
             () // err 
         ))
@@ -274,9 +205,8 @@
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;.event.Account[];()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -284,9 +214,8 @@
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;.event.Account[];()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -294,9 +223,8 @@
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;.event.Account[];()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -304,9 +232,8 @@
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;.event.Account[];()) // Update Account
             ); // mocks 
             () // err 
         ));
@@ -314,9 +241,8 @@
             .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeAccount[]); // Update Account
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeEvent[];()) // Update Account
+                (1b;1;.model.Account[];()); // Update Account
+                (1b;1;.event.Account[];()) // Update Account
             ); // mocks 
             () // err 
         ))

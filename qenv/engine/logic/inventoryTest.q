@@ -14,7 +14,7 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-.qt.SkpBesTest[37];
+/ .qt.SkpBesTest[37];
 .qt.Unit[
     ".engine.logic.inventory.Fill";
     {[c]
@@ -37,15 +37,13 @@
         a[`ivId]:`.engine.model.inventory.Inventory$flip[a[`aId`side]];
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck1: .qt.OM[`.engine.model.account.Update;c];
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         res:.engine.logic.inventory.Fill[a];
 
-        .qt.CheckMock[mck1;m[1];c]; // 
-        .qt.CheckMock[mck2;m[2];c];
-        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck2;m[2];c]; // Inventory Update
+        .qt.CheckMock[mck3;m[3];c]; // Emit 
 
         / .util.table.dropAll[(
         /   `.engine.egress.Events;
@@ -68,13 +66,8 @@
             .util.testutils.makeFill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z)];
             (); // res 
             (
-                (1b;1;();.util.testutils.makeInventory[
-                    `amt`totalEntry`ordQty`ordVal`ordLoss`rpnl`execCost`avgPrice`reduce`amt`upnl;
-                    enlist(0;0;0;0;0;0;0;0;0;0;0)
-                ]); // GetInventory
-                (1b;1;.util.testutils.makeAccount[`aId`iId`lng`srt`rt`ft`avail`bal;enlist(0;0;0;0;0;0;0;0)];()); // Update Account
-                (1b;1;.util.testutils.makeInventory[`aId`side`ordQty`ordVal`ordLoss`amt`avgPrice`execCost`totEnt`upnl`rpnl;()];()); // Update Inventory 
-                (1b;2;();.util.testutils.makeEvent[]) // Emit
+                (1b;1;.model.Inventory[];()); // UpdateInventory 
+                (1b;2;(.event.Inventory[];.event.Fill[]);()) // Emit
             ); // mocks 
             () // err 
         ))
