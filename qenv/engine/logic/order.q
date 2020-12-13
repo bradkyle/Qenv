@@ -9,11 +9,9 @@
 				/ cnd:[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
 				/ 		all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
 						
-				mkt:o where cnd;
-				.engine.logic.trade.Match[mkt];
+				.engine.logic.trade.Match ?[];
 
-				lmt:o where not cnd;
-				.engine.model.order.CreateOrder lmt;
+				.engine.model.order.CreateOrder o; 
 
 				.engine.EmitA[`inventory;t;iv];
 				.engine.EmitA[`account;t;a];
