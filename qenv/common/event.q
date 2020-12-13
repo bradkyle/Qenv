@@ -4,93 +4,6 @@
 
 // TODO setup in seperate process?
 
-/*******************************************************
-/ error kind enumerations
-
-
-
-/*******************************************************
-/ event enumerations
-
-.common.event.EventKind   :(
-    `depth,                    
-    `trade,                    
-    `mark,                     
-    `settlement,               
-    `funding,                  
-    `pricelimit,               
-    `liquidation,              
-    `neworderreq,              
-    `neworderbatchreq,         
-    `amendorderreq,            
-    `amendorderbatchreq,       
-    `cancelorderreq,           
-    `cancelorderbatchreq,      
-    `cancelallordersreq,       
-    `withdrawreq,              
-    `depositreq,               
-    `leverageupdatereq,        
-    `neworderres,              
-    `neworderbatchres,         
-    `amendorderres,            
-    `amendorderbatchres,       
-    `cancelorderres,           
-    `cancelorderbatchres,      
-    `cancelallordersres,       
-    `withdrawres,              
-    `depositres,               
-    `leverageupdateres,        
-    `signal1,                  
-    `signal2,                  
-    `signal3,                  
-    `signal4,                  
-    `signal5,                  
-    `signal6,                  
-    `signal7,                  
-    `signal8,                  
-    `signal9,                  
-    `signal10,                 
-    `signal11,                 
-    `signal12,                 
-    `signal13,                 
-    `signal14,                 
-    `signal15,                 
-    `signal16,                 
-    `signal17,                 
-    `signal18,                 
-    `signal19,                 
-    `signal20);
-
-// USING MANUAL LIST FOR REFERENCABILITY 
-.common.event.EVENTKIND:( // TODO update kinds throughout
-        0; // DEPTH
-        1; // TRADE
-        2; // MARK
-        3; // LIQUIDATION
-        4; // FUNDING
-        5; // SETTLEMENT
-        6; // ACCOUNT
-        7; // INVENTORY
-        8; // NEW ORDER
-        9; // AMEND ORDER
-        10; // CANCEL ORDER
-        11; // CANCEL ALL ORDERS
-        12; // PRICELIMIT
-        13; // WITHDRAW
-        14; // DEPOSIT
-        15; // INSTRUMENT
-        16; // EXECUTION
-        17; // UPDATE LEVERAGE
-        18; // ERROR 
-        19 // SIGNAL
-        );
-
-/ `NEW:0,`UPDATE:1,`DELETE:2,`FAILED:3
-.common.event.EVENTCMD      : (0;1;2;3;4);
-
-
-/*******************************************************
-/ Datum Construction
 
 /*******************************************************
 / Event LOGIC
@@ -115,18 +28,21 @@
 
 .common.event.COLS                   :`eid`time`cmd`kind`datum;
 .common.event.DCOLS                  :.common.event.COLS!.common.event.COLS;
-// Time delay / formatting functionality
-.common.event.addDelaysByKind        :{[e]
-        // todo check if kind is in config
-        e[`time]:`datetime$(e[`time]) + (.conf.c[`delays] . e[`kind]);
-        :e
-        };
 
+/*******************************************************
+/Construction
 
-
-
-
-
-
-
+.event.Failure :{}
+.event.Account :{}
+.event.Inventory :{}
+.event.Deposit :{}
+.event.Withdraw :{}
+.event.Funding : {}
+.event.Mark:{}
+.event.Settlement:{}
+.event.PriceLimit :{}
+.event.Level:{}
+.event.Trade:{}
+.event.Order:{}
+.event.Instrument:{}
 

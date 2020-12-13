@@ -102,8 +102,7 @@
 		.engine.model.instrument.Update i;
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 
-		.engine.Emit InstruentEvent[]; 
-		.engine.Emit PriceLimitEvent[]; 
+		.engine.Emit .event.PriceLimit[]; 
 	};
 
 

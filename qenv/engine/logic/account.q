@@ -16,6 +16,7 @@
 // TODO 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
+
 		.engine.model.account.Update[];
 		// Partial Liquidation
 		$[(a[`rt][`id]>=3);[

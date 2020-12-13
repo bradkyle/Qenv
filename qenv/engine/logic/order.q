@@ -3,9 +3,11 @@
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
 .engine.logic.order.New:{
-				acc: 	![];
+				acc: 	![x;();0b;`aId`avail`rt()];
 
-				ivn: 	![];
+				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
+
+					)];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
@@ -19,15 +21,17 @@
 
 				.engine.Emit AccountEvent[]; 
 				.engine.Emit InventoryEvent[]; 
-				.engine.Emit NewOrderEvent[]; 
+				.engine.Emit OrderEvent[]; 
 		};
 
 .engine.logic.order.Amend:{
-				ord: ();
+				x: ?[] ^ x;
 
-				acc: 	![];
+				acc: 	![x;();0b;`aId`avail`rt()];
 
-				ivn: 	![];
+				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
+
+					)];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
@@ -41,13 +45,15 @@
 
 				.engine.Emit AccountEvent[]; 
 				.engine.Emit InventoryEvent[]; 
-				.engine.Emit AmendOrderEvent[]; 
+				.engine.Emit OrderEvent[]; 
 		};
 
 .engine.logic.order.Cancel:{
-				acc: 	![];
+				acc: 	![x;();0b;`aId`avail`rt()];
 
-				ivn: 	![];
+				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
+
+					)];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
@@ -61,14 +67,16 @@
 
 				.engine.Emit AccountEvent[]; 
 				.engine.Emit InventoryEvent[]; 
-				.engine.Emit CancelOrderEvent[]; 
+				.engine.Emit OrderEvent[]; 
 		};
 
 
 .engine.logic.order.CancelAll:{
-				acc: 	![];
+				acc: 	![x;();0b;`aId`avail`rt()];
 
-				ivn: 	![];
+				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
+
+					)];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
@@ -82,6 +90,6 @@
 
 				.engine.Emit AccountEvent[]; 
 				.engine.Emit InventoryEvent[]; 
-				.engine.Emit CancelOrderEvent[]; 
+				.engine.Emit OrderEvent[]; 
     };
 
