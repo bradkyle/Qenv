@@ -16,18 +16,22 @@
 / (0;0;1000;-1;1;0;0;1;0;0;0;0;1)
 .state.adapter.ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqty`einst`reduce;
 
+// TODO convert to event
 .state.adapter.cancelOrders : {[t;e]
     `time`kind`datum!(t;`cancelorder;e[.state.adapter.ordCols])
     };
 
+// TODO convert ot event
 .state.adapter.amendOrders : {[t;e]
     `time`kind`datum!(t;`amendorder;e[.state.adapter.ordCols])
     };
 
+// TODO convert to event
 .state.adapter.newOrders : {[t;e]
     `time`kind`datum!(t;`neworder;e[.state.adapter.ordCols])
     };
 
+// TODO convert to event
 .state.adapter.createDeposit            : {[t;e]
         // 14; // DEPOSIT
         // `NEW:0
@@ -36,6 +40,7 @@
         enlist `time`kind`datum!(t;`deposit;e)
     };
 
+// TODO convert to event
 .state.adapter.createWithdraw           : {[t;e]
         // 13; // WITHDRAW
         // `NEW:0

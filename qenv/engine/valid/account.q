@@ -1,6 +1,7 @@
 
 .engine.valid.account.Withdraw:{
-				/ if[a[`bal]<=0;.engine.Purge[w;0;"Order account has no balance"]];
+				a:.engine.Purge[a;enlist();0;"Order account has no balance"];
+				a:.engine.Purge[a;enlist();0;"Order account has insufficient available balance"];
 				/ if[a[`available]<=0;.engine.Purge[w;0;"Order account has insufficient available balance"]];
 				/ if[a[`state]=1;.engine.Purge[w;0;"Account has been disabled"]];
 				/ if[a[`state]=2;.engine.Purge[w;0;"Account has been locked for liquidation"]];
