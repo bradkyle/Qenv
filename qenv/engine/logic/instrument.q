@@ -25,9 +25,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit AccountEvent[]; 
-			.engine.Emit InventoryEvent[]; 
-			.engine.Emit FundingEvent[]; 
+			.engine.Emit .event.Account[]; 
+			.engine.Emit .event.Inventory[]; 
+			.engine.Emit .event.Funding[]; 
 		};
 
 // Apply mark price update 
@@ -55,9 +55,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit AccountEvent[]; 
-			.engine.Emit InventoryEvent[]; 
-			.engine.Emit MarkEvent[]; 
+			.engine.Emit .event.Account[]; 
+			.engine.Emit .event.Inventory[]; 
+			.engine.Emit .event.Mark[]; 
 	};
 
 .engine.logic.instrument.Settlement:{
@@ -84,9 +84,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit AccountEvent[]; 
-			.engine.Emit InventoryEvent[]; 
-			.engine.Emit SettlementEvent[]; 
+			.engine.Emit .event.Account[]; 
+			.engine.Emit .event.Inventory[]; 
+			.engine.Emit .event.Settlement[]; 
 	};
 
 
