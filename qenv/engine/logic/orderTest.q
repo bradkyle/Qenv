@@ -40,7 +40,7 @@
     {[p] :`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
-            .event.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            .model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;.model.Account[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account
@@ -51,7 +51,7 @@
             () // err 
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
-            .event.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            .model.Order[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;.model.Account[`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1)];()); // Update Account

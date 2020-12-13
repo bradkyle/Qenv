@@ -57,13 +57,14 @@
     (
         enlist("INVERSE:flat to long: UPL: 0, RPL:0 ONE POSITION";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
+                (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
                 (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
                 (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
                 (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`order;.model.Order[]) // Update Account
             ));
-            .event.Fill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z)];
+            .model.Fill[`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z)];
             (); // res 
             (
                 (1b;1;.model.Inventory[];()); // UpdateInventory 

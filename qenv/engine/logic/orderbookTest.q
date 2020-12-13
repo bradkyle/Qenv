@@ -65,7 +65,7 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     {`args`eRes`mocks`err!x};
     (
         enlist("No change occurs and thus no update is triggered";(
-        .util.testutils.makeLevel[`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0)];
+        .model.Level[`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeLevel[]);

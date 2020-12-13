@@ -28,7 +28,7 @@
             (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
             (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .event.Funding[`iId`fundingrate;enlist(0;0.0001)];
+            .model.Funding[`iId`fundingrate;enlist(0;0.0001)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -44,7 +44,7 @@
             (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
             (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .event.Funding[`iId`fundingrate;enlist(0;0.0001)];
+            .model.Funding[`iId`fundingrate;enlist(0;0.0001)];
             (); // res 
             (
                 (1b;1;.model.Account[];()); // UpdateAccount 
@@ -136,7 +136,7 @@
             (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
             (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .event.Mark[`iId`markprice;enlist(0;0.0001)];
+            .model.Mark[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -152,7 +152,7 @@
             (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
             (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .event.Mark[`iId`markprice;enlist(0;0.0001)];
+            .model.Mark[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -288,7 +288,7 @@
             (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
             (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
             ));
-            .event.Settlement[`iId`time;enlist(0;z)];
+            .model.Settlement[`iId`time;enlist(0;z)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -302,7 +302,7 @@
             (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
             (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
             ));
-            .event.Settlement[`iId`time;enlist(0;z)];
+            .model.Settlement[`iId`time;enlist(0;z)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -485,7 +485,7 @@
             (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
             (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
             ));
-            .event.PriceLimit[`iId`markprice;enlist(0;0.0001)];
+            .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 
@@ -500,7 +500,7 @@
             (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
             (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
             ));
-            .event.PriceLimit[`iId`markprice;enlist(0;0.0001)];
+            .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
             (1b;1;.model.Account[];()); // UpdateAccount 

@@ -11,7 +11,7 @@
 				side:`long$();acc:`.engine.model.account.Account$();price:`long$();lprice:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
 				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
-				einst:`long$());
+				einst:`long$();time:`datetime$());
 
 .engine.model.order.Get:.engine.model.common.Get[`.engine.model.order.Order];
 .engine.model.order.Update:.engine.model.common.Update[`.engine.model.order.Order];

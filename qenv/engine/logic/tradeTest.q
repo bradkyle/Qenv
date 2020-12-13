@@ -48,7 +48,7 @@
     (
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-          .event.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+          .model.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeLevel[]);
@@ -61,7 +61,7 @@
         ));
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-          .event.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+          .model.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
             (); // res 
             (
                 (1b;1;();.util.testutils.makeLevel[]);

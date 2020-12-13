@@ -10,7 +10,7 @@
 // Visible qty (including order qty)=(qty+displayqty)
 // TODO add num liquidations at level as a feature
 
-.engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$())
+.engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$();time:`datetime$());
 
 .engine.model.orderbook.Get:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
 .engine.model.orderbook.Update:.engine.model.common.Update[`.engine.model.orderbook.Orderbook];
