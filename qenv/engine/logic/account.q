@@ -24,7 +24,7 @@
 	};
 
 .engine.logic.account.Withdraw:{
-			acc:.model.Withdraw[flip ![x;();0b;`kind`wit`bal`avail!(
+			acc:.model.Account[flip ![x;();0b;`kind`wit`bal`avail!(
 				(+;`aId.wit;`wit);	
 				(-;`aId.bal;`wit);	
 				(`.engine.logic.account.GetAvailable;)

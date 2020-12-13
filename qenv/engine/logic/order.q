@@ -4,21 +4,24 @@
 // Events will be passed with aId
 .engine.logic.order.New:{
 
-				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty!(
+				ivn: 	?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
+					`aId;`side;
 					(+;`ivId.ordLoss;);
 					(+;`ivId.ordVal;);
 					(+;`ivId.ordQty;);
 					)];
 
-				acc: 	![x;();0b;`aId`avail`rt()];
+				acc: ?[x;();0b;`aId`avail`rt!(
+					`aId;
+					(`.engine.logic.account.GetAvailable);
+					(`.engine.logic.account.GetRiskTier)
+					)];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
-				.enigne.model.instrument.Update ins;
 
 				.engine.logic.trade.Match ?[o;();0b;()];
-
-				.engine.model.order.CreateOrder l; 
+				.engine.model.order.CreateOrder x; 
 
 				.engine.Emit .event.Account[acc]; 
 				.engine.Emit .event.Inventory[ivn]; 
@@ -26,13 +29,20 @@
 		};
 
 .engine.logic.order.Amend:{
-				x: ?[] ^ x;
+				x: .model.Order[![x;]]
 
-				acc: 	![x;();0b;`aId`avail`rt()];
+				ivn: 	.model.Inventory[?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
+					`aId;`side;
+					(+;`ivId.ordLoss;);
+					(+;`ivId.ordVal;);
+					(+;`ivId.ordQty;);
+					)]];
 
-				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
-
-					)];
+				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+					`aId;
+					(`.engine.logic.account.GetAvailable);
+					(`.engine.logic.account.GetRiskTier)
+					)]];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
@@ -49,15 +59,21 @@
 		};
 
 .engine.logic.order.Cancel:{
-				acc: 	![x;();0b;`aId`avail`rt()];
+				ivn: 	.model.Inventory[?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
+					`aId;`side;
+					(-;`ivId.ordLoss;);
+					(-;`ivId.ordVal;);
+					(-;`ivId.ordQty;);
+					)]];
 
-				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
-
-					)];
+				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+					`aId;
+					(`.engine.logic.account.GetAvailable);
+					(`.engine.logic.account.GetRiskTier)
+					)]];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
-				.enigne.model.instrument.Update ins;
 
 				.engine.logic.trade.Match ?[o;();0b;()];
 
@@ -71,15 +87,18 @@
 
 
 .engine.logic.order.CancelAll:{
-				acc: 	![x;();0b;`aId`avail`rt()];
+				ivn: 	.model.Inventory[?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
+					`aId;`side;0;0;0
+					)]];
 
-				ivn: 	![x;();0b;`ordLoss`ordVal`ordQty`lev!(
-
-					)];
+				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+					`aId;
+					(`.engine.logic.account.GetAvailable);
+					(`.engine.logic.account.GetRiskTier)
+					)]];
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
-				.enigne.model.instrument.Update ins;
 
 				.engine.logic.trade.Match ?[o;();0b;()];
 
