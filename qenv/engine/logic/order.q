@@ -33,14 +33,13 @@
 		};
 
 .engine.logic.order.Amend:{
-				x: .model.Order[![x;]]
-
-				ivn: 	.model.Inventory[?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
-					`aId;`side;
-					(+;`ivId.ordLoss;);
-					(+;`ivId.ordVal;);
-					(+;`ivId.ordQty;);
-					)]];
+				/ x: .model.Order[![x;]]
+				ivn: 	?[x;();0b;`aId`side`time`ordLoss`ordVal`ordQty!(
+					`aId;`side;`time;
+					(+;`ivId.ordLoss;0);
+					(+;`ivId.ordVal;0);
+					(+;`ivId.ordQty;0)
+					)];
 
 				// TODO rt
 				ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
@@ -55,7 +54,6 @@
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
-				.enigne.model.instrument.Update ins;
 
 				.engine.logic.trade.Match ?[o;();0b;()];
 
@@ -68,12 +66,12 @@
 		};
 
 .engine.logic.order.Cancel:{
-				ivn: 	.model.Inventory[?[x;();0b;`aId`side`ordLoss`ordVal`ordQty!(
-					`aId;`side;
-					(-;`ivId.ordLoss;);
-					(-;`ivId.ordVal;);
-					(-;`ivId.ordQty;);
-					)]];
+				ivn: 	?[x;();0b;`aId`side`time`ordLoss`ordVal`ordQty!(
+					`aId;`side;`time;
+					(+;`ivId.ordLoss;0);
+					(+;`ivId.ordVal;0);
+					(+;`ivId.ordQty;0)
+					)];
 
 				// TODO rt
 				ivn[`aId]:`.engine.model.account.Account$ivn[`aId];

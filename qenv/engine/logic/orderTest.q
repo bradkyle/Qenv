@@ -14,7 +14,7 @@
 // TODO validation and stop orders
 // TODO Check mock called with correct
 /// TODO simulate order loss
-.qt.SkpBesTest[31];
+/ .qt.SkpBesTest[31];
 .qt.Unit[
     ".engine.logic.order.New";
     {[c]
@@ -325,53 +325,91 @@
 // TODO check mock invocations
 // TODO test change in display qty, side, price, execInst
 // TODO test with clOrdId
+.qt.SkpBesTest[32];
 .qt.Unit[
-    ".engine.logic.order.AmendOrder";
+    ".engine.logic.order.Amend";
     {[c]
+        p:c[`params];
+        m:p[`mocks];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
+        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+
+        a:.model.Order . p`args;
+        res:.engine.logic.order.Amend a;
+
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck4;m[4];c];
+        .qt.RestoreMocks[];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         // Decreasing in size stays at same price
-        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								(19);();();()
-        )); 
-        ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (last in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-        ));
-        // Increasing in size stays at same price
-        ("Amend limit order (first in queue), larger than previous, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (second in queue), larger than previous, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (last in queue), larger than previous, should update offsets, depth etc.";(
-								();();();()
-        ));
-        // Different price same side no orders on new level (same size)
-        ("Amend limit order (first in queue), different price same side, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (second in queue), different price same side, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (last in queue), different price same side, should update offsets, depth etc.";(
-								();();();()
-        ));
-        // Amend to zero (Cancellation)
-        ("Amend limit order (first in queue) to zero, different price same side, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (second in queue) to zero, different price same side, should update offsets, depth etc.";(
-								();();();()
-        )); 
-        ("Amend limit order (last in queue) to zero, different price same side, should update offsets, depth etc.";(
-								();();();()
-        ))
+        enlist("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
+            (); // res 
+            (
+                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
+                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
+                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
+                (1b;3;(();();());()) // Emit
+            ); // mocks 
+            () // err 
+        )) 
+        / ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (last in queue), smaller than previous, should update offsets, depth etc.";(
+								/ ();();();()
+        / ));
+        / // Increasing in size stays at same price
+        / ("Amend limit order (first in queue), larger than previous, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (second in queue), larger than previous, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (last in queue), larger than previous, should update offsets, depth etc.";(
+								/ ();();();()
+        / ));
+        / // Different price same side no orders on new level (same size)
+        / ("Amend limit order (first in queue), different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (second in queue), different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (last in queue), different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / ));
+        / // Amend to zero (Cancellation)
+        / ("Amend limit order (first in queue) to zero, different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (second in queue) to zero, different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / )); 
+        / ("Amend limit order (last in queue) to zero, different price same side, should update offsets, depth etc.";(
+								/ ();();();()
+        / ))
         / ("Amend limit order, larger than previous, should push to back of queue, update offsets, depth etc.";(
         /     ((10#1);1000-til 10;10#1000); // Current Depth
         /     (); ();
