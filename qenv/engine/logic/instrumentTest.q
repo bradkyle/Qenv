@@ -32,7 +32,7 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
                 (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`fundingrate;enlist(0;0.0001));
+            (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
@@ -50,7 +50,7 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
                 (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`fundingrate;enlist(0;0.0001));
+            (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 

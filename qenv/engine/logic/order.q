@@ -23,9 +23,9 @@
 				.engine.logic.trade.Match ?[o;();0b;()];
 				.engine.model.order.CreateOrder x; 
 
-				.engine.Emit .event.Account[acc]; 
-				.engine.Emit .event.Inventory[ivn]; 
-				.engine.Emit .event.Order[x]; 
+				.engine.E .event.Account[acc]; 
+				.engine.E .event.Inventory[ivn]; 
+				.engine.E .event.Order[x]; 
 		};
 
 .engine.logic.order.Amend:{
@@ -53,9 +53,9 @@
 				.engine.model.order.CreateOrder l; 
 				.engine.model.orderbook.Update o;
 
-				.engine.Emit .event.Account[acc]; 
-				.engine.Emit .event.Inventory[ivn]; 
-				.engine.Emit .event.Order[x]; 
+				.engine.E .event.Account[acc]; 
+				.engine.E .event.Inventory[ivn]; 
+				.engine.E .event.Order[x]; 
 		};
 
 .engine.logic.order.Cancel:{
@@ -80,9 +80,9 @@
 				.engine.model.order.CreateOrder l; 
 				.engine.model.orderbook.Update o;
 
-				.engine.Emit .event.Account[acc]; 
-				.engine.Emit .event.Inventory[ivn]; 
-				.engine.Emit .event.Order[x]; 
+				.engine.E .event.Account[acc]; 
+				.engine.E .event.Inventory[ivn]; 
+				.engine.E .event.Order[x]; 
 		};
 
 
@@ -105,8 +105,8 @@
 				.engine.model.order.CreateOrder l; 
 				.engine.model.orderbook.Update o;
 
-				.engine.Emit .event.Account[acc]; 
-				.engine.Emit .event.Inventory[ivn]; 
-				.engine.Emit .event.Order[x]; 
+				.engine.E .event.Account[acc]; 
+				.engine.E .event.Inventory[ivn]; 
+				.engine.E .event.Order[x]; 
     };
 

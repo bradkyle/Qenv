@@ -8,8 +8,8 @@
 			)];
 			
 			ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
-			acc:?[ivn;();0b;`aId`avail!(
-				`aId;
+			acc:?[x;();0b;`aId`time`froz`bal`avail!(
+				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -19,7 +19,7 @@
 
 			.engine.model.account.Update acc;
 			.engine.model.inventory.Update ivn;
-			.engine.model.instrument.Update ins
+			/ .engine.model.instrument.Update ins
 
 			// Update instrument
 			.engine.E .event.Account[acc]; 
@@ -83,7 +83,7 @@
 		.engine.model.instrument.Update i;
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 
-		.engine.Emit .event.PriceLimit[x]; 
+		.engine.E .event.PriceLimit[x]; 
 	};
 
 
