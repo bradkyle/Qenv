@@ -14,7 +14,7 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-/ .qt.SkpBesTest[36];
+.qt.SkpBesTest[37];
 .qt.Unit[
     ".engine.logic.inventory.Fill";
     {[c]
@@ -49,7 +49,7 @@
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
-                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)))
             ));
             (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time`ivId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 0;0 0;0 0;2#z;((0 -1);(0 1))));
             (); // res 
@@ -66,7 +66,7 @@
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
-                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)))
             ));
             (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time`ivId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 0;0 0;0 0;2#z;((0 -1);(0 1))));
             (); // res 

@@ -33,13 +33,13 @@
 /Construction
 
 // TODO allow for many events
-.event.Event				:{e:flip `time`datum`aId!y;e[`kind]:x;e};
+.event.Event				:{(time:x[])};
 .event.Failure 			:{()}
-.event.Account 			:{.event.Event[`account;(x`time;(x`aId`time`bal`avail`froz);7h$x`aId)]}
-.event.Inventory		:{.event.Event[`inventory;(x`time;(x`aId`side`time`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
-.event.Order     		:{.event.Event[`order;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
-.event.Deposit 			:{.event.Event[`deposit;(x`time;(x`aId`time`dep);7h$x`aId)]}
-.event.Withdraw 		:{.event.Event[`withdraw;(x`time;(x`aId`time`wit);7h$x`aId)]}
+.event.Account 			:{([]kind:`account;time:x`time;datum:(x`aId`time`bal`avail`froz);aId:7h$x`aId)}
+.event.Inventory		:{([]kind:`inventory;time:x`time;datum:x`aId`side`time`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
+.event.Order     		:{([]kind:`order;time:x`time;datum:x`oId`time`aId`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
+.event.Deposit 			:{([]kind:`deposit;time:x`time;datum:x`aId`time`dep;aId:7h$x`aId)}
+.event.Withdraw 		:{([]kind:`withdraw;time:x`time;datum:x`aId`iId`time`wit;aId:7h$x`aId)}
 .event.Funding 			:{}
 .event.Mark					:{}
 .event.Settlement		:{}

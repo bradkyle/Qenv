@@ -33,6 +33,8 @@
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			.engine.model.account.Update acc;
+			.bam.acc:acc;
+			.bam.ae:.event.Account[acc]; 
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Withdraw[x]; 
 			};

@@ -28,5 +28,6 @@ ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqt
     x[`aId]:`.engine.model.account.Account$x[`aId];
     x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId]; 
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
+    .bam.ord:x;
     x
     };
