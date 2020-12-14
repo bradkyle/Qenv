@@ -12,8 +12,6 @@
     / .bam.x:x;
     / .bam.ivId:x`ivId;
     / .bam.iv: .engine.model.inventory.Inventory;
-    show x[`ivId];
-    show `.engine.model.inventory.Inventory$x[`ivId];
     x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId];
     x[`oId]:`.engine.model.order.Order$x[`oId];
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];

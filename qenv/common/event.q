@@ -48,7 +48,7 @@
 .event.Trade:{}
 .event.Order:{}
 .event.Instrument:{}
-.event.Fill:{}
+.event.Fill:{.event.Event[`fill;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`qty`price);7h$x`aId)]}
 .event.Liquidation:{}
 
 /*******************************************************
