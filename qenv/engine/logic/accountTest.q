@@ -53,21 +53,23 @@
           `.engine.model.risktier.RiskTier,
           `.engine.model.feetier.Feetier
         )];
-
         .engine.testutils.SwitchSetupModels[p`setup];
+
+        mck0: .qt.OM[`.engine.model.account.Update;c];
+        mck1: .qt.OM[`.engine.E;c];
 
         a:.model.Withdraw . p`args;
         res:.engine.logic.account.Withdraw[a];
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
        enlist("Withdraw no balance:should fail";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time;enlist(0;0;0;(0 1);(0 -1);0;0;0;z))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account

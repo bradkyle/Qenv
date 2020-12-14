@@ -23,8 +23,8 @@
 	};
 
 .engine.logic.account.Withdraw:{
-			acc:?[x;();0b;`aId`time`wit`bal`avail!(
-				`aId;`time;
+			acc:?[x;();0b;`aId`time`froz`wit`bal`avail!(
+				`aId;`time;`aId.froz;
 				(+;`aId.wit;`wit);	
 				(-;`aId.bal;`wit);	
 				(`.engine.logic.account.GetAvailable;
@@ -34,8 +34,8 @@
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			.engine.model.account.Update acc;
-			.engine.Emit .event.Account[acc]; 
-			.engine.Emit .event.Withdraw[x]; 
+			.engine.E .event.Account[acc]; 
+			.engine.E .event.Withdraw[x]; 
 			};
 
 .engine.logic.account.Deposit:{
@@ -50,22 +50,21 @@
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			.engine.model.account.Update acc;
-			.engine.Emit .event.Account[acc]; 
-			.engine.Emit .event.Deposit[x]; 
+			.engine.E .event.Account[acc]; 
+			.engine.E .event.Deposit[x]; 
 			};
 
 .engine.logic.account.Leverage:{
-			acc:.model.Account[flip ![x;();0b;`time`lev`avail!(
+				acc:flip ![x;();0b;`time`lev`avail!(
 				`time;`lev;	
-				(`.engine.logic.account.GetAvailable;
+					(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-			)]];
 			.engine.model.account.Update acc;
-			.engine.Emit .event.Account[acc]; 
+			.engine.E .event.Account[acc]; 
 			};
 
 
