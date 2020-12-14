@@ -32,23 +32,22 @@
 /*******************************************************
 /Construction
 
-.event.RmFk : {fk:key fkeys x;x[fk]:7h$x[fk];x};
-.event.Event: {e:flip `time`datum`aId!y;e[`kind]:x;e};
-.event.Failure :{()}
-.event.Account : {.event.Event[`account;(x`time;(x`aId`time`bal`avail`froz);7h$x`aId)]}
-.event.Inventory :{.event.Event[`inventory;(x`time;(flip .event.RmFk[flip x]`aId`side`time`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
-.event.Order     :{.event.Event[`order;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
-.event.Deposit :{}
-.event.Account : {.event.Event[`withdraw;(x`time;(x`aId`time`wit);7h$x`aId)]}
-.event.Funding :{}
-.event.Mark:{}
-.event.Settlement:{}
-.event.PriceLimit :{}
-.event.Level:{}
-.event.Trade:{}
-.event.Order:{}
-.event.Instrument:{}
-.event.Fill:{.event.Event[`fill;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`qty`price);7h$x`aId)]}
-.event.Liquidation:{}
+.event.Event				:{e:flip `time`datum`aId!y;e[`kind]:x;e};
+.event.Failure 			:{()}
+.event.Account 			:{.event.Event[`account;(x`time;(x`aId`time`bal`avail`froz);7h$x`aId)]}
+.event.Inventory		:{.event.Event[`inventory;(x`time;(xaId`side`time`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
+.event.Order     		:{.event.Event[`order;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
+.event.Deposit 			:{}
+.event.Withdraw 		:{.event.Event[`withdraw;(x`time;(x`aId`time`wit);7h$x`aId)]}
+.event.Funding 			:{}
+.event.Mark					:{}
+.event.Settlement		:{}
+.event.PriceLimit 	:{}
+.event.Level        :{}
+.event.Trade				:{}
+.event.Order				:{}
+.event.Instrument   :{}
+.event.Fill					:{.event.Event[`fill;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`qty`price);7h$x`aId)]}
+.event.Liquidation	:{}
 
 /*******************************************************

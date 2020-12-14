@@ -22,6 +22,7 @@
 		x
 	};
 
+// TODO check formatting of events
 .engine.logic.account.Withdraw:{
 			acc:?[x;();0b;`aId`time`froz`wit`bal`avail!(
 				`aId;`time;`aId.froz;
@@ -38,6 +39,7 @@
 			.engine.E .event.Withdraw[x]; 
 			};
 
+// TODO check formatting of events
 .engine.logic.account.Deposit:{
 			acc:?[x;();0b;`aId`time`wit`bal`avail!(
 				`aId;`time;
@@ -54,6 +56,7 @@
 			.engine.E .event.Deposit[x]; 
 			};
 
+// TODO check formatting of events
 .engine.logic.account.Leverage:{
 				acc:flip ![x;();0b;`time`lev`avail!(
 				`time;`lev;	
