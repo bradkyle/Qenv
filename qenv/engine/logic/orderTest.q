@@ -325,7 +325,7 @@
 // TODO check mock invocations
 // TODO test change in display qty, side, price, execInst
 // TODO test with clOrdId
-.qt.SkpBesTest[32];
+/ .qt.SkpBesTest[32];
 .qt.Unit[
     ".engine.logic.order.Amend";
     {[c]
@@ -535,6 +535,7 @@
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
 
+.qt.SkpBesTest[32];
 .qt.Unit[
     ".engine.logic.order.CancelOrder";
     {[c]
