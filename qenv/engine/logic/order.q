@@ -11,7 +11,7 @@
 					(+;`ivId.ordQty;);
 					)];
 
-				acc: ?[x;();0b;`aId`avail`rt!(
+				acc: ?[ivn;();0b;`aId`avail`rt!(
 					`aId;
 					(`.engine.logic.account.GetAvailable);
 					(`.engine.logic.account.GetRiskTier)
@@ -38,7 +38,7 @@
 					(+;`ivId.ordQty;);
 					)]];
 
-				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+				acc: .model.Account[?[ivn;();0b;`aId`avail`rt!(
 					`aId;
 					(`.engine.logic.account.GetAvailable);
 					(`.engine.logic.account.GetRiskTier)
@@ -66,7 +66,7 @@
 					(-;`ivId.ordQty;);
 					)]];
 
-				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+				acc: .model.Account[?[ivn;();0b;`aId`avail`rt!(
 					`aId;
 					(`.engine.logic.account.GetAvailable);
 					(`.engine.logic.account.GetRiskTier)
@@ -91,7 +91,7 @@
 					`aId;`side;0;0;0
 					)]];
 
-				acc: .model.Account[?[x;();0b;`aId`avail`rt!(
+				acc: .model.Account[?[ivn;();0b;`aId`avail`rt!(
 					`aId;
 					(`.engine.logic.account.GetAvailable);
 					(`.engine.logic.account.GetRiskTier)
