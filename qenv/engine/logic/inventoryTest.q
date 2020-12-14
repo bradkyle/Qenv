@@ -14,14 +14,14 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-/ .qt.SkpBesTest[37];
+.qt.SkpBesTest[36];
 .qt.Unit[
     ".engine.logic.inventory.Fill";
     {[c]
         p:c[`params];
         m:p[`mocks];
-        show p`setup;
-        .engine.testutils.SwitchSetupModels[p`setup];
+        .boom.s:p`setup;
+        .engine.testutils.SwitchSetupModels . p`setup;
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.inventory.Update;c];

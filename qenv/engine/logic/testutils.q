@@ -530,26 +530,27 @@ dozc:{x+y}[doz];
 
 
 //
-.engine.testutils.SwitchSetupModels :{[]
+.engine.testutils.SwitchSetupModels :{
     k:x[0];
-    $[
-        k=`inventory;[.engine.model.inventory.Inventory,:.model.Inventory . x[1]];
-        k=`account;[.engine.model.account.Account,:.model.Account . x[1]];
-        k=`order;[.engine.model.order.Order,:.model.Order . x[1]];
-        k=`trade;[.engine.model.trade.Trade,:.model.Trade . x[1]];
-        k=`instrument;[.engine.model.instrument.Instrument,:.model.Instrument . x[1]];
-        k=`fill;[.engine.model.fill.Fill,:.model.Fill . x[1]];
-        k=`risktier;[.engine.model.risktier.Risktier,:.model.Risktier . x[1]];
-        k=`feetier;[.engine.model.feetier.Feetier,:.model.Feetier . x[1]];
-        k=`funding;[];
-        k=`withdraw;[];
-        k=`deposit;[];
-        k=`leverage;[];
-        k=`mark;[];
-        k=`settlement;[];
-        k=`pricelimit;[];
-        () 
-        ];
+
+    / $[
+    /     k=`inventory;[.engine.model.inventory.Inventory,:.model.Inventory . x[1]];
+    /     k=`account;[.engine.model.account.Account,:.model.Account . x[1]];
+    /     k=`order;[.engine.model.order.Order,:.model.Order . x[1]];
+    /     k=`trade;[.engine.model.trade.Trade,:.model.Trade . x[1]];
+    /     k=`instrument;[.engine.model.instrument.Instrument,:.model.Instrument . x[1]];
+    /     k=`fill;[.engine.model.fill.Fill,:.model.Fill . x[1]];
+    /     k=`risktier;[.engine.model.risktier.Risktier,:.model.Risktier . x[1]];
+    /     k=`feetier;[.engine.model.feetier.Feetier,:.model.Feetier . x[1]];
+    /     k=`funding;[];
+    /     k=`withdraw;[];
+    /     k=`deposit;[];
+    /     k=`leverage;[];
+    /     k=`mark;[];
+    /     k=`settlement;[];
+    /     k=`pricelimit;[];
+    /     () 
+    /     ];
     };
 
 
