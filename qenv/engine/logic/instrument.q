@@ -1,14 +1,12 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-			// TODO select from  inventory where open 
-			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
-			ivn:flip ![ivn;();0b;`aId`side`amt!(
+			ivn:?[ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			acc:flip ![ivn;();0b;`kind`dep`bal`avail!(
+			acc:?[ivn;();0b;`kind`dep`bal`avail!(
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
@@ -26,14 +24,12 @@
 
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
-			// TODO check if can uj
-			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
-			ivn:flip ![ivn;();0b;`aId`side`amt!(
+			ivn:?[ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+			acc:?[ivn;();0b;`kind`dep`bal`avail!(
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
@@ -50,13 +46,12 @@
 	};
 
 .engine.logic.instrument.Settlement:{
-			ivn:.engine.model.inventory.Get[enlist(>;`amt;0)];
-			ivn:flip ![ivn;();0b;`aId`side`amt!(
+			ivn:?[ivn;();0b;`aId`side`amt!(
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
 
-			acc:flip ![x;();0b;`kind`dep`bal`avail!(
+			acc:?[ivn;();0b;`kind`dep`bal`avail!(
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
