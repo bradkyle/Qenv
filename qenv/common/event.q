@@ -32,14 +32,15 @@
 /*******************************************************
 /Construction
 
-.event.Event: {}
-
-.event.Failure :{}
-.event.Account :{}
-.event.Inventory :{}
+.event.RmFk : {fk:key fkeys x;x[fk]:7h$x[fk];x};
+.event.Event: {e:flip `time`datum`aId!y;e[`kind]:x;e};
+.event.Failure :{()}
+.event.Account : {.event.Event[`account;((flip .event.RmFk[flip x]`time;flipx`aId`time`bal`avail`froz);7h$x`aId)]}
+.event.Inventory :{.event.Event[`inventory;(x`time;(flip .event.RmFk[flip x]`aId`side`time`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
+.event.Order     :{.event.Event[`order;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
 .event.Deposit :{}
 .event.Withdraw :{}
-.event.Funding : {}
+.event.Funding :{}
 .event.Mark:{}
 .event.Settlement:{}
 .event.PriceLimit :{}
@@ -49,6 +50,5 @@
 .event.Instrument:{}
 .event.Fill:{}
 .event.Liquidation:{}
-
 
 /*******************************************************

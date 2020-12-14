@@ -21,6 +21,10 @@
     enlist[`i] _ e
     };
 
+.engine.E :{
+    .engine.egress.Events,:x;
+    };
+
 // ReInserts events into the egress event buffer
 .engine.Emit            :{[kind;time;event]
     .engine.egress.Events,:(time;kind;event;0n);

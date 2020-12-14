@@ -23,17 +23,15 @@
         .boom.s:p`setup;
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.inventory.Update;{[a] c};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.inventory.Update;{[a]};c];
+        mck1: .qt.M[`.engine.E;{[x]};c];
 
-        show p`args;
         / show .engine.model.inventory.Inventory;
         a:.model.Fill . p`args;
         res:.engine.logic.inventory.Fill[a];
 
-        .qt.CheckMock[mck2;m[2];c]; // Inventory Update
-        .qt.CheckMock[mck3;m[3];c]; // Emit 
+        .qt.CheckMock[mck0;m[0];c]; // Inventory Update
+        .qt.CheckMock[mck1;m[1];c]; // Emit 
 
         / .util.table.dropAll[(
         /   `.engine.egress.Events;
@@ -58,7 +56,7 @@
             (); // res 
             (
                 (1b;1;();()); // UpdateInventory 
-                (1b;2;(();());()) // Emit
+                (1b;2;();()) // Emit
             ); // mocks 
             () // err 
         ))
