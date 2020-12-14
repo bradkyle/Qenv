@@ -534,6 +534,7 @@ dozc:{x+y}[doz];
     .engine.model.instrument.Instrument,:.model.Instrument . x[`instrument];
     .engine.model.risktier.Risktier,:.model.Risktier . x[`risktier];
     .engine.model.feetier.Feetier,:.model.Feetier . x[`feetier];
+    show x[`inventory];
     .engine.model.inventory.Inventory,:.model.Inventory . x[`inventory];
     .engine.model.account.Account,:.model.Account . x[`account];
     .engine.model.order.Order,:.model.Order . x[`order];

@@ -24,9 +24,11 @@
         .engine.testutils.SwitchSetupModels[p`setup];
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.OM[`.engine.model.inventory.Update;c];
+        mck2: .qt.M[`.engine.model.inventory.Update;{[a] c};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
+        show p`args;
+        / show .engine.model.inventory.Inventory;
         a:.model.Fill . p`args;
         res:.engine.logic.inventory.Fill[a];
 

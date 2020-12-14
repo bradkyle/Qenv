@@ -5,7 +5,7 @@
 // TODO add posval
 // TODO     		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
 .engine.logic.inventory.Fill:{ // TODO simple select
-				iv:.model.Inventory[flip ![![x;();0b;`kind`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt!(
+				iv:flip ![![x;();0b;`kind`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt!(
 						(enlist`inventory);
 						((';`.engine.logic.contract.AvgPrice);`iId.cntTyp;`side;`ivId.execCost;`ivId.totEnt;`iId.smul); // TODO dependent
 						((';`.engine.logic.contract.ExecCost);`iId.cntTyp;`price;`qty;`iId.smul);
@@ -17,7 +17,9 @@
 				)];
 				();0b;`upnl`rpnl!(
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
-				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))]];
+				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
+
+				.bam.iv:iv;
 				.engine.model.inventory.Update iv; 
 				.engine.Emit .event.Inventory[iv];
 				.engine.Emit .event.Fill[x] 

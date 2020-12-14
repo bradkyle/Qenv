@@ -12,6 +12,7 @@
 	};
 
 .engine.model.common.Update  :{[tbl;val]
+	.bam.val:val;
 	tbl upsert val;		  
 	};
 
