@@ -23,25 +23,32 @@
 	};
 
 .engine.logic.account.Withdraw:{
-			
-			acc:?[x;();0b;`aId`wit`bal`avail!(
-				`aId;
+			acc:?[x;();0b;`aId`time`wit`bal`avail!(
+				`aId;`time;
 				(+;`aId.wit;`wit);	
 				(-;`aId.bal;`wit);	
-				(`.engine.logic.account.GetAvailable;`aId.bal;)
-				)];
-			.bam.acc:acc;
+				(`.engine.logic.account.GetAvailable;
+					`aId.bal;
+					(+;`aId.lng.mm;`aId.srt.mm);
+					(+;`aId.lng.upnl;`aId.srt.upnl);
+					(+;`aId.lng.ordQty;`aId.srt.ordQty);
+					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.Emit .event.Account[acc]; 
 			.engine.Emit .event.Withdraw[x]; 
 			};
 
 .engine.logic.account.Deposit:{
-			acc:.model.Account[flip ![x;();0b;`kind`dep`bal`avail!(
-				(+;`aId.dep;`dep);	
-				(+;`aId.bal;`dep);	
-				(`.engine.logic.account.GetAvailable;)
-				)]];
+			acc:?[x;();0b;`aId`time`wit`bal`avail!(
+				`aId;`time;
+				(+;`aId.wit;`wit);	
+				(-;`aId.bal;`wit);	
+				(`.engine.logic.account.GetAvailable;
+					`aId.bal;
+					(+;`aId.lng.mm;`aId.srt.mm);
+					(+;`aId.lng.upnl;`aId.srt.upnl);
+					(+;`aId.lng.ordQty;`aId.srt.ordQty);
+					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.Emit .event.Account[acc]; 
 			.engine.Emit .event.Deposit[x]; 
