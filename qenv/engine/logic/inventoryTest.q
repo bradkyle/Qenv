@@ -23,8 +23,8 @@
         .boom.s:p`setup;
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.inventory.Update;{[a]};c];
-        mck1: .qt.M[`.engine.E;{[x]};c];
+        mck0: .qt.OM[`.engine.model.inventory.Update;c];
+        mck1: .qt.OM[`.engine.E;c];
 
         / show .engine.model.inventory.Inventory;
         a:.model.Fill . p`args;
