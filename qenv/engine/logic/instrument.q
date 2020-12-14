@@ -1,8 +1,6 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-			.bam.xv:x;
-			// TODO update instrument		
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`upnl`rpnl!(
 				`aId;`side;`time;`amt;`avgPrice;`upnl;
