@@ -27,7 +27,7 @@
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        a:.model.Fill[p`args];
+        a:.model.Fill . p`args;
         res:.engine.logic.inventory.Fill[a];
 
         .qt.CheckMock[mck2;m[2];c]; // Inventory Update

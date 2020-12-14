@@ -19,7 +19,6 @@
     ".engine.logic.order.NewOrder";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
 
         mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
@@ -28,6 +27,7 @@
         mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
         mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
+        a:.model.Order . p`args;
         res:.engine.logic.order.NewOrder a;
 
         .qt.CheckMock[mck0;m[0];c];

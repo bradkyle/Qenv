@@ -7,12 +7,12 @@
     ".engine.logic.instrument.Funding";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
 
         mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
+        a:.model.Funding . p`args;
         res:.engine.logic.instrument.Funding a;
 
         .qt.CheckMock[mck0;m[0];c];
