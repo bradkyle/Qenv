@@ -21,7 +21,7 @@
 
 			.engine.model.account.Update acc;
 			.engine.model.inventory.Update ivn;
-			.engine.model.instrument.Update x; 
+			/ .engine.model.instrument.Update x; 
 
 			// Update instrument
 			.engine.E .event.Account[acc]; 
