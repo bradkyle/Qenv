@@ -29,7 +29,6 @@
 
 .engine.model.settlement.r:.util.NullRowDict[([] 
         time:`datetime$(); 
-        aId:`.engine.model.account.Account$(); 
         iId:`.engine.model.instrument.Instrument$())];
 
 .model.Settlement:{[cl;vl]
@@ -52,7 +51,7 @@
     x
     };
 
-.engine.model.pricelimit.r:.util.NullRowDict[([] 
+.engine.model.markprice.r:.util.NullRowDict[([] 
         time:`datetime$(); 
         iId:`.engine.model.instrument.Instrument$(); 
         markprice:`long$())];

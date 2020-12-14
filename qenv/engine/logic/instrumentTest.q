@@ -2,7 +2,7 @@
 // TODO test multiple accounts
 // TODO test multiple events
 
-.qt.SkpBesTest[27];
+/ .qt.SkpBesTest[27];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
@@ -115,33 +115,37 @@
     ({};{};{};{});
     "Global function for creating a new account"];
 
-/ .qt.SkpBesTest[28];
+.qt.SkpBesTest[28];
 .qt.Unit[
-    ".engine.logic.instrument.MarkPrice";
+    ".engine.logic.instrument.Mark";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
+        mck2: .qt.M[`.engine.E;{[a;b;c]};c];
 
-        res:.engine.logic.instrument.MarkPrice a; 
+        a:.model.Mark . p`args;
+        res:.engine.logic.instrument.Mark a;
 
-        .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Update mark price (decreasing), one account: no positions";(
             ((!) . flip(
-                (`account;(`aId`avail`bal;enlist(0;0;0))); 
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
+                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`markprice;enlist(0;0.0001));
+            (`iId`time`markprice;enlist(0;z;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
@@ -151,13 +155,14 @@
         ));
         ("Update mark price (increasing), one account: no positions";(
             ((!) . flip(
-                (`account;(`aId`avail`bal;enlist(0;0;0))); 
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
+                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`markprice;enlist(0;0.0001));
+            (`iId`time`markprice;enlist(0;z;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
