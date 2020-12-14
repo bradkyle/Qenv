@@ -37,7 +37,7 @@
 .event.Account 			:{.event.Event[`account;(x`time;(x`aId`time`bal`avail`froz);7h$x`aId)]}
 .event.Inventory		:{.event.Event[`inventory;(x`time;(xaId`side`time`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
 .event.Order     		:{.event.Event[`order;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`amt`rpnl`avgPrice`upnl);7h$x`aId)]}
-.event.Deposit 			:{}
+.event.Deposit 			:{.event.Event[`deposit;(x`time;(x`aId`time`dep);7h$x`aId)]}
 .event.Withdraw 		:{.event.Event[`withdraw;(x`time;(x`aId`time`wit);7h$x`aId)]}
 .event.Funding 			:{}
 .event.Mark					:{}

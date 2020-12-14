@@ -41,10 +41,10 @@
 
 // TODO check formatting of events
 .engine.logic.account.Deposit:{
-			acc:?[x;();0b;`aId`time`wit`bal`avail!(
+			acc:?[x;();0b;`aId`time`dep`bal`avail!(
 				`aId;`time;
-				(+;`aId.wit;`wit);	
-				(-;`aId.bal;`wit);	
+				(+;`aId.dep;`dep);	
+				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -56,7 +56,7 @@
 			.engine.E .event.Deposit[x]; 
 			};
 
-// TODO check formatting of events
+// TODO check formatting of events multiple lev update
 .engine.logic.account.Leverage:{
 				acc:flip ![x;();0b;`time`lev`avail!(
 				`time;`lev;	
