@@ -55,10 +55,14 @@
 			};
 
 .engine.logic.account.Leverage:{
-			acc:.model.Account[flip ![x;();0b;`kind`wit`bal`avail!(
-				`lev;	
-				();
-				(`.engine.logic.account.GetAvailable;)
+			acc:.model.Account[flip ![x;();0b;`time`lev`avail!(
+				`time;`lev;	
+				(`.engine.logic.account.GetAvailable;
+					`aId.bal;
+					(+;`aId.lng.mm;`aId.srt.mm);
+					(+;`aId.lng.upnl;`aId.srt.upnl);
+					(+;`aId.lng.ordQty;`aId.srt.ordQty);
+					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 			)]];
 			.engine.model.account.Update acc;
 			.engine.Emit .event.Account[acc]; 
