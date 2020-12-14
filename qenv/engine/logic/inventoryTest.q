@@ -19,7 +19,6 @@
     ".engine.logic.inventory.Fill";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
         .engine.testutils.SwitchSetupModels[p`setup];
 
@@ -27,6 +26,7 @@
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
+        a:.model.Fill[p`args];
         res:.engine.logic.inventory.Fill[a];
 
         .qt.CheckMock[mck2;m[2];c]; // Inventory Update
