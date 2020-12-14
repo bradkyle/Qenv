@@ -14,12 +14,17 @@
 // TODO validation and stop orders
 // TODO Check mock called with correct
 /// TODO simulate order loss
-/ .qt.SkpBesTest[31];
+.qt.SkpBesTest[31];
 .qt.Unit[
-    ".engine.logic.order.NewOrder";
+    ".engine.logic.order.New";
     {[c]
         p:c[`params];
         m:p[`mocks];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
         mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
         mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
@@ -28,7 +33,7 @@
         mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         a:.model.Order . p`args;
-        res:.engine.logic.order.NewOrder a;
+        res:.engine.logic.order.New a;
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
@@ -40,8 +45,14 @@
     {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
-            ();
-            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
                 (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
@@ -52,8 +63,14 @@
             () // err 
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
-            ();
-            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
                 (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
