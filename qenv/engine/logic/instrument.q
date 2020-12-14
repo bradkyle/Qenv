@@ -1,30 +1,37 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-			ivn:?[ivn;();0b;`aId`side`amt!(
-				(+;`aId.bal;`dep);	
-				(`.engine.logic.account.GetAvailable;)
+			ivn:?[`.engine.model.inventory.Inventory;();0b;
+				`aId`side`time`rpnl!(
+				`aId;`side;`time;
+				(-;`rpnl;0)	
 			)];
-
-			acc:?[ivn;();0b;`kind`dep`bal`avail!(
-				(+;`aId.dep;`dep);	
-				(+;`aId.bal;`dep);	
-				(`.engine.logic.account.GetAvailable;)
-			)];
+			
+			ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
+			acc:?[ivn;();0b;`aId`avail!(
+				`aId;
+				(`.engine.logic.account.GetAvailable;
+					`aId.bal;
+					(+;`aId.lng.mm;`aId.srt.mm);
+					(+;`aId.lng.upnl;`aId.srt.upnl);
+					(+;`aId.lng.ordQty;`aId.srt.ordQty);
+					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 
 			.engine.model.account.Update acc;
 			.engine.model.inventory.Update ivn;
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[acc]; 
-			.engine.Emit .event.Inventory[ivn]; 
-			.engine.Emit .event.Funding[x]; 
+			.engine.E .event.Account[acc]; 
+			.engine.E .event.Inventory[ivn]; 
+			.engine.E .event.Funding[x]; 
 		};
 
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
-			ivn:?[ivn;();0b;`aId`side`amt!(
+			ivn:?[`.enigne.model.inventory.Inventory;();0b;
+		  `aId`side`rpnl`posVal`time!(
+				($;`.engine.model.account.Account;`aId);`side;
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
@@ -40,13 +47,15 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[acc]; 
-			.engine.Emit .event.Inventory[ivn]; 
-			.engine.Emit .event.Mark[x]; 
+			.engine.E .event.Account[acc]; 
+			.engine.E .event.Inventory[ivn]; 
+			.engine.E .event.Mark[x]; 
 	};
 
 .engine.logic.instrument.Settlement:{
-			ivn:?[ivn;();0b;`aId`side`amt!(
+			ivn:?[`.enigne.model.inventory.Inventory;();0b;
+		  `aId`side`rpnl`posVal`time!(
+				($;`.engine.model.account.Account;`aId);`side;
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;)
 			)];
@@ -62,9 +71,9 @@
 			.engine.model.instrument.Update ins
 
 			// Update instrument
-			.engine.Emit .event.Account[acc]; 
-			.engine.Emit .event.Inventory[ivn]; 
-			.engine.Emit .event.Settlement[x]; 
+			.engine.E .event.Account[acc]; 
+			.engine.E .event.Inventory[ivn]; 
+			.engine.E .event.Settlement[x]; 
 	};
 
 
