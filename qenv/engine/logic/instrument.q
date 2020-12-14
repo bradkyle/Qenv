@@ -78,7 +78,7 @@
 
 
 .engine.logic.instrument.PriceLimit:{
-	o:?[];
+		o:?[];
 
 		.engine.model.instrument.Update i;
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
