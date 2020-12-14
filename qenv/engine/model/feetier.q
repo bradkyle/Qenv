@@ -7,3 +7,8 @@ feeCols:`vol`makerFee`takerFee`wdrawFee`dpsitFee`wdrawLimit;
 
 .engine.model.feetier.Create:.engine.model.common.Create[`.engine.model.feetier.Feetier];
 .engine.model.feetier.Get:.engine.model.common.Get[`.engine.model.feetier.Feetier];
+
+.model.Feetier:{[cl;vl]
+    x:.model.Model[.engine.model.feetier.r;cl;vl]; 
+    flip x
+    };

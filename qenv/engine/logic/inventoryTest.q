@@ -21,7 +21,7 @@
         p:c[`params];
         m:p[`mocks];
         .boom.s:p`setup;
-        .engine.testutils.SwitchSetupModels . p`setup;
+        .engine.testutils.SwitchSetupModels[p`setup];
 
         mck0: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.OM[`.engine.model.inventory.Update;c];
@@ -49,7 +49,7 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal;enlist(0;0;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;0;0;0;0))) 
                 / (`order;()) // Update Account
             ));
             (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z));

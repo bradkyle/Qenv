@@ -23,9 +23,9 @@
     show .engine.model.instrument.Instrument;
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x[`lng]:`.engine.model.inventory.Inventory$x[`lng]; 
-    x[`srt]:`.engine.model.inventory.Inventory$x[`srt]; 
-    x[`rt]:`.engine.model.risktier.Risktier$x[`rt]; 
-    x[`ft]:`.engine.model.feetier.Feetier$x[`ft];  
+    / x[`srt]:`.engine.model.inventory.Inventory$x[`srt]; 
+    / x[`rt]:`.engine.model.risktier.Risktier$x[`rt]; 
+    / x[`ft]:`.engine.model.feetier.Feetier$x[`ft];  
     x
     };
 
