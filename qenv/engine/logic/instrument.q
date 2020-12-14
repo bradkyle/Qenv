@@ -1,9 +1,11 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
-			ivn:?[`.engine.model.inventory.Inventory;();0b;
-				`aId`side`time`rpnl!(
-				`aId;`side;`time;
+			// TODO update instrument		
+
+			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
+				`aId`side`time`amt`avgPrice`upnl`rpnl!(
+				`aId;`side;`time;`amt;`avgPrice;`upnl;
 				(-;`rpnl;0)	
 			)];
 			
@@ -29,6 +31,8 @@
 
 // Apply mark price update 
 .engine.logic.instrument.MarkPrice:{
+			// TODO update instrument		
+
 			ivn:?[`.enigne.model.inventory.Inventory;();0b;
 		  `aId`side`rpnl`posVal`time!(
 				($;`.engine.model.account.Account;`aId);`side;
@@ -53,6 +57,8 @@
 	};
 
 .engine.logic.instrument.Settlement:{
+			// TODO update instrument		
+
 			ivn:?[`.enigne.model.inventory.Inventory;();0b;
 		  `aId`side`rpnl`posVal`time!(
 				($;`.engine.model.account.Account;`aId);`side;
@@ -78,7 +84,7 @@
 
 
 .engine.logic.instrument.PriceLimit:{
-		o:?[];
+		o:?[`.engine.model.order.Order;();0b;()];
 
 		.engine.model.instrument.Update i;
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
