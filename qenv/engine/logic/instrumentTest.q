@@ -54,12 +54,10 @@
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
-                (1b;1;();()); // UpdateAccount 
-                (1b;1;();()) // UpdateAccount 
+                (1b;1;();()); //  
+                (1b;1;();()) // 
             ); // mocks 
-            (
-
-            ) // err 
+            () // err 
         ))
         / ("Positive Funding: One account, longs pay shorts";(
         /     .util.testutils.makeFunding[`iId`fundingrate;enlist(0;0)];
