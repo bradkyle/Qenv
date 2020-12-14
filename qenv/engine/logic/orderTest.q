@@ -535,43 +535,112 @@
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
 
-.qt.SkpBesTest[32];
+/ .qt.SkpBesTest[33];
 .qt.Unit[
-    ".engine.logic.order.CancelOrder";
+    ".engine.logic.order.Cancel";
     {[c]
+        p:c[`params];
+        m:p[`mocks];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
+        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+
+        a:.model.Order . p`args;
+        res:.engine.logic.order.Cancel a;
+
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck4;m[4];c];
+        .qt.RestoreMocks[];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         // Decreasing in size stays at same price
-        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-				)); 
-        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-				)) 
+        enlist("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
+            (); // res 
+            (
+                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
+                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
+                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
+                (1b;3;(();();());()) // Emit
+            ); // mocks 
+            () // err 
+        )) 
     );
     ({};{};{};{});
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
 
-
+.qt.SkpBesTest[34];
 .qt.Unit[
-    ".engine.logic.order.CancelAllOrders";
+    ".engine.logic.order.CancelAll";
     {[c]
+        p:c[`params];
+        m:p[`mocks];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
+        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+
+        a:.model.Order . p`args;
+        res:.engine.logic.order.Cancel a;
+
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
+        .qt.CheckMock[mck3;m[3];c];
+        .qt.CheckMock[mck4;m[4];c];
+        .qt.RestoreMocks[];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         // Decreasing in size stays at same price
-        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-				)); 
-        ("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
-								();();();()
-				)) 
+        enlist("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
+            (); // res 
+            (
+                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
+                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
+                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
+                (1b;3;(();();());()) // Emit
+            ); // mocks 
+            () // err 
+        )) 
     );
     ({};{};{};{});
     "Global function for processing new orders, amending orders and cancelling orders (amending to 0)"];
+
 
 
 

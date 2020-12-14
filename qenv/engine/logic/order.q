@@ -85,10 +85,7 @@
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
 
-				.engine.logic.trade.Match ?[o;();0b;()];
-
-				.engine.model.order.CreateOrder l; 
-				.engine.model.orderbook.Update o;
+				// TODO remove orders
 
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 
@@ -118,10 +115,7 @@
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
 
-				.engine.logic.trade.Match ?[o;();0b;()];
-
-				.engine.model.order.CreateOrder l; 
-				.engine.model.orderbook.Update o;
+				// TODO remove orders
 
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 
