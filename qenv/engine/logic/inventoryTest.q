@@ -20,7 +20,6 @@
     {[c]
         p:c[`params];
         m:p[`mocks];
-        .boom.s:p`setup;
         .engine.testutils.SwitchSetupModels[p`setup];
 
         mck0: .qt.OM[`.engine.model.inventory.Update;c];
