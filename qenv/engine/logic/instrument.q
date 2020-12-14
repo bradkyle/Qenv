@@ -1,8 +1,8 @@
 
 // Update 
 .engine.logic.instrument.Funding:{
+			.bam.xv:x;
 			// TODO update instrument		
-
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`upnl`rpnl!(
 				`aId;`side;`time;`amt;`avgPrice;`upnl;
@@ -10,7 +10,7 @@
 			)];
 			
 			ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
-			acc:?[x;();0b;`aId`time`froz`bal`avail!(
+			acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
@@ -21,7 +21,7 @@
 
 			.engine.model.account.Update acc;
 			.engine.model.inventory.Update ivn;
-			/ .engine.model.instrument.Update ins
+			.engine.model.instrument.Update x; 
 
 			// Update instrument
 			.engine.E .event.Account[acc]; 

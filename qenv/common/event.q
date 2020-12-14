@@ -32,6 +32,7 @@
 /*******************************************************
 /Construction
 
+// TODO allow for many events
 .event.Event				:{e:flip `time`datum`aId!y;e[`kind]:x;e};
 .event.Failure 			:{()}
 .event.Account 			:{.event.Event[`account;(x`time;(x`aId`time`bal`avail`froz);7h$x`aId)]}

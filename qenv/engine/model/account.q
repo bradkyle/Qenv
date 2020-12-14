@@ -41,17 +41,29 @@
     x
     };
 
+.engine.model.deposit.r:.util.NullRowDict[([] 
+        time:`datetime$(); 
+        aId:`.engine.model.account.Account$(); 
+        iId:`.engine.model.instrument.Instrument$(); 
+        dep:`long$())];
+
 .model.Deposit:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
-    x:.model.Model[.engine.model.order.r;cl;vl];
+    x:.model.Model[.engine.model.deposit.r;cl;vl];
     x[`aId]:`.engine.model.account.Account$x[`aId]; 
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x
     };
 
+.engine.model.leverage.r:.util.NullRowDict[([] 
+        time:`datetime$(); 
+        aId:`.engine.model.account.Account$(); 
+        iId:`.engine.model.instrument.Instrument$(); 
+        lev:`long$())];
+
 .model.Leverage:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
-    x:.model.Model[.engine.model.order.r;cl;vl];
+    x:.model.Model[.engine.model.leverage.r;cl;vl];
     x[`aId]:`.engine.model.account.Account$x[`aId];
     / x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId]; 
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
