@@ -540,6 +540,7 @@ dozc:{x+y}[doz];
     if[`order in k;.engine.model.order.Order,:.model.Order . x[`order]];
     if[`trade in k;.engine.model.trade.Trade,:.model.Trade . x[`trade]];
     if[`fill in k;.engine.model.fill.Fill,:.model.Fill . x[`fill]];
+    if[`orderbook in k;.engine.model.orderbook.Orderbook,:.model.Level . x[`orderbook]];
     / if[`withdraw in k;.engine.model.fill.Fill,:.model.Fill . x[`fill]];
     };
 

@@ -7,6 +7,7 @@
         / dlts:deltas'[(l`hqty`qty;c`hqty`qty)];
         // TODO chenge to any dlts
         $[(count[c]>0);[
+                .bam.x:x;
                 x[`nqty]:x`qty;
                 s:lj[`side`price xgroup x;`side`price xkey c];
                 dlts:(-/)(0!s)[`qty`nqty];
