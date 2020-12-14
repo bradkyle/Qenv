@@ -39,7 +39,7 @@
     "Global function for creating a new account"];
 
 
-/ .qt.SkpBesTest[25];
+.qt.SkpBesTest[24];
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
@@ -54,8 +54,10 @@
           `.engine.model.feetier.Feetier
         )];
 
+        .engine.testutils.SwitchSetupModels[p`setup];
+
         a:.model.Withdraw . p`args;
-        res:.engine.logic.account.Withdraw[p`args];
+        res:.engine.logic.account.Withdraw[a];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -64,6 +66,8 @@
     (
        enlist("Withdraw no balance:should fail";(
             ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
@@ -122,6 +126,7 @@
     ({};{};{};{});
     "Process a batch of signal events"];
 
+/ .qt.SkpBesTest[25];
 .qt.Unit[
     ".engine.logic.account.Deposit";
     {[c]
@@ -133,7 +138,7 @@
         mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.account.Deposit[a 0;a 1;a 2];
+        / res:.engine.logic.account.Deposit[a 0;a 1;a 2];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];
@@ -184,7 +189,7 @@
         mck2: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
-        res:.engine.logic.account.Leverage[a 0;a 1;a 2];
+        / res:.engine.logic.account.Leverage[a 0;a 1;a 2];
 
         .qt.CheckMock[mck1;m[0];c];
         .qt.CheckMock[mck2;m[1];c];

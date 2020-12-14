@@ -14,7 +14,7 @@
 // TODO full integration
 // TODO test rpnl and upnl
 // TODO test tier change
-.qt.SkpBesTest[36];
+/ .qt.SkpBesTest[36];
 .qt.Unit[
     ".engine.logic.inventory.Fill";
     {[c]

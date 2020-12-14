@@ -23,11 +23,14 @@
 	};
 
 .engine.logic.account.Withdraw:{
-			acc:.model.Account[flip ![x;();0b;`kind`wit`bal`avail!(
+			
+			acc:?[x;();0b;`aId`wit`bal`avail!(
+				`aId;
 				(+;`aId.wit;`wit);	
 				(-;`aId.bal;`wit);	
-				(`.engine.logic.account.GetAvailable;)
-				)]];
+				(`.engine.logic.account.GetAvailable;`aId.bal;)
+				)];
+			.bam.acc:acc;
 			.engine.model.account.Update acc;
 			.engine.Emit .event.Account[acc]; 
 			.engine.Emit .event.Withdraw[x]; 

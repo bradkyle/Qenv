@@ -531,15 +531,16 @@ dozc:{x+y}[doz];
 
 //
 .engine.testutils.SwitchSetupModels :{
-    .engine.model.instrument.Instrument,:.model.Instrument . x[`instrument];
-    .engine.model.risktier.Risktier,:.model.Risktier . x[`risktier];
-    .engine.model.feetier.Feetier,:.model.Feetier . x[`feetier];
-    show x[`inventory];
-    .engine.model.inventory.Inventory,:.model.Inventory . x[`inventory];
-    .engine.model.account.Account,:.model.Account . x[`account];
-    .engine.model.order.Order,:.model.Order . x[`order];
-    / .engine.model.trade.Trade,:.model.Trade . x[`trade];
-    / .engine.model.fill.Fill,:.model.Fill . x[`fill];
+    k:key x;
+    if[`instrument in k;.engine.model.instrument.Instrument,:.model.Instrument . x[`instrument]];
+    if[`risktier in k;.engine.model.risktier.Risktier,:.model.Risktier . x[`risktier]];
+    if[`feetier in k;.engine.model.feetier.Feetier,:.model.Feetier . x[`feetier]];
+    if[`inventory in k;.engine.model.inventory.Inventory,:.model.Inventory . x[`inventory]];
+    if[`account in k;.engine.model.account.Account,:.model.Account . x[`account]];
+    if[`order in k;.engine.model.order.Order,:.model.Order . x[`order]];
+    if[`trade in k;.engine.model.trade.Trade,:.model.Trade . x[`trade]];
+    if[`fill in k;.engine.model.fill.Fill,:.model.Fill . x[`fill]];
+    / if[`withdraw in k;.engine.model.fill.Fill,:.model.Fill . x[`fill]];
     };
 
 
