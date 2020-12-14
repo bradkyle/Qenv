@@ -18,15 +18,15 @@
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Positive Funding: no accounts";(
             ((!) . flip(
-                (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-                (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-                (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
-                (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
             (`iId`fundingrate;enlist(0;0.0001));
             (); // res 
@@ -38,11 +38,11 @@
         ));
         ("Negative Funding: No accounts";(
             ((!) . flip(
-                (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-                (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-                (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
-                (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-                (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
             (`iId`fundingrate;enlist(0;0.0001));
             (); // res 
@@ -130,33 +130,33 @@
     (
         ("Update mark price (decreasing), one account: no positions";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
-            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.Mark[`iId`markprice;enlist(0;0.0001)];
+            (`iId`markprice;enlist(0;0.0001));
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ));
         ("Update mark price (increasing), one account: no positions";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
-            (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
-            (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.Mark[`iId`markprice;enlist(0;0.0001)];
+            (`iId`markprice;enlist(0;0.0001));
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ))
@@ -284,29 +284,33 @@
     (
         ("Settlement no accounts";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.Settlement[`iId`time;enlist(0;z)];
+            (`iId`time;enlist(0;z));
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ));
         ("Settlement one account no inventory";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.Settlement[`iId`time;enlist(0;z)];
+            (`iId`time;enlist(0;z));
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ));
@@ -480,31 +484,33 @@
     (
         ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`order;.model.Order[`aId`oId`ivId;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
             .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ));
         ("First should succeed";(
             ((!) . flip(
-            (`account;.model.Account[`aId`avail`bal;enlist(0;0;0)]); 
-            (`order;.model.Order[`aId`oId`ivId;enlist(0;0;0)]); 
-            (`instrument;.model.Instrument[`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1)]); 
-            (`inventory;.model.Inventory[`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10)]); 
+                (`account;(`aId`avail`bal;enlist(0;0;0))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
             .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ))

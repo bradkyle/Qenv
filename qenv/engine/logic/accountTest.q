@@ -54,10 +54,7 @@
           `.engine.model.feetier.Feetier
         )];
 
-        .engine.model.inventory.Inventory,:.model.Inventory . s[`inventory];
-        .engine.model.feetier.Feetier,:s[`feetier];
-        .engine.model.risktier.Risktier,:s[`risktier];
-
+        a:.model.Withdraw . p`args;
         res:.engine.logic.account.Withdraw[p`args];
 
         .qt.CheckMock[mck1;m[0];c];
@@ -67,9 +64,9 @@
     (
        enlist("Withdraw no balance:should fail";(
             ((!) . flip(
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10)]); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100)) // Update Account
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
             (`aId`iId`wit;enlist(0;0;0));
             (); // res 
