@@ -8,7 +8,8 @@
 // lqty: leaves qty
 // dqty: display qty 
 .engine.model.order.Order:([oId:`long$()] 
-				side:`long$();acc:`.engine.model.account.Account$();price:`long$();lprice:`long$();
+        aId:`.engine.model.account.Account$();iId:`.engine.model.instrument.Instrument$();
+        price:`long$();lprice:`long$();side:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
 				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
 				einst:`long$();time:`datetime$());
@@ -25,7 +26,7 @@ ordCols:`clOid`aId`price`lprice`sprice`trig`tif`okind`oskind`state`oqty`dqty`lqt
     //if[null cl;cl:key .fill.r]; // TODO check
     x:.model.Model[.engine.model.order.r;cl;vl];
     x[`aId]:`.engine.model.account.Account$x[`aId];
-    x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId]; 
+    / x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId]; 
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x
     };

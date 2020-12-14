@@ -7,8 +7,11 @@
 
 .model.Fill:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
-    x:.model.Model[.fill.r;cl;vl];
+    x:.model.Model[.engine.model.fill.r;cl;vl];
     x[`aId]:`.engine.model.account.Account$x[`aId];
+    / .bam.x:x;
+    / .bam.ivId:x`ivId;
+    / .bam.iv: .engine.model.inventory.Inventory;
     x[`ivId]:`.engine.model.inventory.Inventory$x[`ivId];
     x[`oId]:`.engine.model.order.Order$x[`oId];
     x[`iId]:`.engine.model.inventory.Inventory$x[`iId];

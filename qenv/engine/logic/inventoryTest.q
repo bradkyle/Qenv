@@ -49,10 +49,10 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;0;0;0;0))) 
-                / (`order;()) // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
+                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 1;0 0;0 0;2#z));
+            (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time`ivId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 0;0 0;0 0;2#z;((0 -1);(0 1))));
             (); // res 
             (
                 (1b;1;();()); // UpdateInventory 

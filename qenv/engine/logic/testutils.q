@@ -537,8 +537,8 @@ dozc:{x+y}[doz];
     .engine.model.inventory.Inventory,:.model.Inventory . x[`inventory];
     .engine.model.account.Account,:.model.Account . x[`account];
     .engine.model.order.Order,:.model.Order . x[`order];
-    .engine.model.trade.Trade,:.model.Trade . x[`trade];
-    .engine.model.fill.Fill,:.model.Fill . x[`fill];
+    / .engine.model.trade.Trade,:.model.Trade . x[`trade];
+    / .engine.model.fill.Fill,:.model.Fill . x[`fill];
     };
 
 
