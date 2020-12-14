@@ -48,27 +48,27 @@
     (
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-          .model.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();.util.testutils.makeLevel[]);
-                (1b;1;();.util.testutils.makeOrder[]);
-                (0b;0;.util.testutils.makeEvent[];()); // Emit
-                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
-                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();())
             ); // mscks 
             () // err 
         ));
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
-          .model.Take[`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1)];
+            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();.util.testutils.makeLevel[]);
-                (1b;1;();.util.testutils.makeOrder[]);
-                (0b;0;.util.testutils.makeEvent[];()); // Emit
-                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
-                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();())
             ); // mscks 
             () // err 
         ))

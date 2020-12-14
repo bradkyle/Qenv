@@ -19,7 +19,9 @@
 .model.Account:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
     x:.model.Model[.engine.model.account.r;cl;vl];
-    x[`aId]:`.engine.model.account.Account$x[`aId];
+    show x;
+    show .engine.model.instrument.Instrument;
+    x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x[`lng]:`.engine.model.inventory.Inventory$x[`lng]; 
     x[`srt]:`.engine.model.inventory.Inventory$x[`srt]; 
     x[`rt]:`.engine.model.risktier.Risktier$x[`rt]; 

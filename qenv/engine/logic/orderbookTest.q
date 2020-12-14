@@ -65,14 +65,14 @@ ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`
     {`args`eRes`mocks`err!x};
     (
         enlist("No change occurs and thus no update is triggered";(
-        .model.Level[`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0)];
+            (`price`side`qty`hqty`iqty`vqty;enlist(1000;1;100;100;0;0));
             (); // res 
             (
-                (1b;1;();.util.testutils.makeLevel[]);
-                (1b;1;();.util.testutils.makeOrder[]);
-                (0b;0;.util.testutils.makeEvent[];()); // Emit
-                (0b;0;.util.testutils.makeOrder[];()); // UpdateOrder
-                (0b;0;.util.testutils.makeLevel[];()) // UpdateLevel
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
             ); // mscks 
             () // err 
         ))

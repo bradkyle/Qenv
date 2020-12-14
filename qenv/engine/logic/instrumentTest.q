@@ -28,11 +28,11 @@
                 (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .model.Funding[`iId`fundingrate;enlist(0;0.0001)];
+            (`iId`fundingrate;enlist(0;0.0001));
             (); // res 
             (
-            (1b;1;.model.Account[];()); // UpdateAccount 
-            (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
         ));
@@ -44,11 +44,11 @@
                 (`feetier;.model.Feetier[`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0)]); // Update Account
                 (`risktier;.model.Risktier[`rtId`amt`lev;flip(0 1;50000 250000;125 100)]) // Update Account
             ));
-            .model.Funding[`iId`fundingrate;enlist(0;0.0001)];
+            (`iId`fundingrate;enlist(0;0.0001));
             (); // res 
             (
-                (1b;1;.model.Account[];()); // UpdateAccount 
-                (1b;3;(.event.Funding[], .event.Inventory[], .event.Account[]);()) // Emit
+                (1b;1;();()); // UpdateAccount 
+                (1b;1;();()) // UpdateAccount 
             ); // mocks 
             (
 
