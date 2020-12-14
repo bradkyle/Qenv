@@ -126,7 +126,7 @@
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Update mark price (decreasing), one account: no positions";(
             ((!) . flip(
@@ -280,7 +280,7 @@
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Settlement no accounts";(
             ((!) . flip(
@@ -313,7 +313,7 @@
                 (1b;1;();()) // UpdateAccount 
             ); // mocks 
             () // err 
-        ));
+        ))
         / ("Settlement one account, one short inventory: RPL 0.5";(
         /     .util.testutils.makeSettlement[`iId`time;enlist(0;z)];
         /     (); // res 
@@ -480,7 +480,7 @@
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ((!) . flip(
@@ -490,7 +490,7 @@
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
+            (`iId`markprice;enlist(0;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
@@ -506,7 +506,7 @@
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            .model.PriceLimit[`iId`markprice;enlist(0;0.0001)];
+            (`iId`markprice;enlist(0;0.0001));
             (); // res 
             (
                 (1b;1;();()); // UpdateAccount 
