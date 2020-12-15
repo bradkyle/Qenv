@@ -12,7 +12,7 @@
 
 .logic.loadTests   :{
 
-    .qt.SkpBesTest[(31 34 35)];
+    .qt.SkpBesTest[(31 34 35 36)];
     system[sv["";("l ";x;"/testutils.q")]];
     .contract.loadTests[sv["/";(x;"contract")]];
     / system[sv["";("l ";path;"/testutils.q")]];

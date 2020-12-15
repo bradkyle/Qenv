@@ -7,7 +7,8 @@
 // except they aren't visible.
 .engine.logic.trade.Take:{
     // Get the current levels for the side  
-    nside:neg[sx];
+    .ba.x:x;
+    nside:neg[x`side];
     sides:x[;0];
     qtys:x[;1];
     tot:sum qtys;
