@@ -1,4 +1,3 @@
-ocols:`oId`side`acc`price`lprice`sprice`trig`tif`okind`oskind`reduce`state`oqty`dqty`lqty`offset`einst;
 // TODO process depth updates without orders
 
 // TODO check orders event by time
