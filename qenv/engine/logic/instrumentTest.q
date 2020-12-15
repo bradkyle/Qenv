@@ -12,7 +12,7 @@
 
         mck0: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
-        mck2: .qt.M[`.engine.E;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.E;{[a]};c];
 
         a:.model.Funding . p`args;
         res:.engine.logic.instrument.Funding a;

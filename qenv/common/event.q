@@ -33,7 +33,6 @@
 /Construction
 
 // TODO allow for many events
-.event.Event				:{(time:x[])};
 .event.Failure 			:{()}
 .event.Mark					:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`markprice)}
 .event.Settlement		:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time)}
@@ -42,7 +41,6 @@
 .event.Trade				:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`side`price`qty)}
 .event.Instrument   :{}
 .event.Liquidation	:{}
-.event.Order				:{}
 .event.Account 			:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip(x`aId`time`bal`avail`froz);aId:7h$x`aId)}
 .event.Inventory		:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`aId`side`time`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
 .event.Order     		:{if[type[x]=99h;x:enlist x];([]kind:`order;time:flip x`time;datum:x`oId`time`aId`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
