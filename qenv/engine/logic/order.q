@@ -86,7 +86,6 @@
 				.engine.model.inventory.Update ivn;
 
 				// TODO remove orders
-
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 
 				.engine.E .event.Order[x]; 
@@ -116,7 +115,6 @@
 				.engine.model.inventory.Update ivn;
 
 				// TODO remove orders
-
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 
 				.engine.E .event.Order[x]; 
