@@ -19,7 +19,6 @@
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
 				.engine.model.inventory.Update flip iv; 
-				.bam.iv:iv;
 				.engine.E .event.Inventory[iv];
 				.engine.E .event.Fill[x] 
 				};
