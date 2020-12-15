@@ -26,6 +26,7 @@
 
 				/ .engine.logic.trade.Match ?[o;();0b;()];
 				/ .engine.model.order.CreateOrder x; 
+				.bam.ivn:ivn;
 
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 

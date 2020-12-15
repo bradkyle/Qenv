@@ -32,6 +32,7 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+			.bam.w:x;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Withdraw[x]; 

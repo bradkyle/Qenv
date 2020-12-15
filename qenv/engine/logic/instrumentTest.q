@@ -2,7 +2,7 @@
 // TODO test multiple accounts
 // TODO test multiple events
 
-.qt.SkpBesTest[(27 37)];
+/ .qt.SkpBesTest[(27 37)];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
