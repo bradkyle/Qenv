@@ -20,6 +20,7 @@
 
 			.engine.model.account.Update acc;
 			.engine.model.inventory.Update ivn;
+			.bam.funding:x;
 
 			// Update instrument
 			.engine.E .event.Funding[x]; 
