@@ -10,7 +10,9 @@
 // Visible qty (including order qty)=(qty+displayqty)
 // TODO add num liquidations at level as a feature
 
-.engine.model.orderbook.Orderbook:([price:`long$()]side:`long$();qty:`long$();hqty:`long$();iqty:`long$();vqty:`long$();time:`datetime$());
+.engine.model.orderbook.Orderbook:([price:`long$()]
+    iId:`.engine.model.instrument.Instrument$();side:`long$();qty:`long$();
+    hqty:`long$();iqty:`long$();vqty:`long$();time:`datetime$());
 .engine.model.orderbook.r:.util.NullRowDict[`.engine.model.orderbook.Orderbook];
 
 .engine.model.orderbook.Get:.engine.model.common.Get[`.engine.model.orderbook.Orderbook];
@@ -20,5 +22,6 @@
 .model.Level:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
     x:.model.Model[.engine.model.orderbook.r;cl;vl];  
+    x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x
     };

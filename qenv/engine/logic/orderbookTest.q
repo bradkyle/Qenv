@@ -61,7 +61,7 @@
         mck1: .qt.OM[`.engine.model.order.Update;c];
         mck2: .qt.OM[`.engine.E;c];
 
-        a:.model.Level . p`args;
+        a:.event.prep[.model.Level . p`args];
         res:.engine.logic.orderbook.Level[a];
 
         .qt.CheckMock[mck0;m[0];c];
@@ -79,14 +79,14 @@
                 (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z)));
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z));
+            (`iId`price`side`qty`hqty`iqty`vqty`time;enlist(0;1000;1;100;100;0;0;z));
             (); // res 
             (
                 (1b;1;();());
                 (1b;1;();());
                 (1b;1;();());
                 (1b;1;();());
-                (1b;1;();());
+                (1b;1;();())
             ); // mscks 
             () // err 
         ))

@@ -9,7 +9,7 @@
         $[(count[c]>0);[
                 .bam.x:x;
                 x[`nqty]:x`qty;
-                s:lj[`side`price xgroup x;`side`price xkey c];
+                s:0!lj[`side`price xgroup x;`side`price xkey c];
                 dlts:(-/)(0!s)[`qty`nqty];
                 dneg:sum'[{x where[x<0]}'[dlts]];
                 $[any[dneg<0];[ // TODO also check for side
@@ -21,7 +21,7 @@
 
                         // TODO get last qty by time check!!!
                         ocl:`price`side`qty;
-                        .engine.model.orderbook.Update[flip cl[ocl;crs]];
+                        .engine.model.orderbook.Update[flip scl[ocl;crs]];
                         .engine.Emit[`depth]'[last'[crs`time];flip crs[ocl]];
 
                         if[any[cnd];[
@@ -109,14 +109,14 @@
                                 .engine.Emit .event.Level[];
                         ]];
                 ];[
-                        ocl:`price`side`qty;
-                        .engine.model.orderbook.Update[flip cl[ocl;s]];
-                        .engine.Emit .event.Level[];
+                        ocl:`price`side`qty; // TODO uniform 
+                        .engine.model.orderbook.Update[flip scl[ocl;s]];
+                        .engine.E .event.Level[s];
                 ]];
         ];[
                 / No update occurs, should emit?
                 ocl:`price`side`qty;
-                .engine.model.orderbook.Update[flip cl[ocl;s]];
+                .engine.model.orderbook.Update[flip scl[ocl;s]];
                 .engine.Emit .event.Level[];
         ]];
 
