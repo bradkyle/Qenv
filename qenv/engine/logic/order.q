@@ -23,7 +23,6 @@
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
-				show "BAM";
 
 				/ .engine.logic.trade.Match ?[o;();0b;()];
 				/ .engine.model.order.CreateOrder x; 
