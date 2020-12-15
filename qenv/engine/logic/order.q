@@ -3,8 +3,8 @@
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
 .engine.logic.order.New:{
-				ivn: 	?[x;();0b;`aId`side`time`ordLoss`ordVal`ordQty!(
-					`aId;`side;`time;
+			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
+				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
 					(+;`ivId.ordLoss;0);
 					(+;`ivId.ordVal;0);
 					(+;`ivId.ordQty;0)
@@ -23,11 +23,10 @@
 
 				.engine.model.account.Update acc;
 				.engine.model.inventory.Update ivn;
+				show "BAM";
 
 				/ .engine.logic.trade.Match ?[o;();0b;()];
 				/ .engine.model.order.CreateOrder x; 
-				.bam.ivn:ivn;
-
 				.engine.E .event.Account[acc]; 
 				.engine.E .event.Inventory[ivn]; 
 				.engine.E .event.Order[x]; 

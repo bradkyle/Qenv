@@ -30,7 +30,7 @@
         mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
         mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
         mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
         res:.engine.logic.order.New a;
@@ -58,7 +58,8 @@
                 (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
                 (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
                 (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
-                (1b;3;(();();());()) // Emit
+                (0b;0;();()); // Emit
+                (1b;3;();()) // Emit
             ); // mocks 
             () // err 
         ));
@@ -76,7 +77,8 @@
                 (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
                 (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
                 (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
-                (1b;3;(();());()) // Emit
+                (0b;0;();()); // Emit
+                (1b;3;();()) // Emit
             ); // mocks 
             () // err 
         ))
