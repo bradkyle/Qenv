@@ -23,9 +23,12 @@
 			/ .engine.model.instrument.Update x; 
 
 			// Update instrument
+			.bam.xvc:x;
+			.bam.iv:ivn;
+			.bam.f:.event.Funding[x];
+			.engine.E .event.Funding[x]; 
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Inventory[ivn]; 
-			.engine.E .event.Funding[x]; 
 		};
 
 // Apply mark price update 

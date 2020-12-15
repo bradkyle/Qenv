@@ -2,7 +2,7 @@
 // TODO test multiple accounts
 // TODO test multiple events
 
-/ .qt.SkpBesTest[27];
+.qt.SkpBesTest[27];
 .qt.Unit[
     ".engine.logic.instrument.Funding";
     {[c]
@@ -29,8 +29,8 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
-                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
@@ -47,8 +47,8 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))); 
-                (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 

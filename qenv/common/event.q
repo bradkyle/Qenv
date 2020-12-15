@@ -35,20 +35,20 @@
 // TODO allow for many events
 .event.Event				:{(time:x[])};
 .event.Failure 			:{()}
-.event.Account 			:{([]kind:`account;time:x`time;datum:(x`aId`time`bal`avail`froz);aId:7h$x`aId)}
-.event.Inventory		:{([]kind:`inventory;time:x`time;datum:x`aId`side`time`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
-.event.Order     		:{([]kind:`order;time:x`time;datum:x`oId`time`aId`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
-.event.Deposit 			:{([]kind:`deposit;time:x`time;datum:x`aId`time`dep;aId:7h$x`aId)}
-.event.Withdraw 		:{([]kind:`withdraw;time:x`time;datum:x`aId`iId`time`wit;aId:7h$x`aId)}
-.event.Funding 			:{}
-.event.Mark					:{}
-.event.Settlement		:{}
-.event.PriceLimit 	:{}
-.event.Level        :{}
-.event.Trade				:{}
-.event.Order				:{}
+.event.Mark					:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`markprice)}
+.event.Settlement		:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time)}
+.event.PriceLimit 	:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`highest`lowest)}
+.event.Level        :{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`side`price`qty)}
+.event.Trade				:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`side`price`qty)}
 .event.Instrument   :{}
-.event.Fill					:{.event.Event[`fill;(x`time;(flip .event.RmFk[flip x]`oId`time`aId`qty`price);7h$x`aId)]}
 .event.Liquidation	:{}
+.event.Order				:{}
+.event.Account 			:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip(x`aId`time`bal`avail`froz);aId:7h$x`aId)}
+.event.Inventory		:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`aId`side`time`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
+.event.Order     		:{if[type[x]=99h;x:enlist x];([]kind:`order;time:flip x`time;datum:x`oId`time`aId`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
+.event.Deposit 			:{if[type[x]=99h;x:enlist x];([]kind:`deposit;time:flip x`time;datum:x`aId`time`dep;aId:7h$x`aId)}
+.event.Withdraw 		:{if[type[x]=99h;x:enlist x];([]kind:`withdraw;time:flip x`time;datum:x`aId`iId`time`wit;aId:7h$x`aId)}
+.event.Funding      :{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`iId`time`fundingrate)}
+.event.Fill					:{if[type[x]=99h;x:enlist x];([]time:x`time;datum:flip x`oId`time`aId`qty`price)}
 
 /*******************************************************
