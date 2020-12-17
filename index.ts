@@ -31,7 +31,7 @@ if (gke_config.active && !isMinikube) {
 
 let ingest_config = config.requireObject("ingest");
 console.log(ingest_config);
-if () {
+if (ingest_config.active) {
 
 } else {
 
