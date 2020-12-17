@@ -1,0 +1,7 @@
+syntax = "proto3";
+package model.userevent.v1;
+
+message UserEvent {
+  
+}
+

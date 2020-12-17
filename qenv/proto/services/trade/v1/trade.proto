@@ -1,0 +1,9 @@
+syntax = "proto3";
+package services.trade.v1;
+
+message GetTradeRequest {}
+message GetTradeResponse {}
+
+service TradeService {
+  rpc GetTrade(GetTradeRequest) returns (GetTradeResponse) {}
+}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+package services.user.v1;
+
+message GetUserRequest {}
+message GetUserResponse {}
+
+message NewUserRequest {}
+message NewUserResponse {}
+
+message GetAffiliateStatusRequest {}
+message GetAffiliateStatusResponse {}
+
+message CheckReferralCodeRequest {}
+message CheckReferralCodeResponse {}
+
+message GetWalletsRequest {} 
+message GetWalletsResponse {}
+
+message GetWalletHistoryRequest {}
+message GetWalletHistoryResponse {}
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+  rpc NewUser(NewUserRequest) returns (NewUserResponse) {}
+  rpc GetAffiliateStatus(GetAffiliateStatusRequest) returns (GetAffiliateStatusResponse) {} 
+  rpc CheckReferralCode(CheckReferralCodeRequest) returns (CheckReferralCodeResponse) {}
+  rpc GetWallets(GetWalletsRequest) returns (GetWalletsResponse) {}
+  rpc GetWalletHistory(GetWalletHistoryRequest) returns (GetWalletHistoryResponse) {}
+}

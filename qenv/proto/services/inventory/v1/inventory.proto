@@ -1,0 +1,25 @@
+syntax = "proto3";
+package services.inventory.v1;
+
+message GetInventoryRequest{}
+message GetInventoryResponse {}
+
+message UpdateLeverageRequest{}
+message UpdateLeverageResponse{}
+
+message UpdateRiskLimitRequest {}
+message UpdateRiskLimitResponse {}
+
+message UpdateMarginTypeRequest {}
+message UpdateMarginTypeResponse {}
+
+message TransferMarginRequest{}
+message TransferMarginResponse{}
+
+service InventoryService {
+  rpc GetInventory(GetInventoryRequest) returns (GetInventoryResponse) {}
+  rpc UpdateLeverage(UpdateLeverageRequest) returns (UpdateLeverageResponse) {}
+  rpc UpdateRiskLimit(UpdateRiskLimitRequest) returns (UpdateRiskLimitResponse) {}
+  rpc UpdateMarginType(UpdateMarginTypeRequest) returns (UpdateMarginTypeResponse) {}
+  rpc TransferMargin(TransferMarginRequest) returns (TransferMarginResponse) {}
+}

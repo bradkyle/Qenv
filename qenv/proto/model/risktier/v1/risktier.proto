@@ -1,0 +1,9 @@
+syntax = "proto3";
+package model.risktier.v1;
+
+message RiskTier {
+  double max_amount = 1;
+  double maint_margin = 2;
+  double init_margin = 3;
+  double max_lev = 4;
+}

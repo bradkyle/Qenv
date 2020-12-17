@@ -1,0 +1,15 @@
+syntax = "proto3";
+package model.affiliate.v1;
+
+message Affiliate   {
+    double prev_turnover = 1;
+    double prev_commission = 2;
+    double exec_turnover = 3; 
+    double exec_commission = 4;
+    double total_referrals = 5;
+    double total_turnover = 6;
+    double total_commission = 7;
+    double pending_payout = 8;
+    double total_payout = 9;
+    double prev_payout = 10;
+}
