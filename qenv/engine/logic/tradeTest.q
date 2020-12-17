@@ -37,7 +37,8 @@
         mck5: .qt.M[`.engine.logic.inventory.Fill;{[a;b;c;d]};c];
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        res:.engine.logic.trade.Take[];
+        a:.model.Fill . p`args; 
+        res:.engine.logic.trade.Take[a];
 
         / .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
@@ -54,9 +55,10 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
+            (`fid`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId;enlist(0;z;1000;10;0b;0b;1;0;0;(0 1);0));
             (); // res 
             (
                 (1b;1;();());
@@ -75,9 +77,10 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));
+            (`fid`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId;enlist(0;z;1000;10;0b;0b;1;0;0;(0 -1);0));
             (); // res 
             (
                 (1b;1;();());

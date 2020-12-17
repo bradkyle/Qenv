@@ -20,7 +20,7 @@ import * as random from "@pulumi/random";
 export interface GkeClusterArgs {
 }
 
-export class GkeCluster extends pulumi.ComponentResource {
+export class GKECluster extends pulumi.ComponentResource {
     public cluster: gcp.container.Cluster;
     public provider: k8s.Provider;
 

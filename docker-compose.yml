@@ -2,8 +2,36 @@
 version: '3'
 
 services:
-  ingest:
-    image: gcr.io/practice-275123/kdbml:v1.6
+  ingest1:
+    build:
+      context: ./ingest/
+      dockerfile: ./ingest/ingest.Dockerfile
+    command: q /home/ingest/ingest/ingest.q
+    volumes:
+      - ./:/home/ingest
+    working_dir: /home/ingest
+    networks:
+      - env-net 
+    ports:
+      - "4999:4999"
+
+  ingest2:
+    build:
+      context: ./ingest/
+      dockerfile: ./ingest/ingest.Dockerfile
+    command: q /home/ingest/ingest/ingest.q
+    volumes:
+      - ./:/home/ingest
+    working_dir: /home/ingest
+    networks:
+      - env-net 
+    ports:
+      - "4999:4999"
+
+  gateway:
+    build:
+      context: ./ingest/
+      dockerfile: ./ingest/ingest.Dockerfile
     command: q /home/ingest/ingest/ingest.q
     volumes:
       - ./:/home/ingest
@@ -14,13 +42,15 @@ services:
       - "4999:4999"
 
   env1:
-    image: gcr.io/practice-275123/kdbml:v1.6
+    build:
+      context: ./qenv/
+      dockerfile: ./qenv/Dockerfile
     command: q /home/qenv/server.q
     volumes:
       - ./:/home/qenv
     working_dir: /home/qenv
     depends_on:
-      - ingest
+      - gateway
     networks:
       - env-net 
     ports:
@@ -28,13 +58,15 @@ services:
 
   # environment (exchange) 1 (first actor/actor group)
   env2:
-    image: gcr.io/practice-275123/kdbml:v1.6
+    build:
+      context: ./qenv/
+      dockerfile: ./qenv/Dockerfile
     command: q /home/qenv/server.q
     volumes:
       - ./:/home/qenv
     working_dir: /home/qenv
     depends_on:
-      - ingest
+      - gateway
     networks:
       - env-net 
     ports:
@@ -42,13 +74,15 @@ services:
 
   # environment (exchange) 3 (third actor/actor group)
   env3:
-    image: gcr.io/practice-275123/kdbml:v1.6
+    build:
+      context: ./qenv/
+      dockerfile: ./qenv/Dockerfile
     command: q /home/qenv/server.q
     volumes:
       - ./:/home/qenv
     working_dir: /home/qenv
     depends_on:
-      - ingest
+      - gateway
     networks:
       - env-net 
     ports:

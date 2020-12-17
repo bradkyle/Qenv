@@ -1,5 +1,4 @@
 // TODO process depth updates without orders
-
 // TODO check orders event by time
 // TODO depth update does not match order update
 // TODO depth update crosses
@@ -17,7 +16,6 @@
 // TODO differing level order counts
 // TODO check events created correctly.
 // TODO max num levels
-
 // TODO process depth // process trade Integration check
 // TODO hidden/iceberg orders orders 
 // TODO replicate cases without hidden orders!
