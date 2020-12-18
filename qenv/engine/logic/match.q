@@ -1,11 +1,15 @@
 
+.engine.logic.match.Trade: {
+
+    };
+
 // TODO set max price for sums
 // Hidden order qty i.e. derived from data 
 // is always at the front of the queue.
 // Iceberg orders placed by agents have a 
 // typical offset and function like normal orders
 // except they aren't visible.
-.engine.logic.trade.Take:{
+.engine.logic.match.Match:{
     // Get the current levels for the side  
     .ba.x:x;
     nside:neg[x`side];
@@ -178,24 +182,3 @@
 
         // TODO recurse
     };
-
-
-// TODO check if has liquidity before doing take else just gen trades
-// TODO process multiple trades
-.engine.logic.trade.Trade:{
-        s:(x[;0]>0);
-        b:where s;
-        a:where not s;
-        if[count[b]>0;.engine.logic.trade.Take[1;0b;t b;i;x b]];
-        if[count[a]>0;.engine.logic.trade.Take[-1;0b;t a;i;x a]];
-    };
-
-
-.engine.logic.trade.Match:{
-        s:(x[;0]>0);
-        b:where s;
-        a:where not s;
-        if[count[b]>0;.engine.logic.trade.Take[1;a;t b;i;x b]];
-        if[count[a]>0;.engine.logic.trade.Take[-1;a;t a;i;x a]];
-    };
-

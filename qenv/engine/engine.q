@@ -59,7 +59,7 @@
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.trade.Trade;`size`qty`price]; 
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade;`size`qty`price]; 
 .engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;`size`qty`price];
 .engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;enlist`fundingrate];
 .engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark;enlist`markprice];

@@ -1,0 +1,30 @@
+syntax = "proto3";
+package user;
+
+service User {
+  rpc GetUser(GetUserRequest) returns (UserInfo) {}
+  rpc CreateUser(UserInfo) returns (UserStatus) {}
+}
+
+message UserInfo {
+  string email = 2;
+  string name = 3;
+  repeated string phone = 4;
+
+  message Address {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+    string zip = 4;
+  }
+
+  Address address = 5;
+}
+
+message GetUserRequest {
+  string email = 1;
+}
+
+message UserStatus {
+  string error = 1;
+}

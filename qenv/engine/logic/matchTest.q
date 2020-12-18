@@ -1,5 +1,4 @@
 // TODO integration tests
-
 // TODO no liquidity
 // TODO add order update events!!!!
 // TODO agent trade fills entire price level
@@ -29,6 +28,7 @@
         p:c[`params];
         a:p`args;
         m:p[`mocks];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
         mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
         mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
@@ -37,8 +37,8 @@
         mck5: .qt.M[`.engine.logic.inventory.Fill;{[a;b;c;d]};c];
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
-        a:.model.Fill . p`args; 
-        res:.engine.logic.trade.Take[a];
+        a:.model.Order . p`args; 
+        res:.engine.logic.match.Match[a];
 
         / .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];

@@ -29,91 +29,78 @@ export class GKECluster extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:kubernetes-ts-multicloud:GkeCluster", name, {}, opts);
 
-        // Find the latest engine version.
-        const engineVersion = gcp.container.getEngineVersions({}, { async: true }).then(v => v.latestMasterVersion);
-        console.log(engineVersion);
+        gcp.container.getEngineVersions().then(it => it.latestMasterVersion);
 
-        // Generate a strong password for the Kubernetes cluster.
-        const password = new random.RandomPassword("password", {
-            length: 20,
-            special: true,
-        }, {parent: this}).result;
-
-        // Create the GKE cluster.
-        const k8sCluster = new gcp.container.Cluster("cluster", {
-            // We can't create a cluster with no node pool defined, but we want to only use
-            // separately managed node pools. So we create the smallest possible default
-            // node pool and immediately delete it.
-            initialNodeCount: 1,
-            removeDefaultNodePool: true,
-
-            minMasterVersion: engineVersion,
-            masterAuth: {username: "example-user", password: password},
-        }, {parent: this});
-
-        console.log(gcp.config.project);
-        console.log(gcp.config.zone);
-
-        const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
-            project:gcp.config.project,
-            cluster: k8sCluster.name,
+        // Create a GKE cluster
+        const engineVersion = gcp.container.getEngineVersions().then(v => v.latestMasterVersion);
+        this.cluster = new gcp.container.Cluster(name, {
             initialNodeCount: 2,
-            location: k8sCluster.location,
+            minMasterVersion: engineVersion,
+            nodeVersion: engineVersion,
             nodeConfig: {
-                preemptible: true,
                 machineType: "n1-standard-4",
                 oauthScopes: [
+                    "https://www.googleapis.com/auth/cloud-platform",
                     "https://www.googleapis.com/auth/compute",
+                    "https://www.googleapis.com/auth/servicecontrol",
+                    "https://www.googleapis.com/auth/service.management.readonly",
                     "https://www.googleapis.com/auth/devstorage.read_only",
                     "https://www.googleapis.com/auth/logging.write",
-                    "https://www.googleapis.com/auth/monitoring",
+                    "https://www.googleapis.com/auth/monitoring"
                 ],
             },
-            version: engineVersion,
-            management: {
-                autoRepair: true,
-            },
-        }, {
-            dependsOn: [k8sCluster],
         });
 
-        this.cluster = k8sCluster;
+        // const my_repo = new gcp.artifactregistry.Repository("my-repo", {
+        //     location: "us-central1",
+        //     repositoryId: "my-repository",
+        //     description: "example docker repository",
+        //     format: "DOCKER",
+        // }, {
+        //     provider: google_beta,
+        // });
 
-        // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
-        // gcloud to be in the picture for cluster authentication (rather than using the client cert/key directly).
-        const k8sConfig = pulumi.all([k8sCluster.name, k8sCluster.endpoint, k8sCluster.masterAuth]).apply(
-            ([name, endpoint, auth]) => {
-            const context = `${gcp.config.project}_${gcp.config.zone}_${name}`;
-            return `apiVersion: v1
-            clusters:
-            - cluster:
-                certificate-authority-data: ${auth.clusterCaCertificate}
-                server: https://${endpoint}
-              name: ${context}
-            contexts:
-            - context:
-                cluster: ${context}
-                user: ${context}
-              name: ${context}
-            current-context: ${context}
-            kind: Config
-            preferences: {}
-            users:
-            - name: ${context}
-              user:
-                auth-provider:
-                  config:
-                    cmd-args: config config-helper --format=json
-                    cmd-path: gcloud
-                    expiry-key: '{.credential.token_expiry}'
-                    token-key: '{.credential.access_token}'
-                  name: gcp
-            `;});
+        // Export the Cluster name
+        const clusterName = this.cluster.name;
 
-        // Export a Kubernetes provider instance that uses our cluster from above.
-        this.provider = new k8s.Provider("gke", {kubeconfig: k8sConfig}, {
-            parent: this,
-            dependsOn: [nodePool],
+        // Manufacture a GKE-style kubeconfig. Note that this is slightly "different"
+        // because of the way GKE requires gcloud to be in the picture for cluster
+        // authentication (rather than using the client cert/key directly).
+        const kubeconfig = pulumi.
+            all([ this.cluster.name, this.cluster.endpoint, this.cluster.masterAuth ]).
+            apply(([ name, endpoint, masterAuth ]) => {
+                const context = `${gcp.config.project}_${gcp.config.zone}_${name}`;
+                return `apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: ${masterAuth.clusterCaCertificate}
+    server: https://${endpoint}
+  name: ${context}
+contexts:
+- context:
+    cluster: ${context}
+    user: ${context}
+  name: ${context}
+current-context: ${context}
+kind: Config
+preferences: {}
+users:
+- name: ${context}
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: gcloud
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
+`;
         });
+
+        // Create a Kubernetes provider instance that uses our cluster from above.
+        this.provider = new k8s.Provider(name, {
+            kubeconfig: kubeconfig,
+        });
+
     }
 }

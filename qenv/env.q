@@ -1,3 +1,4 @@
+.log4q.a[hopen `:env.log;`ERROR`WARN`FATAL]
 // Agents ________________________ engine ____
 // Pipe ______ exchange events __/          \__ state _____ feature buffer ___ Agent 
 //      \_____ other features _____________________________/              \___ Logging
@@ -23,7 +24,7 @@
 // TODO validation
 /  @param config     (JSON) A json string containing the env config 
 /  @return          (List/Vector) The first observation for each agent
-.env.Reset    :{[aIds]
+.env.reset    :{[aIds]
     // Reset the current step
     .Q.gc[];
     step:0;
@@ -85,7 +86,7 @@
 /                     agent id and their respective actions (Long)
 /  @return          (Tuple[Observation;Reward;Dones]) Returns a tuple of 
 /                    agentId, observation, reward, dones for each agent.
-.env.Step    :{[actions]
+.env.step    :{[actions]
     // TODO format actions
     .env.CurrentStep+:1;
     step:.env.CurrentStep;
@@ -136,8 +137,8 @@
 .env.ActionSpace:22;
 
 
-
-
+.engine.Reset:{.Q.trp[.env.reset;x;{show x;ERROR .Q.sbt[y]}]};
+.engine.Step:{.Q.trp[.env.step;x;{show x;ERROR .Q.sbt[y]}]};
 
 
 

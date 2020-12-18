@@ -1,12 +1,12 @@
 config:
+  QenvBeast:gcp:
+    project: beast-298015
+    zone: us-central1-a
+
   QenvBeast:isMinikube: true
 
   QenvBeast:docker:
     config: ~/.docker/config.json
-
-  QenvBeast:gke:
-    project: beast-298015
-    zone: us-central1-a
 
   QenvBeast:gke:
     active: false
@@ -52,9 +52,8 @@ config:
   QenvBeast:impala:
     active: false
     name: "impala"
-    xparl: 
-      port: 8010
-      cpus: 2
+    xparlPort: 8010
+    xparlCpus: 2
     numActors: 2
     logInterval: 30
 
