@@ -99,11 +99,11 @@ export class MIngest extends pulumi.ComponentResource {
         if (batches && batches.length>0){
             for(let i=0;i<batches.length;i++) {
                 let batch = batches[i];
-                let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
-                dirs.push("gs://axiomdata/okex/events/ev");
+                let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString()+","+p.toString());
+                dirs.push("gs://axiomdata/okex/events/ev,ev");
                 let s = i.toString();
                 let sname = (`ingest-${s}`);
-                // console.log(dirs);
+                console.log(dirs);
                 this.servants[sname] = new ingest.Ingest(sname, {
                     provider: args.provider,  
                     isMinikube:args.isMinikube,

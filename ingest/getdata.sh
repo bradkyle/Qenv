@@ -10,6 +10,10 @@ syncfn() {
 # for i in cat ${1} ; do IFS=","; set $i; echo $1 $2; done
 while IFS=, read -r field1 field2
 do
+    if [ $(jobs -r | wc -l) -ge 3 ]; then
+        wait $(jobs -r -p | head -1)
+    fi
+
     syncfn ${2} ${field1} ${field2} &
 done < ${1}
 

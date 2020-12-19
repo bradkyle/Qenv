@@ -5,6 +5,8 @@ import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
 import * as gcs from "@google-cloud/storage";
 
+const fs = require('fs');
+
 // Arguments for the demo app.
 export interface IngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
@@ -65,6 +67,11 @@ export class Ingest extends pulumi.ComponentResource {
         // for (i of)
         const appLabels = {app: "ingest"};
         this.datapaths = (args.datapaths || []);
+        
+        fs.writeFile('./ingest/data.txt', this.datapaths.join("\n"), (err:any) => {
+            // throws an error, you could also catch it here
+            if (err) throw err;
+        });
 
         // const gcloudKey = new k8s.core.v1.ConfigMap(`${name}-gcloud-key`, {
         //     metadata: { labels: appLabels },
