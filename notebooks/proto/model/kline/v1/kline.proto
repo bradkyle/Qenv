@@ -1,0 +1,19 @@
+syntax = "proto3";
+package model.kline.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Kline {
+  string symbol = 1;
+  google.protobuf.Timestamp open_time = 2;
+  google.protobuf.Timestamp close_time = 3;
+  double open = 4;
+  double high = 5;
+  double low = 6;
+  double close = 7;
+  double volume = 8;
+  double vwap = 9;
+  double turnover = 10;
+  int32 count = 11; 
+}
+

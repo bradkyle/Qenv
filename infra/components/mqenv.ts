@@ -36,7 +36,7 @@ export class MQenv extends pulumi.ComponentResource {
                 dockerfile: "./qenv/Dockerfile",
                 context: "./qenv/",
             },
-            skipPush:(args.skipPush || true),
+            skipPush:false
         });
 
         console.log(this.qenvImage.imageName);

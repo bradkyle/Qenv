@@ -1,0 +1,14 @@
+syntax = "proto3";
+package services.adapter.v1;
+
+message AdaptRequest  {
+        
+}
+
+message AdaptResponse {
+    
+}
+
+service ExecutionsService {
+  rpc GetExecutions(AdaptRequest) returns (AdaptResponse) {}
+}

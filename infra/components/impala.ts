@@ -19,6 +19,8 @@ export class Impala extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("beast:impala:train", name, args, opts);
 
+        console.log("-------------------skipPush----------------");
+        console.log(args.skipPush);
         const ts = Date.now();
         this.image = new docker.Image(`${name}-impala-image`, {
             imageName: "throad/impala",
@@ -26,7 +28,7 @@ export class Impala extends pulumi.ComponentResource {
                 dockerfile: "./impala/Dockerfile",
                 context: "./impala/",
             },
-            skipPush:(args.skipPush || true),
+            skipPush:false
         });
     
         const envs = {};
@@ -109,7 +111,8 @@ export class Impala extends pulumi.ComponentResource {
         // TODO convert this to job?
         // xparl start --port 8010 --cpu_num ${NUM_WORKERS}
 
-
+        // command: [ "/bin/bash", "-c", "--" ]
+        // args: [ "while true; do sleep 30; done;" ]
         // Create the kuard Deployment.
         const appLabels = {app: "impala"};
         const deployment = new k8s.apps.v1.StatefulSet(`${name}-impala`, {
@@ -129,8 +132,10 @@ export class Impala extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "impala",
-                                image: this.image.imageName, 
+                                image: "thorad/impala", 
                                 imagePullPolicy: "Always",
+                                command:[ "/bin/bash", "-c", "--"],
+                                args:[ "while true; do sleep 30; done;" ],
                                 env: [
                                     { 
                                         name: "NUM_WORKERS", 
@@ -160,29 +165,26 @@ export class Impala extends pulumi.ComponentResource {
                                         // subPath: "config.py"
                                     }
                                 ],
-                                // lifecycle:{
-                                //     postStart :{
-                                //         exec : {
-                                //             command: [
-                                //                 "gcsfuse", 
-                                //                 "--implicit-dirs", 
-                                //                 "-o", 
-                                //                 "nonempty", 
-                                //                 this.bucket.name, 
-                                //                 args.stateMountPath
-                                //             ]
-                                //         }
-                                //     },
-                                //     preStop:{
-                                //         exec : {
-                                //             command: [
-                                //                 "fusermount", 
-                                //                 "-u", 
-                                //                 args.stateMountPath
-                                //             ]
-                                //         }
-                                //     }
-                                // }
+                                lifecycle:{
+                                    postStart :{
+                                        exec : {
+                                            command: [
+                                                "xparl", 
+                                                "start", 
+                                                "--port","8010", 
+                                                "--cpu_num","2" 
+                                            ]
+                                        }
+                                    },
+                                    preStop:{
+                                        exec : {
+                                            command: [
+                                                "xparl", 
+                                                "stop" 
+                                            ]
+                                        }
+                                    }
+                                }
 
                             },
                         ],

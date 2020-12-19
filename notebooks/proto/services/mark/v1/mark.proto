@@ -1,0 +1,9 @@
+syntax = "proto3";
+package services.mark.v1;
+
+message GetMarkRequest {}
+message GetMarkResponse {}
+
+service MarkService {
+  rpc GetMark(GetMarkRequest) returns (GetMarkResponse) {}
+}

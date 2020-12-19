@@ -1,0 +1,19 @@
+syntax = "proto3";
+package model.index.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Index {
+  string symbol = 1;
+  double mark_price = 2;
+  double index_price = 3;
+  double last_funding_rate = 4;
+  double interest_rate = 5;
+  google.protobuf.Timestamp timestamp = 7;
+}
+
+message Component {
+  string symbol = 1;
+  double price = 2;
+  google.protobuf.Timestamp timestamp = 7;
+}

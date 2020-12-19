@@ -9,9 +9,9 @@
 // dqty: display qty 
 .engine.model.order.Order:([oId:`long$()] 
         aId:`.engine.model.account.Account$();iId:`.engine.model.instrument.Instrument$();
-        ivId:`.engine.model.inventory.Inventory$();price:`long$();lprice:`long$();side:`long$();
+        ivId:`.engine.model.inventory.Inventory$();price:`long$();slprice:`long$();side:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
-				state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();offset:`long$();
+        state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();slqty:`long$();offset:`long$();
 				einst:`long$();time:`datetime$());
 .engine.model.order.r:.util.NullRowDict[`.engine.model.order.Order];
 

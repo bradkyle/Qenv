@@ -1,0 +1,28 @@
+syntax = "proto3";
+package model.order.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Order {
+  string symbol = 1;
+  string order_id = 2;
+  string client_order_id = 3;
+  string account_id = 4;
+  int32  side = 5;
+  double price = 6;
+  double qty = 7;
+  double display_qty = 8;
+  double stop_price = 9;
+  double order_kind = 10;
+  double order_status = 11;
+  double display_kind = 12;
+  double outstanding = 13;
+  double last_funding_rate = 14;
+  double interest_rate = 15;
+  double exec_inst = 16;
+  double average_price = 17;
+  double time_in_force = 18;
+  google.protobuf.Timestamp exec_time = 19;
+  google.protobuf.Timestamp timestamp = 20;
+}
+

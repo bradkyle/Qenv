@@ -1,0 +1,11 @@
+syntax = "proto3";
+package model.stats.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Stats {
+  string name = 1;
+  bytes data = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package services.kline.v1;
+
+message GetKlineRequest {}
+message GetKlineResponse {}
+
+service KlineService {
+  rpc GetKline(GetKlineRequest) returns (GetKlineResponse) {}
+}

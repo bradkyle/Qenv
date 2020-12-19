@@ -1,0 +1,19 @@
+syntax = "proto3";
+package model.execution.v1;
+import "google/protobuf/timestamp.proto";
+
+message Execution {
+    bool buyer = 1;   
+    bool maker = 2;
+    double commission = 3;
+    string commission_asset = 4;
+    int64 id = 5;
+    int64 order_id = 6;
+    double price = 7;
+    double qty = 8;
+    double quote_qty = 9;
+    double realized_pnl = 10;
+    int32 side=11;
+    int32 position_side = 12;
+    google.protobuf.Timestamp timestamp = 20;
+}

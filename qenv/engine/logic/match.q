@@ -14,37 +14,33 @@
 .engine.logic.match.Match:{
 
     // TODO add limit to match
-    l:.engine.model.orderbook.Get[(
+    l:0!?[`.engine.model.orderbook.Orderbook;(
         (in;`side;x`side);
         (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
         (|;(<;(+\;`qty);sum[x`oqty]);
-        (=;`i;(*:;`i))))]; //TODO impl max depth
+        (=;`i;(*:;`i))));0b;()];
 
     $[count[l]>0;[
         // Join the opposing side of the orderbook with the current agent orders
         // at that level, creating the trade effected s
-        s:l;
-        aqty:sum[s[`iqty`hqty`vqty]];
+        aqty:sum[l[`qty`iqty`hqty`vqty]];
         thresh:sums[aqty];
-        rp:(thresh-prev[thresh])-(thresh-tot);
-        s[`thresh]:thresh; 
-
-        // Derive the amount that will be replaced per level
-        s[`rp]:min[(tot;first[aqty])]^rp; // TODO check that rp is correct
+        rp:min[(sum x`oqty;first[aqty])]^((thresh-prev[thresh])-(thresh-sum x`oqty));
 
         // Get the current active orders at the prices 
-        o:.engine.model.order.Get[(
+        o:?[`.engine.model.order.Order;(
             (=;`okind;1);
-            (in;`price;s[`price] where (s[`rp]>0));
-            (in;`state;(0 1));(>;`oqty;0))];
+            (in;`price;l[`price] where (rp>0));
+            (in;`state;(0 1));(>;`oqty;0));0b;()];
 
         $[count[o]>0;[
-            s:0!{$[x>0;desc[y];asc[y]]}[nside;ij[1!s;`price xgroup (update oprice:price, oside:side from o)]]; 
+            s:0!((`price`side xkey l) ij (`price`side xgroup o));
+            s[`rp]:rp;
             msk:raze[.util.PadM[{x#1}'[count'[s`oId]]]];
 
             // Pad s into a matrix
             // for faster operations
-            pdcl:`oId`side`price`offset`oqty`lqty`reduce`acc`state;
+            pdcl:`oId`side`price`offset`oqty`lqty`reduce`aId`state;
             (s pdcl):.util.PadM'[s pdcl];
 
             // Useful counts 
@@ -109,7 +105,6 @@
             tqty:{s:sums[y];q:.util.Clip[?[(x-s)>=0;y;x-(s-y)]];q where[q>0]}'[s`rp;splt]; 
             numtds:count[raze[tqty]];
             numtdslvl:count'[tqty];
-            s[`mside]:nside; // TODO changes
             // TODO move into own function.
             / s[`side]:`side; // TODO changes
      
@@ -119,7 +114,8 @@
             // TODO better derivation
             // TODO emit trade events
 
-            .engine.Emit .event.Trade[];
+            
+            / .engine.Emit .event.Trade[];
             / .engine.Emit[`trade;last t]'[flip( // TODO derive the prices at each level before
             /         numtds#sx; // more accurate derivation
             /         raze[{x#y}'[numtds;s`price]]; // more accurate derivation
@@ -132,9 +128,10 @@
             // as a result of the trade and amends them 
             // accordingly
             // TODO full order cols
-            o:raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
-            .engine.model.order.Update[flip `oId`price`offset`lqty`dqty`state!o];
-            .engine.Emit .event.Order[];
+            o:flip `oId`price`offset`lqty`dqty`state!raze'[(s`oId;s`oprice;noffset;nlqty;ndqty;nstatus)][;where[msk]];
+            .engine.model.order.Update[o];
+            show o;
+            .engine.Emit .event.Order[o];
             / .engine.Emit[`order;last t]'[flip o];
             
      

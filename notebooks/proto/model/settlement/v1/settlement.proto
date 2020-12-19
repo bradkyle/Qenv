@@ -1,0 +1,14 @@
+syntax = "proto3";
+package model.settlement.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Settlement {
+  string symbol = 1; 
+  string settlement_type = 2; 
+  int32 side = 3;
+  double size = 4;
+  double settlement_price = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+

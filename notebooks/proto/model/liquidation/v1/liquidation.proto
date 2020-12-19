@@ -1,0 +1,13 @@
+syntax = "proto3";
+package model.liquidation.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Liquidation {
+  string symbol = 1; 
+  int32  side = 2;
+  double price = 3;
+  double leaves = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+

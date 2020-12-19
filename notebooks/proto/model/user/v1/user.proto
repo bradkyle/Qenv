@@ -1,0 +1,14 @@
+syntax = "proto3";
+package model.user.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+  string firstname =1;   
+  string lastname =2;
+  string username =3;
+  string email=4;
+  string phone=5;
+  google.protobuf.Timestamp created = 6;
+  google.protobuf.Timestamp updated = 7;
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+package common.query.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message BucketedQuery {
+  google.protobuf.Timestamp instrument_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  string granularity = 4; 
+  int32 limit = 5;
+}
+
+message TemporalQuery {
+  google.protobuf.Timestamp instrument_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+  int32 limit = 5;
+} 
+
+

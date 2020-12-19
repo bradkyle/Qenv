@@ -1,0 +1,13 @@
+syntax = "proto3";
+package model.orderbook.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Orderbook {
+  string symbol = 1; 
+  int32 side = 2;
+  double size = 3;
+  double price = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+

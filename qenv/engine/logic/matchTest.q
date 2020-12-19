@@ -50,13 +50,13 @@
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+            (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z)));
-                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;flip(1000 1001;2#1;2#100;2#100;2#0;2#0;2#z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty`okind`state`offset;flip(1 2;0 0;0 0;((0 1);(0 1));1 1;200 200;1000 1000;11b;1 1;1 1;0 0;0 210)));
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account));
             ));
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
@@ -72,13 +72,13 @@
         (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
           "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+            (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;enlist(1000;1;100;100;0;0;z)));
-                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;flip(1000 1001;2#1;2#100;2#100;2#0;2#0;2#z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty`okind`state`offset;flip(1 2;0 0;0 0;((0 1);(0 1));1 1;200 200;1000 1000;11b;1 1;1 1;0 0;0 210)));
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account));
             ));
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 

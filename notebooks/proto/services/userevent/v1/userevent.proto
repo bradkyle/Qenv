@@ -1,0 +1,9 @@
+syntax = "proto3";
+package services.userevent.v1;
+
+message GetUserEventRequest {}
+message GetUserEventResponse {}
+
+service UserEventService {
+  rpc GetUserEvent(GetUserEventRequest) returns (GetUserEventResponse) {}
+}

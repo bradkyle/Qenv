@@ -26,5 +26,3 @@ RUN mkdir -p /impala
 RUN mkdir -p /impala/config
 WORKDIR /impala
 ADD . /impala 
-RUN chmod +x /impala/entrypoint.sh
-

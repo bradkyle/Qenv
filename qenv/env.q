@@ -137,8 +137,8 @@
 .env.ActionSpace:22;
 
 
-.engine.Reset:{.Q.trp[.env.reset;x;{show x;ERROR .Q.sbt[y]}]};
-.engine.Step:{.Q.trp[.env.step;x;{show x;ERROR .Q.sbt[y]}]};
+.env.Reset:{.Q.trp[.env.reset;x;{show x;ERROR .Q.sbt[y]}]};
+.env.Step:{.Q.trp[.env.step;x;{show x;ERROR .Q.sbt[y]}]};
 
 
 
