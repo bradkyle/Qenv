@@ -1,6 +1,0 @@
-syntax = "proto3";
-package model.userpreferences.v1;
-
-message UserPreferences {
-  // TODO front end specific details 
-}

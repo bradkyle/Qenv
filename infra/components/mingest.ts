@@ -11,14 +11,12 @@ const execSync = require('child_process').execSync;
 // Arguments for the demo app.
 export interface MIngestArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag: string; // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
     isMinikube?: boolean;
     replicas?: number;
     gcpBucket?:gcp.storage.Bucket;
     dataMountPath:string;
     pullPolicy?:string
-    ports?: number[];
     allocateIpAddress?: boolean;
     skipPush?: boolean;
 }
@@ -70,7 +68,7 @@ export class MIngest extends pulumi.ComponentResource {
         const ts=Date.now();
 
         this.gateImage = new docker.Image(`${name}-gate-image`, {
-            imageName: "gcr.io/beast-298015/gate",
+            imageName: "thorad/gate",
             build: {
                 dockerfile: "./ingest/gate.Dockerfile",
                 context: "./ingest/",
@@ -79,7 +77,7 @@ export class MIngest extends pulumi.ComponentResource {
         });
 
         this.ingestImage = new docker.Image(`${name}-ingest-image`, {
-            imageName: "gcr.io/beast-298015/ingest:latest",
+            imageName: "thorad/ingest",
             build: {
                 dockerfile: "./ingest/ingest.Dockerfile",
                 context: "./ingest/",
@@ -102,11 +100,13 @@ export class MIngest extends pulumi.ComponentResource {
             for(let i=0;i<batches.length;i++) {
                 let batch = batches[i];
                 let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString());
+                dirs.push("gs://axiomdata/okex/events/ev");
                 let s = i.toString();
                 let sname = (`ingest-${s}`);
                 // console.log(dirs);
                 this.servants[sname] = new ingest.Ingest(sname, {
                     provider: args.provider,  
+                    isMinikube:args.isMinikube,
                     image: this.ingestImage,
                     gcpBucket: this.bucket,
                     dataMountPath:this.mountDataPath,
@@ -142,7 +142,7 @@ export class MIngest extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "gate",
-                                image: "gcr.io/beast-298015/gate:latest",
+                                image:this.gateImage.imageName, 
                                 imagePullPolicy:(args.pullPolicy || "Always"), 
                                 env: [
                                     { 

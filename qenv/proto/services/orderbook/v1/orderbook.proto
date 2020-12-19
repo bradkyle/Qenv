@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.orderbook.v1;
-
-message GetOrderbookRequest {}
-message GetOrderbookResponse {}
-
-service OrderbookService {
-  rpc GetOrderbook(GetOrderbookRequest) returns (GetOrderbookResponse) {}
-}

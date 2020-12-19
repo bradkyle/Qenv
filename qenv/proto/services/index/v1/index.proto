@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.index.v1;
-
-message GetIndexRequest {}
-message GetIndexResponse {}
-
-service IndexService {
-  rpc GetIndex(GetIndexRequest) returns (GetIndexResponse) {}
-}

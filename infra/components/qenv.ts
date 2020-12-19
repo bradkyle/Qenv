@@ -6,7 +6,7 @@ import * as k8stypes from "@pulumi/kubernetes/types/input";
 // Arguments for the demo app.
 export interface QenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    ingestService: pulumi.Output<string>;
+    ingestService: string;
     image?:docker.Image;
     numEnvs?: number; 
     port?: number; 
@@ -66,7 +66,7 @@ export class Qenv extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "qenv",
-                                image: "gcr.io/beast-298015/qenv:latest",
+                                image: "thorad/qenv", 
                                 ports: [{containerPort: this.port, name: "kdb"}],
                                 env: [
                                     { 

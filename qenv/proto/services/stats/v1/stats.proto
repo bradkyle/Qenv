@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.stats.v1;
-
-message GetStatsRequest {}
-message GetStatsResponse {}
-
-service StatsService {
-  rpc GetStats(GetStatsRequest) returns (GetStatsResponse) {}
-}

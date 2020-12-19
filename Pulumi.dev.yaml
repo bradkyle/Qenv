@@ -23,7 +23,7 @@ config:
     bucketPath: "/okex/events"
     bucketProvider: "gs"
     pullData: false
-    dataPath: "/ingest/testdata/events"
+    dataPath: "/ingest/testdata"
     replicas: 1
     batchSize: 48
     maxBatches: 2

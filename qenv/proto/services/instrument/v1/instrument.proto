@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.instrument.v1;
-
-message GetInstrumentRequest {}
-message GetInstrumentResponse {}
-
-service InstrumentService {
-  rpc GetInstrument(GetInstrumentRequest) returns (GetInstrumentResponse) {}
-}

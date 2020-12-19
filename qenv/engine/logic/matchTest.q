@@ -23,7 +23,7 @@
 // TODO test with different accounts
 / .qt.SkpBesTest[36];
 .qt.Unit[
-    ".engine.logic.trade.Take";
+    ".engine.logic.match.Match";
     {[c]
         p:c[`params];
         a:p`args;
@@ -58,7 +58,7 @@
                 (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`fid`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId;enlist(0;z;1000;10;0b;0b;1;0;0;(0 1);0));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
                 (1b;1;();());
@@ -80,7 +80,7 @@
                 (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`fid`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId;enlist(0;z;1000;10;0b;0b;1;0;0;(0 -1);0));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
                 (1b;1;();());

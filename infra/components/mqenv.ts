@@ -8,7 +8,7 @@ import * as qenv from "./qenv"
 // Arguments for the demo app.
 export interface MQenvArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    ingestService: pulumi.Output<string>;
+    ingestService: string;
     numEnvs?: number; 
     port?: number; 
     allocateIpAddress?: boolean;
@@ -31,7 +31,7 @@ export class MQenv extends pulumi.ComponentResource {
 
         this.port = args.port || 5000;
         this.qenvImage = new docker.Image(`${name}-qenv-image`, {
-            imageName: "gcr.io/beast-298015/qenv:latest",
+            imageName: "thorad/qenv",
             build: {
                 dockerfile: "./qenv/Dockerfile",
                 context: "./qenv/",

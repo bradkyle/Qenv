@@ -1,34 +1,15 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as dev from "./infra/stacks/development";
-import * as prd from "./infra/stacks/production";
-import * as stg from "./infra/stacks/staging";
-import * as tst from "./infra/stacks/testing";
 import * as local from "./infra/components/lclcluster"
 import * as gke from "./infra/components/gkecluster"
 import * as mingest from "./infra/components/mingest"
 import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
+import * as mqenv from "./infra/components/mqenv";
+import * as impala from "./infra/components/impala";
 
 let config = new pulumi.Config();
-const isMinikube = config.require("isMinikube");
-
-const registry = new gcp.container.Registry("beast");
-const registryUrl = registry.id.apply(_ =>
-    gcp.container.getRegistryRepository().then(reg => reg.repositoryUrl));
-
-const imageName = registryUrl.apply(url => `${url}/myapp`);
-const registryInfo = undefined; // use gcloud for authentication.
-
-const image = new docker.Image('push-ingest-image', {
-	imageName: "thorad/ingest:bambam",
-	build: {
-			dockerfile: "./ingest/ingest.Dockerfile",
-			context: "./ingest/",
-	},
-	registry: registryInfo,
-	skipPush:false
-});
+const isMinikube = (config.require("isMinikube") == "true");
 
 // const env = pulumi.getStack();
 // const infra = new pulumi.StackReference(`acmecorp/infra/${env}`);
@@ -83,15 +64,14 @@ let ingest_config = config.requireObject<IngestConfig>("ingest");
 let gate = config.requireObject<GateConfig>("gate");
 console.log(ingest_config);
 console.log(gate);
+var ingest: mingest.MIngest;
 if (ingest_config.active) {
-			const ingest = new mingest.MIngest("ingest",{
-					dataMountPath: "/ingest/data",
+			ingest = new mingest.MIngest("ingest",{
+					dataMountPath:ingest_config.dataPath, 
 					provider: provider,    
-					imageTag:"latest",
-					ports:[5000],
-					isMinikube:false,
-					skipPush:false,
-					replicas:1
+					isMinikube:isMinikube,
+					skipPush:ingest_config.skipPush,
+					replicas:ingest_config.replicas
 			});
 }
 
@@ -106,8 +86,18 @@ interface QenvConfig {
 	skipPush:boolean;
 }
 
-let qenv = config.requireObject<QenvConfig>("ingest");
-console.log(qenv);
+let qenv_config = config.requireObject<QenvConfig>("ingest");
+console.log(qenv_config);
+if (qenv_config.active){
+	const qenv = new mqenv.MQenv("qenv",{
+		provider:provider,
+		ingestService:"gate",
+		numEnvs:2,
+		isMinikube:isMinikube,
+		replicas:1,
+		skipPush:false,
+	})
+}
 
 interface ImpalaConfig {
 	active:boolean;
@@ -118,5 +108,23 @@ interface ImpalaConfig {
 	logInterval:number;
 }
 
-let impala = config.requireObject<ImpalaConfig>("impala");
-console.log(impala);
+let impala_config = config.requireObject<ImpalaConfig>("impala");
+console.log(impala_config);
+if (impala_config.active){
+	const i = new impala.Impala("impala",{
+		provider:provider,
+		skipPush:false,
+	})
+}
+
+
+
+
+
+
+
+
+
+
+
+

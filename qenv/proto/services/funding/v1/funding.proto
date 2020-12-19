@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.funding.v1;
-
-message GetFundingRequest {}
-message GetFundingResponse {}
-
-service FundingService{
-  rpc GetFunding(GetFundingRequest) returns (GetFundingResponse) {}
-}

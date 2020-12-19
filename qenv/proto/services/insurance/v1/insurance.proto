@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.insurance.v1;
-
-message GetInsuranceRequest {}
-message GetInsuranceResponse {}
-
-service InsuranceService {
-  rpc GetInsurance(GetInsuranceRequest) returns (GetInsuranceResponse) {}
-}

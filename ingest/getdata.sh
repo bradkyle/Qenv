@@ -1,1 +1,1 @@
-cat ${1} | gsutil -m cp -R -I ${2}
+cat ${1} | gsutil -m rsync -R -I ${2}

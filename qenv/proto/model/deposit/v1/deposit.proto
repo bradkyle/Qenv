@@ -1,6 +1,0 @@
-syntax = "proto3";
-package model.deposit.v1;
-
-message DepositAddress {
-  string deposit_address = 1;
-}

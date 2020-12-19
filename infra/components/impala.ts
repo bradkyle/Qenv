@@ -7,12 +7,11 @@ import * as gcp from "@pulumi/gcp";
 // Arguments for the demo app.
 export interface ImpalaArgs {
     provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
-    imageTag: string; // Tag for the kuard image to deploy.
     skipPush?: boolean;
 }
 
 export class Impala extends pulumi.ComponentResource {
-    // public readonly image: docker.Image; 
+    public readonly image: docker.Image; 
     // public readonly nodepool: gcp.container.Nodepool;
 
     constructor(name: string,
@@ -21,14 +20,14 @@ export class Impala extends pulumi.ComponentResource {
         super("beast:impala:train", name, args, opts);
 
         const ts = Date.now();
-        // this.image = new docker.Image(`${name}-impala-image`, {
-        //     imageName: "gcr.io/beast-298015/impala:"+ts.toString(),
-        //     build: {
-        //         dockerfile: "./impala/Dockerfile",
-        //         context: "./impala/",
-        //     },
-        //     skipPush:(args.skipPush || true),
-        // });
+        this.image = new docker.Image(`${name}-impala-image`, {
+            imageName: "throad/impala",
+            build: {
+                dockerfile: "./impala/Dockerfile",
+                context: "./impala/",
+            },
+            skipPush:(args.skipPush || true),
+        });
     
         const envs = {};
 
@@ -51,6 +50,8 @@ export class Impala extends pulumi.ComponentResource {
         //         labels: {"instanceType": "n1-standard-1"},
         //     }
         // });
+
+        const env_config = [];
 
         // Create a ConfigMap to hold the MariaDB configuration.
         const impalaCM = new k8s.core.v1.ConfigMap("impala", {
@@ -128,7 +129,7 @@ export class Impala extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "impala",
-                                image: "gcr.io/beast-298015/impala:latest",
+                                image: this.image.imageName, 
                                 imagePullPolicy: "Always",
                                 env: [
                                     { 

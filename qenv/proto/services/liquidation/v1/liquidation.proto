@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.liquidation.v1;
-
-message GetLiquidationsRequest {}
-message GetLiquidationsResponse {}
-
-service AccountService {
-  rpc GetLiquidations(GetLiquidationsRequest) returns (GetLiquidationsResponse) {}
-}

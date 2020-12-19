@@ -1,9 +1,0 @@
-syntax = "proto3";
-package model.inventory.v1;
-
-message Inventory {
-  int64 account = 1; 
-  string symbol = 2;
-  string currency = 3;
-  double leverage = 4;
-}

@@ -79,8 +79,7 @@ export class Ingest extends pulumi.ComponentResource {
         }, {provider: args.provider, parent: this});
         const ingestConfigName = ingestConfig.metadata.apply(m => m.name);
 
-
-        const datapath = (args.dataMountPath || "/ingest/data");
+        const datapath = (args.dataMountPath || "/ingest/testdata/events");
         this.deployment = new k8s.apps.v1.StatefulSet(`${name}-ingest`, {
             spec: {
                 selector: {
@@ -111,7 +110,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: "/ingest/testdata/events" 
+                                        value: "/ingest/data/events" 
                                     }
                                 ],
                                 volumeMounts: [
@@ -119,16 +118,20 @@ export class Ingest extends pulumi.ComponentResource {
                                         name: "data-list",
                                         mountPath: "/ingest/config/datalist"
                                     },
-                                    {
+                                    (!args.isMinikube ? {
                                         name:"data",
                                         mountPath:datapath
-                                    }
+                                    }:{name:"data",mountPath:"/data"}),
                                 ],
                                 ports: [
                                       {containerPort: 5000, name: "kdb"}
                                 ],
                                 lifecycle:{
-                                    postStart :{
+                                    postStart :(args.isMinikube ? {
+                                        exec :{
+                                            command :["ls"]
+                                        }
+                                    }:{
                                         exec : {
                                             command: [
                                                 "/bin/sh",
@@ -137,7 +140,7 @@ export class Ingest extends pulumi.ComponentResource {
                                                 datapath
                                             ]
                                         }
-                                    },
+                                    }),
                                     // preStop:{
                                     //     exec : {
                                     //         command: [
@@ -166,7 +169,7 @@ export class Ingest extends pulumi.ComponentResource {
                     },
                 },
                 volumeClaimTemplates: [
-                    {
+                    { 
                         metadata: {
                             name: "data",
                             labels: {

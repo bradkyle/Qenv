@@ -1,9 +1,0 @@
-syntax = "proto3";
-package services.execution.v1;
-
-message GetExecutionsRequest {}
-message GetExecutionsResponse {}
-
-service ExecutionsService {
-  rpc GetExecutions(GetExecutionsRequest) returns (GetExecutionsResponse) {}
-}
