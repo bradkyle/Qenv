@@ -95,7 +95,7 @@
     // Get the next set of 
     // environment events from 
     // the ingest cluster
-    ingest:.ingest.Advance[];
+    ingest:.ingest.Advance[.engine.watermark];
 
     isDone:ingest[0];
     xevents:ingest[1];

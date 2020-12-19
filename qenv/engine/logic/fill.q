@@ -4,7 +4,7 @@
 // Fill account
 // TODO add posval
 // TODO     		/if[abs[iv[`amt]]=0;iv[`avgPrice`execCost`totalEntry]:0];
-.engine.logic.inventory.Fill:{ // TODO simple select
+.engine.logic.fill.Fill:{ // TODO simple select
 				iv:?[![x;();0b;`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt!(
 						((';`.engine.logic.contract.AvgPrice);`iId.cntTyp;`side;`ivId.execCost;`ivId.totEnt;`iId.smul); // TODO dependent on execCost
 						((';`.engine.logic.contract.ExecCost);`iId.cntTyp;`price;`qty;`iId.smul);

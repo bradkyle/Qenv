@@ -16,7 +16,7 @@
 // TODO test tier change
 / .qt.SkpBesTest[37];
 .qt.Unit[
-    ".engine.logic.inventory.Fill";
+    ".engine.logic.fill.Fill";
     {[c]
         p:c[`params];
         m:p[`mocks];
@@ -27,7 +27,7 @@
 
         / show .engine.model.inventory.Inventory;
         a:.model.Fill . p`args;
-        res:.engine.logic.inventory.Fill[a];
+        res:.engine.logic.fill.Fill[a];
 
         .qt.CheckMock[mck0;m[0];c]; // Inventory Update
         .qt.CheckMock[mck1;m[1];c]; // Emit 

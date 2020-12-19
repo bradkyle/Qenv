@@ -34,9 +34,6 @@ persist:{[outpath;sympath;table;x]
 // long term permenant storage
 events:();
 upd:{[msg]
-  msg[`data]:"c"$msg[`data];
-  msg[`rcvtime]:.z.p;
-
 
   };
 

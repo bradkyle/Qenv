@@ -38,5 +38,5 @@ request :{
 	};
 
 reset: {
-	request[first[(select min start from slave)`start]]
+	request[first[(select min[start] from slave)`start]]
 	}

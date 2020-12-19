@@ -34,7 +34,7 @@
         mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
         / mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
         mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
-        mck5: .qt.M[`.engine.logic.inventory.Fill;{[a;b;c;d]};c];
+        mck5: .qt.M[`.engine.logic.fill.Fill;{[a;b;c;d]};c];
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
         a:.model.Order . p`args; 

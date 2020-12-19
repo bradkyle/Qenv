@@ -28,7 +28,7 @@ export class Impala extends pulumi.ComponentResource {
                 dockerfile: "./impala/Dockerfile",
                 context: "./impala/",
             },
-            skipPush:false
+            skipPush:true
         });
     
         const envs = {};

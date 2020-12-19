@@ -113,7 +113,6 @@
 
             // TODO better derivation
             // TODO emit trade events
-
             
             / .engine.Emit .event.Trade[];
             / .engine.Emit[`trade;last t]'[flip( // TODO derive the prices at each level before
