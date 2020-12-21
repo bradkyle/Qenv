@@ -4,7 +4,10 @@
     
     };
 
-.engine.logic.match:{[state;offset;rp;lqty]rp:first rp;?[((offset<=rp)and((lqty+offset)<=rp));1;?[(sums[offset]<=rp);2;state]]};
+.engine.logic.newstate:{[state;offset;rp;lqty]
+    rp:first rp;
+    ?[((offset<=rp)and((lqty+offset)<=rp));1;?[(sums[offset]<=rp);2;state]]
+    };
 
 .engine.logic.match.NewMatch: {
 
@@ -32,9 +35,9 @@
             s:0!((`price`side`iId xkey l) lj (`price`side`iId xgroup o));
 
             // Update Orders
-            // Derive the new orders from the ungrouped 
-            // state.
-            no:![?[so;();0b;`iId`oId`time`aId`side`okind`price`dqty`state`reduce`lqty`offset`shft!(
+            // Derive the new orders from the ungrouped state.
+            no:![?[so;();0b;
+                `iId`oId`time`aId`side`okind`price`dqty`state`reduce`lqty`offset`shft!(
                 `iId;`oId;`time;`aId;`side;`okind;`price;`dqty;`state;`reduce;
                 (max;(enlist;(?;(>;`rp;`lqty);(-;(+;`lqty;`offset);`rp);`lqty);0)); // lqty
                 (.util.Clip;(-;`offset;`rp)); // offset
@@ -42,12 +45,13 @@
             )];();0b;`dqty`shft`state!(
                 (.util.Clip;(?;(&;(<;`dqty;`lqty);(>;`lqty;0));`dqty;`lqty));
                 (+;`lqty;`offset);
-                (newstate;`state;`offset;`rp;`lqty) // TODO update state
+                (.engine.logic.match;`state;`offset;`rp;`lqty) // TODO update state
             )];
             .engine.model.order.Update[no];
             .engine.Emit .event.Order[no];
 
             // Update Orderbook
+            nl:?[];
 
             // Execute Actor Fills
 
