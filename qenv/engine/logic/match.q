@@ -55,17 +55,16 @@
     };
 
 .engine.logic.match.NewMatch: {
-
-    // Get all the levels that would encounter a  
-    // fill, limit the price level selection to 
-    // TODO add limit to match
-    l:0!?[`.engine.model.orderbook.Orderbook;(
-        (in;`side;x`side);
-        (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
-        (|;(<;(+\;`qty);sum[x`oqty]);
-        (=;`i;(*:;`i))));0b;()];
-      
-    $[count[l]>0;[
+        // Get all the levels that would encounter a  
+        // fill, limit the price level selection to 
+        // TODO add limit to match
+        l:0!?[`.engine.model.orderbook.Orderbook;(
+            (in;`side;x`side);
+            (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
+            (|;(<;(+\;`qty);sum[x`oqty]);
+            (=;`i;(*:;`i))));0b;()];
+          
+        if[count[l]>0;[
             aqty:sum[l[`qty`iqty`hqty`vqty]];
             thresh:sums[aqty];
             rp:min[(sum x`oqty;first[aqty])]^((thresh-prev[thresh])-(thresh-sum x`oqty));
@@ -105,9 +104,7 @@
             // Create New Trades
 
 
-        ];[
-
-        ]];
+            ]];
       
     };
 
