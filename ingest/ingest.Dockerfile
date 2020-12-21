@@ -26,5 +26,6 @@ RUN mkdir -p /ingest/config
 WORKDIR /ingest
 ADD ingest.q .
 ADD ./testdata/ ./testdata/
-ADD getdata.sh .
+ADD start.sh .
+RUN chmod +x start.sh 
 CMD q ingest.q

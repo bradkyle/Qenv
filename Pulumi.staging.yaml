@@ -28,12 +28,14 @@ config:
     skipPush: false
   QenvBeast:ingest:
     active: true
+    start: 441735
+    end: 999999
     batchSize: 48
+    maxBatches: 4
     bucketPath: /okex/events
     bucketProvider: gs
     dataBucket: gs://axiomdata
     dataPath: /ingest/data
-    maxBatches: 2
     name: ingest
     numWorkers: 2
     port: 5000

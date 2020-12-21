@@ -44,6 +44,8 @@ interface IngestConfig {
 	pullData:false;
 	dataPath: string;
 	replicas: number;
+	start:number;
+	end:number;
 	batchSize: number;
 	maxBatches: number;
 	skipBuild: boolean;
@@ -71,7 +73,11 @@ if (ingest_config.active) {
 					provider: provider,    
 					isMinikube:isMinikube,
 					skipPush:ingest_config.skipPush,
-					replicas:ingest_config.replicas
+					replicas:ingest_config.replicas,
+					start:ingest_config.start,
+					end:ingest_config.end,
+					batchSize:ingest_config.batchSize,
+					maxBatches:ingest_config.maxBatches
 			});
 }
 

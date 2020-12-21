@@ -21,3 +21,5 @@ done < ${1}
 
 wait
 echo "All files are downloaded."
+
+q ingest.q

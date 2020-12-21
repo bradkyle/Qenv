@@ -19,6 +19,10 @@ export interface MIngestArgs {
     pullPolicy?:string
     allocateIpAddress?: boolean;
     skipPush?: boolean;
+    start:number;
+    end:number;
+    batchSize:number;
+    maxBatches:number;
 }
 
 export interface ServantSpec {
@@ -33,6 +37,8 @@ function getBatches(
     bucketPath:string, 
     batchSize:number,
     maxBatches:number,
+    start:number,
+    end:number
   ):number[][] {
     // Lists files in the bucket
     let files:string[] = execSync("gsutil ls "+bucketPath).toString("utf8").split("\n");
@@ -40,6 +46,8 @@ function getBatches(
     let nbrs = names.map(f=>f[5]).map(Number);
     nbrs = nbrs.filter(f=>!Number.isNaN(f));
     nbrs = _.uniq(nbrs);
+    nbrs = _.filter(nbrs,n=>n>start); 
+    nbrs = _.filter(nbrs,n=>n<end); 
     let batches:number[][] = _.chunk(nbrs, batchSize);
     batches = _.slice(batches, 0, maxBatches);
     return batches;
@@ -89,18 +97,20 @@ export class MIngest extends pulumi.ComponentResource {
         this.testDataPath = "/ingest/testdata/events"
         this.mountDataPath = args.dataMountPath + "/events"
 
-        const batchSize = 48;
-        const maxBatches = 2;
+        const start = args.start;
+        const end = args.end;
+        const batchSize = args.batchSize;
+        const maxBatches = args.maxBatches;
 
         this.conf = [];
         this.servants = {};
-        let batches = getBatches("gs://axiomdata/okex/events/", batchSize, maxBatches);
+        let batches = getBatches("gs://axiomdata/okex/events/", batchSize, maxBatches, start, end);
 
         if (batches && batches.length>0){
             for(let i=0;i<batches.length;i++) {
                 let batch = batches[i];
                 let dirs = batch.map(p=>"gs://axiomdata/okex/events/"+p.toString()+","+p.toString());
-                dirs.push("gs://axiomdata/okex/events/ev,ev");
+                dirs.push("gs://axiomdata/okex/events/ev,ev\n");
                 let s = i.toString();
                 let sname = (`ingest-${s}`);
                 console.log(dirs);

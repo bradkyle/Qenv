@@ -68,11 +68,6 @@ export class Ingest extends pulumi.ComponentResource {
         const appLabels = {app: "ingest"};
         this.datapaths = (args.datapaths || []);
         
-        fs.writeFile('./ingest/data.txt', this.datapaths.join("\n"), (err:any) => {
-            // throws an error, you could also catch it here
-            if (err) throw err;
-        });
-
         // const gcloudKey = new k8s.core.v1.ConfigMap(`${name}-gcloud-key`, {
         //     metadata: { labels: appLabels },
         //     data: { "data.list": JSON.stringify(this.datapaths)},
@@ -120,6 +115,12 @@ export class Ingest extends pulumi.ComponentResource {
                                         value: "/ingest/data/events" 
                                     }
                                 ],
+                                command: (!args.isMinikube ? [
+                                    "/bin/bash",
+                                    "start.sh", 
+                                    "/ingest/config/datalist/data.list",
+                                    "/ingest/data/events/" 
+                                ] : ["q","ingest.q"]),
                                 volumeMounts: [
                                     {
                                         name: "data-list",
@@ -134,20 +135,20 @@ export class Ingest extends pulumi.ComponentResource {
                                       {containerPort: 5000, name: "kdb"}
                                 ],
                                 lifecycle:{
-                                    postStart :(args.isMinikube ? {
-                                        exec :{
-                                            command :["ls"]
-                                        }
-                                    }:{
-                                        exec : {
-                                            command: [
-                                                "/bin/sh",
-                                                "./getdata.sh", 
-                                                "/ingest/config/datalist/data.list",
-                                                datapath
-                                            ]
-                                        }
-                                    }),
+                                    // postStart :(args.isMinikube ? {
+                                    //     exec :{
+                                    //         command :["ls"]
+                                    //     }
+                                    // }:{
+                                    //     exec : {
+                                    //         command: [
+                                    //             "/bin/bash",
+                                    //             "./getdata.sh", 
+                                    //             "/ingest/config/datalist/data.list",
+                                    //             "/ingest/data/events/" 
+                                    //         ]
+                                    //     }
+                                    // }),
                                     // preStop:{
                                     //     exec : {
                                     //         command: [

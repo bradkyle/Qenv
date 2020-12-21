@@ -4,6 +4,7 @@
     
     };
 
+// TODO randomize hidden qty
 // TODO set max price for sums
 // Hidden order qty i.e. derived from data 
 // is always at the front of the queue.
