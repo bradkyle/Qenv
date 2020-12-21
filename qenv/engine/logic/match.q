@@ -4,6 +4,49 @@
     
     };
 
+.engine.logic.match.NewMatch: {
+
+    // Get all the levels that would encounter a  
+    // fill
+    // TODO add limit to match
+    l:0!?[`.engine.model.orderbook.Orderbook;(
+        (in;`side;x`side);
+        (>;(+;`qty;(+;`hqty;(+;`iqty;`vqty)));0);
+        (|;(<;(+\;`qty);sum[x`oqty]);
+        (=;`i;(*:;`i))));0b;()];
+      
+    $[count[l]>0;[
+        aqty:sum[l[`qty`iqty`hqty`vqty]];
+        thresh:sums[aqty];
+        rp:min[(sum x`oqty;first[aqty])]^((thresh-prev[thresh])-(thresh-sum x`oqty));
+
+        // Get all the orders that are to be filled
+        o:?[`.engine.model.order.Order;(
+            (=;`okind;1);
+            (in;`price;l[`price] where (rp>0));
+            (in;`state;(0 1));(>;`oqty;0));0b;()];
+
+        // Create a state table
+        s:0!((`price`side`iId xkey l) lj (`price`side`iId xgroup o));
+
+        // Derive the new orders from the ungrouped 
+        // state.
+        no:?[ungroup s;();0b;
+            `iId`oId`time`aId`side`okind`price`lqty,
+            `dqty`offset`shft`nh`state`reduce`slprice`slqty,
+            `state`trig`einst!(
+                `iId;`oId;`time;`aId;`side;`okind;`price;
+                max[(?[rp>lqty;(lqty+offset)-rp;lqty];0)];
+                ()
+            )];
+
+
+        ];[
+
+        ]];
+      
+    };
+
 // TODO randomize hidden qty
 // TODO set max price for sums
 // Hidden order qty i.e. derived from data 
