@@ -12,13 +12,11 @@
 						(-;`ivId.ordVal;((*/);`qty;`price)); // TODO contract dependent
 						(-;`ivId.ordQty;`qty);
 						(+;`ivId.amt;`qty);
-						((+/);`ivId.totEnt;`qty)
-				)];
+						((+/);`ivId.totEnt;`qty))];
 				();0b;`aId`side`time`avgPrice`execCost`ordLoss`ordVal`ordQty`amt`totEnt`upnl`rpnl!(
 				`aId;`side;`time;`avgPrice;`execCost;`ordLoss;`ordVal;`ordQty;`amt;`totEnt;
 				((';`.engine.logic.contract.UnrealizedPnl);`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`ivId.amt;`side;`ivId.avgPrice);
 				((';`.engine.logic.contract.RealizedPnl);`iId.cntTyp;`qty;`price;`side;`ivId.avgPrice;`iId.faceValue;`iId.smul))];
-				.bam.iv:iv;
 				.engine.model.inventory.Update flip iv; 
 				.engine.E .event.Inventory[iv];
 				.engine.E .event.Fill[x] 
