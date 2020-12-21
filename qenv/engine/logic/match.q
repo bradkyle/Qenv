@@ -48,6 +48,9 @@
             nl:?[];
 
             // Execute Book Fills 
+            f:?[no;();0b;`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId!(
+                `time;`price;so[`lqty] - no[`lqty];`reduce;
+                 (=;`okind;1);`side;`iId;`oId;`ivId;`aId)]
 
             // Create New Trades
         ]];
@@ -100,6 +103,9 @@
             // Execute Actor Fills
 
             // Execute Book Fills 
+            f:?[no;();0b;`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId!(
+                `time;`price;so[`lqty] - no[`lqty];`reduce;
+                 (=;`okind;1);`side;`iId;`oId;`ivId;`aId)]
 
             // Create New Trades
 
