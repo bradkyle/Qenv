@@ -25,35 +25,40 @@
                 (in;`price;l[`price] where (rp>0));
                 (in;`state;(0 1));(>;`oqty;0));0b;()];
 
-            // Create a state table
-            s:0!((`price`side`iId xkey l) lj (`price`side`iId xgroup o));
+            if[count[o]>0;[
 
-            // Update Orders
-            // Derive the new orders from the ungrouped state.
-            no:![?[so;();0b;
-                `iId`oId`time`aId`side`okind`price`dqty`state`reduce`lqty`offset`shft!(
-                `iId;`oId;`time;`aId;`side;`okind;`price;`dqty;`state;`reduce;
-                (max;(enlist;(?;(>;`rp;`lqty);(-;(+;`lqty;`offset);`rp);`lqty);0)); // lqty
-                (.util.Clip;(-;`offset;`rp)); // offset
-                (.util.Clip;(+;(-;`offset;`rp);`lqty)) // shft // todo test
-            )];();0b;`dqty`shft`state!(
-                (.util.Clip;(?;(&;(<;`dqty;`lqty);(>;`lqty;0));`dqty;`lqty));
-                (+;`lqty;`offset);
-                (.engine.logic.match;`state;`offset;`rp;`lqty) // TODO update state
-            )];
-            .engine.model.order.Update[no];
-            .engine.Emit .event.Order[no];
+                    // Create a state table
+                    s:0!((`price`side`iId xkey l) lj (`price`side`iId xgroup o));
+                    so:ungroup s;
 
-            // Update Orderbook
-            nl:?[];
+                    // Update Orders
+                    // Derive the new orders from the ungrouped state.
+                    no:![?[so;();0b;
+                        `iId`oId`time`aId`side`okind`price`dqty`state`reduce`lqty`offset`shft!(
+                        `iId;`oId;`time;`aId;`side;`okind;`price;`dqty;`state;`reduce;
+                        (max;(enlist;(?;(>;`rp;`lqty);(-;(+;`lqty;`offset);`rp);`lqty);0)); // lqty
+                        (.util.Clip;(-;`offset;`rp)); // offset
+                        (.util.Clip;(+;(-;`offset;`rp);`lqty)) // shft // todo test
+                    )];();0b;`dqty`shft`state!(
+                        (.util.Clip;(?;(&;(<;`dqty;`lqty);(>;`lqty;0));`dqty;`lqty));
+                        (+;`lqty;`offset);
+                        (.engine.logic.match;`state;`offset;`rp;`lqty) // TODO update state
+                    )];
+                    .engine.model.order.Update[no];
+                    .engine.Emit .event.Order[no];
 
-            // Execute Book Fills 
-            f:?[no;();0b;`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId!(
-                `time;`price;so[`lqty] - no[`lqty];`reduce;
-                 (=;`okind;1);`side;`iId;`oId;`ivId;`aId)]
+                    // Update Orderbook
+                    nl:?[];
 
-            // Create New Trades
-        ]];
+                    // Execute Book Fills 
+                    f:?[no;();0b;`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId!(
+                        `time;`price;so[`lqty] - no[`lqty];`reduce;
+                         (=;`okind;1);`side;`iId;`oId;`ivId;`aId)]
+
+                    // Create New Trades
+            
+            ]];
+      ]];
     
     };
 
@@ -98,7 +103,16 @@
             .engine.Emit .event.Order[no];
 
             // Update Orderbook
-            nl:?[];
+            nl:?[s ij (`price`side xgroup no);();0b;`price`side`hqty`iqty`vqty`qty`time!(
+                `price;`side;
+                (.util.Clip;(-;`hqty;`rp));
+                ((';sum);(-;`lqty;`dqty));
+                ((';sum);`lqty);
+                (.util.Clip;(-;(-;`qty;`rp);(sum;(-;so[`lqty];no[`lqty])))); // TODO
+                (max;x`time)
+                )];
+            .engine.model.orderbook.Update[nl];
+            .engine.Emit .event.Level[nl];
 
             // Execute Actor Fills
 
@@ -106,6 +120,8 @@
             f:?[no;();0b;`time`price`qty`reduce`ismaker`side`iId`oId`ivId`aId!(
                 `time;`price;so[`lqty] - no[`lqty];`reduce;
                  (=;`okind;1);`side;`iId;`oId;`ivId;`aId)]
+            .engine.logic.fill.Fill[f];
+
 
             // Create New Trades
 
