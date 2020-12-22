@@ -14,6 +14,7 @@
         state:`long$();oqty:`long$();dqty:`long$();lqty:`long$();slqty:`long$();offset:`long$();
 				einst:`long$();time:`datetime$());
 .engine.model.order.r:.util.NullRowDict[`.engine.model.order.Order];
+.engine.model.order.count:0;
 
 .engine.model.order.Get:.engine.model.common.Get[`.engine.model.order.Order];
 .engine.model.order.Update:.engine.model.common.Update[`.engine.model.order.Order];

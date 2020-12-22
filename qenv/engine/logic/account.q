@@ -5,6 +5,7 @@
    };
 
 .engine.logic.account.GetRisktier:{[ivamt;ivlev]
+	 show ivamt;
 	 rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>ivamt) or ((i=0) and (amt>ivamt));
    `.engine.model.risktier.Risktier$((first 0!rt)`rtId)
    };

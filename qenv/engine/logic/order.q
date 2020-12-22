@@ -3,6 +3,8 @@
 / lsdlt:min[(((dlt*i[`mkprice])-vdlt);0)];
 // Events will be passed with aId
 .engine.logic.order.New:{
+				x[`oId]:.engine.model.order.count + til count x;
+
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
