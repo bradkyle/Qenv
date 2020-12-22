@@ -10,10 +10,10 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        res:.engine.valid.order.NewOrder[a];
+        a:.model.Order . p`args;
+        res:.engine.valid.order.New[a];
 
-        .qt.A[];
-
+        .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check

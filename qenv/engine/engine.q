@@ -36,8 +36,10 @@
     .engine.egress.Events,:flip `time`kind`event`aId!(15h$time;kind;event;7h$aId);
 		};
 
-.engine.Purge   :{[event;time;msg] 
-    .engine.egress.Events,:(time;`failure;(msg;event));
+.engine.Purge   :{[events;cond;tag;msg] 
+    if[count[events]=0;:events];
+    / .engine.egress.Events,:(time;`failure;(msg;));
+    ![events;cond;0b;`symbol$()]
     };
 
 / Event Processing logic (Writes)

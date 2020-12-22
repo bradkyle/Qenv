@@ -6,7 +6,9 @@
 \l engine.q
 
 loadTests   :{
-    // system[sv["";("l ";x;"/testutils.q")]];
+    / .qt.SkpBesTest[(27 28 29 30)]; // instrument
+    / .qt.SkpBesTest[(31 32 33 34)]; // order
+    .qt.SkpBesTest[(38 39 40 41)]; // order
     system[sv["";("l ";x;"/engineTest.q")]];
     .logic.loadTests[sv["/";(x;"logic")]];
     .valid.loadTests[sv["/";(x;"valid")]];
