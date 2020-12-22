@@ -1,6 +1,5 @@
 
 // Update 
-// TODO by account Id
 .engine.logic.instrument.Funding:{
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -28,7 +27,6 @@
 		};
 
 // Apply mark price update 
-// TODO update instrument		
 .engine.logic.instrument.Mark:{
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -56,7 +54,7 @@
 			.engine.E .event.Mark[x]; 
 	};
 
-// TODO update instrument		
+// Apply settlement
 .engine.logic.instrument.Settlement:{
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -67,7 +65,6 @@
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
 			
-			// TODO by account Id
 			// Update and emit account
 			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`froz;`bal;
@@ -84,7 +81,7 @@
 			.engine.E .event.Settlement[x]; 
 	};
 
-
+// Apply price limits
 .engine.logic.instrument.PriceLimit:{
 
 		// Update and emit instrument
