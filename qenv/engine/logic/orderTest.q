@@ -32,7 +32,6 @@
         mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
-        .bam.a:a;
         res:.engine.logic.order.New a;
 
         .qt.CheckMock[mck0;m[0];c];
