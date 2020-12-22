@@ -24,8 +24,25 @@
 	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
 
 	// TODO check has available resources
+	acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(
+			`aId;`time;`aId.bal;
+			(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+			(`.engine.logic.account.GetFeetier;`aId.vol);
+			(`.engine.logic.account.GetAvailable;
+				`aId.bal;
+				(+;`aId.lng.mm;`aId.srt.mm);
+				(+;`aId.lng.upnl;`aId.srt.upnl);
+				(+;`aId.lng.ordQty;`aId.srt.ordQty);
+				(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
 
+	// where account 
+	x:.engine.Purge[x;enlist();0;"Insufficient available margin to place new order"];
+	x:.engine.Purge[x;enlist();0;"Resultant leverage exceeds allowed leverage"];
 
+	// Placement of order would result in immediate liquidation
+	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
+
+	x
 	};
 
 .engine.valid.order.Amend:{

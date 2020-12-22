@@ -1,5 +1,10 @@
 
 .engine.valid.account.Withdraw:{
+	// 
+	x:.engine.Purge[x;enlist(<;`aId.bal;0);0;"Withdraw is less than min withdrawal amount"];
+	x:.engine.Purge[x;enlist(<;`aId.bal;0);0;"Withdraw is greater than max withdrawal amount"];
+
+	// TODO link account
 	x:.engine.Purge[x;enlist(<;`aId.bal;0);0;"Order account has no balance"];
 	x:.engine.Purge[x;enlist();0;"Order account has insufficient available balance"];
 	x:.engine.Purge[x;enlist();0;"Account has been disabled"];
