@@ -59,7 +59,10 @@
                 ()); // Update Account
                 (1b;1;e2 `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0);());
                 (1b;1;(`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));()); // Match 
-                (1b;2;();()) // Emit
+                (1b;2;(
+                    .event.Inventory[];
+                    .event.Account[]
+                );()) // Emit
             ); // mocks 
             () // err 
         ));
