@@ -46,6 +46,8 @@
 	};
 
 .engine.valid.order.Amend:{
+	// TODO check that current order exists
+
 	// TODO fkey to instrument
 	x:.engine.Purge[x;enlist(>;(count;`i);10);0;"Invalid batch size: batch size > max batch size"];
 	x:.engine.Purge[x;enlist(<;`price;`iId.mnPrice);0;"Invalid price: price<mnPrice"];
