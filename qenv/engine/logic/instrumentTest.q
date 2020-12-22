@@ -29,13 +29,13 @@
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;();()); // Account 
+                (1b;1;e2 `aId`time`froz`bal`avail!(`.engine.model.account.Account!0;z;0;0;0);()); // Update Account
                 (1b;1;();()); // Inventory  
                 (1b;3;();()) // .engine.E 
             ); // mocks 
