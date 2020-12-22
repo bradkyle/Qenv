@@ -9,21 +9,20 @@
 				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
 				/ 		]];
 
+	// TODO fkey to instrument
 	x:.engine.Purge[x;enlist();0;"Invalid batch size: batch size > max batch size"];
 	x:.engine.Purge[x;enlist(<;`price;`iId.mnPrice);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(>;`price;`iId.mxPrice);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<;`oqty;`iId.mnQty);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(>;`oqty;`iId.mxQty);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(<;`dqty;`iId.mnQty);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(>;`dqty;`iId.mxQty);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`price;`iId.ticksize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`lprice;`iId.ticksize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`oqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`dqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
-				/ if[(x[`price] mod i[`ticksize])<>0;:.engine.Purge[x;t;"Invalid ticksize"]]; 
-				/ if[(o[`oqty] mod i[`lotsize])<>0;:.engine.Purge[x;t;"Invalid lotsize"]];
-				/ if[x[`dqty] < i[`mnSize];:.engine.Purge[x;t;"Invalid dqty: dqty<minsize"]];
-				/ if[x[`dqty] > i[`mxSize];:.engine.Purge[x;t;"Invalid dqty: dqty>maxsize"]];
-				/ if[(x[`dqty] mod i[`lotsize])<>0;.engine.Purge[x;t;"Invalid dqty lot oqty"]]; 
 
+	// TODO fkey to account
 	x:.engine.Purge[x;enlist();0;"Order account has no balance"];
 	x:.engine.Purge[x;enlist();0;"Order account has insufficient available balance"];
 	x:.engine.Purge[x;enlist();0;"Account has been disabled"];
