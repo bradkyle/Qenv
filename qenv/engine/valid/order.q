@@ -23,6 +23,8 @@
 	x:.engine.Purge[x;enlist();0;"Account has been disabled"];
 	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
 
+	// TODO check has available resources
+
 
 	};
 
