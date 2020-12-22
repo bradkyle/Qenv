@@ -55,16 +55,19 @@
 			.engine.E .event.Mark[x]; 
 	};
 
+// TODO update instrument		
 .engine.logic.instrument.Settlement:{
-			// TODO update instrument		
+			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
 				`aId;`side;`time;`amt;`avgPrice;`rpnl;
 				(-;`upnl;0)	
 			)];
+			.engine.model.inventory.Update ivn;
+			.engine.E .event.Inventory[ivn]; 
 			
 			// TODO by account Id
-			ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
+			// Update and emit account
 			acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
@@ -73,14 +76,10 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-
 			.engine.model.account.Update acc;
-			.engine.model.inventory.Update ivn;
-			/ .engine.model.instrument.Update ins
-
-			// Update instrument
 			.engine.E .event.Account[acc]; 
-			.engine.E .event.Inventory[ivn]; 
+
+			// Emit Settlement Event 
 			.engine.E .event.Settlement[x]; 
 	};
 
