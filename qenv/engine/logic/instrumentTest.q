@@ -510,8 +510,8 @@
         mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
         mck2: .qt.M[`.engine.E;{[a]};c];
 
-        a:.model.Funding . p`args;
-        res:.engine.logic.instrument.Funding a;
+        a:.model.PriceLimit . p`args;
+        res:.engine.logic.instrument.PriceLimit a;
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
@@ -550,7 +550,7 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`time`fundingrate;enlist(0;z;0.0001));
+            (`iId`time`highest`lowest;enlist(0;z;0.0001));
             (); // res 
             (
                 (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
