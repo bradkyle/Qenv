@@ -9,12 +9,8 @@
 				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
 				/ 		]];
 
-	x:.engine.Purge[x;enlist();0;"Order account has no balance"];
-	x:.engine.Purge[x;enlist();0;"Order account has insufficient available balance"];
-	x:.engine.Purge[x;enlist();0;"Account has been disabled"];
-	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
-				/ if[count[x]>10;:.engine.Purge[x;first x`time;"Invalid batch size: batch size > max batch size"]];
-				/ if[x[`price] < i[`mnPrice];:.engine.Purge[x;t;"Invalid price: price<mnPrice"]];
+	x:.engine.Purge[x;enlist();0;"Invalid batch size: batch size > max batch size"];
+	x:.engine.Purge[x;enlist(x[`price] < i[`mnPrice]);0;"Invalid price: price<mnPrice"];
 				/ if[x[`price] > i[`mxPrice];:.engine.Purge[x;t;"Invalid price: price>mxPrice"]];
 				/ if[x[`xqty] < i[`mnSize];:.engine.Purge[x;t;"Invalid oqty: oqty<minqty"]];
 				/ if[x[`oqty] > i[`mxSize];:.engine.Purge[x;t;"Invalid oqty: oqty>maxqty"]];
@@ -24,13 +20,13 @@
 				/ if[x[`dqty] > i[`mxSize];:.engine.Purge[x;t;"Invalid dqty: dqty>maxsize"]];
 				/ if[(x[`dqty] mod i[`lotsize])<>0;.engine.Purge[x;t;"Invalid dqty lot oqty"]]; 
 
-				/ // Account validations
-				/ if[a[`bal]<=0;:.engine.Purge[x;t;"Order account has no balance"]];
-				/ if[a[`avail]<=0;:.engine.Purge[x;t;"Order account has insufficient available balance"]];
-				/ if[a[`state]=1;:.engine.Purge[x;t;"Account has been disabled"]];
-				/ if[a[`state]=2;:.engine.Purge[o;t;"Account has been locked for liquidation"]];
-				x				  
-				};
+	x:.engine.Purge[x;enlist();0;"Order account has no balance"];
+	x:.engine.Purge[x;enlist();0;"Order account has insufficient available balance"];
+	x:.engine.Purge[x;enlist();0;"Account has been disabled"];
+	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
+
+
+	};
 
 .engine.valid.order.Amend:{
 				// Instrument validations
