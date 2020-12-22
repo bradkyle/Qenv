@@ -17,7 +17,7 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check
-        ("";(
+        ("Invalid Batch size";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
@@ -30,7 +30,7 @@
             (); // res 
             () // err 
         ));
-        ("";(
+        ("Invalid price";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
