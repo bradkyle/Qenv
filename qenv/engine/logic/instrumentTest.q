@@ -506,7 +506,7 @@
         m:p[`mocks];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.account.Update;{[a;b]};c];
+        mck0: .qt.M[`.engine.logic.order.Cancel;{[a;b]};c];
         mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
         mck2: .qt.M[`.engine.E;{[a]};c];
 
@@ -528,15 +528,13 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`time`fundingrate;enlist(0;z;0.0001));
+            (`iId`time`highest`lowest;enlist(0;z;1100;1000));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;();()); // Cancel Order 
                 (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
-                (1b;3;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
-                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                (1b;1;(
+                .event.PriceLimit[`iId`time`highest`lowest!(0;z;1100;1000)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 
@@ -550,15 +548,13 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`time`highest`lowest;enlist(0;z;0.0001));
+            (`iId`time`highest`lowest;enlist(0;z;1100;1000));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;();()); // Cancel Order 
                 (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
-                (1b;3;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
-                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                (1b;1;(
+                .event.PriceLimit[`iId`time`highest`lowest!(0;z;1100;1000)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 

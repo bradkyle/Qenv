@@ -89,7 +89,7 @@
 
 		// Update and emit instrument
 		i:?[x;();0b;`iId`highest`lowest!(
-			`iId;
+			(7h$;`iId);
 			`highest;
 			`lowest)];
 		.engine.model.instrument.Update i;
@@ -99,7 +99,7 @@
 			(&;(=;`side;1);(>;`price;last x`highest));
 			(&;(=;`side;-1);(<;`price;last x`lowest))
 		);0b;()];
-		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
+		if[count[o]>0;.engine.logic.order.Cancel[o]];
 
 		// Emit PriceLimit Event
 		.engine.E .event.PriceLimit[x]; 
