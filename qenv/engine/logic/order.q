@@ -53,7 +53,6 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-				.bam.acc:acc;
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 

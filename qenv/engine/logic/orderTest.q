@@ -32,6 +32,7 @@
         mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
+        .bam.a:a;
         res:.engine.logic.order.New a;
 
         .qt.CheckMock[mck0;m[0];c];
@@ -53,7 +54,10 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
+                (1b;1;
+                e2 `aId`time`froz`wit`bal`rt`ft`avail!
+                (`.engine.model.account.Account!0;z;0;0;0;`.engine.model.risktier.Risktier!0;`.engine.model.feetier.Feetier!0;0);
+                ()); // Update Account
                 (1b;1;();()); // Inventory 
                 (1b;1;();()); // Match 
                 (1b;2;();()) // Emit
