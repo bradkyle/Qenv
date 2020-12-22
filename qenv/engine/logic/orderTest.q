@@ -69,7 +69,7 @@
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
@@ -83,8 +83,8 @@
                  (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!(0 0);1 -1;2#z;10 10;0N 0N;0 0;0 0;0 0;0 0;0 0);());
                 (1b;1;();()); // Match 
                 (1b;2;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0)];
-                .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0;z;0;0)]
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0 0;1 -1;2#z;2#10;2#100;2#0;2#0;2#0;2#0;2#0)];
+                .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0 0;2#z;2#0;2#0)]
                 );()) // Emit
             ); // mocks 
             () // err 
