@@ -14,9 +14,7 @@
 	x:.engine.Purge[x;enlist(>;`price;`iId.mxPrice);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<;`oqty;`iId.mnQty);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(>;`oqty;`iId.mxQty);0;"Invalid price: price<mnPrice"];
-				/ if[x[`price] > i[`mxPrice];:.engine.Purge[x;t;"Invalid price: price>mxPrice"]];
-				/ if[x[`xqty] < i[`mnSize];:.engine.Purge[x;t;"Invalid oqty: oqty<minqty"]];
-				/ if[x[`oqty] > i[`mxSize];:.engine.Purge[x;t;"Invalid oqty: oqty>maxqty"]];
+	x:.engine.Purge[x;enlist(<>;(mod;`price;`iId.ticksize);0);0;"Invalid price: price<mnPrice"];
 				/ if[(x[`price] mod i[`ticksize])<>0;:.engine.Purge[x;t;"Invalid ticksize"]]; 
 				/ if[(o[`oqty] mod i[`lotsize])<>0;:.engine.Purge[x;t;"Invalid lotsize"]];
 				/ if[x[`dqty] < i[`mnSize];:.engine.Purge[x;t;"Invalid dqty: dqty<minsize"]];
