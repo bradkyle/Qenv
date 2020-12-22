@@ -53,7 +53,7 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();()); // Update Account
+                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
                 (1b;1;();()); // Inventory 
                 (1b;1;();()); // Match 
                 (1b;2;();()) // Emit
@@ -71,7 +71,7 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();()); // Update Account
+                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
                 (1b;1;();()); // Inventory 
                 (1b;1;();()); // Match 
                 (1b;2;();()) // Emit

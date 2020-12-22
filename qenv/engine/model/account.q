@@ -9,7 +9,7 @@
   iId:`.engine.model.instrument.Instrument$();
   lng:`.engine.model.inventory.Inventory$();srt:`.engine.model.inventory.Inventory$();
   rt:`.engine.model.risktier.Risktier$();ft:`.engine.model.feetier.Feetier$();
-  froz:`long$();dep:`long$();wit:`long$();mrgTyp:`long$();avail:`long$();bal:`long$();time:`datetime$());
+  froz:`long$();vol:`long$();dep:`long$();wit:`long$();mrgTyp:`long$();avail:`long$();bal:`long$();time:`datetime$());
 .engine.model.account.r:.util.NullRowDict[`.engine.model.account.Account];
 
 .engine.model.account.Create:.engine.model.common.Create[`.engine.model.account.Account];

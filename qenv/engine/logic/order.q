@@ -12,8 +12,10 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-				acc:?[x;();0b;`aId`time`froz`bal`avail!(
+				acc:?[x;();0b;`aId`time`froz`bal`rt`ft`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
+				(`.engine.logic.account.GetRisktier;();());
+				(`.engine.logic.account.GetFeetier;`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -45,6 +47,7 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+				.bam.acc:acc;
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
