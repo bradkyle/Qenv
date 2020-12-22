@@ -12,6 +12,7 @@
 
         res:.engine.valid.order.NewOrder[a];
 
+        .qt.A[];
 
     };
     {[p] :`setup`args`eRes`mocks`err!p};
