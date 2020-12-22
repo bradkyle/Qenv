@@ -38,12 +38,10 @@
 
 .engine.Purge   :{[e;cond;tag;msg] 
     if[count[e]=0;:e];
-    .bam.e:e;
-    .bam.cond:cond;
-    .bam.msg:msg;
-
+    / .bam.e:e;
+    / .bam.cond:cond;
+    / .bam.msg:msg;
     / .engine.E .event.Failure[?[e;cond;0b;()]];
-
     / .engine.E ([]time:e[`time];datum:();kind:`failure) // .event.Failure[?[events;cond;0b;()]]; // TODO add reason
     ![e;cond;0b;`symbol$()]
     };
@@ -62,7 +60,7 @@
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$x[`aId];
-    x[e]};
+    x[v e]};
 
 .engine.map:()!();
 

@@ -60,16 +60,46 @@
     };
     {[p] :`args`eRes`mocks!p};
     (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+        ("Process trade events";(
             (10;5;0.1;1);(1 1 1);()
         ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+        ("Process depth events";(
             (10;5;0.1;1);(1 1 1);()
         ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+        ("Process funding events";(
             (10;5;0.1;1);(1 1 1);()
         ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+        ("Process mark events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process settlement events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process pricerange events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process withdraw events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process deposit events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process leverage events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process neworder events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process amendorder events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process cancelorder events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process cancelall events";(
+            (10;5;0.1;1);(1 1 1);()
+        ));
+        ("Process combined events";(
             (10;5;0.1;1);(1 1 1);()
         ))
     );
