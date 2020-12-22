@@ -12,7 +12,7 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-				acc:?[o;();0b;`aId`time`froz`bal`avail!(
+				acc:?[x;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
@@ -23,7 +23,7 @@
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
-				.engine.logic.match.Match[o];
+				.engine.logic.match.Match[x];
 		};
 
 .engine.logic.order.Amend:{
@@ -37,7 +37,7 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-			  acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
+				acc:?[x;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
@@ -48,7 +48,7 @@
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
-				.engine.logic.match.Match[o];
+				.engine.logic.match.Match[x];
 		};
 
 .engine.logic.order.Cancel:{

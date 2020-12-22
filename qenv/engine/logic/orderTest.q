@@ -26,16 +26,14 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.E;{[x]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.logic.match.Match;{[a]};c];
+        mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
         res:.engine.logic.order.New a;
 
-        .qt.CheckMock[mck4;m[4];c];
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
         .qt.CheckMock[mck2;m[2];c];
@@ -57,9 +55,8 @@
             (
                 (1b;1;();()); // Update Account
                 (1b;1;();()); // Inventory 
-                (1b;1;();()); // CreateOrder 
-                (0b;0;();()); // Emit
-                (1b;3;();()) // Emit
+                (1b;1;();()); // Match 
+                (1b;2;();()) // Emit
             ); // mocks 
             () // err 
         ));
@@ -76,9 +73,8 @@
             (
                 (1b;1;();()); // Update Account
                 (1b;1;();()); // Inventory 
-                (1b;1;();()); // CreateOrder 
-                (0b;0;();()); // Emit
-                (1b;3;();()) // Emit
+                (1b;1;();()); // Match 
+                (1b;2;();()) // Emit
             ); // mocks 
             () // err 
         ))
