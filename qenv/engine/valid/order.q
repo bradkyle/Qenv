@@ -10,7 +10,10 @@
 				/ 		]];
 
 	x:.engine.Purge[x;enlist();0;"Invalid batch size: batch size > max batch size"];
-	x:.engine.Purge[x;enlist(x[`price] < i[`mnPrice]);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(<;`price;`iId.mnPrice);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(>;`price;`iId.mxPrice);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(<;`oqty;`iId.mnQty);0;"Invalid price: price<mnPrice"];
+	x:.engine.Purge[x;enlist(>;`oqty;`iId.mxQty);0;"Invalid price: price<mnPrice"];
 				/ if[x[`price] > i[`mxPrice];:.engine.Purge[x;t;"Invalid price: price>mxPrice"]];
 				/ if[x[`xqty] < i[`mnSize];:.engine.Purge[x;t;"Invalid oqty: oqty<minqty"]];
 				/ if[x[`oqty] > i[`mxSize];:.engine.Purge[x;t;"Invalid oqty: oqty>maxqty"]];
