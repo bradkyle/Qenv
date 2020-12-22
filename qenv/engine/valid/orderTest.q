@@ -1,4 +1,12 @@
 
+.engine.valid.order.test.Setup: ((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+    (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+    (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+    ));
+
 .qt.Unit[
     ".engine.valid.order.NewOrder";
     {[c]
@@ -9,38 +17,28 @@
           `.engine.model.inventory.Inventory,
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
+        mck: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
         res:.engine.valid.order.New[a];
 
+        .qt.CheckMock[mck;m;c];
         .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Invalid Batch size";(
-            ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
-            ));
+            .engine.valid.order.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
-            (); // res 
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Invalid price";(
-            ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
-            ));
+            .engine.valid.order.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;flip(0 0;0 0;((0 1);(0 -1));1 -1;1 1;1000 1000;1 1;11b;1 1;2#z));
             (0b); // res 
-            (); // mocks 
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ))
     );

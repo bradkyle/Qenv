@@ -38,7 +38,8 @@
 
 .engine.Purge   :{[events;cond;tag;msg] 
     if[count[events]=0;:events];
-    / .engine.egress.Events,:(time;`failure;(msg;));
+    .bam.f:.event.Failure[?[events;cond;0b;()]];
+    .engine.E .event.Failure[?[events;cond;0b;()]];
     ![events;cond;0b;`symbol$()]
     };
 

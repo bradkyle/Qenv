@@ -35,7 +35,8 @@
 // TODO allow for many events
 .event.prep:{$[(type[x]=99h) and (count[first[x]]=1);enlist x;type[x]=99h;flip x;x]};
 
-.event.Failure 			:{}
+// TODO implement kind
+.event.Failure      :{x:.event.prep[x];([]time:x`time;datum:x)}
 .event.Mark					:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`markprice)}
 .event.Settlement		:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time)}
 .event.PriceLimit 	:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`highest`lowest)}
