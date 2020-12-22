@@ -32,7 +32,6 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-			.bam.w:acc;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Withdraw[x]; 
@@ -40,8 +39,8 @@
 
 // TODO check formatting of events
 .engine.logic.account.Deposit:{
-			acc:?[x;();0b;`aId`time`dep`bal`avail!(
-				`aId;`time;
+			acc:?[x;();0b;`aId`time`froz`dep`bal`avail!(
+				`aId;`time;`aId.froz;
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;
@@ -57,14 +56,15 @@
 
 // TODO check formatting of events multiple lev update
 .engine.logic.account.Leverage:{
-			acc:?[x;();0b;`aId`time`lev`avail!(
-				`aId;`time;`lev;	
-				 (`.engine.logic.account.GetAvailable;
+			acc:?[x;();0b;`aId`time`bal`froz`avail!(
+				`aId;`time;`aId.bal;`aId.froz;
+				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+			.bam.acc:acc;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			};

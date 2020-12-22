@@ -46,7 +46,7 @@
 .event.Account 			:{x:.event.prep[x];x[`aId]:7h$x[`aId];([]time:x`time;datum:flip(x`aId`time`bal`avail`froz);aId:x`aId)}
 .event.Inventory		:{x:.event.prep[x];([]time:x`time;datum:flip x`aId`side`time`amt`rpnl`avgPrice`upnl;aId:7h$x`aId)}
 .event.Order     		:{x:.event.prep[x];([]kind:`order;time:x`time;datum:flip x`oId`time`aId`side`okind`price`lqty`lprice`sprice`state`reduce`trig`einst;aId:7h$x`aId)}
-.event.Deposit 			:{x:.event.prep[x];([]kind:`deposit;time:x`time;datum:flip x`aId`time`dep;aId:7h$x`aId)}
+.event.Deposit 			:{x:.event.prep[x];x[`aId]:7h$x[`aId];([]kind:`deposit;time:x`time;datum:flip x`aId`time`dep;aId:x`aId)}
 .event.Withdraw 		:{x:.event.prep[x];x[`aId`iId]:7h$x[`aId`iId];([]kind:`withdraw;time:x`time;datum:flip x`aId`iId`time`wit;aId:x`aId)}
 .event.Funding      :{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`fundingrate)}
 .event.Fill					:{x:.event.prep[x];([]time:x`time;datum:flip x`oId`time`aId`qty`price)}

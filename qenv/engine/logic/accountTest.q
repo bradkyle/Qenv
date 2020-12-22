@@ -164,10 +164,10 @@ e2:{enlist enlist x}
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Deposit Account disabled:should fail";(
+        ("0 deposited nothing should happen";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
@@ -175,40 +175,56 @@ e2:{enlist enlist x}
             (`aId`iId`dep`time;enlist(0;0;0;z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;2;();()) // Emit 
+                (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
+                (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;0;0;0)];.event.Deposit[`aId`iId`dep`time!(0;0;0;z)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
-        ("Deposit Account locked:should fail";(
+        ("Deposit balance available should update";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`dep`time;enlist(0;0;0;z));
+            (`aId`iId`dep`time;enlist(0;0;1;z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;2;();()) // Emit 
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;11;11);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)];.event.Deposit[`aId`iId`dep`time!(0;0;1;z)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
-        ("Deposit Success: Update fee tier, risk tier, avail";(
+        ("Multiple Deposit one balance available should update";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`dep`time;enlist(0;0;0;z));
+            (`aId`iId`dep`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;2;();()) // Emit 
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;9;9)];.event.Deposit[`aId`iId`dep`time!(0;0;1;z)]);()) // Emit 
+            ); // mocks 
+            () // err 
+        ));
+        ("Multiple deposit multiple account balance available should update";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+            ));
+            (`aId`iId`dep`time;flip(0 0;0 0;1 1;2#z));
+            (); // res 
+            (
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;9;9)];.event.Deposit[`aId`iId`dep`time!(0;0;1;z)]);()) // Emit 
             ); // mocks 
             () // err 
         ))
@@ -245,10 +261,10 @@ e2:{enlist enlist x}
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Leverage no balance:should fail";(
+        ("0 deposited nothing should happen";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
@@ -256,72 +272,56 @@ e2:{enlist enlist x}
             (`aId`iId`lev`time;enlist(0;0;0;z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()) // Emit 
+                (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
+                (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
-        ("Leverage insufficient balance:should fail";(
+        ("Deposit balance available should update";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`lev`time;enlist(0;0;0;z));
+            (`aId`iId`lev`time;enlist(0;0;1;z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()) // Update Account
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;11;11);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
-        ("Leverage Account disabled:should fail";(
+        ("Multiple Deposit one balance available should update";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`lev`time;enlist(0;0;0;z));
+            (`aId`iId`lev`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()) // Update Account
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
-        ("Leverage Account locked:should fail";(
+        ("Multiple deposit multiple account balance available should update";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`dep`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`lev`time;enlist(0;0;0;z));
+            (`aId`iId`lev`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()) // Update Account
-            ); // mocks 
-            () // err 
-        ));
-        ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-            ));
-            (`aId`iId`lev`time;enlist(0;0;0;z));
-            (); // res 
-            (
-                (1b;1;();()); // Update Account
-                (1b;1;();()) // Update Account
+            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
             ); // mocks 
             () // err 
         ))
