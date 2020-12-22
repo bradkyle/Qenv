@@ -13,10 +13,9 @@
 	x:.engine.Purge[x;enlist(<>;(mod;`lprice;`iId.ticksize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`oqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`dqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
-
 	x:.engine.Purge[x;enlist();0;"Order had execInst of immediate or cancel"];
-	if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
- 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
+	/ if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+ 	/ all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
 
 	// TODO fkey to account
 	x:.engine.Purge[x;enlist();0;"Order account has no balance"];
