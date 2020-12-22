@@ -38,9 +38,9 @@
 
 .engine.Purge   :{[e;cond;tag;msg] 
     if[count[e]=0;:e];
-    .bam.e:e;
-    .bam.cond:cond;
-    .bam.msg:msg;
+    / .bam.e:e;
+    / .bam.cond:cond;
+    / .bam.msg:msg;
     / .engine.E ([]time:e[`time];datum:();kind:`failure) // .event.Failure[?[events;cond;0b;()]]; // TODO add reason
     ![e;cond;0b;`symbol$()]
     };
