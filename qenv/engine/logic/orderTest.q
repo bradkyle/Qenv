@@ -352,7 +352,7 @@
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         // Decreasing in size stays at same price
-        enlist("Amend limit order (first in queue), smaller than previous, should update offsets, depth etc.";(
+        ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
@@ -369,7 +369,25 @@
                 (1b;2;();()) // Emit
             ); // mocks 
             () // err 
-        )) 
+        ));
+        ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+            ));
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
+            (); // res 
+            (
+                (1b;1;();()); // Update Account
+                (1b;1;();()); // Inventory 
+                (1b;1;();()); // Match 
+                (1b;2;();()) // Emit
+            ); // mocks 
+            () // err 
+        ))
         / ("Amend limit order (second in queue), smaller than previous, should update offsets, depth etc.";(
 								/ ();();();()
         / )); 
@@ -546,8 +564,7 @@
         mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
         mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
         mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck3: .qt.M[`.engine.Emit;{[a]};c];
 
         a:.model.Order . p`args;
         res:.engine.logic.order.Cancel a;
@@ -556,7 +573,6 @@
         .qt.CheckMock[mck1;m[1];c];
         .qt.CheckMock[mck2;m[2];c];
         .qt.CheckMock[mck3;m[3];c];
-        .qt.CheckMock[mck4;m[4];c];
         .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
@@ -599,7 +615,6 @@
         mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
         mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
         mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
         mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
 
         a:.model.Order . p`args;
@@ -609,7 +624,6 @@
         .qt.CheckMock[mck1;m[1];c];
         .qt.CheckMock[mck2;m[2];c];
         .qt.CheckMock[mck3;m[3];c];
-        .qt.CheckMock[mck4;m[4];c];
         .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
