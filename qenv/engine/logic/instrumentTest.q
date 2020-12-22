@@ -35,7 +35,7 @@
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`bal`avail!(`.engine.model.account.Account!0;z;0;0;0);()); // Update Account
+                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;0;0);()); // Update Account
                 (1b;1;();()); // Inventory  
                 (1b;3;();()) // .engine.E 
             ); // mocks 

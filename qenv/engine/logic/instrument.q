@@ -7,24 +7,21 @@
 				(-;`rpnl;0)	
 			)];
 			.engine.model.inventory.Update ivn;
+			.engine.E .event.Inventory[ivn]; 
 			
 			// TODO by account Id
 			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
-				`aId;x`time;`aId.froz;`aId.bal;
+				`aId;`time;`froz;`bal;
 				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
-					(+;`aId.lng.mm;`aId.srt.mm);
-					(+;`aId.lng.upnl;`aId.srt.upnl);
-					(+;`aId.lng.ordQty;`aId.srt.ordQty);
-					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-
+					`bal;
+					(+;`lng.mm;`srt.mm);
+					(+;`lng.upnl;`srt.upnl);
+					(+;`lng.ordQty;`srt.ordQty);
+					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
-			.bam.funding:x;
-
-			// Update instrument
-			.engine.E .event.Funding[x]; 
 			.engine.E .event.Account[acc]; 
-			.engine.E .event.Inventory[ivn]; 
+
+			.engine.E .event.Funding[x]; 
 		};
 
 // Apply mark price update 
