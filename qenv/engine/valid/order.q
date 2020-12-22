@@ -41,7 +41,6 @@
 
 	// Placement of order would result in immediate liquidation
 	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
-	.bam.x:x;
 
 	// Return if 
 	if[count x;:0b;:x]
