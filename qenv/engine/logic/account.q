@@ -27,11 +27,12 @@
 				(+;`aId.wit;`wit);	
 				(-;`aId.bal;`wit);	
 				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
+					(-;`aId.bal;`wit);
 					(+;`aId.lng.mm;`aId.srt.mm);
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+			.bam.w:acc;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Withdraw[x]; 
@@ -44,7 +45,7 @@
 				(+;`aId.dep;`dep);	
 				(+;`aId.bal;`dep);	
 				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
+					(+;`aId.bal;`dep);
 					(+;`aId.lng.mm;`aId.srt.mm);
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);

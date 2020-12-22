@@ -96,52 +96,42 @@ e2:{enlist enlist x}
             (); // res 
             (
             (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
-                (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)];.event.Withdraw[`aId`iId`wit`time!(0;0;0;z)]);()) // Emit 
+            (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;1;9;9)];.event.Withdraw[`aId`iId`wit`time!(0;0;1;z)]);()) // Emit 
+            ); // mocks 
+            () // err 
+        ));
+        ("Multiple withdraw one balance available should update";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+            ));
+            (`aId`iId`wit`time;flip(0 0;0 0;1 1;2#z));
+            (); // res 
+            (
+            (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;1;9;9)];.event.Withdraw[`aId`iId`wit`time!(0;0;1;z)]);()) // Emit 
+            ); // mocks 
+            () // err 
+        ));
+        ("Multiple withdraw multiple account balance available should update";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+            ));
+            (`aId`iId`wit`time;flip(0 0;0 0;1 1;2#z));
+            (); // res 
+            (
+            (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;1;9;9)];.event.Withdraw[`aId`iId`wit`time!(0;0;1;z)]);()) // Emit 
             ); // mocks 
             () // err 
         ))
-        / ("Withdraw insufficient balance:should fail";(
-        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-        /     (); // res 
-        /     (
-        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
-        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
-        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
-        /     ); // mocks 
-        /     () // err 
-        / ));
-        / ("Withdraw Account disabled:should fail";(
-        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-        /     (); // res 
-        /     (
-        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
-        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
-        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
-        /     ); // mocks 
-        /     (
-
-        /     ) // err 
-        / ));
-        / ("Withdraw Account locked:should fail";(
-        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-        /     (); // res 
-        /     (
-        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
-        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
-        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
-        /     ); // mocks 
-        /     () // err 
-        / ));
-        / ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-        /     .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-        /     (); // res 
-        /     (
-        /         (1b;1;();.util.testutils.makeAccount[]); // Update Account
-        /         (1b;1;.util.testutils.makeAccount[];()); // Update Account
-        /         (1b;1;.util.testutils.makeEvent[];()) // Update Account
-        /     ); // mocks 
-        /     () // err 
-        / ))
     );
     ({};{};{};{});
     "Process a batch of signal events"];
