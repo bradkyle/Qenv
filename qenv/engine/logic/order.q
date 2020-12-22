@@ -12,7 +12,6 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-				// TODO rt
 				acc:?[o;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
