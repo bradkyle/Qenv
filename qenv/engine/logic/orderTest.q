@@ -561,10 +561,10 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.order.Remove;{[a;b;c]};c];
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.Emit;{[a]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.order.Delete;{[a]};c];
+        mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
         res:.engine.logic.order.Cancel a;
@@ -630,13 +630,13 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.model.order.Delete;{[a]};c];
+        mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
-        res:.engine.logic.order.Cancel a;
+        res:.engine.logic.order.CancelAll a;
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];

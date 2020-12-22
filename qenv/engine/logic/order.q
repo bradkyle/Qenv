@@ -72,19 +72,21 @@
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
+				.engine.model.order.Delete[x];
+				/ .engine.E .event.Order[];
 		};
 
 .engine.logic.order.CancelAll:{
-				ivn: 	?[x;();0b;`aId`side`time`ordLoss`ordVal`ordQty!(
-					`aId;`side;`time;
+			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
+				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
 					(+;`ivId.ordLoss;0);
 					(+;`ivId.ordVal;0);
 					(+;`ivId.ordQty;0)
 					)];
+				.engine.model.inventory.Update ivn;
+				.engine.E .event.Inventory[ivn]; 
 
-				// TODO rt
-				ivn[`aId]:`.engine.model.account.Account$ivn[`aId];
-			  acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
+				acc:?[x;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
@@ -92,13 +94,10 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-
 				.engine.model.account.Update acc;
-				.engine.model.inventory.Update ivn;
-
-				// TODO remove orders
 				.engine.E .event.Account[acc]; 
-				.engine.E .event.Inventory[ivn]; 
-				.engine.E .event.Order[x]; 
+
+				.engine.model.order.Delete[x];
+				/ .engine.E .event.Order[];
     };
 
