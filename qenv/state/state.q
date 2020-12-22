@@ -30,7 +30,6 @@
     [accountId : `long$(); time : `datetime$()]
     balance             : `long$();
     available           : `long$();
-    frozen              : `long$();
     maintMargin         : `long$());
 .state.accountCols:cols .state.AccountEventHistory;
 .state.CurrentAccount: `accountId xkey .state.AccountEventHistory;
