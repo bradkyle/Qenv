@@ -85,11 +85,14 @@
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
+				// Cancel order should delete order
 				.engine.model.order.Delete[x];
 				/ .engine.E .event.Order[];
 		};
 
 .engine.logic.order.CancelAll:{
+
+				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
 					(+;`ivId.ordLoss;0);
@@ -99,6 +102,7 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
+				// Update account and emit events
 				acc:?[x;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
@@ -110,6 +114,7 @@
 				.engine.model.account.Update acc;
 				.engine.E .event.Account[acc]; 
 
+				// Cancel all orders should delete orders
 				.engine.model.order.Delete[x];
 				/ .engine.E .event.Order[];
     };
