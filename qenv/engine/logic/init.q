@@ -11,7 +11,7 @@
 \l fill.q 
 
 .logic.loadTests   :{
-    .qt.SkpBesTest[(31 34 35 36)];
+    .qt.SkpBesTest[(24)];
     .contract.loadTests[sv["/";(x;"contract")]];
     system[sv["";("l ";x;"/testutils.q")]];
     system[sv["";("l ";x;"/accountTest.q")]];
