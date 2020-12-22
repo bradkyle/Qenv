@@ -3,18 +3,18 @@
     ".engine.valid.order.NewOrder";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
-
-        mck1: .qt.M[`.engine.model.inventory.Get;{[a;b] a}[m[0][3]];c];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
         res:.engine.valid.order.NewOrder[a];
 
-        .qt.CheckMock[mck0;m[7];c];
-        .qt.RestoreMocks[];
 
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
