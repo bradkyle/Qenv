@@ -75,7 +75,19 @@
 
 
 .engine.logic.account.Settings:{
+			/ lng:?[x;();0b;()]
+			/ srt:?[x;();0b;()]
 
+			acc:?[x;();0b;`aId`time`bal`froz`avail!(
+				`aId;`time;`aId.bal;`aId.froz;
+				(`.engine.logic.account.GetAvailable;
+					`aId.bal;
+					(+;`aId.lng.mm;`aId.srt.mm);
+					(+;`aId.lng.upnl;`aId.srt.upnl);
+					(+;`aId.lng.ordQty;`aId.srt.ordQty);
+					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+			.engine.model.account.Update acc;
+			.engine.E .event.Account[acc]; 
 			};
 
 
