@@ -26,19 +26,8 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
             ));
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
             (); // res 
-            (
-                (1b;1;
-                e2 `aId`time`bal`rt`ft`avail!
-                (`.engine.model.account.Account!0;z;0;`.engine.model.risktier.Risktier!0;`.engine.model.feetier.Feetier!0;0);
-                ()); // Update Account
-                (1b;1;e2 `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0);());
-                (1b;1;();()); 
-                (1b;2;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0)];
-                .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0;z;0;0)]
-                );()) // Emit
-            ); // mocks 
             () // err 
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
@@ -50,18 +39,8 @@
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
             ));
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;flip(0 0;0 0;((0 1);(0 -1));1 -1;1 1;1000 1000;1 1;11b;1 1;2#z));
-            (); // res 
-            (
-                (1b;1;e2 flip `aId`time`bal`rt`ft`avail!(
-                 `.engine.model.account.Account!(0 0);
-                 2#z;2#0;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;0 0);()); // Update Account
-                 (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!(0 0);1 -1;2#z;10 10;0N 0N;0 0;0 0;0 0;0 0;0 0);());
-                (1b;1;();()); // Match 
-                (1b;2;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0 0;1 -1;2#z;2#10;2#100;2#0;2#0;2#0;2#0;2#0)];
-                .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0 0;2#z;2#0;2#0)]
-                );()) // Emit
-            ); // mocks 
+            (0b); // res 
+            (); // mocks 
             () // err 
         ))
     );

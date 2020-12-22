@@ -43,7 +43,7 @@
 	x:.engine.Purge[x;enlist();0;"Account has been locked for liquidation"];
 
 	// Return if 
-	if[count x;:0b;:x]
+	if[count[x]=0;:0b;:x]
 	};
 
 .engine.valid.order.Amend:{
