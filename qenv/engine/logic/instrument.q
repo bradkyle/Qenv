@@ -1,15 +1,14 @@
 
 // Update 
+// TODO by account Id
 .engine.logic.instrument.Funding:{
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`upnl`rpnl!(
 				`aId;`side;x`time;`amt;`avgPrice;`upnl;
-				(-;`rpnl;0)	
+				(-;`rpnl;(*;(sum;x`fundingrate);`amt))	
 			)];
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
-			
-			// TODO by account Id
 			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`froz;`bal;
 				(`.engine.logic.account.GetAvailable;
@@ -20,13 +19,12 @@
 					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
-
 			.engine.E .event.Funding[x]; 
 		};
 
 // Apply mark price update 
+// TODO update instrument		
 .engine.logic.instrument.Mark:{
-			// TODO update instrument		
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
 				`aId;`side;`time;`amt;`avgPrice;`rpnl;

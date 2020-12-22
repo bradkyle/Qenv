@@ -23,39 +23,47 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Positive Funding: no accounts";(
+        ("Positive Funding: no open inventory";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;0;0);()); // Update Account
-                (1b;1;();()); // Inventory  
-                (1b;3;();()) // .engine.E 
+                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
+                (1b;3;(
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
+                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
+                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                );()) // .engine.E 
             ); // mocks 
             () // err 
         ));
-        ("Negative Funding: No accounts";(
+        ("Positive Funding: no open inventory";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
-                (1b;1;();()); // Inventory  
-                (1b;3;();()) // .engine.E 
+                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
+                (1b;3;(
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
+                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
+                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                );()) // .engine.E 
             ); // mocks 
             () // err 
         ))
