@@ -14,7 +14,7 @@
             (|;(<;(+\;`qty);sum[x`qty]);
             (=;`i;(*:;`i))));0b;()];
           
-        if[count[l]>0;[
+        $[count[l]>0;[
             aqty:sum[l[`qty`iqty`hqty`vqty]];
             thresh:sums[aqty];
             rp:min[(sum x`oqty;first[aqty])]^((thresh-prev[thresh])-(thresh-sum x`oqty));
@@ -57,7 +57,7 @@
 
                     // Create New Trades
             
-            ]];
+        ]];
       ]];
     
     };
