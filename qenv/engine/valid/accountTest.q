@@ -1,51 +1,66 @@
 
+.engine.valid.account.test.Setup: ((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+    (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
+    (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+    ));
  
 
 .qt.Unit[
     ".engine.logic.account.Withdraw";
     {[c]
         p:c[`params];
-        a:p`args;
         m:p[`mocks];
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
+        mck: .qt.M[`.engine.E;{[x]};c];
 
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
-        mck2: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        a:.model.Order . p`args;
+        res:.engine.valid.order.New[a];
 
-				res:.engine.logic.account.Withdraw[a];
-
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
+        .qt.CheckMock[mck;m;c];
+        .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Withdraw no balance:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
+            .engine.valid.order.test.Setup;
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw insufficient balance:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
+            .engine.valid.order.test.Setup;
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Account disabled:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
+            .engine.valid.order.test.Setup;
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Account locked:should fail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
+            .engine.valid.order.test.Setup;
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            .util.testutils.makeWithdraw[`aId`iId`withdraw;enlist(0;0;0)];
-            (); // res 
-            (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
+            .engine.valid.order.test.Setup;
+            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
+            (0b);
+            ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ))
     );
