@@ -1,11 +1,11 @@
 
 .engine.logic.account.GetFeetier:{[avol]
-   ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>a) or ((i=0) and (vol>a));
+	 ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>avol) or ((i=0) and (vol>avol));
    `.engine.model.feetier.Feetier$((0!ft)`ftId)
    };
 
-.engine.logic.account.GetRisktier:{[ivnamt;ivlev]
-   rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>a) or ((i=0) and (amt>a));
+.engine.logic.account.GetRisktier:{[ivamt;ivlev]
+	 rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>ivamt) or ((i=0) and (amt>ivamt));
    `.engine.model.risktier.Risktier$((0!rt)`rtId)
    };
 
