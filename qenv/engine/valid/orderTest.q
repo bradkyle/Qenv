@@ -17,7 +17,7 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     ( // TODO sell side check
-        ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
+        ("";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
@@ -30,7 +30,7 @@
             (); // res 
             () // err 
         ));
-        ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
+        ("";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
