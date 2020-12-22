@@ -335,11 +335,10 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.M[`.engine.model.order.Create;{[a;b;c]};c];
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
-        mck2: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
-        mck3: .qt.M[`.engine.logic.trade.Match;{[a;b;c]};c];
-        mck4: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b;c]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b;c]};c];
+        mck2: .qt.M[`.engine.logic.match.Match;{[a]};c];
+        mck3: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Order . p`args;
         res:.engine.logic.order.Amend a;
@@ -348,7 +347,6 @@
         .qt.CheckMock[mck1;m[1];c];
         .qt.CheckMock[mck2;m[2];c];
         .qt.CheckMock[mck3;m[3];c];
-        .qt.CheckMock[mck4;m[4];c];
         .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
@@ -365,10 +363,10 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;(`aId`bal`avail`ft`rt;enlist(0;2000;1000;1;1));()); // Update Account
-                (1b;1;(`ordQty`ordVal`ordLoss`amt`totalEntry`execCost`avgPrice;enlist(3;1000;0;0;0;0;0));()); // Inventory 
-                (1b;1;(`oqty`price`dlt`reduce`dqty;enlist(1;1000;1;1b;1));()); // CreateOrder 
-                (1b;3;(();();());()) // Emit
+                (1b;1;();()); // Update Account
+                (1b;1;();()); // Inventory 
+                (1b;1;();()); // Match 
+                (1b;2;();()) // Emit
             ); // mocks 
             () // err 
         )) 
