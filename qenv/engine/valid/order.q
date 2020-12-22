@@ -1,13 +1,5 @@
 
 .engine.valid.order.New:{
-				/ $[(if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
-				/ 		all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
-				/ 		[
-				/ 			.engine.logic.trade.Match[i;a;o];
-				/ 		];[
-				/ 			.engine.model.order.CreateOrder o;
-				/ 			.engine.logic.orderbook.Level[select sum oqty by side, price from o]
-				/ 		]];
 
 	// TODO fkey to instrument
 	x:.engine.Purge[x;enlist();0;"Invalid batch size: batch size > max batch size"];
@@ -21,6 +13,9 @@
 	x:.engine.Purge[x;enlist(<>;(mod;`lprice;`iId.ticksize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`oqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
 	x:.engine.Purge[x;enlist(<>;(mod;`dqty;`iId.lotsize);0);0;"Invalid price: price<mnPrice"];
+
+	if[((o[`okind]=0) or all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])] or
+ 	all[((o[`side]<0);(i[`bestBidPrice]>=o[`price]);i[`hasLiquidityBuy])]) and in'[1;o[`execInst]]);
 
 	// TODO fkey to account
 	x:.engine.Purge[x;enlist();0;"Order account has no balance"];
