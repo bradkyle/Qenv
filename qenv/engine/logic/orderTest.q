@@ -53,11 +53,10 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (); // res 
             (
-                (1b;1;
-                e2 `aId`time`bal`rt`ft`avail!
-                (`.engine.model.account.Account!0;z;0;`.engine.model.risktier.Risktier!0;`.engine.model.feetier.Feetier!0;0);
-                ()); // Update Account
-                (1b;1;();()); // Inventory 
+                (1b;1;e2 flip `aId`time`bal`rt`ft`avail!(
+                 `.engine.model.account.Account!(0 0);
+                 2#z;2#0;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;0 0);()); // Update Account
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (1b;1;();()); // Match 
                 (1b;2;();()) // Emit
             ); // mocks 
@@ -66,7 +65,7 @@
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
@@ -74,10 +73,9 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;flip(0 0;0 0;((0 1);(0 -1));1 -1;1 1;1000 1000;1 1;11b;1 1;2#z));
             (); // res 
             (
-                (1b;1;
-                e2 flip `aId`time`bal`rt`ft`avail!
-                (`.engine.model.account.Account!(0 0);2#z;2#0;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;0 0);
-                ()); // Update Account
+                (1b;1;e2 flip `aId`time`bal`rt`ft`avail!(
+                 `.engine.model.account.Account!(0 0);
+                 2#z;2#0;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;0 0);()); // Update Account
                 (1b;1;();()); // Inventory 
                 (1b;1;();()); // Match 
                 (1b;2;();()) // Emit
