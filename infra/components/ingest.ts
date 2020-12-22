@@ -112,7 +112,7 @@ export class Ingest extends pulumi.ComponentResource {
                                     },
                                     { 
                                         name: "DATA_PATH", 
-                                        value: "/ingest/data/events" 
+                                        value: datapath 
                                     }
                                 ],
                                 command: (!args.isMinikube ? [

@@ -20,8 +20,14 @@
     {[c]
         p:c[`params];
         m:p[`mocks];
-        .engine.testutils.SwitchSetupModels[p`setup];
+        .util.table.dropAll[(
+          `.engine.egress.Events;
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
 
+        .engine.testutils.SwitchSetupModels[p`setup];
         mck0: .qt.OM[`.engine.model.inventory.Update;c];
         mck1: .qt.OM[`.engine.E;c];
 
@@ -32,12 +38,6 @@
         .qt.CheckMock[mck0;m[0];c]; // Inventory Update
         .qt.CheckMock[mck1;m[1];c]; // Emit 
 
-        / .util.table.dropAll[(
-        /   `.engine.egress.Events;
-        /   `.engine.model.inventory.Inventory,
-        /   `.engine.model.risktier.RiskTier,
-        /   `.engine.model.feetier.Feetier
-        / )];
 
     };
     {[p] `setup`args`eRes`mocks`err!p};
@@ -54,8 +54,11 @@
             (`fId`price`side`qty`reduce`ismaker`oId`aId`iId`time`ivId;flip(0 1;1000 1000;1 -1;100 100;01b;01b;0 0;0 0;0 0;2#z;((0 -1);(0 1))));
             (); // res 
             (
-                (1b;1;();()); // UpdateInventory 
-                (1b;2;();()) // Emit
+                (1b;1;e2 `aId`time`side`amt`rpnl`avgPrice`upnl!(0;z;0;0;0;0;0);()); // Update Account
+                (1b;2;(
+                  / .event.Inventory[`aId`time`side`amt`rpnl`avgPrice`upnl!(0;z;0;0;0;0;0)];
+                  / .event.Fill[`aId`]
+                  );()) // Emit 
             ); // mocks 
             () // err 
         ));

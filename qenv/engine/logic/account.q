@@ -56,6 +56,9 @@
 
 // TODO check formatting of events multiple lev update
 .engine.logic.account.Leverage:{
+			/ lng:?[x;();0b;()]
+			/ srt:?[x;();0b;()]
+
 			acc:?[x;();0b;`aId`time`bal`froz`avail!(
 				`aId;`time;`aId.bal;`aId.froz;
 				(`.engine.logic.account.GetAvailable;
@@ -64,12 +67,14 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-			.bam.acc:acc;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			};
 
 
+.engine.logic.account.Settings:{
+
+			};
 
 
 

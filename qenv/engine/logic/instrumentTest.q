@@ -53,7 +53,7 @@
             (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;();()); // Account 
+                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
                 (1b;1;();()); // Inventory  
                 (1b;3;();()) // .engine.E 
             ); // mocks 
