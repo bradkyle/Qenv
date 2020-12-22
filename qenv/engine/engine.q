@@ -36,11 +36,13 @@
     .engine.egress.Events,:flip `time`kind`event`aId!(15h$time;kind;event;7h$aId);
 		};
 
-.engine.Purge   :{[events;cond;tag;msg] 
-    if[count[events]=0;:events];
-    .bam.f:.event.Failure[?[events;cond;0b;()]];
-    .engine.E .event.Failure[?[events;cond;0b;()]];
-    ![events;cond;0b;`symbol$()]
+.engine.Purge   :{[e;cond;tag;msg] 
+    if[count[e]=0;:e];
+    .bam.e:e;
+    .bam.cond:cond;
+    .bam.msg:msg;
+    / .engine.E ([]time:e[`time];datum:();kind:`failure) // .event.Failure[?[events;cond;0b;()]]; // TODO add reason
+    ![e;cond;0b;`symbol$()]
     };
 
 / Event Processing logic (Writes)
