@@ -147,7 +147,7 @@
         ("Update mark price (decreasing), one account: no positions";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
+                (`inventory;(`aId`side`iId`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
@@ -169,7 +169,7 @@
         ("Update mark price (increasing), one account: no positions";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
+                (`inventory;(`aId`side`iId`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
@@ -504,52 +504,62 @@
         p:c[`params];
         a:p`args;
         m:p[`mocks];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck1: .qt.M[`.engine.model.order.GetOrder;{[a;b] a}[m[0][3]];c];
-        mck2: .qt.M[`.engine.model.instrument.UpdateInstrument;{[a;b]};c];
-        mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck0: .qt.M[`.engine.model.account.Update;{[a;b]};c];
+        mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
+        mck2: .qt.M[`.engine.E;{[a]};c];
 
-        res:.engine.logic.instrument.PriceLimit a;
+        a:.model.Funding . p`args;
+        res:.engine.logic.instrument.Funding a;
 
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
-        .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck0;m[0];c];
+        .qt.CheckMock[mck1;m[1];c];
+        .qt.CheckMock[mck2;m[2];c];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`markprice;enlist(0;0.0001));
+            (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;();()); // Account 
-                (1b;1;();()); // Inventory  
-                (1b;3;();()) // .engine.E 
+                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
+                (1b;3;(
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
+                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
+                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                );()) // .engine.E 
             ); // mocks 
             () // err 
         ));
         ("First should succeed";(
             ((!) . flip(
                 (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
+                (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
-                (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;10;10;(0 1);(0 -1);0;0;0;z;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`markprice;enlist(0;0.0001));
+            (`iId`time`fundingrate;enlist(0;z;0.0001));
             (); // res 
             (
-                (1b;1;();()); // Account 
-                (1b;1;();()); // Inventory  
-                (1b;3;();()) // .engine.E 
+                (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
+                (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
+                (1b;3;(
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
+                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
+                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                );()) // .engine.E 
             ); // mocks 
             () // err 
         ))

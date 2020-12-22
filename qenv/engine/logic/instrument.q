@@ -34,20 +34,21 @@
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
 				`aId;`side;`time;`amt;`avgPrice;`rpnl;
-				(-;`upnl;0)	
+				((';`.engine.logic.contract.UnrealizedPnl);
+				`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`amt;`side;`avgPrice)
 			)];
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
 			
 			// Update and emit accounts
-			acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
-				`aId;`time;`aId.froz;`aId.bal;
+			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
+				`aId;`time;`froz;`bal;
 				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
-					(+;`aId.lng.mm;`aId.srt.mm);
-					(+;`aId.lng.upnl;`aId.srt.upnl);
-					(+;`aId.lng.ordQty;`aId.srt.ordQty);
-					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+					`bal;
+					(+;`lng.mm;`srt.mm);
+					(+;`lng.upnl;`srt.upnl);
+					(+;`lng.ordQty;`srt.ordQty);
+					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 
@@ -68,14 +69,14 @@
 			
 			// TODO by account Id
 			// Update and emit account
-			acc:?[ivn;();0b;`aId`time`froz`bal`avail!(
-				`aId;`time;`aId.froz;`aId.bal;
+			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
+				`aId;`time;`froz;`bal;
 				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
-					(+;`aId.lng.mm;`aId.srt.mm);
-					(+;`aId.lng.upnl;`aId.srt.upnl);
-					(+;`aId.lng.ordQty;`aId.srt.ordQty);
-					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+					`bal;
+					(+;`lng.mm;`srt.mm);
+					(+;`lng.upnl;`srt.upnl);
+					(+;`lng.ordQty;`srt.ordQty);
+					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 
@@ -85,11 +86,22 @@
 
 
 .engine.logic.instrument.PriceLimit:{
-		o:?[`.engine.model.order.Order;(();());0b;()];
 
+		// Update and emit instrument
+		i:?[x;();0b;`iId`highest`lowest!(
+			`iId;
+			`highest;
+			`lowest)];
 		.engine.model.instrument.Update i;
+
+		// Get all orders passed price limits
+		o:?[`.engine.model.order.Order;enlist(|;
+			(&;(=;`side;1);(>;`price;last x`highest));
+			(&;(=;`side;-1);(<;`price;last x`lowest))
+		);0b;()];
 		if[count[o]>0;.engine.logic.order.CancelOrder[o]];
 
+		// Emit PriceLimit Event
 		.engine.E .event.PriceLimit[x]; 
 	};
 
