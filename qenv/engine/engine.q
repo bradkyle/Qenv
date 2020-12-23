@@ -62,7 +62,8 @@
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$y[`aId];
-    x[v e]};
+    e:v e;
+    if[not[e~0b];x e]};
 
 .engine.map:()!();
 

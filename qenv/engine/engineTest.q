@@ -163,7 +163,7 @@
         ));
         ("Process cancelall event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`cancelall;datum:enlist()); // Events
+            ([]time:enlist z;kind:enlist`cancelall;datum:enlist enlist[`command]!enlist[1];aId:enlist(0)); // Events
             (); // res 
             (); // mocks
             () // err 

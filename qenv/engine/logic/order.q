@@ -65,6 +65,7 @@
 		};
 
 .engine.logic.order.Cancel:{
+				.bam.cx:x;
 
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
