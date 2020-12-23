@@ -28,11 +28,12 @@
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
+			.bam.mrk:x;
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
 				`aId;`side;`time;`amt;`avgPrice;`rpnl;
-				((';`.engine.logic.contract.UnrealizedPnl);
+				(`.engine.logic.contract.UnrealizedPnl;
 				`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`amt;`side;`avgPrice)
 			)];
 			.engine.model.inventory.Update ivn;

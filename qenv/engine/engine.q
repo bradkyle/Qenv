@@ -54,7 +54,7 @@
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     .bam.e:e;
-    x[e]};
+    x[flip e]};
 
 .engine.privateWrapper:{[v;x;y]
     e:(,\)y`datum;
@@ -62,7 +62,7 @@
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$y[`aId];
-    e:v e;
+    e:v flip e;
     if[not[e~0b];x e]};
 
 .engine.map:()!();

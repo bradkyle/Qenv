@@ -51,6 +51,7 @@
 /         i[`markPrice];
 /         i[`faceValue]];
 .engine.logic.contract.UnrealizedPnl    :{[contractType;markPrice;faceValue;multiplier;amt;isignum;avgPrice] 
+      show contractType;
       7h$($[contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
 				  contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
           contractType=0;.engine.logic.contract.inverse.UnrealizedPnl[amt;isignum;avgPrice;markPrice;faceValue;multiplier]; 
