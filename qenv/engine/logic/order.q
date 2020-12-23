@@ -77,10 +77,10 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-				// TODO Risktier
 				// Update account and emit events
-				acc:?[x;();0b;`aId`time`froz`bal`avail!(
-				`aId;`time;`aId.froz;`aId.bal;
+				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(`aId;`time;`aId.bal;
+				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				(`.engine.logic.account.GetFeetier;`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -110,8 +110,10 @@
 				.engine.E .event.Inventory[ivn]; 
 
 				// Update account and emit events
-				acc:?[x;();0b;`aId`time`froz`bal`avail!(
-				`aId;`time;`aId.froz;`aId.bal;
+				// Update account and emit events
+				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(`aId;`time;`aId.bal;
+				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				(`.engine.logic.account.GetFeetier;`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
