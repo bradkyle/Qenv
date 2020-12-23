@@ -12,7 +12,7 @@
 
         mck0: .qt.M[`.engine.model.account.Update;{[a;b]};c];
         mck1: .qt.M[`.engine.model.inventory.Update;{[a;b]};c];
-        mck2: .qt.M[`.engine.E;{[a]};c];
+        mck2: .qt.OM[`.engine.E;c];
 
         a:.model.Funding . p`args;
         res:.engine.logic.instrument.Funding a;
@@ -20,6 +20,7 @@
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
         .qt.CheckMock[mck2;m[2];c];
+        .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
@@ -38,9 +39,9 @@
                 (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
                 (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
                 (1b;3;(
+                    enlist .event.Funding[`iId`time`fundingrate!(0;z;0.0001)];
                     enlist .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
-                    enlist .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                    enlist .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                    enlist .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 

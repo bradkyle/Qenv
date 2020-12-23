@@ -15,8 +15,8 @@
 			.engine.E .event.Inventory[ivn]; 
 
 			// Update and emit accounts
-			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
-				`aId;`time;`froz;`bal;
+			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`bal`avail!(
+				`aId;`time;`bal;
 				(`.engine.logic.account.GetAvailable;
 					`bal;
 					(+;`lng.mm;`srt.mm);

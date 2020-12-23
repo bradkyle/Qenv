@@ -49,7 +49,7 @@
 .event.Order     		:{x:.event.prep[x];([]kind:`order;time:x`time;datum:flip x`oId`time`aId`side`okind`price`lqty`lprice`sprice`state`reduce`trig`einst;aId:x`aId)}
 .event.Deposit 			:{x:.event.prep[x];x[`aId]:7h$x[`aId];([]kind:`deposit;time:x`time;datum:flip x`aId`time`dep;aId:x`aId)}
 .event.Withdraw 		:{x:.event.prep[x];x[`aId`iId]:7h$x[`aId`iId];([]kind:`withdraw;time:x`time;datum:flip x`aId`iId`time`wit;aId:x`aId)}
-.event.Funding      :{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`fundingrate)}
+.event.Funding      :{x:.event.prep[x];x[`iId]:7h$x[`iId];([]time:x`time;datum:flip x`iId`time`fundingrate)}
 .event.Fill					:{x:.event.prep[x];x[`aId`ivId`iId`oId]:7h$x[`aId`ivId`iId`oId];([]time:x`time;datum:flip x`oId`time`aId`qty`price;aId:x`aId)}
 
 /*******************************************************
