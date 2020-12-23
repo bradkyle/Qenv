@@ -105,6 +105,20 @@
             (); // mocks
             () // err 
         ));
+        ("Process settlement event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`settlement;datum:enlist()); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process pricerange event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`pricerange;datum:enlist(1000;1000)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
         ("Process withdraw event";(
             .engine.test.process.Setup; // Setup
             ([]time:enlist z;kind:enlist`withdraw;datum:enlist(1)); // Events

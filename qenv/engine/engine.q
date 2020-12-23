@@ -50,10 +50,8 @@
 / -------------------------------------------------------------------->
 
 .engine.publicWrapper:{[x;y;z]
-    .bam.z:z;
-    .bam.x:x;
-    .bam.y:y;
-    e:flip enlist y!$[count[y]>1;flip z`datum;z`datum];
+    e:()!();
+    e[y]:$[count[y]>1;flip z;z];
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     .bam.e:e;
