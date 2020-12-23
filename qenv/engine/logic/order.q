@@ -70,9 +70,9 @@
 				// Update inventory and emit events
 				ivn:?[o;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;0);
-					(+;`ivId.ordVal;0);
-					(+;`ivId.ordQty;0)
+					(-;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;));
+					(-;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;));
+					(-;`ivId.ordQty;())
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -103,7 +103,7 @@
 				`aId;`side;`time;`amt;`avgPrice;`upnl;`rpnl;
 					(+;`ordLoss;0);
 					(+;`ordVal;0);
-					(+;`ordQty;1)
+					(+;`ordQty;0)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
