@@ -21,7 +21,7 @@
 
 .model.Level:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
-    x:flip .model.Model[.engine.model.orderbook.r;cl;vl];  
+    x:.model.Model[.engine.model.orderbook.r;cl;vl];  
     x[`iId]:`.engine.model.instrument.Instrument$x[`iId];
     x
     };
