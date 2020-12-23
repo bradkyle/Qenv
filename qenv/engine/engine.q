@@ -116,7 +116,7 @@
       (count[events]>0);
       .engine.ingress.Events:events;::];
     .engine.process[.engine.GetIngressEvents[.engine.watermark;`second$5;950]];
-    / .engine.runcheck[];
+    / .engine.checkhooks[];
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
     };
 

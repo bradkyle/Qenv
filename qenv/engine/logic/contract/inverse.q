@@ -34,8 +34,6 @@
 // Given the current Inventory state, this function will derive the
 // unrealized pnl that the inventory has incurred.
 .engine.logic.contract.inverse.UnrealizedPnl          :{[amt;isignum;avgPrice;markPrice;faceValue;multiplier] 
-    show multiplier;
-    show type multiplier;
     7h$((((faceValue%avgPrice)-(faceValue%markPrice))*(amt*isignum))*multiplier)
     };
 
