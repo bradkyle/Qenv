@@ -2,7 +2,6 @@
 // TODO realized pnl logic
 // Update 
 .engine.logic.instrument.Funding:{
-
 			// Update instrument & funding event 
 			.engine.model.instrument.Update flip[x];
 			.engine.E .event.Funding[x]; 

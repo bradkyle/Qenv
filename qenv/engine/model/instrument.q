@@ -1,5 +1,8 @@
 
-.engine.model.instrument.Instrument:([iId:`long$()] cntTyp:`long$();state:`long$();faceValue:`long$();mkprice:`long$();
+.engine.model.CONTRACTTYPE:`linear`inverse`quanto;
+
+.engine.model.instrument.Instrument:([iId:`long$()] 
+        cntTyp:`.engine.model.CONTRACTTYPE$();state:`long$();faceValue:`long$();mkprice:`long$();
 				highest:`long$();lowest:`long$();lotSize:`long$();tickSize:`long$();mnSize:`long$();
   			mxSize:`long$();mnPrice:`long$();mxPrice:`long$();smul:`long$();fudingrate:`float$();
 				bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$();time:`datetime$());
