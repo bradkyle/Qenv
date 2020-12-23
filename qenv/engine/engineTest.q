@@ -50,10 +50,19 @@
     );
     "Path finder action set (made for binance exchange)"];
 
+.engine.test.process.Setup:((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+    (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+));
+
 .qt.Unit[
     ".engine.process";
     {[c]
         p:c[`params];
+        .engine.watermark:0n;
 
         .util.table.dropAll[(
           `.engine.model.account.Account,
@@ -69,62 +78,34 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("Process trade events";(
-            ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-            ));
-            ([]time:z;kind:`trade;datum:();aId:0);
+        ("Process trade event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
             (); // res 
-            (
-                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
-                (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)];.event.Withdraw[`aId`iId`wit`time!(0;0;0;z)]);()) // Emit 
-            ); // mocks 
+            (); // mocks
+            () // err 
+        ));
+        ("Process trade events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process depth event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
             () // err 
         ));
         ("Process depth events";(
-            ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
-                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
-                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-            ));
-            ([]time:z;kind:`trade;datum:();aId:0);
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
             (); // res 
-            (
-                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
-                (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)];.event.Withdraw[`aId`iId`wit`time!(0;0;0;z)]);()) // Emit 
-            ); // mocks 
+            (); // mocks
             () // err 
-        ))
-        / ("Process funding events";(
-        / ));
-        / ("Process mark events";(
-        / ));
-        / ("Process settlement events";(
-        / ));
-        / ("Process pricerange events";(
-        / ));
-        / ("Process withdraw events";(
-        / ));
-        / ("Process deposit events";(
-        / ));
-        / ("Process leverage events";(
-        / ));
-        / ("Process neworder events";(
-        / ));
-        / ("Process amendorder events";(
-        / ));
-        / ("Process cancelorder events";(
-        / ));
-        / ("Process cancelall events";(
-        / ));
-        / ("Process combined events";(
-        / ))
+        ));
     );
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
