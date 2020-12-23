@@ -114,49 +114,49 @@
         ));
         ("Process pricerange event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `pricerange;datum:enlist `highest`lowest!(1000;1000)); // Events
+            ([]time:enlist z;kind:enlist`pricerange;datum:enlist `highest`lowest!(1000;1000)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process withdraw event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `withdraw;datum:enlist enlist[`withdraw]!enlist[1]); // Events
+            ([]time:enlist z;kind:enlist`withdraw;datum:enlist enlist[`withdraw]!enlist[1]); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process deposit event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `deposit;datum:enlist enlist[`deposit]!enlist[1]); // Events
+            ([]time:enlist z;kind:enlist`deposit;datum:enlist enlist[`deposit]!enlist[1]); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process leverage event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `leverage;datum:enlist enlist[`leverage]!enlist[1]); // Events
+            ([]time:enlist z;kind:enlist`leverage;datum:enlist enlist[`leverage]!enlist[1]); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process neworder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
+            ([]time:enlist z;kind:enlist`neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process amendorder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
+            ([]time:enlist z;kind:enlist`amendorder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process cancelorder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
+            ([]time:enlist z;kind:enlist`cancelorder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
