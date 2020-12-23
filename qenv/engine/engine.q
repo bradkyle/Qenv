@@ -53,10 +53,10 @@
     .bam.z:z;
     .bam.x:x;
     .bam.y:y;
-    e:y!$[count[y]>1;flip z`datum;z`datum];
-    .bam.e:e;
+    e:flip enlist y!$[count[y]>1;flip z`datum;z`datum];
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
+    .bam.e:e;
     x[e]};
 
 .engine.privateWrapper:{[v;x;y;z]
@@ -87,8 +87,9 @@
 .engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel;`oId`clId];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
 
-.engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
-/ .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // TODO logging
+/ .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
+/ .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // 
+.engine.multiplex:{.engine.map[first x[`kind];x]}; // testing only 
 
 // Todo add slight randomization to incoming trades and 
 // depth during training
