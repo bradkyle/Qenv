@@ -49,15 +49,16 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
+// TODO remove if/else
 .engine.publicWrapper:{[x;y]
-    e:(,\)y`datum;
+    $[`datum in cols[y];e:(,\)y`datum;e:()!()];
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     .bam.e:e;
     x[flip e]};
 
 .engine.privateWrapper:{[v;x;y]
-    e:(,\)y`datum;
+    $[`datum in cols[y];e:(,\)y`datum;e:()!()];
     .bam.ep:e;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
