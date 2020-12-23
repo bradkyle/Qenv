@@ -79,28 +79,28 @@
     (
         ("Process trade event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process depth event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`depth;datum:enlist(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process funding event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`funding;datum:enlist(0.0001)); // Events
+            ([]time:enlist z;kind:enlist `funding;datum:enlist enlist[`fundingrate]!enlist(0.001)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process mark event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`mark;datum:enlist(1000)); // Events
+            ([]time:enlist z;kind:enlist `mark;datum:enlist enlist[`markprice]!enlist(1000)); // Events
             (); // res 
             (); // mocks
             () // err 
