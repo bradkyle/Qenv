@@ -8,9 +8,9 @@
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
-					(+;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
-					(+;`ivId.ordQty;`qty)
+					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;enlist `Loss;`iId.mkprice;`oqty;`price));
+					(+;`ivId.ordVal;(`.engine.logic.contract;`iId.cntTyp;enlist `Value;`oqty;`price));
+					(+;`ivId.ordQty;`oqty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -39,9 +39,9 @@
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
-					(+;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
-					(+;`ivId.ordQty;`qty)
+					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;enlist `Loss;`iId.mkprice;`oqty;`price));
+					(+;`ivId.ordVal;(`.engine.logic.contract;`iId.cntTyp;enlist `Value;`oqty;`price));
+					(+;`ivId.ordQty;`oqty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -70,9 +70,9 @@
 				// Update inventory and emit events
 				ivn:?[o;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(-;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
-					(-;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
-					(-;`ivId.ordQty;`qty)
+					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;enlist `Loss;`iId.mkprice;`oqty;`price));
+					(+;`ivId.ordVal;(`.engine.logic.contract;`iId.cntTyp;enlist `Value;`oqty;`price));
+					(+;`ivId.ordQty;`oqty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -109,7 +109,6 @@
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
-				// Update account and emit events
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(`aId;`time;`aId.bal;
 				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
