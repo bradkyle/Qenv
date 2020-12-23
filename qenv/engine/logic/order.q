@@ -65,10 +65,10 @@
 		};
 
 .engine.logic.order.Cancel:{
-				.bam.cx:x;
+				o:0!?[`.engine.model.order.Order;enlist(in;`oId;x`oId);0b;()];
 
 				// Update inventory and emit events
-			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
+				ivn:?[o;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
 					(+;`ivId.ordLoss;0);
 					(+;`ivId.ordVal;0);
@@ -90,7 +90,7 @@
 				.engine.E .event.Account[acc]; 
 
 				// Cancel order should delete order
-				.engine.model.order.Delete[x];
+				.engine.model.order.Delete[enlist(in;`oId;o`oId)];
 				/ .engine.E .event.Order[];
 		};
 

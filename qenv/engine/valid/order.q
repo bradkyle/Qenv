@@ -94,6 +94,7 @@
 	};
 
 .engine.valid.order.Cancel:{
+
 				/ c:.engie.logic.order.Get[`oId`cId;o`oId`cId];
 				/ if[null[c];.engine.Purge[o;0;"Order not found"]];
 				/ if[not[c[`state] in ()];.engine.Purge[o;0;"cancel order with terminal state"]];
