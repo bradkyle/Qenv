@@ -67,23 +67,23 @@
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade;`size`qty`price]; 
-.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;`size`qty`price];
-.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;enlist`fundingrate];
-.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark;enlist`markprice];
-.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement;()];
-.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit;`highest`lowest];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade]; 
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark];
+.engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
+.engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
 
 // Account
-.engine.map[`withdraw]    :.engine.privateWrapper[.engine.valid.account.Withdraw;.engine.logic.account.Withdraw;enlist`withdraw];
-.engine.map[`deposit]     :.engine.privateWrapper[.engine.valid.account.Deposit;.engine.logic.account.Deposit;enlist`deposit];
-.engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage;enlist`leverage];
+.engine.map[`withdraw]    :.engine.privateWrapper[.engine.valid.account.Withdraw;.engine.logic.account.Withdraw];
+.engine.map[`deposit]     :.engine.privateWrapper[.engine.valid.account.Deposit;.engine.logic.account.Deposit];
+.engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New;`clId`oId];
-.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.Amend;.engine.logic.order.Amend;`oId`clId];
-.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel;`oId`clId];
-.engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New];
+.engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.Amend;.engine.logic.order.Amend];
+.engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel];
+.engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll];
 
 / .engine.multiplex:{.Q.trp[.engine.map[first x[`kind]];x;{show x;ERROR .Q.sbt[y]}]}; // TODO logging
 / .engine.multiplex:{@[.engine.map[first x[`kind]];x;show first[x`kind]]}; // 
