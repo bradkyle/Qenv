@@ -29,6 +29,7 @@
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
+			.bam.mk:x;
 			// Update instrument & mark event 
 			.engine.model.instrument.Update[x];
 			.engine.E .event.Mark[x]; 
@@ -37,7 +38,7 @@
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
 					`aId;`side;`time;`amt;`avgPrice;`rpnl;
-					(.engine.logic.contract;`iId.cntTyp;enlist`UnrealizedPnl;`amt;`side;`avgPrice;`iId.mkprice;`iId.faceValue;`iId)
+					(.engine.logic.contract;`iId.cntTyp;enlist`UnrealizedPnl;`amt;`side;`avgPrice;`iId.mkprice;`iId.faceValue;`iId.smul)
 				)];
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
@@ -53,7 +54,6 @@
 					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
-
 	};
 
 // TODO implement
