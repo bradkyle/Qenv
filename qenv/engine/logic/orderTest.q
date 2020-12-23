@@ -137,10 +137,16 @@
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()); // Inventory 
-                (1b;1;();()); // Match 
-                (1b;2;();()) // Emit
+                (1b;1;
+                e2 `aId`time`bal`rt`ft`avail!
+                (`.engine.model.account.Account!0;z;0;`.engine.model.risktier.Risktier!0;`.engine.model.feetier.Feetier!0;0);
+                ()); // Update Account
+                (1b;1;e2 `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0);());
+                (1b;1;();()); 
+                (1b;2;(
+                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0)];
+                .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0;z;0;0)]
+                );()) // Emit
             ); // mocks 
             () // err 
         ));
@@ -156,10 +162,14 @@
             (`oId`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
-                (1b;1;();()); // Update Account
-                (1b;1;();()); // Inventory 
+                (1b;1;e2 flip `aId`time`bal`rt`ft`avail!(`.engine.model.account.Account!(0 0);
+                         2#z;2#0;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;0 0);()); // Update Account
+                (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!(0 0);1 -1;2#z;10 10;100 100;0 0;0 0;0 0;0 0;0 0);());
                 (1b;1;();()); // Match 
-                (1b;2;();()) // Emit
+                (1b;2;(
+                enlist .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0 0;1 -1;2#z;2#10;2#100;2#0;2#0;2#0;2#0;2#0)];
+                enlist .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0 0;2#z;2#0;2#0)]
+                );()) // Emit
             ); // mocks 
             () // err 
         ))
