@@ -38,9 +38,9 @@
                 (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
                 (1b;1;e2 flip `aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001);()); //Update Inventory 
                 (1b;3;(
-                .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
-                .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
+                    enlist .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
+                    enlist .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
+                    enlist .event.Funding[`iId`time`fundingrate!(0;z;0.0001)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 
