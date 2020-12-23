@@ -4,7 +4,7 @@
 .engine.logic.instrument.Funding:{
 			// Update instrument & funding event 
 			.engine.model.instrument.Update[x];
-			/TODO .engine.E .event.Funding[x]; 
+			.engine.E .event.Funding[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -32,7 +32,7 @@
 .engine.logic.instrument.Mark:{
 			// Update instrument & mark event 
 			.engine.model.instrument.Update[x];
-			/TODO .engine.E .event.Mark[x]; 
+			.engine.E .event.Mark[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -63,7 +63,7 @@
 .engine.logic.instrument.Settlement:{
 			// Update instrument & mark event 
 			.engine.model.instrument.Update x;
-			/TODO .engine.E .event.Settlement[x]; 
+			.engine.E .event.Settlement[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;

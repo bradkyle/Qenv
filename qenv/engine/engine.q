@@ -51,15 +51,14 @@
 
 // TODO remove if/else
 .engine.publicWrapper:{[x;y]
-    $[`datum in cols[y];e:(,\)y`datum;e:()!()];
+    e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     .bam.e:e;
     x[e]};
 
 .engine.privateWrapper:{[v;x;y]
-    $[`datum in cols[y];e:(,\)y`datum;e:()!()];
-    .bam.ep:e;
+    e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$y[`aId];

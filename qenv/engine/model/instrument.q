@@ -6,7 +6,7 @@
 				highest:`long$();lowest:`long$();lotSize:`long$();tickSize:`long$();mnSize:`long$();
   			mxSize:`long$();mnPrice:`long$();mxPrice:`long$();smul:`long$();fudingrate:`float$();
         bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$();fundingrate:`float$();
-        time:`datetime$());
+        lastsettled:`datetime$();time:`datetime$());
 .engine.model.instrument.r:.util.NullRowDict[`.engine.model.instrument.Instrument];
 
 .engine.model.instrument.Create:.engine.model.common.Create[`.engine.model.instrument.Instrument]
