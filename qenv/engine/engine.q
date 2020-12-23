@@ -50,13 +50,17 @@
 / -------------------------------------------------------------------->
 
 .engine.publicWrapper:{[x;y;z]
-    e:y!flip z[`datum];
+    .bam.z:z;
+    .bam.x:x;
+    .bam.y:y;
+    e:y!$[count[y]>1;flip z`datum;z`datum];
+    .bam.e:e;
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     x[e]};
 
 .engine.privateWrapper:{[v;x;y;z]
-    e:y!flip z;
+    e:y!$[count[y]>1;flip z`datum;z`datum];
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$x[`aId];
@@ -78,7 +82,7 @@
 .engine.map[`leverage]    :.engine.privateWrapper[.engine.valid.account.Leverage;.engine.logic.account.Leverage;enlist`leverage];
 
 // Ordering
-.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New;`clId`];
+.engine.map[`neworder]    :.engine.privateWrapper[.engine.valid.order.New;.engine.logic.order.New;`clId`oId];
 .engine.map[`amendorder]  :.engine.privateWrapper[.engine.valid.order.Amend;.engine.logic.order.Amend;`oId`clId];
 .engine.map[`cancelorder] :.engine.privateWrapper[.engine.valid.order.Cancel;.engine.logic.order.Cancel;`oId`clId];
 .engine.map[`cancelall]   :.engine.privateWrapper[.engine.valid.order.CancelAll;.engine.logic.order.CancelAll;()];
