@@ -51,7 +51,7 @@
     "Path finder action set (made for binance exchange)"];
 
 .engine.test.process.Setup:((!) . flip(
-    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
     (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
     (`inventory;(`aId`iId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
     (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
