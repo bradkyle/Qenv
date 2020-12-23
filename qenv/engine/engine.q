@@ -50,16 +50,18 @@
 / -------------------------------------------------------------------->
 
 .engine.publicWrapper:{[x;y]
-    e:y`datum;
-    e[`time]:z[`time];
+    e:(,\)y`datum;
+    e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
+    .bam.e:e;
     x[e]};
 
 .engine.privateWrapper:{[v;x;y]
-    e:y`datum;
-    e[`time]:z[`time];
+    e:(,\)y`datum;
+    .bam.ep:e;
+    e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
-    e[`aId]:`.engine.model.account.Account$x[`aId];
+    e[`aId]:`.engine.model.account.Account$y[`aId];
     x[v e]};
 
 .engine.map:()!();
