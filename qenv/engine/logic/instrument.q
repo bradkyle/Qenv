@@ -2,6 +2,11 @@
 // TODO realized pnl logic
 // Update 
 .engine.logic.instrument.Funding:{
+
+			// Update instrument & funding event 
+			.engine.model.instrument.Update flip[x];
+			.engine.E .event.Funding[x]; 
+
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`upnl`rpnl!(
@@ -22,14 +27,12 @@
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 
-			// Emit funding event
-			.engine.E .event.Funding[x]; 
 		};
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
-			![`.engine.model.instrument.Instrument;enlist();0b;()];
-			// Emit mark event 
+			// Update instrument & mark event 
+			.engine.model.instrument.Update flip[x];
 			.engine.E .event.Mark[x]; 
 
 			// Update and emit inventory
@@ -57,6 +60,10 @@
 
 // Apply settlement
 .engine.logic.instrument.Settlement:{
+			// Update instrument & mark event 
+			.engine.model.instrument.Update flip[x];
+			.engine.E .event.Settlement[x]; 
+
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
@@ -78,8 +85,6 @@
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 
-			// Emit Settlement Event 
-			.engine.E .event.Settlement[x]; 
 	};
 
 // Apply price limits

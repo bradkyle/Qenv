@@ -1,4 +1,4 @@
-
+        
 
 .qt.Unit[
     ".engine.GetIngressEvents";
@@ -100,7 +100,7 @@
         ));
         ("Process mark event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `mark;datum:enlist enlist[`markprice]!enlist(1000)); // Events
+            ([]time:enlist z;kind:enlist `mark;datum:enlist enlist[`mkprice]!enlist(1000)); // Events
             (); // res 
             (); // mocks
             () // err 
