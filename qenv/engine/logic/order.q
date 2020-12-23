@@ -35,7 +35,7 @@
 
 .engine.logic.order.Amend:{
 				.bam.x:x;
-				x:?[`.engine.model.order.Order;enlist(in;x`oId;`oId);0b;()];
+				x:?[`.engine.model.order.Order;enlist(in;`oId;x`oId);0b;()];
 
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
