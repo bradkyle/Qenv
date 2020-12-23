@@ -58,8 +58,7 @@
 			};
 
 .engine.logic.account.Leverage:{
-			/ lng:?[x;();0b;()]
-			/ srt:?[x;();0b;()]
+			// 
 
 			acc:?[x;();0b;`aId`time`bal`froz`avail!(
 				`aId;`time;`aId.bal;`aId.froz;
