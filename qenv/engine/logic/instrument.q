@@ -32,10 +32,9 @@
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
-				`aId;`side;`time;`amt;`avgPrice;`rpnl;
-				(`.engine.logic.contract[`iId.cntTyp;`UnrealizedPnl];
-				`iId.cntTyp;`iId.mkprice;`iId.faceValue;`iId.smul;`amt;`side;`avgPrice)
-			)];
+					`aId;`side;`time;`amt;`avgPrice;`rpnl;
+					(.engine.logic.contract;`iId.cntTyp;enlist`UnrealizedPnl;`amt;`side;`avgPrice;`iId.mkprice;`iId.faceValue;`iId)
+				)];
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
 			
