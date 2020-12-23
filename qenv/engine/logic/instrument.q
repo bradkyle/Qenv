@@ -4,9 +4,11 @@
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`upnl`rpnl!(
-				`aId;`side;x`time;`amt;`avgPrice;`upnl;
+				`aId;`side;last x`time;`amt;`avgPrice;`upnl;
 				(-;`rpnl;(*;(sum;x`fundingrate);`amt))	
 			)];
+			.bam.ivn:ivn;
+
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
 
