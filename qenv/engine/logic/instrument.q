@@ -28,7 +28,10 @@
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
-			.bam.mrk:x;
+			![`.engine.model.instrument.Instrument;enlist();0b;()];
+			// Emit mark event 
+			.engine.E .event.Mark[x]; 
+
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
@@ -50,8 +53,6 @@
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 
-			// Emit mark event 
-			.engine.E .event.Mark[x]; 
 	};
 
 // Apply settlement
