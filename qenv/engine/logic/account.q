@@ -57,9 +57,8 @@
 			.engine.E .event.Deposit[x]; 
 			};
 
+// TODO update inventory
 .engine.logic.account.Leverage:{
-			// 
-
 			acc:?[x;();0b;`aId`time`bal`avail!(
 				`aId;`time;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
@@ -72,11 +71,10 @@
 			.engine.E .event.Account[acc]; 
 			};
 
-
+// TODO update inventory
 .engine.logic.account.Settings:{
 			/ lng:?[x;();0b;()]
 			/ srt:?[x;();0b;()]
-
 			acc:?[x;();0b;`aId`time`bal`froz`avail!(
 				`aId;`time;`aId.bal;`aId.froz;
 				(`.engine.logic.account.GetAvailable;
