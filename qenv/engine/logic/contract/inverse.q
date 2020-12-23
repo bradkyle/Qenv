@@ -43,3 +43,17 @@
 .engine.logic.contract.inverse.RealizedPnl            :{[fillQty;fillPrice;isignum;avgPrice;faceValue;multiplier]
     7h$((((faceValue%fillPrice)-(faceValue%avgPrice))*(fillQty*isignum))*multiplier)
     };
+
+
+// Derives the approximate price at which the inventory will be liquidated
+// Given the maintenence margin requirements and initial margin requirements
+// of the current risk tier of the account
+.engine.logic.contract.inverse.LiquidationPrice :{[]
+      
+    };
+
+// Derives the approximage price at which the inventory will become bankrupts
+// given the leverage etc.
+.engine.logic.contract.inverse.BankruptcyPrice  :{[]
+      
+    };
