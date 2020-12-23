@@ -66,9 +66,8 @@
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
-				`aId;`side;`time;`amt;`avgPrice;
-				(*;`rpnl;0);
-				(-;`upnl;0)	
+				`aId;`side;`time;`amt;`avgPrice;`rpnl;`upnl
+				/ (*;`rpnl;0);`upnl
 			)];
 			.engine.model.inventory.Update ivn;
 			.engine.E .event.Inventory[ivn]; 
