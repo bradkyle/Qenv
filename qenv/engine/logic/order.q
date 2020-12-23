@@ -95,13 +95,15 @@
 		};
 
 .engine.logic.order.CancelAll:{
+				o:0!?[`.engine.model.order.Order;enlist(in;`aId;x`aId);0b;()];
 
 				// Update inventory and emit events
-			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
-				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;0);
-					(+;`ivId.ordVal;0);
-					(+;`ivId.ordQty;0)
+				ivn: ?[`.engine.model.inventory.Inventory;enlist(in;`aId;x`aId);0b;
+				`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
+				`aId;`side;`time;`amt;`avgPrice;`upnl;`rpnl;
+					(+;`ordLoss;0);
+					(+;`ordVal;0);
+					(+;`ordQty;1)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -119,7 +121,7 @@
 				.engine.E .event.Account[acc]; 
 
 				// Cancel all orders should delete orders
-				.engine.model.order.Delete[x];
+				.engine.model.order.Delete[enlist(in;`oId;o`oId)];
 				/ .engine.E .event.Order[];
     };
 
