@@ -1,6 +1,5 @@
 
 .engine.valid.account.Withdraw:{
-	// 
 	x:.engine.Purge[x;enlist(<;`wit;0);0;"Withdraw is less than min withdrawal amount"];
 	x:.engine.Purge[x;enlist(>;`wit;10000);0;"Withdraw is greater than max withdrawal amount"];
 
@@ -13,7 +12,6 @@
 	};
 
 .engine.valid.account.Deposit:{
-	.bam.dx:x;
 	x:.engine.Purge[x;enlist(<=;`aId.bal;0);0;"Order account has no balance"];
 	x 
 	};
