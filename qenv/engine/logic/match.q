@@ -3,6 +3,7 @@
     rp:first rp;
     ?[((offset<=rp)and((lqty+offset)<=rp));1;?[(sums[offset]<=rp);2;state]]};
 
+// TODO implement trade
 // recieves trade as type
 .engine.logic.match.Trade: {};
 
