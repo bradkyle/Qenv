@@ -107,7 +107,7 @@
         ));
         ("Process settlement event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`settlement;datum:enlist()); // Events
+            ([]time:enlist z;kind:enlist`settlement;datum:enlist(()!())); // Events
             (); // res 
             (); // mocks
             () // err 
