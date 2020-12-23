@@ -84,18 +84,13 @@
 					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
-
 	};
 
 // Apply price limits
 .engine.logic.instrument.PriceLimit:{
-
-		// Update and emit instrument
-		i:?[x;();0b;`iId`highest`lowest!(
-			(7h$;`iId);
-			`highest;
-			`lowest)];
-		.engine.model.instrument.Update i;
+		// Update instrument & pricelimit event 
+		.engine.model.instrument.Update flip[x];
+		.engine.E .event.PriceLimit[x]; 
 
 		// Get all orders passed price limits
 		o:?[`.engine.model.order.Order;enlist(|;
@@ -104,8 +99,6 @@
 		);0b;()];
 		if[count[o]>0;.engine.logic.order.Cancel[o]];
 
-		// Emit PriceLimit Event
-		.engine.E .event.PriceLimit[x]; 
 	};
 
 
