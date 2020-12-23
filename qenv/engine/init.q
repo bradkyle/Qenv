@@ -6,7 +6,8 @@
 \l engine.q
 
 loadTests   :{
-    .qt.SkpBesTest[(23 24 25 26)]; // account 
+    / .qt.SkpBesTest[(11 12 13 14)]; // inverse contract 
+    / .qt.SkpBesTest[(23 24 25 26)]; // account 
     / .qt.SkpBesTest[(27 28 29 30)]; // instrument
     / .qt.SkpBesTest[(31 32 33 34)]; // order
     / .qt.SkpBesTest[(38 39 40 41)]; // valid order
