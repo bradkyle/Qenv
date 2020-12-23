@@ -29,7 +29,6 @@
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
-			.bam.mk:x;
 			// Update instrument & mark event 
 			.engine.model.instrument.Update[x];
 			.engine.E .event.Mark[x]; 
@@ -67,7 +66,8 @@
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
 				`aId`side`time`amt`avgPrice`rpnl`upnl!(
-				`aId;`side;`time;`amt;`avgPrice;`rpnl;
+				`aId;`side;`time;`amt;`avgPrice;
+				(*;`rpnl;0);
 				(-;`upnl;0)	
 			)];
 			.engine.model.inventory.Update ivn;
@@ -89,7 +89,7 @@
 // Apply price limits
 .engine.logic.instrument.PriceLimit:{
 		// Update instrument & pricelimit event 
-		.engine.model.instrument.Update [x];
+		.engine.model.instrument.Update[x];
 		/TODO .engine.E .event.PriceLimit[x]; 
 
 		// Get all orders passed price limits

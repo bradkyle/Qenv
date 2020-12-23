@@ -13,12 +13,10 @@
    	`.engine.model.risktier.Risktier$((first 0!rt)`rtId)
    };
 
-// TODO allow for multiple args
 .engine.logic.account.GetAvailable:{[bal;mm;upnl;oqty;oloss]
       bal-(mm+upnl)+(oqty-oloss)
     };
 
-// TODO 
 .engine.logic.account.Liquidate:{
 		x[`status]:1;
 		// derive bankruptch price
@@ -27,7 +25,6 @@
 		x
 	};
 
-// TODO check formatting of events
 .engine.logic.account.Withdraw:{
 			acc:?[x;();0b;`aId`time`froz`wit`bal`avail!(
 				`aId;`time;`aId.froz;
@@ -44,7 +41,6 @@
 			.engine.E .event.Withdraw[x]; 
 			};
 
-// TODO check formatting of events
 .engine.logic.account.Deposit:{
 			acc:?[x;();0b;`aId`time`froz`dep`bal`avail!(
 				`aId;`time;`aId.froz;
@@ -61,7 +57,6 @@
 			.engine.E .event.Deposit[x]; 
 			};
 
-// TODO check formatting of events multiple lev update
 .engine.logic.account.Leverage:{
 			/ lng:?[x;();0b;()]
 			/ srt:?[x;();0b;()]
