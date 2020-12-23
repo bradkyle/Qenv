@@ -142,28 +142,28 @@
         ));
         ("Process neworder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist enlist[`price`okind`side`oqty`dqty]!enlist[(1000;1;1;100;100)]); // Events
+            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process amendorder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist enlist[`price`okind`side`oqty`dqty]!enlist[(1000;1;1;100;100)]); // Events
+            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process cancelorder event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist `neworder;datum:enlist enlist[`price`okind`side`oqty`dqty]!enlist[(1000;1;1;100;100)]); // Events
+            ([]time:enlist z;kind:enlist `neworder;datum:enlist `price`okind`side`oqty`dqty!(1000;1;1;100;100)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Process cancelall event";(
             .engine.test.process.Setup; // Setup
-            ([]time:enlist z;kind:enlist`cancelall;datum:enlist(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist`cancelall;datum:enlist()); // Events
             (); // res 
             (); // mocks
             () // err 
