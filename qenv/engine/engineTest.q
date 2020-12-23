@@ -55,6 +55,15 @@
     {[c]
         p:c[`params];
 
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
+
+        res:.engine.process[];
         .qt.A[res;~;p[`eRes];"res";c];
 
     };
