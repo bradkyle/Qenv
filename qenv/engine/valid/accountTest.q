@@ -1,6 +1,6 @@
 
 .engine.valid.account.test.Setup: ((!) . flip(
-    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
     (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
     (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
     (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -29,35 +29,35 @@
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Withdraw no balance:should fail";(
-            .engine.valid.order.test.Setup;
+            .engine.valid.account.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
             ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw insufficient balance:should fail";(
-            .engine.valid.order.test.Setup;
+            .engine.valid.account.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
             ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Account disabled:should fail";(
-            .engine.valid.order.test.Setup;
+            .engine.valid.account.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
             ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Account locked:should fail";(
-            .engine.valid.order.test.Setup;
+            .engine.valid.account.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
             ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
             () // err 
         ));
         ("Withdraw Success: Update fee tier, risk tier, apply withdraw fee, avail";(
-            .engine.valid.order.test.Setup;
+            .engine.valid.account.test.Setup;
             (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty`time;enlist(0;0;enlist(0 1);1;1;1000;1;1b;1;z));
             (0b);
             ((1b;3;();())); //(.event.Failure[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)]);()) // Emit ); // mocks 
@@ -84,21 +84,24 @@
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Deposit Account disabled:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Deposit Account locked:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Deposit Success: Update fee tier, risk tier, avail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeDeposit[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
@@ -124,33 +127,38 @@
         .qt.CheckMock[mck2;m[1];c];
         .qt.CheckMock[mck3;m[2];c];
     };
-    {[p] :`args`eRes`mocks`err!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Leverage no balance:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage insufficient balance:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Account disabled:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Account locked:should fail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeLeverage[`aId`iId`withdraw;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
             () // err 
         ));
         ("Leverage Success: Update fee tier, risk tier, apply withdraw fee, avail";(
+            .engine.valid.account.test.Setup;
             .util.testutils.makeLeverage[`aId`iId`leverage;enlist(0;0;0)];
             (); // res 
             (enlist(1b;1;();.util.testutils.makeAccount[])); // mocks 
