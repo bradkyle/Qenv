@@ -74,7 +74,6 @@
 
         res:.engine.process[p`args];
         .qt.A[res;~;p[`eRes];"res";c];
-
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
