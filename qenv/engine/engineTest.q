@@ -106,6 +106,132 @@
             (); // mocks
             () // err 
         ));
+        ("Process funding event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process funidng events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process mark event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process mark events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process withdraw event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process withdraw events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process deposit event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process deposit events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process leverage event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process leverage events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process neworder event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process neworder events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process amendorder event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process amendorder events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process cancelorder event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process cancelorder events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process cancelall event";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ));
+        ("Process cancelall events";(
+            .engine.test.process.Setup; // Setup
+            ([]time:enlist z;kind:enlist`trade;datum:enlist(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
+        ))
     );
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
