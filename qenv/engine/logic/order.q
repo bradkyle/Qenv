@@ -8,9 +8,9 @@
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;0);
-					(+;`ivId.ordVal;0);
-					(+;`ivId.ordQty;0)
+					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
+					(+;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
+					(+;`ivId.ordQty;`qty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -39,9 +39,9 @@
 				// Update inventory and emit events
 			  ivn: 	?[x;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(+;`ivId.ordLoss;0);
-					(+;`ivId.ordVal;0);
-					(+;`ivId.ordQty;0)
+					(+;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
+					(+;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
+					(+;`ivId.ordQty;`qty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
@@ -70,13 +70,14 @@
 				// Update inventory and emit events
 				ivn:?[o;();0b;`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(
 				`aId;`side;`time;`ivId.amt;`ivId.avgPrice;`ivId.upnl;`ivId.rpnl;
-					(-;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;));
-					(-;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;));
-					(-;`ivId.ordQty;())
+					(-;`ivId.ordLoss;(`.engine.logic.contract;`iId.cntTyp;`Loss;`iId.mkprice;`qty;`price));
+					(-;`ivId.ordValue;(`.engine.logic.contract;`iId.cntTyp;`Value;`qty;`price));
+					(-;`ivId.ordQty;`qty)
 					)];
 				.engine.model.inventory.Update ivn;
 				.engine.E .event.Inventory[ivn]; 
 
+				// TODO Risktier
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`froz`bal`avail!(
 				`aId;`time;`aId.froz;`aId.bal;
