@@ -7,7 +7,7 @@
 // oqty: initial size
 // lqty: leaves qty
 // dqty: display qty 
-.engine.model.order.Order:([oId:`long$()] 
+.engine.model.order.Order:([oId:`long$()] clId:`long$(); 
         aId:`.engine.model.account.Account$();iId:`.engine.model.instrument.Instrument$();
         ivId:`.engine.model.inventory.Inventory$();price:`long$();slprice:`long$();side:`long$();
 				sprice:`long$();trig:`long$();tif:`long$();okind:`long$();oskind:`long$();reduce:`boolean$();
