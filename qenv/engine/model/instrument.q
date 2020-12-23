@@ -5,7 +5,8 @@
         cntTyp:`.engine.model.CONTRACTTYPE$();state:`long$();faceValue:`long$();mkprice:`long$();
 				highest:`long$();lowest:`long$();lotSize:`long$();tickSize:`long$();mnSize:`long$();
   			mxSize:`long$();mnPrice:`long$();mxPrice:`long$();smul:`long$();fudingrate:`float$();
-				bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$();time:`datetime$());
+        bestBid:`long$();bestAsk:`long$();liqb:`boolean$();liqs:`boolean$();fundingrate:`float$();
+        time:`datetime$());
 .engine.model.instrument.r:.util.NullRowDict[`.engine.model.instrument.Instrument];
 
 .engine.model.instrument.Create:.engine.model.common.Create[`.engine.model.instrument.Instrument]

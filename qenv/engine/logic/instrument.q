@@ -4,7 +4,7 @@
 .engine.logic.instrument.Funding:{
 			// Update instrument & funding event 
 			.engine.model.instrument.Update flip[x];
-			.engine.E .event.Funding[x]; 
+			/TODO .engine.E .event.Funding[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -32,7 +32,7 @@
 .engine.logic.instrument.Mark:{
 			// Update instrument & mark event 
 			.engine.model.instrument.Update flip[x];
-			.engine.E .event.Mark[x]; 
+			/TODO .engine.E .event.Mark[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -61,7 +61,7 @@
 .engine.logic.instrument.Settlement:{
 			// Update instrument & mark event 
 			.engine.model.instrument.Update flip[x];
-			.engine.E .event.Settlement[x]; 
+			/TODO .engine.E .event.Settlement[x]; 
 
 			// Update and emit inventory
 			ivn:?[`.engine.model.inventory.Inventory;enlist(>;`amt;0);0b;
@@ -89,7 +89,7 @@
 .engine.logic.instrument.PriceLimit:{
 		// Update instrument & pricelimit event 
 		.engine.model.instrument.Update flip[x];
-		.engine.E .event.PriceLimit[x]; 
+		/TODO .engine.E .event.PriceLimit[x]; 
 
 		// Get all orders passed price limits
 		o:?[`.engine.model.order.Order;enlist(|;
