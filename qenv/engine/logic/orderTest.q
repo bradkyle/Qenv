@@ -153,7 +153,7 @@
                 (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1b;1)));
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
             ));
-            (`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;(0 1);1;1;1000;1;1b;1));
+            (`oId`aId`iId`ivId`side`oqty`price`dlt`reduce`dqty;enlist(0;0;0;(0 1);1;1;1000;1;1b;1));
             (); // res 
             (
                 (1b;1;();()); // Update Account
