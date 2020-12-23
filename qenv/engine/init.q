@@ -8,8 +8,8 @@
 loadTests   :{
     / .qt.SkpBesTest[(27 28 29 30)]; // instrument
     / .qt.SkpBesTest[(31 32 33 34)]; // order
-    .qt.SkpBesTest[(38 39 40 41)]; // valid order
-    .qt.SkpBesTest[(42 43)]; // valid account 
+    / .qt.SkpBesTest[(38 39 40 41)]; // valid order
+    .qt.SkpBesTest[(42 43 44)]; // valid account 
     system[sv["";("l ";x;"/engineTest.q")]];
     .logic.loadTests[sv["/";(x;"logic")]];
     .valid.loadTests[sv["/";(x;"valid")]];
