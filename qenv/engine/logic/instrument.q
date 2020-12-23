@@ -3,7 +3,7 @@
 // Update 
 .engine.logic.instrument.Funding:{
 			// Update instrument & funding event 
-			.engine.model.instrument.Update flip[x];
+			.engine.model.instrument.Update[x];
 			/TODO .engine.E .event.Funding[x]; 
 
 			// Update and emit inventory
@@ -31,7 +31,7 @@
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
 			// Update instrument & mark event 
-			.engine.model.instrument.Update flip[x];
+			.engine.model.instrument.Update[x];
 			/TODO .engine.E .event.Mark[x]; 
 
 			// Update and emit inventory
@@ -90,7 +90,7 @@
 // Apply price limits
 .engine.logic.instrument.PriceLimit:{
 		// Update instrument & pricelimit event 
-		.engine.model.instrument.Update flip[x];
+		.engine.model.instrument.Update [x];
 		/TODO .engine.E .event.PriceLimit[x]; 
 
 		// Get all orders passed price limits
