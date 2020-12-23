@@ -43,6 +43,8 @@
     / .bam.msg:msg;
     / .engine.E .event.Failure[?[e;cond;0b;()]];
     / .engine.E ([]time:e[`time];datum:();kind:`failure) // .event.Failure[?[events;cond;0b;()]]; // TODO add reason
+    .bam.e:e;
+    .bam.cond:cond;
     ![e;cond;0b;`symbol$()]
     };
 

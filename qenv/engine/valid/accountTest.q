@@ -125,7 +125,7 @@
         .engine.testutils.SwitchSetupModels[p`setup];
         mck: .qt.M[`.engine.E;{[x]};c];
 
-        a:.model.Deposit . p`args;
+        a:.model.Leverage . p`args;
         res:.engine.valid.account.Deposit[a];
 
         .qt.CheckMock[mck;m;c];
