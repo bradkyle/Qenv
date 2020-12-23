@@ -49,16 +49,12 @@
 / Event Processing logic (Writes)
 / -------------------------------------------------------------------->
 
-.engine.publicWrapper:{[x;y;z]
-    e:()!();
-    e[y]:$[count[y]>1;flip z;z];
+.engine.publicWrapper:{[x;e]
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
-    .bam.e:e;
     x[e]};
 
-.engine.privateWrapper:{[v;x;y;z]
-    e:y!$[count[y]>1;flip z`datum;z`datum];
+.engine.privateWrapper:{[v;x;e]
     e[`time]:z[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
     e[`aId]:`.engine.model.account.Account$x[`aId];
