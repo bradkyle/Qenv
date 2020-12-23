@@ -63,7 +63,7 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        res:.engine.process[];
+        res:.engine.process[p`args];
         .qt.A[res;~;p[`eRes];"res";c];
 
     };
@@ -77,7 +77,23 @@
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
             ));
-            (`aId`iId`wit`time;enlist(0;0;0;z));
+            ([]time:z;kind:`trade;datum:();aId:0);
+            (); // res 
+            (
+                (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
+                (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;0;0;0)];.event.Withdraw[`aId`iId`wit`time!(0;0;0;z)]);()) // Emit 
+            ); // mocks 
+            () // err 
+        ));
+        ("Process depth events";(
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+            ));
+            ([]time:z;kind:`trade;datum:();aId:0);
             (); // res 
             (
                 (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
@@ -85,8 +101,6 @@
             ); // mocks 
             () // err 
         ))
-        / ("Process depth events";(
-        / ));
         / ("Process funding events";(
         / ));
         / ("Process mark events";(
