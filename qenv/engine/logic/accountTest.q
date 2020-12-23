@@ -305,8 +305,8 @@ e2:{enlist enlist x}
             (`aId`iId`lev`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-            (1b;1;e2 `aId`time`bal`avail!(`.engine.model.account.Account!0;z;10;10);()); // Update Account
-            (1b;1;enlist(.event.Account[`aId`time`bal`avail!(0;z;10;10)]);()) // Emit 
+            (1b;1;e2 `aId`time`bal`avail!(2#`.engine.model.account.Account!0;2#z;2#10;2#10);()); // Update Account
+            (1b;1;(enlist .event.Account[`aId`time`bal`avail!(2#0;2#z;2#10;2#10)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
@@ -321,8 +321,8 @@ e2:{enlist enlist x}
             (`aId`iId`lev`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-            (1b;1;e2 `aId`time`bal`avail!(`.engine.model.account.Account!0;z;10;10);()); // Update Account
-            (1b;1;enlist(.event.Account[`aId`time`bal`avail!(0;z;10;10)]);()) // Emit 
+            (1b;1;e2 `aId`time`bal`avail!(2#`.engine.model.account.Account!0;2#z;2#10;2#10);()); // Update Account
+            (1b;1;(enlist .event.Account[`aId`time`bal`avail!(2#0;2#z;2#10;2#10)]);()) // Emit 
             ); // mocks 
             () // err 
         ))
