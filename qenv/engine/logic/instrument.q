@@ -57,10 +57,12 @@
 
 	};
 
+// TODO implement
+// TODO make datum analagous 
 // Apply settlement
 .engine.logic.instrument.Settlement:{
 			// Update instrument & mark event 
-			.engine.model.instrument.Update flip[x];
+			.engine.model.instrument.Update x;
 			/TODO .engine.E .event.Settlement[x]; 
 
 			// Update and emit inventory
