@@ -65,6 +65,7 @@ e2:{enlist enlist x}
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
+        .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
@@ -111,8 +112,8 @@ e2:{enlist enlist x}
             (`aId`iId`wit`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-            (1b;1;e2 `aId`time`froz`wit`bal`avail!(`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
-            (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(0;z;0;1;9;9)];.event.Withdraw[`aId`iId`wit`time!(0;0;1;z)]);()) // Emit 
+            (1b;1;e2 `aId`time`froz`wit`bal`avail!(2#`.engine.model.account.Account!0;z;0;1;9;9);()); // Update Account
+            (1b;2;(.event.Account[`aId`time`froz`wit`bal`avail!(2#0;2#z;2#0;2#1;2#9;2#9)];.event.Withdraw[`aId`iId`wit`time!(2#0;2#0;2#1;2#z)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
