@@ -2,15 +2,15 @@
 // TODO allow for multiple args
 .engine.logic.account.GetFeetier:{[avol]
 		avol:first avol;
-	 ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>avol) or ((i=0) and (vol>avol));
-   `.engine.model.feetier.Feetier$((first 0!ft)`ftId)
+	  ft:select[1;<vol] from .engine.model.feetier.Feetier where (vol>avol) or ((i=0) and (vol>avol));
+   	`.engine.model.feetier.Feetier$((first 0!ft)`ftId)
    };
 
 // TODO allow for multiple args
 .engine.logic.account.GetRisktier:{[ivamt;ivlev]
 		ivamt:first ivamt;
-	 rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>ivamt) or ((i=0) and (amt>ivamt));
-   `.engine.model.risktier.Risktier$((first 0!rt)`rtId)
+	  rt:select[1;<amt] from .engine.model.risktier.Risktier where (amt>ivamt) or ((i=0) and (amt>ivamt));
+   	`.engine.model.risktier.Risktier$((first 0!rt)`rtId)
    };
 
 // TODO allow for multiple args
