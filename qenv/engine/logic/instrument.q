@@ -30,6 +30,7 @@
 
 // Apply mark price update 
 .engine.logic.instrument.Mark:{
+			.bam.mk:x;
 			// Update instrument & mark event 
 			.engine.model.instrument.Update[x];
 			.engine.E .event.Mark[x]; 
@@ -54,7 +55,6 @@
 					(+;`lng.ordLoss;`srt.ordLoss)))];
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
-
 	};
 
 // TODO implement

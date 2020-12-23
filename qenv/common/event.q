@@ -37,7 +37,7 @@
 
 // TODO implement kind
 .event.Failure      :{x:.event.prep[x];([]time:x`time;datum:x)}
-.event.Mark					:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`markprice)}
+.event.Mark					:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`mkprice)}
 .event.Settlement		:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time)}
 .event.PriceLimit 	:{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`highest`lowest)}
 .event.Level        :{x:.event.prep[x];([]time:x`time;datum:flip x`iId`time`side`price`qty)}

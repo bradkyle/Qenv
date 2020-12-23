@@ -161,7 +161,7 @@
                 (1b;3;(
                 .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
                 .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Mark[`iId`time`markprice!(0;z;0.0001)]
+                .event.Mark[`iId`time`mkprice!(0;z;0.0001)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 
@@ -183,7 +183,7 @@
                 (1b;3;(
                 .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
                 .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Mark[`iId`time`markprice!(0;z;0.0001)]
+                .event.Mark[`iId`time`mkprice!(0;z;0.0001)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 
