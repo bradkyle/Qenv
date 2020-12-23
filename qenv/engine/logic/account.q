@@ -60,8 +60,8 @@
 .engine.logic.account.Leverage:{
 			// 
 
-			acc:?[x;();0b;`aId`time`bal`froz`avail!(
-				`aId;`time;`aId.bal;`aId.froz;
+			acc:?[x;();0b;`aId`time`bal`avail!(
+				`aId;`time;`aId.bal;
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);

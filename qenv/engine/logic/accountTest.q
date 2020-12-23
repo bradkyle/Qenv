@@ -273,8 +273,8 @@ e2:{enlist enlist x}
             (`aId`iId`lev`time;enlist(0;0;0;z));
             (); // res 
             (
-                (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;0;0;0);()); // Update Account
-                (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
+            (1b;1;e2 `aId`time`bal`avail!(`.engine.model.account.Account!0;z;0;0);()); // Update Account
+            (1b;1;enlist(.event.Account[`aId`time`bal`avail!(0;z;0;0)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
@@ -289,8 +289,8 @@ e2:{enlist enlist x}
             (`aId`iId`lev`time;enlist(0;0;1;z));
             (); // res 
             (
-            (1b;1;e2 `aId`time`froz`dep`bal`avail!(`.engine.model.account.Account!0;z;0;1;11;11);()); // Update Account
-            (1b;2;(.event.Account[`aId`time`froz`dep`bal`avail!(0;z;0;1;11;11)]);()) // Emit 
+            (1b;1;e2 `aId`time`bal`avail!(`.engine.model.account.Account!0;z;10;10);()); // Update Account
+            (1b;1;enlist(.event.Account[`aId`time`bal`avail!(0;z;10;10)]);()) // Emit 
             ); // mocks 
             () // err 
         ));
