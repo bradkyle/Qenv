@@ -44,7 +44,7 @@
     ( // TODO sell side check
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -68,7 +68,7 @@
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`avgPrice`rpnl;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;100 100;0 0))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -128,7 +128,7 @@
         // Decreasing in size stays at same price
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -146,7 +146,7 @@
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -198,7 +198,7 @@
         // Decreasing in size stays at same price
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -216,7 +216,7 @@
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -267,7 +267,7 @@
         // Decreasing in size stays at same price
         ("Place new buy post only limit order at best price, no previous depth or agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -285,7 +285,7 @@
         ));
         ("Place new buy post only limit order, previous depth, no agent orders should update depth";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account

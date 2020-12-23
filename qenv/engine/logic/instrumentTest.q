@@ -25,7 +25,7 @@
     (
         ("Positive Funding: no open inventory";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+            (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -47,7 +47,7 @@
         ));
         ("Positive Funding: no open inventory";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+            (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -146,14 +146,14 @@
     (
         ("Update mark price (decreasing), one account: no positions";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`iId`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`time`markprice;enlist(0;z;0.0001));
+            (`iId`time`mkprice;enlist(0;z;10000));
             (); // res 
             (
                 (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
@@ -161,21 +161,21 @@
                 (1b;3;(
                 .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl!(0 0;-1 1;2#z;10 10;0N 0N;0 0;-0.001 -0.001)];
                 .event.Account[`aId`time`froz`bal`avail!(0;z;0;10;10)];
-                .event.Mark[`iId`time`mkprice!(0;z;0.0001)]
+                .event.Mark[`iId`time`mkprice!(0;z;1000)]
                 );()) // .engine.E 
             ); // mocks 
             () // err 
         ));
         ("Update mark price (increasing), one account: no positions";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`iId`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
                 (`account;(`aId`avail`bal`lng`srt`ft`rt;enlist(0;0;0;(0 1);(0 -1);0;0))) 
                 / (`order;(`oId`aId`iId;enlist(0;0;0))) // Update Account
             ));
-            (`iId`time`markprice;enlist(0;z;0.0001));
+            (`iId`time`mkprice;enlist(0;z;10000));
             (); // res 
             (
                 (1b;1;e2 `aId`time`froz`bal`avail!(0;z;0;10;10);()); // Update Account
@@ -315,7 +315,7 @@
     (
         ("Settlement no accounts";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -333,7 +333,7 @@
         ));
         ("Settlement one account no inventory";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`ordVal`amt`totEnt`rpnl`time;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10;10 10;0 0;2#z))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -521,7 +521,7 @@
     (
         ("Settlement multiple account, both sides short/long (0.5/0.5) inventory: RPL -0.5";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account
@@ -541,7 +541,7 @@
         ));
         ("First should succeed";(
             ((!) . flip(
-                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;0;1;1000;1))); 
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
                 (`inventory;(`aId`side`mm`upnl`rpnl`ordQty`ordLoss`ordVal`amt`totEnt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;0 0;0 0;10 10;10 10))); 
                 (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
                 (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))); // Update Account

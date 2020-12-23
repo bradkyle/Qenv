@@ -58,7 +58,7 @@
 .engine.model.markprice.r:.util.NullRowDict[([] 
         time:`datetime$(); 
         iId:`.engine.model.instrument.Instrument$(); 
-        markprice:`long$())];
+        mkprice:`long$())];
 
 .model.Mark:{[cl;vl]
     //if[null cl;cl:key .fill.r]; // TODO check
