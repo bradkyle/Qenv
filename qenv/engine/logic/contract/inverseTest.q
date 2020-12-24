@@ -1,4 +1,6 @@
 
+// TODO add array validation
+
 nl:{neg l[x]};
 
 .qt.Unit[
@@ -65,7 +67,6 @@ nl:{neg l[x]};
     "Function for deriving the exec cost from the qty and the price"];
 
 //
-
 .qt.Unit[
     ".engine.logic.contract.inverse.RealizedPnl";
     {[c]
@@ -91,6 +92,36 @@ nl:{neg l[x]};
         ("-0.50 RPL long:Bitmex XBTUSD inverse analog, faceValue 1";((100 1 100 200 1 1e8);nl 5e7));
         ("-0.50 RPL long:Okex BTCUSDT inverse analog, faceValue 100";((100 1 100 200 100 1e8);nl 5e9)); 
         ("Check Null amt";((0n 0 0 0 0 0);0))
+    );
+    ({};{};{};{});
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
+    ".engine.logic.contract.inverse.LiquidationPrice";
+    {[c]
+        p:c[`params];
+        res:.engine.logic.contract.inverse.LiquidationPrice . p`args;
+        .qt.A[res;~;p[`eRes];"liquidationPrice";c];
+    };
+    {[p] :`args`eRes!p; };
+    (
+
+    );
+    ({};{};{};{});
+    "Function for deriving the exec cost from the qty and the price"];
+
+
+.qt.Unit[
+    ".engine.logic.contract.inverse.BankruptcyPrice";
+    {[c]
+        p:c[`params];
+        res:.engine.logic.contract.inverse.BankruptcyPrice . p`args;
+        .qt.A[res;~;p[`eRes];"bankruptcyPrice";c];
+    };
+    {[p] :`args`eRes!p; };
+    (
+
     );
     ({};{};{};{});
     "Function for deriving the exec cost from the qty and the price"];

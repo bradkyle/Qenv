@@ -19,6 +19,7 @@
 					(.engine.logic.contract;`iId.cntTyp;enlist`UnrealizedPnl;`amt;`side;`avgPrice;`iId.mkprice;`iId.faceValue;`iId.smul);
 					(.engine.logic.contract;`iId.cntTyp;enlist`RealizedPnl;`qty;`price;`side;`avgPrice;`iId.faceValue;`iId.smul)
 					)];
+				.bam.iv:iv;
 
 				.engine.model.inventory.Update flip iv; 
 				.engine.E .event.Inventory[iv];

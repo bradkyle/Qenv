@@ -48,12 +48,19 @@
 // Derives the approximate price at which the inventory will be liquidated
 // Given the maintenence margin requirements and initial margin requirements
 // of the current risk tier of the account
-.engine.logic.contract.inverse.LiquidationPrice :{[]
-      
+.engine.logic.contract.inverse.LiquidationPrice :{[amt;isignum;avgPrice;initialMargin;mm;faceValue;multiplier]
+    7h$(((facevalue%avgPrice)-())*(amt*isignum)*multiplier)
     };
 
-// Derives the approximage price at which the inventory will become bankrupts
+// Derives the approximage price at which the inventory will become bankrupt
 // given the leverage etc.
-.engine.logic.contract.inverse.BankruptcyPrice  :{[]
-      
+.engine.logic.contract.inverse.BankruptcyPrice  :{[amt;isignum;avgPrice;faceValue;multiplier]
+    7h$((((isignum*amt)*avgPrice*faceValue)%(((isignum*amt)*faceValue)+(avgPrice * 1)))*multiplier) 
+    };
+
+
+// Derives the approximage price at which the inventory will become bankrupt
+// given the leverage etc.
+.engine.logic.contract.inverse.BankruptcyPrice  :{[amt;isignum;avgPrice;faceValue;pmul;smul]
+    7h$((amt * (1%.engine.logic.contract.inverse.BankruptcyPrice[amt;isignum;avgPrice;faceValue;pmul])) * smul)
     };

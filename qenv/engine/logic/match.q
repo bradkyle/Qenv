@@ -74,16 +74,13 @@
                 t:();
                 .engine.Emit .event.Trade[t];
             ]];
-
-
-            // TODO insert unmatched orders if condition stipulates
-
-
-            ]];
+        ]];
       
     };
 
-
+nagent:{[hqty;offset;shft;vqty;qty;mxshft] 
+    (hqty;offset[0]-hqty;.util.Clip[(1_offset)-(1_shft)];.util.Clip[(vqty+hqty+qty)-mxshft])
+    };
 
 // TODO 
 .engine.logic.match.Match: {
@@ -111,7 +108,6 @@
             // Create a state table
             s:0!((`price`side`iId xkey l) lj (`price`side`iId xgroup o));
             so:ungroup s;
-
             if[count[so]>0;[
                 // Update Orders
                 // Derive the new orders from the ungrouped state.
@@ -158,7 +154,7 @@
             ]];
 
         ];[
-
+           l:(); 
 
         ]];
       
