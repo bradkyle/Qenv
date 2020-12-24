@@ -64,3 +64,10 @@
 .engine.logic.contract.inverse.BankruptcyPrice  :{[amt;isignum;avgPrice;faceValue;pmul;smul]
     7h$((amt * (1%.engine.logic.contract.inverse.BankruptcyPrice[amt;isignum;avgPrice;faceValue;pmul])) * smul)
     };
+
+// Derives the approximage price at which the inventory will become bankrupt
+// given the leverage etc.
+.engine.logic.contract.inverse.MaintMarginValue :{[amt;isignum;avgPrice;faceValue;pmul;smul]
+    // TODO
+    };
+
