@@ -5,8 +5,11 @@
 
 // TODO implement trade
 // recieves trade as type
-.engine.logic.match.Trade: {};
+.engine.logic.match.Trade: {
 
+    };
+
+// TODO 
 .engine.logic.match.Match: {
         // Get all the levels that would encounter a  
         // fill, limit the price level selection to 

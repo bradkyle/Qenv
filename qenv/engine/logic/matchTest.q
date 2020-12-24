@@ -40,7 +40,7 @@
         mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
 
         a:.model.Trade . p`args; 
-        res:.engine.logic.trade.Trade[a];
+        res:.engine.logic.match.Trade[a];
 
         / .qt.CheckMock[mck3;m[2];c];
         .qt.CheckMock[mck4;m[3];c];
