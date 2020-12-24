@@ -37,8 +37,6 @@
 
         .qt.CheckMock[mck0;m[0];c]; // Inventory Update
         .qt.CheckMock[mck1;m[1];c]; // Emit 
-
-
     };
     {[p] `setup`args`eRes`mocks`err!p};
     (
