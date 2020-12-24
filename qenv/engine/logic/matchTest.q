@@ -1,3 +1,106 @@
+
+
+// TODO integration tests
+// TODO no liquidity
+// TODO add order update events!!!!
+// TODO agent trade fills entire price level
+// TODO trade size larger than orderbook qty
+// TODO instrument id, tick size, lot size etc. 
+// TODO inc self fill called
+// TODO test that qty is ordered correctly for fills i.e. price is ordered
+// TODO less than offset fills price and removes price
+// TODO test reduce only, immediate or cancel, participate don't initiate etc.
+// TODO test with different accounts
+// TODO reduce only
+// TODO test other side
+// TODO benchmarking
+// TOOD test instrument/account doesn't exist
+// TODO test erroring
+// TODO iceberg/hidden order logic
+// TODO hidden orders from agent, hidden orders from data.
+// TODO drifts out of book bounds
+// TODO no previous depth however previous orders.
+// TODO fills 3 levels
+// TODO test different instrument
+// TODO test with different accounts
+/ .qt.SkpBesTest[36];
+.qt.Unit[
+    ".engine.logic.trade.Trade";
+    {[c]
+        p:c[`params];
+        a:p`args;
+        m:p[`mocks];
+        .engine.testutils.SwitchSetupModels[p`setup];
+
+        mck1: .qt.M[`.engine.model.orderbook.Get;{[a;b] a}[m[0][3]];c];
+        mck2: .qt.M[`.engine.model.order.Get;{[a;b] a}[m[1][3]];c];
+        / mck3: .qt.M[`.engine.Emit;{[a;b;c]};c];
+        mck4: .qt.M[`.engine.model.order.Update;{[a;b]};c];
+        mck5: .qt.M[`.engine.logic.fill.Fill;{[a;b;c;d]};c];
+        mck6: .qt.M[`.engine.model.orderbook.Update;{[a;b]};c];
+
+        a:.model.Trade . p`args; 
+        res:.engine.logic.trade.Trade[a];
+
+        / .qt.CheckMock[mck3;m[2];c];
+        .qt.CheckMock[mck4;m[3];c];
+        .qt.CheckMock[mck5;m[4];c];
+        .qt.CheckMock[mck6;m[5];c];
+    };
+    {[p] `setup`args`eRes`mocks`err!p};
+    (
+        (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
+          "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;flip(1000 1001;2#1;2#100;2#100;2#0;2#0;2#z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty`okind`state`offset;flip(1 2;0 0;0 0;((0 1);(0 1));1 1;200 200;1000 1000;11b;1 1;1 1;0 0;0 210)));
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account));
+            ));
+            (`side`qty`price;enlist(1;100;;1000));
+            (); // res 
+            (
+                (1b;1;e2 `aId`time`bal`rt`ft`avail!(`.engine.model.account.Account!0;z;0;`.engine.model.risktier.Risktier!0;`.engine.model.feetier.Feetier!0;0);()); // Update Account
+                (1b;1;e2 `aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0);());
+                (1b;1;();()); 
+                (1b;2;(
+                  enlist .event.Inventory[`aId`side`time`amt`avgPrice`upnl`rpnl`ordLoss`ordVal`ordQty!(`.engine.model.account.Account!0;1;z;10;100;0;0;0;0;0)];
+                  enlist .event.Account[`aId`time`bal`avail!(`.engine.model.account.Account!0;z;0;0)]
+                );()) // Emit
+            ); // mscks 
+            () // err 
+        ));
+        (("1a) Prj;essTrade SELL: has agent hidden jxders, lvl1 size > qty, trade djpsn't fill agent", // 12
+          "jider, trade executijy <= agent jrder jwfset, fill is agent (partial hidden qty fill)");( // Mjlks
+            ((!) . flip(
+                (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+                (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+                (`inventory;(`aId`side`mm`upnl`ordQty`ordLoss`amt;flip(0 0;-1 1;0 0;0 0;0 0;0 0;10 10))); 
+                (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+                (`orderbook;(`price`side`qty`hqty`iqty`vqty`time;flip(1000 1001;2#1;2#100;2#100;2#0;2#0;2#z)));
+                (`order;(`oId`aId`iId`ivId`side`oqty`price`reduce`dqty`okind`state`offset;flip(1 2;0 0;0 0;((0 1);(0 1));1 1;200 200;1000 1000;11b;1 1;1 1;0 0;0 210)));
+                (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account));
+            ));
+            (`side`qty`price;enlist(1;100;;1000));
+            (); // res 
+            (
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();());
+                (1b;1;();())
+            ); // mscks 
+            () // err 
+        ))
+    );
+    ({};{};{};{});
+    "Global function for creating a new account"];
+
+
+
 // TODO integration tests
 // TODO no liquidity
 // TODO add order update events!!!!
