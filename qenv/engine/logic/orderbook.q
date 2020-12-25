@@ -1,5 +1,9 @@
 
 .engine.logic.orderbook.Level :{
+
+        };
+
+.engine.logic.orderbook.Sevel :{
         / ld[`time]:l`time;
         / show price;
         / show side
