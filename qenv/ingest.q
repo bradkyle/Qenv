@@ -1,6 +1,9 @@
 hour:{`int$sum 24 1*@[;0;-;1970.01.01] `date`hh$x};
 
 // TODO better connection handling
+.ingest.prep: {[]
+		
+	};
 
 .ingest.h:hopen`:gate:5000
 .ingest.watermark:0n;

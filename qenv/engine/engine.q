@@ -45,6 +45,7 @@
 
 // TODO remove if/else
 .engine.publicWrapper:{[x;y]
+    .bam.yd:y;
     e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
@@ -52,6 +53,7 @@
     x[e]};
 
 .engine.privateWrapper:{[v;x;y]
+    .bam.yd:y;
     e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
@@ -89,7 +91,6 @@
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
     if[count[x]>0;[
         newwm: max x`time;
-        show newwm;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
             / x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
             $[count[distinct[x`kind]]>1;
