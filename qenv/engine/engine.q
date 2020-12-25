@@ -165,6 +165,7 @@
         (`mxPrice                  ; 0) 
         ));
 
+    t:min events`time;
     n:count[aIds];
     dn:n*2;
     .engine.model.inventory.Inventory,:ivn:flip[(!) . flip(
@@ -181,6 +182,7 @@
         (`avgPrice         ; dn#0);  
         (`execCost         ; dn#0);  
         (`upnl             ; dn#0);  
+        (`time             ; dn#t);  
         (`lev              ; dn#0)  
         )];
 
@@ -196,15 +198,17 @@
         (`rt               ; n#`.engine.model.risktier.Risktier$0);  
         (`ft               ; n#`.engine.model.feetier.Feetier$0);  
         (`mrgTyp           ; n#0);  
-        (`time             ; n#z);  
+        (`time             ; n#t);  
         (`avail            ; n?10);  
         (`bal              ; n?10)  
         ));
 
+    .bam.acc:acc;
+    .bam.ivn:ivn;
+
     // TODO make cleaner
-    t:min events`time;
-    .engine.Emit .event.Account[];
-    .engine.Emit .event.Inventory[];
+    .engine.E .event.Account[acc];
+    .engine.E .event.Inventory[ivn];
 
     / {.engine.EmitA[`account;x;value y;y`aId]}[t]'[select aId, time:t, bal, avail, dep, mm:0 from acc];
     / {.engine.EmitA[`inventory;x;value y;y`aId]}[t]'[select aId, side, time:t, amt, rpnl, avgPrice, upnl from ivn];
