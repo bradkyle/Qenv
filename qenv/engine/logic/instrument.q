@@ -15,8 +15,10 @@
 			.engine.E .event.Inventory[ivn]; 
 
 			// Update and emit accounts
-			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`bal`avail!(
+			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`bal`rt`ft`avail!(
 				`aId;`time;`bal;
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`bal;
 					(+;`lng.mm;`srt.mm);
@@ -43,8 +45,10 @@
 			.engine.E .event.Inventory[ivn]; 
 			
 			// Update and emit accounts
-			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`avail!(
+			acc:?[`.engine.model.account.Account;enlist(|;(>;`lng.amt;0);(>;`srt.amt;0));0b;`aId`time`froz`bal`rt`ft`avail!(
 				`aId;`time;`froz;`bal;
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`bal;
 					(+;`lng.mm;`srt.mm);
