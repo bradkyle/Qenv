@@ -17,18 +17,17 @@
 // Given the total entry and the exec cost of the given Inventory
 // this function will derive the average price at which the inventory
 // was opened at/ entered into.
-.engine.logic.contract.inverse.AvgPriceDeriv               :{[isignum;price;qty;totalEntry;multiplier]
-    execCost:.engine.logic.contract.inverse.ExecCost[price;qty;multiplier];
+.engine.logic.contract.inverse.AvgPrice               :{[isignum;execCost;totalEntry;multiplier]
     p:execCost%totalEntry;
-    ?[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier?
+    7h$(?[isignum>0;1e8%floor[p];1e8%ceiling[p]] * multiplier) // TODO change 1e8 to multiplier?
     };
 
 // Given the total entry and the exec cost of the given Inventory
 // this function will derive the average price at which the inventory
 // was opened at/ entered into.
-.engine.logic.contract.inverse.AvgPrice               :{[isignum;execCost;totalEntry;multiplier]
-    p:execCost%totalEntry;
-    ?[isignum>0;1e8%floor[p];1e8%ceiling[p]] // TODO change 1e8 to multiplier?
+.engine.logic.contract.inverse.AvgPriceDeriv               :{[isignum;price;qty;totalEntry;multiplier]
+    execCost:.engine.logic.contract.inverse.ExecCost[price;qty;multiplier];
+    .engine.logic.contract.inverse.AvgPrice[isignum;execCost;totalEntry;multiplier]
     };
 
 // Given the current Inventory state, this function will derive the
