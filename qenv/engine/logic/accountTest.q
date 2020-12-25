@@ -131,7 +131,8 @@ e2:{enlist enlist x}
             (`aId`iId`wit`time;flip(0 0;0 0;1 1;2#z));
             (); // res 
             (
-            (1b;1;e2 `aId`time`froz`wit`bal`avail!(2#`.engine.model.account.Account!0;2#z;2#0;2#1;2#9;2#9);()); // Update Account
+            (1b;1;e2 `aId`time`froz`wit`rt`ft`bal`avail!(
+            2#`.engine.model.account.Account!0;2#z;2#0;2#1;2#`.engine.model.risktier.Risktier!0;2#`.engine.model.feetier.Feetier!0;2#9;2#9);()); 
             (1b;2;(enlist .event.Account[`aId`time`froz`wit`bal`avail!(2#0;2#z;2#0;2#1;2#9;2#9)];enlist .event.Withdraw[`aId`iId`wit`time!(2#0;2#0;2#1;2#z)]);()) // Emit 
             ); // mocks 
             () // err 
