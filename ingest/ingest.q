@@ -35,7 +35,7 @@ show "funding: ", string count funding;
     kind=`mark;enlist[`mkprice]!datum;
     kind=`trade;`side`price`size!datum;
     kind=`funding;enlist[`fundingrate]!datum;
-    kind=`settlement;enlist[`lastsettled]!time;
+    kind=`settlement;enlist[`lastsettled]!enlist[time];
     datum]}'[kind;datum;time] from x
     };
 
