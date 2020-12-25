@@ -21,20 +21,10 @@
     enlist[`i] _ e
     };
 
+// ReInserts events into the egress event buffer
 .engine.E :{
     .engine.egress.Events,:x;
     };
-
-// ReInserts events into the egress event buffer
-.engine.Emit            :{[kind;time;event]
-    .engine.egress.Events,:(time;kind;event;0n);
-		};
-
-// ReInserts events into the egress event buffer
-.engine.EmitA           :{[kind;time;event;aId]
-    .bam.a:(kind;time;event;aId);
-    .engine.egress.Events,:flip `time`kind`event`aId!(15h$time;kind;event;7h$aId);
-		};
 
 .engine.Purge   :{[e;cond;tag;msg] 
     if[count[e]=0;:e];
@@ -131,11 +121,12 @@
       `.engine.model.account.Account,
       `.engine.model.inventory.Inventory,
       `.engine.model.instrument.Instrument,
-      `.engine.model.risktier.RiskTier,
+      `.engine.model.risktier.Risktier,
+      `.engine.model.feetier.Feetier,
       `.engine.model.orderbook.OrderBook
     )];
 
-    .engine.model.risktier.RiskTier,:flip `rtid`mxamt`mmr`imr`maxlev!flip[(
+    .engine.model.risktier.Risktier,:flip `rtId`mxamt`mmr`imr`maxlev!flip[(
         (0; 50000;       0.004;    0.008;    125);
         (1; 250000;      0.005;    0.01;     100);
         (2; 1000000;     0.01;     0.02;     50);
@@ -147,7 +138,7 @@
         (8; 500000000;   0.25;     0.50;     2);
         (9; 500000000;   0.25;     1.0;      1))]; 
 
-     .engine.model.feetier.FeeTier,:flip `ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim!flip[(
+    .engine.model.feetier.Feetier,:flip `ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim!flip[(
         (0; 50;      0.0006;    0.0006;    0f;  0f; 600);
         (1; 500;     0.00054;   0.0006;    0f;  0f; 600);
         (2; 1500;    0.00048;   0.0006;    0f;  0f; 600);
