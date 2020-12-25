@@ -27,9 +27,11 @@
 
 // TODO rt ft etc.
 .engine.logic.account.Withdraw:{
-			acc:?[x;();0b;`aId`time`froz`wit`bal`avail!(
+			acc:?[x;();0b;`aId`time`froz`wit`rt`ft`bal`avail!(
 				`aId;`time;`aId.froz;
 				(+;`aId.wit;`wit);	
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(-;`aId.bal;`wit);	
 				(`.engine.logic.account.GetAvailable;
 					(-;`aId.bal;`wit);
