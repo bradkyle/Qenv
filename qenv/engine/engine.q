@@ -9,16 +9,20 @@
 // of the agent action.
 .engine.GetIngressEvents   :{[watermark;frq;per] // TODO should select next batch according to config
     e:select[per] i, time, kind, datum from .engine.ingress.Events where (time>watermark) and (time < ((watermark | first time)+frq)); 
-    delete from `.engine.ingress.Events where i in e[`i]; 
-    enlist[`i] _ e
+    if[count[e]>0;[
+              delete from `.engine.ingress.Events where i in e[`i]; 
+              :(enlist[`i] _ e)
+              ]];
     };
 
 // Returns the set of events that would occur in the given step 
 // of the agent action.
 .engine.GetEgressEvents:{[watermark;frq;per] // TODO should select next batch according to config
     e:select[per] i, time, kind, datum from .engine.egress.Events where time < watermark; 
-    delete from `.engine.egress.Events where i in e[`i]; 
-    enlist[`i] _ e
+    if[count[e]>0;[
+              delete from `.engine.egress.Events where i in e[`i]; 
+              :(enlist[`i] _ e)
+              ]];
     };
 
 // ReInserts events into the egress event buffer
@@ -112,6 +116,7 @@
     .engine.GetEgressEvents[.engine.watermark;`second$5;950]
     };
 
+// TODO allow for non sequential aIds
 .engine.Reset   :{[aIds; events]
     // TODO delete all models 
     .util.table.dropAll[(
@@ -126,7 +131,7 @@
       `.engine.model.orderbook.OrderBook
     )];
 
-    .engine.model.risktier.Risktier,:flip `rtId`mxamt`mmr`imr`maxlev!flip[(
+    .engine.model.risktier.Risktier,:flip `rtId`amt`mmr`imr`lev!flip[(
         (0; 50000;       0.004;    0.008;    125);
         (1; 250000;      0.005;    0.01;     100);
         (2; 1000000;     0.01;     0.02;     50);
@@ -138,7 +143,7 @@
         (8; 500000000;   0.25;     0.50;     2);
         (9; 500000000;   0.25;     1.0;      1))]; 
 
-    .engine.model.feetier.Feetier,:flip `ftid`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim!flip[(
+    .engine.model.feetier.Feetier,:flip `ftId`vol`mkrfee`tkrfee`wdrawfee`dpstfee`wdlim!flip[(
         (0; 50;      0.0006;    0.0006;    0f;  0f; 600);
         (1; 500;     0.00054;   0.0006;    0f;  0f; 600);
         (2; 1500;    0.00048;   0.0006;    0f;  0f; 600);
@@ -151,7 +156,7 @@
 
     .engine.model.instrument.Instrument,:((!) . flip(
         (`iId                      ; 0);                                           
-        (`cntTyp                   ; 0);
+        (`cntTyp                   ; `inverse);
         (`state                    ; 0);
         (`faceValue                ; 0);
         (`mkprice                  ; 0);
@@ -181,14 +186,17 @@
 
     .engine.model.account.Account,:acc:flip((!) . flip(
         (`aId              ; aIds);                                            
+        (`iId              ; n#`.engine.model.instrument.Instrument$0);                                            
+        (`done             ; n#0b);                                            
         (`lng              ; `.engine.model.inventory.Inventory$(flip(aIds;n#1)));
         (`srt              ; `.engine.model.inventory.Inventory$(flip(aIds;n#-1)));
         (`dep              ; n#0);  
         (`wit              ; n#0);  
-        (`rt               ; n#`.engine.model.risktier.RiskTier$0);  
-        (`ft               ; n#`.engine.model.feetier.FeeTier$0);  
-        (`posTyp           ; n#0);  
+        (`vol              ; n#0);  
+        (`rt               ; n#`.engine.model.risktier.Risktier$0);  
+        (`ft               ; n#`.engine.model.feetier.Feetier$0);  
         (`mrgTyp           ; n#0);  
+        (`time             ; n#z);  
         (`avail            ; n?10);  
         (`bal              ; n?10)  
         ));

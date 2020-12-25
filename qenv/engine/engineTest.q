@@ -246,45 +246,43 @@
     ".engine.Advance";
     {[c]
         p:c[`params];
-        .engine.watermark:0n;
+        .engine.watermark:.z.z - `second$5;
 
-        .util.table.dropAll[(
-          `.engine.model.account.Account,
-          `.engine.model.inventory.Inventory,
-          `.engine.model.risktier.RiskTier,
-          `.engine.model.feetier.Feetier
-        )];
-        .engine.testutils.SwitchSetupModels[p`setup];
+        .engine.ingress.Events,:p`setup;
 
         res:.engine.Advance . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
+
+        .util.table.dropAll[(
+            `.engine.ingress.Events
+        )];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
@@ -314,28 +312,28 @@
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            (til 3;([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
             (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            (til 3;([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
             (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            (til 3;([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
             (); // Setup
-            ((0 1 3);([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
+            (til 3;([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0))); // Events
             (); // res 
             (); // mocks
             () // err 
