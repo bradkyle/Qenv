@@ -17,7 +17,6 @@
       bal-(mm+upnl)+(oqty-oloss)
     };
 
-
 // TODO rt ft etc.
 .engine.logic.account.Withdraw:{
 			acc:?[x;();0b;`aId`time`froz`wit`rt`ft`bal`avail!(
@@ -32,6 +31,7 @@
 					(+;`aId.lng.upnl;`aId.srt.upnl);
 					(+;`aId.lng.ordQty;`aId.srt.ordQty);
 					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
+			.bam.acc:acc;
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			.engine.E .event.Withdraw[x]; 

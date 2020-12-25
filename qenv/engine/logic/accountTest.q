@@ -1,43 +1,4 @@
 
-
-.qt.Unit[
-    ".engine.logic.account.Liquidate";
-    {[c]
-        mck1: .qt.M[`.engine.model.account.Update;{[a;b]};c];
-        mck2: .qt.M[`.engine.model.liquidation.Create;{[a;b;c]};c];
-        mck1: .qt.M[`.engine.logic.order.New;{[a;b]};c];
-
-        res:.engine.logic.account.Remargin[a 0;a 1;a 2];
-
-        .qt.CheckMock[mck1;m[0];c];
-        .qt.CheckMock[mck2;m[1];c];
-    };
-    {[p] :`args`eRes`mocks`err!p};
-    (
-        ("Liquidation of > tier 3 account";(
-            (`aId`iId`withdraw;enlist(0;0;0));
-            (); // res 
-            (
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeLiquidation[];()); // Update Account
-                (1b;1;.util.testutils.makeOrder[];()) // Update Account
-            ); // mocks 
-            () // err 
-        ));
-        ("Liquidation of < tier 3 account";(
-            (`aId`iId`withdraw;enlist(0;0;0));
-            (); // res 
-            (
-                (1b;1;.util.testutils.makeAccount[];()); // Update Account
-                (1b;1;.util.testutils.makeLiquidation[];()); // Update Account
-                (1b;1;.util.testutils.makeOrder[];()) // Update Account
-            ); // mocks 
-            () // err 
-        ))
-    );
-    ({};{};{};{});
-    "Global function for creating a new account"];
-
 e2:{enlist enlist x}
 
 / .qt.SkpBesTest[24];
@@ -48,6 +9,7 @@ e2:{enlist enlist x}
         s:p[`setup];
         m:p[`mocks];
         a:p[`args];
+        .qt.RestoreMocks[];
 
         .util.table.dropAll[(
           `.engine.model.account.Account,
@@ -57,15 +19,14 @@ e2:{enlist enlist x}
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.OM[`.engine.model.account.Update;c];
-        mck1: .qt.OM[`.engine.E;c];
+        mck0: .qt.M[`.engine.model.account.Update;{[x]};c];
+        mck1: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Withdraw . p`args;
         res:.engine.logic.account.Withdraw[a];
 
         .qt.CheckMock[mck0;m[0];c];
         .qt.CheckMock[mck1;m[1];c];
-        .qt.RestoreMocks[];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
@@ -158,8 +119,8 @@ e2:{enlist enlist x}
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.OM[`.engine.model.account.Update;c];
-        mck1: .qt.OM[`.engine.E;c];
+        mck0: .qt.M[`.engine.model.account.Update;{[x]};c];
+        mck1: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Deposit . p`args;
         res:.engine.logic.account.Deposit[a];
@@ -255,8 +216,8 @@ e2:{enlist enlist x}
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        mck0: .qt.OM[`.engine.model.account.Update;c];
-        mck1: .qt.OM[`.engine.E;c];
+        mck0: .qt.M[`.engine.model.account.Update;{[x]};c];
+        mck1: .qt.M[`.engine.E;{[x]};c];
 
         a:.model.Leverage . p`args;
         res:.engine.logic.account.Leverage[a];
