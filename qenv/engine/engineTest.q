@@ -5,7 +5,16 @@
     {[c]
         p:c[`params];
 
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
+        res:.engine.Purge . p[`args];
+        .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};
     (
@@ -30,7 +39,16 @@
     {[c]
         p:c[`params];
 
+        .util.table.dropAll[(
+          `.engine.model.account.Account,
+          `.engine.model.inventory.Inventory,
+          `.engine.model.risktier.RiskTier,
+          `.engine.model.feetier.Feetier
+        )];
+        .engine.testutils.SwitchSetupModels[p`setup];
 
+        res:.engine.Purge . p[`args];
+        .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};
     (
@@ -55,7 +73,8 @@
     {[c]
         p:c[`params];
 
-
+        res:.engine.Purge . p[`args];
+        .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};
     (
@@ -80,6 +99,8 @@
     {[c]
         p:c[`params];
 
+        res:.engine.Purge . p[`args];
+        .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};
     (
