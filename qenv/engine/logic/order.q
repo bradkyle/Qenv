@@ -18,8 +18,8 @@
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(
 					`aId;`time;`aId.bal;
-				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
-				(`.engine.logic.account.GetFeetier;`aId.vol);
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -49,8 +49,8 @@
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(
 					`aId;`time;`aId.bal;
-				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
-				(`.engine.logic.account.GetFeetier;`aId.vol);
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -79,8 +79,8 @@
 
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(`aId;`time;`aId.bal;
-				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
-				(`.engine.logic.account.GetFeetier;`aId.vol);
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -111,8 +111,8 @@
 
 				// Update account and emit events
 				acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(`aId;`time;`aId.bal;
-				(`.engine.logic.account.GetRisktier;(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
-				(`.engine.logic.account.GetFeetier;`aId.vol);
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
