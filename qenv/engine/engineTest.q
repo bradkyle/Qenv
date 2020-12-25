@@ -13,22 +13,34 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        res:.engine.Purge . p[`args];
+        res:.engine.GetIngressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            ();
+            ();
+            ();
+            ()
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            ();
+            ();
+            ();
+            ()
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            ();
+            ();
+            ();
+            ()
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            ();
+            ();
+            ();
+            ()
         ))
     );
     ({};{};{};{});
@@ -47,7 +59,7 @@
         )];
         .engine.testutils.SwitchSetupModels[p`setup];
 
-        res:.engine.Purge . p[`args];
+        res:.engine.GetEgressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};
@@ -73,7 +85,7 @@
     {[c]
         p:c[`params];
 
-        res:.engine.Purge . p[`args];
+        res:.engine.E . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
     {[p] :`args`eRes`mocks!p};

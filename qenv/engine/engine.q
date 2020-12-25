@@ -37,8 +37,6 @@
     / .bam.msg:msg;
     / .engine.E .event.Failure[?[e;cond;0b;()]];
     / .engine.E ([]time:e[`time];datum:();kind:`failure) // .event.Failure[?[events;cond;0b;()]]; // TODO add reason
-    .bam.e:e;
-    .bam.cond:cond;
     ![e;cond;0b;`symbol$()]
     };
 
@@ -91,6 +89,7 @@
 .engine.process            :{[x] // WRITE EVENTS TODO remove liquidation events?
     if[count[x]>0;[
         newwm: max x`time;
+        show newwm;
         $[(null[.engine.watermark] or (newwm>.engine.watermark));[ // TODO instead of show log to file etc
             / x:.util.batch.TimeOffsetK[x;.conf.c[]]; // Set time offset by config (only for agent events)
             $[count[distinct[x`kind]]>1;
@@ -202,9 +201,6 @@
         (`avail            ; n?10);  
         (`bal              ; n?10)  
         ));
-
-    .bam.acc:acc;
-    .bam.ivn:ivn;
 
     // TODO make cleaner
     .engine.E .event.Account[acc];
