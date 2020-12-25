@@ -64,8 +64,10 @@
 
 // TODO update inventory
 .engine.logic.account.Leverage:{
-			acc:?[x;();0b;`aId`time`bal`avail!(
+			acc:?[x;();0b;`aId`time`bal`rt`ft`avail!(
 				`aId;`time;`aId.bal;
+				((';`.engine.logic.account.GetRisktier);(+;`aId.lng.amt;`aId.srt.amt);(+;`aId.lng.lev;`aId.srt.lev));
+				((';`.engine.logic.account.GetFeetier);`aId.vol);
 				(`.engine.logic.account.GetAvailable;
 					`aId.bal;
 					(+;`aId.lng.mm;`aId.srt.mm);
@@ -75,25 +77,4 @@
 			.engine.model.account.Update acc;
 			.engine.E .event.Account[acc]; 
 			};
-
-// TODO update inventory
-.engine.logic.account.Settings:{
-			/ lng:?[x;();0b;()]
-			/ srt:?[x;();0b;()]
-
-			acc:?[x;();0b;`aId`time`bal`froz`avail!(
-				`aId;`time;`aId.bal;`aId.froz;
-				(`.engine.logic.account.GetAvailable;
-					`aId.bal;
-					(+;`aId.lng.mm;`aId.srt.mm);
-					(+;`aId.lng.upnl;`aId.srt.upnl);
-					(+;`aId.lng.ordQty;`aId.srt.ordQty);
-					(+;`aId.lng.ordLoss;`aId.srt.ordLoss)))];
-			.engine.model.account.Update acc;
-			.engine.E .event.Account[acc]; 
-			};
-
-
-
-
 
