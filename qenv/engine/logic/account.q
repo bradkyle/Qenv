@@ -17,13 +17,6 @@
       bal-(mm+upnl)+(oqty-oloss)
     };
 
-.engine.logic.account.Liquidate:{
-		/ x[`status]:1;
-		/ // derive bankruptch price
-		/ .engine.logic.order.New[];
-		/ .engine.model.account.Update x;
-		x
-	};
 
 // TODO rt ft etc.
 .engine.logic.account.Withdraw:{
