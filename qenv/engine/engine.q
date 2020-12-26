@@ -44,7 +44,7 @@
 / -------------------------------------------------------------------->
 
 // TODO remove if/else
-.engine.publicWrapper:{[x;y]
+.engine.publicWrapper:{[x;y;z]
     .bam.yd:y;
     e:(,\)y`datum;
     e[`time]:y[`time];
@@ -64,10 +64,10 @@
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade]; 
-.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
-.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
-.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade;{`side`price`qty!x`datum}]; 
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;{`side`price`qty!x`datum}];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;{enlist[`fundingrate]!x`datum}];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark;{enlist[`markprice]!x`datum}];
 .engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
 .engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
 
