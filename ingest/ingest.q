@@ -32,9 +32,9 @@ show "funding: ", string count funding;
 .ingest.prep: {update datum:{[kind;datum;time]$[
     kind=`pricerange;`highest`lowest!datum;
     kind=`depth;`side`price`size!datum;
-    kind=`mark;enlist[`mkprice]!datum;
+    kind=`mark;enlist[`mkprice]!enlist datum;
     kind=`trade;`side`price`size!datum;
-    kind=`funding;enlist[`fundingrate]!datum;
+    kind=`funding;enlist[`fundingrate]!enlist datum;
     kind=`settlement;enlist[`lastsettled]!enlist[time];
     datum]}'[kind;datum;time] from x
     };

@@ -25,9 +25,9 @@ config:
     pullData: false
     dataPath: "/ingest/testdata"
     replicas: 1
-    start: 441730
-    end: 441736
-    batchSize: 3
+    start: 445801
+    end: 445848
+    batchSize: 5 
     maxBatches: 2
     skipBuild: true
     skipPush: true

@@ -21,3 +21,4 @@ done < ${1}
 
 wait
 echo "All files are downloaded."
+

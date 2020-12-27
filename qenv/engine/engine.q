@@ -44,8 +44,7 @@
 / -------------------------------------------------------------------->
 
 // TODO remove if/else
-.engine.publicWrapper:{[x;y;z]
-    .bam.yd:y;
+.engine.publicWrapper:{[x;y]
     e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
@@ -53,7 +52,6 @@
     x[e]};
 
 .engine.privateWrapper:{[v;x;y]
-    .bam.yd:y;
     e:(,\)y`datum;
     e[`time]:y[`time];
     e[`iId]:`.engine.model.instrument.Instrument$0;
@@ -64,10 +62,10 @@
 .engine.map:()!();
 
 // Public
-.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade;{`side`price`qty!x`datum}]; 
-.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level;{`side`price`qty!x`datum}];
-.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding;{enlist[`fundingrate]!x`datum}];
-.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark;{enlist[`markprice]!x`datum}];
+.engine.map[`trade]       :.engine.publicWrapper[.engine.logic.match.Trade]; 
+.engine.map[`depth]       :.engine.publicWrapper[.engine.logic.orderbook.Level];
+.engine.map[`funding]     :.engine.publicWrapper[.engine.logic.instrument.Funding];
+.engine.map[`mark]        :.engine.publicWrapper[.engine.logic.instrument.Mark];
 .engine.map[`settlement]  :.engine.publicWrapper[.engine.logic.instrument.Settlement];
 .engine.map[`pricerange]  :.engine.publicWrapper[.engine.logic.instrument.PriceLimit];
 
