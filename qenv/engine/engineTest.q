@@ -24,31 +24,31 @@
         res:.engine.GetIngressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`setup`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            .engine.test.GetIngressEvents; // Setup
+            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            .engine.test.GetIngressEvents; // Setup
+            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            .engine.test.GetIngressEvents; // Setup
+            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            .engine.test.GetIngressEvents; // Setup
+            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
@@ -82,7 +82,7 @@
         res:.engine.GetEgressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`setup`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             .engine.test.GetEgressEvents.Setup; // Setup
@@ -134,28 +134,21 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+        ("One event is emitted";(
             .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+        ("2 events are emitted";(
             .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            .engine.test.E.Setup; // Setup
-            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
-            (); // res 
-            (); // mocks
-            () // err 
-        ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+        ("no events are passed to emit functions";(
             .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
@@ -184,28 +177,28 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+        ("No events are purged";(
             .engine.test.Purge.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+        ("50/50 events purged to not purged ratio";(
             .engine.test.Purge.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+        ("All events are purged";(
             .engine.test.Purge.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+        ("No events are passed to Purge fnction";(
             .engine.test.Purge.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
