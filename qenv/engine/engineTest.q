@@ -1,55 +1,44 @@
         
 
-.engine.test.GetIngressEvents.Setup:((!) . flip(
-    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
-    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
-    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-    ));
-
 .qt.Unit[
     ".engine.GetIngressEvents";
     {[c]
         p:c[`params];
-
-        .util.table.dropAll[(
-          `.engine.model.account.Account,
-          `.engine.model.inventory.Inventory,
-          `.engine.model.risktier.RiskTier,
-          `.engine.model.feetier.Feetier
-        )];
-        .engine.testutils.SwitchSetupModels[p`setup];
+        .engine.ingress.Events,:p`setup;
 
         res:.engine.GetIngressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
+
+        .util.table.dropAll[(
+            `.engine.ingress.Events,
+        )];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Get ingress events no events present";(
-            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get ingress events events present none fit selection";(
-            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get ingress events events present all fit selection";(
-            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get ingress events 50/50 fit selection";(
-            .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
@@ -57,57 +46,46 @@
     );
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
-
-.engine.test.GetEgressEvents.Setup:((!) . flip(
-    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
-    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
-    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-    ));
 
 .qt.Unit[
     ".engine.GetEgressEvents";
     {[c]
         p:c[`params];
-
-        .util.table.dropAll[(
-          `.engine.model.account.Account,
-          `.engine.model.inventory.Inventory,
-          `.engine.model.risktier.RiskTier,
-          `.engine.model.feetier.Feetier
-        )];
-        .engine.testutils.SwitchSetupModels[p`setup];
+        .engine.egress.Events,:p`setup;
 
         res:.engine.GetEgressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
+
+        .util.table.dropAll[(
+            `.engine.egress.Events,
+        )];
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("Get egress events no events present";(
-            .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get egress events events present none fit selection";(
-            .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get egress events events present all fit selection";(
-            .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
         ));
         ("Get egress events 50/50 fit selection";(
-            .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (z;5;500);
             (); // res 
             (); // mocks
             () // err 
@@ -115,14 +93,6 @@
     );
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
-
-.engine.test.E.Setup:((!) . flip(
-    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
-    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
-    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
-    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
-    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
-    ));
 
 .qt.Unit[
     ".engine.E";
@@ -132,24 +102,21 @@
         res:.engine.E . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`setup`args`eRes`mocks`err!p};
+    {[p] :`args`eRes`mocks`err!p};
     (
         ("One event is emitted";(
-            .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("2 events are emitted";(
-            .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("no events are passed to emit functions";(
-            .engine.test.E.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
