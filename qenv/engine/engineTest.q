@@ -27,28 +27,32 @@
     {[p] :`setup`args`eRes`mocks!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            ();
-            ();
-            ();
-            ()
+            .engine.test.GetIngressEvents; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            ();
-            ();
-            ();
-            ()
+            .engine.test.GetIngressEvents; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            ();
-            ();
-            ();
-            ()
+            .engine.test.GetIngressEvents; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            ();
-            ();
-            ();
-            ()
+            .engine.test.GetIngressEvents; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ))
     );
     ({};{};{};{});
@@ -78,7 +82,7 @@
         res:.engine.GetEgressEvents . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
             .engine.test.GetEgressEvents.Setup; // Setup
