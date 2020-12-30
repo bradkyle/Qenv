@@ -1,5 +1,13 @@
         
 
+.engine.test.GetIngressEvents.Setup:((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+    ));
+
 .qt.Unit[
     ".engine.GetIngressEvents";
     {[c]
@@ -46,6 +54,14 @@
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
 
+.engine.test.GetEgressEvents.Setup:((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+    ));
+
 .qt.Unit[
     ".engine.GetEgressEvents";
     {[c]
@@ -80,6 +96,14 @@
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
 
+.engine.test.E.Setup:((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+    ));
+
 .qt.Unit[
     ".engine.E";
     {[c]
@@ -88,23 +112,47 @@
         res:.engine.E . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.E.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.E.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.E.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.E.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ))
     );
     ({};{};{};{});
     "Path finder action set (made for binance exchange)"];
+
+.engine.test.Purge.Setup:((!) . flip(
+    (`instrument;(`iId`cntTyp`faceValue`mkprice`smul;enlist(0;`inverse;1;1000;1))); 
+    (`account;(`aId`avail`bal`lng`srt`ft`rt`wit`time`froz;enlist(0;0;0;(0 1);(0 -1);0;0;0;z;0))); 
+    (`inventory;(`aId`iId`side`mm`upnl`rpnl`ordQty`ordLoss`amt;flip(0 0;0 0;-1 1;0 0;0 0;0 0;0 0;0 0;10 10))); 
+    (`feetier;(`ftId`vol`bal`ref;flip(0 1;0 0;0 0;0 0))); // Update Account
+    (`risktier;(`rtId`amt`lev;flip(0 1;50000 250000;125 100))) // Update Account
+    ));
 
 .qt.Unit[
     ".engine.Purge";
@@ -114,19 +162,35 @@
         res:.engine.Purge . p[`args];
         .qt.A[res;~;p[`eRes];"res";c];
     };
-    {[p] :`args`eRes`mocks!p};
+    {[p] :`setup`args`eRes`mocks`err!p};
     (
         ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.Purge.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.Purge.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.Purge.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ));
         ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
-            (10;5;0.1;1);(1 1 1);()
+            .engine.test.Purge.Setup; // Setup
+            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (); // res 
+            (); // mocks
+            () // err 
         ))
     );
     ({};{};{};{});
