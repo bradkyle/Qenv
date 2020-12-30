@@ -26,28 +26,28 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+        ("Get ingress events no events present";(
             .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+        ("Get ingress events events present none fit selection";(
             .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+        ("Get ingress events events present all fit selection";(
             .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+        ("Get ingress events 50/50 fit selection";(
             .engine.test.GetIngressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
@@ -84,28 +84,28 @@
     };
     {[p] :`setup`args`eRes`mocks`err!p};
     (
-        ("min price 1000 (asks) price distribution 0.01 tick size: 10 levels";(
+        ("Get egress events no events present";(
             .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.01 tick size: 10 levels";(
+        ("Get egress events events present none fit selection";(
             .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (asks) price distribution 0.5 tick size: 10 levels";(
+        ("Get egress events events present all fit selection";(
             .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
-        ("min price 1000 (bids) price distribution 0.5 tick size: 10 levels";(
+        ("Get egress events 50/50 fit selection";(
             .engine.test.GetEgressEvents.Setup; // Setup
             ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
             (); // res 
