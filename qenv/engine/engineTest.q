@@ -146,28 +146,28 @@
     (
         ("No events are purged";(
             .engine.test.Purge.Setup; // Setup
-            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0));();0;"testing"); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("50/50 events purged to not purged ratio";(
             .engine.test.Purge.Setup; // Setup
-            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0));();0;"testing"); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("All events are purged";(
             .engine.test.Purge.Setup; // Setup
-            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0));();0;"testing"); // Events
             (); // res 
             (); // mocks
             () // err 
         ));
         ("No events are passed to Purge fnction";(
             .engine.test.Purge.Setup; // Setup
-            ([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0)); // Events
+            (([]time:enlist z;kind:enlist `trade;datum:enlist `side`price`size!(0;1;0));();0;"testing"); // Events
             (); // res 
             (); // mocks
             () // err 
